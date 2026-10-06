@@ -1,0 +1,8 @@
+{
+  "root_report_sha256": "41f2bf7188df88e63d46e520a274f0e271d42b7067b0eceffe958c2a0c016dd0",
+  "master_after_sha256": "aa7d38e8534d98b5dd80d4e163f2de309cd94dd2832d7f22b77bc7d004fe095c",
+  "rows": 18904,
+  "Originalaccepted": 18042,
+  "Originalremaining": 527,
+  "existing_source_identity_rebases": 51
+}

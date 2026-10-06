@@ -1,0 +1,79 @@
+{
+  "status": "F003_FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+  "root_author_review": {
+    "complete_source_bound_delta_read": true,
+    "whole_actual_r2_log_read": true,
+    "ten_current_sources_previously_personally_FULL_and_hash_bound": true,
+    "unchanged_tool_gate_and_locks": true,
+    "all_20116_API_lines_semantic_review_claimed": false
+  },
+  "native": {
+    "phase": "package24-f003-current-gate-r2",
+    "command": [
+      "bash",
+      "tools/ci/verify_developer_journeys.sh"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T20:53:53.418969+00:00",
+    "completed_utc": "2026-10-03T20:56:39.960744+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package24-f003-current-gate-r2.log",
+    "log_sha256": "2b3303b49092f2e41209099f3f2f9d039967e0d0c7fa23eeccf23f0063b6815a"
+  },
+  "actual_counts": {
+    "packages": 31,
+    "restored_runtime_dlls": 30,
+    "journey_source_files": 18,
+    "isolated_consumer_executions": 4
+  },
+  "baseline": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/api/packed-public-api.txt",
+    "sha256": "e6f246add57089d65de9f78c2b8d38fd6a3f5f73117792e7eea1dff9fbe02719",
+    "bytes": 3737802,
+    "exact_reviewed_candidate_and_generated_equal": true,
+    "lines": 20116
+  },
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package24-f003-current-gate-adversarial-r1/proactive-r2-filesystem/FINAL_F003_ACTUAL_R2_QUALIFICATION.json",
+    "sha256": "0237d878b2a463509004c1b19bb32d800ec111771ee12930ad342fcbbdfd45f4"
+  },
+  "independent_bound_artifacts_reverified": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package24-f003-current-gate-adversarial-r1/FINAL_F003_BASELINE_CANDIDATE_R1_PREFLIGHT.json",
+      "sha256": "fef38065371bb05abe34567c8fe57e89703d298bfb7f5244571d4490a98f08c3",
+      "bytes": 13657
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package24-f003-current-gate-adversarial-r1/proactive-r2-filesystem/ACTUAL31_FRESH_FEED_SNAPSHOT.json",
+      "sha256": "9e92bd6f8c6700ebe9eac306a6d8068d5f0b577e51a221fe026c3b22cd8c3503",
+      "bytes": 17232
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package24-f003-current-gate-adversarial-r1/proactive-r2-filesystem/ACTUAL30_RESTORED_RUNTIME_FRESH_ZIP_BINDINGS.json",
+      "sha256": "cd7fb1578363e9b61c478ef4c8db45c710be8286a8b88dcc4f4abc72c4d13c02",
+      "bytes": 21809
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package24-f003-current-gate-adversarial-r1/proactive-r2-filesystem/ACTUAL_R2_PACKAGE_RUNTIME_PDB_AND_LOCK_BINDINGS.json",
+      "sha256": "6675e892fdf1204c1138ff87afe2e1b564797ca885f5a0546443999edaf6a5d7",
+      "bytes": 52458
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package24-f003-current-gate-adversarial-r1/proactive-r2-filesystem/LIVE30_RECHECK_01.json",
+      "sha256": "fc94a623384e7facfe014dc750ea1bbff1c1f2bfacace077b016707edaa1c71a",
+      "bytes": 11515
+    }
+  ],
+  "limits": [
+    "Gate EXIT cleanup removed the private cache before the post-completion recheck. No loader telemetry or post-producer live-byte recheck is invented.",
+    "The whole R2 log is personally FULL; R1 whole-log FULL and R1 package/runtime snapshots are not claimed.",
+    "This qualifies the 55 changed baseline rows and F003 package gate, not all 20116 public API lines or whole API semantics.",
+    "The eighteen scenario count is enforced by the FULL gate and PASS execution; individual scenario stdout is not present in this log.",
+    "This gate does not establish full canonical unit-suite success; Root reported two stale CS0120 static telemetry test calls.",
+    "No Root canonical Core-owner FULL reading credit, ordinary RAW increment, external service integration coverage, or global A+ grade follows."
+  ],
+  "whole_api_Aplus": false,
+  "current_full_unit_green": false,
+  "root_core_owner766_personal_FULL": false,
+  "created_utc": "2026-10-03T21:04:52.688551+00:00"
+}

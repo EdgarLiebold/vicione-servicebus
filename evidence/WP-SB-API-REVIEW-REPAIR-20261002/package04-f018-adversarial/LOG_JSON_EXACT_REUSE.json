@@ -1,0 +1,202 @@
+[
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-run.log",
+    "sha256": "fd10344da7c6affaec8899cadd7b5cea4834fa7c06f92cff4b6cd9499db852ce",
+    "bytes": 722,
+    "phase": "package04-f018-ownership-corrected-run",
+    "cases": 12,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-run.log",
+    "sha256": "2521c2da24290ba2d2093e4f9733cb97f7486c05a896d485a9372ef66b70d711",
+    "bytes": 235,
+    "phase": "package04-f018-identity-corrected-run",
+    "cases": 4,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-marker-only-ownership-send-separate-success.log",
+    "sha256": "cfe35bceb9a11f23bfa95c6e2a8655f43524254ebef8bfa222af6f48b7a4fd4c",
+    "bytes": 1721,
+    "phase": "package04-f018-mut-send-marker-only-ownership-send-separate-success",
+    "cases": 1,
+    "failures": 1,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-marker-only-ownership-query-separate-success.log",
+    "sha256": "092ac953b4354507088ca9bb4d4b1834cd15deb5191f84d1509c331d3b1ba63e",
+    "bytes": 94,
+    "phase": "package04-f018-mut-send-marker-only-ownership-query-separate-success",
+    "cases": 1,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-marker-only-ownership-query-separate-success.log",
+    "sha256": "745087bcc43a6838ab63aaeb956d16eaba9e9e499495c2371759fbf705f4ec53",
+    "bytes": 1722,
+    "phase": "package04-f018-mut-query-marker-only-ownership-query-separate-success",
+    "cases": 1,
+    "failures": 1,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-marker-only-ownership-send-separate-success.log",
+    "sha256": "5059a515ab0a9ec3aa1826523b188c6950b369824f23ca5562d4c98afeec4d11",
+    "bytes": 93,
+    "phase": "package04-f018-mut-query-marker-only-ownership-send-separate-success",
+    "cases": 1,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-id-comparison-lost-identity-send-foreign.log",
+    "sha256": "6421bd5ebbd25747cb75b8787c0a4d0c6f716d4fcfada4166ce0ec9665ca958f",
+    "bytes": 1241,
+    "phase": "package04-f018-mut-send-id-comparison-lost-identity-send-foreign",
+    "cases": 1,
+    "failures": 1,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-id-comparison-lost-identity-send-matching.log",
+    "sha256": "21531b5e24b3e00a2549036b382e236f9d2fb6bdea45a5522ae7f7159fe319ce",
+    "bytes": 85,
+    "phase": "package04-f018-mut-send-id-comparison-lost-identity-send-matching",
+    "cases": 1,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-id-comparison-lost-identity-query-foreign.log",
+    "sha256": "c2522758a6791acc4c8db6bc273644cb07eff477abe1be8065a5b7631d367fa6",
+    "bytes": 1242,
+    "phase": "package04-f018-mut-query-id-comparison-lost-identity-query-foreign",
+    "cases": 1,
+    "failures": 1,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-id-comparison-lost-identity-query-matching.log",
+    "sha256": "0f3d3de2836ae5058004e25c5a8673beb00608f0e4cfe1f16d34c34dd8ed8fee",
+    "bytes": 86,
+    "phase": "package04-f018-mut-query-id-comparison-lost-identity-query-matching",
+    "cases": 1,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-valid-owner-rejected-identity-send-matching.log",
+    "sha256": "9fa8381647ea742bfceeca846eb339a4f71e38cffabd0dbb8925ce6af74f106e",
+    "bytes": 11396,
+    "phase": "package04-f018-mut-send-valid-owner-rejected-identity-send-matching",
+    "cases": 1,
+    "failures": 1,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-valid-owner-rejected-identity-query-matching.log",
+    "sha256": "0f3d3de2836ae5058004e25c5a8673beb00608f0e4cfe1f16d34c34dd8ed8fee",
+    "bytes": 86,
+    "phase": "package04-f018-mut-send-valid-owner-rejected-identity-query-matching",
+    "cases": 1,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-valid-owner-rejected-identity-query-matching.log",
+    "sha256": "983edb9824bb4d6468cb50d37f574a72e339af88c5c46b4b0a974058a1fbfa58",
+    "bytes": 12265,
+    "phase": "package04-f018-mut-query-valid-owner-rejected-identity-query-matching",
+    "cases": 1,
+    "failures": 1,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-valid-owner-rejected-identity-send-matching.log",
+    "sha256": "21531b5e24b3e00a2549036b382e236f9d2fb6bdea45a5522ae7f7159fe319ce",
+    "bytes": 85,
+    "phase": "package04-f018-mut-query-valid-owner-rejected-identity-send-matching",
+    "cases": 1,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-corrected-ownership-all.log",
+    "sha256": "fd10344da7c6affaec8899cadd7b5cea4834fa7c06f92cff4b6cd9499db852ce",
+    "bytes": 722,
+    "phase": "package04-f018-mut-corrected-ownership-all",
+    "cases": 12,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-corrected-identity-all.log",
+    "sha256": "2521c2da24290ba2d2093e4f9733cb97f7486c05a896d485a9372ef66b70d711",
+    "bytes": 235,
+    "phase": "package04-f018-mut-corrected-identity-all",
+    "cases": 4,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-rollback-ownership-all.log",
+    "sha256": "fd10344da7c6affaec8899cadd7b5cea4834fa7c06f92cff4b6cd9499db852ce",
+    "bytes": 722,
+    "phase": "package04-f018-mut-rollback-ownership-all",
+    "cases": 12,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-rollback-identity-all.log",
+    "sha256": "2521c2da24290ba2d2093e4f9733cb97f7486c05a896d485a9372ef66b70d711",
+    "bytes": 235,
+    "phase": "package04-f018-mut-rollback-identity-all",
+    "cases": 4,
+    "failures": 0,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-original-run12.log",
+    "sha256": "6477137789b1634cc6cc645e4a6c505a70f2b332f56710ca3731ac50c7d7fbe5",
+    "bytes": 7214,
+    "phase": "package04-f018-ownership-original-run12",
+    "cases": 12,
+    "failures": 4,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-original-run4.log",
+    "sha256": "39752dfd711f06c7f68b8a105f2e14ce61113f43c49050c433d8b8700f98fea9",
+    "bytes": 2543,
+    "phase": "package04-f018-identity-original-run4",
+    "cases": 4,
+    "failures": 2,
+    "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+    "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+  }
+]

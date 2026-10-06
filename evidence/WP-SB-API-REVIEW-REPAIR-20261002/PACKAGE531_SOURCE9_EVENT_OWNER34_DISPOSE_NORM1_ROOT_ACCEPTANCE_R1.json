@@ -1,0 +1,90 @@
+{
+  "utc": "2026-10-06T17:58:44.896041+00:00",
+  "status": "BOUNDED_SOURCE9_IDENTITY34_NORM_REVISION1_ORIGINAL_INVENTORY_COMPLETE_GLOBAL_OPEN",
+  "before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package531-source9-event34-root-acceptance-before-r1/MANIFEST.json",
+    "sha256": "0e4d7a8e220182b3a4fbc1b4f16c9be63798876e60b741fbe8b05df36703385f"
+  },
+  "authorities": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package523-sqs-settlement2-current299-runtime-proposed-r1/MANIFEST.json",
+      "sha256": "a4d70ddf7a7c3f51061de666b3d080999b6498084a7aa034452e9050c150a4ce"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package523-sqs-settlement2-independent-current299-norm-peer-r1/MANIFEST.json",
+      "sha256": "3b1ad6ee3c72e88e23a810f5c48c501ce645d051acc26b8b1f7bc9747cc1d84b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package523-settlement2-independent-historical-fullrows-check-supplement-r1/MANIFEST.json",
+      "sha256": "635ad5c034a992c009211961f10e7db5002e4280cd54c931c6302748aa8c3a86"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package511-rabbit-source3-visibility2-precision-overlay-r1/MANIFEST.json",
+      "sha256": "514474fc9d7cb5a82b8b1a27aacfb2d75064b194cabcfc718eed2092796b04c6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package511-rabbit-source3-visibility2-authorship-context-supplement-r1/MANIFEST.json",
+      "sha256": "bae0894f0fbbf2667a42a8299ea56e244d91e9c63a50d8204230c6cd3979e6e6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package511-rabbit-source3-failfast5065-precision-overlay-r1/MANIFEST.json",
+      "sha256": "d355ce96daa99486f9878c802782715bed8f201bacd0e5278e938d069aeabf98"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package511-rabbit-source3-current523-frozen-compilation-binding-supplement-r1/MANIFEST.json",
+      "sha256": "4280d6011a582e8768d1407c7e188dac05cb04f26b7f643fb65f1041ccdb4c21"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package511-rabbit-source3-independent-current523-norm-peer-r1/MANIFEST.json",
+      "sha256": "a2b631e1464abe7fa36e8d6b1c08a99131d87cd9fb226f8e02ac8290fbaa0de8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package523-event-source3-dispose1-owner34-current526-runtime-binding-supplement-r1/MANIFEST.json",
+      "sha256": "6d2f8ffb7fb0c3017d7c07ae0c799888839a233d7a2783b2205d7db68d02871b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package523-event-source3-dispose1-owner34-independent-current526-norm-peer-r1/MANIFEST.json",
+      "sha256": "bbdf9247008537191e8e41db2f1ef303fe43e50ca72f9255c1ce4d099ab08e33"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package521-azure2505-materializer1-norm-precision-overlay-r1/MANIFEST.json",
+      "sha256": "94e297b1e650c7b7f3aca2c52d9262e8e9add34b4cea4017b7e71bb208016b68"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package521-azure2505-current528-frozen-compilation-binding-supplement-r1/MANIFEST.json",
+      "sha256": "61d19a2f4919fd3efdb04c7a7ef0855aa13d14bc921a20155f29f09a3dbf556e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package521-azure2505-independent-current528-final-norm-peer-r1/MANIFEST.json",
+      "sha256": "26f3b733e5236eaf858b3eee845a0f9295fb337a16124c65400b4553ebbb8291"
+    }
+  ],
+  "root_whole_norm_reads": {
+    "SQS2": "67b62c; historical supplement91e7ae",
+    "Rabbit3": "d78984; different91e7ae",
+    "Event3": "17bfb1; owner34 literals25814d; soleDispose bothnorms d91030/a4e58d; different9a321f",
+    "Azure1": "1c70af allactive norm plusXML; cc1645 remainingobligations and fulldifferentfinalpeer"
+  },
+  "accounting": {
+    "master_before": 19422,
+    "master_after": 19431,
+    "original_canonical_before": 18560,
+    "original_canonical_after": 18569,
+    "current_canonical_after": 18598,
+    "compiler_accessor_sidecars": 833,
+    "original_remaining": 0
+  },
+  "semantic_norm_revisions": 1,
+  "identity_rows_updated": 34,
+  "unchanged_norm_strings": 33,
+  "entire_old_rows_retained": true,
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": [
+    "SelectedSource bindings only: historical522/523/526/528 epochs are not entirecurrentgraph assertions.",
+    "Source2 SQS Original5154PASS is ZERO earlyexit/drain causalcounterexample.",
+    "All original18569 inventoried API entries now carry bounded contracts; complete inventory is not wholeAPI A+ acceptance.",
+    "All nine pending finding dispositions and global/freshpublication gates remain open."
+  ]
+}

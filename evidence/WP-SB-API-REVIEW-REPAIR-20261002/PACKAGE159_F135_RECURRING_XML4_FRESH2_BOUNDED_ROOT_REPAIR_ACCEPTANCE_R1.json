@@ -1,0 +1,30 @@
+{
+  "utc": "2026-10-05T00:43:58.444525+00:00",
+  "actor": "/root",
+  "status": "CURRENT_REPAIR_ROOT_ACCEPTED_BOUNDED",
+  "finding": "F-SB-API-135",
+  "accepted_before": 133,
+  "accepted_after": 134,
+  "confirmed": 135,
+  "actual_MAN_hashes_verified": 3339,
+  "physical_fresh_packages": [
+    "ViciOne.ServiceBus.1.0.0.nupkg",
+    "ViciOne.ServiceBus.Sagas.1.0.0.nupkg"
+  ],
+  "actual_XML_nodes": [
+    "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.PayloadType",
+    "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Destination",
+    "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Schedule",
+    "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Payload"
+  ],
+  "source_read_evidence": "Root prior acc4a4/2c3304 whole original/proposed58 and exact4 inverse, b158e7 nodes, cc5a27 whole peer; current compiled qualification source bound.",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package159-outbox-original84-recurring-doc4-fresh2-independent-r1/REPORT.json",
+    "sha256": "1c6189da625d6f23e2dd9e15b11eb11d7bade714f24a42e1a079679da1cb5945"
+  },
+  "native_credit": 0,
+  "limits": [
+    "XML-only getter summary correction; executable unchanged.",
+    "No whole Core/API A+; original Outbox84 has3finite failures."
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "utc": "2026-10-03T02:42:52.423898+00:00",
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "previous": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/00-ConfigurationException.cs",
+        "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+        "bytes": 2662
+      },
+      "current": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-freeze/00-ConfigurationException.cs.txt",
+        "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+        "bytes": 2662
+      },
+      "unchanged": true,
+      "read_status": "READ_FULL",
+      "read_mode": "EXACT_SHARED_PERSONALLY_FULL_CURRENT_TEXT_AND_COMPLETE_ORIGINAL_REPLACEMENTS_FULL",
+      "reverse_reconstruction_sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "complete_delta": ""
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "previous": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/01-ValidateViciOneServiceBusHostOptions.cs",
+        "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+        "bytes": 2641
+      },
+      "current": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-freeze/01-ValidateViciOneServiceBusHostOptions.cs.txt",
+        "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+        "bytes": 2641
+      },
+      "unchanged": true,
+      "read_status": "READ_FULL",
+      "read_mode": "EXACT_SHARED_PERSONALLY_FULL_CURRENT_TEXT_AND_COMPLETE_ORIGINAL_REPLACEMENTS_FULL",
+      "reverse_reconstruction_sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "complete_delta": ""
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "previous": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/02-ViciOneServiceBusHostOptions.cs",
+        "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+        "bytes": 1550
+      },
+      "current": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-freeze/02-ViciOneServiceBusHostOptions.cs.txt",
+        "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+        "bytes": 1550
+      },
+      "unchanged": true,
+      "read_status": "READ_FULL",
+      "read_mode": "EXACT_SHARED_PERSONALLY_FULL_CURRENT_TEXT_AND_COMPLETE_ORIGINAL_REPLACEMENTS_FULL",
+      "reverse_reconstruction_sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "complete_delta": ""
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "previous": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/03-BatchCollector.cs",
+        "sha256": "df09223331e2acd9be04e5e241510bd39cc2572618b3d3b0d16f0548e4f9c0d0",
+        "bytes": 13411
+      },
+      "current": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-freeze/03-BatchCollector.cs.txt",
+        "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+        "bytes": 13959
+      },
+      "unchanged": false,
+      "read_status": "READ_FULL",
+      "read_mode": "EXACT_SHARED_PERSONALLY_FULL_CURRENT_TEXT_AND_COMPLETE_ORIGINAL_REPLACEMENTS_FULL",
+      "reverse_reconstruction_sha256": "df09223331e2acd9be04e5e241510bd39cc2572618b3d3b0d16f0548e4f9c0d0",
+      "complete_delta": "--- /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/03-BatchCollector.cs\n+++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-freeze/03-BatchCollector.cs.txt\n@@ -16,13 +16,16 @@\n     readonly IPipe<ConsumeContext<IMessageBatch<TMessage>>> _consumerPipe;\n     readonly BatchCollectorLifetime _lifetime;\n     readonly BatchRuntimeSettings _settings;\n+    readonly string _busKey;\n \n     /// <summary>Creates a collector whose completed batches are sent through the supplied pipe.</summary>\n     /// <param name=\"options\">The validated batch limits captured for this collector.</param>\n     /// <param name=\"consumerPipe\">The pipeline that receives each completed batch.</param>\n-    protected BatchCollectorBase(BatchOptions options, IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe)\n+    /// <param name=\"busKey\">The owning bus key, or unknown for a connector without registration ownership.</param>\n+    protected BatchCollectorBase(BatchOptions options, IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe, string busKey)\n     {\n         _settings = new BatchRuntimeSettings(options);\n+        _busKey = busKey;\n         _consumerPipe = consumerPipe ?? throw new ArgumentNullException(nameof(consumerPipe));\n         _lifetime = new BatchCollectorLifetime(_settings.ConcurrencyLimit);\n     }\n@@ -93,9 +96,10 @@\n             if (ReferenceEquals(timeProvider, TimeProvider.System)\n                 && (long)_settings.TimeLimit.TotalMilliseconds > uint.MaxValue - 1L)\n             {\n-                string message = $\"Batch timing at endpoint '{context.Advanced().ReceiveContext.InputAddress}': \"\n-                    + $\"Batch.TimeLimit ({_settings.TimeLimit:c}) exceeds the System timer range of 4294967294 whole milliseconds. \"\n-                    + \"Set Batch.TimeLimit to a positive supported duration or attach a TimeProvider whose timer supports this interval.\";\n+                string message = global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(\n+                    \"Batch timing\", _busKey,\n+                    $\"At endpoint '{context.Advanced().ReceiveContext.InputAddress}', Batch.TimeLimit ({_settings.TimeLimit:c}) exceeds the System timer range of 4294967294 whole milliseconds\",\n+                    \"Set Batch.TimeLimit to a positive supported duration or attach a TimeProvider whose timer supports this interval\");\n                 var failure = global::ViciOne.ServiceBus.Configuration.ValidationResultExtensions.Failure(null, \"Batch.TimeLimit\", message);\n                 throw new ConfigurationException([failure], message);\n             }\n@@ -203,8 +207,9 @@\n     /// <summary>Creates a collector whose completed batches are sent through the supplied pipe.</summary>\n     /// <param name=\"options\">The validated batch limits captured for this collector.</param>\n     /// <param name=\"consumerPipe\">The pipeline that receives each completed batch.</param>\n-    public BatchCollector(BatchOptions options, IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe)\n-        : base(options, consumerPipe)\n+    /// <param name=\"busKey\">The owning registration's diagnostic key when known.</param>\n+    public BatchCollector(BatchOptions options, IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe, string busKey = \"unknown\")\n+        : base(options, consumerPipe, busKey)\n     {\n     }\n \n@@ -248,11 +253,13 @@\n     /// <param name=\"options\">The validated batch limits captured for this collector.</param>\n     /// <param name=\"consumerPipe\">The pipeline that receives each completed batch.</param>\n     /// <param name=\"keyProvider\">The selector that assigns messages to groups.</param>\n+    /// <param name=\"busKey\">The owning registration's diagnostic key when known.</param>\n     public BatchCollector(\n         BatchOptions options,\n         IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe,\n-        IGroupKeyProvider<TMessage, TKey> keyProvider)\n-        : base(RequireKeyProvider(options, keyProvider), consumerPipe)\n+        IGroupKeyProvider<TMessage, TKey> keyProvider,\n+        string busKey = \"unknown\")\n+        : base(RequireKeyProvider(options, keyProvider), consumerPipe, busKey)\n     {\n         _keyProvider = keyProvider;\n     }\n"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "previous": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/04-BatchOptions.cs",
+        "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+        "bytes": 7243
+      },
+      "current": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-freeze/04-BatchOptions.cs.txt",
+        "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+        "bytes": 7243
+      },
+      "unchanged": true,
+      "read_status": "READ_FULL",
+      "read_mode": "EXACT_SHARED_PERSONALLY_FULL_CURRENT_TEXT_AND_COMPLETE_ORIGINAL_REPLACEMENTS_FULL",
+      "reverse_reconstruction_sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "complete_delta": ""
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "previous": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+        "sha256": "d674136886bc706ef596fe3d2017c8608d0171e0a9a6c02f3d9d03ca74f46d5b",
+        "bytes": 4603
+      },
+      "current": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-freeze/05-ConsumerRegistration.cs.txt",
+        "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+        "bytes": 4762
+      },
+      "unchanged": false,
+      "read_status": "READ_FULL",
+      "read_mode": "EXACT_SHARED_PERSONALLY_FULL_CURRENT_TEXT_AND_COMPLETE_ORIGINAL_REPLACEMENTS_FULL",
+      "reverse_reconstruction_sha256": "d674136886bc706ef596fe3d2017c8608d0171e0a9a6c02f3d9d03ca74f46d5b",
+      "complete_delta": "--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs\n+++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-freeze/05-ConsumerRegistration.cs.txt\n@@ -55,6 +55,8 @@\n             consumerFactory = decoratorRegistration.DecorateConsumerFactory(consumerFactory);\n \n         var consumerConfigurator = new ConsumerConfigurator<TConsumer>(consumerFactory, configurator);\n+        consumerConfigurator.Options(new ConsumerBusIdentityOptions(\n+            context is IBusRegistrationIdentity identity ? identity.BusKey : \"unknown\"));\n \n         GetConsumerDefinition(context)\n             .Configure(configurator, consumerConfigurator, context);\n"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "previous": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+        "sha256": "3ae4735449c76fb29ca75718ef96f5babef34bd80cd11a3a51ccaea33d822942",
+        "bytes": 4930
+      },
+      "current": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-freeze/06-BatchConsumerMessageConnector.cs.txt",
+        "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+        "bytes": 5099
+      },
+      "unchanged": false,
+      "read_status": "READ_FULL",
+      "read_mode": "EXACT_SHARED_PERSONALLY_FULL_CURRENT_TEXT_AND_COMPLETE_ORIGINAL_REPLACEMENTS_FULL",
+      "reverse_reconstruction_sha256": "3ae4735449c76fb29ca75718ef96f5babef34bd80cd11a3a51ccaea33d822942",
+      "complete_delta": "--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs\n+++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-freeze/06-BatchConsumerMessageConnector.cs.txt\n@@ -36,6 +36,9 @@\n         ArgumentNullException.ThrowIfNull(specification);\n \n         var options = specification.Options<BatchOptions>();\n+        string busKey = specification.TryGetOptions<ConsumerBusIdentityOptions>(out var identity)\n+            ? identity.BusKey\n+            : \"unknown\";\n \n         IConsumerMessageSpecification<TConsumer, IMessageBatch<TMessage>> batchMessageSpecification = specification.GetMessageSpecification<IMessageBatch<TMessage>>();\n \n@@ -52,14 +55,14 @@\n \n         IBatchCollector<TMessage> collector;\n         if (options.GroupKeyProvider == null)\n-            collector = new BatchCollector<TMessage>(options, batchMessagePipe);\n+            collector = new BatchCollector<TMessage>(options, batchMessagePipe, busKey);\n         else\n         {\n             if (options.GroupKeyProvider.GetType().TryGetSingleClosedGenericArguments(typeof(IGroupKeyProvider<,>), out Type[] types))\n             {\n                 var collectorType = typeof(BatchCollector<,>).MakeGenericType(typeof(TMessage), types[1]);\n                 collector = (IBatchCollector<TMessage>)(Activator.CreateInstance(collectorType,\n-                    options, batchMessagePipe, options.GroupKeyProvider) ?? throw new System.InvalidOperationException(\"The requested runtime type could not be activated.\"));\n+                    options, batchMessagePipe, options.GroupKeyProvider, busKey) ?? throw new System.InvalidOperationException(\"The requested runtime type could not be activated.\"));\n             }\n             else\n                 throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(\"Batch Consumer Message Connector\", \"unknown\", \"The GroupKeyProvider does not implement IGroupKeyProvider<TMessage,TKey>\", \"Correct the named configuration before starting the host\"));\n"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "status": "NEW_INTERNAL_FILE_ABSENT_FROZEN_ORIGINAL",
+      "current": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-freeze/07-ConsumerBusIdentityOptions.cs.txt",
+        "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+        "bytes": 281
+      }
+    }
+  ],
+  "original_frozen_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "previous_package05_collector_sha256": "df09223331e2acd9be04e5e241510bd39cc2572618b3d3b0d16f0548e4f9c0d0",
+  "unchanged_prior_product_inputs": [
+    0,
+    1,
+    2,
+    4
+  ],
+  "public_signature_changes": false
+}

@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-05T14:47:18.507876+00:00",
+  "status": "INDEPENDENTLY_REVIEWED_FIXED_LIFETIME9_TEST_AND_ADDREQ2_APPLIED_NATIVE_PENDING",
+  "product_source_changed": false,
+  "test": {
+    "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsConnectionCreationMiddlewareLifetimeTests.cs",
+    "sha256": "4cce0380e3b9bd3c0b726d70ff67849c25a767f150f1c0647befa1ae9b4592f0",
+    "cases": 9,
+    "root_whole_read_receipt": "288640"
+  },
+  "requirements": {
+    "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+    "before_count": 181,
+    "after_count": 183,
+    "before_sha256": "f8ca1076a4cf3fab9805c861b7f18ee9c9f0d4a575e516e73ab60f488ed9ccbd",
+    "after_sha256": "c13688e226f66947e49d5264d8842cd41317010bb3023f0f2c2734f5444af2a2",
+    "prefix181_preserved": true
+  },
+  "proposal_manifest_sha256": "50f9f249cf124bf89433e82c9bbeeecc9fb76cb4d73b5df72d75ffcbcdce8bdd",
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package188-sqs-creation-lifetime9-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "f74d3ef1f3df58ec8d0daa80546319e2cf6e27ebd9d809e5d0a17076b195a025",
+    "root_whole_report_receipt": "020ec4"
+  },
+  "original8_smoke": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "log_sha256": "6d3ce3f78f4c5fcd1f83f69606724df8490c964df4f7be4a136a0fc1eb4b14db"
+  },
+  "limits": "Fixed-only focused creator ownership controls; no new original defect count, no cloud or overall API closure."
+}

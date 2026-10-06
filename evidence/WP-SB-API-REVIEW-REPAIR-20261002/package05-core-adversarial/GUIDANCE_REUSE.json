@@ -1,0 +1,35 @@
+{
+  "skills": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/assertion-quality/SKILL.md",
+      "sha256": "efc92d1cbea09cf01e5e3b723bffa72ff4f6f8be352a2cd89fb502d6d27194e8",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_REUSED_HASH_VERIFIED",
+      "own_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/SKILL.md",
+      "sha256": "ec6f69ed00a627c0319a2bbdcfd71fcfab84eaae28900b2f814af3b27e44bd70",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_REUSED_HASH_VERIFIED",
+      "own_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/extensions/dotnet.md",
+      "sha256": "ef257a931a25501697fde8a36e027ba9195ff624ff701dd5fd276d746c0d25be",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_REUSED_HASH_VERIFIED",
+      "own_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-gap-analysis/SKILL.md",
+      "sha256": "cfec7d0e13deaee15fb97151d0cd5339fa5f14c109a10c49de81e9a5512231b7",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_REUSED_HASH_VERIFIED",
+      "own_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-anti-patterns/SKILL.md",
+      "sha256": "0f589352ba88c5873e85a2bde65d44f72c75ec76a0547105ff6698271d813bf0",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_REUSED_HASH_VERIFIED",
+      "own_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-adversarial/READ_CLOSURE.json"
+    }
+  ],
+  "application": "Assertions target observable membership/identity, startup options validation, actual pipeline result, retained controls and discriminating mutants. Async boundedness/cleanup checked; no sleep-absence PASS or compiler kill accepted. No new tests generated or run."
+}

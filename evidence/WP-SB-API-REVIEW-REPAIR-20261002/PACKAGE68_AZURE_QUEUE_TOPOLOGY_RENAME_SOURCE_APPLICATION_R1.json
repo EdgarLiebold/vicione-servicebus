@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-04T13:58:48.363466+00:00",
+  "decision": "SOURCE_APPLIED_ROOT_INDEPENDENT_ADVERSARIAL_NO_BLOCK_NATIVE_PENDING",
+  "root_whole_reads": [
+    "a708f8 Queue227 actualSDK/lifetime exactfailure gates",
+    "7f74fa Topology365 actual5stages finiteRED and positivecontrols",
+    "a4c049 actualTopologyFilter and Subscription owner",
+    "8143cd enumtest rename diff exactsamebody"
+  ],
+  "boundaries": [
+    "No confirmed topology finding before original native5",
+    "No cloud behavior claim",
+    "All SDK invocations root serial"
+  ],
+  "files": [
+    {
+      "path": "repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/QueueProcessorLifecycleTests.cs",
+      "sha256": "15424cfb3d22d261eacccb19c861205b45997a7858792ee4fb6bd07cd8b728c9",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-azure-queue-lifecycle16-oracles-proposed-r1/QueueProcessorLifecycleTests.proposed.cs"
+    },
+    {
+      "path": "repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusTopologyOwnershipTests.cs",
+      "sha256": "11b0f7360ca88d00ce3db83260e87bc7023486f165a385f2341a3418d7ceb68b",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package67-azure-topology-ownership-oracles-proposed-r1/ServiceBusTopologyOwnershipTests.proposed.cs"
+    },
+    {
+      "path": "repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusScheduleCancellationCapabilityTests.cs",
+      "before": "9c26ad4c53a7f72ea752e28d11ef791df90d90c6fc1368bab2f771d9788acdff",
+      "sha256": "91807d509160f2f9a17874b3533603b0a2744b1555c5eee8ed61d471b01e0f18"
+    },
+    {
+      "path": "repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "before": "9675c0b832056fc553c3ba0468676af2ae9eb32c22ee50fa85073475ee09a168",
+      "sha256": "c8d7cd99a487bf37dba1a1bfe9cbbf6ab57ea1d99cf79f9f52b81ea5f2fa753d",
+      "preserved_old_rows": 198,
+      "add": 4,
+      "exact_replace": 1,
+      "total": 203
+    }
+  ]
+}

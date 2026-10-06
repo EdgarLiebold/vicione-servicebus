@@ -1,0 +1,14 @@
+{
+  "status": "HASH_ONLY_ROLLBACK_VERIFIED",
+  "read_by": "azure_test_scope",
+  "csv_sha256": "abf8c9b6d08e5be399d517dad8dc57fae4b29db7342f59e9ad480d98911b4208",
+  "checked_files": 6209,
+  "mismatches": [],
+  "method": "Personal independent full byte SHA256 comparison of every CSV tracked original row; no semantic FULL read inferred.",
+  "new_fixtures_absent": {
+    "EventHubClosingRegressionTests.cs": true,
+    "EventHubReceivePolicyRegressionTests.cs": true,
+    "EventHubDeferredCallerCancellationRegressionTests.cs": true,
+    "EventHubBuiltContextCapture.cs": true
+  }
+}

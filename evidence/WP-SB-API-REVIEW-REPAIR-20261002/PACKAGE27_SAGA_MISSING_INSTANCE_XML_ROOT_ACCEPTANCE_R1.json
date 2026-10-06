@@ -1,0 +1,43 @@
+{
+  "status": "ROOT_ACCEPTED_TWO_ADDITIONAL_SAGA_XML_CONTRACT_CORRECTIONS_SHARED_FINAL_PENDING",
+  "utc": "2026-10-03T21:23:49.529714+00:00",
+  "root_personally_FULL_seven_current_sources": true,
+  "root_actual_emitted_two_members_FULL": true,
+  "strict_build_and_pack_exit": 0,
+  "public_signatures_and_non_XML_original_source_bytes_unchanged": true,
+  "actual_package_CRC_payloads_source_and_snapshot_hashes_verified": true,
+  "independent_final": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package27-saga-missing-instance-xml-peer-r1/FINAL_ACTUAL_PACKAGE27_QUALIFICATION.json",
+    "sha256": "9908df60240a6a34c30f1c002ee37ec796992ca02f8b779bd8d9e8abca28368d"
+  },
+  "bound_artifacts": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package27-saga-missing-instance-xml-peer-r1/FINAL_CURRENT_SOURCE_PREFLIGHT.json",
+      "sha256": "5bfa0e73e3e7d69c279212eb08a229ce59be32a428ccf401c5f1f82a744b9fc5",
+      "bytes": 5573
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE27_SAGA_MISSING_INSTANCE_ACTUAL_PACKAGE_XML_R1.json",
+      "sha256": "6217b2133872d493a5ee3f2dc4032f2efd4ae1f45d146db71d2bc47e9459e06d",
+      "bytes": 3240
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package27-saga-xml-r1/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "e76e49708bd9a319c405c9b34e11b75bab005b11310c5d8a024969289660c486",
+      "bytes": 449428
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package27-saga-missing-instance-xml-peer-r1/ACTUAL_PACKED_SAGAS.xml",
+      "sha256": "bfd9c88a7129a8747e531c5f727eed99235fa92d9dbefac334b17f009cf7f7a8",
+      "bytes": 1245400
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package27-saga-missing-instance-xml-peer-r1/ACTUAL_PACKED_SAGAS.dll",
+      "sha256": "55af061bf1655fef32f0ebfd8eeb3724d8c59a54e09a2e559253ee1215066f8c",
+      "bytes": 936448
+    }
+  ],
+  "prior_F003_gate_current_new_Sagas_payload_claimed": false,
+  "whole_API_Aplus": false,
+  "current_full_unit_green": false
+}

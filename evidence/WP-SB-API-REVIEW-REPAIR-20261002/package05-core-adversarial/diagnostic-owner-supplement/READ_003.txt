@@ -1,0 +1,26 @@
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs", "bytes": 18461, "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825", "start_line": 361, "end_line": 384}
+    sealed record PlannedRegistration(IConsumerKind Kind, IConsumerKindRegistration Registration, bool RequiresServiceInstance);
+
+
+    sealed record NamedEndpoint(string Name, IEndpointDefinition Definition);
+
+
+    sealed record EndpointPlan(
+        IReadOnlyList<Endpoint> Endpoints,
+        Func<string, IEndpointDefinition?> GetDefinitionByName);
+
+
+    sealed class Endpoint
+    {
+        public Endpoint(IEndpointDefinition definition, IReadOnlyList<PlannedRegistration> registrations)
+        {
+            Definition = definition;
+            Registrations = registrations;
+        }
+
+        public IEndpointDefinition Definition { get; }
+        public IReadOnlyList<PlannedRegistration> Registrations { get; }
+        public bool RequiresServiceInstance => Registrations.Any(x => x.RequiresServiceInstance);
+    }
+}
+

@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>Provides extension methods for json serializer configuration.</summary>
 public static class JsonSerializerConfigurationExtensions
 {
-    /// <summary>Serialize and deserialize messages using the raw JSON message serializer.</summary>
+    /// <summary>Registers the System.Text.Json message-envelope serializer and deserializer for the bus.</summary>
     /// <param name="configurator">The configurator to update.</param>
     public static void UseJsonSerializer(this IBusFactoryConfigurator configurator)
     {
@@ -20,7 +20,7 @@ public static class JsonSerializerConfigurationExtensions
         configurator.AddDeserializer(factory);
     }
 
-    /// <summary>Deserialize messages using the raw JSON message serializer.</summary>
+    /// <summary>Registers the System.Text.Json message-envelope deserializer for the bus.</summary>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="isDefault">If true, set the default content type to the content type of the deserializer.</param>
     public static void UseJsonDeserializer(this IBusFactoryConfigurator configurator, bool isDefault = false)
@@ -30,7 +30,7 @@ public static class JsonSerializerConfigurationExtensions
         configurator.AddDeserializer(factory, isDefault);
     }
 
-    /// <summary>Serialize and deserialize messages using the raw JSON message serializer.</summary>
+    /// <summary>Registers the System.Text.Json message-envelope serializer and deserializer for the receive endpoint.</summary>
     /// <param name="configurator">The configurator to update.</param>
     public static void UseJsonSerializer(this IReceiveEndpointConfigurator configurator)
     {
@@ -40,7 +40,7 @@ public static class JsonSerializerConfigurationExtensions
         configurator.AddDeserializer(factory);
     }
 
-    /// <summary>Deserialize messages using the raw JSON message serializer.</summary>
+    /// <summary>Registers the System.Text.Json message-envelope deserializer for the receive endpoint.</summary>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="isDefault">If true, set the default content type to the content type of the deserializer.</param>
     public static void UseJsonDeserializer(this IReceiveEndpointConfigurator configurator, bool isDefault = false)

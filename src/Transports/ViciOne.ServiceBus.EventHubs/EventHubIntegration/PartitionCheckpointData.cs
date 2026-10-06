@@ -45,7 +45,13 @@ public class PartitionCheckpointData
 
         await _checkpointer.DisposeAsync().ConfigureAwait(false);
 
-        LogContext.Info?.Log("Partition: {PartitionId} was closed, reason: {Reason}", args.PartitionId, args.Reason);
+        try
+        {
+            LogContext.Info?.Log("Partition: {PartitionId} was closed, reason: {Reason}", args.PartitionId, args.Reason);
+        }
+        catch (global::System.Exception)
+        {
+        }
 
         _cancellationTokenSource.Cancel();
         _cancellationTokenSource.Dispose();

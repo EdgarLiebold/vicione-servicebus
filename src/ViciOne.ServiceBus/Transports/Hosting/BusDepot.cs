@@ -44,10 +44,16 @@ internal sealed class BusDepot :
 
         _logger.LogDebug("Starting bus instances: {Instances}", string.Join(", ", _instances.Keys.Select(x => x.Name)));
 
-        return Task.WhenAll(_instances.Values.Select(instance =>
-            (instance.BusControl ?? throw new InvalidOperationException($"The bus instance '{instance.InstanceType}' returned no lifecycle control."))
-            .StartAsync(cancellationToken)
-            ?? throw new InvalidOperationException($"The bus instance '{instance.InstanceType}' returned no start task.")));
+        return Task.WhenAll(_instances.Values.Select(StartInstanceAsync));
+
+        async Task StartInstanceAsync(IBusInstance instance)
+        {
+            IBusControl control = instance.BusControl
+                ?? throw new InvalidOperationException($"The bus instance '{instance.InstanceType}' returned no lifecycle control.");
+            Task starting = control.StartAsync(cancellationToken)
+                ?? throw new InvalidOperationException($"The bus instance '{instance.InstanceType}' returned no start task.");
+            await starting.ConfigureAwait(false);
+        }
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
@@ -58,9 +64,15 @@ internal sealed class BusDepot :
 
         _logger.LogDebug("Stopping bus instances: {Instances}", string.Join(", ", _instances.Keys.Select(x => x.Name)));
 
-        return Task.WhenAll(_instances.Values.Select(instance =>
-            (instance.BusControl ?? throw new InvalidOperationException($"The bus instance '{instance.InstanceType}' returned no lifecycle control."))
-            .StopAsync(cancellationToken)
-            ?? throw new InvalidOperationException($"The bus instance '{instance.InstanceType}' returned no stop task.")));
+        return Task.WhenAll(_instances.Values.Select(StopInstanceAsync));
+
+        async Task StopInstanceAsync(IBusInstance instance)
+        {
+            IBusControl control = instance.BusControl
+                ?? throw new InvalidOperationException($"The bus instance '{instance.InstanceType}' returned no lifecycle control.");
+            Task stopping = control.StopAsync(cancellationToken)
+                ?? throw new InvalidOperationException($"The bus instance '{instance.InstanceType}' returned no stop task.");
+            await stopping.ConfigureAwait(false);
+        }
     }
 }

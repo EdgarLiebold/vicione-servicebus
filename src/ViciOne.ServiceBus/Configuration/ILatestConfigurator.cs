@@ -5,6 +5,6 @@ namespace ViciOne.ServiceBus.Configuration;
 public interface ILatestConfigurator<T>
     where T : class, PipeContext
 {
-    /// <summary>Gets or sets the created.</summary>
+    /// <summary>Sets the callback invoked when the latest-value filter is created.</summary>
     LatestFilterCreated<T> Created { set; }
 }

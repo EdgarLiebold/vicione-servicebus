@@ -1,0 +1,104 @@
+using System.Collections.Concurrent;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced.Observers;
+
+namespace ViciOneReview.ScopeFault;
+
+public sealed record Input(int Index);
+
+public abstract class TrackedConsumer : IConsumer<Input>
+{
+    protected readonly Probe Owner;
+    int _disposeCalls;
+    public int Index { get; private set; }
+    public int DisposeCount => Volatile.Read(ref _disposeCalls);
+    public bool CleanupCompleted;
+    protected TrackedConsumer(Probe owner)
+    {
+        Owner = owner; Interlocked.Increment(ref owner.Created); owner.Instances.Enqueue(this);
+    }
+    public async Task ConsumeAsync(ConsumeContext<Input> context)
+    {
+        Index = context.Message.Index;
+        if (DisposeCount != 0) throw new InvalidOperationException("already-disposed");
+        Interlocked.Increment(ref Owner.Calls); Owner.Entered(Index).TrySetResult();
+        await Owner.Release(Index).Task.WaitAsync(context.CancellationToken);
+        if (DisposeCount != 0) throw new InvalidOperationException("disposed-across-await");
+        Interlocked.Increment(ref Owner.AliveAcrossAwait);
+        if (Index == 1 && Owner.HasOperationFault) throw Owner.Operation;
+        Interlocked.Increment(ref Owner.Successes);
+    }
+    protected void BeginCleanup()
+    {
+        Interlocked.Increment(ref _disposeCalls); Interlocked.Increment(ref Owner.Disposed);
+    }
+    protected void CompleteCleanup()
+    {
+        Volatile.Write(ref CleanupCompleted, true);
+        if (Index == 1 && Owner.HasCleanupFault) throw Owner.Cleanup;
+    }
+}
+
+public sealed class SyncConsumer(Probe probe) : TrackedConsumer(probe), IDisposable
+{
+    public void Dispose() { Interlocked.Increment(ref Owner.SyncDisposals); BeginCleanup(); CompleteCleanup(); }
+}
+
+public sealed class AsyncConsumer(Probe probe) : TrackedConsumer(probe), IAsyncDisposable, IDisposable
+{
+    public async ValueTask DisposeAsync()
+    {
+        Interlocked.Increment(ref Owner.AsyncDisposals); BeginCleanup();
+        Owner.CleanupEntered(Index).TrySetResult();
+        await Owner.ReleaseCleanup(Index).Task; // Genuinely incomplete owned asynchronous cleanup.
+        CompleteCleanup();
+    }
+    public void Dispose() { Interlocked.Increment(ref Owner.SyncDisposals); throw new InvalidOperationException("sync-disposal-must-not-be-selected"); }
+}
+
+public sealed class Probe : IConsumeObserver
+{
+    readonly ConcurrentDictionary<int, TaskCompletionSource> _entered = new(), _release = new(), _cleanupEntered = new(), _releaseCleanup = new();
+    readonly ConcurrentDictionary<int, TaskCompletionSource<Exception?>> _terminal = new();
+    public bool Async { get; }
+    public bool HasOperationFault { get; }
+    public bool HasCleanupFault { get; }
+    public Exception Operation { get; }
+    public Exception Cleanup { get; } = new ApplicationException("owned-scope-cleanup-fault");
+    public ConcurrentQueue<TrackedConsumer> Instances { get; } = new();
+    public int Created, Disposed, Terminals, Faults, Calls, Successes, AliveAcrossAwait, AsyncDisposals, SyncDisposals, TerminalsBeforeCleanupCompleted;
+    public Probe(string behavior, CancellationToken independentToken)
+    {
+        Async = behavior == "async-dual";
+        HasOperationFault = behavior is "operation-only" or "dual" or "dependency-cancel-only" or "dependency-cancel-dual" or "async-dual";
+        HasCleanupFault = behavior is "cleanup-only" or "dual" or "dependency-cancel-dual" or "async-dual";
+        Operation = behavior.StartsWith("dependency-cancel", StringComparison.Ordinal)
+            ? new OperationCanceledException("independent-consumer-cancellation", null, independentToken)
+            : new InvalidOperationException("owned-business-fault");
+    }
+    public TaskCompletionSource Entered(int index) => Signal(_entered, index);
+    public TaskCompletionSource Release(int index) => Signal(_release, index);
+    public TaskCompletionSource CleanupEntered(int index) => Signal(_cleanupEntered, index);
+    public TaskCompletionSource ReleaseCleanup(int index) => Signal(_releaseCleanup, index);
+    static TaskCompletionSource Signal(ConcurrentDictionary<int, TaskCompletionSource> source, int index) => source.GetOrAdd(index, static _ => new(TaskCreationOptions.RunContinuationsAsynchronously));
+    public TaskCompletionSource<Exception?> Terminal(int index) => _terminal.GetOrAdd(index, static _ => new(TaskCreationOptions.RunContinuationsAsynchronously));
+    public void ReleaseAll()
+    {
+        // Two known owned deliveries; publish both gate families even if a failure preceded gate allocation.
+        for (int index = 1; index <= 2; index++) { Release(index).TrySetResult(); ReleaseCleanup(index).TrySetResult(); }
+    }
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class => Finish(context, null);
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception) where T : class => Finish(context, exception);
+    Task Finish<T>(ConsumeContext<T> context, Exception? exception) where T : class
+    {
+        if (context.Message is Input input)
+        {
+            Interlocked.Increment(ref Terminals); if (exception is not null) Interlocked.Increment(ref Faults);
+            TrackedConsumer actual = Instances.Single(consumer => consumer.Index == input.Index);
+            if (!Volatile.Read(ref actual.CleanupCompleted)) Interlocked.Increment(ref TerminalsBeforeCleanupCompleted);
+            Terminal(input.Index).TrySetResult(exception);
+        }
+        return Task.CompletedTask;
+    }
+}

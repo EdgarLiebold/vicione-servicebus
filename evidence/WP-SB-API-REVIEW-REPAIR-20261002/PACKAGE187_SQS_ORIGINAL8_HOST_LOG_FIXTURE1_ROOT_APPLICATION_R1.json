@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-05T14:08:11.212670+00:00",
+  "status": "TESTONLY_FIXTURE_ONE_LINE_APPLIED_ALL_ORIGINAL_ORACLES_UNCHANGED",
+  "source_path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsConfiguredPipelinesAndSendTopologyTests.cs",
+  "before_sha256": "a971b5031a48431ac7f9d8b96dfc4bfa9050d414d5081dae8172f15d201710d7",
+  "after_sha256": "2720fbbbcfa762c2c5c636a60afbdb279746233649bb9d4869f2d127f8b1735a",
+  "change": "Assign existing configured LogContext to host before Build; matches actual BusFactoryExtensions setup. Existing ambient restoration and all test assertions remain unchanged.",
+  "root_exact_inverse_read": "d6f912",
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package214-sqs-fixture-r4-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "d53f840c704bce9bf3ef3da2a4f13aabfc15eea3be1d1802544ecc8645ed1444"
+  },
+  "proposal_manifest_sha256": "8afc13e5a61cf090b3935791151ff9a66c4e951413fdfdbb78f73755b0fb1708",
+  "requirements_unchanged": true,
+  "product_unchanged": true,
+  "new_product_finding": false,
+  "previous_original_receipt": "package186-sqs-original8-native-r1",
+  "previous_result": "8 cases; one control passed; three metadata failures; four logging-fixture failures before filter target"
+}

@@ -1,0 +1,362 @@
+{
+  "lines": [
+    "  ViciOne.ServiceBus.Abstractions -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll\n",
+    "  ViciOne.ServiceBus -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll\n",
+    "  ViciOne.ServiceBus.Courier -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll\n",
+    "  ViciOne.ServiceBus.Sagas -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll\n",
+    "  ViciOne.ServiceBus.EntityFrameworkCore -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll\n",
+    "  ViciOne.ServiceBus.Futures -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll\n",
+    "  ViciOne.ServiceBus.JobService -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll\n",
+    "  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll\n",
+    "\n",
+    "Der Buildvorgang wurde erfolgreich ausgef\u00fchrt.\n",
+    "    0 Warnung(en)\n",
+    "    0 Fehler\n",
+    "Verstrichene Zeit 00:00:07.66\n",
+    "  Das Paket \"/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg\" wurde erfolgreich erstellt.\n",
+    "  Wiederherzustellende Projekte werden ermittelt...\n",
+    "  \"/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/F018.PublicConsumer.csproj\" wiederhergestellt (in 897 ms.).\n",
+    "  F018.PublicConsumer -> /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/F018.PublicConsumer.dll\n",
+    "Verstrichene Zeit 00:00:01.62\n",
+    "  \"/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/F018.IdentityGateConsumer.csproj\" wiederhergestellt (in 966 ms.).\n",
+    "  F018.IdentityGateConsumer -> /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/F018.IdentityGateConsumer.dll\n",
+    "Verstrichene Zeit 00:00:01.57\n",
+    "  \"/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/F018.PublicConsumer.csproj\" wiederhergestellt (in 224 ms.).\n",
+    "  \"/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/F018.IdentityGateConsumer.csproj\" wiederhergestellt (in 245 ms.).\n",
+    "  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll\n",
+    "  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll\n",
+    "  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll\n",
+    "  ViciOne.ServiceBus.Courier -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll\n",
+    "  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll\n",
+    "  ViciOne.ServiceBus.Futures -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll\n",
+    "  ViciOne.ServiceBus.EntityFrameworkCore -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll\n",
+    "  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll\n",
+    "Verstrichene Zeit 00:00:02.36\n",
+    "Verstrichene Zeit 00:00:01.87\n",
+    "Verstrichene Zeit 00:00:01.75\n",
+    "Verstrichene Zeit 00:00:01.58\n",
+    "Verstrichene Zeit 00:00:01.43\n",
+    "Verstrichene Zeit 00:00:01.31\n",
+    "  Alle Projekte sind f\u00fcr die Wiederherstellung auf dem neuesten Stand.\n",
+    "Verstrichene Zeit 00:00:06.56\n",
+    "Ausf\u00fchren von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll (net10.0|x64)\n",
+    "fehlerhaft ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.EntityFrameworkSagaRepositoryFactoryTests.SendQuery_WithAnOuterTransaction_UsesOnlyTheProviderQueryExecutionAsync (89ms)\n",
+    "  von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll (net10.0|x64)\n",
+    "  Assert.Equal() Failure: Values differ\n",
+    "  Expected: 1\n",
+    "  Actual:   3\n",
+    "    um ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.EntityFrameworkSagaRepositoryFactoryTests.SendQuery_WithAnOuterTransaction_UsesOnlyTheProviderQueryExecutionAsync() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/EntityFrameworkSagaRepositoryFactoryTests.cs:249\n",
+    "    --- End of stack trace from previous location ---\n",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll (net10.0|x64) fehlerhaft mit 1\u00a0Fehler(n) (38s 871ms)\n",
+    "Exitcode: 2\n",
+    "  Standardausgabe: 02:58:58.934 DBG [ViciOne.ServiceBus.Transports.BusDepot] Starting bus instances: IBus\n",
+    "  02:58:59.003 DBG [ViciOne.ServiceBus] Starting bus: loopback://localhost/\n",
+    "  02:58:59.070 DBG [ViciOne.ServiceBus] Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneService_bus_64noyydppokgd594bdx1b4cb8c\n",
+    "  02:58:59.082 INF [ViciOne.ServiceBus] Bus started: loopback://localhost/\n",
+    "  02:58:59.183 DBG [ViciOne.ServiceBus.Transports.BusDepot] Stopping bus instances: IBus\n",
+    "  02:58:59.191 DBG [ViciOne.ServiceBus] Stopping bus: loopback://localhost/\n",
+    "  02:58:59.239 DBG [ViciOne.ServiceBus] Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneService_bus_64noyydppokgd594bdx1b4cb8c\n",
+    "  02:58:59.244 DBG [ViciOne.ServiceBus] Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneService_bus_64noyydppokgd594bdx1b4cb8c (Stop Receive Transport)\n",
+    "  02:58:59.421 DBG [ViciOne.ServiceBus] Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneService_bus_64noyydppokgd594bdx1b4cb8c\n",
+    "  02:58:59.442 DBG [ViciOne.ServiceBus.Messages] Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneService_bus_64noyydppokgd594bdx1b4cb8c: 0 received, 0 concurrent peak\n",
+    "  02:58:59.490 INF [ViciOne.ServiceBus] Bus stopped: loopback://localhost/\n",
+    "Testlaufzusammenfassung: Fehler!\n",
+    "  gesamt: 410\n",
+    "  fehlgeschlagen: 1\n",
+    "  erfolgreich: 409\n",
+    "  \u00fcbersprungen: 0\n",
+    "  Dauer: 39s 818ms\n",
+    "Der Testlauf wurde mit einem nicht erfolgreichen Exitcode abgeschlossen: 2 (siehe: https://aka.ms/testingplatform/exitcodes)\n"
+  ],
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-corrected-build.log",
+      "sha256": "4f8600215e58e73dc2b9305ec89d8d4fdee5885c6a41274cce35f71cb38d8eda",
+      "ordered_line_refs": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        9,
+        13
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-corrected-fresh-pack.log",
+      "sha256": "cd24beb1afd80f8ad7b67de707eb2f75dc7c016165826e0cb5cf64632bb0b19c",
+      "ordered_line_refs": [
+        14
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-restore.log",
+      "sha256": "ed3801359cc9f8c12af7b94eb83da9d3bbbf3d1dc565d1765f8810e0e434f869",
+      "ordered_line_refs": [
+        15,
+        16
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-build.log",
+      "sha256": "c094303a211c9a0591fa6ffad525d94742ea73ac4b41aa84ed774d1115301c16",
+      "ordered_line_refs": [
+        17,
+        9,
+        10,
+        11,
+        12,
+        9,
+        18
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-restore.log",
+      "sha256": "e8cbb94419fa35f580ea7ac42e6596f8bde28e63f536917a83075d697da6ff4d",
+      "ordered_line_refs": [
+        15,
+        19
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-build.log",
+      "sha256": "262eebfea558d5323c231601ae289252d75871fb7b868211756b0df9ba48954a",
+      "ordered_line_refs": [
+        20,
+        9,
+        10,
+        11,
+        12,
+        9,
+        21
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-locked.log",
+      "sha256": "ce511d72a9f22194a5211941b61765caaee979810b2e19817a14286f17c4cee1",
+      "ordered_line_refs": [
+        15,
+        22
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-locked.log",
+      "sha256": "8bdd1ac7b43c226b52cc7660753a294a28e14d067061e754ac59b2425281c6a7",
+      "ordered_line_refs": [
+        15,
+        23
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-marker-only-build.log",
+      "sha256": "886085474263c62177e9d94635a8d52e7081d8ae62451a8fe9f98fc83ab070db",
+      "ordered_line_refs": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        9,
+        10,
+        11,
+        12,
+        9,
+        32
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-marker-only-build.log",
+      "sha256": "5b10c9671ea50d2c81b58a0de766efcfca65ce0bb2c15a5d68ff4ed14363e6bd",
+      "ordered_line_refs": [
+        24,
+        25,
+        27,
+        26,
+        29,
+        28,
+        30,
+        31,
+        9,
+        10,
+        11,
+        12,
+        9,
+        33
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-id-comparison-lost-build.log",
+      "sha256": "d806c55734df0dfdfc10d0c2479d1524e08f163d1c856d2ae9a3c42e00839380",
+      "ordered_line_refs": [
+        24,
+        25,
+        27,
+        26,
+        28,
+        29,
+        30,
+        31,
+        9,
+        10,
+        11,
+        12,
+        9,
+        34
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-id-comparison-lost-build.log",
+      "sha256": "b5bc8b4aafdfc7ffdb7ee653b4f3e25d1fa75119770b4c456c47ebe47f7d6d4f",
+      "ordered_line_refs": [
+        24,
+        25,
+        27,
+        26,
+        28,
+        29,
+        30,
+        31,
+        9,
+        10,
+        11,
+        12,
+        9,
+        35
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-valid-owner-rejected-build.log",
+      "sha256": "0ee009c7a1827f3bc1a23d07ceb530ce6074d2285cfbfa6c84ffe2e8229b242d",
+      "ordered_line_refs": [
+        24,
+        25,
+        27,
+        26,
+        28,
+        29,
+        30,
+        31,
+        9,
+        10,
+        11,
+        12,
+        9,
+        36
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-valid-owner-rejected-build.log",
+      "sha256": "2692a7fb8cdc76e0a6dceac709eeb88651e6fc12a43b68c3e7bc28e8df071d4e",
+      "ordered_line_refs": [
+        24,
+        25,
+        27,
+        26,
+        29,
+        28,
+        30,
+        31,
+        9,
+        10,
+        11,
+        12,
+        9,
+        37
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-locked-restore.log",
+      "sha256": "d7558ed960c2b2ad78b436a3d1c3781262f5976ca9646ebb7b91265bead3fb6c",
+      "ordered_line_refs": [
+        15,
+        38
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-corrected-build.log",
+      "sha256": "ad788b3baccd6784c06cd196ce96f1a6cb0281da2f746cd4ec5a906657744463",
+      "ordered_line_refs": [
+        24,
+        25,
+        30,
+        26,
+        27,
+        28,
+        29,
+        31,
+        9,
+        10,
+        11,
+        12,
+        9,
+        39
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-rollback-build.log",
+      "sha256": "cfe56d56fd6c824b62f5e4ec06a1e0a119e381f098199d7e74317151ea7c46c7",
+      "ordered_line_refs": [
+        24,
+        25,
+        27,
+        26,
+        29,
+        28,
+        30,
+        31,
+        9,
+        10,
+        11,
+        12,
+        9,
+        36
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-existing-native-owner-r2.log",
+      "sha256": "4e3fc55f89a49e73865c81f656885f72525ba125eb1cf9c3b617798c3a67f2ad",
+      "ordered_line_refs": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        9,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67
+      ]
+    }
+  ]
+}

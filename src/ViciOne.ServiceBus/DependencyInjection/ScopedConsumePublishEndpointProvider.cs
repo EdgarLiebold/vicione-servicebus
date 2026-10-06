@@ -12,7 +12,7 @@ public class ScopedConsumePublishEndpointProvider :
     readonly IServiceProvider _serviceProvider;
 
     /// <summary>Initializes a new instance.</summary>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="provider">The underlying publish endpoint provider.</param>
     /// <param name="consumeContext">The consume context.</param>
     /// <param name="serviceProvider">The service provider.</param>
     public ScopedConsumePublishEndpointProvider(IPublishEndpointProvider provider, ConsumeContext consumeContext, IServiceProvider serviceProvider)

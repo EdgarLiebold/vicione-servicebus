@@ -36,7 +36,7 @@ public class ConsumerMessageMergePipe<TConsumer, TMessage> :
         _output.Probe(scope);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Forwards the message through the output pipeline with the associated consumer context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(ConsumeContext<TMessage> context)

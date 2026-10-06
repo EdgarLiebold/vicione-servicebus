@@ -9,7 +9,7 @@ public static class ReliableSchedulerConfigurationExtensions
 {
     /// <summary>Selects transport-native scheduling instead of the reliable store's default DueAt scheduler.</summary>
     /// <param name="configurator">The configurator to update.</param>
-    /// <returns>The configured transport scheduler.</returns>
+    /// <returns>The same configurator after selecting the transport scheduler adapter.</returns>
     public static IReliableMessagingConfigurator UseTransportScheduler(
         this IReliableMessagingConfigurator configurator)
     {

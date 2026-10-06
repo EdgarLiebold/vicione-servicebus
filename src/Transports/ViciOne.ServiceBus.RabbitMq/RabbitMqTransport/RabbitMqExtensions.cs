@@ -29,8 +29,14 @@ public static class RabbitMqExtensions
             catch (Exception exception)
             {
                 // Closing is best effort; record protocol context and continue to disposal.
-                LogContext.Error?.Log(exception, "Closing the channel faulted, the primary failure is unaffected: {ReplyCode} {Message}",
-                    replyCode, message);
+                try
+                {
+                    LogContext.Error?.Log(exception, "Closing the channel faulted, the primary failure is unaffected: {ReplyCode} {Message}",
+                        replyCode, message);
+                }
+                catch (Exception)
+                {
+                }
             }
 
             // Disposal is also best effort because the broker may already have closed the channel.
@@ -40,8 +46,14 @@ public static class RabbitMqExtensions
             }
             catch (Exception exception)
             {
-                LogContext.Error?.Log(exception, "Disposing the channel faulted, the primary failure is unaffected: {ReplyCode} {Message}",
-                    replyCode, message);
+                try
+                {
+                    LogContext.Error?.Log(exception, "Disposing the channel faulted, the primary failure is unaffected: {ReplyCode} {Message}",
+                        replyCode, message);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
     }

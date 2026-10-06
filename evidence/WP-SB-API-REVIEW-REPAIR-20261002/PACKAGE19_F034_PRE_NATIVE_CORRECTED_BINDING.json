@@ -1,0 +1,55 @@
+{
+  "status": "ROOT_PAIRED_WHOLE_R3_REUSE_NEW_CORRECTED_LOCK_FULL_AND_PACKAGE_CHAIN_VERIFIED",
+  "inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/ActivityOwnership.PublicConsumer.csproj",
+      "sha256": "483efa2320e44deb0f60598ab0598de0b406f2aad97bb18fe819942dbd75a282"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/Cases.cs",
+      "sha256": "7292593d3498a58b8c061c9be489040e85ed946a3cfba38c27d9db488b09da8e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/Models.cs",
+      "sha256": "0b03a6bf96d30492569dd45172b12cd636b1a7d9589b9d20d4a8b0d18af3f8e8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/NuGet.Config",
+      "sha256": "53e1aab82979e5469859b39500f8f278090d29717b6b29229545e14aa0727053"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/OwnedLifetime.cs",
+      "sha256": "57121c85d071a911ebe455a3eee60e5efb2132e7dade5b6ca07d9b2b9a79f53a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/Program.cs",
+      "sha256": "45327fe8582dcc0ce8068a62a7e8941cc61777503737d75896ec65f93a9ecee9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/RuntimeOwner.cs",
+      "sha256": "7f1353717035189c3686eed86a37bd236b139904ef2d1fe1760973dfd588568d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/packages.lock.json",
+      "sha256": "b142b0d3ccadf4afd32f4571f216892e3fa16385d858e67f15cb55b19be4e4d6"
+    }
+  ],
+  "chains": [
+    {
+      "name": "ViciOne.ServiceBus",
+      "package_sha256": "7287d3b8e4d9febdc35bd153fff0e9d6871814b2ed0b5e7d028f3bd28667efbd",
+      "binary_sha256": "29a0a2fb6462eb68d4fe781682db0750f689d0280f106b4c5097fe8bd34a3c90"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Abstractions",
+      "package_sha256": "440bd764b8dff36e641061930227b2065fe8a88f776d78b1f3b85a537277ca16",
+      "binary_sha256": "ef5817cda765fc00c65671440d18884fda8d7636b0dd5bed8135470507c9d6b2"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Courier",
+      "package_sha256": "913b122e04c5bda7581fa4c717e36a77dbda5d4898c9c1b3b07d66ae19022528",
+      "binary_sha256": "4fceb105f02b90d48a587d2fc89cef6f65b5808fcd28537089906dc0e44aaa33"
+    }
+  ],
+  "whole_API_closed": false
+}

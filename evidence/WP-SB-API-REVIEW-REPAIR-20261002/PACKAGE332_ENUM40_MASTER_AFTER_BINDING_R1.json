@@ -1,0 +1,16 @@
+{
+  "evidence": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE332_ENUM40_ORIGINAL_ID_SOURCE_LANGUAGE_ACTUAL320_REFLECTION_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "da2af2972c18241f0cbacd147f29d93a815d7bb4f3a51f24ac597822bf038c5e"
+  },
+  "master_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "ad78696a1b4efe677d9f3b4341667c229ac2f1b6425d56bf7772e5207bcc90d1"
+  },
+  "state_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+    "sha256": "1866e3b7f29fda90a9bc1a44982205c207c9fc0d436df3db4036d8303e38d8ac"
+  },
+  "Original_remaining": 391,
+  "NativeAdded": 0
+}

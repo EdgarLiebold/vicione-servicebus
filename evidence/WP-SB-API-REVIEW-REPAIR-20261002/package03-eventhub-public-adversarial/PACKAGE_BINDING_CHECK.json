@@ -1,0 +1,62 @@
+{
+  "status": "INDEPENDENT_SELECTED_LOCK_CACHE_RUNTIME_BINDING_VERIFIED",
+  "packages": [
+    {
+      "package": "ViciOne.ServiceBus.EventHubs",
+      "version": "1.0.0",
+      "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package03-eventhub/ViciOne.ServiceBus.EventHubs.1.0.0.nupkg",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus.eventhubs/1.0.0/vicione.servicebus.eventhubs.1.0.0.nupkg",
+      "nupkg_sha256": "b22c2820fe592ec6a5b63c1f78c4e0dad511d0ea9106c6916571a7b11fe07e1b",
+      "contentHash_sha512": "Ew7cmTrA1avf9T4THKx3P+K0rBHsaBwZhXPjsqDCT9zezMMNpRdZTmD5bpTiMPURnsUKePNJu60PExFEU3TrbQ==",
+      "member": "lib/net10.0/ViciOne.ServiceBus.EventHubs.dll",
+      "dll_sha256": "e9ccaacdc6cdc36c1f3ebf1a9e5a5ca0ea2733855f05c5ba1d546db8e064b8ac",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EventHubs.dll",
+      "independent_selected_cache_nupkg_identical": true,
+      "independent_sha512_matches_lock_and_cache_sidecar": true,
+      "independent_zip_cache_runtime_dll_identical": true
+    },
+    {
+      "package": "ViciOne.ServiceBus",
+      "version": "1.0.0",
+      "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package03-eventhub/ViciOne.ServiceBus.1.0.0.nupkg",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg",
+      "nupkg_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+      "contentHash_sha512": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+      "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+      "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "independent_selected_cache_nupkg_identical": true,
+      "independent_sha512_matches_lock_and_cache_sidecar": true,
+      "independent_zip_cache_runtime_dll_identical": true
+    },
+    {
+      "package": "ViciOne.ServiceBus.Abstractions",
+      "version": "1.0.0",
+      "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package03-eventhub/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg",
+      "nupkg_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+      "contentHash_sha512": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+      "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "independent_selected_cache_nupkg_identical": true,
+      "independent_sha512_matches_lock_and_cache_sidecar": true,
+      "independent_zip_cache_runtime_dll_identical": true
+    },
+    {
+      "package": "ViciOne.ServiceBus.Sagas",
+      "version": "1.0.0",
+      "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package03-eventhub/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus.sagas/1.0.0/vicione.servicebus.sagas.1.0.0.nupkg",
+      "nupkg_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+      "contentHash_sha512": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+      "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+      "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+      "independent_selected_cache_nupkg_identical": true,
+      "independent_sha512_matches_lock_and_cache_sidecar": true,
+      "independent_zip_cache_runtime_dll_identical": true
+    }
+  ],
+  "no_native_operations": true
+}

@@ -31,7 +31,7 @@ public class EventHubProducerCache<TKey> :
     /// <summary>Gets a cached producer or creates a cache-owned producer for the key.</summary>
     /// <param name="key">The key that identifies the producer.</param>
     /// <param name="factory">Creates the producer when the key is absent.</param>
-    /// <param name="cancellationToken">Cancels cache lookup or producer creation.</param>
+    /// <param name="cancellationToken">Cancels this caller's cache lookup, capacity wait, or producer wait without canceling shared producer creation.</param>
     /// <returns>A task whose result is the cached or newly created producer.</returns>
     public async Task<IEventHubProducer> GetProducerAsync(TKey key, Func<TKey, Task<IEventHubProducer>> factory, CancellationToken cancellationToken = default)
     {

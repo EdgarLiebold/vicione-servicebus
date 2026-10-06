@@ -1,0 +1,9 @@
+{
+  "phase": "package18-f035-public-previous-build",
+  "exit_code": 1,
+  "log_sha256": "148d9bcbf4792f29528ea6ae2f7affbc2629e0069a3a223d811417fae0e39c99",
+  "classification": "PUBLIC_FIXTURE_COMPILER_SETUP_EXCLUDED_FROM_FINDING_AND_MUTANT_COUNTS",
+  "cause": "Missing Advanced namespace import for actual public IEndpointNameFormatter; cascading abstract override errors",
+  "change": "paired Resources.cs adds using ViciOne.ServiceBus.Advanced",
+  "causal_native_behavior_runs": 0
+}

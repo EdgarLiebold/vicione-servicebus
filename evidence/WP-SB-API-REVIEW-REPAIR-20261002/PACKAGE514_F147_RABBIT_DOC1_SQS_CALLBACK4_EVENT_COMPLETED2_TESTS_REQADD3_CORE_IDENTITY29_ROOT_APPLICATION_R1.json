@@ -1,0 +1,97 @@
+{
+  "utc": "2026-10-06T16:39:14.895860+00:00",
+  "status": "ROOT_DIFFERENT_REVIEWED_DOC1_TESTS6_REQADD3_CORE_IDENTITY29_APPLIED_NATIVE_PENDING",
+  "before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package514-doc1-public-tests6-reqadd3-coreidentity29-root-application-before-r1/BEFORE.json",
+    "sha256": "ce41cd68bf4ee4e0b5ed8f986fa40f88fd71307bfd1e6f58ea522ac6f98f3ab0",
+    "MAN": "325da6809e62a57d67278d0cd2c81e367b831aab867d29cc44429119ebd51387"
+  },
+  "Doc5073": {
+    "author": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package511-rabbit-recreate5073-document-source2-root-proposed-r1/REPORT.json",
+      "sha256": "a585282338aa35e302216b50f0ddfa4145f928cbe8c80aab2cd478cd8b4ff4f5"
+    },
+    "different_peer": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package511-rabbit-doc-source2-independent-peer-r1/REPORT.json",
+      "sha256": "6960c40fc4e524188c263347e0de94023e046effbc27d696c5195bf499b1111d"
+    },
+    "before_sha256": "da2670b4150c7c9cca781351cde7e2d1c3bf88fa436a058e2f5ebc283b02be5b",
+    "after_sha256": "520c7f0f61eae0832da8af86380211480d9c30210e9891b91107780eee9d4b76",
+    "comments_only": true,
+    "Source5065_5070_NOT_accepted_here": true
+  },
+  "tests": [
+    {
+      "kind": "SQSCallback4",
+      "author": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package505-sqs-callback4-testonly-proposed-r1/REPORT.json",
+        "sha256": "07cf4a74c4a48b6e621c9f517014d68a77b20a64f81a88638b7ec5ea99442795"
+      },
+      "different_peer": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package505-sqs-callback4-independent-test-source-peer-r1/REPORT.json",
+        "sha256": "bdbb77c627465219cc565be73e8a189d72bdc7904925d493804960a769db304b"
+      },
+      "file": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsReceiveLockCallbackOrderTests.cs",
+      "sha256": "e38a496574353427819d40531cb9df5e5876b22e8aebf22f0bfbac27352fd345",
+      "Root_whole_reads": "fdac11+55e957 entire395; peer76d84b; actualtarget281 d3245e; Test main140 beforecleanup. OriginalPASS supplies ZERO early-exit/worker-drain/API closure."
+    },
+    {
+      "kind": "EventConsumerCompleted2",
+      "author": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package450-event-consumer-completed2-testonly-proposed-r1/REPORT.json",
+        "sha256": "198121088058ddb83c6a66a415724c1e2f7ddfe464c66abf6dcf0fe81ce8b61b"
+      },
+      "different_peer": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package450-event-completed2-independent-runtime-source-peer-r1/REPORT.json",
+        "sha256": "8fc3e8d3df1c46f25b3fe794e3c85a212a49af144b8a93073ac07fed38fe7771"
+      },
+      "file": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/ConsumerCompletedOwningDiagnosticsTests.cs",
+      "sha256": "f4907d8010bf9e6920f9713b2f8b259523bcd9371a521c97e2640f05b12ecbf4",
+      "Root_whole_reads": "7e9cb9 entire285; peer0c4fbd; actualFilter56/Receiver130 a2e746; trueSDK/publicStop/Completed beforeownDebug first131 Null"
+    }
+  ],
+  "requirements": [
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "before": 197,
+      "after": 199,
+      "literal_entire_prefix_inverse": true,
+      "before_sha256": "2d7729a6910c833363db81148c3203791993b8379946d8b2f6669c95837f517d",
+      "after_sha256": "4cac888fdd0a09ec5b3d9077fe49f4c9fbe5b617ce9ed37f069e174f99d08c05"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "before": 95,
+      "after": 96,
+      "literal_entire_prefix_inverse": true,
+      "before_sha256": "0c22c07dc150ddbba63a3ebd77fc6ed612724d3feabc5475b7111e71d3bd561e",
+      "after_sha256": "3084a090da3858b7e4bcacad6e7570eacc6798b9242b5070106fb8854237b1c0"
+    }
+  ],
+  "Core_identity_only": {
+    "author": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package513-core-owner31-current504-identity-only-proposed-r1/REPORT.json",
+      "sha256": "1a28ff0da553c645ba478e341719a911680152947c5dc42f0603ac1ca766447e",
+      "ROWS": "221bfe9e8195c546d24c6e7dcf71eb4bf3f640396d0ae43c008bc1b5f7ed1639"
+    },
+    "different_Root_review": "d9fcca reportwhole;c294b9 entireinversebridges/binding;9d900a all31primarynorms;b9a040 all31individualXML/mapping/schema; exactwhole731 ae5b38 priorretained plus currentmetricsdirectea7cdb; fullrowmachineequality/inverse checked beforemutation",
+    "rebase": 29,
+    "already_current_witness": 2,
+    "norm_changes": 0,
+    "metrics_hypothesis": "Wrong Root hypothesis withdrawn: protectedConsumerActiveDispatchCount long, dispatcher int widening; no type norm correction or Code change.",
+    "native_promotion": 0,
+    "new_UIDs": 0,
+    "entire_prior_rows_retained": true
+  },
+  "native_cases_added": 0,
+  "new_original_source_acceptances": 0,
+  "whole_API_member_review_closed": false,
+  "grade": null,
+  "status_accounting": {
+    "confirmed": 231,
+    "bounded_accepted": 225,
+    "pending": 6,
+    "original_remaining": 18,
+    "cause": "ExistingF147 reopened onlyforadditionalDoc5073 scope, currentcompiled/strict/publicationproof pending; no new FindingID."
+  }
+}

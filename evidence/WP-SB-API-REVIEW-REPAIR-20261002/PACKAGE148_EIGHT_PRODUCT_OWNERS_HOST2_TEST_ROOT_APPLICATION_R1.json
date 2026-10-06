@@ -1,0 +1,228 @@
+{
+  "utc": "2026-10-04T21:29:13.700590+00:00",
+  "status": "SOURCE_AND_TEST_APPLIED_FIXED_NATIVE_PENDING_HOST_ORIGINAL_PENDING",
+  "qualification147_freeze_sha256": "e9100a50102cde367d349f9b4124936a2fa0a3959879b6971b4521596f0ee2b3",
+  "sealed_author_peer_inputs": [
+    {
+      "package": "package138-bus-warning-containment-product-proposed-r2",
+      "manifest_sha256": "8730f4a54a6517ba0d9978be2e086f5bf142a200ba86787fc11712c3ad24f25f",
+      "verified_rows": 8,
+      "report_sha256": "a01210d9fb7d6e333dc9463fbf76a593b1ee5de070b05ca54aaa93e25b33b1e7"
+    },
+    {
+      "package": "package140-bus-four-warning-independent-runtime-source-r1",
+      "manifest_sha256": "5798ea21f6116d8e0a08726d39fff6880ff8607aed5030072fb26f7c99e37b2f",
+      "verified_rows": 1,
+      "report_sha256": "974a2eb9ffe1b85e2ef79640b475db3401e0975c2345af33c5f479d41e4e7d44"
+    },
+    {
+      "package": "package142-bus-additional-four-startup-warning-independent-runtime-source-r1",
+      "manifest_sha256": "b30b21679d1af59b67bbfdfb3d08ff2126e48760c5d0b00b6bca1b886baceb5e",
+      "verified_rows": 1,
+      "report_sha256": "b6799d0023ccc391fcceed428cdf5a986fe528d2eb8c939aadc6d82ae23df7bd"
+    },
+    {
+      "package": "package147-inmemory-consumer-three-warning-product-proposed-r1",
+      "manifest_sha256": "e28bd88230f987d26be1afdbee7b19d80a52026e1ae96abc51eeb646ff3a6a68",
+      "verified_rows": 11,
+      "report_sha256": "7209c015bd54c0d96679def475060e38fa6361af2f51d2b633b078838b5fdbce"
+    },
+    {
+      "package": "package147-inmemory-consumer3-independent-runtime-source-r1",
+      "manifest_sha256": "e5d674aaec58c41f65cd2452abbf5e7cadbe8cfb84113f2b40be5d5d90ceae22",
+      "verified_rows": 2,
+      "report_sha256": "4fba60be64dbb84a5a74897f3395de0d630089f8c452768e723cff822cf294e8"
+    },
+    {
+      "package": "package148-validator-four-absolute-anchors-product-proposed-r1",
+      "manifest_sha256": "0a4cf8aa30551d5b65c787af17ec4a81f572aa8fe5b6f6b7cf66757bb1802269",
+      "verified_rows": 13,
+      "report_sha256": "a325368605b40358ebfa0d10f0b8ad1bf39f3b4dbce2e0e1218dca5da8d8b1db"
+    },
+    {
+      "package": "package148-validator4-independent-runtime-source-r1",
+      "manifest_sha256": "384f9eefe5c7f7021989bf3f980f57fede7e3738c9ea7d089856f47dc49a5d61",
+      "verified_rows": 2,
+      "report_sha256": "470fb79146d4037c1801c31e62a9971dead5a93da6ca04f05d71fec73ba8fec9"
+    },
+    {
+      "package": "package148-host-observer-connect-ownership2-oracles-proposed-r1",
+      "manifest_sha256": "a0564d5eb711f5471778b80819638850e6faf4241136cbbdada0150a61c59e8e",
+      "verified_rows": 18,
+      "report_sha256": "02965ca4ce29d439e9e26825782118d3f46a49d17252f74a73d17f71129d1862"
+    },
+    {
+      "package": "package148-host-observer2-independent-runtime-source-r1",
+      "manifest_sha256": "266dff43c16a660194a98edaecbbcfce7448d7d29fb976049dc6dffdc10d300f",
+      "verified_rows": 2,
+      "report_sha256": "9ffc6a79242f5acb4683a74a7a7aec778b3f03286138a8a7f4d9ae20339ede1c"
+    }
+  ],
+  "live_before_guards": [
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/BusFactoryExtensions.cs",
+      "sha256": "ddec027a6a8ed8d05619e702442ce1e54db622182b33095561d63644f576d846"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Runtime/ServiceBusRuntime.Lifecycle.cs",
+      "sha256": "bb28c551abcd04bb211d6da7a7982987da1b7da3136551a92f7994afe1e9c99c"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveTransport.cs",
+      "sha256": "5d76e1daa329a55db0241457806d6eea12ea088b6e10d1cc7d3f39fe772ae5bc"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "sha256": "58405e18c4d3fc11fa89a59c8e429a780acb076ccbe8626df0ba0bba9e714436"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs",
+      "sha256": "303c63521ca7bca3c2d1a979189f97b55b174af119cb5e2037adba0e3c95ff0b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "sha256": "b0c8a917b713f6789de136bb40862cc62c1a2edb86d0285c1393fd2e7a334c6b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+      "sha256": "aac760c52eee27b218da3f60b9006f1b484fa72ff4173367690f2c57d32c85fe"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ActiveMqEntityNameValidator.cs",
+      "sha256": "0eba10332d4fccb124937fd211954c1b4c2045a5773d8621cef47a87a28a5cde"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/AmazonSnsTopicNameValidator.cs",
+      "sha256": "8c232a68662801ab46a4cf0fd185a8517bc3cbcbcf3c925cf5a569ba889e5ca8"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/AmazonSqsEntityNameValidator.cs",
+      "sha256": "fd0fa30cf48ed48cbfe7b75daae4a4a93d5f2a969146c17052c766a3fdd6eabc"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusEntityNameValidator.cs",
+      "sha256": "b3c79ca933e08da0502a62f9d4bcabc4a1f93dfd7f68e2c20514245ec8c5c317"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+      "sha256": "5089ec8676c11b05db3f64ff3355ae2728925f73711888121efa7cb80a33a328"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/IHostConfiguration.cs",
+      "sha256": "e3da1c2b4b1f364398503cef07fbf5cc7569d08c6f64ae52c41ceefd4ccf9fee"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusConfiguration.cs",
+      "sha256": "f434862f967b22837e2d3988dcdde507eb9ae9897938b64ae5a4a605df3b6612"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryHostConfiguration.cs",
+      "sha256": "414c32cae0345b670e5a9799eb5e2105c8569adb38b0b219f6660d77b08c6f9c"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryTopologyConfiguration.cs",
+      "sha256": "afe7d630bbc272b69287a67a68bd7b9b1e04cb8240163092f97751547bf087ed"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpointContext.cs",
+      "sha256": "6d16c2cd9a874d6ab8d6594d8acd90e6b4200ab3bbd10773c3b5f13841d16c6b"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Transports/IReceivePipe.cs",
+      "sha256": "0fe04dff741cd77fa7dd0624111ba07a9e26d12e637ff26883fef8293f67ddfb"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Util/Connectable.cs",
+      "sha256": "0d52a1b09abceec67844e2bd88992188ce1749cac9a6e77dd47cc0e2487e7536"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Util/MultipleConnectHandle.cs",
+      "sha256": "e99a3b654940bb637e0b5e17658309c8b970a28a50cce42e6ecbe1aa1ab86b34"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "sha256": "b0c8a917b713f6789de136bb40862cc62c1a2edb86d0285c1393fd2e7a334c6b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/HostConfigurationRetryExtensionsTests.cs",
+      "sha256": "2c3f8f6a0ca34b86efbac2d30b6816504ee7b8791fd91a6a3bbd1e2923290bba"
+    }
+  ],
+  "changes": [
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/BusFactoryExtensions.cs",
+      "before_sha256": "ddec027a6a8ed8d05619e702442ce1e54db622182b33095561d63644f576d846",
+      "after_sha256": "4b6ece0088dda57570fa4852f75168e72b8dde9e4c2cc984befa5d5e769f8d09"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Runtime/ServiceBusRuntime.Lifecycle.cs",
+      "before_sha256": "bb28c551abcd04bb211d6da7a7982987da1b7da3136551a92f7994afe1e9c99c",
+      "after_sha256": "fda545a8e963fb69b2efca65613ae9dbc0d88420b65c7f1f5e9571290a7ec03b"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveTransport.cs",
+      "before_sha256": "5d76e1daa329a55db0241457806d6eea12ea088b6e10d1cc7d3f39fe772ae5bc",
+      "after_sha256": "9f5b89efaf46e4d705974f5081445baa42c2c71a2bd3e0393bb9d5fd42dc44dc"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "before_sha256": "58405e18c4d3fc11fa89a59c8e429a780acb076ccbe8626df0ba0bba9e714436",
+      "after_sha256": "0ea6d8e86568eaa166fa6707fcc8de8dab08151e456c77677272f26828a6c7fd"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ActiveMqEntityNameValidator.cs",
+      "before_sha256": "0eba10332d4fccb124937fd211954c1b4c2045a5773d8621cef47a87a28a5cde",
+      "after_sha256": "df0e01400b7cb0aafa1a7c98dc6c63f62de11b3f4c5c66a024a4db4e5854f840"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/AmazonSnsTopicNameValidator.cs",
+      "before_sha256": "8c232a68662801ab46a4cf0fd185a8517bc3cbcbcf3c925cf5a569ba889e5ca8",
+      "after_sha256": "019e47db8a89409e57b03ee44317834ccf9b8a124e8f1bb2e5c6d78b15fb5fcd"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/AmazonSqsEntityNameValidator.cs",
+      "before_sha256": "fd0fa30cf48ed48cbfe7b75daae4a4a93d5f2a969146c17052c766a3fdd6eabc",
+      "after_sha256": "baba29a8f6156fc9fc0150cff80b40aa087f245d1b6dacaa34cca7c57dd41398"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusEntityNameValidator.cs",
+      "before_sha256": "b3c79ca933e08da0502a62f9d4bcabc4a1f93dfd7f68e2c20514245ec8c5c317",
+      "after_sha256": "5ecb48ff73c2a908d1fdaeb43cc8726b740f6a41cc3a56a2106c050ccb53ed99"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/HostConfigurationRetryExtensionsTests.cs",
+      "before_sha256": "2c3f8f6a0ca34b86efbac2d30b6816504ee7b8791fd91a6a3bbd1e2923290bba",
+      "after_sha256": "30754935c3ccfce9463af8133eaaab9ea5f5fbc98f2e8708cd094d4760cf23d9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "b0c8a917b713f6789de136bb40862cc62c1a2edb86d0285c1393fd2e7a334c6b",
+      "after_sha256": "fb968655d391d37c46dafb94dc56e3f66fdc6bf6722c9faaf11c97d22eda461a"
+    }
+  ],
+  "core_requirement_rows_before": 4597,
+  "core_requirement_rows_after": 4599,
+  "root_actual_read_receipts": [
+    "793165",
+    "ebc104",
+    "41872b",
+    "9e741c",
+    "9faf7d",
+    "0063e3",
+    "01b4a0",
+    "52e79e",
+    "619dee",
+    "bfd843"
+  ],
+  "root_prior_whole_source_reuse": "Bus/FourValidators/InMemory/Consumer before unchanged bytepinned; Root exact whole patches re-read. Host root actual changed tests+helpers and focused original implementation; independent peer whole owner read remains peer authority.",
+  "limits": [
+    "No fixed native/pack/A+ claim.",
+    "Host Source remains original pending actual Original2 native.",
+    "Consumer third ObserveConsumeTask diagnostic remains unproved/unpatched.",
+    "No whole API closure."
+  ]
+}

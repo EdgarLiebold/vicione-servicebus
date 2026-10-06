@@ -1,0 +1,45 @@
+{
+  "utc": "2026-10-04T22:29:22.055533+00:00",
+  "decision": "ACCEPT122_INDIVIDUAL_CONFIGURATION_SOURCE_CONTRACTS_WITH_QUALIFIED_HOST_ROLLBACK_OVERLAY",
+  "api_before": 3230,
+  "api_after": 3352,
+  "semantic_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-bus-configuration122-independent-scanner-r1/REPORT.json",
+    "sha256": "b0040713736ca61babd0e08ed22830ffac874bf6b79a956b752d0313ef1d6563"
+  },
+  "semantic_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-bus-configuration122-independent-scanner-r1/PER_ID122_INDEPENDENT_DISPOSITIONS.json",
+    "sha256": "2f2383b72cd17f197d4d3bd5529105f40be4d382ad441877c30c7b014ddfb291"
+  },
+  "corrections8": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-bus-configuration122-independent-scanner-r1/LEDGER_NORM_CORRECTIONS.json",
+    "sha256": "568cc91cabce70301c0cb892461e7aa6f918adb5d80a0e0f09def06cb34b8f83"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-bus-configuration122-independent-scanner-r1/MANIFEST.json",
+    "sha256": "5d80f190d6f0e629a1e8ed5460a5f17cf628390d444085f871c96eb44613b834"
+  },
+  "original_dossier": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package147-bus-configuration122-contract-context-r1/REPORT.json",
+    "sha256": "a72fac20ed2a46d8ee2d40c5c830ea54ae6d25012de52f2711ddfd720f7f79d5"
+  },
+  "fixed_Host_current_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE151_HOST_SEND_TWO_ROOT_REPAIR_ACCEPTANCE_R1.json",
+    "sha256": "6c56ddcd21f0dc33534fb97f6c04a80a324131855c1bf51d0a00c6b121c1060d"
+  },
+  "root_personal_norms": [
+    "Whole original report baeedf. All122 source-contract/NA/cancellation/error/ownership/gaps 2ad647/679751/b2b7b6/952a7e; every8 peer correction75450b, full semantic peer reportbb4acd. All31 actualdirectgaps+exact corrected clauses014d90.",
+    "Every122 typed signatures/default/nullable/generic/ref result/accessor/inheritance reviewed3fd10b +3c7a58 exact recovery21..37 and62..121. Empty metadata default on optional callback is literal null from Source, not empty string.",
+    "Whole44 sourceassert-reference entriesd87f96/2dab2b plus exact per-route scope for0/7/28/51/68/79/94/112 d87f96. These extracted assertions are bounded shared-target corroboration; no fresh native assertions transferred from unnamed/partial-line extractions."
+  ],
+  "genuine_whole_source_basis": "Qualifier prior3Product1059L+9helpers+4tests; independent Scanner own3originalProducts+9helpers+4tests+7additionalhelpers. Current BaseHost283 personally peerread728b28 plus exact sole-method inverse to5089. Root own actual rollbackmethod/composite90 c7d037 and actual applieddelta fac015; current Source47b890 qualified150 actual PE/PDB/source and freshCore package.",
+  "current_F124_resolution": "Host14 current native allGREEN independently qualified150, primary/complete cleanup identity+attempt-all cardinality and healthy genuine4-handle composite. Rootrepair6c56... explicitly resolves former heldrow7; original finite Host failure preserved. Other121 Source contracts unchanged current; older143XML compiled provenance stays historical.",
+  "retained_gaps_count": 31,
+  "limits": [
+    "Five constructors executable; aliases/mutablegraphs and child settings individually Source-derived, never source-NA blanket. No invented constructor/native runtime closure.",
+    "No atomic LogContext setter/configuration transaction promise. Validate3/7 sequence acquisition immediate, enumeration deferred; BaseSelectMany callback calls deferred.",
+    "RecordingSagaObserver.StateMachineSagaConfigured empty callback supplies no runtimeassertion. Sourceassert-index method parser can include helper descendants: ConsumeAsync line204 entry contains unrelated assertion346; it receives no direct facade/native credit.",
+    "Only specific Host14 current runtime accepted here. All transparent facade and collaborator body semantics bounded; runtime coverage and whole API remain partial."
+  ],
+  "whole_api_status": "PARTIAL"
+}

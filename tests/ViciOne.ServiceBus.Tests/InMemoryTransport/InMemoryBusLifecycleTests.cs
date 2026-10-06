@@ -1,7 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -220,48 +222,110 @@ public sealed class InMemoryBusLifecycleTests
         Assert.Equal(1, observer.PostStopCount);
     }
 
-    [Fact]
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
     [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "stop-fault-is-observed-once")]
-    public async Task StopFailure_NotifiesObserversExactlyOnceAndRemainsRetryableAsync()
+    public async Task StopFailure_NotifiesObserversExactlyOnceAndRemainsRetryableAsync(bool loggerThrows)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observer = new FaultingFirstPostStopObserver();
-        IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration => configuration.ConnectBusObserver(observer));
-        await bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+        var logger = new ThrowingWarningLogger();
+        ILogContext? previous = LogContext.Current;
+        IBusControl? bus = null;
+        try
+        {
+            if (loggerThrows)
+                LogContext.ConfigureCurrentLogContext(logger);
+            else
+                LogContext.ConfigureCurrentLogContext();
 
-        ExpectedStopException exception = await Assert.ThrowsAsync<ExpectedStopException>(() =>
-            bus.StopAsync(cancellationToken).WaitAsync(timeout, cancellationToken));
+            bus = Bus.Factory.CreateUsingInMemory(configuration => configuration.ConnectBusObserver(observer));
+            await bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
 
-        Assert.Same(observer.ExpectedFailure, exception);
-        Assert.Equal(1, observer.StopFaultedCount);
-        Assert.Same(exception, observer.ObservedFailure);
+            ExpectedStopException exception = await Assert.ThrowsAsync<ExpectedStopException>(() =>
+                bus.StopAsync(cancellationToken).WaitAsync(timeout, cancellationToken));
 
-        await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
-        Assert.Equal(2, observer.PostStopCount);
-        Assert.Equal(1, observer.StopFaultedCount);
+            Assert.Same(observer.ExpectedFailure, exception);
+            Assert.Equal(1, observer.StopFaultedCount);
+            Assert.Same(exception, observer.ObservedFailure);
+            if (loggerThrows)
+                Assert.Contains(observer.SecondaryFailure, logger.Failures);
+            else
+                Assert.Empty(logger.Failures);
+
+            await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            Assert.Equal(2, observer.PostStopCount);
+            Assert.Equal(1, observer.StopFaultedCount);
+        }
+        finally
+        {
+            // Replace the captured hostile logger during cleanup, then restore the caller's ambient context.
+            LogContext.ConfigureCurrentLogContext();
+            try
+            {
+                if (bus != null)
+                    await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            }
+            finally
+            {
+                LogContext.Current = previous;
+            }
+        }
     }
 
-    [Fact]
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
     [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "start-fault-is-observed-once-and-preserved")]
-    public async Task StartObserverFailure_PreservesTheOriginalFailureAndRemainsRetryableAsync()
+    public async Task StartObserverFailure_PreservesTheOriginalFailureAndRemainsRetryableAsync(bool loggerThrows)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observer = new FaultingFirstPreStartObserver();
-        IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration => configuration.ConnectBusObserver(observer));
+        var logger = new ThrowingWarningLogger();
+        ILogContext? previous = LogContext.Current;
+        IBusControl? bus = null;
+        try
+        {
+            if (loggerThrows)
+                LogContext.ConfigureCurrentLogContext(logger);
+            else
+                LogContext.ConfigureCurrentLogContext();
 
-        ExpectedStartObserverException exception = await Assert.ThrowsAsync<ExpectedStartObserverException>(() =>
-            bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken));
+            bus = Bus.Factory.CreateUsingInMemory(configuration => configuration.ConnectBusObserver(observer));
 
-        Assert.Same(observer.ExpectedFailure, exception);
-        Assert.Equal(1, observer.StartFaultedCount);
-        Assert.Same(exception, observer.ObservedFailure);
+            ExpectedStartObserverException exception = await Assert.ThrowsAsync<ExpectedStartObserverException>(() =>
+                bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken));
 
-        await bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
-        await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
-        Assert.Equal(2, observer.PreStartCount);
-        Assert.Equal(1, observer.StartFaultedCount);
+            Assert.Same(observer.ExpectedFailure, exception);
+            Assert.Equal(1, observer.StartFaultedCount);
+            Assert.Same(exception, observer.ObservedFailure);
+            if (loggerThrows)
+                Assert.Contains(observer.SecondaryFailure, logger.Failures);
+            else
+                Assert.Empty(logger.Failures);
+
+            await bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            Assert.Equal(2, observer.PreStartCount);
+            Assert.Equal(1, observer.StartFaultedCount);
+        }
+        finally
+        {
+            // Replace the captured hostile logger during cleanup, then restore the caller's ambient context.
+            LogContext.ConfigureCurrentLogContext();
+            try
+            {
+                if (bus != null)
+                    await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            }
+            finally
+            {
+                LogContext.Current = previous;
+            }
+        }
     }
 
     [Fact]
@@ -332,6 +396,181 @@ public sealed class InMemoryBusLifecycleTests
         Assert.False(observer.ReadyObserved.IsCompleted);
     }
 
+    [Theory]
+    [InlineData(false, false, false)]
+    [InlineData(false, false, true)]
+    [InlineData(false, true, false)]
+    [InlineData(false, true, true)]
+    [InlineData(true, false, false)]
+    [InlineData(true, false, true)]
+    [InlineData(true, true, false)]
+    [InlineData(true, true, true)]
+    [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "startup-diagnostics-preserve-primary-and-host-cleanup")]
+    public async Task StartupFailure_DiagnosticsPreserveThePrimaryAndJoinHostCleanupAsync(
+        bool cancelStartup, bool cleanupObserverFails, bool loggerThrows)
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken testCancellation = TestContext.Current.CancellationToken;
+        string endpointName = $"startup-cleanup-{NewId.NextGuid():N}";
+        var dependency = new StartupCleanupDependency();
+        var observer = new StartupCleanupBusObserver(cleanupObserverFails);
+        var endpointObserver = new StartupCleanupEndpointObserver(endpointName, false);
+        var logger = new ThrowingWarningLogger();
+        var expected = new ExpectedStartupException();
+        ILogContext? previous = LogContext.Current;
+        IBusControl? bus = null;
+        Task? start = null;
+        using var caller = new CancellationTokenSource();
+        try
+        {
+            if (loggerThrows)
+                LogContext.ConfigureCurrentLogContext(logger);
+            else
+                LogContext.ConfigureCurrentLogContext();
+
+            bus = Bus.Factory.CreateUsingInMemory(configuration =>
+            {
+                configuration.ConnectBusObserver(observer);
+                configuration.ReceiveEndpoint(endpointName, endpoint => endpoint.AddDependency(dependency));
+            });
+            using ConnectHandle endpointObserverHandle = bus.ConnectReceiveEndpointObserver(endpointObserver);
+            start = bus.StartAsync(caller.Token);
+            await dependency.Waiting.WaitAsync(timeout, testCancellation);
+            if (cancelStartup)
+                caller.Cancel();
+            else
+                dependency.Fail(expected);
+
+            Exception? observed = await Record.ExceptionAsync(() => start.WaitAsync(timeout, testCancellation));
+            if (cancelStartup)
+                Assert.Equal(caller.Token, Assert.IsAssignableFrom<OperationCanceledException>(observed).CancellationToken);
+            else
+                Assert.Same(expected, observed);
+            Assert.Same(observed, observer.ObservedFailure);
+            Assert.Equal(1, observer.StartFaultedCount);
+            Assert.Equal(cancelStartup && cleanupObserverFails ? 2 : 1, observer.PostStopCount);
+            Assert.Equal(observer.PostStopCount, observer.PreStopCount);
+            Assert.Equal(1, endpointObserver.CompletedCount);
+            if (loggerThrows)
+            {
+                Assert.Contains(observed, logger.Failures);
+                if (cleanupObserverFails)
+                    Assert.Contains(observer.CleanupFailure, logger.Failures);
+            }
+            else
+                Assert.Empty(logger.Failures);
+        }
+        finally
+        {
+            dependency.Complete();
+            LogContext.ConfigureCurrentLogContext();
+            try
+            {
+                if (start != null)
+                    await Record.ExceptionAsync(() => start.WaitAsync(timeout, CancellationToken.None));
+                if (bus != null)
+                {
+                    // A failed StartAsync never publishes _busHandle. Own its actual host even on the original defective path.
+                    await GetLifecycleHost(bus).StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                    await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                }
+            }
+            finally
+            {
+                LogContext.Current = previous;
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "startup-observer-diagnostics-do-not-abandon-owned-executor")]
+    public async Task StartupFaultObserver_DiagnosticsDoNotAbandonTheOwnedExecutorAsync(bool loggerThrows)
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken testCancellation = TestContext.Current.CancellationToken;
+        string endpointName = $"startup-executor-{NewId.NextGuid():N}";
+        var dependency = new StartupCleanupDependency();
+        var observer = new StartupCleanupEndpointObserver(endpointName, true);
+        var logger = new StartupFaultWarningLogger(loggerThrows);
+        var expected = new ExpectedStartupException();
+        var workEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseWork = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        ILogContext? previous = LogContext.Current;
+        IBusControl? bus = null;
+        IHostReceiveEndpointHandle? endpointHandle = null;
+        ReceiveTransportHandle? transport = null;
+        TaskExecutor? executor = null;
+        Task? work = null;
+        Task? startup = null;
+        Task? stop = null;
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            bus = Bus.Factory.CreateUsingInMemory(_ => { });
+            await bus.StartAsync(testCancellation).WaitAsync(timeout, testCancellation);
+            using ConnectHandle observerHandle = bus.ConnectReceiveEndpointObserver(observer);
+            endpointHandle = bus.ConnectReceiveEndpoint(endpointName, endpoint => endpoint.AddDependency(dependency));
+            transport = GetTransportHandle(endpointHandle.ReceiveEndpoint);
+            executor = GetExecutor(transport);
+            startup = GetOwnedStartupTaskAsync(transport);
+            work = executor.ExecuteAsync(async () =>
+            {
+                workEntered.TrySetResult();
+                await releaseWork.Task.ConfigureAwait(false);
+            }, CancellationToken.None);
+            await workEntered.Task.WaitAsync(timeout, testCancellation);
+            await dependency.Waiting.WaitAsync(timeout, testCancellation);
+            dependency.Fail(expected);
+            ReceiveEndpointFaulted fault = await observer.FaultObserved.WaitAsync(timeout, testCancellation);
+            Assert.Same(expected, fault.Exception);
+            Assert.True(fault.IsTerminal);
+            Exception? readyFailure = await Record.ExceptionAsync(() => endpointHandle.Ready.WaitAsync(timeout, testCancellation));
+            Assert.Same(expected, readyFailure);
+            Exception? startupFailure = await Record.ExceptionAsync(() => startup.WaitAsync(timeout, testCancellation));
+
+            stop = transport.StopAsync(CancellationToken.None);
+            Assert.False(stop.IsCompleted);
+            Assert.Equal(0, observer.CompletedCount);
+            releaseWork.TrySetResult();
+            await work.WaitAsync(timeout, testCancellation);
+            await stop.WaitAsync(timeout, testCancellation);
+            Assert.Null(startupFailure);
+            Assert.Equal(1, observer.CompletedCount);
+            Assert.Equal(1, observer.FaultedCount);
+            Assert.Contains(observer.SecondaryFailure, logger.Failures);
+            Assert.Equal("TaskExecutor", (await Assert.ThrowsAsync<ObjectDisposedException>(() =>
+                executor.ExecuteAsync(() => Task.CompletedTask, CancellationToken.None))).ObjectName);
+        }
+        finally
+        {
+            dependency.Complete();
+            releaseWork.TrySetResult();
+            LogContext.ConfigureCurrentLogContext();
+            try
+            {
+                if (work != null)
+                    await work.WaitAsync(timeout, CancellationToken.None);
+                if (startup != null)
+                    await Record.ExceptionAsync(() => startup.WaitAsync(timeout, CancellationToken.None));
+                if (stop != null)
+                    await Record.ExceptionAsync(() => stop.WaitAsync(timeout, CancellationToken.None));
+                if (executor != null)
+                    await executor.DisposeAsync();
+                if (endpointHandle != null)
+                    await Record.ExceptionAsync(() => endpointHandle.StopAsync(CancellationToken.None)
+                        .WaitAsync(timeout, CancellationToken.None));
+                if (bus != null)
+                    await Record.ExceptionAsync(() => bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None));
+            }
+            finally
+            {
+                LogContext.Current = previous;
+            }
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "start-request-stop-and-restart")]
     public async Task StartRequestStopAndRestart_PreservesExactRequestRoutingAcrossBothRunsAsync()
@@ -371,6 +610,114 @@ public sealed class InMemoryBusLifecycleTests
         finally
         {
             await bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    private static BaseHost GetLifecycleHost(IBusControl bus)
+    {
+        FieldInfo hostField = bus.GetType().GetField("_host", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("The actual lifecycle host field was not found.");
+        return Assert.IsAssignableFrom<BaseHost>(hostField.GetValue(bus));
+    }
+
+    private static Task GetOwnedStartupTaskAsync(ReceiveTransportHandle transport)
+    {
+        FieldInfo startupField = transport.GetType().GetField("_startupTask", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("The actual in-memory startup task field was not found.");
+        return Assert.IsAssignableFrom<Task>(startupField.GetValue(transport));
+    }
+
+    private sealed class StartupCleanupDependency : IReceiveEndpointDependency
+    {
+        readonly TaskCompletionSource _ready = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        readonly TaskCompletionSource _waiting = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public Task Ready
+        {
+            get
+            {
+                _waiting.TrySetResult();
+                return _ready.Task;
+            }
+        }
+        public Task Waiting => _waiting.Task;
+        public void Fail(Exception failure) => _ready.TrySetException(failure);
+        public void Complete() => _ready.TrySetResult();
+    }
+
+    private sealed class StartupCleanupBusObserver(bool cleanupFails) : IBusObserver
+    {
+        int _preStopCount;
+        int _postStopCount;
+        int _startFaultedCount;
+        public Exception CleanupFailure { get; } = new IOException("Unique startup cleanup observation failure");
+        public Exception? ObservedFailure { get; private set; }
+        public int PreStopCount => Volatile.Read(ref _preStopCount);
+        public int PostStopCount => Volatile.Read(ref _postStopCount);
+        public int StartFaultedCount => Volatile.Read(ref _startFaultedCount);
+        public void PostCreate(IBus bus) { }
+        public void CreateFaulted(Exception exception) { }
+        public Task PreStartAsync(IBus bus) => Task.CompletedTask;
+        public Task PostStartAsync(IBus bus, Task<BusReady> busReady) => Task.CompletedTask;
+        public Task StartFaultedAsync(IBus bus, Exception exception)
+        {
+            Interlocked.Increment(ref _startFaultedCount);
+            ObservedFailure = exception;
+            return Task.CompletedTask;
+        }
+        public Task PreStopAsync(IBus bus)
+        {
+            Interlocked.Increment(ref _preStopCount);
+            return Task.CompletedTask;
+        }
+        public Task PostStopAsync(IBus bus)
+        {
+            int invocation = Interlocked.Increment(ref _postStopCount);
+            return cleanupFails && invocation == 1 ? Task.FromException(CleanupFailure) : Task.CompletedTask;
+        }
+        public Task StopFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
+    }
+
+    private sealed class StartupCleanupEndpointObserver(string endpointName, bool faultObserverFails) : IReceiveEndpointObserver
+    {
+        readonly TaskCompletionSource<ReceiveEndpointFaulted> _faulted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        int _completedCount;
+        int _faultedCount;
+        public Exception SecondaryFailure { get; } = new IOException("Unique in-memory startup fault observer failure");
+        public Task<ReceiveEndpointFaulted> FaultObserved => _faulted.Task;
+        public int CompletedCount => Volatile.Read(ref _completedCount);
+        public int FaultedCount => Volatile.Read(ref _faultedCount);
+        public Task ReadyAsync(ReceiveEndpointReady ready) => Task.CompletedTask;
+        public Task StoppingAsync(ReceiveEndpointStopping stopping) => Task.CompletedTask;
+        public Task CompletedAsync(ReceiveEndpointCompleted completed)
+        {
+            if (IsTarget(completed.InputAddress))
+                Interlocked.Increment(ref _completedCount);
+            return Task.CompletedTask;
+        }
+        public Task FaultedAsync(ReceiveEndpointFaulted faulted)
+        {
+            if (!IsTarget(faulted.InputAddress))
+                return Task.CompletedTask;
+            Interlocked.Increment(ref _faultedCount);
+            _faulted.TrySetResult(faulted);
+            return faultObserverFails ? Task.FromException(SecondaryFailure) : Task.CompletedTask;
+        }
+        bool IsTarget(Uri address) => Uri.UnescapeDataString(address.AbsolutePath.Trim('/')) == endpointName;
+    }
+
+    private sealed class StartupFaultWarningLogger(bool throws) : ILogger
+    {
+        public System.Collections.Concurrent.ConcurrentQueue<Exception?> Failures { get; } = new();
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Warning;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            if (!formatter(state, exception).StartsWith("In-memory receive startup fault observer failed:", StringComparison.Ordinal))
+                return;
+            Failures.Enqueue(exception);
+            if (throws)
+                throw new ExpectedWarningLoggerException();
         }
     }
 
@@ -682,6 +1029,7 @@ public sealed class InMemoryBusLifecycleTests
         private int _stopFaultedCount;
 
         public ExpectedStopException ExpectedFailure { get; } = new();
+        public ExpectedStopFaultObserverException SecondaryFailure { get; } = new();
         public Exception? ObservedFailure { get; private set; }
         public int PostStopCount => Volatile.Read(ref _postStopCount);
         public int StopFaultedCount => Volatile.Read(ref _stopFaultedCount);
@@ -713,7 +1061,7 @@ public sealed class InMemoryBusLifecycleTests
         {
             Interlocked.Increment(ref _stopFaultedCount);
             ObservedFailure = exception;
-            return Task.FromException(new ExpectedStopFaultObserverException());
+            return Task.FromException(SecondaryFailure);
         }
     }
 
@@ -723,6 +1071,7 @@ public sealed class InMemoryBusLifecycleTests
         private int _startFaultedCount;
 
         public ExpectedStartObserverException ExpectedFailure { get; } = new();
+        public ExpectedStartFaultObserverException SecondaryFailure { get; } = new();
         public Exception? ObservedFailure { get; private set; }
         public int PreStartCount => Volatile.Read(ref _preStartCount);
         public int StartFaultedCount => Volatile.Read(ref _startFaultedCount);
@@ -748,7 +1097,7 @@ public sealed class InMemoryBusLifecycleTests
         {
             Interlocked.Increment(ref _startFaultedCount);
             ObservedFailure = exception;
-            return Task.FromException(new ExpectedStartFaultObserverException());
+            return Task.FromException(SecondaryFailure);
         }
 
         public Task PreStopAsync(IBus bus) => Task.CompletedTask;
@@ -757,6 +1106,21 @@ public sealed class InMemoryBusLifecycleTests
 
         public Task StopFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
     }
+
+    private sealed class ThrowingWarningLogger : ILogger
+    {
+        public System.Collections.Concurrent.ConcurrentQueue<Exception?> Failures { get; } = new();
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Warning;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            Failures.Enqueue(exception);
+            throw new ExpectedWarningLoggerException();
+        }
+    }
+
+    private sealed class ExpectedWarningLoggerException : Exception;
 
     private sealed class ExpectedStartupException : Exception;
     private sealed class ExpectedStartObserverException : Exception;

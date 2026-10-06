@@ -29,7 +29,25 @@ public sealed class ConsumerSpecification<TConsumer> :
         _messageTypes = messageSpecifications.ToDictionary(x => x.MessageType);
 
         _observers = new ConsumerConfigurationObservable();
-        _handles = _messageTypes.Values.Select(x => x.ConnectConsumerConfigurationObserver(_observers)).ToArray();
+        var handles = new List<ConnectHandle>(_messageTypes.Count);
+        try
+        {
+            foreach (IConsumerMessageSpecification<TConsumer> specification in _messageTypes.Values)
+                handles.Add(specification.ConnectConsumerConfigurationObserver(_observers));
+            _handles = handles.ToArray();
+        }
+        catch (Exception operationFailure)
+        {
+            try
+            {
+                new global::ViciOne.ServiceBus.Util.MultipleConnectHandle(handles.Where(handle => handle is not null)).Disconnect();
+            }
+            catch (Exception cleanupFailure)
+            {
+                throw new AggregateException("Consumer configuration observer connection and cleanup failed.", operationFailure, cleanupFailure);
+            }
+            throw;
+        }
     }
 
     /// <summary>Sets the maximum number of messages admitted concurrently for this consumer.</summary>

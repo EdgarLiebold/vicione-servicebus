@@ -1,0 +1,585 @@
+{
+  "utc": "2026-10-04T19:54:36.061466+00:00",
+  "decision": "ROOT_ACCEPT_FOURTEEN_PREVIOUSLY_HELD_OBSERVER_DECLARATIONS_AFTER_CURRENT_XML16_FIX_AND_FRESH_PUBLISHED_XML",
+  "accepted_before": 2111,
+  "accepted_after": 2125,
+  "member_count": 14,
+  "members": [
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.CompensateFailAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1},System.Exception)",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "source_sha256": "16c61f6aa3fa5a9e47fa6208734a3ea9d9a8ad34f5a805e98a648c7bb0846ee6",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.CompensateFailAsync<TActivity, TLog>(global::ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity, TLog> context, global::System.Exception exception) where TActivity : class where TLog : class",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "global::ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity, TLog> where TActivity : class where TLog : class",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          },
+          {
+            "Name": "exception",
+            "type": "global::System.Exception",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.CompensateFailAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1},System.Exception)\">\n            <summary>Called when the observed compensation pipeline fails.</summary>\n            <typeparam name=\"TActivity\">The activity type.</typeparam>\n            <typeparam name=\"TLog\">The log type.</typeparam>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"exception\">The exception associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Six Task callbacks observe execution and compensation using distinct ExecuteActivityContext/CompensateActivityContext and class-constrained activity/arguments/log. Fault callbacks are ExecuteFaultAsync and CompensateFailAsync, not DispatchFaulted. There is no explicit CancellationToken parameter or observer exception-isolation implementation here.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.ExecuteFaultAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1},System.Exception)",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "source_sha256": "16c61f6aa3fa5a9e47fa6208734a3ea9d9a8ad34f5a805e98a648c7bb0846ee6",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.ExecuteFaultAsync<TActivity, TArguments>(global::ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity, TArguments> context, global::System.Exception exception) where TActivity : class where TArguments : class",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "global::ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity, TArguments> where TActivity : class where TArguments : class",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          },
+          {
+            "Name": "exception",
+            "type": "global::System.Exception",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.ExecuteFaultAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1},System.Exception)\">\n            <summary>Called when the observed execution pipeline fails.</summary>\n            <typeparam name=\"TActivity\">The activity type.</typeparam>\n            <typeparam name=\"TArguments\">The arguments type.</typeparam>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"exception\">The exception associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Six Task callbacks observe execution and compensation using distinct ExecuteActivityContext/CompensateActivityContext and class-constrained activity/arguments/log. Fault callbacks are ExecuteFaultAsync and CompensateFailAsync, not DispatchFaulted. There is no explicit CancellationToken parameter or observer exception-isolation implementation here.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostCompensateAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1})",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "source_sha256": "16c61f6aa3fa5a9e47fa6208734a3ea9d9a8ad34f5a805e98a648c7bb0846ee6",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostCompensateAsync<TActivity, TLog>(global::ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity, TLog> context) where TActivity : class where TLog : class",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "global::ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity, TLog> where TActivity : class where TLog : class",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostCompensateAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1})\">\n            <summary>Called after compensation and its continuation complete successfully. Failures are reported to CompensateFailAsync.</summary>\n            <typeparam name=\"TActivity\">The activity type.</typeparam>\n            <typeparam name=\"TLog\">The log type.</typeparam>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Six Task callbacks observe execution and compensation using distinct ExecuteActivityContext/CompensateActivityContext and class-constrained activity/arguments/log. Fault callbacks are ExecuteFaultAsync and CompensateFailAsync, not DispatchFaulted. There is no explicit CancellationToken parameter or observer exception-isolation implementation here.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostExecuteAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1})",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "source_sha256": "16c61f6aa3fa5a9e47fa6208734a3ea9d9a8ad34f5a805e98a648c7bb0846ee6",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostExecuteAsync<TActivity, TArguments>(global::ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity, TArguments> context) where TActivity : class where TArguments : class",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "global::ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity, TArguments> where TActivity : class where TArguments : class",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostExecuteAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1})\">\n            <summary>Called after execution and its continuation complete successfully. Failures are reported to ExecuteFaultAsync.</summary>\n            <typeparam name=\"TActivity\">The activity type.</typeparam>\n            <typeparam name=\"TArguments\">The arguments type.</typeparam>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Six Task callbacks observe execution and compensation using distinct ExecuteActivityContext/CompensateActivityContext and class-constrained activity/arguments/log. Fault callbacks are ExecuteFaultAsync and CompensateFailAsync, not DispatchFaulted. There is no explicit CancellationToken parameter or observer exception-isolation implementation here.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreCompensateAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1})",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "source_sha256": "16c61f6aa3fa5a9e47fa6208734a3ea9d9a8ad34f5a805e98a648c7bb0846ee6",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreCompensateAsync<TActivity, TLog>(global::ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity, TLog> context) where TActivity : class where TLog : class",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "global::ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity, TLog> where TActivity : class where TLog : class",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreCompensateAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1})\">\n            <summary>Called before the compensation activity is invoked.</summary>\n            <typeparam name=\"TActivity\">The activity type.</typeparam>\n            <typeparam name=\"TLog\">The log type.</typeparam>\n            <param name=\"context\">The compensation activity context.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Six Task callbacks observe execution and compensation using distinct ExecuteActivityContext/CompensateActivityContext and class-constrained activity/arguments/log. Fault callbacks are ExecuteFaultAsync and CompensateFailAsync, not DispatchFaulted. There is no explicit CancellationToken parameter or observer exception-isolation implementation here.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreExecuteAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1})",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "source_sha256": "16c61f6aa3fa5a9e47fa6208734a3ea9d9a8ad34f5a805e98a648c7bb0846ee6",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreExecuteAsync<TActivity, TArguments>(global::ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity, TArguments> context) where TActivity : class where TArguments : class",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "global::ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity, TArguments> where TActivity : class where TArguments : class",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreExecuteAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1})\">\n            <summary>Called before the execution activity is invoked.</summary>\n            <typeparam name=\"TActivity\">The activity type.</typeparam>\n            <typeparam name=\"TArguments\">The arguments type.</typeparam>\n            <param name=\"context\">The execution activity context.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Six Task callbacks observe execution and compensation using distinct ExecuteActivityContext/CompensateActivityContext and class-constrained activity/arguments/log. Fault callbacks are ExecuteFaultAsync and CompensateFailAsync, not DispatchFaulted. There is no explicit CancellationToken parameter or observer exception-isolation implementation here.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver`1.PostConsumeAsync(ViciOne.ServiceBus.ConsumeContext{`0})",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IConsumeMessageObserver.cs",
+      "source_sha256": "96e148d58bd7657ab09ec747f6943824c844669ed2b7e6671df040043bac252a",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver<in T>.PostConsumeAsync(global::ViciOne.ServiceBus.ConsumeContext<in T> context)",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "global::ViciOne.ServiceBus.ConsumeContext<in T> where T : class",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver`1.PostConsumeAsync(ViciOne.ServiceBus.ConsumeContext{`0})\">\n            <summary>Called after consumer dispatch completes successfully. Dispatch failures are reported to ConsumeFaultAsync.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Contravariant class-constrained message observer provides Task PreConsumeAsync/PostConsumeAsync/ConsumeFaultAsync on ConsumeContext<TMessage>. Fault callback is ConsumeFaultAsync. Runtime per-type filtering, callback await and primary-error preservation are separate.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver.PostConsumeAsync``1(ViciOne.ServiceBus.ConsumeContext{``0})",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IConsumeObserver.cs",
+      "source_sha256": "fde5f382c665c6c7b00ce5632f21bf59b7f7d09bf9267149cc993ed26da18f55",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver.PostConsumeAsync<T>(global::ViciOne.ServiceBus.ConsumeContext<T> context) where T : class",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "global::ViciOne.ServiceBus.ConsumeContext<T> where T : class",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver.PostConsumeAsync``1(ViciOne.ServiceBus.ConsumeContext{``0})\">\n            <summary>Called after consumer dispatch completes successfully. Dispatch failures are reported to ConsumeFaultAsync.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Generic class-constrained Task callbacks observe ConsumeContext<T>; the untyped observer still receives typed message contexts. Fault callback is ConsumeFaultAsync. No default cancellation argument, callback dispatch algorithm or exception policy is declared.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PostSendAsync``1(``0)",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "source_sha256": "8baa1467502a5ded572532e27fe38feedd7e4647f1003d71d442185d4091b4aa",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PostSendAsync<T>(T context) where T : class, global::ViciOne.ServiceBus.Advanced.PipeContext",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "T",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PostSendAsync``1(``0)\">\n            <summary>Called after the observed output pipeline completes successfully. Failures are reported to SendFaultAsync.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Untyped generic and contravariant typed filter observers require class, PipeContext and Task PreSendAsync/PostSendAsync/SendFaultAsync. These are pipe-context callbacks, not necessarily consumer callbacks. Invocation, conversion, ordering and fault preservation belong to filters.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PreSendAsync``1(``0)",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "source_sha256": "8baa1467502a5ded572532e27fe38feedd7e4647f1003d71d442185d4091b4aa",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PreSendAsync<T>(T context) where T : class, global::ViciOne.ServiceBus.Advanced.PipeContext",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "T",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PreSendAsync``1(``0)\">\n            <summary>Called before a context is sent through the observed output pipeline.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n            <param name=\"context\">The pipeline context.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Untyped generic and contravariant typed filter observers require class, PipeContext and Task PreSendAsync/PostSendAsync/SendFaultAsync. These are pipe-context callbacks, not necessarily consumer callbacks. Invocation, conversion, ordering and fault preservation belong to filters.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.SendFaultAsync``1(``0,System.Exception)",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "source_sha256": "8baa1467502a5ded572532e27fe38feedd7e4647f1003d71d442185d4091b4aa",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.SendFaultAsync<T>(T context, global::System.Exception exception) where T : class, global::ViciOne.ServiceBus.Advanced.PipeContext",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "T",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          },
+          {
+            "Name": "exception",
+            "type": "global::System.Exception",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.SendFaultAsync``1(``0,System.Exception)\">\n            <summary>Called when the observed output pipeline or its observers fail.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"exception\">The exception associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Untyped generic and contravariant typed filter observers require class, PipeContext and Task PreSendAsync/PostSendAsync/SendFaultAsync. These are pipe-context callbacks, not necessarily consumer callbacks. Invocation, conversion, ordering and fault preservation belong to filters.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.PostSendAsync(`0)",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "source_sha256": "8baa1467502a5ded572532e27fe38feedd7e4647f1003d71d442185d4091b4aa",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver<in TContext>.PostSendAsync(TContext context)",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "in TContext",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.PostSendAsync(`0)\">\n            <summary>Called after the observed output pipeline completes successfully. Failures are reported to SendFaultAsync.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Untyped generic and contravariant typed filter observers require class, PipeContext and Task PreSendAsync/PostSendAsync/SendFaultAsync. These are pipe-context callbacks, not necessarily consumer callbacks. Invocation, conversion, ordering and fault preservation belong to filters.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.PreSendAsync(`0)",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "source_sha256": "8baa1467502a5ded572532e27fe38feedd7e4647f1003d71d442185d4091b4aa",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver<in TContext>.PreSendAsync(TContext context)",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "in TContext",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.PreSendAsync(`0)\">\n            <summary>Called before a context is sent through the observed output pipeline.</summary>\n            <param name=\"context\">The pipeline context.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Untyped generic and contravariant typed filter observers require class, PipeContext and Task PreSendAsync/PostSendAsync/SendFaultAsync. These are pipe-context callbacks, not necessarily consumer callbacks. Invocation, conversion, ordering and fault preservation belong to filters.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.SendFaultAsync(`0,System.Exception)",
+      "status": "ROOT_ACCEPTED_DECLARED_OBSERVER_CONTRACT_AFTER_PUBLISHED_XML_CORRECTION",
+      "source_path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "source_sha256": "8baa1467502a5ded572532e27fe38feedd7e4647f1003d71d442185d4091b4aa",
+      "signature": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver<in TContext>.SendFaultAsync(TContext context, global::System.Exception exception)",
+      "detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Threading.Tasks.Task",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "context",
+            "type": "in TContext",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          },
+          {
+            "Name": "exception",
+            "type": "global::System.Exception",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_published_XML": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.SendFaultAsync(`0,System.Exception)\">\n            <summary>Called when the observed output pipeline or its observers fail.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"exception\">The exception associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "contract_scope": "Untyped generic and contravariant typed filter observers require class, PipeContext and Task PreSendAsync/PostSendAsync/SendFaultAsync. These are pipe-context callbacks, not necessarily consumer callbacks. Invocation, conversion, ordering and fault preservation belong to filters.",
+      "declaration_test_na_reason": "No executable method body exists in this interface. Exact argument/return/default/constraint declaration is source-sufficient; invocation, guards, await ordering and errors require its concrete caller/implementer and are not accepted here.",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    }
+  ],
+  "fresh_package": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package123-fresh-abs-sql-four/packages/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+    "sha256": "e2eb158cf653312100a739820543dbb18558fcd57a459a39616d43f5f3c39821"
+  },
+  "independent_XML_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package123-fresh-abs-sql-four-independent-r1/REPORT.json",
+    "sha256": "1651375e395b8f65944a06221814cd5e1950d1135f9f7889b06fdd3ecd3c5c82"
+  },
+  "root_personal_review": "27a810 entire current four interface owners and all callback signatures/constraints/current summaries. Prior263 per-ID declaration metadata provenance preserved. f00a92/a77ea1 truncated aggregate outputs not claimed as whole reads.",
+  "limits": [
+    "Declared method contract only; concrete89 caller obligations, Courier/mediator/dispatcher errors separate.",
+    "No native closure, global inheritedAPI grade or test mirroring required for declarations."
+  ],
+  "whole_api_status": "PARTIAL"
+}

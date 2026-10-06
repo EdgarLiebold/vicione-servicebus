@@ -1,0 +1,97 @@
+{
+  "utc": "2026-10-05T01:21:37.857422+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED_TWO_BOUNDED_REPAIRS_CURRENT_NATIVE_AND_PUBLISHED_ARTIFACTS",
+  "accepted_before": 136,
+  "accepted_after": 138,
+  "known_findings": 140,
+  "finding_ids": [
+    "F-SB-API-138",
+    "F-SB-API-139"
+  ],
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package161-scope-fixed19-output-fixed14-dictionary-original25-neighbors-fresh2-independent-r1/REPORT.json",
+    "sha256": "eda165ece52e29cca65c4c9556b80f2cc8938737d1cd9319c1ca786a5bb22ef3"
+  },
+  "root_MAN_verified": 3344,
+  "root_raw_target_read": "38b937 all33caseIDs/results and OriginalHeader25firstcause order; f1324a whole report semantic fields;30a1c1 actual6receipts/fresh2 complete before oversized MAN key output, no whole MAN human-source read claim.",
+  "actual_native": {
+    "target33": 33,
+    "disjoint_neighbors915": 915,
+    "target_failures": 0,
+    "skipped": 0,
+    "original_header25_passed17_failed8": "not repaired in161, separate retained failure evidence"
+  },
+  "reached_repair_oracles": [
+    "Both typed/untyped scope both-failure cases now exact AggregateException with pipelineIOException then cleanupApplicationException references, restore and ownedasyncDispose once",
+    "Converted held continuation keeps publicTask pending; after release typed/outer post occur in order",
+    "Converted fault preserves same actual primary in public operation and both observers; canceled continuation gives exact OCE token and same observer failure"
+  ],
+  "artifacts": [
+    {
+      "filename": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "b8d98ab2b1171db0a69c859deea663af8ff508f0c42db2e27f6bda5d405cbc84",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.dll",
+        "lib/net10.0/ViciOne.ServiceBus.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/a3f3a734b7c744bba76d408aad59cfcb.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "3941a156885c895cce2f56b672f63d67d36fabeb2b08a93d75d3b7e0d05bb196",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "08c5bc1b893afde01c60043608776fcd0b1ffc03be68a365f9ba12535b64a64b",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "344930ff23c80aeda0fa5259ffb76049202c71d5b52d7f0e2f162db0fbbdc786"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "98128dc9f1656484481511ec7029eecce237f36ebd904121952f022c1968f05d",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.Sagas.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/cb51aba0f06c48448ec991811565d178.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "44653cc7da4f3572584d3a4c07aa091e75e435f096e5b791ec64425bcc41a145",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+          "sha256": "22e3987d347f2917266b1cf8306efaa4a35713742c2d65a9a44e7e278a52808e",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "29368ece6e497d9e4fda9fa79c549e1a93c0db4d32881c511014da23eb160e21"
+    }
+  ],
+  "limits": [
+    "Frozen purePython qualification only; no SDK/native/Repo mutations.",
+    "Selected973 includes8finite originalDictionary failures; no cleanCore/wholeAPI grade.",
+    "Original8 later fallback assertions remain unreached; exact physical assertionlines differ from optimized native stacksequencepointlines explicitly documented.",
+    "Exactly7 selected runtimeDLLs equal canonicalframes, notall loaded dependencies.",
+    "Resource payload exactsingle physicalReq4626, names notdecoded.",
+    "MTP rawlog naturally truncates some string parameter displays; retain actual logged identity only.",
+    "Physical/generated checksum binding grants no humanwholeSource or APIgrade transfer.",
+    "Fresh2 ZIPs match this frozen161epoch only; noall-package-release claim."
+  ],
+  "CLOSED": false
+}

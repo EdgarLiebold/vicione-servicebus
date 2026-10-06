@@ -613,6 +613,293 @@ public sealed class StateMachinePublishSendRespondActivitiesDeepContractTests
         Assert.Equal(Count, next.FaultCalls);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-ACTIVITY", "normal-respond-null-context-preserves-argument-validation-before-effects")]
+    public async Task Respond_RejectsNullContextBeforeFactoryTransportAndContinuationAsync()
+    {
+        var recorder = new TransportRecorder();
+        var factoryCalls = 0;
+        var factory = new ContextMessageFactory<IBehaviorContext<TestSaga, Input>, Output>(_ =>
+        {
+            factoryCalls++;
+            return Task.FromResult(new InitializedMessage<Output>(new Output()));
+        });
+        var next = new TypedNext(recorder);
+        Task operation = new RespondActivity<TestSaga, Input, Output>(factory).ExecuteAsync(null!, next);
+        ArgumentNullException failure = await Assert.ThrowsAsync<ArgumentNullException>(() => operation);
+
+        Assert.Equal("context", failure.ParamName);
+        Assert.Equal(0, factoryCalls);
+        Assert.Equal(0, recorder.TransportCalls);
+        Assert.Empty(recorder.Events);
+        Assert.Equal(0, next.Calls);
+        Assert.Equal(0, next.FaultCalls);
+        Assert.Null(next.LastContext);
+        Assert.True(operation.IsFaulted);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-ACTIVITY", "normal-respond-context-cancellation-factory-admission-and-awaited-response")]
+    public async Task Respond_UsesContextCancellationForFactoryAdmissionAndAwaitsTheResponseAsync(
+        bool withCancellationToken, bool cancelBeforeExecution)
+    {
+        using var caller = new CancellationTokenSource();
+        CancellationToken token = withCancellationToken ? caller.Token : CancellationToken.None;
+        if (cancelBeforeExecution)
+            caller.Cancel();
+        var recorder = new TransportRecorder(token);
+        IBehaviorContext<TestSaga, Input> context = Context<IBehaviorContext<TestSaga, Input>>(recorder);
+        var output = new Output();
+        var initialized = new InitializedMessage<Output>(output);
+        var factoryContexts = new List<object>();
+        var factory = new ContextMessageFactory<IBehaviorContext<TestSaga, Input>, Output>(observed =>
+        {
+            factoryContexts.Add(observed);
+            recorder.Events.Enqueue("factory");
+            return Task.FromResult(initialized);
+        });
+        var response = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        recorder.TransportTask = cancelBeforeExecution ? Task.CompletedTask : response.Task;
+        var next = new TypedNext();
+        Task? operation = null;
+        try
+        {
+            operation = new RespondActivity<TestSaga, Input, Output>(factory).ExecuteAsync(context, next);
+            if (cancelBeforeExecution)
+            {
+                Exception? observed = await Record.ExceptionAsync(() => operation);
+                Assert.Empty(factoryContexts);
+                Assert.Equal(0, recorder.TransportCalls);
+                Assert.Equal(0, next.Calls);
+                Assert.Empty(recorder.Events);
+                OperationCanceledException canceled = Assert.IsAssignableFrom<OperationCanceledException>(observed);
+                Assert.Equal(token, canceled.CancellationToken);
+                Assert.True(operation.IsCanceled);
+            }
+            else
+            {
+                Assert.Same(context, Assert.Single(factoryContexts));
+                Assert.Equal(token, context.CancellationToken);
+                Assert.Equal(["factory", "RespondAsync"], recorder.Events);
+                Assert.Equal(1, recorder.TransportCalls);
+                Assert.Same(output, recorder.Payload);
+                Assert.Same(initialized.Pipe, recorder.Pipe);
+                Assert.Equal(0, next.Calls);
+                Assert.False(operation.IsCompleted);
+                response.SetResult();
+                await operation;
+                Assert.Equal(1, next.Calls);
+                Assert.Equal(0, next.FaultCalls);
+                Assert.Same(context, next.LastContext);
+                Assert.Equal(1, recorder.TransportCalls);
+                Assert.Equal(["factory", "RespondAsync"], recorder.Events);
+            }
+        }
+        finally
+        {
+            response.TrySetResult();
+            if (operation is not null)
+                await Record.ExceptionAsync(() => operation);
+        }
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-ACTIVITY", "normal-respond-exact-factory-and-response-failure-before-continuation")]
+    public async Task Respond_FactoryAndResponseFailuresPreserveTheExactFailureAndPreventContinuationAsync(bool factoryFails)
+    {
+        var failure = new System.IO.IOException("unique normal respond failure");
+        var recorder = new TransportRecorder
+        {
+            TransportTask = factoryFails ? Task.CompletedTask : Task.FromException(failure),
+        };
+        IBehaviorContext<TestSaga, Input> context = Context<IBehaviorContext<TestSaga, Input>>(recorder);
+        var initialized = new InitializedMessage<Output>(new Output());
+        var factoryContexts = new List<object>();
+        var factory = new ContextMessageFactory<IBehaviorContext<TestSaga, Input>, Output>(observed =>
+        {
+            factoryContexts.Add(observed);
+            recorder.Events.Enqueue("factory");
+            return factoryFails
+                ? Task.FromException<InitializedMessage<Output>>(failure)
+                : Task.FromResult(initialized);
+        });
+        var next = new TypedNext();
+        Task operation = new RespondActivity<TestSaga, Input, Output>(factory).ExecuteAsync(context, next);
+        Exception? observed = await Record.ExceptionAsync(() => operation);
+
+        Assert.Same(failure, observed);
+        Assert.Same(context, Assert.Single(factoryContexts));
+        Assert.Equal(factoryFails ? 0 : 1, recorder.TransportCalls);
+        Assert.Equal(0, next.Calls);
+        Assert.Equal(0, next.FaultCalls);
+        Assert.True(operation.IsFaulted);
+        Assert.Equal(factoryFails ? new[] { "factory" } : new[] { "factory", "RespondAsync" }, recorder.Events);
+        if (!factoryFails)
+        {
+            Assert.Same(initialized.Message, recorder.Payload);
+            Assert.Same(initialized.Pipe, recorder.Pipe);
+        }
+    }
+
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-RUNTIME", "normal-send-resolution-token-and-healthy-continuation")]
+    public async Task Send_UsesTheExactContextTokenForEndpointResolutionAndHealthyContinuationAsync(bool typed, bool withCancellationToken)
+    {
+        using var caller = new CancellationTokenSource();
+        CancellationToken token = withCancellationToken ? caller.Token : CancellationToken.None;
+        var recorder = new TransportRecorder(token);
+        var output = new Output();
+        var initialized = new InitializedMessage<Output>(output);
+        var factoryContexts = new List<object>();
+        var next = new Next(execute: _ =>
+        {
+            recorder.Events.Enqueue("next");
+            return Task.CompletedTask;
+        });
+        var typedNext = new TypedNext();
+
+        await ExecuteNormalSendAsync(typed, recorder, initialized, factoryContexts, next, typedNext, out object context);
+
+        Assert.Equal(token, recorder.EndpointToken);
+        Assert.Equal(token, recorder.TransportToken);
+        Assert.Equal(Destination, recorder.Address);
+        Assert.Same(context, Assert.Single(factoryContexts));
+        Assert.Same(output, recorder.Payload);
+        Assert.Same(initialized.Pipe, recorder.Pipe);
+        Assert.Equal(1, recorder.EndpointRequests);
+        Assert.Equal(1, recorder.TransportCalls);
+        Assert.Equal(typed ? 0 : 1, next.Calls);
+        Assert.Equal(typed ? 1 : 0, typedNext.Calls);
+        Assert.Same(context, typed ? typedNext.LastContext : next.LastContext);
+        string[] expectedEvents = typed
+            ? ["address", "GetSendEndpointAsync", "factory", "SendAsync"]
+            : ["address", "GetSendEndpointAsync", "factory", "SendAsync", "next"];
+        Assert.Equal(expectedEvents, recorder.Events);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-RUNTIME", "normal-send-cooperative-resolution-cancellation")]
+    public async Task Send_CooperativeEndpointCancellationPreventsFactorySendAndContinuationAsync(bool typed)
+    {
+        using var caller = new CancellationTokenSource();
+        var endpoint = new TaskCompletionSource<ISendEndpoint>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var recorder = new TransportRecorder(caller.Token) { EndpointTask = endpoint.Task };
+        var initialized = new InitializedMessage<Output>(new Output());
+        var factoryContexts = new List<object>();
+        var next = new Next();
+        var typedNext = new TypedNext();
+        CancellationTokenRegistration registration = default;
+        recorder.EndpointResolutionStarted = token =>
+        {
+            registration = token.Register(() => endpoint.TrySetCanceled(token));
+        };
+        Task? operation = null;
+        try
+        {
+            operation = ExecuteNormalSendAsync(typed, recorder, initialized, factoryContexts, next, typedNext, out _);
+            Assert.False(operation.IsCompleted);
+            Assert.Equal(["address", "GetSendEndpointAsync"], recorder.Events);
+            Assert.Equal(1, recorder.EndpointRequests);
+
+            caller.Cancel();
+
+            // This finite state check also protects the original implementation from a hanging await.
+            Assert.True(endpoint.Task.IsCanceled, "The saga token must cancel cooperative endpoint resolution.");
+            Assert.Equal(caller.Token, recorder.EndpointToken);
+            OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => operation);
+            Assert.Equal(caller.Token, actual.CancellationToken);
+            Assert.Empty(factoryContexts);
+            Assert.Equal(0, recorder.TransportCalls);
+            Assert.Equal(0, next.Calls);
+            Assert.Equal(0, typedNext.Calls);
+            Assert.Equal(["address", "GetSendEndpointAsync"], recorder.Events);
+        }
+        finally
+        {
+            endpoint.TrySetCanceled(caller.Token);
+            if (operation is not null)
+                await Record.ExceptionAsync(() => operation);
+            registration.Dispose();
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-RUNTIME", "normal-send-cancellation-before-factory-admission")]
+    public async Task Send_CancellationAfterResolutionPreventsFactorySendAndContinuationAsync(bool typed)
+    {
+        using var caller = new CancellationTokenSource();
+        var recorder = new TransportRecorder(caller.Token);
+        recorder.EndpointResolutionStarted = _ =>
+        {
+            caller.Cancel();
+            recorder.TransportTask = Task.FromCanceled(caller.Token);
+        };
+        var initialized = new InitializedMessage<Output>(new Output());
+        var factoryContexts = new List<object>();
+        var next = new Next();
+        var typedNext = new TypedNext();
+
+        Task operation = ExecuteNormalSendAsync(typed, recorder, initialized, factoryContexts, next, typedNext, out _);
+        OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => operation);
+
+        Assert.Equal(caller.Token, actual.CancellationToken);
+        Assert.Empty(factoryContexts);
+        Assert.Equal(1, recorder.EndpointRequests);
+        Assert.Equal(0, recorder.TransportCalls);
+        Assert.Equal(0, next.Calls);
+        Assert.Equal(0, typedNext.Calls);
+        Assert.Equal(["address", "GetSendEndpointAsync"], recorder.Events);
+    }
+
+    static Task ExecuteNormalSendAsync(bool typed, TransportRecorder recorder, InitializedMessage<Output> initialized,
+        List<object> factoryContexts, Next next, TypedNext typedNext, out object context)
+    {
+        if (typed)
+        {
+            IBehaviorContext<TestSaga, Input> typedContext = Context<IBehaviorContext<TestSaga, Input>>(recorder);
+            context = typedContext;
+            var factory = new ContextMessageFactory<IBehaviorContext<TestSaga, Input>, Output>(observed =>
+            {
+                factoryContexts.Add(observed);
+                recorder.Events.Enqueue("factory");
+                return Task.FromResult(initialized);
+            });
+            return new SendActivity<TestSaga, Input, Output>(_ =>
+            {
+                recorder.Events.Enqueue("address");
+                return Destination;
+            }, factory).ExecuteAsync(typedContext, typedNext);
+        }
+
+        IBehaviorContext<TestSaga> untypedContext = Context<IBehaviorContext<TestSaga>>(recorder);
+        context = untypedContext;
+        var untypedFactory = new ContextMessageFactory<IBehaviorContext<TestSaga>, Output>(observed =>
+        {
+            factoryContexts.Add(observed);
+            recorder.Events.Enqueue("factory");
+            return Task.FromResult(initialized);
+        });
+        return new SendActivity<TestSaga, Output>(_ =>
+        {
+            recorder.Events.Enqueue("address");
+            return Destination;
+        }, untypedFactory).ExecuteAsync(untypedContext, next);
+    }
+
     static IStateMachineActivity<TestSaga> UntypedFaultActivity(Operation operation, TransportRecorder recorder,
         ContextMessageFactory<IBehaviorExceptionContext<TestSaga, BaseFault>, Output> factory) => operation switch
         {
@@ -747,6 +1034,7 @@ public sealed class StateMachinePublishSendRespondActivitiesDeepContractTests
         public int TransportCalls { get; set; }
         public Task TransportTask { get; set; } = Task.CompletedTask;
         public Task<ISendEndpoint>? EndpointTask { get; set; }
+        public Action<CancellationToken>? EndpointResolutionStarted { get; set; }
     }
 
     public class ContextProxy : DispatchProxy
@@ -763,6 +1051,7 @@ public sealed class StateMachinePublishSendRespondActivitiesDeepContractTests
                 Recorder.Address = Assert.IsType<Uri>(args![0]);
                 Recorder.EndpointToken = Assert.IsType<CancellationToken>(args[1]);
                 Recorder.EndpointRequests++;
+                Recorder.EndpointResolutionStarted?.Invoke(Recorder.EndpointToken);
                 ISendEndpoint endpoint = DispatchProxy.Create<IAdvancedSendEndpoint, EndpointProxy>();
                 ((EndpointProxy)endpoint).Recorder = Recorder;
                 return Recorder.EndpointTask ?? Task.FromResult(endpoint);

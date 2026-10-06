@@ -13,7 +13,7 @@ public class SqlReceiveEndpointBuilder :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="hostConfiguration">The host configuration.</param>
-    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <param name="configuration">The receive endpoint configuration used to build topology and receive contexts.</param>
     public SqlReceiveEndpointBuilder(ISqlHostConfiguration hostConfiguration, ISqlReceiveEndpointConfiguration configuration)
         : base(configuration)
     {

@@ -1,0 +1,142 @@
+{
+  "utc": "2026-10-05T12:36:05.790986+00:00",
+  "actor": "/root",
+  "status": "CURRENT183_TWO_OWNING_DIAGNOSTIC_REPAIRS_ROOT_ACCEPTED_BOUNDED",
+  "before": {
+    "known_unique": 175,
+    "accepted": 173
+  },
+  "after": {
+    "known_unique": 175,
+    "accepted": 175
+  },
+  "accepted_ids": [
+    "F-SB-API-174",
+    "F-SB-API-175"
+  ],
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package183-sql-scheduler-purge-fixed285-fresh3-independent-r1/REPORT.json",
+    "sha256": "d8602170cf8f1653d56a5dc382c04e779fecb30f5bd2177513a5920d7949a068",
+    "manifest_sha256": "3572a99457ea68e7ad0a5a392e2105cad1e25e3033081f4e0e6789f569128b2b",
+    "freeze_sha256": "4e26eb4b81109323b860f511f3059e0bc87640acf7f8e8220d437014e14e6507"
+  },
+  "root_independent_verification": "64495e all2855MAN/2838frozenLIVEorigins/12RootreparsedPEPDB/2744CS84Embedded/7runtime/Req167exhaustive once/5serial receipts/exactold285allP/3CRC/9XMLsame182/5literalSourceinverses; own112pureQualifier3f92e8 reusedandaf76b7whole reread. Actualaffected10 b9c73c plus later reachedassertionsbfd7dc; original5 finitefailures479cc2.",
+  "actual_native": {
+    "total": 285,
+    "passed": 285,
+    "failed": 0,
+    "skipped": 0
+  },
+  "fixed_contexts": [
+    {
+      "actual_cases": [
+        "erfolgreich ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests.AcceptedOperations_AreNotReplacedByTheirDebugLoggerAsync(route: 2, loggerThrows: True) (31ms)",
+        "erfolgreich ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests.AcceptedOperations_AreNotReplacedByTheirDebugLoggerAsync(route: 0, loggerThrows: False) (15ms)",
+        "erfolgreich ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests.AcceptedOperations_AreNotReplacedByTheirDebugLoggerAsync(route: 1, loggerThrows: False) (2ms)",
+        "erfolgreich ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests.AcceptedOperations_AreNotReplacedByTheirDebugLoggerAsync(route: 0, loggerThrows: True) (0ms)",
+        "erfolgreich ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests.AcceptedOperations_AreNotReplacedByTheirDebugLoggerAsync(route: 2, loggerThrows: False) (0ms)",
+        "erfolgreich ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests.AcceptedOperations_AreNotReplacedByTheirDebugLoggerAsync(route: 1, loggerThrows: True) (0ms)"
+      ],
+      "source_cause": "Three owning Debug guards preserve accepted schedule handle or successful token-deletion completion; selected provider await, accepted metadata, token and cancellation boundaries remain outside guards.",
+      "reached": [
+        "All six unchangedcases actually reach former Null293 and public success294. Structured template/exact arguments and hostile single throw before Null still asserted.",
+        "Route0 bothhealthy/hostile reach accepted ScheduledMessage token/destination/due/payload identity after Null; route1/2 bothhealthy/hostile retain exact token/caller and real delete result."
+      ],
+      "limits": "Held actual Send/Delete SPI tasks and real public scheduler composition; no fresh DB or host-side supervisor cancellation-route blanket coverage."
+    },
+    {
+      "actual_cases": [
+        "erfolgreich ViciOne.ServiceBus.SqlTransport.Tests.Runtime.PurgeOnStartupFilterTests.SuccessfulPurge_RemainsOnceOnlyDespiteItsDebugLoggerAsync(selectSkip: False, loggerThrows: True) (118ms)",
+        "erfolgreich ViciOne.ServiceBus.SqlTransport.Tests.Runtime.PurgeOnStartupFilterTests.SuccessfulPurge_RemainsOnceOnlyDespiteItsDebugLoggerAsync(selectSkip: True, loggerThrows: True) (2ms)",
+        "erfolgreich ViciOne.ServiceBus.SqlTransport.Tests.Runtime.PurgeOnStartupFilterTests.SuccessfulPurge_RemainsOnceOnlyDespiteItsDebugLoggerAsync(selectSkip: True, loggerThrows: False) (2ms)",
+        "erfolgreich ViciOne.ServiceBus.SqlTransport.Tests.Runtime.PurgeOnStartupFilterTests.SuccessfulPurge_RemainsOnceOnlyDespiteItsDebugLoggerAsync(selectSkip: False, loggerThrows: False) (4ms)"
+      ],
+      "source_cause": "Once flag is committed immediately after successful provider await and before optional completion Debug; completion and skip Debug are guarded, allowing actual downstream next in both cases.",
+      "reached": [
+        "All four unchangedcases now reach Calls1 L165, FirstNull166/SecondNull167, next2 L168, both tasks successful and exactlyone selected structured log entry.",
+        "Healthy and hostile paths preserve exact queue/caller token, held raw purge/pending publictask before release and successful raw provider result; previous completion repeat2 and skip exception eliminated."
+      ],
+      "limits": "Actual public filter plus fail-loud held purge provider proxy; no real database query/native global grade."
+    }
+  ],
+  "source2": [
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.SqlTransport/Scheduling/SqlScheduleMessageProvider.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Scheduling/SqlScheduleMessageProvider.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-sql-scheduler-purge-owned-diagnostics-product-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Scheduling/SqlScheduleMessageProvider.cs",
+      "before_sha256": "f334816aa15dbe1851135c655abb80b97c79033798f77669d474c56f8b099f92",
+      "after_sha256": "a599a803c22b949b4655190ce299193f685cac2640b1189db467ebdca83d205a",
+      "kind": "OWNING_DIAGNOSTIC_ONLY_PLUS_PURGE_SUCCESS_FLAG_ORDER",
+      "before_lines": 174,
+      "after_lines": 196,
+      "literal_inverse_and_original182_PDB": {
+        "snapshot": "source/src/Transports/ViciOne.ServiceBus.SqlTransport/Scheduling/SqlScheduleMessageProvider.cs",
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Scheduling/SqlScheduleMessageProvider.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "f334816aa15dbe1851135c655abb80b97c79033798f77669d474c56f8b099f92",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "dll_sha256": "9939bab1de6276cb35189e22ebff82e9605933bdf17bf0e937020e20c51e48b5",
+        "sha256": "f334816aa15dbe1851135c655abb80b97c79033798f77669d474c56f8b099f92"
+      },
+      "actual_PDB_bindings": [
+        {
+          "snapshot": "source/src/Transports/ViciOne.ServiceBus.SqlTransport/Scheduling/SqlScheduleMessageProvider.cs",
+          "document": {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Scheduling/SqlScheduleMessageProvider.cs",
+            "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a599a803c22b949b4655190ce299193f685cac2640b1189db467ebdca83d205a",
+            "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+          },
+          "dll_sha256": "6e6832cf48b964533bcf2ebbbdf58a7e3f508da17a671910a7cd498c5af9f8c8",
+          "sha256": "a599a803c22b949b4655190ce299193f685cac2640b1189db467ebdca83d205a"
+        }
+      ]
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/PurgeOnStartupFilter.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/PurgeOnStartupFilter.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-sql-scheduler-purge-owned-diagnostics-product-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/PurgeOnStartupFilter.cs",
+      "before_sha256": "fc00d95dce2b7480f6b53d420e69cf6785cf0215837cd7b65ebb1491ab3b5064",
+      "after_sha256": "cbf3dedb22b0569dc7eb52a7d1a15a0cfe7b8538d89a93e7eb9b662fe27f1713",
+      "kind": "OWNING_DIAGNOSTIC_ONLY_PLUS_PURGE_SUCCESS_FLAG_ORDER",
+      "before_lines": 60,
+      "after_lines": 72,
+      "literal_inverse_and_original182_PDB": {
+        "snapshot": "source/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/PurgeOnStartupFilter.cs",
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/PurgeOnStartupFilter.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "fc00d95dce2b7480f6b53d420e69cf6785cf0215837cd7b65ebb1491ab3b5064",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "dll_sha256": "9939bab1de6276cb35189e22ebff82e9605933bdf17bf0e937020e20c51e48b5",
+        "sha256": "fc00d95dce2b7480f6b53d420e69cf6785cf0215837cd7b65ebb1491ab3b5064"
+      },
+      "actual_PDB_bindings": [
+        {
+          "snapshot": "source/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/PurgeOnStartupFilter.cs",
+          "document": {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/PurgeOnStartupFilter.cs",
+            "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "cbf3dedb22b0569dc7eb52a7d1a15a0cfe7b8538d89a93e7eb9b662fe27f1713",
+            "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+          },
+          "dll_sha256": "6e6832cf48b964533bcf2ebbbdf58a7e3f508da17a671910a7cd498c5af9f8c8",
+          "sha256": "cbf3dedb22b0569dc7eb52a7d1a15a0cfe7b8538d89a93e7eb9b662fe27f1713"
+        }
+      ]
+    }
+  ],
+  "new_native_cases_added": 0,
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "final_23Unit_31Package_18Journey_4Consumers_pending": true,
+  "limits": [
+    "One strict/one unfiltered SQL native285/three fresh SQL packages, XMLall9unchanged; no wholeUnit/nativeDB/global API A+ claim.",
+    "Real public scheduler/filter plus held fail-loud SPI providers; no extra host transport or private-field lifecycle authority.",
+    "Only actual selected runtime copies and physical167 JSON resource exact once; names not decoded.",
+    "No SDK/repository/Master/automatic status/count/finding/closure writes."
+  ]
+}

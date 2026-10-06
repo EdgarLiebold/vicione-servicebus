@@ -15,7 +15,7 @@ public static class PublishEndpointExtensions
     /// <param name="messageType">The message contract to initialize and publish.</param>
     /// <param name="values">The object whose public properties supply message values.</param>
     /// <param name="cancellationToken">The token that cancels publication.</param>
-    /// <returns>A task that completes when the initialized message has been sent to the transport.</returns>
+    /// <returns>A task that completes the configured endpoint operation. Buffer or outbox policy may complete it after local capture, before transport dispatch; completion does not confirm delivery or consumption.</returns>
     public static Task PublishAsync(this IPublishEndpoint endpoint, Type messageType, object values, CancellationToken cancellationToken = default)
     {
         return PublishEndpointDispatcher.PublishInitializerAsync(endpoint, messageType, values, cancellationToken);
@@ -27,7 +27,7 @@ public static class PublishEndpointExtensions
     /// <param name="values">The object whose public properties supply message values.</param>
     /// <param name="pipe">The pipeline that configures the publish context.</param>
     /// <param name="cancellationToken">The token that cancels publication.</param>
-    /// <returns>A task that completes when the initialized message has been sent to the transport.</returns>
+    /// <returns>A task that completes the configured endpoint operation. Buffer or outbox policy may complete it after local capture, before transport dispatch; completion does not confirm delivery or consumption.</returns>
     public static Task PublishAsync(this IPublishEndpoint endpoint, Type messageType, object values, IPipe<PublishContext> pipe,
         CancellationToken cancellationToken = default)
     {

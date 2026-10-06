@@ -1,0 +1,194 @@
+{
+  "utc": "2026-10-05T03:07:16.175713+00:00",
+  "actor": "/root",
+  "status": "ROOT_APPLIED_INDEPENDENT_PRECISION_OVERLAYS_NO_ACCEPTANCE_OR_RUNTIME_PROMOTION",
+  "audit": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-source597-independent-scanner-audit-r1/REPORT.json",
+    "sha256": "076d38b832f1aec08f9c03bc54b79b8cb97dfa07a67f51fa4b3bc66bd092d053"
+  },
+  "source597_receipt": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE164_CORE447_SAGA148_SPI2_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "6bce67a6e6ce71be78d8915b56e62c37bb28d20e4aab0df2aff77903aded5740"
+  },
+  "previous_master_sha256": "121e79741871317e55ec4c14a3437dfc53abaf0e988bbaa8cb37e0407fd189d3",
+  "manifest_verified_files": 5,
+  "prior_source_hashes_updated": 19,
+  "parent_local_narratives_updated": 6,
+  "accepted_count_unchanged": 6766,
+  "actual_changes": [
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator`3.Completed",
+      "before_source_sha256": "7201b0ae3fbdb0da34a1fc2e9bd79bd94c874f8d67413cb195cfbdac3f9073ad",
+      "after_source_sha256": "507489c0585386c2adf03795f46e4998d63145cf9035b5ee7fb31e464c475435",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IRequestConfigurator.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator`3.Faulted",
+      "before_source_sha256": "7201b0ae3fbdb0da34a1fc2e9bd79bd94c874f8d67413cb195cfbdac3f9073ad",
+      "after_source_sha256": "507489c0585386c2adf03795f46e4998d63145cf9035b5ee7fb31e464c475435",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IRequestConfigurator.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator`3.TimeoutExpired",
+      "before_source_sha256": "7201b0ae3fbdb0da34a1fc2e9bd79bd94c874f8d67413cb195cfbdac3f9073ad",
+      "after_source_sha256": "507489c0585386c2adf03795f46e4998d63145cf9035b5ee7fb31e464c475435",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IRequestConfigurator.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator`4.Completed2",
+      "before_source_sha256": "7201b0ae3fbdb0da34a1fc2e9bd79bd94c874f8d67413cb195cfbdac3f9073ad",
+      "after_source_sha256": "507489c0585386c2adf03795f46e4998d63145cf9035b5ee7fb31e464c475435",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IRequestConfigurator.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator`5.Completed3",
+      "before_source_sha256": "7201b0ae3fbdb0da34a1fc2e9bd79bd94c874f8d67413cb195cfbdac3f9073ad",
+      "after_source_sha256": "507489c0585386c2adf03795f46e4998d63145cf9035b5ee7fb31e464c475435",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IRequestConfigurator.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.ClearRequestIdOnFaulted",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.Completed",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.Faulted",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.ServiceAddress",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.Timeout",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.TimeoutExpired",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.TimeToLive",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.Sagas.IRequestSettings`3",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`4.Completed2",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.Sagas.IRequestSettings`4",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`5.Completed3",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.Sagas.IRequestSettings`5",
+      "before_source_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_source_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IScheduleConfigurator`2.Received",
+      "before_source_sha256": "fb64bceb1b56c4996559a76a4774a8f0e814a35baf0ca75d9b943062aa67acb9",
+      "after_source_sha256": "e3312f7f1d9a2de4864cd5b877fdcfcee9479880ffdea5a59e38f0c169bd64b7",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IScheduleConfigurator.cs"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.IScheduleSettings`2.Received",
+      "before_source_sha256": "5079275eabce36f602e515eb216e0be05653de6ae7554698812ea10e9eb5d350",
+      "after_source_sha256": "63bc979edc3b13185f6f379a2edcf83b4be5051c4d209146358cc626b2c8f29c",
+      "qualified164_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/source/src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IScheduleSettings.cs"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Middleware.ConsumeContextMessageTypeFilter.#ctor",
+      "changed_fields": [
+        "member_contract",
+        "owner_contract_context"
+      ],
+      "source_epoch_retained": "qualified164",
+      "source_sha256_unchanged": "b6b45afef8a344155d352bc0586838ec255d37f999be00f2b0e49295c7574c64"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Middleware.ConsumeContextMessageTypeFilter.ConnectConsumeMessageObserver``1(ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver{``0})",
+      "changed_fields": [
+        "member_contract",
+        "owner_contract_context"
+      ],
+      "source_epoch_retained": "qualified164",
+      "source_sha256_unchanged": "b6b45afef8a344155d352bc0586838ec255d37f999be00f2b0e49295c7574c64"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Middleware.ConsumeContextMessageTypeFilter.ConnectConsumeObserver(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver)",
+      "changed_fields": [
+        "member_contract",
+        "owner_contract_context"
+      ],
+      "source_epoch_retained": "qualified164",
+      "source_sha256_unchanged": "b6b45afef8a344155d352bc0586838ec255d37f999be00f2b0e49295c7574c64"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Middleware.ConsumeContextMessageTypeFilter.ConnectMessagePipe``1(System.Guid,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{``0}})",
+      "changed_fields": [
+        "member_contract",
+        "owner_contract_context"
+      ],
+      "source_epoch_retained": "qualified164",
+      "source_sha256_unchanged": "b6b45afef8a344155d352bc0586838ec255d37f999be00f2b0e49295c7574c64"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Middleware.ConsumeContextMessageTypeFilter.ConnectMessagePipe``1(ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{``0}})",
+      "changed_fields": [
+        "member_contract",
+        "owner_contract_context"
+      ],
+      "source_epoch_retained": "qualified164",
+      "source_sha256_unchanged": "b6b45afef8a344155d352bc0586838ec255d37f999be00f2b0e49295c7574c64"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Middleware.ConsumeContextMessageTypeFilter.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+      "changed_fields": [
+        "owner_contract_context"
+      ],
+      "source_epoch_retained": "qualified164",
+      "source_sha256_unchanged": "b6b45afef8a344155d352bc0586838ec255d37f999be00f2b0e49295c7574c64"
+    }
+  ],
+  "root_read": "AuditsemanticReport baa45d; exactcommon six narrativeclause allvisible; all19IDs/actualhashgroups mechanicallyverifiedhere againstcurrent fourSagasSourcesandqualified164Snapshots.",
+  "limits": [
+    "All historical typed shapes/OriginalSHA preserved.",
+    "Parent source stays qualified164; no165source claim beforeindependentqualification.",
+    "Nativecredit0/CLOSEDfalse for new597 remains.",
+    "No Source/Test/requirements/SDK mutation."
+  ]
+}

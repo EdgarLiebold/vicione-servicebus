@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Observables;
 
-/// <summary>Converts the object message type to the generic type T and publishes it on the endpoint specified.</summary>
+/// <summary>Checks the supplied context as a typed consume context and invokes the supplied consume observer.</summary>
 /// <typeparam name="T">The value type.</typeparam>
 public class ConsumeObserverConverter<T> :
     IConsumeObserverConverter

@@ -1,0 +1,150 @@
+using System.Collections.Concurrent;
+using System.Runtime.ExceptionServices;
+using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Observers;
+using ViciOne.ServiceBus.Providers.Transports;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Operations;
+using ViciOne.ServiceBus.Transports;
+using Xunit;
+
+namespace ActivityOwnership;
+
+public interface INamedBus : IBus { }
+public sealed record ProbeMessage(Guid Tracking, string Value);
+public sealed record Receipt(Guid Tracking, Guid? MessageId, string Endpoint);
+
+public static class Cases
+{
+    public static readonly string[] Names = ["default-ascii", "default-backtick", "default-space", "default-percent", "default-unicode",
+        "typed-ascii", "typed-backtick", "typed-space", "typed-percent", "typed-unicode",
+        "default-wildcard", "typed-wildcard", "default-vhost", "typed-vhost"];
+
+    public static async Task Run(string name, TimeSpan timeout)
+    {
+        Assert.Contains(name, Names);
+        var life = new OwnedLifetime(timeout);
+        Exception? primary = null;
+        try
+        {
+            string raw = name[(name.IndexOf('-') + 1)..] switch
+            {
+                "ascii" => "owner-ascii",
+                "backtick" => "owner`1",
+                "space" => "owner space",
+                "percent" => "owner%60literal",
+                "unicode" => "owner-ä",
+                "wildcard" => "*",
+                "vhost" => "owner%60literal",
+                _ => throw new ArgumentException(name)
+            };
+            string escaped = Uri.EscapeDataString(raw);
+            bool wildcard = name.EndsWith("-wildcard", StringComparison.Ordinal);
+            bool vhost = name.EndsWith("-vhost", StringComparison.Ordinal);
+            string hostPath = vhost ? Uri.EscapeDataString("review%60 ä") + "/" : "";
+            var business = new ConcurrentQueue<Receipt>();
+            var observer = new ReceiptObserver();
+            var services = new ServiceCollection();
+            services.AddLogging();
+            void Configure(IInMemoryBusFactoryConfigurator cfg)
+            {
+                if (vhost) cfg.Host("review%60 ä");
+                cfg.ReceiveEndpoint(raw, endpoint => endpoint.Handler<ProbeMessage>(context =>
+                {
+                    Assert.Equal(raw, Uri.UnescapeDataString(context.Advanced().ReceiveContext.InputAddress.Segments[^1].Trim('/')));
+                    business.Enqueue(new Receipt(context.Message.Tracking, context.MessageId,
+                        Uri.UnescapeDataString(context.Advanced().ReceiveContext.InputAddress.Segments[^1].Trim('/'))));
+                    return Task.CompletedTask;
+                }));
+            }
+            bool typed = name.StartsWith("typed-", StringComparison.Ordinal);
+            if (typed) services.AddViciOneServiceBus<INamedBus>(c => { c.Limits(MessageLimits.Conservative); c.UsingInMemory((_, cfg) => Configure(cfg)); });
+            else services.AddViciOneServiceBus(c => { c.Limits(MessageLimits.Conservative); c.UsingInMemory((_, cfg) => Configure(cfg)); });
+            var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+            life.Own(() => provider.DisposeAsync().AsTask());
+            IBusControl bus = typed ? provider.GetRequiredService<IBusInstance<INamedBus>>().BusInstance.BusControl : provider.GetRequiredService<IBusControl>();
+            var handle = bus.ConnectConsumeObserver(observer);
+            life.Own(() => handle.DisposeAsync().AsTask());
+            life.Own(() => { observer.CancelPending(); return Task.CompletedTask; });
+            Task? stop = null;
+            life.Own(() => stop ??= bus.StopAsync());
+            await life.Await(bus.StartAsync());
+
+            JsonElement root = JsonSerializer.SerializeToElement(bus.GetProbeResult().Results);
+            JsonElement fabric = root.GetProperty("bus").GetProperty("host").GetProperty("messageFabric");
+            JsonElement queue = Assert.Single(Nodes(fabric, "queue").Where(q => q.GetProperty("name").GetString() == raw
+                || q.GetProperty("name").GetString() == escaped));
+            Assert.Equal(raw, queue.GetProperty("name").GetString());
+            Assert.Equal(JsonValueKind.Object, queue.GetProperty("receivers").GetProperty("inMemory").ValueKind);
+            JsonElement exchange = Assert.Single(Nodes(fabric, "exchange").Where(q => q.GetProperty("name").GetString() == raw
+                || q.GetProperty("name").GetString() == escaped));
+            Assert.Equal(raw, exchange.GetProperty("name").GetString());
+            Assert.Equal("fanOut", exchange.GetProperty("type").GetString());
+            JsonElement destination = Assert.Single(Nodes(exchange.GetProperty("destinations"), "queue"));
+            Assert.Equal(raw, destination.GetProperty("name").GetString());
+            Assert.Equal(JsonValueKind.Object, destination.GetProperty("receivers").GetProperty("inMemory").ValueKind);
+
+            foreach (Uri address in wildcard ? Array.Empty<Uri>() : new[] { new Uri("loopback://localhost/" + hostPath + escaped), new Uri("queue:" + escaped) })
+            {
+                Guid tracking = Guid.NewGuid(), messageId = Guid.NewGuid();
+                string value = address.Scheme + ":" + raw;
+                Task<Receipt> receipt = life.Track(observer.Watch(tracking));
+                ISendEndpoint endpoint = await life.Await(bus.GetSendEndpointAsync(address, CancellationToken.None));
+                await life.Await(endpoint.SendAsync(new ProbeMessage(tracking, value), new SendOptions { MessageId = messageId }));
+                Receipt received = await life.Await(receipt);
+                Assert.Equal(new Receipt(tracking, messageId, raw), received);
+                Assert.Equal(new Receipt(tracking, messageId, raw), Assert.Single(business.Where(x => x.Tracking == tracking)));
+                Assert.Equal(value, observer.Values[tracking]);
+            }
+            Assert.Equal(wildcard ? 0 : 2, business.Count);
+            Assert.Equal(wildcard ? 0 : 2, observer.Values.Count);
+            await life.Await(stop ??= bus.StopAsync());
+        }
+        catch (Exception e) { primary = e; }
+        Exception? cleanup = null;
+        try { await life.DisposeAsync(); } catch (Exception e) { cleanup = e; }
+        if (primary != null && cleanup != null) throw new AggregateException("Case and cleanup failed", primary, cleanup);
+        if (primary != null) ExceptionDispatchInfo.Capture(primary).Throw();
+        if (cleanup != null) ExceptionDispatchInfo.Capture(cleanup).Throw();
+    }
+
+    static IEnumerable<JsonElement> Nodes(JsonElement parent, string property)
+    {
+        JsonElement node = parent.GetProperty(property);
+        return node.ValueKind == JsonValueKind.Array ? node.EnumerateArray().ToArray() : [node];
+    }
+}
+
+public sealed class ReceiptObserver : IConsumeObserver
+{
+    readonly ConcurrentDictionary<Guid, TaskCompletionSource<Receipt>> _pending = new();
+    public readonly ConcurrentDictionary<Guid, string> Values = new();
+    public Task<Receipt> Watch(Guid tracking)
+    {
+        var source = new TaskCompletionSource<Receipt>(TaskCreationOptions.RunContinuationsAsynchronously);
+        Assert.True(_pending.TryAdd(tracking, source));
+        return source.Task;
+    }
+    public void CancelPending()
+    { foreach (var source in _pending.Values) source.TrySetCanceled(); }
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class
+    {
+        if (context.Message is ProbeMessage message)
+        {
+            Assert.True(Values.TryAdd(message.Tracking, message.Value));
+            Assert.True(_pending[message.Tracking].TrySetResult(new Receipt(message.Tracking, context.MessageId,
+                Uri.UnescapeDataString(context.Advanced().ReceiveContext.InputAddress.Segments[^1].Trim('/')))));
+        }
+        return Task.CompletedTask;
+    }
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception) where T : class
+    {
+        if (context.Message is ProbeMessage message) _pending[message.Tracking].TrySetException(exception);
+        return Task.CompletedTask;
+    }
+}

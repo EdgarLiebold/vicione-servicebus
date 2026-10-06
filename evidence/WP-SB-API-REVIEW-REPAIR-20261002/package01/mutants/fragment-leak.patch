@@ -1,0 +1,10 @@
+--- a/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs
++++ b/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs
+@@ -47,7 +47,6 @@
+         var endpoint = new UriBuilder(_blobContainerClient.Uri)
+         {
+             Query = string.Empty,
+-            Fragment = string.Empty,
+             UserName = string.Empty,
+             Password = string.Empty
+         };

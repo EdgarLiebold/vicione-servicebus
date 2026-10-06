@@ -58,6 +58,67 @@ public sealed class ServiceBusSessionBatchConfigurationTests
         Assert.DoesNotContain(endpointRecording.Writes, name => name == "ConcurrentMessageLimit");
     }
 
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-ASB-SESSION-BATCH", "caller-options-snapshot-survives-valid-and-invalid-late-mutations")]
+    public void SessionBatching_SnapshotsCallerOptionsForEveryEndpointConfiguration(bool subscription, bool invalidMutation)
+    {
+        IConsumerConfigurator<TestConsumer> consumer = CreateConsumer(out RecordingConsumerConfiguratorProxy recording);
+        ServiceBusSessionBatchOptions? retained = null;
+        var idleTimeout = TimeSpan.FromSeconds(43);
+        var timeLimit = TimeSpan.FromSeconds(2);
+        consumer.SetServiceBusSessionBatchOptions(options =>
+        {
+            retained = options;
+            options.MessageLimitPerSession = 7;
+            options.MaxConcurrentSessions = 3;
+            options.SessionIdleTimeout = idleTimeout;
+            options.TimeLimit = timeLimit;
+            options.TimeLimitStart = BatchTimeLimitStart.FromLast;
+        });
+
+        ServiceBusSessionBatchOptions callerOptions = Assert.IsType<ServiceBusSessionBatchOptions>(retained);
+        BatchOptions batch = Assert.IsType<BatchOptions>(recording.Batch);
+        callerOptions.MessageLimitPerSession = invalidMutation ? 0 : 13;
+        callerOptions.MaxConcurrentSessions = invalidMutation ? 0 : 5;
+        callerOptions.SessionIdleTimeout = invalidMutation ? TimeSpan.Zero : TimeSpan.FromSeconds(9);
+        callerOptions.TimeLimit = invalidMutation ? TimeSpan.Zero : TimeSpan.FromSeconds(4);
+        callerOptions.TimeLimitStart = invalidMutation ? (BatchTimeLimitStart)int.MaxValue : BatchTimeLimitStart.FromFirst;
+
+        Assert.Equal(7, batch.MessageLimit);
+        Assert.Equal(3, batch.ConcurrencyLimit);
+        Assert.Equal(timeLimit, batch.TimeLimit);
+        Assert.Equal(BatchTimeLimitStart.FromLast, batch.TimeLimitStart);
+        Assert.Empty(batch.Validate());
+        Assert.Equal(1, recording.OptionsCalls);
+
+        for (int endpointIndex = 0; endpointIndex < 2; endpointIndex++)
+        {
+            IReceiveEndpointConfigurator endpoint = subscription
+                ? DispatchProxy.Create<IServiceBusSubscriptionEndpointConfigurator, RecordingEndpointProxy>()
+                : DispatchProxy.Create<IServiceBusReceiveEndpointConfigurator, RecordingEndpointProxy>();
+            var endpointRecording = (RecordingEndpointProxy)(object)endpoint;
+            endpoint.PrefetchCount = 1;
+
+            batch.Configure($"orders-{endpointIndex}", endpoint);
+
+            Assert.True(endpointRecording.Value<bool>("RequiresSession"));
+            Assert.Equal(3, endpointRecording.Value<int>("MaxConcurrentSessions"));
+            Assert.Equal(7, endpointRecording.Value<int>("MaxConcurrentCallsPerSession"));
+            Assert.Equal(idleTimeout, endpointRecording.Value<TimeSpan?>("SessionIdleTimeout"));
+            Assert.Equal(7, endpoint.PrefetchCount);
+
+            callerOptions.MessageLimitPerSession = 17;
+            callerOptions.MaxConcurrentSessions = 11;
+            callerOptions.SessionIdleTimeout = TimeSpan.FromSeconds(19);
+            callerOptions.TimeLimit = TimeSpan.FromSeconds(6);
+            callerOptions.TimeLimitStart = BatchTimeLimitStart.FromFirst;
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-SESSION-BATCH", "group-key-uses-broker-session-instead-of-reply-session")]
     public void SessionBatching_GroupsByTheBrokerSessionIdentifier()

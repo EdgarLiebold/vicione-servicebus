@@ -1,0 +1,118 @@
+{
+  "status": "ROOT_ACCEPTED_CORE721_SOURCE704_EXACT17_HELD_WITH_MANDATORY4_PRECISION",
+  "utc": "2026-10-05T18:29:33.560225+00:00",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-current196-contract-context-r1/REPORT.json",
+    "sha256": "2447bbfd120d6dcb0faa96ad36f1e19482eb70a753d1bf989f08d0957c5be8dc"
+  },
+  "mandatory_overlay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-four-row-precision-overlay-r1/REPORT.json",
+    "sha256": "82e5f4cfc34812cb63d756374565cc926d3b7e161360d65a14ca5c12ebc16af5"
+  },
+  "independent": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-independent-source-peer-r1/REPORT.json",
+    "sha256": "06b42e81750c3b0b7bacf6796ab323bd6de77cdb4c43f018a7cf0861b929dbc3"
+  },
+  "root_report_and_precision_receipts": [
+    "374d1a",
+    "8aeb09[peer report and17holds; not giant replacement objects]",
+    "d1ef1b[exact4 changed fields]"
+  ],
+  "semantic_authority": "Author genuine whole220/20053 (215 fresh+5 own samehash historical), independent genuine whole220/20053 and every721 contract. Root adjudicates reports/17holds/4 corrections and actual bindings; no third Root human whole220/721 assertion.",
+  "canonical_selected": 721,
+  "canonical_source_accepted": 704,
+  "held_exact": [
+    {
+      "id": "T:ViciOne.ServiceBus.Configuration.CompositeFilter`1",
+      "reason": "DOC_PURPOSE: actual CompositeFilter value predicate composition differs from composite pipeline-stage summary."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Configuration.ConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator)",
+      "reason": "EXECUTABLE_CTOR_OWNERSHIP: four supported external configuration-observer connections, handles discarded, no failed-construction rollback; normative/known-finding research pending."
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Configuration.ConsumerConnector`1.Connectors",
+      "reason": "DOC_PRECISION: IReadOnlyList view of retained actual array; XML immutable wording needs bounded sibling review, not asserted mutation finding."
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter.JoinSeparator",
+      "reason": "NULLABILITY_RESEARCH: JoinSeparator nonnullable declaration with intentional null! sentinel in most constructors, separate FormatName fallback; no new defect claimed."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IOutboxConfigurator})",
+      "reason": "EXECUTABLE_CTOR_OWNERSHIP: inherited ConfigurationObserver registration occurs before derived initialization/local connection; failure ownership research pending."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext,ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IOutboxConfigurator})",
+      "reason": "EXECUTABLE_CTOR_OWNERSHIP: inherited sequential external registration then local connect; bounded failure ownership research pending."
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.Configuration.InterceptPipeSpecification`1",
+      "reason": "DOC_PURPOSE: specification installs InterceptFilter, current summary claims fork."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguration.#ctor(ViciOne.ServiceBus.Configuration.IHostConfiguration,ViciOne.ServiceBus.Configuration.IEndpointConfiguration)",
+      "reason": "EXECUTABLE_CTOR_OWNERSHIP: actual ReceiveEndpointConfiguration protected constructor performs four sequential parent-bus observer registrations; supported custom SPI failure and acquired registration ownership remain unqualified."
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Configuration.CompensateContextRedeliveryPipeSpecification`1.ReplaceMessageId",
+      "reason": "ACTIVITY_FLAG_RESEARCH: retained ReplaceMessageId not consumed in whole activity redelivery owner; public workflow/known-family research pending."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Configuration.DelayedRedeliveryConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IRedeliveryConfigurator})",
+      "reason": "EXECUTABLE_CTOR_OWNERSHIP: inherited observer registration before retained configure callback; not bodyless or generic safe-state closure."
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Configuration.ExecuteContextRedeliveryPipeSpecification`1.ReplaceMessageId",
+      "reason": "ACTIVITY_FLAG_RESEARCH: retained ReplaceMessageId not consumed in whole execute redelivery owner; public workflow research pending."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Configuration.ScheduledRedeliveryConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IRedeliveryConfigurator})",
+      "reason": "EXECUTABLE_CTOR_OWNERSHIP: inherited external observer registration before derived initialization; precise partial-failure ownership pending."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedConsumePublishEndpointProvider.#ctor(ViciOne.ServiceBus.Advanced.IPublishEndpointProvider,ViciOne.ServiceBus.ConsumeContext,System.IServiceProvider)",
+      "reason": "DOC_PARAM_PROVIDER: IPublishEndpointProvider purpose confused with IServiceProvider."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedConsumeSendEndpointProvider.#ctor(ViciOne.ServiceBus.ISendEndpointProvider,ViciOne.ServiceBus.ConsumeContext,System.IServiceProvider)",
+      "reason": "DOC_PARAM_PROVIDER: ISendEndpointProvider purpose confused with IServiceProvider."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedPublishEndpointProvider.#ctor(ViciOne.ServiceBus.Advanced.IPublishEndpointProvider,System.IServiceProvider)",
+      "reason": "DOC_PARAM_PROVIDER: IPublishEndpointProvider purpose confused with IServiceProvider."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedSendEndpointProvider.#ctor(ViciOne.ServiceBus.ISendEndpointProvider,System.IServiceProvider)",
+      "reason": "DOC_PARAM_PROVIDER: ISendEndpointProvider purpose confused with IServiceProvider."
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+      "reason": "LAZY_FACTORY_LIFETIME_BOUND: supervisor factory/Stoppng registration execute within selected getter; do not infer custom lifetime/registration-failure closure."
+    }
+  ],
+  "corrected_matrix_sha256": "cb952838f13a9d46e795a13cc69b1ca7431855e0542b73a6ce935e38d101485c",
+  "corrected_matrix_serialization": "json.dumps(indent=2, ensure_ascii=False) plusLF; Root initial ensure_ascii=True pin failed closed before any writes; exact rowobjects equal.",
+  "actual_current_DLL": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+    "sha256": "f80c19a029408815a13004c365fdc94b0f2e15276174b031f2c4582752e651a4"
+  },
+  "actual_current_XML": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.xml",
+    "sha256": "9d2c0d9bbe164be085a7e9a958fe39393207ac7e3bb534e431c53449e27c6160"
+  },
+  "actual_current_PDB_sha256": "702d127b5a252b1a8814386d2a45c2b3491219790a21afa8a359157632ff5343",
+  "selected220_current_source_matches196_and_PDB": true,
+  "actual_emitted_XML_members": 686,
+  "implicit_constructor_XML_NA": 35,
+  "all246_constructors_executable": true,
+  "original_canonical_before": 11343,
+  "original_canonical_after": 12047,
+  "original_remaining_after": 6522,
+  "raw_before": 12205,
+  "raw_after": 12909,
+  "native_cases_added": 0,
+  "global_grade": null,
+  "whole_API_member_review_closed": false,
+  "history": "All prior12205 Master objects unchanged and retained in order; Source-only scope. Current dependency coherency/loaded/native not inferred from PDB identity."
+}

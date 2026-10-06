@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>The last pipe in a pipeline is always an end pipe that does nothing and returns synchronously.</summary>
+/// <summary>Invokes a filter using a terminal continuation that completes without further processing.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class LastPipe<TContext> :
     IPipe<TContext>
@@ -25,7 +25,7 @@ public class LastPipe<TContext> :
         _filter.Probe(context);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Invokes the retained filter with the terminal continuation and returns its task.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerStepThrough]

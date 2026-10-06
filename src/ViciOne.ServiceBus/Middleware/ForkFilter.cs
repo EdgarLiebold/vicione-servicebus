@@ -20,7 +20,20 @@ public class ForkFilter<TContext> :
 
     Task IFilter<TContext>.SendAsync(TContext context, IPipe<TContext> next)
     {
-        return Task.WhenAll(_pipe.SendAsync(context), next.SendAsync(context));
+        Task? pipeTask = _pipe.SendAsync(context);
+        Task? nextTask = null;
+        try
+        {
+            nextTask = next.SendAsync(context);
+            return Task.WhenAll(pipeTask!, nextTask!);
+        }
+        catch (Exception exception)
+        {
+            return Task.WhenAll(
+                pipeTask ?? Task.CompletedTask,
+                nextTask ?? Task.CompletedTask,
+                Task.FromException(exception));
+        }
     }
 
     void IProbeSite.Probe(ProbeContext context)

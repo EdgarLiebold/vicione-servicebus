@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-04T14:22:05.212405+00:00",
+  "status": "ROOT_ADVERSARIAL_SOURCE_ACCEPTED_APPLIED_CORRECTED_AZURE_AND_ORIGINAL_ABSTRACTIONS_NATIVE_PENDING",
+  "root_source_reviews": [
+    "bdb314 exactAzurehelper&Doc5diff",
+    "a4c049 Subscriptionwhole",
+    "a5cf53 Queuewhole",
+    "4b9027 independentRootAbstractions6review whole"
+  ],
+  "originalAzure3qualifiedfreeze": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package68-azure-topology-original-r3-independent-r1/FREEZE.json",
+  "originalAzureR3native": "5FINITEcausalRED+2GREEN c324424f1e168d3ee7145d4710dafc01c44809fe3e99c4cc50bc494c9705355a",
+  "files": [
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+      "before": "308c7436ef463c184e429f0c87f32d19331be825ae87e39abcc43884ea52bb45",
+      "after": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package67-azure-topology-product-proposal-r1/ConfigureServiceBusTopologyFilter.proposed.cs"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ClientContext.cs",
+      "before": "0642adc7f11f46d96ee696501143aef5161aeffb71684d6ce009626463546583",
+      "after": "1e4e7219719db099ad8dbeaa715215f3e850c551cd38ea407de42623dbd8bd8b",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package68-client-stop-close-doc5-proposal-r2/ClientContext.proposed.cs"
+    },
+    {
+      "path": "repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/AbstractionBoundaryOracleTests.cs",
+      "after": "cbce244d4db8752d45c26b82eed8f6963a652998722bf0ff93536ab3e8e4a10e",
+      "adversarial_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/root-abstractions-causal-oracles-adversarial-r1/REPORT.json"
+    },
+    {
+      "path": "repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/Requirements/AbstractionsRequirements.json",
+      "before": "7a313bd64d3a5bb2ec09fe208b1a80e50b26fca4e7124c4f4201968957e2180f",
+      "after": "effc63abfbf6d66a4cde59f53730e702d065a7666e6237b05343b81d9bc7f422",
+      "old_rows": 660,
+      "add": 3,
+      "new_rows": 663
+    }
+  ],
+  "limits": "No OriginalREDclaim for the two R1/R2fixtureerrors; OriginalSourceframesremain immutable; noCloudclaim."
+}

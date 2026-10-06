@@ -3,8 +3,7 @@ using System;
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
-/// Configures a message retry for a handler, on the handler configurator, which is constrained to
-/// the message types for that handler, and only applies to the handler.
+/// Configures in-memory buffering of outgoing operations for a handler, constrained to that handler's message types.
 /// </summary>
 public class InMemoryOutboxHandlerConfigurationObserver :
     IHandlerConfigurationObserver

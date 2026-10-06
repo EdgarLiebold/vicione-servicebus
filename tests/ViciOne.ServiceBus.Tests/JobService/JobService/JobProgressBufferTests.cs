@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Threading.Channels;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -117,6 +119,78 @@ public sealed class JobProgressBufferTests
         Assert.Same(expected, actual);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-PROGRESS-TIME", "reader-failure-rejects-later-admission")]
+    public async Task Update_AfterPublisherFailureRejectsAdmissionWithOriginalCauseAsync()
+    {
+        var expected = new InvalidOperationException("progress publisher failed");
+        var buffer = new JobProgressBuffer(new RecordingJobContext(expected), TimeProvider.System,
+            new JobProgressBufferOptions { UpdateLimit = 1, TimeLimit = TimeSpan.FromDays(1) });
+        var update = new JobProgressBuffer.ProgressUpdate(NewId.NextGuid(), NewId.NextGuid(), 1, 10);
+        try
+        {
+            await buffer.UpdateAsync(update, TestContext.Current.CancellationToken);
+            // Observe the real reader's termination without Flush closing admission for it.
+            Task reader = Assert.IsAssignableFrom<Task>(typeof(JobProgressBuffer)
+                .GetField("_updateTask", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(buffer));
+            Assert.Same(expected, await Assert.ThrowsAsync<InvalidOperationException>(
+                () => reader.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken)));
+
+            ChannelClosedException failure = await Assert.ThrowsAsync<ChannelClosedException>(
+                () => buffer.UpdateAsync(update, TestContext.Current.CancellationToken)
+                    .WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken));
+            Assert.Same(expected, failure.InnerException);
+        }
+        finally
+        {
+            Assert.Same(expected, await Assert.ThrowsAsync<InvalidOperationException>(
+                () => buffer.FlushAsync(CancellationToken.None).WaitAsync(OperationTimeout(), CancellationToken.None)));
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-PROGRESS-TIME", "reader-failure-releases-pending-writer")]
+    public async Task PublisherFailure_ReleasesPendingWriterAndPreservesFlushFaultAsync()
+    {
+        var expected = new InvalidOperationException("held progress publisher failed");
+        var notifications = new RecordingJobContext();
+        var publication = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        notifications.PublicationTask = publication.Task;
+        var buffer = new JobProgressBuffer(notifications, TimeProvider.System,
+            new JobProgressBufferOptions { UpdateLimit = 1, TimeLimit = TimeSpan.FromDays(1) });
+        var update = new JobProgressBuffer.ProgressUpdate(NewId.NextGuid(), NewId.NextGuid(), 1, 10);
+        Task? waiting = null;
+        try
+        {
+            await buffer.UpdateAsync(update, TestContext.Current.CancellationToken);
+            await notifications.Progress.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+            await buffer.UpdateAsync(update, TestContext.Current.CancellationToken);
+            waiting = buffer.UpdateAsync(update, TestContext.Current.CancellationToken);
+            Assert.False(waiting.IsCompleted);
+
+            publication.SetException(expected);
+            ChannelClosedException failure = await Assert.ThrowsAsync<ChannelClosedException>(
+                () => waiting.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken));
+            Assert.Same(expected, failure.InnerException);
+            Assert.Same(expected, await Assert.ThrowsAsync<InvalidOperationException>(
+                () => buffer.FlushAsync(TestContext.Current.CancellationToken).WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken)));
+        }
+        finally
+        {
+            publication.TrySetException(expected);
+            await ObserveSettledAsync(buffer.FlushAsync(CancellationToken.None));
+            if (waiting is not null)
+                await ObserveSettledAsync(waiting);
+            await ObserveSettledAsync(publication.Task);
+        }
+    }
+
+    private static async Task ObserveSettledAsync(Task task)
+    {
+        try { await task.WaitAsync(OperationTimeout(), CancellationToken.None); }
+        catch (Exception) when (task.IsCompleted) { }
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
@@ -134,6 +208,8 @@ public sealed class JobProgressBufferTests
 
         public Task<ISetJobProgress> Progress => _progress.Task;
 
+        public Task PublicationTask { get; set; } = Task.CompletedTask;
+
         public Task NotifyCanceledAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public Task NotifyStartedAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public Task NotifyCompletedAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
@@ -146,7 +222,7 @@ public sealed class JobProgressBufferTests
                 return Task.FromException(_failure);
 
             _progress.TrySetResult(progress);
-            return Task.CompletedTask;
+            return PublicationTask;
         }
     }
 }

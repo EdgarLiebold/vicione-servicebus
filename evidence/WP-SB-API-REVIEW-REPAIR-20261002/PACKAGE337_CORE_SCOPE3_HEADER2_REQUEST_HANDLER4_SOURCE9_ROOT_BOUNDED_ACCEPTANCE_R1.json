@@ -1,0 +1,66 @@
+{
+  "utc": "2026-10-06T04:32:31.894007+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_LOCAL_SOURCE9_ONLY",
+  "master_before_sha256": "ff95d7fcc847f61873e91daad0e6972f0f917ed3787423c52271bec4874838f7",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-scoped-consumer-adapter-source3-bounded-contracts-proposed-r1",
+      "manifest_sha256": "0674f129f55542e9d2539c118920a0314c578fb88d49e25b2d17fce8423c5304"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-scoped-source3-independent-runtime-source-peer-r1",
+      "manifest_sha256": "107729c911ae5370b49b91cc04e5c41ac2e45f62197a0e9da2fa1e0104381d60"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-scoped-source3-abstractions-support-pdb-supplement-r1",
+      "manifest_sha256": "12e6b649fa5556593cf2ab9a0f6a4c2fba405a4d90737c66756377d77b7b4127"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-scoped-source3-own-read-label-count-precision-erratum-r1",
+      "manifest_sha256": "3e551910e171efa0ba7c612cf2dc835b98ecda44745375e28a28bf6dc74f3457"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-scoped-source3-metadata-reference-sha-precision-overlay-r1",
+      "manifest_sha256": "92fdbf1b5d7372d8fdd1730769a59e20eaf28f227df32f682f86c6312ba8576a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-scoped-source3-independent-runtime-reference-hash-overlay-peer-r1",
+      "manifest_sha256": "9f5c4b794fd5244fa2f9f91bc545e2b61f20599bd551ec102d74ab6bb9fca5b9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-json-header2-bounded-current-source-contracts-proposed-r1",
+      "manifest_sha256": "0f70b04690fe6ade216e5f6d6eeb251cbc445ba445bb6d3167cfffcd8d166dc3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-header2-independent-source-norm-peer-r1",
+      "manifest_sha256": "7b5254ff851764b22d258a0729c569338b5ddb48b55bc3e0a6824c23f2efeabb"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-json-header2-read-count-precision-erratum-r2",
+      "manifest_sha256": "e5bba8c41573bd2f29d7ff6cfed9cc66e2390727409886d6c9cbe19ee10c4b37"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-request-handler4-bounded-source-contracts-proposed-r1",
+      "manifest_sha256": "c1b1decc2c269b6dea68ec40040816e90a6ccf06d688f5c4f11f57dd8a35f1b8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-request-handler4-independent-runtime-source-peer-r1",
+      "manifest_sha256": "f20bd476151694631d5170fdb2956bb7ca30f7976862789206a147ced59959ab"
+    }
+  ],
+  "Root_authority": "Whole9 individualnorms43fcba; Scope7/335 +RequestConsumer157/Method119 whole3f548c; ConsumeContext199 and Header5helpers+owner41a786; remaining Header4 db7208 with truncated Factory explicitly recovered whole1608ae2ae; full3different-author reports27c475. Actual own334 full parsed Core/Abstr PDB source19+selected headers/request helperjoins verified; actualpaired XML9 structural compared, exactCSV IDs and disjointMaster guarded.",
+  "scope": "9 local Sourcecontracts only. Scope/handler/response/customheader provider/codec/concurrency/cancellation/termination/business runtime obligations retained. Existing F203/Doc3 publication proofs separate and not converted to native membergrade.",
+  "source_only_native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "before": {
+    "Original_accepted": 18178,
+    "remaining": 391,
+    "master": 19040
+  },
+  "after": {
+    "Original_accepted": 18187,
+    "remaining": 382,
+    "master": 19049
+  }
+}

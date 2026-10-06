@@ -1,0 +1,271 @@
+{
+  "status": "IMMUTABLE_SCOPED_REVIEW_WITH_F030_STARTUP_CLOSURE_HELD",
+  "freeze_sha256": "2911be2c1fec39766f3c964d3aab3f8c157042a6e813088e8cdbba7b7ec78af2",
+  "artifacts": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/ADDITIONAL_READ_PLAN.json",
+      "bytes": 25761,
+      "sha256": "adadb2448d0c168fa1042a623ab79bcbf9c4700f72977636ccc5d576eb838927"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/F030_STARTUP_POLICY_RESEARCH.json",
+      "bytes": 2618,
+      "sha256": "f036a4ff0eac559fc107a7ab2616466b285276c29c2eb1c5795282e8c540aef4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/GUIDANCE_REUSE.json",
+      "bytes": 3036,
+      "sha256": "97bda25f0102e9614fdec36b78d8bac8f7d1a50b9d992f09151b1a0d172aae9b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/INDEPENDENT_PACKAGE_BINDINGS.json",
+      "bytes": 29153,
+      "sha256": "fb6f4c7390f7f3e161036cbb1684aec5d7f927ef64602b101654dc956ed80ff7"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/INDEPENDENT_RECEIPT_CHECKS.json",
+      "bytes": 51398,
+      "sha256": "c3b136c51b554b4495cd973a6bf57aeecdb990893cb316bd8a228c2f8b8630ab"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/INDEPENDENT_SOURCE_EFFECTS.json",
+      "bytes": 80906,
+      "sha256": "8088f4891c2eac9f42c4d296f76ae70cf9c07579013e2d4e4858660397c89647"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/INPUT_BINDING_INITIAL.json",
+      "bytes": 210,
+      "sha256": "9b68a936bb52dc77c77e8c7eab552000159189f93df14629428ed3dbccdde599"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/LOG_READ_PLAN.json",
+      "bytes": 36073,
+      "sha256": "206cb42b0d6337a937586c2cd3b3a7c565a0f584e7f16f824f425268938a5645"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/ORIGINAL_FINDING_OBJECTS.json",
+      "bytes": 17900,
+      "sha256": "9bf57c084de3fed21ccb544565d90a1fe3506f7612aa03ff3bf1b6deb8537097"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/PROVIDER_READ_PLAN.json",
+      "bytes": 1875,
+      "sha256": "ef4c379b1d9ba036b7f38a3bc7039f46b36f088a7596f26cc1554ef337144c52"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_001.txt",
+      "bytes": 17454,
+      "sha256": "b3bb6906ec70f0ae849af1dda72a04b1687796e97a033d2ef55840640f1b49b3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_002.txt",
+      "bytes": 18000,
+      "sha256": "254b490a0f5ba5ceb93a7e699f9b2b399c4c7e2951bafc2b22a5fd0545d7cdc0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_003.txt",
+      "bytes": 16425,
+      "sha256": "9947c2477d25cef61692527b2dd1747c7c2853f71ef6a9e4a98295f93b11cb96"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_004.txt",
+      "bytes": 12987,
+      "sha256": "52185ebff7f7e190bc402a6c4a138a9224117d1ccc9ff9ac363d5bb8dab34bce"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_005.txt",
+      "bytes": 18753,
+      "sha256": "f158abf1989d32bfc0bd941280be8e46a299c8bd3ccd0430afd906f169bea1e3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_006.txt",
+      "bytes": 16076,
+      "sha256": "5c6a4b708bc5084555bbff4f951be3d6674b8e27a6d26ebc0e970348d5e2209b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_007.txt",
+      "bytes": 15696,
+      "sha256": "f2daf4530662d17e49a6a3d50d5cd841841da51805ffc21c06183d305b83a2c2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_008.txt",
+      "bytes": 13744,
+      "sha256": "c8139fe0d046c16d746fdb35109edb327343499622d6072bed9bca179b21489a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_009.txt",
+      "bytes": 13759,
+      "sha256": "dbf90c6877a51b6621fd4e3b5c0552a4aec57c82ba9f4e52247327b5d8844092"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_010.txt",
+      "bytes": 14350,
+      "sha256": "dac98c461dbb9e4b716592655a82bd4a96abf5aaaad1a6b660c562e77a04b85c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_011.txt",
+      "bytes": 15732,
+      "sha256": "e526a027db0a563dbd4d5c7c921e32cca2f64c06ae091d4ec78df9d18d88cbc3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_012.txt",
+      "bytes": 15617,
+      "sha256": "6f01d25bd526a677325cf0ee3e62e745bc52d6f0f00390e411e29693baec3356"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_013.txt",
+      "bytes": 13860,
+      "sha256": "e4538032e5f602a8688043f286604eff8c3a8f17450f82a9569f3d59880820b8"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_014.txt",
+      "bytes": 7859,
+      "sha256": "9c9df4b826649ced7e051e0f467e87b6b6536f4dbd8d6deea0832d5e9c299615"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_015.txt",
+      "bytes": 12205,
+      "sha256": "53489124e55ef8beaec5861e286a6e768aca12d2ed3ae4104442aa1066c28d6f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_016.txt",
+      "bytes": 11734,
+      "sha256": "ad445968028541ae1eb04d7bd257ba1d0dc94a5370cff4448587f2c4b6fbcf3c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_017.txt",
+      "bytes": 11785,
+      "sha256": "7ddb847d3b0758637a71c0019591ec39cc5a77a95ca346e73dc2265fb64348a3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_018.txt",
+      "bytes": 11958,
+      "sha256": "01b2d37692ab397ab4b58a4904fcc051febad56a1917fd11cc85dba383e31948"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_019.txt",
+      "bytes": 15412,
+      "sha256": "230c7b91f72337a513b0749f222d5ebd6a10b57423f98c2eb658c9f5c23462fc"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_020.txt",
+      "bytes": 15375,
+      "sha256": "53cef5aa5a7a79b6ebf99f9af4e89335a1d80772869ad55d4bc9da9a4b0d0a21"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_021.txt",
+      "bytes": 13560,
+      "sha256": "29d93cd83948a95203c14e67040e6fe2d8dbf1b381e55c0214656ce5295bcd79"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_CLOSURE.json",
+      "bytes": 79174,
+      "sha256": "a03a34671a47086a2ffa12bf666be162d98b020f2fb67c5ed4c882131c3cac27"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_001.txt",
+      "bytes": 18920,
+      "sha256": "3a53fcb6b089bc73b7f3ce9938022281cab0701a81be19ec9753abcb131db54e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_002.txt",
+      "bytes": 18767,
+      "sha256": "5ad2e6821a24306707827b4a2d315935fd71a96dfc3a6d9c9149f85b3627fa52"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_003.txt",
+      "bytes": 17924,
+      "sha256": "a8fc034eaf8646a50ad2b1481a4d06a29021c2aaa4efc41d2c53e02183438f85"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_004.txt",
+      "bytes": 17817,
+      "sha256": "c9c9a739e8e77440817fd158e7cfa1c500ebfd09a88a81eeb0670b5be5fad6b0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_005.txt",
+      "bytes": 18710,
+      "sha256": "6793da841e25df3bac7309eb6d28fd5da4bfcdfc4188e04e2e5318f26b12bb44"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_006.txt",
+      "bytes": 18994,
+      "sha256": "36a7e14d85f713b2cc895887b463f0a0be53888973c0dc45e4f5a8944810835c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_007.txt",
+      "bytes": 17875,
+      "sha256": "d359257f5359d71b554a2056b4cd68462b038dab1333c06ff4dfb141e7d45c1a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_008.txt",
+      "bytes": 16439,
+      "sha256": "fbe3bdb2fba48db3426e6d68cdb099190a5ad7338630d16cf2f63c21ff54e4d1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_009.txt",
+      "bytes": 14671,
+      "sha256": "b16fa0bdf6bf2219d8ce72a263b43a2d643019ca74751ec284f9f0cb5ac1a773"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_PROGRESS.json",
+      "bytes": 15065,
+      "sha256": "3904d6cdd16d477b54cb6e83e3572a7756ff77321c43e1c475f4db77a573435f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_PROVIDER_001.txt",
+      "bytes": 15465,
+      "sha256": "c21cec6de2e364e506f528fb8667b8129822866324604c59490d057594637bfa"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_PROVIDER_002.txt",
+      "bytes": 18579,
+      "sha256": "54de0b641a6bfd1f5d576f509bdfcc98b8c57bff3675f77acbfad37b198c6c6a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_PROVIDER_003.txt",
+      "bytes": 9191,
+      "sha256": "643bb17da4c563bfb80f79868172cb219da460dfa9885ce6df706d0d1e69a512"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_PUBLIC_RECEIPTS.json",
+      "bytes": 10864,
+      "sha256": "aeaaeaa03a3e2de8b015e4246a62427f8e902b84dee77d69752e9ec75fe9f835"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_STARTUP_001.txt",
+      "bytes": 18406,
+      "sha256": "55c656d2b9c56d74756c61584c140c64198142e8593361da03986a1dcc29b9e1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_STARTUP_002.txt",
+      "bytes": 14459,
+      "sha256": "3a27d042f293ffd4490317cbacc201d658ee90a57a596cce33f6b26f569c00b4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_STARTUP_003.txt",
+      "bytes": 15003,
+      "sha256": "3313ebedd4d18cda8fa32a29f9b56502adbd5c4e03c8dcc84ed93ec6a9ea8b84"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_STARTUP_004.txt",
+      "bytes": 8576,
+      "sha256": "d96e5c8ce1901c1ff4c744d07790ff633cc0d107fbabfa7d8326f0a84e3822bd"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/REVIEW.json",
+      "bytes": 4206,
+      "sha256": "38c8059446c03668f874745b919760586234a39730dd0408684ac83ef4b257f2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/REVIEW.txt",
+      "bytes": 8476,
+      "sha256": "2ce8d2fe50e5922ddece188b7cc7e0b5a5a459ab145a853dee6882e01bbeefec"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/STARTUP_READ_PLAN.json",
+      "bytes": 1828,
+      "sha256": "9dd84142ea3ea972821549baf78e5083191e84ea1dc78efafa787d14e89046cf"
+    }
+  ]
+}

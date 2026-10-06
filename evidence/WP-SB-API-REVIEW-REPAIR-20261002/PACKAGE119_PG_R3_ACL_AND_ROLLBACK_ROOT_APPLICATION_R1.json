@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-04T19:05:50.072990+00:00",
+  "decision": "ROOT_APPLY_PG_R3_EXACT_ACL_AND_PARTIAL_DROP_ROLLBACK_HARDENING",
+  "source_review": "Root personally read the entire actual R2_TO_R3_ONLY.patch, author REPORT.json and independent REPORT.json in this turn; prior Root118 four product-deltas and full test-addition reviews remain separate historical credit.",
+  "adversarial": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package113-sql-seven-product-independent-source-r3/REPORT.json",
+    "sha256": "0205f67ec19a49b7b8647f1772409d2f28f691d33cda16dbef52056e27fa77ec"
+  },
+  "author_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package113-sql-seven-product-proposed-r3/REPORT.json",
+    "sha256": "bb715f25ad98053b5be18bb96aeb955a48ece2579156f8c4c4ba2531b1dae0ad"
+  },
+  "author_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package113-sql-seven-product-proposed-r3/MANIFEST.json",
+    "sha256": "2ac8c91c2359961d83cd98e9c0f5c99aa12ee42a35522cbc0e14b27eeaf345d4"
+  },
+  "prior_mssql_epoch_frozen": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package118-sqlserver-fixed24-independent-r1/FREEZE.json",
+    "sha256": "c5bfb0f4e52729213ad53175f77e3d72ee5dc5f276621120070d07a8704bbbae"
+  },
+  "files": [
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlDatabaseBoundaryContractTests.cs",
+      "before_sha256": "8a0d6ac38885c7ac2c7fc6dfb604df3000baf3f30b989be2ab8a97388ab018c1",
+      "after_sha256": "2dfd4b657bc30959fd3e9eda7370f24e549b42bf73ae2604f47f4e925d30c5a0"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Database/PostgreSqlDatabaseMigrator.cs",
+      "before_sha256": "ee5a5e0bef0a77d46480e440cefee9e8d156b96719f58ecaa4903a57963f93fd",
+      "after_sha256": "0c7822a8f7c9e593fe9a680b8b0630248fbe1f9f52a9108eb9ab8949e28213cd"
+    }
+  ],
+  "mssql_changes": 0,
+  "native_and_pack_pending": true,
+  "whole_api_status": "PARTIAL"
+}

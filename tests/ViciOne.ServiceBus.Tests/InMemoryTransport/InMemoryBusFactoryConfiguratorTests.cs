@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
 using ViciOne.ServiceBus.InMemoryTransport.Topology;
@@ -289,17 +291,38 @@ public sealed class InMemoryBusFactoryConfiguratorTests
         Assert.Equal("dependencies", dependencies.ParamName);
     }
 
-    [Fact]
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
     [RequirementCoverage("REQ-VSB-BUS-FACTORY", "fault-observer-cannot-replace-construction-failure")]
-    public void CreationFaultObserverFailure_DoesNotReplaceTheConstructionFailure()
+    public void CreationFaultObserverFailure_DoesNotReplaceTheConstructionFailure(bool loggerThrows)
     {
         var observer = new FailingCreationObserver();
 
-        ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
-            InMemoryBus.Create(configurator => configurator.ConnectBusObserver(observer)));
+        var logger = new ThrowingWarningLogger();
+        ILogContext? previous = LogContext.Current;
+        try
+        {
+            if (loggerThrows)
+                LogContext.ConfigureCurrentLogContext(logger);
+            else
+                LogContext.ConfigureCurrentLogContext();
 
-        Assert.IsType<ExpectedConstructionException>(exception.InnerException);
-        Assert.Equal(1, observer.CreateFaultedCount);
+            ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
+                InMemoryBus.Create(configurator => configurator.ConnectBusObserver(observer)));
+
+            Assert.Same(observer.ExpectedFailure, exception.InnerException);
+            Assert.Same(observer.ExpectedFailure, observer.ObservedFailure);
+            Assert.Equal(1, observer.CreateFaultedCount);
+            if (loggerThrows)
+                Assert.Contains(observer.SecondaryFailure, logger.Failures);
+            else
+                Assert.Empty(logger.Failures);
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
     }
 
     [Fact]
@@ -393,13 +416,17 @@ public sealed class InMemoryBusFactoryConfiguratorTests
     private sealed class FailingCreationObserver : IBusObserver
     {
         public int CreateFaultedCount { get; private set; }
+        public ExpectedConstructionException ExpectedFailure { get; } = new();
+        public ExpectedObservationException SecondaryFailure { get; } = new();
+        public Exception? ObservedFailure { get; private set; }
 
-        public void PostCreate(IBus bus) => throw new ExpectedConstructionException();
+        public void PostCreate(IBus bus) => throw ExpectedFailure;
 
         public void CreateFaulted(Exception exception)
         {
             CreateFaultedCount++;
-            throw new ExpectedObservationException();
+            ObservedFailure = exception;
+            throw SecondaryFailure;
         }
 
         public Task PreStartAsync(IBus bus) => Task.CompletedTask;
@@ -414,6 +441,21 @@ public sealed class InMemoryBusFactoryConfiguratorTests
 
         public Task StopFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
     }
+
+    private sealed class ThrowingWarningLogger : ILogger
+    {
+        public System.Collections.Concurrent.ConcurrentQueue<Exception?> Failures { get; } = new();
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Warning;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            Failures.Enqueue(exception);
+            throw new ExpectedWarningLoggerException();
+        }
+    }
+
+    private sealed class ExpectedWarningLoggerException : Exception;
 
     private sealed class ExpectedConstructionException : Exception;
 

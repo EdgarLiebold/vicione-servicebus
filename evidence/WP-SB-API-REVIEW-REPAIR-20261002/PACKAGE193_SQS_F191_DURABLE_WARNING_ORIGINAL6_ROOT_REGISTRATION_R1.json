@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-05T16:28:03.767592+00:00",
+  "finding": "F-SB-API-191",
+  "severity": "High",
+  "title": "Optional owning Warning failures interrupt durable resource cancellation drain or skip remaining resource disposal",
+  "status": "SOURCE_BOUND_ACTUAL_ORIGINAL_3PASS_3FINITE_FAILURE_ROOT_REGISTERED",
+  "qualified_original": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package193-sqs-original-warning6-independent-r1/REPORT.json",
+    "sha256": "3bab93596a3ad16a3d830505543fa9dd3412d69121ba0a67f42c4e3c4a4091cd"
+  },
+  "independent_original_final_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package193-warning6-final-independent-runtime-result-peer-r1/REPORT.json",
+    "sha256": "79eb3ebf99cd4375355af5a4be827e6bab9306d9a2b949ed455f98b4b83e0f1b"
+  },
+  "actual_counts": {
+    "total": 6,
+    "passed": 3,
+    "failed": 3,
+    "skipped": 0
+  },
+  "first_failed_assertions": [
+    67,
+    67,
+    120
+  ],
+  "root_reads": [
+    "27f705 whole final qualification",
+    "6371d6 whole final result peer",
+    "5b2520 actual6 raw",
+    "11848b whole original259"
+  ],
+  "source_cause": "Two existing containment catches invoke owning Warning without guarding secondary diagnostics exceptions. One owner policy cause with two observable lifecycle effects; three case failures are not three IDs.",
+  "empirical_limits": [
+    "Failed Null68/121 and Remove71/72 assertions not credited.",
+    "Finally86/139 is cleanup, not extra failure.",
+    "Private detached worker/CTS disposal and late-resource-throwing-disposal branch remain outside six-case proof."
+  ],
+  "whole_API_closed": false,
+  "global_Aplus": false
+}

@@ -63,7 +63,13 @@ internal sealed class DynamoDbSagaRepositoryContext<TSaga, TMessage>(
         {
             await _store.CreateAsync(instance, _consumeContext.CancellationToken).ConfigureAwait(false);
 
-            _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
+            try
+            {
+                _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
+            }
+            catch (Exception)
+            {
+            }
 
             return await _consumeContextFactory.CreateSagaConsumeContextAsync(
                     _store,
@@ -74,7 +80,13 @@ internal sealed class DynamoDbSagaRepositoryContext<TSaga, TMessage>(
         }
         catch (Exception ex)
         {
-            _consumeContext.LogInsertFault<TSaga, TMessage>(ex, instance.CorrelationId);
+            try
+            {
+                _consumeContext.LogInsertFault<TSaga, TMessage>(ex, instance.CorrelationId);
+            }
+            catch (Exception)
+            {
+            }
 
             throw;
         }

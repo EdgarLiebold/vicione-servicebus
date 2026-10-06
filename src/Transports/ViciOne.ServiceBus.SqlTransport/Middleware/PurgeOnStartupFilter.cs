@@ -42,15 +42,27 @@ public class PurgeOnStartupFilter :
         {
             if (_queueAlreadyPurged)
             {
-                LogContext.Debug?.Log("Queue {QueueName} was purged at startup, skipping", queueName);
+                try
+                {
+                    LogContext.Debug?.Log("Queue {QueueName} was purged at startup, skipping", queueName);
+                }
+                catch (Exception)
+                {
+                }
                 return;
             }
 
             await context.PurgeQueueAsync(queueName, context.CancellationToken).ConfigureAwait(false);
 
-            LogContext.Debug?.Log("Purged queue {QueueName}", queueName);
-
             _queueAlreadyPurged = true;
+
+            try
+            {
+                LogContext.Debug?.Log("Purged queue {QueueName}", queueName);
+            }
+            catch (Exception)
+            {
+            }
         }
         finally
         {

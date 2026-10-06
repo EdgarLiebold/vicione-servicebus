@@ -1,0 +1,33 @@
+{
+  "status": "ROOT_CANONICAL_SIGNALR25_GITSET_PERSONAL_FULL_LANGUAGE_CLOSURE_COMPLETE_BEFORE_TEST_AUTHORING",
+  "utc": "2026-10-04T03:19:30.110038+00:00",
+  "refs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package37-f043-root-owner25-r1/ACTUAL_PARSE_R1.json",
+      "bytes": 17868,
+      "sha256": "5df08895b56164c7b4248adffea6cf2df664fb6e542ef6928ea865c5444394d2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package37-f043-root-owner25-r1/PARSER_INPUT.json",
+      "bytes": 16334,
+      "sha256": "14b08a8e1a21fff5a90c671e0c7b9aa70c10da3b380367ab89dafd42dd4ff876"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE37_F043_ROOT_CANONICAL_OWNER25_FULL_R1.json",
+      "bytes": 46692,
+      "sha256": "b7f73850e511594478b0b7dac11952533d2a0b44fbb459f67135402ad388d99e"
+    }
+  ],
+  "owner_count": 25,
+  "csharp": 22,
+  "json": 2,
+  "xml": 1,
+  "requirements": 76,
+  "parser_native_exit": 0,
+  "syntax_errors": 0,
+  "disabled_regions": 0,
+  "shared_configs": "57 exact prior Root FULL hashes refreshed;10 XML/JSON reuse actual CoreScopedParser report;YAML/CAPI separate prior Root qualification;editorconfig/gitattributes plain grammar RootFull",
+  "adversarial_program_sha256": "0494601ef33d279737f0dad473cf4c872bcf6b1d907d16a7ebf08a37bba7dfed",
+  "adversarial_preflight_sha256": "abdbdb215afcfbed187447e483d0bd00dbe1a9572dd491edeb1d7614f9559e3b",
+  "global_API_or_runtime_acceptance": false
+}

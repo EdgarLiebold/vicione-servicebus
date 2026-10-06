@@ -1,0 +1,12 @@
+{
+  "status": "256_PERSONAL_READ_ROWS_HASH_VERIFIED_AND_MERGED",
+  "before_sha256": "1b7f06a1af3f54113d7b0a01a333c69fadf37391f1e2b9538d37e287f5c904c5",
+  "after_sha256": "1a6eeb3deac1f6b0bb6b00cc69991dc5b2f3c1b04f28299b4b797cdd35f7f023",
+  "added": 256,
+  "preserved_prior_rows": 2577,
+  "whole_full": 2833,
+  "total": 6209,
+  "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/sagas-family-review/PENDING_TO_FULL_PROPOSAL_CHECKPOINT_051_256.json",
+  "proposal_sha256": "0202dd3e255abbbbbb4d5f8f3c5ba0d7ed4059afd567d813ecf5491877ff9e7b",
+  "symbols_closed": 0
+}

@@ -395,11 +395,12 @@ public static class JobServiceExtensions
             cancellationToken: cancellationToken);
     }
 
-    /// <summary>Removes a terminal job and its retained attempts from persistence.</summary>
+    /// <summary>Publishes a request to finalize the specified job.</summary>
+    /// <remarks>Completing this operation does not acknowledge removal from persistence.</remarks>
     /// <param name="publishEndpoint">The endpoint used to publish the finalization command.</param>
     /// <param name="jobId">The identifier of the job to finalize.</param>
     /// <param name="cancellationToken">The token that cancels publication.</param>
-    /// <returns>A task that completes when the command has been published.</returns>
+    /// <returns>The task returned by the publish endpoint.</returns>
     public static Task FinalizeJobAsync(
         this IPublishEndpoint publishEndpoint,
         Guid jobId,

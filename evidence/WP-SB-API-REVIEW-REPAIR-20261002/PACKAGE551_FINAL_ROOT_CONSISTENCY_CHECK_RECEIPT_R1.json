@@ -1,0 +1,16 @@
+{
+  "status": "ROOT_FINAL_ADMINISTRATIVE_CONSISTENCY_PASS",
+  "actual_exec_JOIN": "807a72",
+  "actual_exit_code": 0,
+  "checks": [
+    "19433 unique member IDs",
+    "234 unique findings with bounded acceptance and0pending",
+    "exact CSV cardinalities6330/18569/18600/270/18/40",
+    "18569 Original plus31 later canonical IDs disjoint equal fresh18600",
+    "all23 final deliverable Manifest byte hashes exact"
+  ],
+  "SDK_calls": 0,
+  "Source_Test_Product_mutations": 0,
+  "does_not_replace_different_author_final_application_audit": true,
+  "manifest_sha256": "55832d35351f2b6c9280bfbc2250c4fe10d87c4accd830180031850947e1635f"
+}

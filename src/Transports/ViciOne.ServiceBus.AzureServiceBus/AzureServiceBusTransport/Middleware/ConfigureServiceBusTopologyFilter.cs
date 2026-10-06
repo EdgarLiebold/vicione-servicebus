@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.AzureServiceBus.Topology;
@@ -86,23 +86,44 @@ public class ConfigureServiceBusTopologyFilter<TSettings> :
         StartedActivity? activity = MessageActivity.TryStart("Configure Topology");
         try
         {
-            await Task.WhenAll(_brokerTopology.Topics.Select(topic => CreateAsync(context, topic, cancellationToken))).ConfigureAwait(false);
+            await CreateAllAsync(_brokerTopology.Topics, topic => CreateAsync(context, topic, cancellationToken)).ConfigureAwait(false);
 
-            await Task.WhenAll(_brokerTopology.Queues.Select(queue => CreateAsync(context, queue, cancellationToken))).ConfigureAwait(false);
+            await CreateAllAsync(_brokerTopology.Queues, queue => CreateAsync(context, queue, cancellationToken)).ConfigureAwait(false);
 
-            await Task.WhenAll(_brokerTopology.Subscriptions.Select(subscription => CreateAsync(context, subscription, cancellationToken)))
+            await CreateAllAsync(_brokerTopology.Subscriptions, subscription => CreateAsync(context, subscription, cancellationToken))
                 .ConfigureAwait(false);
 
-            await Task.WhenAll(_brokerTopology.QueueSubscriptions.Select(subscription => CreateAsync(context, subscription, cancellationToken)))
+            await CreateAllAsync(_brokerTopology.QueueSubscriptions, subscription => CreateAsync(context, subscription, cancellationToken))
                 .ConfigureAwait(false);
 
-            await Task.WhenAll(_brokerTopology.TopicSubscriptions.Select(subscription => CreateAsync(context, subscription, cancellationToken)))
+            await CreateAllAsync(_brokerTopology.TopicSubscriptions, subscription => CreateAsync(context, subscription, cancellationToken))
                 .ConfigureAwait(false);
         }
         finally
         {
             activity?.Stop();
         }
+    }
+
+    static Task CreateAllAsync<T>(T[] declarations, Func<T, Task> create)
+    {
+        var tasks = new List<Task>(declarations.Length);
+        foreach (T declaration in declarations)
+        {
+            try
+            {
+                tasks.Add(create(declaration)
+                    ?? throw new ArgumentException("The topology provider returned a null task.", "tasks"));
+            }
+            catch (Exception failure)
+            {
+                // Stop admitting declarations, but retain and join every task already admitted.
+                tasks.Add(Task.FromException(failure));
+                break;
+            }
+        }
+
+        return Task.WhenAll(tasks);
     }
 
     Task CreateAsync(ConnectionContext context, Topic topic, CancellationToken cancellationToken)

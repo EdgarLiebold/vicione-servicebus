@@ -1,0 +1,145 @@
+{
+  "utc": "2026-10-06T11:21:19.859742+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_INDIVIDUAL_SOURCE9_NATIVE0",
+  "validation": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package422-activemq8-sqsdispose1-root-source-validation-before-r1/REPORT.json",
+    "sha256": "b49ccc3c648d25439dc06a87d59836d161fab0628cad31189bbc50a861ba6f54",
+    "manifest_sha256": "a4dfaf8a9961f05fc56fb371d216fc93be74e45c886ccc605e50e717dfc1408f"
+  },
+  "selected_original_indices": [
+    451,
+    503,
+    542,
+    672,
+    732,
+    779,
+    781,
+    782,
+    1615
+  ],
+  "whole_unchanged_master_prior_rows_preserved": 19334,
+  "root_source_and_peer_authority": {
+    "utc": "2026-10-06T11:19:26.371466+00:00",
+    "status": "SOURCE9_VALIDATED_PENDING_ROOT_ADMIN_ACCEPTANCE_AFTER_SERIAL_SDK_JOIN",
+    "selected_original_indices": [
+      451,
+      503,
+      542,
+      672,
+      732,
+      779,
+      781,
+      782,
+      1615
+    ],
+    "own_root_source_receipts": [
+      "58c802",
+      "062c52",
+      "029b4e",
+      "961eee",
+      "ef0a46",
+      "072f6e"
+    ],
+    "own_root_norms_and_peer_receipts": [
+      "6cc0e0",
+      "eebebf"
+    ],
+    "proposal_and_peer_pins": [
+      {
+        "directory": "package413-activemq13-individual-current-local-contracts-proposed-r1",
+        "report_sha256": "6146ed56e4e452ddbb69fd5db27ddf2a97e78249f17a37b9caf7952e19eede5c",
+        "manifest_sha256": "8d887e9896801c047ca8d79fafafbc1504142f3d52b28a4edbb21f023899c38d"
+      },
+      {
+        "directory": "package413-activemq13-norm735-payload-preservation-overlay-r1",
+        "report_sha256": "4d0b297c20b261a05ac212af4da3ee176b2fbc775b849d72ff5a35d3801c5fa2",
+        "manifest_sha256": "52185f5b276f8668adac0052ca108a002ddc378410247d4a88aa840475d60c45"
+      },
+      {
+        "directory": "package418-activemq13-independent-runtime-source-norm-peer-r1",
+        "report_sha256": "3f18b09f3873412cb2b79274a0aec89f0b90920d9183582cf94c017cc1e8efae",
+        "manifest_sha256": "1b8fa0b57f02e9b488f68add76f9dbb49468757dc35414107b9715a486f04c46"
+      },
+      {
+        "directory": "package415-sqs-topic-dispose1-bounded-local-source-proposed-r1",
+        "report_sha256": "fbfda6b73c86f1942130b05c18afee504ec20bbda291b5842330133754e81ebe",
+        "manifest_sha256": "849a5a05ef20b466904bae25af63a9ad408f3aa760de118d936bf2cb42bce4b7"
+      },
+      {
+        "directory": "package415-topic-dispose1-independent-scanner-source-peer-r1",
+        "report_sha256": "b28aec348510f3fa0a3971056470687414ff1a1009feeac3bb77e5ce76c6a5bd",
+        "manifest_sha256": "d66d9af1f7aa874a7737ec7273c8cdbbc5e81e7626aaab8e30df3680f6acbeea"
+      }
+    ],
+    "current_master_sha256": "0572050db173df06f0a03201da82cf6ca27de6574ad54ca4c26487cbc22be446",
+    "source_files": [
+      {
+        "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqConnectionContext.cs",
+        "sha256": "43b516b33a5bac6bba661ef1997801cd63598988c83339e300b88ef5b5df3c22"
+      },
+      {
+        "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqMoveTransport.cs",
+        "sha256": "494222f5f8194594dfdc72c4ad1008f01acce85a91f8fbea55afcce7b5493144"
+      },
+      {
+        "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqSessionContext.cs",
+        "sha256": "3b529b33838114123c489731c2413579bb87f4c71c76adca27b9f6ac2c6e75e3"
+      },
+      {
+        "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ConnectionContextSupervisor.cs",
+        "sha256": "92ac17e111b196c2ea6e55ed8facbeba53af8eaf003fafd50fe7c940b055742e"
+      },
+      {
+        "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Middleware/ActiveMqConsumer.cs",
+        "sha256": "e2e2bd9ac81e0b3c1aac52ea93cb7cb7895ecbfe12d11d3142aadcf7501b3900"
+      },
+      {
+        "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/SessionContextFactory.cs",
+        "sha256": "5ba60a018cda6d2d4815dd1fce717afa5bd8e92d5b7a9669a1bf22c9ae871f00"
+      },
+      {
+        "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/SessionContextSupervisor.cs",
+        "sha256": "1df37cc1863b094555e9f657c54275ea4dbe24e9753d2e5b965c3999862c58ef"
+      },
+      {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79"
+      },
+      {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatcher.cs",
+        "sha256": "54c3110613a8ccdfbb9843b6fc7d6b19f70a0bfb999c2f25f366add8b531d0fe"
+      },
+      {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Batcher.cs",
+        "sha256": "2539ec46704400fb75596c69b1162cc620f487691bc227d0bca1aeefa5c6d9f9"
+      }
+    ],
+    "counts": {
+      "source_candidates": 9,
+      "native_credit_added": 0
+    },
+    "mechanical_precision": "Prior attempts produced no output: manifest files-wrapper, mixed id/symbol_id key and outer XML tail whitespace corrected. Structural selected XML member content exact; entire prior XML strings retained.",
+    "limits": [
+      "Each member has its own local contract and different-author source peer. Frozen314/320 selected source and XML exact; dependency graph not promoted as current423.",
+      "No Native, universal disposal/SPI or A+ whole API grade. Remaining runtime obligations explicit."
+    ]
+  },
+  "accounting": {
+    "original_canonical_denominator": 18569,
+    "original_canonical_accepted": 18481,
+    "original_canonical_remaining": 88,
+    "historical_new_canonical_accepted": 29,
+    "current_canonical_accepted": 18510,
+    "accessor_sidecar": 833,
+    "master_rows": 19343
+  },
+  "known_findings_unchanged": 225,
+  "bounded_dispositions_unchanged": 222,
+  "native_cases_added": 0,
+  "whole_API_closed": false,
+  "grade": null,
+  "limits": [
+    "Each member has its own local contract and different-author source peer. Frozen314/320 selected source and XML exact; dependency graph not promoted as current423.",
+    "No Native, universal disposal/SPI or A+ whole API grade. Remaining runtime obligations explicit."
+  ]
+}

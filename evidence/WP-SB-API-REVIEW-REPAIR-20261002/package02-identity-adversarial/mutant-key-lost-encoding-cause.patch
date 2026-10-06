@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs
++++ src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs
+@@ -26,7 +26,7 @@
+         }
+         catch (EncoderFallbackException exception)
+         {
+-            throw new ArgumentException("The key identifier must contain well-formed UTF-16.", nameof(keyId), exception);
++            throw new ArgumentException("The key identifier must contain well-formed UTF-16.", nameof(keyId), exception.InnerException);
+         }
+ 
+         if (keyIdByteCount > ushort.MaxValue)

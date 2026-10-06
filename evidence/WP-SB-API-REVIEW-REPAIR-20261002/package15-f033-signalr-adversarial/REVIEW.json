@@ -1,0 +1,584 @@
+{
+  "status": "SCOPED_F033_SIGNALR_CODE_AND_PUBLIC_BOUND_EVIDENCE_ACCEPTED",
+  "read_by": "azure_test_scope",
+  "independent_from_product_and_oracle_authorship": true,
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_FREEZE.json",
+    "sha256": "23a798b6c06e282f661e13f005bacd71b8cd67d33b8cac39600aaf09f050e4d2",
+    "bytes": 27248
+  },
+  "blocking_findings": [],
+  "source_contract": {
+    "provider": "Resolution failure preserved and actual created AsyncServiceScope awaited even resolution+scope dual failure.",
+    "manager": "Five owners acquire scope, capture selected operation exception, always await shared release. Remote-group request acquired inside try and stored nullable until ownership exists; synchronous RequestHandle.Dispose remains contract.",
+    "helper": "Ordered direct failures primary\u2192request\u2192scope. Request failure cannot prevent scope attempt. Sole exception same identity via ExceptionDispatchInfo; direct multi Aggregate without flatten; successful no-fault quiet.",
+    "compatibility": "Three internal product files only; unchanged public signatures and normal DI/registration selection. Existing token checks, local/empty fast paths and Task.WhenAll selected outcome maintained."
+  },
+  "public_oracle": {
+    "inputs_complete": 22,
+    "previous_corrected_csproj_and_cs_bodies_identical": true,
+    "ordinary_public_route": "AddSignalRCore+Routing,AddSignalRBackplane<PublicHub>,normal InMemory bus/real GroupCommandConsumer and IRequestClient SPI wrappers, no IVT/internal typename/private-member reflection.",
+    "causal_gates": "Await actual scope entry then assert pending operation before releasing scope gate; actual request send token/gate and response joined. No timeout-as-PASS.",
+    "primary_and_cleanup": "Exact exception refs/order, sole refs/stack, actual cancellation exception selected/retained, request-before-scope events and async dual-interface negative.",
+    "teardown": "Saved actual operation/publication/send/Message/followup tasks joined; all owned cleanup attempted; healthy original controls and corrected cases require recoveryfalse. Explicit mutant recovery is cleanup only; no recovery-derived productPASS.",
+    "real_positive_controls": "Actual serialized InvocationMessage/body received on public controlled HubConnectionContext; normal group responseack and remove operation; no HTTP socket claim."
+  },
+  "native_evidence": {
+    "original_final_cases": 41,
+    "original_causal_assertion_reds": 17,
+    "original_positive_controls": 24,
+    "original_guard_failures": 0,
+    "corrected_cases_passed": 41,
+    "mutation_baseline_cases_passed": 41,
+    "mutation_rollback_cases_passed": 41,
+    "strict_compiled_single_effect_mutants": 10,
+    "mutants": [
+      {
+        "name": "resolution-primary-discarded",
+        "single_effect_verified": true,
+        "negative": "publishendpointresolution-dualfault",
+        "assertion": "Xunit.Sdk.IsTypeException",
+        "positive": "publishendpointresolution-primaryonly",
+        "positive_passed": true,
+        "bounded_guard_failure": false,
+        "binary": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package15-f033-signalr-binaries-r3/resolution-primary-discarded/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "360183a2bf7f3f7aa295f48ca4699e8e5c09c8c3b32e923bf9bbb505d8030b3b"
+        },
+        "negative_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-resolution-primary-discarded-publishendpointresolution-dualfault",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "publishendpointresolution-dualfault",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T05:28:42.659622+00:00",
+          "completed_utc": "2026-10-03T05:28:43.381190+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-resolution-primary-discarded-publishendpointresolution-dualfault.log",
+          "log_sha256": "6a603e98b41a91bab426704c8b65539740a2d7b5a932034921657ec5dc00a41b"
+        },
+        "positive_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-resolution-primary-discarded-publishendpointresolution-primaryonly",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "publishendpointresolution-primaryonly",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T05:28:43.498097+00:00",
+          "completed_utc": "2026-10-03T05:28:44.201127+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-resolution-primary-discarded-publishendpointresolution-primaryonly.log",
+          "log_sha256": "7f30b9fd00555a8bdaa3a1a6ba400076a45569a22ed4cf02849a11f8247fe41e"
+        }
+      },
+      {
+        "name": "publish-await-using-restored",
+        "single_effect_verified": true,
+        "negative": "publish-dualfault",
+        "assertion": "Xunit.Sdk.IsTypeException",
+        "positive": "publish-primaryonly",
+        "positive_passed": true,
+        "bounded_guard_failure": false,
+        "binary": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package15-f033-signalr-binaries-r3/publish-await-using-restored/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "a5f752f1cbca912e1c879750d73bc89d445eea4835d68abc209ed8732af79025"
+        },
+        "negative_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-publish-await-using-restored-publish-dualfault",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "publish-dualfault",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T05:28:58.172281+00:00",
+          "completed_utc": "2026-10-03T05:28:59.550666+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-publish-await-using-restored-publish-dualfault.log",
+          "log_sha256": "98b742c9d1f17de190ab9d18517eda7c04bacb65c481dd28c86e066b651f0331"
+        },
+        "positive_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-publish-await-using-restored-publish-primaryonly",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "publish-primaryonly",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T05:29:00.031683+00:00",
+          "completed_utc": "2026-10-03T05:29:01.248662+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-publish-await-using-restored-publish-primaryonly.log",
+          "log_sha256": "adc44f6dd6220459d46874ee01438df16f11f98477b35479605dd76c2fcd9166"
+        }
+      },
+      {
+        "name": "connections-await-using-restored",
+        "single_effect_verified": true,
+        "negative": "connections-dualfault",
+        "assertion": "Xunit.Sdk.IsTypeException",
+        "positive": "connections-primaryonly",
+        "positive_passed": true,
+        "bounded_guard_failure": false,
+        "binary": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package15-f033-signalr-binaries-r3/connections-await-using-restored/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "1cbf1dfb2e69c1916567a70f7be225eadf051df16526657ba82f540a75653fcf"
+        },
+        "negative_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-connections-await-using-restored-connections-dualfault",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "connections-dualfault",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T05:29:12.182608+00:00",
+          "completed_utc": "2026-10-03T05:29:13.459762+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-connections-await-using-restored-connections-dualfault.log",
+          "log_sha256": "952d80684fccda6e2f778299aba5353380ff39c229495762fc50d89bd12ef442"
+        },
+        "positive_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-connections-await-using-restored-connections-primaryonly",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "connections-primaryonly",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T05:29:13.670866+00:00",
+          "completed_utc": "2026-10-03T05:29:14.643025+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-connections-await-using-restored-connections-primaryonly.log",
+          "log_sha256": "ec521a5104e8cb1cfa33389c9759e01c6390c5e30e6dde19e2564f61808de527"
+        }
+      },
+      {
+        "name": "groups-await-using-restored",
+        "single_effect_verified": true,
+        "negative": "groups-dualfault",
+        "assertion": "Xunit.Sdk.IsTypeException",
+        "positive": "groups-primaryonly",
+        "positive_passed": true,
+        "bounded_guard_failure": false,
+        "binary": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package15-f033-signalr-binaries-r3/groups-await-using-restored/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "4bf373e94ed4ecc2a24ec228146303f24a7133b1fff739d854d02a16327d6510"
+        },
+        "negative_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-groups-await-using-restored-groups-dualfault",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "groups-dualfault",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T05:29:24.574906+00:00",
+          "completed_utc": "2026-10-03T05:29:25.610755+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-groups-await-using-restored-groups-dualfault.log",
+          "log_sha256": "3cd3732f363ff8f3cde8813d908717b49ef5fb60a5d6e1946ca12ccc5160b391"
+        },
+        "positive_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-groups-await-using-restored-groups-primaryonly",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "groups-primaryonly",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T05:29:25.772211+00:00",
+          "completed_utc": "2026-10-03T05:29:26.685439+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-groups-await-using-restored-groups-primaryonly.log",
+          "log_sha256": "53c6e3e29cda15b0dfb60f60914f57a81bcde2ae7ef275c6b8cb4efcbb69b3e2"
+        }
+      },
+      {
+        "name": "users-await-using-restored",
+        "single_effect_verified": true,
+        "negative": "users-dualfault",
+        "assertion": "Xunit.Sdk.IsTypeException",
+        "positive": "users-primaryonly",
+        "positive_passed": true,
+        "bounded_guard_failure": false,
+        "binary": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package15-f033-signalr-binaries-r3/users-await-using-restored/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "ff6a867e647373b5e59c7b8fc96d6a244bd77601adaf59bb87874b7ded2c398b"
+        },
+        "negative_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-users-await-using-restored-users-dualfault",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "users-dualfault",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T05:29:35.176284+00:00",
+          "completed_utc": "2026-10-03T05:29:35.985758+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-users-await-using-restored-users-dualfault.log",
+          "log_sha256": "7133cdf6adcc06c07d48db52f06eb2bb413de1a9e96ac44f28d7ff7352b3e27c"
+        },
+        "positive_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-users-await-using-restored-users-primaryonly",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "users-primaryonly",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T05:29:36.104968+00:00",
+          "completed_utc": "2026-10-03T05:29:36.939374+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-users-await-using-restored-users-primaryonly.log",
+          "log_sha256": "f99ab8efd9592df9d04a69c4d013de8ff6eb39f2c7485ac9511a8f6512c2a331"
+        }
+      },
+      {
+        "name": "remotegroup-await-using-restored",
+        "single_effect_verified": true,
+        "negative": "remotegroup-dualfault",
+        "assertion": "Xunit.Sdk.IsTypeException",
+        "positive": "remotegroup-primaryonly",
+        "positive_passed": true,
+        "bounded_guard_failure": false,
+        "binary": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package15-f033-signalr-binaries-r3/remotegroup-await-using-restored/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "92ba092554a7a8cddb2a5a9d85510fd4f1e5e6ce522fb2fc51c29fb13cb261b7"
+        },
+        "negative_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-remotegroup-await-using-restored-remotegroup-dualfault",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "remotegroup-dualfault",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T05:29:45.038600+00:00",
+          "completed_utc": "2026-10-03T05:29:45.960685+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-remotegroup-await-using-restored-remotegroup-dualfault.log",
+          "log_sha256": "3cfd2f989f69243270954d68e544cab1c70ca06e473ee8834bd61fadfda92491"
+        },
+        "positive_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-remotegroup-await-using-restored-remotegroup-primaryonly",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "remotegroup-primaryonly",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T05:29:46.110408+00:00",
+          "completed_utc": "2026-10-03T05:29:47.046296+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-remotegroup-await-using-restored-remotegroup-primaryonly.log",
+          "log_sha256": "556e1ccb4baa516155f6e0f3becf8145356ecb8286efe18b927894ee4c139f63"
+        }
+      },
+      {
+        "name": "request-fault-skips-scope",
+        "single_effect_verified": true,
+        "negative": "advancedhandle-responseandhandlefault",
+        "assertion": "Xunit.Sdk.TrueException",
+        "positive": "remotegroup-success",
+        "positive_passed": true,
+        "bounded_guard_failure": false,
+        "binary": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package15-f033-signalr-binaries-r3/request-fault-skips-scope/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "8a4fa8375a82b09e6da80bdf937a8f86e5ed28304c2da6cc12f9a4f9d98a4297"
+        },
+        "negative_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-request-fault-skips-scope-advancedhandle-responseandhandlefault",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "advancedhandle-responseandhandlefault",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T05:29:53.711577+00:00",
+          "completed_utc": "2026-10-03T05:29:54.437628+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-request-fault-skips-scope-advancedhandle-responseandhandlefault.log",
+          "log_sha256": "4b98f095475eb5ad136e0a9f9d0ce5ebabf5dfc9ce1a1e0f2401b04954238698"
+        },
+        "positive_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-request-fault-skips-scope-remotegroup-success",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "remotegroup-success",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T05:29:54.567863+00:00",
+          "completed_utc": "2026-10-03T05:29:55.588968+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-request-fault-skips-scope-remotegroup-success.log",
+          "log_sha256": "7f8f957caf27bd0402fe2cb762f68ce23526d23ab452e9a7a9a3750a26b60948"
+        }
+      },
+      {
+        "name": "aggregate-order-reversed",
+        "single_effect_verified": true,
+        "negative": "advancedhandle-controlledthreefaults",
+        "assertion": "Xunit.Sdk.SameException",
+        "positive": "publish-primaryonly",
+        "positive_passed": true,
+        "bounded_guard_failure": false,
+        "binary": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package15-f033-signalr-binaries-r3/aggregate-order-reversed/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "df34f8ad04d66c5756ef3ca8faa09b0fc0e4d1023c3331a7b6fe51f2e82bda09"
+        },
+        "negative_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-aggregate-order-reversed-advancedhandle-controlledthreefaults",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "advancedhandle-controlledthreefaults",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T05:30:02.500065+00:00",
+          "completed_utc": "2026-10-03T05:30:04.172929+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-aggregate-order-reversed-advancedhandle-controlledthreefaults.log",
+          "log_sha256": "ce2932ef030272849c2c1390e7a57d6b8316c6ebc7b624b5ba58fcbaeecf3e4a"
+        },
+        "positive_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-aggregate-order-reversed-publish-primaryonly",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "publish-primaryonly",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T05:30:04.344557+00:00",
+          "completed_utc": "2026-10-03T05:30:05.769932+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-aggregate-order-reversed-publish-primaryonly.log",
+          "log_sha256": "f16b676737eac8a66a743e1634c24a5f61a76cfe94c061c41e0a93f47f8ff5e6"
+        }
+      },
+      {
+        "name": "single-fault-wrapped",
+        "single_effect_verified": true,
+        "negative": "publish-cleanuponly",
+        "assertion": "Xunit.Sdk.SameException",
+        "positive": "publish-success",
+        "positive_passed": true,
+        "bounded_guard_failure": false,
+        "binary": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package15-f033-signalr-binaries-r3/single-fault-wrapped/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "caddc7aa9437dab8aaae3f7969ab63262c01becc419641ad50f465a6398a1fca"
+        },
+        "negative_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-single-fault-wrapped-publish-cleanuponly",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "publish-cleanuponly",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T05:30:14.574927+00:00",
+          "completed_utc": "2026-10-03T05:30:15.341532+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-single-fault-wrapped-publish-cleanuponly.log",
+          "log_sha256": "057c34959ce4a5955a13dab59e54f6780a11269973659e73cb8e106005e39722"
+        },
+        "positive_receipt": {
+          "phase": "package15-f033-signalr-mut-r3-single-fault-wrapped-publish-success",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "publish-success",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T05:30:15.460342+00:00",
+          "completed_utc": "2026-10-03T05:30:16.192309+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r3-single-fault-wrapped-publish-success.log",
+          "log_sha256": "58f53fc9e4f199f0296abe7dd5d2966340b0958a7cd66f983fd5624caf9d2bc1"
+        }
+      },
+      {
+        "name": "request-async-preferred",
+        "single_effect_verified": true,
+        "negative": "dualinterfacehandle-stillsynchronous",
+        "assertion": "Xunit.Sdk.EqualException",
+        "positive": "publish-success",
+        "positive_passed": true,
+        "bounded_guard_failure": false,
+        "binary": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package15-f033-signalr-binaries-r4/request-async-preferred/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "f0c35d10ba3ba3c28d0f4184a5f00dfd6cd1d8157221fa79c92bdbf4d3c47f56"
+        },
+        "negative_receipt": {
+          "phase": "package15-f033-signalr-mut-r4-request-async-preferred-dualinterfacehandle-stillsynchronous",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "dualinterfacehandle-stillsynchronous",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T05:33:31.919457+00:00",
+          "completed_utc": "2026-10-03T05:33:33.014230+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r4-request-async-preferred-dualinterfacehandle-stillsynchronous.log",
+          "log_sha256": "11e8498eeec522576f16266d060d7e3e4b91d8c1eb8ec4217a8fbcdadfbacaa6"
+        },
+        "positive_receipt": {
+          "phase": "package15-f033-signalr-mut-r4-request-async-preferred-publish-success",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+            "publish-success",
+            "00:00:12",
+            "00:00:45"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T05:33:33.145382+00:00",
+          "completed_utc": "2026-10-03T05:33:33.913105+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-mut-r4-request-async-preferred-publish-success.log",
+          "log_sha256": "e76dcc5c403109c77ed81e8905447fc7e4c74b42a357ddafde2f0d2cd3e1c12e"
+        }
+      }
+    ],
+    "earlier_setup_excluded": "R1-R3 restore NU1510/NU1101;R4-R6 compiler14/4/4;R7/R8 two41 DI setup-fail batches;R9 missing assets;R10 nonexistent external PDB assumption after strict build. All historical setup and no kill.",
+    "control_correction": "R11 bad standardremove positive affects same dual-interface wrapper; actual red excluded. Nine byte-identical accepted pairs retained; tenth freshly strict compiled r4 with publish-success positive and41baseline+rollback verified."
+  },
+  "physical_binding": {
+    "proof": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-adversarial/BINDING_PROOF.json",
+      "sha256": "e7069923df6348540f3d9e1b3257351860a7e199a5fd4c781121e162ade63443",
+      "bytes": 193483
+    },
+    "source_effects": 252,
+    "exact_ledger_receipts": 62,
+    "selected_package_chains": 6,
+    "pe_pdb_images": 20,
+    "document_sha256_conditions": 151,
+    "signalr_package_dll_original": "5db60a07f5b73fc9e1e3b5efb32d4515189fca88df902ceb21092179e34e88bd",
+    "signalr_package_dll_corrected": "baaf15493e0e0ea98ebe3b70c6d937d94883582ba974e41f2c5ca80a14afe59b",
+    "constant_Core_Abs": {
+      "ViciOne.ServiceBus.dll": "1872fcba94846a8705c9367ab7217d06a74db951b80a36c47a79dac0c95d2bab",
+      "ViciOne.ServiceBus.Abstractions.dll": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+    },
+    "pruning": [
+      {
+        "consumer": "previous",
+        "assets": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/obj/project.assets.json",
+          "sha256": "ec7b048e2446e06b8354dbf532d1aa86c5b5ad91d6cd2d510b9285e11888a298",
+          "bytes": 36851
+        },
+        "read_extent": "TARGETED_FRAMEWORK_LIBRARY_PRUNE_METADATA",
+        "prune_ranges": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "(,10.0.32767]",
+          "Microsoft.Extensions.Diagnostics": "(,10.0.32767]",
+          "Microsoft.Extensions.Diagnostics.HealthChecks": "(,10.0.32767]",
+          "Microsoft.Extensions.Hosting.Abstractions": "(,10.0.32767]",
+          "Microsoft.Extensions.Logging.Abstractions": "(,10.0.32767]",
+          "Microsoft.Extensions.Options": "(,10.0.32767]"
+        }
+      },
+      {
+        "consumer": "corrected",
+        "assets": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/obj/project.assets.json",
+          "sha256": "689ab5b4b5b30f25915c53e53be5dbc63ce6d6ad0988b027c506ce05ccb22d89",
+          "bytes": 36858
+        },
+        "read_extent": "TARGETED_FRAMEWORK_LIBRARY_PRUNE_METADATA",
+        "prune_ranges": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "(,10.0.32767]",
+          "Microsoft.Extensions.Diagnostics": "(,10.0.32767]",
+          "Microsoft.Extensions.Diagnostics.HealthChecks": "(,10.0.32767]",
+          "Microsoft.Extensions.Hosting.Abstractions": "(,10.0.32767]",
+          "Microsoft.Extensions.Logging.Abstractions": "(,10.0.32767]",
+          "Microsoft.Extensions.Options": "(,10.0.32767]"
+        }
+      }
+    ],
+    "all6209_original_M_restored": {
+      "csv": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/FILE_COVERAGE.csv",
+        "sha256": "a6c3e9c9f38f0774f5b60ac395e5dc9fefae2e66d7b9e0b2bc6f2d7cac3a02e6",
+        "bytes": 4104951
+      },
+      "started_utc": "2026-10-03T05:40:36.173435+00:00",
+      "completed_utc": "2026-10-03T05:40:39.311426+00:00",
+      "original_checked": 6209,
+      "mismatches": [],
+      "new_files_removed": true
+    },
+    "oracle_and_runtime_restored": true
+  },
+  "separate_candidate": {
+    "id": "SIGNALR-FANOUT-SYNC-001",
+    "status": "UNVERIFIED",
+    "own_dossier": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package15-f033-signalr-preflight/SEPARATE_FANOUT_CANDIDATE.json",
+      "sha256": "37b2edbcf373c314500ace58902df9a879afdeb9be69cf3a427a57b5e44bcd11",
+      "bytes": 5809
+    },
+    "scope": "pre-existing manager lazyWhenAll prefix tasks followed by synchronous customSPI throw; separate future qualification/repair, no F033 fixed claim."
+  },
+  "safety": {
+    "native_operations_executed": 0,
+    "product_writes": 0,
+    "canonical_test_writes": 0,
+    "global_csv_writes": 0,
+    "new_test_authorship": false,
+    "root_closure_transferred": false,
+    "whole_API_CLOSED": false
+  },
+  "limits": [
+    "Bounded public NuGet console with one normal InMemory bus and controlled public SPI collaborators; actual SignalR serialization/client delivery and normal remote-group request/ack control. No HTTP/TCP/cross-node deployment guarantee.",
+    "No universal completion for throwing enumerable/custom synchronous fanout SPI: separate candidate SIGNALR-FANOUT-SYNC-001 UNVERIFIED remains open.",
+    "No whole Core766 canonical test-owner reading, whole SignalR canonical suite, whole API/A+ grade, ARM/heap/cloud benchmark or CLOSED symbol.",
+    "The exact Microsoft framework runtime was10.0.10 X64; Core nuspec10.0.12 dependencies unchanged and SDK pruned. No assumed Microsoft NuGet10.0.12 runtime.",
+    "SignalR mutation runtime uses strictly compiled DLL substitutions with embedded PDB; no individual mutant NuGet-pack claim.",
+    "DI scope release may itself contain complex cleanup; F033 guarantees caught selected primary/request/scope failures, not universal best-effort disposal of unknown DI objects."
+  ]
+}

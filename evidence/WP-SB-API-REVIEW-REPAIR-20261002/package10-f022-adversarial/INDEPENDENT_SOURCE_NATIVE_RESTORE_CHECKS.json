@@ -1,0 +1,383 @@
+{
+  "exact_journal_receipts": [
+    {
+      "phase": "package10-f022-previous-restore",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-previous-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-previous-build-r2",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-previous-build-r3",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-previous-ten",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-core-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-core-pack",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-abstractions-pack",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-corrected-restore",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-corrected-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-corrected-ten",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-corrected-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-corrected-all",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-admission-cleanup-omitted-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-admission-cleanup-omitted-admission-formatter-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-mut-admission-cleanup-omitted-admission-plain-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-delivery-cleanup-omitted-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-delivery-cleanup-omitted-delivery-formatter-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-mut-delivery-cleanup-omitted-delivery-plain-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-caller-activity-disposed-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-caller-activity-disposed-admission-formatter-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-mut-caller-activity-disposed-admission-plain-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-unsafe-listener-disposal-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-unsafe-listener-disposal-admission-stop-fault",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-mut-unsafe-listener-disposal-admission-plain-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-rollback-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-rollback-all",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-previous-build-r4",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-previous-ten-r2",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-corrected-build-r2",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-corrected-ten-r2",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-corrected-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-corrected-all",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-admission-cleanup-omitted-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-admission-cleanup-omitted-admission-formatter-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-mut-r2-admission-cleanup-omitted-admission-plain-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-delivery-cleanup-omitted-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-delivery-cleanup-omitted-delivery-formatter-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-mut-r2-delivery-cleanup-omitted-delivery-plain-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-caller-activity-disposed-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-caller-activity-disposed-admission-formatter-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-mut-r2-caller-activity-disposed-admission-plain-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-unsafe-listener-disposal-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-unsafe-listener-disposal-admission-stop-fault",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 1
+    },
+    {
+      "phase": "package10-f022-mut-r2-unsafe-listener-disposal-admission-plain-sampled",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-rollback-build",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    },
+    {
+      "phase": "package10-f022-mut-r2-rollback-all",
+      "exact_execution_journal_row_match": true,
+      "actual_log_sha256_match": true,
+      "exit": 0
+    }
+  ],
+  "recorded_actual_objects_equal_real_logs": true,
+  "mutant_source_effects": [
+    {
+      "mutant": "admission-cleanup-omitted",
+      "reconstructed_exactly": true,
+      "only_trace_source_changed": true,
+      "source_sha256": "7d75f3e155355b9c833d229a77c992e95ebf141e784e598d43889b09fbba870a",
+      "native_red": {
+        "case": "admission-formatter-sampled",
+        "assertions_passed": false,
+        "exception_type": "Xunit.Sdk.TrueException",
+        "Message": "Assert.True() Failure\nExpected: True\nActual:   False",
+        "StackTrace": "   at Xunit.Assert.True(Nullable`1 condition, String userMessage) in /_/src/xunit.v3.assert/Asserts/BooleanAsserts.cs:line 135\n   at Xunit.Assert.True(Boolean condition) in /_/src/xunit.v3.assert/Asserts/BooleanAsserts.cs:line 89\n   at ViciOneReview.ActivityOwnership.ActivityAssertions.<>c__DisplayClass0_0.<<RunAsync>b__2>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityAssertions.cs:line 182\n--- End of stack trace from previous location ---\n   at ViciOneReview.ActivityOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.ActivityOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.ActivityOwnership.ActivityAssertions.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityAssertions.cs:line 112\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "positive_control": [
+        {
+          "case": "admission-plain-sampled",
+          "assertions_passed": true
+        }
+      ],
+      "actual_loaded_binary_binding": true
+    },
+    {
+      "mutant": "delivery-cleanup-omitted",
+      "reconstructed_exactly": true,
+      "only_trace_source_changed": true,
+      "source_sha256": "1cb032aedf0a4eba857ed06f306e32faf47baac596bf34f4fe9e0150329c5079",
+      "native_red": {
+        "case": "delivery-formatter-sampled",
+        "assertions_passed": false,
+        "exception_type": "Xunit.Sdk.TrueException",
+        "Message": "Assert.True() Failure\nExpected: True\nActual:   False",
+        "StackTrace": "   at Xunit.Assert.True(Nullable`1 condition, String userMessage) in /_/src/xunit.v3.assert/Asserts/BooleanAsserts.cs:line 135\n   at Xunit.Assert.True(Boolean condition) in /_/src/xunit.v3.assert/Asserts/BooleanAsserts.cs:line 89\n   at ViciOneReview.ActivityOwnership.ActivityAssertions.<>c__DisplayClass0_0.<<RunAsync>b__2>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityAssertions.cs:line 182\n--- End of stack trace from previous location ---\n   at ViciOneReview.ActivityOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.ActivityOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.ActivityOwnership.ActivityAssertions.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityAssertions.cs:line 112\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "positive_control": [
+        {
+          "case": "delivery-plain-sampled",
+          "assertions_passed": true
+        }
+      ],
+      "actual_loaded_binary_binding": true
+    },
+    {
+      "mutant": "caller-activity-disposed",
+      "reconstructed_exactly": true,
+      "only_trace_source_changed": true,
+      "source_sha256": "3373e74aaa8c96468ab8ebaa23d5d1d7ebc3eb2db766f4ba17bcb009e52387b0",
+      "native_red": {
+        "case": "admission-formatter-sampled",
+        "assertions_passed": false,
+        "exception_type": "Xunit.Sdk.FalseException",
+        "Message": "Assert.False() Failure\nExpected: False\nActual:   True",
+        "StackTrace": "   at Xunit.Assert.False(Nullable`1 condition, String userMessage) in /_/src/xunit.v3.assert/Asserts/BooleanAsserts.cs:line 76\n   at Xunit.Assert.False(Boolean condition) in /_/src/xunit.v3.assert/Asserts/BooleanAsserts.cs:line 30\n   at ViciOneReview.ActivityOwnership.ActivityAssertions.<>c__DisplayClass0_0.<<RunAsync>b__2>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityAssertions.cs:line 178\n--- End of stack trace from previous location ---\n   at ViciOneReview.ActivityOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.ActivityOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.ActivityOwnership.ActivityAssertions.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityAssertions.cs:line 112\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "positive_control": [
+        {
+          "case": "admission-plain-sampled",
+          "assertions_passed": true
+        }
+      ],
+      "actual_loaded_binary_binding": true
+    },
+    {
+      "mutant": "unsafe-listener-disposal",
+      "reconstructed_exactly": true,
+      "only_trace_source_changed": true,
+      "source_sha256": "814c0d271621d49921905bfeb36585b43d7e8d648ed4d361a48ffd0cb9e6acbd",
+      "native_red": {
+        "case": "admission-stop-fault",
+        "assertions_passed": false,
+        "exception_type": "System.InvalidOperationException",
+        "Message": "owned-stop-listener-fault",
+        "StackTrace": "   at ViciOneReview.ActivityOwnership.ActivityAssertions.<>c__DisplayClass0_0.<RunAsync>b__20(Activity activity) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityAssertions.cs:line 99\n   at System.Diagnostics.SynchronizedList`1.EnumWithAction(Action`2 action, Object arg)\n   at System.Diagnostics.Activity.Stop()\n   at System.Diagnostics.Activity.Dispose()\n   at ViciOne.ServiceBus.Monitoring.Telemetry.ServiceBusInstrumentation`1.StartDurableAdmission(SerializedDurableSend message) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs:line 89\n   at ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmission`1.AdmitCoreAsync(SerializedDurableSend message, CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendAdmission.cs:line 45\n   at ViciOneReview.ActivityOwnership.ActivityAssertions.<>c__DisplayClass0_0.<<RunAsync>b__2>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityAssertions.cs:line 145\n--- End of stack trace from previous location ---\n   at ViciOneReview.ActivityOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.ActivityOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.ActivityOwnership.ActivityAssertions.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityAssertions.cs:line 112\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "positive_control": [
+        {
+          "case": "admission-plain-sampled",
+          "assertions_passed": true
+        }
+      ],
+      "actual_loaded_binary_binding": true
+    }
+  ],
+  "oracle_hashes_final_preserved": true,
+  "M_original_current_full_hashcheck_count": 6209,
+  "M_original_mismatches": [],
+  "new_identity_deleted": true,
+  "runtime_final_zip_cache_output_loaded_hash_binding": true,
+  "whole_packed_core_XML_exact_equal": true,
+  "selected_package_core_PDB_only_changed_document": [
+    "ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs"
+  ],
+  "note": "PDB Document source bindings are compile provenance, not whole binary/behavior equivalence or unrelated Core-owner acceptance."
+}

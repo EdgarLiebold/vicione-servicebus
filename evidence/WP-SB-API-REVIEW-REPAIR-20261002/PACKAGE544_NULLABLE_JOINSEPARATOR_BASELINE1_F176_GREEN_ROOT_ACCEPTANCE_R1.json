@@ -1,0 +1,58 @@
+{
+  "utc": "2026-10-06T18:53:25.173419+00:00",
+  "status": "EXACT1_BASELINE_INTENDED_NULLABILITY_APPLIED_F176_LOCAL_FIXED_FRESH31_RERUN_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package541-joinseparator-nullability-baseline-one-literal-root-proposed-r1/REPORT.json",
+    "sha256": "8e1fbe1d3993280c2e5488d6c4523f9d7f49dbd27530d63614a5057dc1028d70"
+  },
+  "different_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package541-joinseparator-baseline-one-literal-independent-source-peer-r1/REPORT.json",
+    "sha256": "af4737ea3dd777c3bee6bb6b104359fb0494397149a47deef2b2b3cdeaf17e02"
+  },
+  "before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package544-one-baseline-literal-f176-green-root-application-before-r1/MANIFEST.json",
+    "sha256": "a645850a42c44acf4591341f1f6578f82265c9151dc0d13e9e7f5f9231c2b780"
+  },
+  "baseline_relative": "docs/api/packed-public-api.txt",
+  "baseline_before": "f21dbd840230b816b300ad227ad3de39322cf1bd544dcafbf1f2ecd326fe9bef",
+  "baseline_after": "493c48624b80c801824bf6caee9b7e6b960b6608335bebaee97da97208e44252",
+  "literal_before": "  PROPERTY System.String JoinSeparator { protected-get;  }",
+  "literal_after": "  PROPERTY System.String JoinSeparator { protected-get;  } [nullability={read=Nullable;write=none}]",
+  "CLR_signature_Source_Test_Req_generator_changes": 0,
+  "compatibility_effect": "Existing nullable protected property declaration truth accepted356; only baseline corrected, derived nullable source warnings match preexisting null runtime state.",
+  "known_findings": 234,
+  "bounded_accepted": 225,
+  "pending": 9,
+  "F176_current_local_proof": {
+    "whole_unit537": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package537-all23-independent-native-qualification-r1/REPORT.json",
+      "sha256": "a4a99659890c0dd4ab30bf2c54e9da0a8e711ce84f52b9e34b2c9380986fc69e"
+    },
+    "mandatory_read_label_precision": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package537-independent-native-read-label-precision-r1/ERRATUM.json",
+      "sha256": "3b0c75653aa4a51f06c87d7a0875b6085516f56831e3e3a8a3e6c0733b5a87aa"
+    },
+    "Event5396": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package539-event6-independent-native-qualification-r1/REPORT.json",
+      "sha256": "da39922234b0549e54125f6c9c0eed319267c7d29816d95c55be730274f4d296"
+    },
+    "Event540scoped166": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package540-event166-independent-scoped-summary-qualification-r1/REPORT.json",
+      "sha256": "e1e69343af55d455d17aa372aaee7946a3921bf072c3aa1ff1e68d00d1bf821d"
+    }
+  },
+  "failed534_kept": {
+    "JOIN_gate": "ea521e",
+    "JOIN_watcher": "17acea",
+    "raw": "f4fb3ef311915558cf71df68b5b7bd26aa34c9f096651a0aab17368741db2134",
+    "capture_MAN": "2916abdfcdfc7ec34328223d63c989a993e01b9db1ee8803bb0f3904c7b724d8",
+    "binlogs24_MAN": "b69825315f88ee6c57ad625893b30016077e1a33fd1cf6cfc68d54648caa248b"
+  },
+  "whole_API_closed": false,
+  "grade": null,
+  "limits": [
+    "No534GatePASS claim, no automatic baseline updater flag. Exactintended single nullable annotation reviewed and accepted explicitly within autonomous repair authorization.",
+    "F176 architecture solefailedcase nowunfilteredmodulePASS, pluschangedEventTest strict/native6/scoped166; no13newNativecases and no newUID.",
+    "Fresh546 gate/703currentSourcebindings and integratedadversarialreview remain required."
+  ]
+}

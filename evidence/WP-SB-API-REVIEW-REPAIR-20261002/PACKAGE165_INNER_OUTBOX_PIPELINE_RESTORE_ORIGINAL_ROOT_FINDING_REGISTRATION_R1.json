@@ -1,0 +1,44 @@
+{
+  "utc": "2026-10-05T05:14:14.376115+00:00",
+  "actor": "/root",
+  "confirmed_before": 150,
+  "confirmed_after": 151,
+  "accepted_current": 150,
+  "cause": {
+    "id": "F-SB-API-151",
+    "severity": "Medium",
+    "title": "Inner Outbox ambient restoration failure replaces simultaneous pipeline failure",
+    "classification": "CONFIRMED_FINITE_NATIVE_PUBLIC_OWNERSHIP_CAUSE_LOSS",
+    "status": "CONFIRMED_REPAIR_SOURCE_PEER_APPROVED_APPLICATION_PENDING",
+    "actual_original_context": {
+      "actual_failed_case": "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests.OutboxMessagePipe_PreservesPipelineAndAmbientRestoreOutcomesAsync(pipelineFails: True, restoreFails: True)",
+      "first_actual_failure": "Source662 Assert.IsType<AggregateException>(observed) receives ApplicationException.",
+      "reached": [
+        "Actual real CreatedConsumeScopeContext pushes through public ISetScopedConsumeContext into actual ScopedConsumeContextProvider",
+        "Real downstream provider task held; public operation also pending; exact next/context/scope identity and no early restore/SetConsumed",
+        "Downstream fault terminal observed; restore executed exactly once; original ambient context identity actually restored",
+        "SetConsumed0 on failing pipeline; ordered next then ambient-restore events",
+        "Borrowed outer restoration handle and scope remain undisposed before public outcome assertion",
+        "Public operation faulted; failure then occurs at aggregate type assertion662"
+      ],
+      "unreached": [
+        "Source663..665 exact ordered original pipeline IOException plus restoration ApplicationException identities"
+      ],
+      "actual_three_controls": [
+        "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests.OutboxMessagePipe_PreservesPipelineAndAmbientRestoreOutcomesAsync(pipelineFails: False, restoreFails: True)",
+        "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests.OutboxMessagePipe_PreservesPipelineAndAmbientRestoreOutcomesAsync(pipelineFails: True, restoreFails: False)",
+        "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests.OutboxMessagePipe_PreservesPipelineAndAmbientRestoreOutcomesAsync(pipelineFails: False, restoreFails: False)"
+      ],
+      "cause": "Inner OutboxMessagePipe.SendAsync uses a synchronous using handle from PushConsumeContext around awaited pipeline. Restore throws during unwind and replaces primary pipeline IOException. Outer scope cleanup is separate and not invoked by this public operation.",
+      "scope_precision": "Actual ScopedConsumeContextProvider uses instance context with Volatile/lock/CompareExchange; this evidence is not an AsyncLocal or cross-ExecutionContext proof.",
+      "cleanup": "Nested finally independently observes downstream and operation tasks, then disposes actual outer scope context once; borrowed ownership counts stay zero until that explicit cleanup.",
+      "limits": "Native first failure proves aggregate shape loss and preceding reached assertions; exact two-cause assertion is not claimed reached. Root alone registers and repairs the new confirmed cause."
+    },
+    "original_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-parent-fixed18-ambient-original-selected100-neighbors2290-fresh2-independent-r1/REPORT.json",
+      "sha256": "b39086ac2f32a65e52834c8a51206f1d12c444f369fe7dd5806f5b2ea34121fb"
+    },
+    "whole_API_member_review_closed": false
+  },
+  "CLOSED": false
+}

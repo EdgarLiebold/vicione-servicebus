@@ -1,0 +1,24 @@
+{
+  "status": "DOC2_UPDATED_DIFFERENT_REVIEW_PENDING",
+  "files": [
+    {
+      "relative": "CHANGELOG.md",
+      "before_sha256": "2c20193151874c23b53eac5dec72e784724acd9ed385bbdace20d795058e7a37",
+      "after_sha256": "4d2377126b992bb25b59b895b96238bd189fdf209e9387cb4bad570efd68440f",
+      "after_bytes": 2716
+    },
+    {
+      "relative": "docs/changelog/product-fixes.md",
+      "before_sha256": "77373cd27e36c2dc36a834fc646565d1cdab769ef567ba09be63beb9ae64773a",
+      "after_sha256": "63d7a6b78faf10309159e6b070beca158e989f155ccb63fe6ccb76b2bbfe3c9e",
+      "after_bytes": 49573
+    }
+  ],
+  "diff_sha256": "150246970e5863779cc365a5ee2c4ac3159fb462c357da4b0e6b4fc4170a31af",
+  "historical_product_fix_bytes_preserved": true,
+  "relative_links_resolve": true,
+  "git_diff_check_exit": 0,
+  "Source_Test_API_code_changes": 0,
+  "SDK_calls": 0,
+  "no_commit_or_push": true
+}

@@ -1,0 +1,19 @@
+{
+  "finding": "F-SB-API-058",
+  "status": "FIXED_ADVERSARIAL_NATIVE_FRESH_PACK_ROOT_REPAIR_REVIEW_CLOSED",
+  "reason": "Actual unsupported positive upper values reproducibly accepted by original filter: native16 fourteenPASS/two finite no-exception RED. Fixed upper guard mirrors actual runtime millisecond truncation; both supported integer/fractional controls and both rejected unsupported cases explicitlyPASS in native48. Root whole source, all native logs and compact independent reports reviewed.",
+  "independent_reviews": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package47-f057-f058-native-independent-r1/REPORT.md",
+      "sha256": "7c0efbbd977692ac7d99a9d9b7fb8f2463096b977a96b4b8bdda28e98910237d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package47-f058-original-red-native-independent-r1/REPORT.md",
+      "sha256": "a850e0a86183810aee40f07e53a5f4c6ebb2f162e3dd4a491c9eef0bc5179453"
+    }
+  ],
+  "original_frame": "package46-47-bus-green-outbox-original-frame-r1 independently qualified supplement, actual4PE/PDB/all37manifest/runtimecopies; Root temporal linkage recorded separately.",
+  "corrected_frame": "package47-fixed-native48-frame-r1 independently qualified actual4PE/PDB/2325documents, corrected Options7ae/Test77682/handler2bdb and emittedXML.",
+  "fresh_pack_sha256": "ff559a2d084141cf9784fef7b5486131fcedf9ec4f28f15aea73b0b6918d4c45",
+  "limits": "Captured package47 epoch; no arbitrary cooperative operation forced-stop/hard-timeout promise; wholeAPI independently pending."
+}

@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-05T11:30:39.846820+00:00",
+  "actor": "/root",
+  "status": "F168_RESEND_AND_WARNING3_REPAIRED_F170_CANCEL_ABANDONED_OWNED_RENEWAL_ORIGINAL_REGISTERED",
+  "before": {
+    "known_unique": 169,
+    "accepted": 168
+  },
+  "after": {
+    "known_unique": 170,
+    "accepted": 169
+  },
+  "accepted_ids": [
+    "F-SB-API-168"
+  ],
+  "new_original_ids": [
+    "F-SB-API-170"
+  ],
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package180-sql-warning-fixed-callback-original2-fresh3-independent-r1/REPORT.json",
+    "sha256": "9c5362980d4e28c15633646f2ac7a902ea7bdc6abe9cad00bf6249418a7ff24f",
+    "manifest_sha256": "4edf645575688462d5ed1c773528ccbf8f98df820c54dc33adfdfdedfcbd29c6",
+    "freeze_sha256": "3318278d205fb86aeced0b9f08ad2fb2cbc21108f1df1ee4dcaf9517fffedc78"
+  },
+  "root_independent_verification": "Wholepure115qualifier6d248d beforeGO; all2839frozen/liveorigins0fa29a; all2855MAN/12reparsedPEPDB/2744CS/84Embedded/5actualseriallogs/275IDs/allold273P/9XMLbyte179equal/fresh3CRC a15fb3. RootwholeCallback179deltae06145 and independentpeer9c00e5/actualfirstfinitefailure5540e1 personallyread; no humanwhole2744source/275assertionbody claim.",
+  "actual_native": {
+    "total": 275,
+    "passed": 274,
+    "failed": 1,
+    "skipped": 0
+  },
+  "repair_scope": "SameF168family allthreeowningoptionaldiagnostics: RESENDDebug1 plusrenewalWarn2exactguards. FouroriginalWarningcases nowPASS withsameIDs/laterDeleteargs/idempotency reached; old273allP includingRESEND2; fresh3 exactcurrentDLL/XML/embeddedPDB. No prior-preadmissionlost-lock policy change.",
+  "original_scope": "F170 distinct ownedwork abandonment: Cancel invokes realregisteredprovider callback thatthrows uniqueIOException (actualAggregateFlatten identity verifiedbefore558). PublicComplete alreadyterminal while actualownedproviderRenewalstillheld; finiteFIRSTFalse558actualTrue, healthycontrol P. L624Finallystackonly. Latermainjoin/callbackAggregate/Delete assertionsunreached. SourceCancelbeforeinnerawait/dispose canabandonjoinanddispose; only publicTask/rawproviderTask abandonment empiricallyproved, no private-renew-task orCTSdisposal directempiricalclaim.",
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "final_23Unit_31Package_18Journey_4Consumers_pending": true,
+  "limits": [
+    "ActualproviderSPI Token.Register/FakeTimeProvider, no liveDB/cloud.",
+    "One actualOriginalCallbackfailure remains; no wholeSQLclean claim.",
+    "No throwingmulticast/combinedprivateTaskfault empiricclaim."
+  ]
+}

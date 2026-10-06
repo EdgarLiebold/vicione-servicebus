@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs
++++ ClampRawLastUtc
+@@ -32,7 +32,7 @@
+         }
+ 
+         FirstMessageReceived = firstMessageReceived;
+-        LastMessageReceived = lastMessageReceived;
++        LastMessageReceived = lastMessageReceived < firstMessageReceived ? firstMessageReceived : lastMessageReceived;
+         Mode = mode;
+         _messages = [.. messages];
+     }

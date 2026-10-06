@@ -1,0 +1,107 @@
+{
+  "utc": "2026-10-05T20:44:09.185967+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_SOURCE240_EXACT11_HELD_NO_NATIVE_OR_GLOBAL_GRADE",
+  "selected_original_canonical": 251,
+  "accepted_original_canonical": 240,
+  "held_members": [
+    {
+      "original_index": 24,
+      "id": "M:ViciOne.ServiceBus.Azure.Storage.MessageData.AzureBlobMessageDataRepository.GetAsync(System.Uri,System.Threading.CancellationToken)",
+      "source_status": "AUTHOR_EXPLICIT_COMPILED_OR_OPERATIVE_HOLD",
+      "local_contract": "Owned address resolver enforces endpoint/container/exact repository path, rejects credentials/fragment/ambiguous query, permits restricted legacy SAS. Logs sanitized URI before token-aware download; returns raw content absent encoding or owning gzip wrapper, disposes unsupported encoded stream, wraps RequestFailedException with sanitized container/blob. Optional logger/wrapper/disposal failure behavior explicitly held for actual public controls."
+    },
+    {
+      "original_index": 30,
+      "id": "M:ViciOne.ServiceBus.Azure.Storage.MessageData.AzureBlobMessageDataRepository.PutAsync(System.IO.Stream,System.Nullable{System.TimeSpan},System.Threading.CancellationToken)",
+      "source_status": "AUTHOR_EXPLICIT_COMPILED_OR_OPERATIVE_HOLD",
+      "local_contract": "Guards readable stream, validates TTL/clock range before name/provider; null/Max TTL no metadata, finite positive TTL uses supplied clock once. Rejects blank generated name; raw upload IfNoneMatchAll or bounded streaming gzip via private owned upload stream, then sanitized address and optional log before return. Upload/commit/disposal/logging outcome held; borrowed input stream not locally disposed."
+    },
+    {
+      "original_index": 34,
+      "id": "M:ViciOne.ServiceBus.Azure.Storage.MessageData.NewIdBlobNameGenerator.#ctor",
+      "source_status": "AUTHOR_EXPLICIT_COMPILED_OR_OPERATIVE_HOLD",
+      "local_contract": "No authored constructor; implicit public constructor shape requires compiled reconciliation, no executable source body certified."
+    },
+    {
+      "original_index": 51,
+      "id": "M:ViciOne.ServiceBus.Azure.Table.AzureTableMessageJournalStore.AppendAsync(ViciOne.ServiceBus.MessageJournal.MessageJournalEntry,System.Threading.CancellationToken)",
+      "source_status": "AUTHOR_EXPLICIT_COMPILED_OR_OPERATIVE_HOLD",
+      "local_contract": "Guards entry/cancellation and configured content bound, converts record, acquires lease, loads bounded partition. Computes expired removals and oldest excess by ObservedAt/EntryId; checked generation increment, one transaction orders lease ETag UpdateReplace, ETag deletes, new Add. No local retry; actual provider atomicity, record bounds, lease races, cancellation/receipt held."
+    },
+    {
+      "original_index": 352,
+      "id": "M:ViciOne.ServiceBus.EntityFrameworkCore.SagaClassMap`1.#ctor",
+      "source_status": "HELD_COMPILED_IDENTITY",
+      "local_contract": "No explicit SagaClassMap constructor in authored Source; original inventory reports implicit protected constructor. Generated compiled shape/visibility requires actual current metadata, held rather than treating Type review as constructor-body proof."
+    },
+    {
+      "original_index": 3355,
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.CleanAsync(System.Threading.CancellationToken)",
+      "source_status": "AUTHOR_EXPLICIT_COMPILED_OR_OPERATIVE_HOLD",
+      "local_contract": "Calls virtual CreateAdministrationClient, forwards same token to AzureServiceBusNamespaceCleaner and awaits it ConfigureAwait(false). Client creation and cleaner behavior are delegated; universal namespace-empty result and concurrent creation require helper reconciliation, not body-only proof."
+    },
+    {
+      "original_index": 3360,
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarnessOptions.#ctor",
+      "source_status": "AUTHOR_EXPLICIT_COMPILED_OR_OPERATIVE_HOLD",
+      "local_contract": "No explicit authored constructor in options owner; implicit public construction shape requires compiled declaration reconciliation. No source-authored validation or external preparation operation can be inferred."
+    },
+    {
+      "original_index": 5065,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarness.CleanAsync(System.Threading.CancellationToken)",
+      "source_status": "AUTHOR_EXPLICIT_COMPILED_OR_OPERATIVE_HOLD",
+      "local_contract": "Checks cancellation and refuses root-vhost cleanup without explicit permission; gets configured host settings, await-owns returned nonnull connection and channel, enumerates exchanges and queues then sequentially deletes names, awaits custom cleanup and channel close, then disables startup cleanup. Failures leave flag true until final assignment; await-using disposal occurs after assignment and may fail. Cleanup exceptions/lifetime/composed primary-error policy are held for runtime qualification, not silently graded by this sequence."
+    },
+    {
+      "original_index": 5070,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarness.CreateBusAsync(System.Threading.CancellationToken)",
+      "source_status": "AUTHOR_EXPLICIT_COMPILED_OR_OPERATIVE_HOLD",
+      "local_contract": "Checks cancellation before optional awaited CleanAsync, then synchronously creates bus with host, base bus and provider callbacks. Endpoint starts with prefetch16 and purge true, invokes base and provider endpoint callbacks then captures input address; returns bus control. Cancellation during successful cleanup is delegated and no extra pre-factory token check exists; no full start/delivery proof."
+    },
+    {
+      "original_index": 5073,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarness.RecreateVirtualHostAsync(System.Threading.CancellationToken)",
+      "source_status": "AUTHOR_EXPLICIT_COMPILED_OR_OPERATIVE_HOLD",
+      "local_contract": "Checks cancellation and always refuses root vhost, owns authenticated HttpClient, deletes escaped vhost URI accepting NoContent/NotFound, then puts owned JSON content accepting Created/NoContent; otherwise throws contextual status error. Startup-clean flag becomes false only after accepted responses; failed create can leave deleted vhost, no rollback guarantee. HTTP/client/content/response ownership and cancellation require actual-path tests."
+    },
+    {
+      "original_index": 5075,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Testing.RabbitMqTestHarnessOptions.#ctor",
+      "source_status": "AUTHOR_EXPLICIT_COMPILED_OR_OPERATIVE_HOLD",
+      "local_contract": "Options has no explicit authored constructor; implicit construction shape requires compiled reconciliation. Auto-property defaults are false/null, but source declaration is not emitted constructor metadata."
+    }
+  ],
+  "author_REPORT": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-nine-assemblies-original251-root-source-contract-proposal-r1/REPORT.json",
+    "sha256": "dfe0d83f9c87472d239236cbbcc830ad336d1a09665bcc94659b886e0194485a"
+  },
+  "independent_REPORT": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-original251-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "1f87c1919a47df2802ccf844599edb748824e20441230c3108c078b90e0dbf6a"
+  },
+  "mandatory_corrected_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-original251-one-norm-precision-overlay-r1/CORRECTED251_MATRIX.json",
+    "sha256": "2002140013f6c5e755cd3e1408b69771f7d2f0d1295e6530f840d9022c969e7a"
+  },
+  "root_exact_precision_read": "6825bf full independentREPORT + exact326replacement; c0906e actualwholeowner85 verifies factory-null then provider-null before constructing",
+  "whole_source_reviewers": [
+    "Root own52/3528 recorded dfe0d83f author report",
+    "Runtime independent own52/3528 and all251 norms recorded1f87c191 peer report"
+  ],
+  "all52_current_source_hashes_exact": true,
+  "physical_provenance": "Both reviewers own approvedP36 parse exact9 frames/selected52checksums/247XML; four implicit generated constructors held. No blanket native/compiler-ABI credit.",
+  "master_before_sha256": "a4620e5cd94e6ce1d37cbe18c2b3861d9c22c39d6bdfeeb42475fe89e6d7a04f",
+  "master_backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package237-master14607-before-source240-acceptance.json",
+  "prior14607_complete_objects_and_order_preserved": true,
+  "canonical_accounting": {
+    "original_before": 13745,
+    "original_after": 13985,
+    "remaining": 4584,
+    "sidecar833_unchanged": true,
+    "administrative_rows_after": 14847
+  },
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": "Only explicitly listed240 Source-local norms accepted; eleven concrete operative/generated holds remain. No ProductFinding registration/count or Native transfer."
+}

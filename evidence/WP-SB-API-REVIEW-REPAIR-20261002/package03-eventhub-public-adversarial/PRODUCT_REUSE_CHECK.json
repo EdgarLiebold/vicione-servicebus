@@ -1,0 +1,95 @@
+{
+  "status": "EXACT_ACCEPTED_PRODUCT_AND_FIXTURE_BYTES_UNCHANGED",
+  "freeze_sha256": "827aff14744d9383e0e18c584035ef729dfa820b1436c00a9870b882bd26d8a0",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProcessorContext.cs",
+      "sha256": "998db6d69265b24ff6cd2a83a0f67d75f22726b4cc678a194700729e22172946",
+      "bytes": 4664,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/00-EventHubProcessorContext.cs",
+      "semantic_notes": "F013 composed closing catches application fault/cancellation, always awaits internal close, preserves single-fault identity and ordered AggregateException on dual failure. Initializing composition and lease registration/release remain otherwise unchanged.",
+      "read_status": "PRIOR_PERSONAL_FULL_EXACT_SHA_REUSED",
+      "reuse_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointConfigurator.cs",
+      "sha256": "89b5f06d34c451480434561d2e8c37ab7ab5a289216b1c6d2f16ada586438bd1",
+      "bytes": 12566,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/01-EventHubReceiveEndpointConfigurator.cs",
+      "semantic_notes": "F014 provider Validate adds five positive-range guards and whole-millisecond native checkpoint timer limit, then preserves inherited validation. F016 captures ConfigureOptions delegate at generation creation before client factory use; normal Build materializes Blob container before future processor creation. Standalone lazy Blob generation is explicitly outside scope.",
+      "read_status": "PRIOR_PERSONAL_FULL_EXACT_SHA_REUSED",
+      "reuse_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointBuilder.cs",
+      "sha256": "8a99b99e9145ca25e9f34eb7ed88cbfb0426f34452a8ed6e0c17b087d24c29a5",
+      "bytes": 4261,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/02-EventHubReceiveEndpointBuilder.cs",
+      "semantic_notes": "F016 builder copies all nine ReceiveSettings fields into getter-only nested snapshot and overwrites receive-settings payload with the same snapshot. Snapshot is taken in constructor before ApplySpecifications; whether valid specification-stage settings mutation should be included remains a concrete adjacent contract question.",
+      "read_status": "PRIOR_PERSONAL_FULL_EXACT_SHA_REUSED",
+      "reuse_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ConsumeContextEventHubProducerProvider.cs",
+      "sha256": "5e4a0c734e0debfe43a2b80e062217cbc59fe26c918fb2fd41162a7a449ae1c1",
+      "bytes": 7835,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/03-ConsumeContextEventHubProducerProvider.cs",
+      "semantic_notes": "F017 all four deferred typed/batch/value/batch-value core overloads await shared resolution via WaitAsync(caller token), then await actual delivery; four pipe-free overloads delegate. Ready fast path retains direct downstream cancellation contract, shared resolution cancellation remains owned by GetProducer caller. Header transfer adapter unchanged.",
+      "read_status": "PRIOR_PERSONAL_FULL_EXACT_SHA_REUSED",
+      "reuse_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "bytes": 7803,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/04-EventHubClosingRegressionTests.cs",
+      "semantic_notes": "One theory covers ten closing combinations with exact ordering, internal-entry gate, pending wait, fault object identity, cancellation token/status and ordered dual-fault aggregate. Finally releases gate, joins real closing task without masking primary assertion with expected fault, and releases SDK event lease twice.",
+      "read_status": "PRIOR_PERSONAL_FULL_EXACT_SHA_REUSED",
+      "reuse_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "bytes": 15659,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/05-EventHubReceivePolicyRegressionTests.cs",
+      "semantic_notes": "Six policy theories cover 9 provider-invalid, 3 inherited-invalid, 5 timer-positive, 2 selection-positive, 7 retained-setting mutations and 2 options-replacement cases = 28 cases. Normal public DI/build/composition validation, exact nine-field snapshot and exact conservative MessageLimits payload; client supervisor path tests actual SDK properties without startup. Timeout bounds only, cleanup awaits stop.",
+      "read_status": "PRIOR_PERSONAL_FULL_EXACT_SHA_REUSED",
+      "reuse_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "bytes": 16117,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/06-EventHubDeferredCallerCancellationRegressionTests.cs",
+      "semantic_notes": "Three producer theories cover eight precanceled, eight later-canceled and sixteen ready/pending positive routes = 32 cases. Genuine held consume context from normal in-memory handler; strict producer SPI verifies exact formal type/argument/token/header transfer and awaits gated delivery. Canceled waiter isolation verified while live waiter and shared source remain pending; finally joins both wrapper tasks and downstream operation.",
+      "read_status": "PRIOR_PERSONAL_FULL_EXACT_SHA_REUSED",
+      "reuse_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBuiltContextCapture.cs",
+      "sha256": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081",
+      "bytes": 5052,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/07-EventHubBuiltContextCapture.cs",
+      "semantic_notes": "Capture helper decorates normal public registration factory/specification, forwards public interface calls through DispatchProxy while unwrapping original exception identity, observes exactly one actual production context via ConnectReceiveEndpointContext. Explicit exact MessageLimits payload projection compensates proxy loss of internal runtime host interface; helper neither generates second context nor supplies ReceiveSettings/client factory.",
+      "read_status": "PRIOR_PERSONAL_FULL_EXACT_SHA_REUSED",
+      "reuse_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-adversarial/READ_CLOSURE.json"
+    }
+  ],
+  "boundary": "Own personal full-read reuse only; no foreign read credited or whole native owner claim."
+}

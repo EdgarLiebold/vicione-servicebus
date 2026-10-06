@@ -1,0 +1,265 @@
+READ {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_ROOT_INDEPENDENT_MUTATION_BINDING.json", "start_line": 1, "end_line": 120, "kind": "proof"}
+{
+  "status": "SEVENTEEN_SOURCE_EFFECTS_RECEIPTS_LOGS_BINARIES_AND_ORACLES_INDEPENDENTLY_BOUND",
+  "checks": [
+    {
+      "name": "results-return-array",
+      "strict_build": "package05-mut-r2-results-return-array-build",
+      "negative": "results-membership-plain",
+      "exact_type": "Xunit.Sdk.SameException",
+      "positive": "results-null-inner",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "results-live-input",
+      "strict_build": "package05-mut-r2-results-live-input-build",
+      "negative": "results-membership-inner",
+      "exact_type": "Xunit.Sdk.SingleException",
+      "positive": "results-empty",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "results-null-guard-lost",
+      "strict_build": "package05-mut-r2-results-null-guard-lost-build",
+      "negative": "results-null-plain",
+      "exact_type": "Xunit.Sdk.EqualException",
+      "positive": "results-membership-inner",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-omit-StartTimeout",
+      "strict_build": "package05-mut-r2-host-omit-StartTimeout-build",
+      "negative": "host-StartTimeout-too-large",
+      "exact_type": "Xunit.Sdk.ThrowsException",
+      "positive": "host-relation-equal",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-omit-StopTimeout",
+      "strict_build": "package05-mut-r2-host-omit-StopTimeout-build",
+      "negative": "host-StopTimeout-too-large",
+      "exact_type": "Xunit.Sdk.ThrowsException",
+      "positive": "host-relation-equal",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-omit-ConsumerStopTimeout",
+      "strict_build": "package05-mut-r2-host-omit-ConsumerStopTimeout-build",
+      "negative": "host-ConsumerStopTimeout-too-large",
+      "exact_type": "Xunit.Sdk.ThrowsException",
+      "positive": "host-relation-equal",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-inclusive-upper",
+      "strict_build": "package05-mut-r2-host-inclusive-upper-build",
+      "negative": "host-StartTimeout-maximum",
+      "exact_type": "Microsoft.Extensions.Options.OptionsValidationException",
+      "positive": "host-StopTimeout-null",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-fractional-compare",
+      "strict_build": "package05-mut-r2-host-fractional-compare-build",
+      "negative": "host-StopTimeout-fraction",
+      "exact_type": "Microsoft.Extensions.Options.OptionsValidationException",
+      "positive": "host-StartTimeout-null",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-relation-lost",
+      "strict_build": "package05-mut-r3-host-relation-lost-build",
+      "negative": "host-relation-greater",
+      "exact_type": "Xunit.Sdk.EqualException",
+      "positive": "host-relation-equal",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-positive-lost",
+      "strict_build": "package05-mut-r3-host-positive-lost-build",
+      "negative": "host-StartTimeout-zero",
+      "exact_type": "Xunit.Sdk.ThrowsException",
+      "positive": "host-StartTimeout-maximum",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-provider-guard-lost",
+      "strict_build": "package05-mut-r3-batch-provider-guard-lost-build",
+      "negative": "batch-default-too-large",
+      "exact_type": "Xunit.Sdk.SingleException",
+      "positive": "batch-custom-long-size",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-global-options-cap",
+      "strict_build": "package05-mut-r3-batch-global-options-cap-build",
+      "negative": "batch-custom-long-expire",
+      "exact_type": "ViciOne.ServiceBus.ConfigurationException",
+      "positive": "batch-system-ordinary",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-all-providers-cap",
+      "strict_build": "package05-mut-r3-batch-all-providers-cap-build",
+      "negative": "batch-custom-long-size",
+      "exact_type": "Xunit.Sdk.NullException",
+      "positive": "batch-system-ordinary",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-inclusive-upper",
+      "strict_build": "package05-mut-r3-batch-inclusive-upper-build",
+      "negative": "batch-system-maximum",
+      "exact_type": "Xunit.Sdk.NullException",
+      "positive": "batch-system-ordinary",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-fractional-compare",
+      "strict_build": "package05-mut-r3-batch-fractional-compare-build",
+      "negative": "batch-system-fraction",
+      "exact_type": "Xunit.Sdk.NullException",
+
+READ {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_ROOT_INDEPENDENT_MUTATION_BINDING.json", "start_line": 121, "end_line": 145, "kind": "proof"}
+      "positive": "batch-system-maximum",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-late-guard",
+      "strict_build": "package05-mut-r3-batch-late-guard-build",
+      "negative": "batch-default-too-large",
+      "exact_type": "Xunit.Sdk.SingleException",
+      "positive": "batch-custom-long-size",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-wrong-diagnostic-key",
+      "strict_build": "package05-mut-r4-batch-wrong-diagnostic-key-build",
+      "negative": "batch-default-too-large",
+      "exact_type": "Xunit.Sdk.SingleException",
+      "positive": "batch-custom-long-size",
+      "source_effects_reconstructed": true
+    }
+  ],
+  "m6209_restored": true,
+  "same_consumer_oracles_preserved": true,
+  "phases": "first8 validatedr2; next8 validatedr3; final1validatedr4; finalfull42r4baseline+rollback",
+  "compiler_category_setup_exclusions": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core"
+}
+
+READ {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_PUBLIC_BINDING.json", "start_line": 1, "end_line": 114, "kind": "proof"}
+{
+  "status": "FOUR_PACKAGES_SELECTED_LOCK_CACHE_LOADED_ASSEMBLY_BOUND",
+  "consumers": [
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original",
+      "lock_sha256": "07da501d49f24b2e333434eb986eb265c640182fc2c48332346e19fd7a1fcb35",
+      "product_packages": [
+        {
+          "package": "ViciOne.ServiceBus",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package05/original/ViciOne.ServiceBus.1.0.0.nupkg",
+          "nupkg_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "contentHash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "loaded_runtime": {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+          }
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package05/original/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "nupkg_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "contentHash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "loaded_runtime": {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+          }
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+          }
+        ]
+      },
+      "native_results": {
+        "count": 42,
+        "failures": 10
+      }
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected",
+      "lock_sha256": "67b4ca31e0cd16ce001ed3a42122dfbfc76131e717a0ffc6cd4518216eb648d4",
+      "product_packages": [
+        {
+          "package": "ViciOne.ServiceBus",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package05/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+          "nupkg_sha256": "b60931a6596d6cfe6f0f572d727f52bdb502c81a9c8c02bbac53b0fcc43768e2",
+          "contentHash": "eXJD1Plo8z1Dv1+1RidR55PdW2ZrJrPqv74iKqTeazN9e2QnD0pwDxtcWhtdY+8+7NJ1LdKe/BvCfPAm7rbg8g==",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "loaded_runtime": {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "70c111cec48d128c020f93dbb11b9bf917a1e2d7ff2ac4e4dd7e891061cbdd57"
+          }
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package05/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "nupkg_sha256": "7c595f5b5a7cfed14d0f47f4ed2d36cb0e7e7422a68f2e574f2b8c7550f63855",
+          "contentHash": "A9V+lrKurMYuZbMsAWHO3dZYPNy/kfr8JKloDpSTLPyePE/3SCGb3Gt29Ckp3eER0gi/19YYuHqqQBlpZmKH9g==",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "loaded_runtime": {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+          }
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "70c111cec48d128c020f93dbb11b9bf917a1e2d7ff2ac4e4dd7e891061cbdd57"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+          }
+        ]
+      },
+      "native_results": {
+        "count": 42,
+        "failures": 0
+      }
+    }
+  ],
+  "mutants_limit": "Actual compiled isolated M DLL substitution into fixed NuGet-only consumer; not a fresh nupkg restore per mutant. M contains only five package05 corrected files, all other original source bytes. Packed actual O corrected42 is separate integration evidence."
+}
+

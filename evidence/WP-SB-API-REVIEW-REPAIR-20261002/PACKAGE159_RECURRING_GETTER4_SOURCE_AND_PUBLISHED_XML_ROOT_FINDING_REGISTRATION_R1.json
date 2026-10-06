@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-05T00:27:17.633326+00:00",
+  "actor": "/root",
+  "status": "ROOT_REGISTERED_ONE_DOCUMENTATION_FINDING_GENERIC_GETTER4",
+  "confirmed_before": 134,
+  "confirmed_after": 135,
+  "accepted_repairs": 133,
+  "finding_id": "F-SB-API-135",
+  "severity": "Low",
+  "source_before_SHA": "b1435ec965823758dbd6839ee650549d743a945eb01f2b55d36c423cdbf3c953",
+  "current158_XML_SHA": "e0ff744bd46303184410207c3aab5ee1513be6e4cf82b047df40a8b6b27d4014",
+  "actual4publishednodes": [
+    {
+      "id": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Schedule",
+      "XML": "<member name=\"P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Schedule\">\n            <summary>Gets or sets the schedule.</summary>\n        </member>\n        "
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.PayloadType",
+      "XML": "<member name=\"P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.PayloadType\">\n            <summary>Gets or sets the payload type.</summary>\n        </member>\n        "
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Destination",
+      "XML": "<member name=\"P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Destination\">\n            <summary>Gets or sets the destination.</summary>\n        </member>\n        "
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Payload",
+      "XML": "<member name=\"P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Payload\">\n            <summary>Gets or sets the payload.</summary>\n        </member>\n        "
+    }
+  ],
+  "root_reads": [
+    "Actual58acc4a4/proposed58whole2c3304",
+    "Actual4fresh158misleadingnodes c5c23c; intendednodesb158e7; independentpeercc5a27"
+  ],
+  "limits": [
+    "Exactly4genericgetter-only summaries; mutable nongenericsetter siblings unchanged; no runtimeAPI/ownership/deepimmutability change.",
+    "Freshcompiled correctedXML laterrequired; nativeCount0appropriateforXML-onlyfix."
+  ]
+}

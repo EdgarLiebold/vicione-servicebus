@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-06T01:17:38.026695+00:00",
+  "status": "INDEPENDENT_SOURCE_PEER_APPROVED_PRODUCT1_DEBUG2_APPLIED_NATIVE_PENDING",
+  "finding": "F-SB-API-209",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package285-activemq-connection-own-debug2-product-proposed-r1/REPORT.json",
+    "sha256": "3573f232f538cc43a41b01c999e08ec033678964a364391fedbad61493972c94"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package285-activemq-debug2-independent-source-peer-r1/REPORT.json",
+    "sha256": "e059c832f21ceb8c921adf0f428dcbb90c7b7cac6b8f3b345734dbe7be7589c5"
+  },
+  "source": {
+    "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqConnectionContext.cs",
+    "before_sha256": "f674bc1bbc140bc635f20a27debbeea0aa76b1b37186b86c002ae1e5b0cff280",
+    "after_sha256": "43b516b33a5bac6bba661ef1997801cd63598988c83339e300b88ef5b5df3c22",
+    "before_lines": 251,
+    "after_lines": 265,
+    "local_debug_wrappers": 2,
+    "original_test_modes": 3
+  },
+  "exact2_inverse_whole251": true,
+  "Test213_Req132_unchanged": true,
+  "native_credit": 0,
+  "grade": null
+}

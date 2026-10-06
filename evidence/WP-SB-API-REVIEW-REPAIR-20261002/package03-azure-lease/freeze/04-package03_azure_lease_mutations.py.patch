@@ -1,0 +1,112 @@
+--- /dev/null
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package03_azure_lease_mutations.py
+@@ -0,0 +1,109 @@
++#!/usr/bin/env python3
++"""Run isolated lease-lifetime mutants against all eighteen native contract cases."""
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++
++W = Path(__file__).resolve().parent.parent
++D = W / 'SERVICEBUS_API_REVIEW_AND_REPAIR'
++O = W / 'repositories/vicione-servicebus'
++R = Path('/private/tmp/vicione-servicebus-api-review-20261001')
++F = R / 'frozen-repository'
++M = R / 'mutations/source-main'
++E = O / 'evidence/WP-SB-API-REVIEW-REPAIR-20261002'
++SOURCE = 'src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/SharedConnectionContext.cs'
++TEST = 'tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSharedAdministrationLeaseTests.cs'
++PROJECT = 'tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj'
++
++
++def sha(data):
++    return hashlib.sha256(data).hexdigest()
++
++
++def operation(phase, command, failures=None):
++    expected = 2 if failures else 0
++    actual = subprocess.run([sys.executable, str(D / 'run_operation.py'), phase, str(M), '--', *command]).returncode
++    receipt = next(row for row in map(json.loads, (E / 'VERIFICATION_LOG.jsonl').read_text().splitlines()) if row['phase'] == phase)
++    assert actual == receipt['exit_code'] == expected, (phase, actual, expected)
++    raw = Path(receipt['log']).read_bytes()
++    assert sha(raw) == receipt['log_sha256']
++    log = raw.decode()
++    if failures is not None:
++        assert 'gesamt: 18' in log and 'übersprungen: 0' in log, phase
++        assert f'fehlgeschlagen: {failures}' in log and f'erfolgreich: {18 - failures}' in log, phase
++        if failures:
++            assert 'ServiceBusSharedAdministrationLeaseTests.' in log, phase
++            assert 'Assert.' in log or 'cancellation link was detached while the inner request was pending.' in log, phase
++        assert 'NestedQueueDestinations_HaveDistinctAutomaticSubscriptionsAsync' not in log, phase
++    return receipt
++
++
++def test(phase, failures):
++    return operation(phase, ['dotnet', 'test', '--project', PROJECT, '-c', 'Release', '--no-restore',
++                            '--filter-class', 'ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests',
++                            '--minimum-expected-tests', '18', '--max-parallel-test-modules', '1'], failures)
++
++
++def main():
++    original = (F / SOURCE).read_bytes()
++    corrected = (O / SOURCE).read_bytes()
++    regression = (O / TEST).read_bytes()
++    assert corrected != original and (M / SOURCE).read_bytes() == original
++    assert not (F / TEST).exists() and not (M / TEST).exists()
++    result = {'status': 'RUNNING', 'source_sha256': sha(corrected), 'test_sha256': sha(regression), 'checks': [], 'mutants': []}
++    mutations = []
++    for name, return_type, call in [
++        ('queue', 'Task<QueueProperties>', '_context.CreateQueueAsync(createQueueOptions, tokenSource.Token)'),
++        ('topic', 'Task<TopicProperties>', '_context.CreateTopicAsync(createTopicOptions, tokenSource.Token)'),
++        ('create-subscription', 'Task<SubscriptionProperties>', '_context.CreateTopicSubscriptionAsync(createSubscriptionOptions, rule, filter, tokenSource.Token)'),
++        ('delete-subscription', 'Task', '_context.DeleteTopicSubscriptionAsync(subscriptionOptions, tokenSource.Token)'),
++    ]:
++        method = {'queue': 'CreateQueueAsync', 'topic': 'CreateTopicAsync', 'create-subscription': 'CreateTopicSubscriptionAsync', 'delete-subscription': 'DeleteTopicSubscriptionAsync'}[name]
++        before_signature = 'public async ' + return_type + ' ' + method
++        after_signature = 'public ' + return_type + ' ' + method
++        before_call = ('return await ' if name != 'delete-subscription' else 'await ') + call + '.ConfigureAwait(false);'
++        after_call = 'return ' + call + ';'
++        mutations.append((name + '-early-linked-disposal', [(before_signature, after_signature, 1), (before_call, after_call, 1)], 2))
++    linked = 'CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken)'
++    mutations.extend([
++        ('caller-link-lost', [(linked, 'CancellationTokenSource.CreateLinkedTokenSource(CancellationToken)', 4)], 4),
++        ('lease-link-lost', [(linked, 'CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)', 4)], 4),
++        ('completed-links-leaked', [('using var tokenSource =', 'var tokenSource =', 4)], 8),
++        ('queue-success-result-lost', [('return await _context.CreateQueueAsync(createQueueOptions, tokenSource.Token).ConfigureAwait(false);',
++          'await _context.CreateQueueAsync(createQueueOptions, tokenSource.Token).ConfigureAwait(false);\n        return null!;', 1)], 1),
++    ])
++    try:
++        (M / TEST).write_bytes(regression)
++        result['checks'].append(operation('package03-lease-isolated-restore', ['dotnet', 'restore', PROJECT, '--locked-mode', '--disable-parallel']))
++        result['checks'].append(test('package03-lease-isolated-original', 8))
++        (M / SOURCE).write_bytes(corrected)
++        result['checks'].append(test('package03-lease-isolated-corrected', 0))
++        for name, replacements, failures in mutations:
++            source = corrected.decode()
++            for before, after, count in replacements:
++                assert source.count(before) == count, name
++                source = source.replace(before, after)
++            mutant = source.encode()
++            (M / SOURCE).write_bytes(mutant)
++            assert (M / TEST).read_bytes() == regression
++            receipt = test('package03-lease-mutant-' + name, failures)
++            result['mutants'].append({'name': name, 'status': 'KILLED_BY_CONTRACT_ASSERTION', 'failures': failures,
++                                      'source_sha256': sha(mutant), 'test_sha256': sha(regression),
++                                      'replacements': [{'before': a, 'after': b, 'count': c} for a, b, c in replacements],
++                                      'native_receipt': receipt})
++            (M / SOURCE).write_bytes(corrected)
++        result['checks'].append(test('package03-lease-isolated-rollback', 0))
++        result['status'] = 'EXECUTED_ALL_8_KILLED_CORRECTED_ROLLBACK_GREEN'
++    finally:
++        (M / SOURCE).write_bytes(original)
++        (M / TEST).unlink(missing_ok=True)
++        result['original_source_restored'] = (M / SOURCE).read_bytes() == original
++        result['new_test_removed'] = not (M / TEST).exists()
++        (E / 'PACKAGE03_AZURE_LEASE_MUTATIONS.json').write_text(json.dumps(result, indent=2) + '\n')
++    assert result['original_source_restored'] and result['new_test_removed']
++
++
++if __name__ == '__main__':
++    main()

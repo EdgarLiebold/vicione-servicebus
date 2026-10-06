@@ -977,6 +977,71 @@ public sealed class MessagePipelineMetricsTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-OBSERVABILITY-ISOLATION", "public-child-context-exact-meter-scope")]
+    public void AutomaticChildLogContext_PreservesOnlyTheOwningProviderMeterBinding()
+    {
+        using ServiceProvider providerA = new ServiceCollection().AddLogging().AddMetrics().BuildServiceProvider();
+        using ServiceProvider providerB = new ServiceCollection().AddLogging().AddMetrics().BuildServiceProvider();
+        Assert.NotSame(providerA.GetRequiredService<Microsoft.Extensions.Logging.ILoggerFactory>(),
+            providerB.GetRequiredService<Microsoft.Extensions.Logging.ILoggerFactory>());
+        using var observationsA = new MetricObservationSession(providerA.GetRequiredService<IMeterFactory>());
+        using var observationsB = new MetricObservationSession(providerB.GetRequiredService<IMeterFactory>());
+        ILogContext? previous = LogContext.Current;
+
+        try
+        {
+            LogContext.Current = null;
+            LogContext.ConfigureCurrentLogContextIfNull(providerA);
+            ILogContext parentA = Assert.IsAssignableFrom<ILogContext>(LogContext.Current);
+            LogContext.ConfigureCurrentLogContextIfNull(providerA);
+            Assert.Same(parentA, LogContext.Current);
+            ILogContext childA = LogContext.CreateLogContext("oracle.child.a");
+            Assert.NotSame(parentA, childA);
+            Assert.Same(parentA, LogContext.Current);
+            var operationA = childA.TryStartOutboxDeliveryMetrics();
+            Assert.NotNull(operationA);
+            operationA.Complete();
+
+            MetricMeasurement first = Assert.Single(observationsA.Measurements,
+                item => item.Name == ServiceBusTelemetry.Metrics.OutboxMessages);
+            Assert.Equal(1d, first.Value);
+            Assert.Equal("deliver", first.Tag(ServiceBusTelemetry.Attributes.OutboxOperation));
+            Assert.Equal("succeeded", first.Tag(ServiceBusTelemetry.Attributes.Outcome));
+            AssertTagKeys(first, ServiceBusTelemetry.Attributes.OutboxOperation, ServiceBusTelemetry.Attributes.Outcome);
+            Assert.Empty(observationsB.Measurements);
+
+            LogContext.ConfigureCurrentLogContextIfNull(providerB);
+            ILogContext parentB = Assert.IsAssignableFrom<ILogContext>(LogContext.Current);
+            Assert.NotSame(parentA, parentB);
+            ILogContext childB = LogContext.CreateLogContext("oracle.child.b");
+            var operationB = childB.TryStartOutboxDeliveryMetrics();
+            Assert.NotNull(operationB);
+            operationB.Complete();
+            Assert.Single(observationsA.Measurements,
+                item => item.Name == ServiceBusTelemetry.Metrics.OutboxMessages);
+            MetricMeasurement second = Assert.Single(observationsB.Measurements,
+                item => item.Name == ServiceBusTelemetry.Metrics.OutboxMessages);
+            Assert.Equal(1d, second.Value);
+            Assert.Equal("deliver", second.Tag(ServiceBusTelemetry.Attributes.OutboxOperation));
+            Assert.Equal("succeeded", second.Tag(ServiceBusTelemetry.Attributes.Outcome));
+            AssertTagKeys(second, ServiceBusTelemetry.Attributes.OutboxOperation, ServiceBusTelemetry.Attributes.Outcome);
+
+            // Switching the ambient parent must not steal the already-created child's binding.
+            var retainedOperationA = childA.TryStartOutboxDeliveryMetrics();
+            Assert.NotNull(retainedOperationA);
+            retainedOperationA.Complete();
+            Assert.Equal(2, observationsA.Measurements.Count(
+                item => item.Name == ServiceBusTelemetry.Metrics.OutboxMessages));
+            Assert.Single(observationsB.Measurements,
+                item => item.Name == ServiceBusTelemetry.Metrics.OutboxMessages);
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
+    }
+
     private static ServiceProvider CreateProvider<TMessage>(
         Func<ConsumeContext<TMessage>, Task> handler,
         TimeSpan timeout)

@@ -1,0 +1,126 @@
+{
+  "utc": "2026-10-05T06:20:51.650753+00:00",
+  "actor": "/root",
+  "status": "F153_BOUNDED_REPAIR_ACCEPTED_F152_THREE_CALLS_FIXED_DEFAULT_FACTORY_FAMILY_HELD_TWO_NEW_CAUSES_REGISTERED",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package168-saga-fixed-load-outbox-original101-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+    "sha256": "4329fea95bfb018af9cfec659ee6c900faabb3b9d571cc6797dda6dff1cf1a17"
+  },
+  "manifest_verified": 3343,
+  "live_frozen_files_verified": 3326,
+  "actual_closed_SDK_receipts": 7,
+  "disjoint_native": {
+    "total": 2481,
+    "passed": 2478,
+    "failed": 3,
+    "skipped": 0
+  },
+  "fresh_two_physical_CRC_DLL_XML_equal": true,
+  "F153_controls": [
+    "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Created\", loggerThrows: False)",
+    "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Created\", loggerThrows: True)",
+    "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Removed\", loggerThrows: False)",
+    "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Removed\", loggerThrows: True)",
+    "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Used\", loggerThrows: False)",
+    "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Used\", loggerThrows: True)",
+    "ViciOne.ServiceBus.Tests.Sagas.SagaStateQueryRuntimeExtensionDeepContractTests.Transition_LiveCallerTokenReachesCooperativeAccessorBeforeMutationAsync(mode: 0)",
+    "ViciOne.ServiceBus.Tests.Sagas.SagaStateQueryRuntimeExtensionDeepContractTests.Transition_LiveCallerTokenReachesCooperativeAccessorBeforeMutationAsync(mode: 1)",
+    "ViciOne.ServiceBus.Tests.Sagas.SagaStateQueryRuntimeExtensionDeepContractTests.Transition_LiveCallerTokenReachesCooperativeAccessorBeforeMutationAsync(mode: 2)",
+    "ViciOne.ServiceBus.Tests.Sagas.SagaStateQueryRuntimeExtensionDeepContractTests.Transition_SelectedLiveTokenReachesBeforeEnterAndItsNestedContextsAsync(cancelBeforeEnter: False)",
+    "ViciOne.ServiceBus.Tests.Sagas.SagaStateQueryRuntimeExtensionDeepContractTests.Transition_SelectedLiveTokenReachesBeforeEnterAndItsNestedContextsAsync(cancelBeforeEnter: True)"
+  ],
+  "F152_family_hold": "Used,Removed,FactoryMethodCreated six current controls pass; defaultFactory Created unguarded same family candidate requires Original169 then repair. No fullfamily acceptance yet.",
+  "new_findings": [
+    {
+      "id": "F-SB-API-154",
+      "severity": "Medium",
+      "title": "Message-specific InMemory saga Load omits separately supplied cancellation from the actual factory saga-lease wait",
+      "status": "CONFIRMED_PEER_REVIEWED_REPAIR_PROPOSAL_READY",
+      "actual_original_contexts": [
+        {
+          "case": "ViciOne.ServiceBus.Tests.Saga.InMemoryRepository.InMemorySagaRepositoryContextTests.MessageLoad_SelectedTokenCancelsTheActualHeldSagaLeaseAsync(mode: 1)",
+          "classification": "CAUSAL_PRODUCT_EXPLICIT_LOAD_TOKEN_OMISSION",
+          "first_failure": "Source649 Assert.True(factory.ObservedToken.IsCancellationRequested) receives false after operationCancellation.Cancel while original saga lease remains HELD.",
+          "reached": [
+            "Real public Load and inner factory Task pending; selected real saga instance/state retained; dictionary lease available; factoryCalls1/exactstorage/state/message/mode recorded; consume token remains uncanceled.",
+            "Explicit operation token cancelled before any held saga lease release; recorded actual factory context token remains uncanceled."
+          ],
+          "unreached": [
+            "Operation wait/terminal/canceled outcome and exception-token assertions after649",
+            "Post-finally independent reacquisition assertions"
+          ],
+          "source_cause": "LoadAsync selects explicit token for dictionary acquisition but at167 passes original _context to CreateSagaConsumeContextAsync; actual InMemorySagaConsumeContextFactory uses consumeContext.CancellationToken for held saga acquisition.",
+          "controls": "mode0 healthy success and mode2 real consumed-token cancellation complete before lease release and pass. Corrected fixture removes prior167 cancellation/release ambiguity.",
+          "cleanup": "finally releases held saga lease only after first assertion fails, joins actual operation and disposes acquired saga context then repository context. No SagaInstance defect claim."
+        }
+      ],
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package168-saga-fixed-load-outbox-original101-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+        "sha256": "4329fea95bfb018af9cfec659ee6c900faabb3b9d571cc6797dda6dff1cf1a17"
+      },
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-155",
+      "severity": "Medium",
+      "title": "Outbox Sent and Completed diagnostics interrupt provider progress after successful work",
+      "status": "CONFIRMED_PEER_REVIEWED_REPAIR_PROPOSAL_READY",
+      "actual_original_contexts": [
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.OutboxMessagePipeTests.DebugDiagnostics_DoNotPreventOutboxProgressAfterSuccessfulWorkAsync(alreadyDelivered: True, loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_POST_WORK_DEBUG_FAILURE",
+          "first_failure": "Source293 Assert.Null(observed) receives exact unique ApplicationException selected-outbox-debug-failure.",
+          "reached": [
+            "Actual held rawwork/publicoperation pending before release; logger empty and progress absent.",
+            "After release rawwork IsCompletedSuccessfully and public terminal; exact single structuredDebug template/IDs/count; hostile ThrowCount1; Assert.Same(uniqueDiagnosticFailure,observed) beforeNull."
+          ],
+          "unreached": [
+            "After293 public success/next0 and per-branch progress assertions"
+          ],
+          "source_cause": "OutboxMessagePipe.SendAsync80 unguarded Completed Debug after actual RemoveOutboxMessagesAsync, before NotifyConsumed/ContinueProcessing=false.",
+          "healthy_control": "Same alreadyDelivered/loggerThrows:false passes full subsequent per-branch progress assertions.",
+          "limits": "Public provider/endpoint seam captures real serializer pipe but does not execute it; no transport/cloud/durability proof.",
+          "cleanup": "Both raw/public tasks independently observed with timeout exclusion; ambient context restored and CTS disposed."
+        },
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.OutboxMessagePipeTests.DebugDiagnostics_DoNotPreventOutboxProgressAfterSuccessfulWorkAsync(alreadyDelivered: False, loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_POST_WORK_DEBUG_FAILURE",
+          "first_failure": "Source293 Assert.Null(observed) receives exact unique ApplicationException selected-outbox-debug-failure.",
+          "reached": [
+            "Actual held rawwork/publicoperation pending before release; logger empty and progress absent.",
+            "After release rawwork IsCompletedSuccessfully and public terminal; exact single structuredDebug template/IDs/count; hostile ThrowCount1; Assert.Same(uniqueDiagnosticFailure,observed) beforeNull."
+          ],
+          "unreached": [
+            "After293 public success/next0 and per-branch progress assertions"
+          ],
+          "source_cause": "OutboxMessagePipe.DeliverOutboxMessagesAsync174 unguarded Sent Debug after actual endpoint task, before DeliveredAsync acknowledgment and SetDeliveredAsync.",
+          "healthy_control": "Same alreadyDelivered/loggerThrows:false passes full subsequent per-branch progress assertions.",
+          "limits": "Public provider/endpoint seam captures real serializer pipe but does not execute it; no transport/cloud/durability proof.",
+          "cleanup": "Both raw/public tasks independently observed with timeout exclusion; ambient context restored and CTS disposed."
+        }
+      ],
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package168-saga-fixed-load-outbox-original101-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+        "sha256": "4329fea95bfb018af9cfec659ee6c900faabb3b9d571cc6797dda6dff1cf1a17"
+      },
+      "whole_API_member_review_closed": false
+    }
+  ],
+  "known_before": 153,
+  "known_after": 155,
+  "accepted_before": 151,
+  "accepted_after": 152,
+  "whole_API_member_review_closed": false,
+  "root_reads": [
+    "All three raw finite first blocks+actual11pass lines68103d; native131 qualifier independently source-reviewed6dc3f8.",
+    "Product four whole1dbdec/792a1c, new controls/source corrections1ada6b and preserved files beforepins; peer fullNative101 authority remains child, no Roothumanwhole2263claim."
+  ],
+  "limits": [
+    "Failed strictR1 retained separately; current test709 compiler-corrected ba0aa108 is overlay, not original727ef8.",
+    "Only7 selected runtimeDLL canonical equality, assets/deps captured; no all loaded external dependency proof.",
+    "Requirement4646 exactonce managed payload; names not decoded.",
+    "Core XML bytes unchanged167; Sagas2435oldnodes exact plus2newCTnodes. No old typed inventory/current new-member count claim.",
+    "No SDK/repository mutations or automatic findings/acceptance by peer.",
+    "Broader2263 and prior117 fully mechanically qualified caseIDs; no universal assertion-body/human semantic grade."
+  ]
+}

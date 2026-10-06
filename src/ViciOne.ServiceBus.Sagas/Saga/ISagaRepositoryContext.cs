@@ -55,8 +55,8 @@ public interface ISagaRepositoryContext<TSaga, TMessage> :
     /// <returns>A task that represents the discard operation.</returns>
     Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default);
 
-    /// <summary>Reverts uncommitted changes to the saga.</summary>
-    /// <param name="context">The saga consume context whose changes are reverted.</param>
+    /// <summary>Performs provider-specific undo handling; the in-memory repository leaves referenced saga state unchanged.</summary>
+    /// <param name="context">The saga consume context supplied to the repository provider's undo policy.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the undo operation.</returns>
     Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default);

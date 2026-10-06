@@ -1,0 +1,16 @@
+{
+  "status": "BOUNDED_F054_REPAIR_SOURCE_ADVERSARIAL_ORIGINAL_RED4_GREEN14_FRESH_PACK_ACCEPTED",
+  "finding": "F-SB-API-054",
+  "created_utc": "2026-10-04T11:12:52.806070+00:00",
+  "root_read": "Root personally whole original/fixed source and tests, all actual14 GREEN and original4 RED logs, whole strict and freshpack receipt; selected full semantic qualification fields/identities/mandatorySources/limits read, no whole huge machine PDB-document dump claim.",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package44-azure-session-green-native-independent-r1/REVIEW.json",
+    "sha256": "bb2e9fb11d929e6b9915b09bbfa979ce42eb83d96217bdbb4fcbb6f5563fcec2"
+  },
+  "product_source": "ab080c1bd07c90e4252901b43232303e020be80176af1c9645b4dcedee65c237",
+  "test_source": "2956aa1eb0a57dbc66cd48c59b3ddc86521b499143fd69a1883e277b11c26201",
+  "native": "Strict0W/E;4 original finite value mismatches;14/14 whole owner green0F/S; independent2actualPE/PDB269document checksums and runtimeASB/Core/Abs equality.",
+  "package": "ad6a0b5e578c3d5423f34d0eaaa8cd41401282e28a14f0428b525975ee3450e9; ZIPCRC, exactDLL/XML qualified against nativeGREENframe. Privatecaller-isolated clone5values validated before registration; every delayed callback uses identicalprivatecopy.",
+  "whole_api_review_closed": false,
+  "limits": "No cloud/fresh wholeAzure native suite/package-only runtime/CLR module trace/universal thread-safe concurrent caller mutation claim."
+}

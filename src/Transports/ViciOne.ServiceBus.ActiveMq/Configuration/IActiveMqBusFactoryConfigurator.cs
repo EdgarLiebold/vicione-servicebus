@@ -27,7 +27,7 @@ public interface IActiveMqBusFactoryConfigurator :
     void Publish<T>(Action<IActiveMqMessagePublishTopologyConfigurator<T>>? configureTopology = null)
         where T : class;
 
-    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <summary>Configures publish topology for a runtime message type.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="configure">An optional callback that configures the message's publish topology.</param>
     void Publish(Type messageType, Action<IActiveMqMessagePublishTopologyConfigurator>? configure = null);

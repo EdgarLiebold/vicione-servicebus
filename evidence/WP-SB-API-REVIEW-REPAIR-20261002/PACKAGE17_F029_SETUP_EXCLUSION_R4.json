@@ -1,0 +1,9 @@
+{
+  "excluded_phase": "package17-f029-public-corrected-twentysix-r3",
+  "actual": "25 PASS / 1 FAIL: duplicate terminal WaitAsync TimeoutException + cleanup List enumeration InvalidOperationException",
+  "not_product_error_or_mutant_kill": true,
+  "ordering_hypothesis": "Send completion does not prove duplicate Batch Add order; replacement may reach serialized collector before duplicate",
+  "confirmed_fixture_fault": "OwnedLifetime tasks List may change during async enumeration",
+  "fix_plan": "Identity-bound public sequence-payload getter witness before replacement send; concurrent queue drain during independently bounded cleanup",
+  "old_owner_and_app_archived": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/MANIFEST.json"
+}

@@ -131,6 +131,8 @@ public sealed class TopicCache :
 
         while (true)
         {
+            _lifetimeCancellationToken.ThrowIfCancellationRequested();
+
             Lazy<Task> loader = _loadExistingTopics;
             try
             {
@@ -139,6 +141,8 @@ public sealed class TopicCache :
             }
             catch when (loader.Value.IsFaulted || loader.Value.IsCanceled)
             {
+                _lifetimeCancellationToken.ThrowIfCancellationRequested();
+
                 lock (_loaderSync)
                 {
                     if (ReferenceEquals(_loadExistingTopics, loader))

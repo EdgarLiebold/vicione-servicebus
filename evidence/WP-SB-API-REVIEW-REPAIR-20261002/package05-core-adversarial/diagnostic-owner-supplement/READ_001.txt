@@ -1,0 +1,336 @@
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKindEndpointContext.cs", "bytes": 1088, "sha256": "6a0e6e67ed13ed4f7ce4aa56fc78de2606bf1fb34add4b4b9ae6360b0bb18913", "start_line": 1, "end_line": 21}
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.Advanced.Registration;
+
+/// <summary>Provides a materialized endpoint and companion-endpoint factory to a consumer-kind registration.</summary>
+public interface IConsumerKindEndpointContext
+{
+    /// <summary>Gets the services and registrations available to the active bus.</summary>
+    IRegistrationContext RegistrationContext { get; }
+
+    /// <summary>Gets the materialized endpoint that receives this registration.</summary>
+    IReceiveEndpointConfigurator EndpointConfigurator { get; }
+
+    /// <summary>Materializes a companion endpoint required by the registration.</summary>
+    /// <param name="endpointName">The unique companion endpoint name.</param>
+    /// <param name="endpointDefinition">Optional settings for the companion endpoint.</param>
+    /// <param name="configure">Configures the materialized companion endpoint.</param>
+    void ConfigureCompanionEndpoint(string endpointName, IEndpointDefinition? endpointDefinition,
+        Action<IReceiveEndpointConfigurator> configure);
+}
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKindContext.cs", "bytes": 921, "sha256": "692a19b3b52e86f67b085f3f356b27375ab7a39f032bde967b79a062f194a065", "start_line": 1, "end_line": 20}
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.Advanced.Registration;
+
+/// <summary>Provides the bus-scoped registration view used by a consumer kind.</summary>
+public interface IConsumerKindContext
+{
+    /// <summary>Gets the services and registrations available to the active bus.</summary>
+    IRegistrationContext RegistrationContext { get; }
+
+    /// <summary>Gets the formatter used to derive endpoint names.</summary>
+    IEndpointNameFormatter EndpointNameFormatter { get; }
+
+    /// <summary>Enumerates enabled, selected registrations that have not already been configured.</summary>
+    /// <typeparam name="TRegistration">The registration type.</typeparam>
+    /// <returns>The selected registrations of the requested type.</returns>
+    IEnumerable<TRegistration> GetRegistrations<TRegistration>()
+        where TRegistration : class, IRegistration;
+}
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs", "bytes": 463, "sha256": "7fa0fd503d34bf8b31fa89d44af32b8a0f5397ff270a3576e0d1b5a1736e5775", "start_line": 1, "end_line": 21}
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+internal interface IBusRegistrationIdentity
+{
+    string BusKey { get; }
+}
+
+
+internal static class BusRegistrationIdentity
+{
+    internal static string GetKey(Type busType)
+    {
+        ArgumentNullException.ThrowIfNull(busType);
+
+        return busType == typeof(IBus)
+            ? "default"
+            : $"{busType.Assembly.GetName().Name ?? "unknown"}:{busType.FullName ?? busType.Name}";
+    }
+}
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ConfigurationMessages.cs", "bytes": 2491, "sha256": "a065264bf22b087fcb671d1165334f4f504b97109a379bf7c02bcc6966a01f31", "start_line": 1, "end_line": 55}
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Providers.Configuration;
+
+/// <summary>
+/// Creates actionable configuration failures with one stable feature, bus, problem and correction shape.
+/// Provider packages use this boundary so startup diagnostics remain consistent across transports and features.
+/// </summary>
+public static class ConfigurationMessages
+{
+    /// <summary>Creates one actionable configuration-failure line.</summary>
+    /// <param name="feature">The feature whose configuration failed.</param>
+    /// <param name="bus">The affected bus identity.</param>
+    /// <param name="problem">A description of the invalid configuration.</param>
+    /// <param name="fix">The action required to correct the configuration.</param>
+    /// <returns>The normalized configuration-failure message.</returns>
+    public static string Create(string feature, string bus, string problem, string fix)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(feature);
+        ArgumentException.ThrowIfNullOrWhiteSpace(bus);
+        ArgumentException.ThrowIfNullOrWhiteSpace(problem);
+        ArgumentException.ThrowIfNullOrWhiteSpace(fix);
+        return $"{NormalizeSegment(feature)} for bus '{NormalizeSegment(bus)}': {Terminate(problem)} {Terminate(fix)}";
+    }
+
+    /// <summary>Combines previously formatted failure lines without losing their individual causes.</summary>
+    /// <param name="failures">The non-empty failure lines to combine.</param>
+    /// <returns>The distinct failure lines in first-occurrence order.</returns>
+    public static string Aggregate(IEnumerable<string> failures)
+    {
+        ArgumentNullException.ThrowIfNull(failures);
+
+        var uniqueFailures = new List<string>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        foreach (string failure in failures)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(failure);
+            if (seen.Add(failure))
+                uniqueFailures.Add(failure);
+        }
+
+        return string.Join(Environment.NewLine, uniqueFailures);
+    }
+
+    static string Terminate(string value)
+    {
+        string normalized = NormalizeSegment(value);
+        return normalized.EndsWith(".", StringComparison.Ordinal) ? normalized : normalized + ".";
+    }
+
+    static string NormalizeSegment(string value) => string.Join(
+        " ",
+        value.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+}
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerKind.cs", "bytes": 4961, "sha256": "a380102810512390083e300911f516317acd6507337157ec2a5547da62fe6bf2", "start_line": 1, "end_line": 119}
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+sealed class ConsumerKind :
+    IConsumerKind,
+    IConsumerKindRuntimeConfigurator,
+    IConsumerKindBulkConfigurator,
+    IConsumerKindDispatcherProvider
+{
+    public bool IsFallback => true;
+
+    public string Name => "Consumer";
+
+    public int Order => 0;
+
+    public IEnumerable<IConsumerKindRegistration> GetRegistrations(IConsumerKindContext context)
+    {
+        foreach (var registration in context.GetRegistrations<IConsumerRegistration>())
+        {
+            var definition = registration.GetDefinition(context.RegistrationContext);
+            yield return new Registration(registration, definition,
+                definition.GetEndpointName(context.EndpointNameFormatter));
+        }
+    }
+
+    public bool TryConfigure(Type registrationType, IReceiveEndpointConfigurator endpointConfigurator,
+        IRegistrationContext registrationContext)
+    {
+        ArgumentNullException.ThrowIfNull(registrationType);
+        ArgumentNullException.ThrowIfNull(endpointConfigurator);
+        ArgumentNullException.ThrowIfNull(registrationContext);
+
+        IContainerSelector selector = registrationContext.GetRequiredService<IContainerSelector>();
+        if (!selector.TryGetRegistration(registrationContext, registrationType, out IConsumerRegistration? registration))
+            return false;
+
+        registration.Configure(endpointConfigurator, registrationContext);
+        return true;
+    }
+
+    public IReadOnlyCollection<Type> ConfigureAll(IReceiveEndpointConfigurator endpointConfigurator,
+        IRegistrationContext registrationContext, IReadOnlySet<Type> excludedRegistrationTypes)
+    {
+        ArgumentNullException.ThrowIfNull(endpointConfigurator);
+        ArgumentNullException.ThrowIfNull(registrationContext);
+        ArgumentNullException.ThrowIfNull(excludedRegistrationTypes);
+
+        IContainerSelector selector = registrationContext.GetRequiredService<IContainerSelector>();
+        IConsumerRegistration[] registrations = selector.GetRegistrations<IConsumerRegistration>(registrationContext)
+            .Where(registration => !excludedRegistrationTypes.Contains(registration.Type))
+            .ToArray();
+
+        foreach (IConsumerRegistration registration in registrations)
+            registration.Configure(endpointConfigurator, registrationContext);
+
+        return registrations.Select(registration => registration.Type).ToArray();
+    }
+
+    public bool TryCreateDispatcher(Type registrationType, IReceiveEndpointDispatcherFactory factory,
+        IEndpointNameFormatter formatter, [NotNullWhen(true)] out IReceiveEndpointDispatcher? dispatcher)
+    {
+        if (!registrationType.ImplementsInterface<IConsumer>())
+        {
+            dispatcher = null;
+            return false;
+        }
+
+        var dispatcherFactory = (ITypeReceiveEndpointDispatcherFactory)(Activator.CreateInstance(
+            typeof(ConsumerReceiveEndpointDispatcher<>).MakeGenericType(registrationType))
+            ?? throw new InvalidOperationException($"Unable to create a consumer dispatcher for '{registrationType}'."));
+        dispatcher = dispatcherFactory.Create(factory, formatter);
+        return true;
+    }
+
+    public void ConfigureTestHarness(IConsumerKindTestHarnessContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        foreach (IConsumerRegistration registration in context.GetRegistrations<IConsumerRegistration>())
+            context.Observe(registration.Type);
+    }
+
+
+    sealed class Registration :
+        IConsumerKindRegistration
+    {
+        static readonly IReadOnlyCollection<string> NoCompanionEndpoints = Array.Empty<string>();
+        readonly IConsumerRegistration _registration;
+
+        public Registration(IConsumerRegistration registration, IConsumerDefinition definition, string endpointName)
+        {
+            _registration = registration;
+            Definition = definition;
+            EndpointDefinition = definition.EndpointDefinition;
+            EndpointName = endpointName;
+        }
+
+        public Type RegistrationType => _registration.Type;
+        public IDefinition Definition { get; }
+        public string EndpointName { get; }
+        public IEndpointDefinition? EndpointDefinition { get; }
+        public bool RequiresServiceInstance => _registration.RequiresServiceInstance;
+        public IReadOnlyCollection<string> CompanionEndpointNames => NoCompanionEndpoints;
+
+        public void Configure(IConsumerKindEndpointContext context)
+        {
+            _registration.Configure(context.EndpointConfigurator, context.RegistrationContext);
+        }
+    }
+}
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs", "bytes": 4930, "sha256": "3ae4735449c76fb29ca75718ef96f5babef34bd80cd11a3a51ccaea33d822942", "start_line": 1, "end_line": 88}
+using System;
+using ViciOne.ServiceBus.Batching.Runtime;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>Connects individual messages to the batching pipeline for one batch consumer contract.</summary>
+/// <typeparam name="TConsumer">The consumer that receives completed batches.</typeparam>
+/// <typeparam name="TMessage">The message contract collected into batches.</typeparam>
+internal sealed class BatchConsumerMessageConnector<TConsumer, TMessage> :
+    IConsumerMessageConnector<TConsumer>
+    where TConsumer : class, IConsumer<IMessageBatch<TMessage>>
+    where TMessage : class
+{
+    /// <summary>Gets the individual message type accepted by the batching pipeline.</summary>
+    public Type MessageType => typeof(TMessage);
+
+    /// <summary>Creates the configuration state for this batch consumer and message pair.</summary>
+    /// <returns>A new batch consumer message specification.</returns>
+    public IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification()
+    {
+        return new BatchConsumerMessageSpecification<TConsumer, TMessage>();
+    }
+
+    /// <summary>Connects collection, batch delivery, and terminal cleanup to the consume pipeline.</summary>
+    /// <param name="consumePipe">The pipeline connector that accepts individual messages.</param>
+    /// <param name="consumerFactory">The factory that creates application batch consumers.</param>
+    /// <param name="specification">The validated consumer configuration.</param>
+    /// <returns>A handle that disconnects the message pipe and drains the batch collector.</returns>
+    public ConnectHandle ConnectConsumer(IConsumePipeConnector consumePipe, IConsumerFactory<TConsumer> consumerFactory,
+        IConsumerSpecification<TConsumer> specification)
+    {
+        ArgumentNullException.ThrowIfNull(consumePipe);
+        ArgumentNullException.ThrowIfNull(consumerFactory);
+        ArgumentNullException.ThrowIfNull(specification);
+
+        var options = specification.Options<BatchOptions>();
+
+        IConsumerMessageSpecification<TConsumer, IMessageBatch<TMessage>> batchMessageSpecification = specification.GetMessageSpecification<IMessageBatch<TMessage>>();
+
+        var consumeFilter = new MethodConsumerMessageFilter<TConsumer, IMessageBatch<TMessage>>();
+
+        IPipe<ConsumerConsumeContext<TConsumer, IMessageBatch<TMessage>>> batchConsumerPipe = batchMessageSpecification.Build(consumeFilter);
+
+        IPipe<ConsumeContext<IMessageBatch<TMessage>>> batchMessagePipe = batchMessageSpecification.BuildMessagePipe(x =>
+        {
+            specification.ConfigureMessagePipe(x);
+
+            x.UseFilter(new ConsumerMessageFilter<TConsumer, IMessageBatch<TMessage>>(consumerFactory, batchConsumerPipe));
+        });
+
+        IBatchCollector<TMessage> collector;
+        if (options.GroupKeyProvider == null)
+            collector = new BatchCollector<TMessage>(options, batchMessagePipe);
+        else
+        {
+            if (options.GroupKeyProvider.GetType().TryGetSingleClosedGenericArguments(typeof(IGroupKeyProvider<,>), out Type[] types))
+            {
+                var collectorType = typeof(BatchCollector<,>).MakeGenericType(typeof(TMessage), types[1]);
+                collector = (IBatchCollector<TMessage>)(Activator.CreateInstance(collectorType,
+                    options, batchMessagePipe, options.GroupKeyProvider) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
+            }
+            else
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Batch Consumer Message Connector", "unknown", "The GroupKeyProvider does not implement IGroupKeyProvider<TMessage,TKey>", "Correct the named configuration before starting the host"));
+        }
+
+        var factory = new BatchConsumerFactory<TMessage>(options, collector);
+
+        IConsumerSpecification<BatchConsumer<TMessage>> messageConsumerSpecification =
+            ConsumerConnectorCache<BatchConsumer<TMessage>>.Connector.CreateConsumerSpecification<BatchConsumer<TMessage>>();
+
+        IConsumerMessageSpecification<BatchConsumer<TMessage>, TMessage> messageSpecification =
+            messageConsumerSpecification.GetMessageSpecification<TMessage>();
+
+        IPipe<ConsumerConsumeContext<BatchConsumer<TMessage>, TMessage>> consumerPipe =
+            messageSpecification.Build(new MethodConsumerMessageFilter<BatchConsumer<TMessage>, TMessage>());
+
+        IPipe<ConsumeContext<TMessage>> messagePipe = messageSpecification.BuildMessagePipe(x =>
+        {
+            x.UseFilter(new ConsumerMessageFilter<BatchConsumer<TMessage>, TMessage>(factory, consumerPipe));
+        });
+
+        var handle = consumePipe.ConnectConsumePipe(messagePipe);
+
+        return new BatchConsumerConnectHandle(handle, factory);
+    }
+}
+

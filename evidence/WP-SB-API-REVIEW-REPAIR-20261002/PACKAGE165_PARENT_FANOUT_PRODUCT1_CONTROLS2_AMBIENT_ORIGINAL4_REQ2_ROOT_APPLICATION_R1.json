@@ -1,0 +1,122 @@
+{
+  "utc": "2026-10-05T02:56:12.222054+00:00",
+  "actor": "/root",
+  "status": "SOURCE_APPLIED_ADVERSARIAL_NO_BLOCK_STRICT_NATIVE_PENDING",
+  "qualified_original164": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/REPORT.json",
+    "sha256": "b56750e89f523b997efdec5830b5dc41ab5e9872321bdeb83bb4b533f6633f03"
+  },
+  "root_read_authority": "Whole currentparent168/innerOutbox1607e60d0; whole proposed200/new173420647; innerambient179+peerREPORTa60f9b; author/peerreports8d5171 and researchplan d678d6. Reused mandatorycode-testing/run-tests skill, currentfocusedrefreshbb7c90partiallycapped, priorwholeRoot/childreads preserved. ExactManifestpins checked beforewrites.",
+  "authors_and_independent_source_peers": [
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-product-proposed-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-product-proposed-r1/MANIFEST.json",
+        "sha256": "eb487deb58ab1438923e244fb44c83875f8e6c207688599ffc44ad77c55d5e91"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-product-proposed-r1/REPORT.json",
+        "sha256": "7c37343742a0e3130e53c57f117fac3ff2434f5273e1d68a5f1e13f59e7b8195"
+      },
+      "files_verified": 3
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-independent-scanner-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-independent-scanner-r1/MANIFEST.json",
+        "sha256": "b4737dc10a620da811fd5bfbbdad7ebc5974a2ec9df9326e8a5ee8f04b5282df"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-independent-scanner-r1/PRODUCT_REPORT.json",
+        "sha256": "d41c001e2d8838f1e10444cd7fb7957c425632dbb37fd51abef94f4e8560b3e1"
+      },
+      "files_verified": 3
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-controls2-proposed-r2",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-controls2-proposed-r2/MANIFEST.json",
+        "sha256": "f80af6c099ad3a77b49c01e89a74fdf4b07865ac07539d370bbb421fad1c3701"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-controls2-proposed-r2/REPORT.json",
+        "sha256": "3dbf815f66451db3c83ed75751a49ee9c833f708249768677bd1dbb5a5caf559"
+      },
+      "files_verified": 6
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-controls2-independent-scanner-r2",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-controls2-independent-scanner-r2/MANIFEST.json",
+        "sha256": "35025df82c6c1fef315c801d9d40bca5499f07ebcf5bde40436c8332be279127"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-consume-parent-fanout-controls2-independent-scanner-r2/REPORT.json",
+        "sha256": "294324c7d99e29c0e7517d08f2422aab6ca91de0d1a47b3185bd277e4e780c66"
+      },
+      "files_verified": 1
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-outbox-ambient-restore4-oracles-proposed-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-outbox-ambient-restore4-oracles-proposed-r1/MANIFEST.json",
+        "sha256": "cfe7c33e7dff16252bae52e8e5457bc361f44bf16a7dc581356bf59ee6822e5d"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-outbox-ambient-restore4-oracles-proposed-r1/REPORT.json",
+        "sha256": "3e0cd5c7fe1c6684dec3342d3088fe4710366adf476cc8bd2bd793b9cf8e99e5"
+      },
+      "files_verified": 9
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-outbox-ambient-restore4-independent-runtime-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-outbox-ambient-restore4-independent-runtime-r1/MANIFEST.json",
+        "sha256": "5cf80b2732d1e103f4e7e7a7d5bbfa56cee6b536afa526ca755ae5e03fc4b5fa"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-outbox-ambient-restore4-independent-runtime-r1/REPORT.json",
+        "sha256": "d3e93dd6519e9a2a8f2b9e92953c344697ee3127a0a4983b9fffd7abffb605d0"
+      },
+      "files_verified": 1
+    }
+  ],
+  "changed_files": [
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumeContextMessageTypeFilter.cs",
+      "before_sha256": "b6b45afef8a344155d352bc0586838ec255d37f999be00f2b0e49295c7574c64",
+      "after_sha256": "4e611e3e78760b328bc8d508521150c42321080ee280ac77424d513da2e2df1d",
+      "authority": "wholeProductRoot420647+fullpeerPRODUCT_REPORT8d5171 approved exact multi-output admission block"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeOutputObserverContractTests.cs",
+      "before_sha256": "654e91b3e5331b8c96ba684564cfa5e0c6e1a87272199c84468f4d2db065a433",
+      "after_sha256": "1d6f7bbbb1037f6148afe5e78698d1e6978f51cf582fc7d1f3e26aa388420c00",
+      "authority": "Root whole173R2 actual420647; independent scannerR2 all4analyzer corrections+causaloracles"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConsumeScopeLifecycleTests.cs",
+      "before_sha256": "9af967a38015cb859338fc2176672dd4d54542b898f704502b1bfabf220751ce",
+      "after_sha256": "8b6f9d1f3a9546bb9a628eed9f3ae019b70c29eb53a9d558e3f85ff0abf24b43",
+      "authority": "Root fullnew179a60f9b+peerwholeREPORT; actual inner ambient original4 no findinguntilnative"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "d107994d0a96291e3515ad4124754720ccbc330ec243d3f275f632d3dd288ee0",
+      "after_sha256": "7a06500ab893f4fa55c5f36873314fc33ab6082582e1963ff005f95b33f918ca",
+      "authority": "bothindependentlyreviewed add-onlymethodrows; preserves all4639prefix"
+    }
+  ],
+  "requirements_before": 4639,
+  "requirements_after": 4641,
+  "requirements_prefix_preserved": true,
+  "added_native_cases": 6,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-root-before-r1",
+  "limits": [
+    "ParentF150 Original finitecause retained164; currentSource fix needs actualcurrentnative/independent compiledqualification.",
+    "AmbientOriginal4 is hypothesis until actualnative; no F151registered yet.",
+    "No public0/1 route/normalasyncWhenAll/API/XMLpolicy changes.",
+    "CurrentRoot6766Sourceacceptanceauthority is164snapshot; six parentnonSend rows need precise currentSource rebase after165 qualification.",
+    "No wholeAPI/release/globalA+closure."
+  ]
+}

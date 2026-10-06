@@ -1,0 +1,147 @@
+{
+  "status": "ONLY_TARGET_METHOD_6_ADDED_2_REPLACED_LINES",
+  "original_sha256": "c50837c059b52f9538d19c286a9a0719909e872b344968529d89bd74e6ea1d8e",
+  "current_sha256": "e2ba79021011bd50a55f492d74d56e5bb9200b3bdbc2a9ca7f01378d85b66e3f",
+  "mapping": [
+    {
+      "tag": "equal",
+      "original_lines": [
+        1,
+        224
+      ],
+      "current_lines": [
+        1,
+        224
+      ],
+      "original_changed_text": null
+    },
+    {
+      "tag": "insert",
+      "original_lines": [
+        225,
+        224
+      ],
+      "current_lines": [
+        225,
+        227
+      ],
+      "original_changed_text": []
+    },
+    {
+      "tag": "equal",
+      "original_lines": [
+        225,
+        225
+      ],
+      "current_lines": [
+        228,
+        228
+      ],
+      "original_changed_text": null
+    },
+    {
+      "tag": "insert",
+      "original_lines": [
+        226,
+        225
+      ],
+      "current_lines": [
+        229,
+        229
+      ],
+      "original_changed_text": []
+    },
+    {
+      "tag": "equal",
+      "original_lines": [
+        226,
+        226
+      ],
+      "current_lines": [
+        230,
+        230
+      ],
+      "original_changed_text": null
+    },
+    {
+      "tag": "replace",
+      "original_lines": [
+        227,
+        227
+      ],
+      "current_lines": [
+        231,
+        231
+      ],
+      "original_changed_text": [
+        "            new DelegateSagaDbContextFactory<FactorySaga>(database.CreateContext),\n"
+      ]
+    },
+    {
+      "tag": "equal",
+      "original_lines": [
+        228,
+        235
+      ],
+      "current_lines": [
+        232,
+        239
+      ],
+      "original_changed_text": null
+    },
+    {
+      "tag": "replace",
+      "original_lines": [
+        236,
+        236
+      ],
+      "current_lines": [
+        240,
+        240
+      ],
+      "original_changed_text": [
+        "            new TransactionPayload(Guid.Parse(\"9c49617d-5341-465f-b624-3807677f7b99\")));\n"
+      ]
+    },
+    {
+      "tag": "equal",
+      "original_lines": [
+        237,
+        249
+      ],
+      "current_lines": [
+        241,
+        253
+      ],
+      "original_changed_text": null
+    },
+    {
+      "tag": "insert",
+      "original_lines": [
+        250,
+        249
+      ],
+      "current_lines": [
+        254,
+        255
+      ],
+      "original_changed_text": []
+    },
+    {
+      "tag": "equal",
+      "original_lines": [
+        250,
+        580
+      ],
+      "current_lines": [
+        256,
+        586
+      ],
+      "original_changed_text": null
+    }
+  ],
+  "patch_sha256": "c7804b327fee9d54846844962c7c6cefc0a331fc8abfe9587c0fd21cbabb1792",
+  "identifiers_unchanged": true,
+  "expected_delivery1_unchanged": true,
+  "expected_execution1_unchanged": true
+}

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Contracts.JobService;
@@ -14,6 +15,60 @@ namespace ViciOne.ServiceBus.Tests.JobService.JobService;
 
 public sealed class JobServiceLifecycleTests
 {
+    [Theory]
+    [InlineData(JobConcurrencyUpdateKind.Configuration)]
+    [InlineData(JobConcurrencyUpdateKind.InstanceStopped)]
+    [InlineData(JobConcurrencyUpdateKind.Heartbeat)]
+    [RequirementCoverage("REQ-VSB-JOB-SERVICE-LIFECYCLE", "multi-type-publication-joins-prior-work-after-synchronous-provider-failure")]
+    public async Task PublicationFanout_JoinsPendingJobTypeBeforeReportingSynchronousFailureAsync(JobConcurrencyUpdateKind kind)
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        RuntimeJobService service = NewService(TimeSpan.FromDays(1));
+        service.RegisterJobType(new JobOptions<UnregisteredLifecycleJob>(), NewId.NextGuid(), "second-job");
+        IPublishEndpoint endpoint = DispatchProxy.Create<IPublishEndpoint, SynchronousFailurePublishProxy>();
+        var recording = (SynchronousFailurePublishProxy)(object)endpoint;
+        recording.Kind = kind;
+        Task? operation = null;
+        try
+        {
+            Exception? synchronous = Record.Exception(() =>
+            {
+                operation = kind switch
+                {
+                    JobConcurrencyUpdateKind.Configuration => service.BusStartedAsync(endpoint, cancellationToken),
+                    JobConcurrencyUpdateKind.InstanceStopped => service.StopAsync(endpoint, cancellationToken),
+                    JobConcurrencyUpdateKind.Heartbeat => (Task)typeof(RuntimeJobService)
+                        .GetMethod("PublishHeartbeatsAsync", BindingFlags.NonPublic | BindingFlags.Instance)!
+                        .Invoke(service, [endpoint, cancellationToken])!,
+                    _ => throw new InvalidOperationException("Unexpected publication kind."),
+                };
+            });
+
+            Assert.Null(synchronous);
+            Assert.NotNull(operation);
+            Assert.Equal(2, recording.Invocations);
+            Assert.All(recording.Tokens, token => Assert.Equal(cancellationToken, token));
+            Assert.False(operation.IsCompleted);
+            Assert.False(recording.FirstPublication.Task.IsCompleted);
+
+            recording.FirstPublication.TrySetResult();
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(() => operation.WaitAsync(timeout, cancellationToken));
+            Assert.Same(recording.Failure, actual);
+        }
+        finally
+        {
+            recording.FirstPublication.TrySetResult();
+            await recording.FirstPublication.Task.WaitAsync(timeout, CancellationToken.None);
+            if (operation is not null)
+            {
+                try { await operation.WaitAsync(timeout, CancellationToken.None); }
+                catch (InvalidOperationException exception) when (ReferenceEquals(exception, recording.Failure)) { }
+            }
+            await service.StopAsync(new ControlledPublishEndpoint(), CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-SAGA-PERSISTENCE", "new-state-has-non-null-persisted-collections")]
     public void NewJobTypeSaga_InitializesEveryPersistedCollection()
@@ -631,6 +686,35 @@ public sealed class JobServiceLifecycleTests
         }
 
         public Task SendAsync(ConsumeContext<LifecycleJob> context) => throw exception;
+    }
+
+    private class SynchronousFailurePublishProxy : DispatchProxy
+    {
+        public JobConcurrencyUpdateKind Kind { get; set; }
+        public int Invocations { get; private set; }
+        public List<CancellationToken> Tokens { get; } = [];
+        public TaskCompletionSource FirstPublication { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public InvalidOperationException Failure { get; } = new("second job publication refused synchronously");
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name != nameof(IPublishEndpoint.PublishAsync)
+                || targetMethod.GetGenericArguments().SingleOrDefault() != typeof(ISetConcurrentJobLimit)
+                || args is not { Length: 2 } || args[0] is not ISetConcurrentJobLimit message
+                || args[1] is not CancellationToken token)
+                throw new InvalidOperationException($"Unexpected publication: {targetMethod?.Name}");
+
+            if (message.UpdateKind != Kind)
+                return Task.CompletedTask;
+
+            Tokens.Add(token);
+            return ++Invocations switch
+            {
+                1 => FirstPublication.Task,
+                2 => throw Failure,
+                _ => throw new InvalidOperationException("Unexpected third publication."),
+            };
+        }
     }
 
     private sealed class ControlledPublishEndpoint : IPublishEndpoint

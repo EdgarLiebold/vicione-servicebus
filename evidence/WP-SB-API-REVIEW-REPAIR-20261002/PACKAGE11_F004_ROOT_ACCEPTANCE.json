@@ -1,0 +1,22 @@
+{
+  "status": "ROOT_SCOPED_ACCEPTED_SHARED_FINAL_PENDING",
+  "finding": "F-SB-API-004",
+  "utc": "2026-10-03T04:07:23.114703+00:00",
+  "Root_personally_FULL_final_review_txt_and_json": true,
+  "mechanical_hash_check": "all manifest artifacts and current+frozen owned inputs exact",
+  "owned_inputs": 40,
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE11_F004_FREEZE.json",
+    "sha256": "b0096b5364b2a84f949bc51fce12bb4881502e2fa73911d6c347f881bc739d23"
+  },
+  "adversarial_manifest": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/FINAL_MANIFEST.json",
+    "sha256": "e211fc42e1272d0080a7d19dce7bd92eb3b04d36a7cfb954bc800ca6f629e0e6"
+  },
+  "adversarial_review": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/REVIEW.json",
+    "sha256": "3688babb18d22eebb93b00a5708753cf2a62317deb925715992a83be44311dd5"
+  },
+  "whole_API_closed": false,
+  "limits": "Ausschließlich bounded NuGet-PublicConsumer mit .NET10.0.10/X64 und InMemory. Die Mutationläufe substituieren SDK-kompilierte DLLs in identischem Consumer; kein frischer NuGet-Restore pro Mutant. Lockinhalte/Cacheidentitäten sind gebunden; kein tatsächlich verwendetes --locked-mode behauptet. Zwei Root-Provider/CustomFactory sind belegt, keine vollständige NamedBus-/ConcurrentDispose-/Transport-/ARM-/Cloud-Matrix. Der Factoryfailure-Test beweist Inaktivität und Geschäftserfolg; die Cleanupzeile einer nur teilweise initialisierten ActivitySource ist quellgeprüft, ihr Dispose nicht separat öffentlich nativ beobachtet. Policycancel setzt den Callertoken synchron; keine pendingGate-/Timer-Cancel-Behauptung. Timeoutguards sind ausschließlich FAIL und verbinden einen nichtkooperativen Task nicht automatisch. Auf dem belegten Lauf trat kein Guard ein. Ein expliziter lebender Caller-Logger isoliert den weiterhin getrennten F019-Vertrag; hier keine F019-Closure. Der separate Graphfix braucht seine eigenen Delay-, Bus-Lifetime- und Registration-URI-Kontrollen; dieser F004-Review nimmt ihn nicht pauschal ab."
+}

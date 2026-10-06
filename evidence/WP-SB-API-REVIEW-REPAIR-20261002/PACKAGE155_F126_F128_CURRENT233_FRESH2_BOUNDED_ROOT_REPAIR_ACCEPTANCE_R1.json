@@ -1,0 +1,84 @@
+{
+  "utc": "2026-10-04T23:10:45.780701+00:00",
+  "decision": "ACCEPT_F126_SETTER9_AND_F128_REQUEST_CANCELLATION_BOUNDED_CURRENT_REPAIR",
+  "accepted_before": 125,
+  "accepted_after": 127,
+  "confirmed_unchanged": 128,
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package153-request-fixed233-doc22-fresh2-independent-r1/REPORT.json",
+    "sha256": "da78437a711a734db35d7286110943b062263dc2d9a460167dbb78494bc7b780"
+  },
+  "full3339_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package153-request-fixed233-doc22-fresh2-independent-r1/MANIFEST.json",
+    "sha256": "e12fc3b07f32febb26e9b89137f64c839e754464c196c9058f8ab6f152017ca6"
+  },
+  "root_report_read": "fdf3b7",
+  "root_manifest_verification": "af66e7",
+  "root_exact_source_and_XML_review": "9b545b",
+  "actual_native": {
+    "total": 233,
+    "passed": 233,
+    "failed": 0,
+    "skipped": 0,
+    "request_class85": 85,
+    "neighbors148": 148,
+    "new30": 30,
+    "original21_exact_IDs_now_pass": true
+  },
+  "physical_fresh_packages": [
+    {
+      "package": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "076e3040656798495d76fba4470b41ae7a151c11eac87cf3a8ffe7ec04aa6013",
+      "entry_count": 7,
+      "CRC_all_entries_pass": true,
+      "actual_entries": [
+        {
+          "path": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "4390d42ed0f408e25556c43cdb391e46a1584d22d9aa5b115902354051fcf702",
+          "bytes": 3026432,
+          "actual_frozen_canonical_equal": true
+        },
+        {
+          "path": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "0668a33974b452cfd820aa5f943e0cbfa27c27f37e4e93d8a61285fa4d4a9b7b",
+          "bytes": 2477712,
+          "actual_frozen_canonical_equal": true
+        }
+      ],
+      "pdb_kind": "embedded-portable",
+      "limits": "PDB is actually embedded in package DLL; no external/package PDB entry exists."
+    },
+    {
+      "package": "ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "e408d8e7b58de1e2f495dfe3bd1b715efede8cb9b591c9f367c4467fe68d2c55",
+      "entry_count": 7,
+      "CRC_all_entries_pass": true,
+      "actual_entries": [
+        {
+          "path": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "0a4e747b8468fa40ff5d28128b541c43351d4d5a500db8373746c10138a2b3a8",
+          "bytes": 936960,
+          "actual_frozen_canonical_equal": true
+        },
+        {
+          "path": "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+          "sha256": "0011982969fb379b061ca26b2c6d3b8a363d2cc26b207913d685846cb6e2f3b6",
+          "bytes": 1245662,
+          "actual_frozen_canonical_equal": true
+        }
+      ],
+      "pdb_kind": "embedded-portable",
+      "limits": "PDB is actually embedded in package DLL; no external/package PDB entry exists."
+    }
+  ],
+  "limits": [
+    "Pure Python read-only frozen qualification; no SDK/native/cloud/DB/repository writes.",
+    "233 is the sum of two disjoint selected native runs85+148, not a full Unit run or whole-API behavior claim.",
+    "7 PE/PDB and canonical/runtime equality do not prove every dependency or assembly loaded.",
+    "Physical4607 JSON is exactly one embedded managed resource; resource names not decoded.",
+    "No genuine whole233 human test-body grade. Member semantic acceptance and parent registry remain separate.",
+    "SagaDefinition siblingXML2 proposal is outside this153 emitted22-node scope."
+  ],
+  "F127": "Original thirteen corrected nodes qualified153; sibling2 now source-confirmed extension pending later fresh Sagas XML. No F127 whole repair acceptance here.",
+  "whole_API_closed": false
+}

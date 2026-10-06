@@ -1,0 +1,9 @@
+{
+  "F022_original_sha256": "46e4802ba192be64b6f817feb04de970aefc612a66592b4f3219889c5616bd6e",
+  "F022_corrected_sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+  "only_two_analogous_own_activity_fault_cleanups": true,
+  "no_public_signatures_XML_changed_by_F022": true,
+  "xml_public_package_exact_equality": "Independently compared selected previous/corrected entire Core XML bytes",
+  "frozen_product_other8_inputs": "Prior reviewed repair frame, preserved byte-identically between mutant frames; personally FULL read here without reopening or grading those findings",
+  "nuget_restore_limit": "Actual recorded restores generate/use retained lock graphs; commands do not include --locked-mode. Final graph/content hashes, strict --no-restore builds and all selected/cache/loaded binaries independently checked. Do not call this locked-mode restore enforcement."
+}

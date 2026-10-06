@@ -1,0 +1,18 @@
+{
+  "status": "SECOND_CONSUMER_MISSING_PUBLIC_NAMESPACE_EXCLUDED",
+  "cause": "IInitiatedByOrOrchestrates is public ViciOne.ServiceBus.Sagas namespace; missing newconsumer import,1compilererror",
+  "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build-r2.log",
+  "sha256": "8c5bc0a110ad70fc8e9a1e5172c4791134192e5a6d712de26fa239d6e4c4d8a3",
+  "preserved_sources": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/previous-Components-r2.cs.txt",
+      "sha256": "117c175219b4b490e02298b58603c97322719606286c6357eb901480c6f2979b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/corrected-Components-r2.cs.txt",
+      "sha256": "117c175219b4b490e02298b58603c97322719606286c6357eb901480c6f2979b"
+    }
+  ],
+  "correction": "added same public Sagas import both newconsumers",
+  "finding_or_kill_count": 0
+}

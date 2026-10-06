@@ -1,0 +1,51 @@
+{
+  "utc": "2026-10-06T04:59:52.851014+00:00",
+  "status": "F152_AZURE2_SCOPE_EXTENSION_GENUINE_ORIGINAL12_R2_6P6F_PRODUCT1_INDEPENDENTLY_REVIEWED_APPLIED_FIXED_PENDING",
+  "finding": "F-SB-API-152",
+  "family": "Existing owning optional-diagnostic family historical14 +Consumer8 +AzureGetPut2 =24 callsites; unique214 unchanged, current bounded213 until expanded actual fixed proof. No inflated new finding IDs.",
+  "original_independent": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package341-azure12-original-independent-qualification-r1/MANIFEST.json",
+    "sha256": "d53b3a8da522ac21d85a2aaa11877c07eb47fbe65d294361a84571ffe59bdfea"
+  },
+  "proposal": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package339-azureblob-optional-diagnostics2-product1-root-proposed-r1/MANIFEST.json",
+    "sha256": "509fdce8c02d61782f021e240e7cb7b58f1e415ebcca2d664376b6ec747d95cd"
+  },
+  "independent_Product_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package339-azureblob-product1-independent-runtime-source-peer-r1/MANIFEST.json",
+    "sha256": "07d938a74cd829ecee8fb5f1b81f434d27a6c599acadbad6c2a59c560c75d349"
+  },
+  "change": {
+    "path": "src/Persistence/ViciOne.ServiceBus.Azure.Storage/MessageData/AzureBlobMessageDataRepository.cs",
+    "before_sha256": "2384e9b330245971cf5fa0907300eb0966f5add101639c7f9e0045b8c5cef3e6",
+    "after_sha256": "09a6e2f74c01713c8d0f8d2358b4083b010f96ba616affe8228299848a473cbd",
+    "literal2_inverse_exact": true,
+    "Source338_to352": true
+  },
+  "test340_unchanged": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/MessageData/AzureBlobOptionalDiagnosticsTests.cs",
+    "sha256": "84d97957f2d9f2566a5db7bbda0b431d613982d3529cfe07a498ae9ee17ded71"
+  },
+  "Req26_unchanged": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/Requirements/AzureStorageRequirements.json",
+    "sha256": "ea246e143b45725db1f9d5e8597615ef18f33229968980fde75d1bf3d95000aa"
+  },
+  "Root_own_source_review": "Whole candidate352 e0cc0d; previous whole338 f94ea0; genuineR2 raw1f61a4 retained; actual independentReports997bcf; literal2inverse8b18b6. Only optional Debug expression guarded, backend/stream/TTL/URI computations outside catches.",
+  "Root_independent_norm2_source_review": {
+    "proposal": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package339-azureblob-getput2-proposed352-local-norm-revision-r1/MANIFEST.json",
+      "sha256": "d11a04e8f9c7ef217318a71f455439c11675cd7396112fb37ab4a217d20f0c33"
+    },
+    "whole_prior_and_after_norm2": "af488b",
+    "new_norm_fields": 2,
+    "Master_rewrite": 0,
+    "pending": "Actual fixedPDB/XML plus separately preserved owner13 prior identities required before norm acceptance."
+  },
+  "fixed_capture_before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package344-azure-fixed12-native-source-capture-r1/BEFORE.json",
+    "sha256": "176f158e023d69d705b114e86588cd5835af0a08026ffd7a44e2d59988757229"
+  },
+  "Native_fixed_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

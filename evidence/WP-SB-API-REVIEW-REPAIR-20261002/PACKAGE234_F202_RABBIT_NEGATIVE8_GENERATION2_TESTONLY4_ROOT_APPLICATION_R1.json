@@ -1,0 +1,102 @@
+{
+  "utc": "2026-10-05T20:17:36.597214+00:00",
+  "status": "ROOT_APPLIED_INDEPENDENTLY_SOURCE_REVIEWED_TESTONLY4_COMPILER_NATIVE_PENDING",
+  "product_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE229_F202_RABBIT_CONNECTION_PRODUCT4_ROOT_APPLICATION_R2.json",
+    "sha256": "f28dfda3d5b2f86d5872f636dc95babcfaca1fad71df6da5a5ea3376ea766b12"
+  },
+  "original2_preservation": {
+    "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionWiringTests.cs",
+    "before_sha256": "522a616471b72120757bbef4110644636548eba4509490139d78cd67238d6ee1",
+    "after_sha256": "17b0ba0db5d620a658683ca108866c11336bfbc997a0844b569d12baf31a3b5d",
+    "lines": 428,
+    "inverse": "Only sealed class\u2192sealed partial class; all427 other lines and existing Original2 assertions/helpers unchanged"
+  },
+  "new_tests": [
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionLifetimeTests.cs",
+      "sha256": "b3b76799b161693a2ff721db258fdd2bca0c119544ab543cea553ed216cdf3fa",
+      "lines": 304,
+      "method": "ConfigureConnection_PublicCreationNegativeAndLeaseBoundariesAsync",
+      "cases": 8,
+      "own_whole_read": [
+        "613828",
+        "539311"
+      ]
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionGenerationTests.cs",
+      "sha256": "1ab4dec4b89de93dbb59b55546fa607b05d48f96077884ff4a9b97ce153822a2",
+      "lines": 310,
+      "method": "ConfigureConnection_CompiledSpecsStayLocalAcrossEndpointsAndRecyclingAsync",
+      "cases": 2,
+      "own_whole_read": "78556b+84fe8d whole302; exact8-line cleanup additions bb9a3b and actual affected cleanup window personally reopened bcd60d. No borrowed Reviewer authority."
+    }
+  ],
+  "requirements": {
+    "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+    "before_sha256": "083fd26503729e50484bc40dbace70b0d544c8446f354099073852d30bcba073",
+    "after_sha256": "fe17f232ae505aed92aff3adcb7497abb5682246827fe83066ff2f4815c87d20",
+    "before_rows": 285,
+    "after_rows": 287,
+    "additions": [
+      {
+        "requirementId": "REQ-VSB-RABBITMQ-CONFIGURED-CONNECTION-WIRING",
+        "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+        "testMethod": "ConfigureConnection_PublicCreationNegativeAndLeaseBoundariesAsync",
+        "testType": "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.Configuration.RabbitMqConfiguredConnectionWiringTests",
+        "variantKey": "public-negative-continuation-and-borrowed-channel-lifetime"
+      },
+      {
+        "requirementId": "REQ-VSB-RABBITMQ-CONFIGURED-CONNECTION-WIRING",
+        "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+        "testMethod": "ConfigureConnection_CompiledSpecsStayLocalAcrossEndpointsAndRecyclingAsync",
+        "testType": "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.Configuration.RabbitMqConfiguredConnectionWiringTests",
+        "variantKey": "compiled-specs-parallel-endpoints-and-current-host-recycle"
+      }
+    ],
+    "exact_original285_prefix_preserved": true
+  },
+  "authors": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-public-negative-lifetime-testonly-proposed-r3/REPORT.json",
+      "sha256": "71d334e7ddef43affbf47f89653fff40cb5227b4c756f5315caceb0d3a05ad5a",
+      "manifest_sha256": "4e7264149209f5d58dc44fd329d87870fb3941209d58ff459cfeeed77a0f78c3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-recycle-parallel2-testonly-proposed-r1/REPORT.json",
+      "sha256": "aabc17483bf2c4f9d7e31f757bc8b86bda29f445fd212a3a5390bebb6d05b42f",
+      "manifest_sha256": "db28c1dbdd76a5ad2cec704a8914c09b4047ddaa8c82bcc6e65eb009f1bdf8b1"
+    }
+  ],
+  "independent_source_peers": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-negative8-independent-runtime-source-peer-r3/REPORT.json",
+      "sha256": "c8fbce67b6841aedf148d194f7cb0f2af9e4bcd8260ed538a2278ce3fc1a4cbd",
+      "manifest_sha256": "8f62d29123e69fc70839402958f25de8e875fc76fc7890605f9fd2ed89cc1109"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-recycle-parallel2-independent-runtime-source-peer-r1/REPORT.json",
+      "sha256": "fb0082523dd4e8b5a8d7973f2754289d62637847ff5b5794afa1aa16a660382d",
+      "manifest_sha256": "8e917d71921dbe807ee888094c20375c8fe87185fd7693db20104bcb24139ade"
+    }
+  ],
+  "root_personal_read": {
+    "new304_whole": "95fd5a",
+    "new310_whole": "91a4d8",
+    "old428_whole": "3fd867 previously522a and one exact partial inverse checked now",
+    "negative8_peer_report": "127296",
+    "generation2_peer": "Independent report pending explicit Root whole before SDK; all manifests/source provenance checked here."
+  },
+  "fixed_original2_independent_actual_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-f202-rabbit-fixed2-independent-runtime-qualification-r1/REPORT.json",
+    "sha256": "1f102a0a9c9a52ecd42855629a88deb2618a33f6d1d68dc750695e9eb2b9d425",
+    "root_whole_report": "a87b96"
+  },
+  "class_membership_expected": 12,
+  "no_pass_prediction": true,
+  "held": "Canceled admitted Task relation still source-reviewed; separate genuine late-creation controls in progress. No full broker consumer/QoS/topology grade.",
+  "product_changes": 0,
+  "native_credit": 0,
+  "whole_API_closed": false
+}

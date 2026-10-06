@@ -1,0 +1,202 @@
+"""Compiled isolated source mutants; same public NuGet consumer and assertions."""
+import csv
+import hashlib
+import json
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+sys.dont_write_bytecode = True
+W = Path('/Users/edgar.liebold/Downloads/ViciOne Suite 2.0')
+O = W / 'repositories/vicione-servicebus'
+R = Path('/private/tmp/vicione-servicebus-api-review-20261001')
+M = R / 'mutations/source-main'
+E = O / 'evidence/WP-SB-API-REVIEW-REPAIR-20261002'
+RUN = W / 'SERVICEBUS_API_REVIEW_AND_REPAIR/run_operation.py'
+C = R / 'repair-consumers/package05/corrected'
+OUT = C / 'bin/Release/net10.0'
+APP = 'CorePackage05.PublicConsumer.dll'
+PROJECT = 'src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj'
+PATHS = {
+    'results': 'src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs',
+    'host': 'src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs',
+    'host_xml': 'src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs',
+    'batch': 'src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs',
+    'batch_options': 'src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs',
+}
+DLLS = ['ViciOne.ServiceBus.dll', 'ViciOne.ServiceBus.Abstractions.dll']
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+originals = {key: (M / rel).read_bytes() for key, rel in PATHS.items()}
+corrected = {key: (O / rel).read_text() for key, rel in PATHS.items()}
+for key, rel in PATHS.items():
+    assert originals[key] == (R / 'frozen-repository' / rel).read_bytes()
+oracle_hashes = {str(p): sha(p) for p in C.iterdir() if p.is_file()}
+oracle_hashes[str(OUT / APP)] = sha(OUT / APP)
+runtime = {dll: (OUT / dll).read_bytes() for dll in DLLS}
+prior_path = E / 'PACKAGE05_CORE_MUTATIONS_ATTEMPT3.json'
+prior = json.loads(prior_path.read_text())
+assert prior['oracle_hashes'] == oracle_hashes
+assert prior['oracle_hashes_preserved'] and prior['runtime_restored'] and not prior['original_mismatches']
+assert len(prior['mutants']) == 16
+result = dict(status='RUNNING', oracle_hashes=oracle_hashes, controls=list(prior['controls']),
+              mutants=list(prior['mutants']), rollback=[], retained_proof=dict(path=str(prior_path), sha256=sha(prior_path)))
+
+
+def native(label, cwd, command, expected=0):
+    phase = 'package05-mut-r4-' + label
+    process = subprocess.run([sys.executable, str(RUN), phase, str(cwd), '--', *command],
+                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    rows = [json.loads(line) for line in (E / 'VERIFICATION_LOG.jsonl').read_text().splitlines()]
+    receipt = next(row for row in reversed(rows) if row['phase'] == phase)
+    print(phase, receipt['exit_code'], flush=True)
+    if process.returncode != expected:
+        raise RuntimeError(process.stdout[-7000:])
+    assert sha(receipt['log']) == receipt['log_sha256']
+    return receipt
+
+
+def write_sources(sources):
+    for key, rel in PATHS.items():
+        (M / rel).write_text(sources[key])
+
+
+def replace_once(sources, key, before, after):
+    assert sources[key].count(before) == 1, (key, before)
+    sources[key] = sources[key].replace(before, after)
+
+
+def build(label, sources):
+    write_sources(sources)
+    receipt = native(label + '-build', M,
+                     ['dotnet', 'build', PROJECT, '-c', 'Release', '--no-restore', '-warnaserror'])
+    folder = R / 'repair-evidence/package05-binaries/r4' / label
+    folder.mkdir(parents=True, exist_ok=False)
+    binaries = []
+    for dll in DLLS:
+        name = dll.removesuffix('.dll')
+        compiled = M / 'artifacts/sdk/bin' / name / 'release' / dll
+        snapshot = folder / dll
+        shutil.copyfile(compiled, snapshot)
+        shutil.copyfile(compiled, OUT / dll)
+        binaries.append(dict(path=str(snapshot), sha256=sha(snapshot)))
+    return dict(receipt=receipt, binaries=binaries,
+                sources={rel: sha(M / rel) for rel in PATHS.values()})
+
+
+def case(label, name='all', expected=0, allowed_types=()):
+    receipt = native(label + '-' + name, C,
+                     ['dotnet', 'bin/Release/net10.0/' + APP, name, '00:00:20', '00:01:00'], expected)
+    observed = json.loads(Path(receipt['log']).read_text())
+    if expected:
+        assert observed['count'] == observed['failures'] == 1
+        failed = observed['cases'][0]
+        assert failed['case'] == name and not failed['assertions_passed']
+        assert not failed['bounded_guard_failure'], failed
+        assert failed['exception_type'] in allowed_types, failed
+    else:
+        assert observed['failures'] == 0 and all(row['assertions_passed'] for row in observed['cases'])
+    return dict(receipt=receipt, actual=observed)
+
+
+def mutation(name):
+    sources = dict(corrected)
+    negative = positive = None
+    types = ()
+    ro = 'return Array.AsReadOnly(results.ToArray());'
+    if name == 'results-return-array':
+        replace_once(sources, 'results', ro, 'return results.ToArray();')
+        negative, positive, types = 'results-membership-plain', 'results-null-inner', ('Xunit.Sdk.SameException',)
+    elif name == 'results-live-input':
+        replace_once(sources, 'results', ro,
+                     'return results is IList<ValidationResult> list\n'
+                     '            ? new System.Collections.ObjectModel.ReadOnlyCollection<ValidationResult>(list)\n'
+                     '            : Array.AsReadOnly(results.ToArray());')
+        negative, positive, types = 'results-membership-inner', 'results-empty', ('Xunit.Sdk.SingleException', 'Xunit.Sdk.SameException', 'Xunit.Sdk.EqualException')
+    elif name == 'results-null-guard-lost':
+        replace_once(sources, 'results', '        ArgumentNullException.ThrowIfNull(results);\n', '')
+        negative, positive, types = 'results-null-plain', 'results-membership-inner', ('Xunit.Sdk.EqualException',)
+    elif name.startswith('host-omit-'):
+        prop = name.removeprefix('host-omit-')
+        replace_once(sources, 'host', 'AddPositiveTimeoutFailure(failures, options.' + prop + ', nameof(options.' + prop + '), bus);',
+                     'AddPositiveTimeoutFailure(failures, null, nameof(options.' + prop + '), bus);')
+        negative, positive, types = 'host-' + prop + '-too-large', 'host-relation-equal', ('Xunit.Sdk.ThrowsException',)
+    elif name == 'host-inclusive-upper':
+        replace_once(sources, 'host', '(long)value.Value.TotalMilliseconds > uint.MaxValue - 1L', '(long)value.Value.TotalMilliseconds >= uint.MaxValue - 1L')
+        negative, positive, types = 'host-StartTimeout-maximum', 'host-StopTimeout-null', ('Microsoft.Extensions.Options.OptionsValidationException',)
+    elif name == 'host-fractional-compare':
+        replace_once(sources, 'host', '(long)value.Value.TotalMilliseconds', 'value.Value.TotalMilliseconds')
+        negative, positive, types = 'host-StopTimeout-fraction', 'host-StartTimeout-null', ('Microsoft.Extensions.Options.OptionsValidationException',)
+    elif name == 'host-relation-lost':
+        replace_once(sources, 'host', '&& options.ConsumerStopTimeout > options.StopTimeout', '&& options.ConsumerStopTimeout < TimeSpan.MinValue')
+        negative, positive, types = 'host-relation-greater', 'host-relation-equal', ('Xunit.Sdk.EqualException',)
+    elif name == 'host-positive-lost':
+        replace_once(sources, 'host', 'else if (value <= TimeSpan.Zero)', 'else if (value < TimeSpan.MinValue)')
+        negative, positive, types = 'host-StartTimeout-zero', 'host-StartTimeout-maximum', ('Xunit.Sdk.ThrowsException',)
+    else:
+        source = sources['batch']
+        start = source.index('            if (ReferenceEquals(timeProvider, TimeProvider.System)')
+        end = source.index('\n\n            currentBatch = new BatchConsumer', start)
+        guard = source[start:end]
+        negative, positive, types = 'batch-default-too-large', 'batch-custom-long-size', ('Xunit.Sdk.SingleException',)
+        if name == 'batch-provider-guard-lost':
+            replace_once(sources, 'batch', guard, '')
+        elif name == 'batch-global-options-cap':
+            before = '    public IEnumerable<ValidationResult> Validate()\n    {'
+            after = before + '\n        if ((long)TimeLimit.TotalMilliseconds > uint.MaxValue - 1L)\n            yield return this.Failure(nameof(TimeLimit), "System timer interval is unsupported.");\n'
+            replace_once(sources, 'batch_options', before, after)
+            negative, positive, types = 'batch-custom-long-expire', 'batch-system-ordinary', ('ViciOne.ServiceBus.ConfigurationException',)
+        elif name == 'batch-all-providers-cap':
+            replace_once(sources, 'batch', 'ReferenceEquals(timeProvider, TimeProvider.System)\n                && ', '')
+            negative, positive, types = 'batch-custom-long-size', 'batch-system-ordinary', ('Xunit.Sdk.NullException',)
+        elif name == 'batch-inclusive-upper':
+            replace_once(sources, 'batch', '(long)_settings.TimeLimit.TotalMilliseconds >', '(long)_settings.TimeLimit.TotalMilliseconds >=')
+            negative, positive, types = 'batch-system-maximum', 'batch-system-ordinary', ('Xunit.Sdk.NullException',)
+        elif name == 'batch-fractional-compare':
+            replace_once(sources, 'batch', '(long)_settings.TimeLimit.TotalMilliseconds', '_settings.TimeLimit.TotalMilliseconds')
+            negative, positive, types = 'batch-system-fraction', 'batch-system-maximum', ('Xunit.Sdk.NullException',)
+        elif name == 'batch-late-guard':
+            replace_once(sources, 'batch', guard, '')
+            late = guard.replace('ReferenceEquals(timeProvider,', 'ReferenceEquals(context.GetTimeProvider(),')
+            replace_once(sources, 'batch', '        await currentBatch.AddAsync(context, currentActivity).ConfigureAwait(false);',
+                         '        await currentBatch.AddAsync(context, currentActivity).ConfigureAwait(false);\n' + late)
+        elif name == 'batch-wrong-diagnostic-key':
+            replace_once(sources, 'batch', 'Failure(null, "Batch.TimeLimit", message)', 'Failure(null, "Batch", message)')
+        else:
+            raise ValueError(name)
+    return sources, negative, positive, types
+
+
+names = ['results-return-array', 'results-live-input', 'results-null-guard-lost',
+         'host-omit-StartTimeout', 'host-omit-StopTimeout', 'host-omit-ConsumerStopTimeout',
+         'host-inclusive-upper', 'host-fractional-compare', 'host-relation-lost', 'host-positive-lost',
+         'batch-provider-guard-lost', 'batch-global-options-cap', 'batch-all-providers-cap',
+         'batch-inclusive-upper', 'batch-fractional-compare', 'batch-late-guard', 'batch-wrong-diagnostic-key']
+try:
+    result['corrected_binary'] = build('corrected', corrected)
+    result['controls'].append(case('corrected'))
+    retained_names = [item['name'] for item in result['mutants']]
+    assert retained_names == names[:16]
+    for name in names[16:]:
+        sources, negative, positive, types = mutation(name)
+        binary = build(name, sources)
+        rejection = case(name, negative, 1, types)
+        control = case(name, positive)
+        result['mutants'].append(dict(name=name, binary=binary, rejection=rejection,
+                                      positive_control=control, status='KILLED_BY_CAUSAL_ASSERTION'))
+    result['rollback_binary'] = build('rollback', corrected)
+    result['rollback'].append(case('rollback'))
+    result['status'] = 'ALL_SEVENTEEN_MUTANTS_KILLED_AND_FORTYTWO_ROLLBACK_CASES_GREEN'
+finally:
+    for key, rel in PATHS.items():
+        (M / rel).write_bytes(originals[key])
+    for dll, content in runtime.items():
+        (OUT / dll).write_bytes(content)
+    rows = list(csv.DictReader((R / 'FILE_COVERAGE.csv').open()))
+    result['original_files'] = len(rows)
+    result['original_mismatches'] = [row['path'] for row in rows if sha(M / row['path']) != row['sha256']]
+    result['oracle_hashes_preserved'] = all(sha(path) == value for path, value in oracle_hashes.items())
+    result['runtime_restored'] = all((OUT / dll).read_bytes() == content for dll, content in runtime.items())
+    (E / 'PACKAGE05_CORE_MUTATIONS.json').write_text(json.dumps(result, indent=2) + '\n')
+    assert len(rows) == 6209 and not result['original_mismatches']
+    assert result['oracle_hashes_preserved'] and result['runtime_restored']

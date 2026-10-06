@@ -1,0 +1,63 @@
+{
+  "status": "SOURCE_CANDIDATE_RUNTIME_AND_REVIEW_PENDING",
+  "finding": "F-SB-API-042",
+  "created_utc": "2026-10-03T22:33:59.067142+00:00",
+  "scope": "Known volatile endpoint decorators are bypassed only for already-owned inline outbox delivery; known consume endpoint metadata and task tracking are rebound intact. Normal application sends retain volatile capture.",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "sha256": "c3d84e077590acec52e6e13323c6d356560f0d7ed035a8ae12db906fbeff4efc",
+      "bytes": 6923
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/ConsumeSendEndpoint.cs",
+      "sha256": "d7b8526ebbaae7c6244d337dac6db5e48eab6f82586c01b2b3db0589499ba49b",
+      "bytes": 2938
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/Composition.PublicConsumer.csproj",
+      "sha256": "65e944038765659fbd99a29043fe6692b2e3fad4e1df7e3542d523236e27205e",
+      "bytes": 1080
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/NuGet.Config",
+      "sha256": "cb5b91dbe139cb56c8d3fd4bc586bb46cc37896aa60c195b279dc0cd7acbef28",
+      "bytes": 576
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/OwnedDisposal.cs",
+      "sha256": "7b5638775cbc3dd898eccac52dc0f6b9a1dae5cb1300b54ccf31084de5598c95",
+      "bytes": 1013
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/OwnedLifetime.cs",
+      "sha256": "e01c009117ec2393a503eda5d2cad44d72e55ce9ef00309d51180fbd6ea5bad0",
+      "bytes": 1921
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/Program.cs",
+      "sha256": "5d40554cd6ca2dff29d7cbc86f93dec7fae30d590eea88b769c2e67812af50f4",
+      "bytes": 17899
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/global.json",
+      "sha256": "fcafdeab1b2af8c88b0aac365be7ec1f4fb8e8b2a2b700a01d2a3619687ce760",
+      "bytes": 135
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/packages.lock.json",
+      "sha256": "10c8d7c4f8700cea08474c92e1ebf2a2182584b3df5bbd94a886fe812c92eeda",
+      "bytes": 14388
+    }
+  ],
+  "original_observation": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE28_ORIGINAL_R6_ROOT_FINITE_OBSERVATION_R1.json",
+  "canonical_core766_full_claimed": false,
+  "cases": [
+    "volatile-positive",
+    "volatile-fault",
+    "nested-volatile-positive",
+    "nested-volatile-fault",
+    "ef-fault"
+  ],
+  "native_executed": false
+}

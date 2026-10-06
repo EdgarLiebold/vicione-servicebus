@@ -1,0 +1,46 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE279_ACTIVEMQ192_SOURCE175_EXACT17_HELD_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "5693be5318c7711ec09d0bae04b3e6191a24e59f3c7bbd564d937e8a225d3616"
+  },
+  "after_master": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "650df96c5708fe8fb4fd17adc0a34db195ea5f3287a2c009fb8c027af2659419",
+    "rows": 18569
+  },
+  "canonical_accounting": {
+    "original_canonical_denominator": 18569,
+    "historical_current_r2_basic_denominator": 18598,
+    "original_canonical_accepted": 17707,
+    "historical_current_r2_new_canonical_accepted": 29,
+    "current_canonical_accepted": 17736,
+    "accessor_sidecar_accepted": 833,
+    "master_unique_rows": 18569,
+    "master_declared_accepted_count_field": 18569,
+    "master_declared_denominator_field": 18598,
+    "original_canonical_remaining": 862,
+    "historical_current_r2_canonical_remaining": 862,
+    "sidecar_get": 690,
+    "sidecar_set": 137,
+    "sidecar_original_parent_unique": 714,
+    "sidecar_unmapped": 0,
+    "original_duplicate_keys": 0,
+    "master_duplicate_keys": 0,
+    "evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE168_MASTER_CANONICAL_ACCESSOR_ROOT_COUNT_PRECISION_R1.json",
+      "sha256": "8be3bc5b82aa65ef6139de4002fd86789583c9a4fbf28a3d88f73496afc12b57"
+    },
+    "historical_current_r2_inventory_is_not_fresh168_metadata": true,
+    "latest_source_append_evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE279_ACTIVEMQ192_SOURCE175_EXACT17_HELD_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "5693be5318c7711ec09d0bae04b3e6191a24e59f3c7bbd564d937e8a225d3616"
+    },
+    "latest_subtotal_precision": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE170_MASTER548_ACCESSOR_AND_SPEC_LINECOUNT_ROOT_PRECISION_R1.json",
+      "sha256": "b41b9e72fbcf91d8314f882fd469a082ce1582994f521ffcb04718adf615fdd2"
+    },
+    "sidecar_event_add": 3,
+    "sidecar_event_remove": 3
+  },
+  "all18394_previous_rows_exact_preserved": true
+}

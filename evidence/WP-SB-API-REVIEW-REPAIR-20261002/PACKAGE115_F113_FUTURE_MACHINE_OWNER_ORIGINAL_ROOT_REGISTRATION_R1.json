@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-04T18:40:37.415716+00:00",
+  "finding": {
+    "id": "F-SB-API-113",
+    "severity": "High",
+    "title": "Identical built-in Future type on two typed buses captures the first bus companion address",
+    "source_owner": "FutureServiceCollectionExtensions.cs;FutureRegistration.cs",
+    "status": "CONFIRMED_FINITE_NATIVE_PRODUCT_FAILURE_REPAIR_PENDING",
+    "original_native_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package113-futures-valid-contracts152-independent-r1/REPORT.json",
+      "sha256": "710b31248e6a9b95097916af50ab68554fd56e3908d19e66ea54a0ea926eb245"
+    },
+    "original_native_phase": "package113-futures-valid-contracts-native152-r1",
+    "original_native_log_sha256": "3014b099147347088251a1557b58092fe290c600188aa025ef5bcaf2e13ce7c2",
+    "causal_boundary": "Global TFuture singleton captures first registrar; unqualified Configure resolves it for second bus. First exact healthy reply/owner observation passes, second request faults foreign-host guard at first companion address. Valid default constructor fixture, no host validation relaxation.",
+    "whole_API_member_review_closed": false
+  },
+  "root_reads": [
+    "cf8630 actual complete finite failure chain",
+    "c88c00 complete independent current152 report",
+    "243e54 whole actual FutureServiceCollectionExtensions",
+    "f9050b whole actual FutureRegistration",
+    "d6f64b whole actual current sameFuture test"
+  ],
+  "actual_cases": 152,
+  "passed": 151,
+  "failed": 1,
+  "skipped": 0,
+  "repair_pending": true,
+  "whole_API_review": "PARTIAL"
+}

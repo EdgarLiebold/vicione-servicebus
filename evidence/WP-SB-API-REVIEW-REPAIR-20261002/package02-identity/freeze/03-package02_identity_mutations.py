@@ -1,0 +1,142 @@
+#!/usr/bin/env python3
+"""Native single-cause identity mutants in the owned source copy; consumers stay frozen."""
+import csv
+import hashlib
+import json
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+W = Path(__file__).resolve().parent.parent
+D = W / "SERVICEBUS_API_REVIEW_AND_REPAIR"
+O = W / "repositories/vicione-servicebus"
+R = Path("/private/tmp/vicione-servicebus-api-review-20261001")
+F = R / "frozen-repository"
+M = R / "mutations/source-main"
+E = O / "evidence/WP-SB-API-REVIEW-REPAIR-20261002"
+KEY = "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs"
+CONTRACT = "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs"
+PROJECT = "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+CONSUMER = R / "repair-consumers/package02/identity-corrected"
+C = R / "repair-consumers/package02/identity-mutations"
+RESULT = E / "PACKAGE02_IDENTITY_MUTATIONS.json"
+RESUME = sys.argv[1:] == ["--resume-after-uncompilable-mutant"]
+assert not sys.argv[1:] or RESUME
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def operation(phase, cwd, command, expected):
+    if RESUME:
+        phase = phase.replace("package02-identity-", "package02-identity-r2-", 1)
+    rc = subprocess.run([sys.executable, str(D / "run_operation.py"), phase, str(cwd), "--", *command]).returncode
+    receipts = [json.loads(line) for line in (E / "VERIFICATION_LOG.jsonl").read_text().splitlines()]
+    receipt = next(item for item in receipts if item["phase"] == phase)
+    assert receipt["exit_code"] == rc == expected, (phase, rc, expected)
+    log = Path(receipt["log"]).read_bytes()
+    assert sha(log) == receipt["log_sha256"]
+    if expected == 134:
+        text = log.decode()
+        assert "Unhandled exception." in text and ("CheckKeyBoundariesAsync" in text or "CheckContractBoundaries" in text), phase
+        assert "System.InvalidOperationException" in text or "System.ArgumentException" in text or "System.ArgumentOutOfRangeException" in text, phase
+    if command[1] == "run" and expected == 0:
+        assert '"contract":"PASS"' in log.decode(), phase
+    return receipt
+
+
+def build(phase):
+    receipt = operation(phase, M, ["dotnet", "build", PROJECT, "-c", "Release", "--no-restore", "-warnaserror"], 0)
+    binaries = []
+    for name in ["ViciOne.ServiceBus", "ViciOne.ServiceBus.Abstractions"]:
+        src = M / f"artifacts/sdk/bin/{name}/release/{name}.dll"
+        dst = C / f"bin/Release/net10.0/{name}.dll"
+        shutil.copy2(src, dst)
+        binaries.append({"source": str(src), "consumer": str(dst), "sha256": sha(src.read_bytes())})
+    return {"receipt": receipt, "copied_actual_source_build_dlls": binaries}
+
+
+def consume(phase, mode, expected):
+    return operation(phase, C, ["dotnet", "run", "--project", "PublicContracts.csproj", "-c", "Release", "--no-build", "--no-restore", "--", mode], expected)
+
+
+def main():
+    corrected = {path: (O / path).read_bytes() for path in [KEY, CONTRACT]}
+    original = {path: (F / path).read_bytes() for path in [KEY, CONTRACT]}
+    for path, data in original.items():
+        assert (M / path).read_bytes() == data, path
+    assert not C.exists() or RESUME, "Existing owned mutation consumer requires explicit bounded resume"
+    C.mkdir(parents=True, exist_ok=RESUME)
+    for name in ["PublicContracts.csproj", "Program.cs", "NuGet.config", "packages.lock.json"]:
+        shutil.copy2(CONSUMER / name, C / name)
+    shutil.copytree(CONSUMER / "bin", C / "bin", dirs_exist_ok=RESUME)
+    oracle_sha = sha((C / "Program.cs").read_bytes())
+    original_oracle_dll_sha = sha((C / "bin/Release/net10.0/PublicContracts.dll").read_bytes())
+    result = {"status": "RUNNING", "oracle_source_sha256": oracle_sha, "oracle_dll_sha256": original_oracle_dll_sha,
+        "corrected_source_hashes": {path: sha(data) for path, data in corrected.items()}, "checks": [], "mutants": [],
+        "execution_kind": "Frozen package-compiled public consumer with two actual isolated-source build DLLs; this is mutation evidence, separate from the fresh NuGet-consumer gate"}
+    if RESUME:
+        previous = json.loads(RESULT.read_text())
+        assert previous["original_tracked_rollback_verified"] == 6209
+        assert previous["oracle_source_sha256"] == oracle_sha
+        assert previous["oracle_dll_sha256"] == original_oracle_dll_sha
+        assert previous["corrected_source_hashes"] == result["corrected_source_hashes"]
+        result["checks"] = previous["checks"]
+        result["mutants"] = previous["mutants"]
+        result["excluded_attempt"] = "Unused catch variable made the first lost-cause mutant uncompilable (CS0168). It is not counted. Remaining definitions preserve compilation and execute contracts."
+    mutations = [
+        ("key-lossy-encoding", KEY, 'new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true).GetByteCount(keyId)', 'Encoding.UTF8.GetByteCount(keyId)', "key-boundaries"),
+        ("key-exclusive-upper-bound", KEY, 'keyIdByteCount > ushort.MaxValue', 'keyIdByteCount >= ushort.MaxValue', "key-boundaries"),
+        ("key-character-count-bound", KEY, 'keyIdByteCount > ushort.MaxValue', 'keyId.Length > ushort.MaxValue', "key-boundaries"),
+        ("key-lost-encoding-cause", KEY, 'nameof(keyId), exception)', 'nameof(keyId), exception.InnerException)', "key-boundaries"),
+        ("contract-lost-high-surrogate-guard", CONTRACT, '!char.IsLowSurrogate(name[index + 1])', 'false', "contract-boundaries"),
+        ("contract-valid-pair-not-consumed", CONTRACT, '                index++;', '                // mutant: leave low surrogate unconsumed', "contract-boundaries"),
+        ("contract-lost-low-surrogate-guard", CONTRACT, 'if (char.IsLowSurrogate(character))', "if (char.IsLowSurrogate(character) && character == '\\0')", "contract-boundaries"),
+        ("contract-exclusive-length-bound", CONTRACT, 'name.Length > 256', 'name.Length >= 256', "contract-boundaries"),
+        ("contract-replacement-character-overrejection", CONTRACT, "char.IsControl(character) || char.IsWhiteSpace(character) || character == ';'", "char.IsControl(character) || char.IsWhiteSpace(character) || character == ';' || character == '\\uFFFD'", "contract-boundaries"),
+    ]
+    try:
+        result["checks"].append(operation("package02-identity-isolated-restore", M, ["dotnet", "restore", PROJECT, "--locked-mode", "--disable-parallel"], 0))
+        result["checks"].append(build("package02-identity-isolated-original-build"))
+        for mode in ["key-boundaries", "contract-boundaries"]:
+            result["checks"].append(consume("package02-identity-isolated-original-" + mode, mode, 134))
+        for path, data in corrected.items():
+            (M / path).write_bytes(data)
+        result["checks"].append(build("package02-identity-isolated-corrected-build"))
+        for mode in ["key-boundaries", "contract-boundaries"]:
+            result["checks"].append(consume("package02-identity-isolated-corrected-" + mode, mode, 0))
+        for name, path, before, after, mode in mutations:
+            text = corrected[path].decode()
+            assert text.count(before) == 1, name
+            mutant = text.replace(before, after).encode()
+            retained = next((record for record in result["mutants"] if record["name"] == name), None)
+            if retained is not None:
+                assert retained["source_sha256"] == sha(mutant)
+                continue
+            (M / path).write_bytes(mutant)
+            assert all((M / other).read_bytes() == data for other, data in corrected.items() if other != path)
+            build_receipt = build("package02-identity-mutant-build-" + name)
+            failure = consume("package02-identity-mutant-" + name, mode, 134)
+            assert sha((C / "Program.cs").read_bytes()) == oracle_sha
+            assert sha((C / "bin/Release/net10.0/PublicContracts.dll").read_bytes()) == original_oracle_dll_sha
+            result["mutants"].append({"name": name, "changed_source": path, "source_sha256": sha(mutant),
+                "replacement": {"before": before, "after": after}, "status": "KILLED_BY_EXECUTED_PUBLIC_CONTRACT", "build": build_receipt, "native_contract_failure": failure})
+            (M / path).write_bytes(corrected[path])
+            RESULT.write_text(json.dumps(result, indent=2) + "\n")
+        result["checks"].append(build("package02-identity-isolated-rollback-build"))
+        for mode in ["key-boundaries", "contract-boundaries"]:
+            result["checks"].append(consume("package02-identity-isolated-rollback-" + mode, mode, 0))
+        result["status"] = "EXECUTED_ALL_9_KILLED_ROLLBACK_GREEN"
+    finally:
+        for path, data in original.items():
+            (M / path).write_bytes(data)
+        rows = list(csv.DictReader((R / "FILE_COVERAGE.csv").open()))
+        result["original_tracked_rollback_verified"] = sum(sha((M / row["path"]).read_bytes()) == row["sha256"] for row in rows)
+        RESULT.write_text(json.dumps(result, indent=2) + "\n")
+    assert result["original_tracked_rollback_verified"] == len(rows)
+
+
+if __name__ == "__main__":
+    main()

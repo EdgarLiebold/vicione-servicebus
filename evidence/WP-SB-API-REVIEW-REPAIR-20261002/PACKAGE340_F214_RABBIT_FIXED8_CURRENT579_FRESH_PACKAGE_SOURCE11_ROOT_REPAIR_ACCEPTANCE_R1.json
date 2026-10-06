@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-06T04:38:48.575472+00:00",
+  "status": "ROOT_BOUNDED_F214_REPAIR_ACCEPTED_WITH_INDEPENDENT_SOURCE_NATIVE_PUBLICATION_PROOFS",
+  "finding": "F-SB-API-214",
+  "master_before_sha256": "ec472d7d5439d91682bfce151af8aa4d21012c748e2d88a3fb8e80a6894f6ad3",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package334-rabbit-fixed8-publication-independent-qualification-r1",
+      "manifest_sha256": "ddff522229afd0d8193f23a97f023ed25436e9f7a2c98d1e8de9f62d4d97d963"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package334-independent-role-attribution-precision-erratum-r1",
+      "manifest_sha256": "21b3fae92d7f770cde12658cde658ba0b9f5bf4f0014431a0bb24243a4579f32"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package334-rabbit-fixed8-native-source-capture-r1",
+      "manifest_sha256": "a547aca083caa7d2dcacf27fd0acf36a1a8b684989ae80ce6ca8c936718dd392"
+    }
+  ],
+  "Root_authority": "Actualfixed8 full126df8; fresh Product146588199 and actualChannelCleanup14183ef94; full independent fixedpeer5e4589 and mandatoryroleprecisionc97306. All manifests/selected11 oldfullrow/actualPDB DocSHA guarded before identity-only application. Own6P36 capturee00cff/19CS/21source/20payload/runtime5/Req291physicalonce/CRC/XMLwholeequal.",
+  "native": {
+    "true_fixed_focused": 8,
+    "whole": 579,
+    "failed": 0,
+    "skipped": 0,
+    "focused_subset_not_additive": true
+  },
+  "scope": "Supported public custom IConnection/IChannel setter failure. Await both cleanup attempts under existing lease, preserve setter primary including contained nativecleanup/logger failures. No standard concrete setter failure or general constructor/cancellation/network/broker guarantee.",
+  "identity_rebase": "Exactly11 existing Sourceidentities only; every oldliteralnorm/status/Native/XML/history retained, newUID0.",
+  "known_findings": 214,
+  "bounded_before": 213,
+  "bounded_after": 214,
+  "master_count_preserved": 19049,
+  "Original_remaining_preserved": 382,
+  "grade": null,
+  "whole_API_closed": false
+}

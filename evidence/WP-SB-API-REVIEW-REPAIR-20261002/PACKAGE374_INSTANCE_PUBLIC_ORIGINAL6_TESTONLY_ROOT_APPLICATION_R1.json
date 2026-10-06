@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-06T07:30:08.335651+00:00",
+  "status": "ROOT_APPLIED_INDEPENDENTLY_REVIEWED_INSTANCE_ORIGINAL6_TESTONLY_NO_FINDING_YET",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package363-instance-admission-original6-testonly-proposed-r2/MANIFEST.json",
+    "sha256": "ba3315efe5b27abf7e938e49a83bebaa80b4d329ddd79755a0becdd6c9535941"
+  },
+  "independent_adversarial_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package363-instance-original6-independent-test-source-peer-r2/MANIFEST.json",
+    "sha256": "df9d41552482edd8a01b1c11770fe7574452c052534a18ae5e882237f3343ee6"
+  },
+  "source_guards39_exact": true,
+  "Root_whole_Test351": "3a0e5d wholeR1 + 0a283a exact2 R2 assertion literal reconstruction",
+  "Root_whole_peer_and_product109": "983792",
+  "test": {
+    "relative": "tests/ViciOne.ServiceBus.Tests/Consumers/InstanceConnectionAdmissionCleanupTests.cs",
+    "sha256": "c5cd12f59e44f7867cca2e75977eb83129d9bf1352ca362a281e5df5ac458a5b",
+    "lines": 351,
+    "cases": 6,
+    "theories": 1,
+    "requirement_attributes": 1,
+    "first_hostile_causal_assertion_line": 127,
+    "own_final_whole_receipt": "Retained own R1 whole351 d95249/1f6c7b; fresh exact2 assertions whole30-lines2140e9 plus literal full inverse; no foreign whole transfer"
+  },
+  "requirements4669_to4670": {
+    "before_count": 4669,
+    "after_count": 4670,
+    "before_sha256": "796ec0273897fca12920ab17eeea4ad750724d60033373bf9598ed866159cce5",
+    "after_sha256": "8f72c1c59719f8d64b9bc7083cd50b5da0df39fdad3024738a60873396830dc7",
+    "literal_prefix_unchanged": true,
+    "entry": {
+      "requirementId": "REQ-VSB-DYNAMIC-CONSUMER-CONNECTION",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "InstanceAdmission_AttemptsEveryAcquiredRegistrationAndPreservesCausesAsync",
+      "testType": "ViciOne.ServiceBus.Tests.Consumers.InstanceConnectionAdmissionCleanupTests",
+      "variantKey": "instance-admission-all-acquired-cleanup-and-primary-causes"
+    },
+    "Root_merge": "Apply sole method ADD1 to latest Root catalog; never replace newer full catalog"
+  },
+  "no_product_source_change": true,
+  "master_unchanged_sha256": "340e5a667a57b1a3834f729314e392171021dee3b47231097a8b4fb2992d463b",
+  "prior_epoch371_final_publication_ACK": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package371-joint-fixed-independent-qualification-r1/FINAL_PUBLICATION_ACK.json",
+    "sha256": "f0139f70c439d67a4543eb049d06cc95f65c9e430e8ed24a088ac394ae7dc49b"
+  },
+  "native_count": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

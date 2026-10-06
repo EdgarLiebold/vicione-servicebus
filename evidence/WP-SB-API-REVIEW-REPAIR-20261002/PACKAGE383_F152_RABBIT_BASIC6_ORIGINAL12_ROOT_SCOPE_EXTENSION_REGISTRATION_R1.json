@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-06T08:14:51.509760+00:00",
+  "status": "ROOT_REGISTERED_F152_DISTINCT_RABBIT_BASIC6_OWNING_DIAGNOSTICS_SCOPE_EXTENSION_REPAIR_PENDING",
+  "existing_finding": "F-SB-API-152",
+  "new_finding_ID_added": false,
+  "known_findings_unchanged": 218,
+  "bounded_dispositions_before": 218,
+  "bounded_dispositions_after": 217,
+  "new_actual_original": {
+    "total": 12,
+    "passed": 6,
+    "failed": 6,
+    "skipped": 0
+  },
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package381-basic12-original-independent-qualification-r1/MANIFEST.json",
+    "sha256": "f630a69f0580a80ca751f3ae66a386abb65ace3b9eb3414a1078503c9204d11d"
+  },
+  "mandatory_final_line_precision_REPORT": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package381-basic12-original-line-precision-r2/REPORT.json",
+    "sha256": "8e846607aa858c42d00ed44b333984c0db3c30017b82974073973eec088cf77e"
+  },
+  "mandatory_final_line_precision_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package381-basic12-original-line-precision-r2/MANIFEST.json",
+    "sha256": "365f48dfdbbae2a46d2ecf672c96e339714cad331dee54898f936942c619742f"
+  },
+  "Root_whole_actual_raw111_read": "fe79eb",
+  "Root_whole_qualification_Report_read": "420b7c",
+  "scope": "Six owning callback/Stop/delivery optional Log calls in RabbitMqBasicConsumer209; historical F152 accepted scopes retained. No public directLog contract change. Original6hostile eachNull112 after unique logger sentinel/selected structured tuple; mode4/5 raw provider business cause prerequisites proven; later main lifecycle assertions unreached.",
+  "other_textual_calls": "EndOfStream and registered private channel-shutdown Log calls untested separate holds, no Original/native transfer.",
+  "Product_changed_at_registration": false,
+  "whole_API_closed": false
+}

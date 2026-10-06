@@ -20,7 +20,7 @@ public class CopyContextPipe :
         _callback = callback;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Copies message metadata and eligible headers to the send context, then invokes the optional callback.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(SendContext context)

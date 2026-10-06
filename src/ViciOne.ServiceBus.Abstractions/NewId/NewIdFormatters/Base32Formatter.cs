@@ -16,6 +16,7 @@ public class Base32Formatter :
     readonly string _chars;
     readonly bool _isUpperCase;
     readonly bool _isCustom;
+    readonly bool _useVectorEncoding = true;
     readonly Vector256<byte> _lower;
     readonly Vector256<byte> _upper;
     /// <summary>Initializes a new instance.</summary>
@@ -37,8 +38,17 @@ public class Base32Formatter :
             throw new ArgumentException("The character string must be exactly 32 characters", nameof(chars));
 
         _chars = chars;
+        _useVectorEncoding = BitConverter.IsLittleEndian;
+        foreach (char value in chars)
+        {
+            if (value > byte.MaxValue)
+            {
+                _useVectorEncoding = false;
+                break;
+            }
+        }
 
-        if (Avx2.IsSupported && BitConverter.IsLittleEndian)
+        if (_useVectorEncoding && Avx2.IsSupported)
         {
             _isCustom = true;
             var bytes = MemoryMarshal.Cast<char, byte>(chars);
@@ -60,7 +70,7 @@ public class Base32Formatter :
             throw new ArgumentException("Exactly 16 bytes are required.", nameof(bytes));
 
         Span<char> result = stackalloc char[26];
-        if (Avx2.IsSupported)
+        if (_useVectorEncoding && Avx2.IsSupported)
         {
             if (_isCustom)
                 IntrinsicsHelper.EncodeBase32(bytes, result, _lower, _upper);

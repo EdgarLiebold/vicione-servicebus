@@ -22,6 +22,35 @@ public sealed class MessageIdHeadersTests
         Assert.Equal([new HeaderValue(nameof(MessageContext.MessageId), MessageId)], headers.ToArray());
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-ID-HEADER", "incompatible-present-value-header-uses-caller-fallback")]
+    public void PresentIdentifier_WithAnIncompatibleValueTypeReturnsTheCallerFallback()
+    {
+        var headers = new MessageIdHeaders(MessageId);
+        Assert.True(headers.TryGetHeader("messageid", out object? raw));
+        Assert.Equal(MessageId, raw);
+        Assert.Equal(MessageId, headers.Get<Guid>("MESSAGEID", Guid.Empty));
+        Assert.Equal(42, headers.Get<int>("other", 42));
+        Assert.Null(headers.Get<int>("MessageId"));
+
+        Assert.Equal(42, headers.Get<int>("mEsSaGeId", 42));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-ID-HEADER", "incompatible-present-reference-header-uses-exact-caller-fallback")]
+    public void PresentIdentifier_WithAnIncompatibleReferenceTypeReturnsTheExactCallerFallback()
+    {
+        Headers headers = new MessageIdHeaders(MessageId);
+        var fallback = new Uri("loopback://fallback");
+        Assert.True(headers.TryGetHeader("MESSAGEID", out object? raw));
+        Assert.Equal(MessageId, raw);
+        Assert.Equal(MessageId, headers.Get<Guid>("messageid"));
+        Assert.Same(fallback, headers.Get<Uri>("other", fallback));
+        Assert.Null(headers.Get<Uri>("MessageId"));
+
+        Assert.Same(fallback, headers.Get<Uri>("mEsSaGeId", fallback));
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]

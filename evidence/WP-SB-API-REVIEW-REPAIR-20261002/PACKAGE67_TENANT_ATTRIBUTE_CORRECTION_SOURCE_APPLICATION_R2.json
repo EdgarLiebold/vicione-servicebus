@@ -1,0 +1,39 @@
+{
+  "utc": "2026-10-04T13:47:26.475140+00:00",
+  "decision": "ROOT_INDEPENDENT_SOURCE_NO_BLOCK_R2_EXACT_CORRECTION",
+  "author": "/root/runtime_spi_adversarial_r2",
+  "reviewer": "/root",
+  "root_whole_prior_body_read": "8d285a",
+  "root_complete_correction_diff": "d4dd70",
+  "requirements_delta_read": "7d1c3d",
+  "review": "R1 has genuine compilerCS0579 missed by source review; R2 respectsAllowMultiplefalse, preserves original7TheoryCases and originalattr, single newFact hasexactclosedRequirement; fullJourneyhelperbody byteidentical toprevious. No globalattribute/testscopechanges, allassertions/timeouts/cleanup unchanged.",
+  "test_before_sha256": "dc56a3f48efa2cba924844848d3470daaa521278e9d03d8049ac893862d4cb22",
+  "test_after_sha256": "79601052a90fcd4be58a3f4b4eac9f3d1344b6937c5cf62f6f9c09211ec52846",
+  "requirements_before_sha256": "40879045cc98f478665cd171311aeb0d27ba7841d92c1dd743895e4ae8343d06",
+  "requirements_after_sha256": "668e1540d1071525ac29be1f1b37ec50dfcd6f674bd4dfb8f709ecdae03e39e5",
+  "delta": {
+    "remove": [
+      {
+        "requirementId": "REQ-VSB-TENANT-SCOPE",
+        "variantKey": "closed-send-filter-initializes-consume-dependent-scope",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testType": "ViciOne.ServiceBus.Tests.Middleware.TenantScopeIntegrationTests",
+        "testMethod": "TenantFilter_InitializesTheScopeBeforeDependentComponentsAreResolvedAsync"
+      }
+    ],
+    "add": [
+      {
+        "requirementId": "REQ-VSB-TENANT-SCOPE",
+        "variantKey": "closed-send-filter-initializes-consume-dependent-scope",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testType": "ViciOne.ServiceBus.Tests.Middleware.TenantScopeIntegrationTests",
+        "testMethod": "ClosedSendFilter_InitializesConsumeDependentScopeBeforeResolutionAsync"
+      }
+    ],
+    "catalogue_rows_before": 4579,
+    "rows_after": 4579,
+    "other_rows_must_remain_byte_equivalent": true
+  },
+  "failed_strict_phase_preserved": "package66-67-fixed-core-strict-build-r1",
+  "native_credit": false
+}

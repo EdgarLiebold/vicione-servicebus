@@ -1,40 +1,116 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace ViciOne.ServiceBus.Metadata;
 
 /// <summary>Represents serializable process and runtime metadata for a message-producing host.</summary>
+/// <remarks>New wire values remain mutable. Instances returned by <see cref="HostMetadataCache"/> are read-only cached snapshots.</remarks>
 public sealed class BusHostInfo : HostInfo
 {
+    static readonly ConditionalWeakTable<BusHostInfo, ReadOnlyState> ReadOnlyInstances = new();
+
     /// <summary>Initializes an empty host-metadata value for serialization.</summary>
     public BusHostInfo()
     {
     }
 
     /// <summary>Gets or sets the machine or container host name.</summary>
-    public string? MachineName { get; set; }
+    /// <exception cref="InvalidOperationException">The instance is a read-only cached host snapshot.</exception>
+    public string? MachineName
+    {
+        get;
+        set
+        {
+            ThrowIfReadOnly();
+            field = value;
+        }
+    }
 
     /// <summary>Gets or sets the executable or entry-assembly name.</summary>
-    public string? ProcessName { get; set; }
+    /// <exception cref="InvalidOperationException">The instance is a read-only cached host snapshot.</exception>
+    public string? ProcessName
+    {
+        get;
+        set
+        {
+            ThrowIfReadOnly();
+            field = value;
+        }
+    }
 
     /// <summary>Gets or sets the operating-system process identifier.</summary>
-    public int ProcessId { get; set; }
+    /// <exception cref="InvalidOperationException">The instance is a read-only cached host snapshot.</exception>
+    public int ProcessId
+    {
+        get;
+        set
+        {
+            ThrowIfReadOnly();
+            field = value;
+        }
+    }
 
     /// <summary>Gets or sets the entry-assembly name.</summary>
-    public string? Assembly { get; set; }
+    /// <exception cref="InvalidOperationException">The instance is a read-only cached host snapshot.</exception>
+    public string? Assembly
+    {
+        get;
+        set
+        {
+            ThrowIfReadOnly();
+            field = value;
+        }
+    }
 
     /// <summary>Gets or sets the entry-assembly version.</summary>
-    public string? AssemblyVersion { get; set; }
+    /// <exception cref="InvalidOperationException">The instance is a read-only cached host snapshot.</exception>
+    public string? AssemblyVersion
+    {
+        get;
+        set
+        {
+            ThrowIfReadOnly();
+            field = value;
+        }
+    }
 
     /// <summary>Gets or sets the runtime version.</summary>
-    public string? FrameworkVersion { get; set; }
+    /// <exception cref="InvalidOperationException">The instance is a read-only cached host snapshot.</exception>
+    public string? FrameworkVersion
+    {
+        get;
+        set
+        {
+            ThrowIfReadOnly();
+            field = value;
+        }
+    }
 
     /// <summary>Gets or sets the ViciOne.ServiceBus assembly version.</summary>
-    public string? ViciOneServiceBusVersion { get; set; }
+    /// <exception cref="InvalidOperationException">The instance is a read-only cached host snapshot.</exception>
+    public string? ViciOneServiceBusVersion
+    {
+        get;
+        set
+        {
+            ThrowIfReadOnly();
+            field = value;
+        }
+    }
 
     /// <summary>Gets or sets the operating-system version description.</summary>
-    public string? OperatingSystemVersion { get; set; }
+    /// <exception cref="InvalidOperationException">The instance is a read-only cached host snapshot.</exception>
+    public string? OperatingSystemVersion
+    {
+        get;
+        set
+        {
+            ThrowIfReadOnly();
+            field = value;
+        }
+    }
 
     internal static BusHostInfo CaptureCurrent()
     {
@@ -54,6 +130,20 @@ public sealed class BusHostInfo : HostInfo
             OperatingSystemVersion = Environment.OSVersion.ToString(),
         };
     }
+
+    internal BusHostInfo Freeze()
+    {
+        ReadOnlyInstances.GetValue(this, static _ => new ReadOnlyState());
+        return this;
+    }
+
+    void ThrowIfReadOnly()
+    {
+        if (ReadOnlyInstances.TryGetValue(this, out _))
+            throw new InvalidOperationException("Cached host metadata is read-only.");
+    }
+
+    sealed class ReadOnlyState;
 
     private static string GetProcessName(System.Reflection.Assembly entryAssembly)
     {

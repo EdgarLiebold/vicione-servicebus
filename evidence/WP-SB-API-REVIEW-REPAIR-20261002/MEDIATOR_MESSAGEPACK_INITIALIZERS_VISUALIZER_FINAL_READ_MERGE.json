@@ -1,0 +1,14 @@
+{
+  "Root_FULL_summary_selfreview_refinements_correction": true,
+  "manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/mediator-messagepack-initializers-visualizer-family-review/FINAL_MANIFEST.json",
+  "manifest_sha256": "3b2dfdaf3fec7c8393620872bee53d719da1531aa9a51bc3746517d8bc664e13",
+  "verified_artifacts": 123,
+  "new_FULL": 56,
+  "prior_whole_rows_preserved": 4440,
+  "before_FULL": 4440,
+  "after_FULL": 4496,
+  "ledger_sha256_before": "345edda89d8dc769d959d8525993ed81e499ce6b0936b86e0c11638575f268d5",
+  "ledger_sha256_after": "085920463e3514d6892de96642ccc4d16c94f574cad17cd059c64769a8559326",
+  "candidates": "2 UNVERIFIED",
+  "whole_API_CLOSED": 0
+}

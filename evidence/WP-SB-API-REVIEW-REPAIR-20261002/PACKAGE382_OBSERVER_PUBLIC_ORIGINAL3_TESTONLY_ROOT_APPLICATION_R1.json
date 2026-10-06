@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-06T08:08:46.782300+00:00",
+  "status": "ROOT_OBSERVER_ORIGINAL3_TESTONLY_APPLIED_PRODUCT_UNCHANGED_NATIVE_PENDING",
+  "Product_changes": 0,
+  "Test1": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerSpecificationObserverAdmissionCleanupTests.cs",
+    "sha256": "b2c2ab57e8ecc3bb69601a91086417cb54f8dc4396ba17e67c2b34449e5a7a6a",
+    "lines": 242
+  },
+  "Req_ADD1": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "before_sha256": "8f72c1c59719f8d64b9bc7083cd50b5da0df39fdad3024738a60873396830dc7",
+    "after_sha256": "c137c9074f5f024a5a77d80fa7e42abcf5f2733bbca8a23da3d6cbdc1d4c36da",
+    "before_rows": 4670,
+    "after_rows": 4671,
+    "physical_entire_before_inverse_equal": true,
+    "object_prefix_equal": true
+  },
+  "author_R2_REPORT": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package363-observer-admission-original3-testonly-proposed-req-literal-preservation-r2/REPORT.json",
+    "sha256": "c7cd7ba54c5146f28ab051fbd3a245791baf6d5091fc04aa45eb46ca0298ac24"
+  },
+  "author_R2_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package363-observer-admission-original3-testonly-proposed-req-literal-preservation-r2/MANIFEST.json",
+    "sha256": "6351ba0e9f83645c62c00d145176e4a7098fe4e86a09ef4cb94dc55c81f7c1d9"
+  },
+  "whole_independent_peer_REPORT": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package363-observer3-independent-test-source-peer-r2/REPORT.json",
+    "sha256": "3318b9c32ca7975b720b68e1f444330c948d20859a5564adcc63a5db81d38f1e"
+  },
+  "whole_independent_peer_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package363-observer3-independent-test-source-peer-r2/MANIFEST.json",
+    "sha256": "34d1b285b58b3ca53c100a6510df8f5a205bcabc34cc571533e7874c67b39ae5"
+  },
+  "previous381_frozen_ACK": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package381-basic12-original-independent-qualification-r1/SNAPSHOT_ACK.json",
+    "sha256": "1661209e16dc0cab4667a7b32e4e5c3dd0750efedfa2f74399b8ad534cb04539"
+  },
+  "Root_whole_Test242_read": "f4d3fc",
+  "Root_whole_Source195_read": "0f5ad7",
+  "Root_whole_peer_Report_read": "b17937",
+  "Root_ReqOnlyR2_Report_read": "e8e0f2",
+  "actual_phase": "package382-observer-admission-public-original3-native-r1",
+  "actual_original_prediction": null,
+  "canonical_UID_additions": 0
+}

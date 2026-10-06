@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-05T16:02:36.540799+00:00",
+  "correction": "Earlier Root193 application descriptive key whole253_current_store and several peer descriptive counts used253/34. The same whole source text actually has259/37 physical lines; source bytes/checksums and review scope did not change.",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DurableResourceStore.cs",
+      "actual_physical_lines": 259,
+      "sha256": "66d327709126033ace4abaee0d56f4846b4346718403f87aea54d7563f158706"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/EnabledLogger.cs",
+      "actual_physical_lines": 37,
+      "sha256": "ef5aa89d3cf563ec3af0cb6ac5e36cc6371afc8ccf85a57eb92589f69344ef17"
+    }
+  ],
+  "root_whole_store_read": "11848b",
+  "actual_count_check": "050822",
+  "no_extra_whole_EnabledLogger_read_claim": true,
+  "no_source_native_API_count_or_finding_change": true,
+  "historical_receipts_preserved": true
+}

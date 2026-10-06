@@ -1,0 +1,181 @@
+{
+  "utc": "2026-10-04T14:19:14.630222+00:00",
+  "decision": "F070_REPAIR_ROOT_ACCEPTED_AND14_SPECIFIC_CORE_MEMBER_GAPS_CLOSED",
+  "finding": "F-SB-API-070",
+  "original": "actual3 finiteRED e1cd684... exactParamName null; Originalstops beforedescriptor/closed-controls, notmutationclaim",
+  "corrected": "actual28/28 zero fail/skip;3 F070 routes run entire same test plus25 named controls. Strict0W/E",
+  "raw_native_log": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package66-67-fixed-core-native28-r1.log",
+  "raw_native_log_sha256": "263c4bccda0d58cd7230a6ae48b9d579ddd94e7fcb1a7cf633e8d9358fdb1c80",
+  "root_whole_reads": [
+    "420654 actualNative28 whole",
+    "5c6a74 independentFixed28report whole",
+    "b46204 independentOriginal3report whole",
+    "582e7d all14 exactmember semantic contracts",
+    "0f9dc7 exacttwoProductguarddiff",
+    "d4dd70 tenantattributeR2 precisebodyextraction"
+  ],
+  "adversarial_source": "package66-f070-runtime-type-guard-adversarial-r1/REPORT.json",
+  "qualification": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package66-67-fixed-native28-independent-r1/REPORT.json",
+  "qualification_sha256": "815f40854bb618bc695668734d484499b59c97958ae7885e8454662ac0785ff9",
+  "fresh_package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package66-67-fixed-core-fresh-pack-r1/packages/ViciOne.ServiceBus.1.0.0.nupkg",
+  "fresh_package_sha256": "00456fce23079f5f16e865a04b557633957a176adc3f7d4cbe4373c1c49d672d",
+  "fresh_package_root_check": "all7 ZIP entries CRCvalid; DLL/XML exactcurrentcanonical (Azurebuild did not changeCore) and frozenNative28 qualifiedsameframe",
+  "matrix": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core399-current-acceptance-preparation-r3/PER_ID399_CURRENT_DECISIONS.json",
+  "matrix_sha256": "d15fa605009fd10a5441b11fcdce814746e8db6f6aa7279ed93d037ae9e75c57",
+  "members": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.GetConfigureReceiveEndpoints(System.IServiceProvider)",
+      "semantic_index": 135,
+      "current_source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de",
+      "oracle_methods": [
+        "EndpointCallbackAggregate_PreservesGlobalThenOwnerOrderAndFailureCutoff"
+      ],
+      "contract_overlay": "Named bounded actual native cases discharge specific semantic gap; prior unrelated source assertions remain historical with their own source-bound limits."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.SetBusFactory``1(``0)",
+      "semantic_index": 167,
+      "current_source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef",
+      "oracle_methods": [
+        "BusFactoryResolution_ForwardsExactOwnerContextSpecificationsAndName",
+        "BusFactorySelection_RejectsInvalidOrRepeatedFactoriesBeforeDescriptorMutation"
+      ],
+      "contract_overlay": "Named bounded actual native cases discharge specific semantic gap; prior unrelated source assertions remain historical with their own source-bound limits."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2.SetBusFactory``1(``0)",
+      "semantic_index": 174,
+      "current_source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef",
+      "oracle_methods": [
+        "BusFactoryResolution_ForwardsExactOwnerContextSpecificationsAndName",
+        "BusFactorySelection_RejectsInvalidOrRepeatedFactoriesBeforeDescriptorMutation"
+      ],
+      "contract_overlay": "Named bounded actual native cases discharge specific semantic gap; prior unrelated source assertions remain historical with their own source-bound limits."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.CreateLogContext(System.String)",
+      "semantic_index": 300,
+      "current_source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+      "oracle_methods": [
+        "AutomaticChildLogContext_PreservesOnlyTheOwningProviderMeterBinding"
+      ],
+      "contract_overlay": "Named bounded actual native cases discharge specific semantic gap; prior unrelated source assertions remain historical with their own source-bound limits."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.ConfigureCurrentLogContextIfNull(System.IServiceProvider)",
+      "semantic_index": 329,
+      "current_source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+      "oracle_methods": [
+        "AutomaticChildLogContext_PreservesOnlyTheOwningProviderMeterBinding"
+      ],
+      "contract_overlay": "Named bounded actual native cases discharge specific semantic gap; prior unrelated source assertions remain historical with their own source-bound limits."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionEndpointRegistrationExtensions.RegisterEndpoint(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Type)",
+      "semantic_index": 355,
+      "current_source_sha256": "b2dd9f1c1f74c064c3e60ceb1e39b4ba7a339e2c7114f37ef75e797a47b8b9a8",
+      "oracle_methods": [
+        "RuntimeRegistration_RejectsOpenImplementationsBeforeMutationAndAcceptsClosedControls"
+      ],
+      "contract_overlay": "F070 rejects implementation.ContainsGenericParameters before reflection and descriptor mutation; openType original loses named parameter, corrected exactParamName+descriptor invariance+closed controls proven."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionEndpointRegistrationExtensions.RegisterEndpoint(Microsoft.Extensions.DependencyInjection.IServiceCollection,ViciOne.ServiceBus.Configuration.IContainerRegistrar,System.Type)",
+      "semantic_index": 356,
+      "current_source_sha256": "b2dd9f1c1f74c064c3e60ceb1e39b4ba7a339e2c7114f37ef75e797a47b8b9a8",
+      "oracle_methods": [
+        "RuntimeRegistration_RejectsOpenImplementationsBeforeMutationAndAcceptsClosedControls"
+      ],
+      "contract_overlay": "F070 rejects implementation.ContainsGenericParameters before reflection and descriptor mutation; openType original loses named parameter, corrected exactParamName+descriptor invariance+closed controls proven."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseCompensateActivityFilter(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Type,ViciOne.ServiceBus.Configuration.IRegistrationContext,System.Action{ViciOne.ServiceBus.Configuration.IMessageTypeFilterConfigurator})",
+      "semantic_index": 360,
+      "current_source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86",
+      "oracle_methods": [
+        "PublicScopedFilterSelection_AttachesOnlyTheSelectedPipelineContracts",
+        "PublicScopedFilterSelectionFailure_PreventsEveryObserverAttachment"
+      ],
+      "contract_overlay": "Named bounded actual native cases discharge specific semantic gap; prior unrelated source assertions remain historical with their own source-bound limits."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseConsumeFilter(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Type,ViciOne.ServiceBus.Configuration.IRegistrationContext,System.Action{ViciOne.ServiceBus.Configuration.IMessageTypeFilterConfigurator})",
+      "semantic_index": 362,
+      "current_source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86",
+      "oracle_methods": [
+        "PublicScopedFilterSelection_AttachesOnlyTheSelectedPipelineContracts",
+        "PublicScopedFilterSelectionFailure_PreventsEveryObserverAttachment"
+      ],
+      "contract_overlay": "Named bounded actual native cases discharge specific semantic gap; prior unrelated source assertions remain historical with their own source-bound limits."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseExecuteActivityFilter(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Type,ViciOne.ServiceBus.Configuration.IRegistrationContext,System.Action{ViciOne.ServiceBus.Configuration.IMessageTypeFilterConfigurator})",
+      "semantic_index": 364,
+      "current_source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86",
+      "oracle_methods": [
+        "PublicScopedFilterSelection_AttachesOnlyTheSelectedPipelineContracts",
+        "PublicScopedFilterSelectionFailure_PreventsEveryObserverAttachment"
+      ],
+      "contract_overlay": "Named bounded actual native cases discharge specific semantic gap; prior unrelated source assertions remain historical with their own source-bound limits."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UsePublishFilter(ViciOne.ServiceBus.Configuration.IPublishPipelineConfigurator,System.Type,ViciOne.ServiceBus.Configuration.IRegistrationContext,System.Action{ViciOne.ServiceBus.Configuration.IMessageTypeFilterConfigurator})",
+      "semantic_index": 366,
+      "current_source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86",
+      "oracle_methods": [
+        "PublicScopedFilterSelection_AttachesOnlyTheSelectedPipelineContracts",
+        "PublicScopedFilterSelectionFailure_PreventsEveryObserverAttachment"
+      ],
+      "contract_overlay": "Named bounded actual native cases discharge specific semantic gap; prior unrelated source assertions remain historical with their own source-bound limits."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseSendFilter(ViciOne.ServiceBus.Configuration.ISendPipelineConfigurator,System.Type,ViciOne.ServiceBus.Configuration.IRegistrationContext,System.Action{ViciOne.ServiceBus.Configuration.IMessageTypeFilterConfigurator})",
+      "semantic_index": 368,
+      "current_source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86",
+      "oracle_methods": [
+        "PublicScopedFilterSelection_AttachesOnlyTheSelectedPipelineContracts",
+        "PublicScopedFilterSelectionFailure_PreventsEveryObserverAttachment"
+      ],
+      "contract_overlay": "Named bounded actual native cases discharge specific semantic gap; prior unrelated source assertions remain historical with their own source-bound limits."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.RegistrationConfiguratorExtensions.AddConsumer(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Type,System.Type)",
+      "semantic_index": 369,
+      "current_source_sha256": "3f2af70be8279400a640616ea46ad1d97dc0766ad89e1fb4f0ab95b82e8e3a58",
+      "oracle_methods": [
+        "RuntimeRegistration_RejectsOpenImplementationsBeforeMutationAndAcceptsClosedControls"
+      ],
+      "contract_overlay": "F070 rejects implementation.ContainsGenericParameters before reflection and descriptor mutation; openType original loses named parameter, corrected exactParamName+descriptor invariance+closed controls proven."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseSendFilter``1(ViciOne.ServiceBus.Configuration.ISendPipelineConfigurator,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "semantic_index": 395,
+      "current_source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86",
+      "oracle_methods": [
+        "ClosedSendFilter_InitializesConsumeDependentScopeBeforeResolutionAsync"
+      ],
+      "contract_overlay": "Named bounded actual native cases discharge specific semantic gap; prior unrelated source assertions remain historical with their own source-bound limits."
+    }
+  ],
+  "whole_api_review_complete": false,
+  "limits": [
+    "Additional14 only specific method contracts and their bounded named behavioral gaps; no arbitrarySPI/Cloud guarantee",
+    "Original3 and Fixed28 artifacts stay separate; compiled Req4579 exactresource",
+    "FailedstrictR1CS0579 retained and correctedR2 verified; no ignored failures",
+    "Freshpackage equality is packaging validation, no new publicconsumer execution"
+  ]
+}

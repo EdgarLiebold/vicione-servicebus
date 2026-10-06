@@ -1,0 +1,100 @@
+{
+  "utc": "2026-10-05T21:12:42.707778+00:00",
+  "status": "BOUNDED_F203_REPAIR_AND_DOC25_PUBLICATION_ROOT_ACCEPTED_WHOLE_API_OPEN",
+  "F203": "Reviewed exact Product3; actual59 PASS independently qualified; actual whole Core7862 PASS independently receipt-rejoined including named RequirementsCoverageProjection; fresh nupkg actualDLL/XML equal bound236 snapshots. No public shape mutation in reviewed Product3.",
+  "F203_original_evidence": "PACKAGE232_F203_JSON_HEADER_DEFAULT_FALLBACK_ORIGINAL12_ROOT_REGISTRATION_R1.json",
+  "independent_reviews": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-fixed59-independent-qualification-r1/REPORT.json",
+      "sha256": "cdf5c11cc2cfd98132da95d11c1f58a156303edb2ff44cbd461f9900b89ba915",
+      "manifest_sha256": "12749772c099f788f5434fc376493330a7cce2cc4143dcc554f58f0c54371785"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package240-core7862-independent-regression-receipt-peer-r1/REPORT.json",
+      "sha256": "c72b861eaa171e4ca08896af5577252c8ae3f5dbc6121ddfd03a4fe64c5ae2b1",
+      "manifest_sha256": "b08690bda6f0ac16b309d639d7a308aa2914d785506ef8a798b809fe583166d8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-core-doc25-fresh-independent-scanner-peer-r1/REPORT.json",
+      "sha256": "8df323a614aa817c8a11f07d39ba6db4cf3d2f2070698d657cb56613fa0bb153",
+      "manifest_sha256": "f6713e0e84a4a5891e919084c3dc887b3b9f8a34c4a2762fe128018c3e64dd49"
+    }
+  ],
+  "fresh_core_pack_root_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-fresh-core-pack-root-proof-r1/REPORT.json",
+    "sha256": "d1bef9cc7f7c7ea1f36e7c96aaf3da695046e28e065a0adec1fbd8785f189bfd"
+  },
+  "Doc25": "13 XML-only Sources; actual entireXML inverse25 plus exactly1 new internalHeaderHelper type; original23 previously held IDs appended,149/152 already accepted preserved without duplicate. Existing delegated runtime holds remain.",
+  "original23_ids": [
+    "M:ViciOne.ServiceBus.Configuration.ConsumePipeSpecification.ConsumerConfigured``1(ViciOne.ServiceBus.Configuration.IConsumerConfigurator{``0})",
+    "M:ViciOne.ServiceBus.Configuration.ConsumePipeSpecification.ConsumerMessageConfigured``2(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator{``0,``1})",
+    "M:ViciOne.ServiceBus.Configuration.DeadLetterExtensions.UseDeadLetter(ViciOne.ServiceBus.Configuration.IPipeConfigurator{ViciOne.ServiceBus.Advanced.ReceiveContext},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ReceiveContext})",
+    "M:ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter.CompensateActivity``2",
+    "M:ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter.ExecuteActivity``2",
+    "M:ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter.Message``1",
+    "M:ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter.Saga``1",
+    "M:ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter.TemporaryEndpoint(System.String)",
+    "M:ViciOne.ServiceBus.Configuration.DelayedRedeliveryExtensions.UseDelayedRedelivery``1(ViciOne.ServiceBus.Configuration.IHandlerConfigurator{``0},System.Action{ViciOne.ServiceBus.Configuration.IRedeliveryConfigurator})",
+    "M:ViciOne.ServiceBus.Configuration.JsonSerializerConfigurationExtensions.UseJsonDeserializer(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator,System.Boolean)",
+    "M:ViciOne.ServiceBus.Configuration.JsonSerializerConfigurationExtensions.UseJsonDeserializer(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Boolean)",
+    "M:ViciOne.ServiceBus.Configuration.JsonSerializerConfigurationExtensions.UseJsonSerializer(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator)",
+    "M:ViciOne.ServiceBus.Configuration.JsonSerializerConfigurationExtensions.UseJsonSerializer(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator)",
+    "M:ViciOne.ServiceBus.Configuration.OutboxConsumePipeSpecificationObserver`1.ConsumerConfigured``1(ViciOne.ServiceBus.Configuration.IConsumerConfigurator{``0})",
+    "M:ViciOne.ServiceBus.Configuration.OutboxConsumePipeSpecificationObserver`1.ConsumerMessageConfigured``2(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator{``0,``1})",
+    "M:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguration.Changed(System.String)",
+    "M:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfigurationExtensions.ReceiveEndpoint(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator,ViciOne.ServiceBus.Configuration.IEndpointDefinition,System.Action{ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator})",
+    "M:ViciOne.ServiceBus.Configuration.RegistrationExtensions.AddConsumers(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Type[])",
+    "M:ViciOne.ServiceBus.Configuration.ReliableSchedulerConfigurationExtensions.UseTransportScheduler(ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator)",
+    "M:ViciOne.ServiceBus.Configuration.ScheduledRedeliveryConfigurationExtensions.UseScheduledRedelivery``1(ViciOne.ServiceBus.Configuration.IHandlerConfigurator{``0},System.Action{ViciOne.ServiceBus.Configuration.IRetryConfigurator})",
+    "M:ViciOne.ServiceBus.Configuration.TransformConfigurationExtensions.UseTransform``1(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Func{ViciOne.ServiceBus.Configuration.ITransformSpecificationConfigurator{``0},ViciOne.ServiceBus.Configuration.IConsumeTransformSpecification{``0}})",
+    "M:ViciOne.ServiceBus.Configuration.TransformConfigurationExtensions.UseTransform``1(ViciOne.ServiceBus.Configuration.IPipeConfigurator{ViciOne.ServiceBus.ConsumeContext{``0}},System.Func{ViciOne.ServiceBus.Configuration.ITransformSpecificationConfigurator{``0},ViciOne.ServiceBus.Configuration.IConsumeTransformSpecification{``0}})",
+    "M:ViciOne.ServiceBus.Configuration.TransformSpecification`1.Default``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})"
+  ],
+  "preserved_prior_rows": 14847,
+  "master_before_sha256": "e97040cdad73c521908bb5cd6c7014db1a3b0b822cc69f4ab1109617f0e64182",
+  "master_after_sha256": "05195b21adac859ff0c1e67856df6712699c2bb7a97d3d5f7ad73cd8389926e7",
+  "canonical_accounting": {
+    "original_canonical_denominator": 18569,
+    "historical_current_r2_basic_denominator": 18598,
+    "original_canonical_accepted": 14008,
+    "historical_current_r2_new_canonical_accepted": 29,
+    "current_canonical_accepted": 14037,
+    "accessor_sidecar_accepted": 833,
+    "master_unique_rows": 14870,
+    "master_declared_accepted_count_field": 14870,
+    "master_declared_denominator_field": 18598,
+    "original_canonical_remaining": 4561,
+    "historical_current_r2_canonical_remaining": 4561,
+    "sidecar_get": 690,
+    "sidecar_set": 137,
+    "sidecar_original_parent_unique": 714,
+    "sidecar_unmapped": 0,
+    "original_duplicate_keys": 0,
+    "master_duplicate_keys": 0,
+    "evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE168_MASTER_CANONICAL_ACCESSOR_ROOT_COUNT_PRECISION_R1.json",
+      "sha256": "8be3bc5b82aa65ef6139de4002fd86789583c9a4fbf28a3d88f73496afc12b57"
+    },
+    "historical_current_r2_inventory_is_not_fresh168_metadata": true,
+    "latest_source_append_evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE243_F203_FIXED59_CORE7862_DOC25_FRESH23_CANONICAL_ROOT_ACCEPTANCE_R1.json"
+    },
+    "latest_subtotal_precision": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE170_MASTER548_ACCESSOR_AND_SPEC_LINECOUNT_ROOT_PRECISION_R1.json",
+      "sha256": "b41b9e72fbcf91d8314f882fd469a082ce1582994f521ffcb04718adf615fdd2"
+    },
+    "sidecar_event_add": 3,
+    "sidecar_event_remove": 3
+  },
+  "finding_counts_after": {
+    "known": 203,
+    "accepted": 202,
+    "F202_pending": true
+  },
+  "native_cases_core": 7862,
+  "focused59_subset_not_added_to7862": true,
+  "whole_API_closed": false,
+  "final_global31_pack_consumer_gates": "pending after remaining source repairs",
+  "grade": null,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package243-root-master-state-before-r1"
+}

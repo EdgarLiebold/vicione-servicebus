@@ -1,0 +1,17 @@
+--- baseline/docs/changelog/product-fixes.md
++++ freeze/docs/changelog/product-fixes.md
+@@ -320,3 +320,14 @@
+   below the effective 60-second floor. Diagnostics identify the setting that is invalid. The
+   existing concurrency, polling, purge, redrive, and SNS raw-delivery checks retain their order;
+   regression tests also protect the raw-delivery attribute's string-only boundary.
++- Azure Service Bus now applies the configured minimum retry backoff to both created SDK
++  clients. Values outside the messaging SDK's inclusive 1 ms to 5 minute range fail before
++  replacing the configured value. Caller-supplied client retry policies remain their owner's.
++- Azure Service Bus factory contexts now close only messaging clients created by the factory.
++  A caller-supplied client remains usable after endpoint shutdown and context replacement.
++  The direct connection-context constructor retains its existing ownership transfer.
++- Azure Service Bus session metadata now reads the current session expiry, including SDK-owned
++  renewals, and returns it in UTC. It no longer reads the original individual message expiry.
++- Event Hubs checkpoint diagnostics now remove query strings, fragments and URI user information
++  from the Blob endpoint. The diagnostic container name is parsed from that sanitized endpoint
++  because an SDK name can also contain the original fragment. The configured SDK URI is retained.

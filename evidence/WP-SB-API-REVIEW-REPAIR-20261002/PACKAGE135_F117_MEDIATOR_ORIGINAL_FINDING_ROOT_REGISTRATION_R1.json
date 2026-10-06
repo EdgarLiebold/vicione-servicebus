@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-04T20:09:33.714486+00:00",
+  "decision": "REGISTER_MEDIATOR_DIAGNOSTIC_SUPPRESSION_ORIGINAL_FINDING_AFTER_NATIVE_SOURCE_PDB_QUALIFICATION",
+  "finding": {
+    "id": "F-SB-API-117",
+    "severity": "Medium",
+    "title": "Mediator diagnostic logger suppresses consume/fault observer notification and consumer-fault metadata",
+    "source_owner": "src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorReceiveContext.cs",
+    "status": "CONFIRMED_ORIGINAL_NATIVE_SOURCE_BOUND_REPAIR_PENDING",
+    "original_native_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package133-fixed-courier6-dispatch11-original-mediator54-independent-r1/REPORT.json",
+      "sha256": "d56229d1b2b15b0ced3c4d3818dd6bbd6fddedd21737a887a550f1214377d6ce"
+    },
+    "original_native_phase": "package133-mediator-logger-original-notification-native54-r1",
+    "original_native_log_sha256": "3653f89a44be0453b12e930b6e50691d09fd776bb6fb52ecbf285f82499ae068",
+    "causal_boundary": "Actual independent Mediator ReceiveContext logs in three notification routes before callbacks, fault metadata creation on consume-fault route. Hostile logger throws ApplicationException before callback; all three new actualMediator cases fail finitely,51other controls pass including existingBase healthy3. No callback assertion on RED claimed reached.",
+    "whole_API_member_review_closed": false
+  },
+  "root_personal_review": "Entire actualMediatorowner8272ec, whole509L test7d183b/bc2f77/0f975f, wholeactual54native79f1ee/bcda79, wholeindependent133Report6bb31c. Exactcaller123/142/160 source chain.",
+  "confirmed_before": 116,
+  "confirmed_after": 117,
+  "whole_api_status": "PARTIAL"
+}

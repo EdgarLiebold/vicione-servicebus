@@ -63,11 +63,12 @@ public sealed class BatchConsumeContextTests
             Assert.Throws<ArgumentException>(() =>
                 new MessageBatch<BatchItem>(receivedAt, receivedAt, BatchCompletionMode.Size, [null!]))
                 .ParamName);
-        Assert.Equal(
-            "lastMessageReceived",
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-                new MessageBatch<BatchItem>(receivedAt, receivedAt.AddTicks(-1), BatchCompletionMode.Size, [first]))
-                .ParamName);
+        var reversedWallClockBatch = new MessageBatch<BatchItem>(
+            receivedAt, receivedAt.AddTicks(-1), BatchCompletionMode.Size, [first]);
+        Assert.Equal(receivedAt, reversedWallClockBatch.FirstMessageReceived);
+        Assert.Equal(receivedAt.AddTicks(-1), reversedWallClockBatch.LastMessageReceived);
+        Assert.Equal(BatchCompletionMode.Size, reversedWallClockBatch.Mode);
+        Assert.Same(first, Assert.Single(reversedWallClockBatch));
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => new BatchConsumeContext<BatchItem>(null!, batch)).ParamName);
         Assert.Equal(
             "batch",

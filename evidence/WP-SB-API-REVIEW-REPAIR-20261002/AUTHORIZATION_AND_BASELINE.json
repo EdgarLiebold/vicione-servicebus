@@ -1,0 +1,263 @@
+{
+  "status": "IN_PROGRESS",
+  "authorization": "PO-DIRECT-SERVICEBUS-API-REVIEW-REPAIR-20261002",
+  "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "baseline_tree": "a69acad1df9167725c06e2dd127b7f927bbe4298",
+  "input_findings_sha256": "65e808177cbe5c9f63f1016ee577b591a4de6f56b0df1af65d878103a17a0630",
+  "order_sha256": "429ddb619a5dbca13cd5b85542e066ce947151628496891f0fde390649e44a50",
+  "created_utc": "2026-10-02T21:05:00.190740+00:00",
+  "finding_status": [
+    {
+      "id": "F-SB-API-001",
+      "severity": "High",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-002",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-003",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-004",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-005",
+      "severity": "Low",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-006",
+      "severity": "Low",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-007",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-008",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-009",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-010",
+      "severity": "Low",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-011",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-012",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-013",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-014",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-015",
+      "severity": "High",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-016",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-017",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-018",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-019",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-020",
+      "severity": "Low",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-021",
+      "severity": "High",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-022",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-023",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-024",
+      "severity": "Low",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-025",
+      "severity": "Low",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-026",
+      "severity": "Low",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-027",
+      "severity": "Low",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-028",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-029",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-030",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-031",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-032",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-033",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-034",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    },
+    {
+      "id": "F-SB-API-035",
+      "severity": "Medium",
+      "status": "PENDING",
+      "repair_evidence": null,
+      "adversarial_review": null
+    }
+  ],
+  "active_package": "01_AZURE_CLIENT_AND_CREDENTIAL_BOUNDARIES",
+  "review_status": "PARTIAL",
+  "final_review_status": "NOT_STARTED",
+  "required_reviews": "Every code change, then integrated whole repair",
+  "pending_product_decision": "F021 retained inbox identity migration policy",
+  "original_review_directory": "/private/tmp/vicione-servicebus-api-review-20261001",
+  "product_source_modifications": false
+}

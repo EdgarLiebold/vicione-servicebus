@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-06T00:14:35.099138+00:00",
+  "status": "F205_BOUNDED_REPAIR_ROOT_ACCEPTED_SOURCE_TYPE1_APPENDED_EXISTING_CTOR1_REBOUND_WHOLE_API_OPEN",
+  "finding": "F-SB-API-205",
+  "before_master_sha256": "927c3b706d3496a6e0ae7a3f91ec5b95d73f58a2aa2b2928a7c8f5b868616dd4",
+  "before_master_rows": 18390,
+  "expected_after_rows": 18391,
+  "source_type1": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package276-sqs-purge-type1-current275-contract-proposed-r1/CURRENT_TYPE1_CONTRACT.json",
+    "sha256": "07ecbf4c07e645fb3345255963b51c43db39b2501e6c605831f507c6b38f2a2b"
+  },
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package275-f205-fixed2-whole355-fresh-sqs-root-proof-r1/REPORT.json",
+      "sha256": "166cfa4dd72bb3d476b73d2b0b0a5fff18fbd78c5b831b81380845659f798912"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package275-fixed2-whole355-fresh-independent-qualification-r1/REPORT.json",
+      "sha256": "6c2b20db61b220f41acc0a45d15973fd768456f64d879d9207bdb5296d21a65a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package276-sqs-purge-type1-independent-source-peer-r1/REPORT.json",
+      "sha256": "87757289ffa8ab7f41c0a2caa1c0859b33f5199fc9a30212b2b38fd4f19db847"
+    }
+  ],
+  "root_whole_peers": "Native018368; Source type1 whole currenttoolread and priorSource+proposal1c4c5e; unique native355 records mechanical, no355 human-body claim.",
+  "native": {
+    "focused2": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "wholeSqs": {
+      "total": 355,
+      "passed": 355,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "test_and_requirements_unchanged_from_Original270": true,
+  "scope": "Original2=1P1F; unchangedfixed2=2P, whole355=355P0S, strict0W0E and actualfreshNuGet independently verified. Catch only optional own Debug after successful SDK purge; provider/next/retry remain outside. No current wholeAPI/A+ grade.",
+  "Master_rebase": "Only existing constructor SourceSHA/PDB/XML identity rebased, its norm/status/native kept. Type1 source-only accepted with independent exactnorm peer; no nativeCases added by Sourceappend.",
+  "grade": null,
+  "whole_API_closed": false
+}

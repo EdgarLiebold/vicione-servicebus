@@ -1,0 +1,169 @@
+{
+  "utc": "2026-10-05T15:21:17.178176+00:00",
+  "status": "ROOT_ACCEPTED_FIVE_PREVIOUS_AZURE_XML_HOLDS_AFTER_SOURCE_AND_FRESH_PACKAGE_REPAIR",
+  "accepted_contracts": 5,
+  "prior_Azure509_plus_these5": 514,
+  "remaining_Azure518_packet_holds": 4,
+  "fresh_repair_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE189_F180_F181_XML5_FRESH_PACKAGE_ROOT_REPAIR_ACCEPTANCE_R1.json",
+    "sha256": "e5fdd2e7c1acac7b7b5d337e6d440b387f277504248ffecd6c90a80c3cb26e42"
+  },
+  "root_whole_source_context": [
+    "cc17c6",
+    "c57f73"
+  ],
+  "root_published_node_and_source_counterproof": "30b279",
+  "independent_whole7_and_published5_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-azure-fresh-xml5-independent-qualification-peer-r1/REPORT.json",
+    "sha256": "3940d78ed2bcd9998cfd9239aa654cb69557d90cb2d5b061e63e055c65e77dd3"
+  },
+  "exact_member_contracts": [
+    {
+      "id": "T:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration",
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusEndpointConfiguration.cs",
+      "source_sha256": "a668ca6d092e549eaae30e1d3c2eaadcd7463f5c7f33b692b4429bc1cf704659",
+      "member_contract": "T:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration: Public endpoint configuration type inherits EndpointConfiguration, stores supplied Azure topology, and creates child wrappers. Its topology wrapper creates separate consume topology while retaining parent message, send and publish topology references; no isolation or deep-copy guarantee.",
+      "runtime_obligations_not_native_proven": [
+        "Only declaration/documentation and exact local topology facts; custom callbacks, providers, cloud readiness and lifecycle remain separately scoped."
+      ],
+      "selected189_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusEndpointConfiguration.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "a668ca6d092e549eaae30e1d3c2eaadcd7463f5c7f33b692b4429bc1cf704659",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "sha256": "a668ca6d092e549eaae30e1d3c2eaadcd7463f5c7f33b692b4429bc1cf704659",
+        "kind": "physical_source"
+      },
+      "selected189_actual_XML": "<member name=\"T:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration\">\n            <summary>Adds Azure Service Bus topology configuration to endpoint configuration.</summary>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration.CreateEndpointConfiguration(System.Boolean)",
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusEndpointConfiguration.cs",
+      "source_sha256": "a668ca6d092e549eaae30e1d3c2eaadcd7463f5c7f33b692b4429bc1cf704659",
+      "member_contract": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration.CreateEndpointConfiguration(System.Boolean): Constructs ServiceBusTopologyConfiguration(Topology), then ServiceBusEndpointConfiguration(this, newTopology, isBusEndpoint). The transport topology constructor retains parent Message, Send and Publish references and constructs a new Consume topology. Base endpoint configuration keeps its own existing pipe, serialization and transport composition rules.",
+      "runtime_obligations_not_native_proven": [
+        "Only declaration/documentation and exact local topology facts; custom callbacks, providers, cloud readiness and lifecycle remain separately scoped."
+      ],
+      "selected189_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusEndpointConfiguration.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "a668ca6d092e549eaae30e1d3c2eaadcd7463f5c7f33b692b4429bc1cf704659",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "sha256": "a668ca6d092e549eaae30e1d3c2eaadcd7463f5c7f33b692b4429bc1cf704659",
+        "kind": "physical_source"
+      },
+      "selected189_actual_XML": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration.CreateEndpointConfiguration(System.Boolean)\">\n            <summary>Creates a child endpoint configuration with separate consume topology and shared message, send, and publish topology.</summary>\n            <param name=\"isBusEndpoint\">Whether the child configures the bus endpoint.</param>\n            <returns>The child endpoint configuration.</returns>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusBusConfiguration.CreateEndpointConfiguration(System.Boolean)",
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/IServiceBusBusConfiguration.cs",
+      "source_sha256": "fe9172fc01028d2fe535124edb412896230ce69c5aea88899ab703b92f39ae91",
+      "member_contract": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusBusConfiguration.CreateEndpointConfiguration(System.Boolean): Bodyless public SPI returning IServiceBusEndpointConfiguration with declared optional isBusEndpoint=false. The built-in inherited concrete implementation creates separate consume topology and shares message, send and publish topology. The declaration imposes no full isolated clone, provider start, task or lifecycle success guarantee on custom implementations.",
+      "runtime_obligations_not_native_proven": [
+        "Only declaration/documentation and exact local topology facts; custom callbacks, providers, cloud readiness and lifecycle remain separately scoped."
+      ],
+      "selected189_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/IServiceBusBusConfiguration.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "fe9172fc01028d2fe535124edb412896230ce69c5aea88899ab703b92f39ae91",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "sha256": "fe9172fc01028d2fe535124edb412896230ce69c5aea88899ab703b92f39ae91",
+        "kind": "physical_source"
+      },
+      "selected189_actual_XML": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusBusConfiguration.CreateEndpointConfiguration(System.Boolean)\">\n            <summary>Creates a child endpoint configuration. The built-in implementation creates separate consume topology and shares message, send, and publish topology.</summary>\n            <param name=\"isBusEndpoint\">Whether the child represents the bus endpoint.</param>\n            <returns>The child endpoint configuration.</returns>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.AzureServiceBus.Topology.ServiceBusBrokerTopology",
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusBrokerTopology.cs",
+      "source_sha256": "1b11f97f8ee4a95288643dd0ad9eeeb3ccc619c271da9800818deaf67f51a665",
+      "member_contract": "T:ViciOne.ServiceBus.AzureServiceBus.Topology.ServiceBusBrokerTopology: Public broker topology model materializes Topics, Queues, Subscriptions, QueueSubscriptions and TopicSubscriptions with ToArray. Get-only properties expose its stored mutable arrays and retain enumerated entity references; no immutable or deep-clone guarantee. Explicit probe reads those declarations; this model does not establish cloud readiness.",
+      "runtime_obligations_not_native_proven": [
+        "Only declaration/documentation and exact local topology facts; custom callbacks, providers, cloud readiness and lifecycle remain separately scoped."
+      ],
+      "selected189_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusBrokerTopology.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "1b11f97f8ee4a95288643dd0ad9eeeb3ccc619c271da9800818deaf67f51a665",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "sha256": "1b11f97f8ee4a95288643dd0ad9eeeb3ccc619c271da9800818deaf67f51a665",
+        "kind": "physical_source"
+      },
+      "selected189_actual_XML": "<member name=\"T:ViciOne.ServiceBus.AzureServiceBus.Topology.ServiceBusBrokerTopology\">\n            <summary>Provides Azure Service Bus entity declarations and relationships in mutable arrays.</summary>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Topology.BrokerTopologyBuilder.BuildBrokerTopology",
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/BrokerTopologyBuilder.cs",
+      "source_sha256": "62d17c55d6574955c8ab7b01af1e6c75b50d138f3cff3b114eccc0a3168940f7",
+      "member_contract": "M:ViciOne.ServiceBus.AzureServiceBus.Topology.BrokerTopologyBuilder.BuildBrokerTopology: Passes the five current collected entity and relationship collections into ServiceBusBrokerTopology. That constructor materializes mutable arrays while retaining entity references; this local model construction establishes no immutable broker state, provider operation or lifecycle success.",
+      "runtime_obligations_not_native_proven": [
+        "Only declaration/documentation and exact local topology facts; custom callbacks, providers, cloud readiness and lifecycle remain separately scoped."
+      ],
+      "selected189_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/BrokerTopologyBuilder.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "62d17c55d6574955c8ab7b01af1e6c75b50d138f3cff3b114eccc0a3168940f7",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "sha256": "62d17c55d6574955c8ab7b01af1e6c75b50d138f3cff3b114eccc0a3168940f7",
+        "kind": "physical_source"
+      },
+      "selected189_actual_XML": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Topology.BrokerTopologyBuilder.BuildBrokerTopology\">\n            <summary>Materializes the collected entity declarations and relationships into a topology with mutable arrays.</summary>\n            <returns>The complete Azure Service Bus broker topology.</returns>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    }
+  ],
+  "counts": {
+    "raw_before": 10749,
+    "raw_after": 10754,
+    "original_before": 9887,
+    "original_after": 9892,
+    "original_denominator": 18569,
+    "remaining_after": 8677
+  },
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_api_closed": false,
+  "limits": "Resolves only five genuine XML holds with accurately scoped source/local declarations; four Azure concrete workflow holds remain. No new runtime or cloud proof."
+}

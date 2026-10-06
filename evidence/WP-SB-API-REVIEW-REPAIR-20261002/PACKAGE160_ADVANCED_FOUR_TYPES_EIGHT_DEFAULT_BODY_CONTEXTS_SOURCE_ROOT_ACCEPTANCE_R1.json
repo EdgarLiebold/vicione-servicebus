@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-05T00:50:11.100749+00:00",
+  "actor": "/root",
+  "status": "FOUR_ORIGINAL_TYPE_IDS_BOUNDED_SOURCE_CONTRACT_ACCEPTED",
+  "accepted_before": 5938,
+  "accepted_after": 5942,
+  "original_ids": [
+    "T:ViciOne.ServiceBus.Advanced.ConnectHandle",
+    "T:ViciOne.ServiceBus.Advanced.IAdvancedMessageScheduler",
+    "T:ViciOne.ServiceBus.Advanced.IAdvancedPublishEndpoint",
+    "T:ViciOne.ServiceBus.Advanced.IAdvancedSendEndpoint"
+  ],
+  "executable_inherited_bodies": 8,
+  "extra_original_ID_credit": 0,
+  "MAN_entries": 36,
+  "actual_XML_nodes": 12,
+  "source_authority": "Child genuine4whole521+support14 and test10. Root currenttype clauses39a114 and eight individualnorms a7ce2b; actualsourceConnect23/Send113/Publish93/Relative30 whole2240e5; Scheduler first95 39a114 plusremaining860881 recovered514219. No Root allhelperwhole claim.",
+  "report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package159-abstract-default-four-contract-context-r1/REPORT.json",
+    "sha256": "bf41b12f6b3c57db6fc0995c9538f91b0fb910bdd778b1a69f3cc87a248050b6"
+  },
+  "norm_overlay": "Descriptor cancellation default is nongeneric; copied generic T-class phrase in default-body norm is inapplicable to this one method. Exact token default remains inherited None, no ref/out.",
+  "remaining_runtime_oracles": "Relative3 actualclock/admission/provider and descriptorCancel actualTask/token; child queued independent tiny controls, noSourcefinding from staticabsence.",
+  "native_credit": 0,
+  "CLOSED": false,
+  "limits": [
+    "Source-bounded type and inherited executable body contexts only.",
+    "No whole Abstractions.Tests runtime qualification or all eight body Native credit.",
+    "Options snapshot shallow; completion selected endpoint policy."
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "utc": "2026-10-06T10:05:41.085343+00:00",
+  "status": "PRODUCT5_APPLIED_NATIVE_MODULE_STRICT_FRESH_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package409-public30-five-owners-root-product-proposed-r1/REPORT.json",
+    "sha256": "91a5dc77e18acc2812303e1ec523316f512f3723435cd154481b50759e1d867f"
+  },
+  "different_adversarial_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package409-public30-independent-product-source-peer-r1/REPORT.json",
+    "sha256": "5ba489fa731a97c4690de36088ebe3a0d4e8b1498f869da5eb785aa0964f029b"
+  },
+  "Root_whole_peer_read": "832027",
+  "Root_whole_diff": "0e1be6",
+  "qualified_original407": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package407-original30-independent-qualification-r1/REPORT.json",
+    "sha256": "add13cac30fd621ac5c052de8cc8df9131b29c03dd0c84f79168111dad9f85c4"
+  },
+  "owners": [
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/ActivityObserverConfigurationExtensions.cs",
+      "before_sha": "2f16f5a4884921501a010be930f49c011d9cc800482c40aa08b9a1c604ae28b4",
+      "after_sha": "841d6074116d00031037e9cc5a4d7a013788abbe8fc7ff905a8b610944388b65",
+      "before_lines": 95,
+      "after_lines": 110
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "before_sha": "7668be0514b1f0019930f43468b655b1f9b69c30c2568c235a5444a186ee36e8",
+      "after_sha": "763f29f24a9ee285ca356b8cbb5e79ac74a427c2fb4dae234b49717dbfc96d24",
+      "before_lines": 254,
+      "after_lines": 272
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "before_sha": "acdfb9e161cd9410938988e5f9d0fee6ee6440c942a917405100d1839a80fc8f",
+      "after_sha": "e0cf4cba9052e58ab914384e6716b972d2cd0c66aac1a2112ee67379367033fb",
+      "before_lines": 639,
+      "after_lines": 653
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Testing/Harnesses/Consumers/MultiTestConsumer.cs",
+      "before_sha": "f17b5ca6509df9d8dc37a320a0d99cff87f5a92945a8a8c7674278993d9098af",
+      "after_sha": "c0b443a791b6f2b1c80b3bdd3e836dd0d8e49a13f6e69bc54c742e7d864bd720",
+      "before_lines": 183,
+      "after_lines": 194
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/CourierHostConfiguratorExtensions.cs",
+      "before_sha": "b072644a33161f02a67f2e3e0fc568bf2e1949ae9ff3403dc3411bf1e98e8c49",
+      "after_sha": "7a0750437f4e97f17ab1529ff31c9b46dd41dbd8219b075359b16e00bb92710b",
+      "before_lines": 236,
+      "after_lines": 257
+    }
+  ],
+  "Tests199_others_except5_unchanged": true,
+  "requirement4677_unchanged": true,
+  "no_native_grade": true,
+  "whole_API_closed": false
+}

@@ -1,0 +1,74 @@
+{
+  "status": "EXACT_SELECTED_NUPKG_LOCK_CACHE_AND_RUNTIME_MATCH",
+  "family": "Benchmark",
+  "packages": [
+    {
+      "package": "ViciOne.ServiceBus",
+      "version": "1.0.0",
+      "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package07-benchmarks/ViciOne.ServiceBus.1.0.0.nupkg",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg",
+      "nupkg_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+      "contentHash_sha512": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+      "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+      "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/ViciOne.ServiceBus.dll"
+    },
+    {
+      "package": "ViciOne.ServiceBus.JobService",
+      "version": "1.0.0",
+      "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package07-benchmarks/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/vicione.servicebus.jobservice/1.0.0/vicione.servicebus.jobservice.1.0.0.nupkg",
+      "nupkg_sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+      "contentHash_sha512": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+      "member": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+      "dll_sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Mediator",
+      "version": "1.0.0",
+      "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package07-benchmarks/ViciOne.ServiceBus.Mediator.1.0.0.nupkg",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/vicione.servicebus.mediator/1.0.0/vicione.servicebus.mediator.1.0.0.nupkg",
+      "nupkg_sha256": "a3312b50d5f4e58bfb90f45d07cd8893e8117b9e824a9c2bb1ab9af7b701e565",
+      "contentHash_sha512": "YZQNaY2o3VtTotcHqDE4H36GvuVJI+PJuOZAZwtrlCSzF7mYHO+vkNQQ2+IrYy+IRUgG43dTqIJMncvFYh8hJw==",
+      "member": "lib/net10.0/ViciOne.ServiceBus.Mediator.dll",
+      "dll_sha256": "f978047bda0affb8641f9c9b7fb431d871936a2eae32b6135d433111b9f83bbb",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/ViciOne.ServiceBus.Mediator.dll"
+    },
+    {
+      "package": "ViciOne.ServiceBus.MessagePack",
+      "version": "1.0.0",
+      "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package07-benchmarks/ViciOne.ServiceBus.MessagePack.1.0.0.nupkg",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/vicione.servicebus.messagepack/1.0.0/vicione.servicebus.messagepack.1.0.0.nupkg",
+      "nupkg_sha256": "62e78eee7b2964d872e6f3645276d525f0a16a30a196f960e30d36b60e1eb277",
+      "contentHash_sha512": "YkeqRHUwNSMs0b1UOm8WVZdp9FupMWsdj0QGBgxq9Ml/QR0IaMKsDpVy8MDPRDaHMnNf4buSMTdr6T/qgpVnjg==",
+      "member": "lib/net10.0/ViciOne.ServiceBus.MessagePack.dll",
+      "dll_sha256": "537a6db0cedc3acd9d4a6cff830ddd3da2093997f7a86ae520a472466d9fab01",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/ViciOne.ServiceBus.MessagePack.dll"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Abstractions",
+      "version": "1.0.0",
+      "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package07-benchmarks/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg",
+      "nupkg_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+      "contentHash_sha512": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+      "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll"
+    },
+    {
+      "package": "ViciOne.ServiceBus.Sagas",
+      "version": "1.0.0",
+      "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package07-benchmarks/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/vicione.servicebus.sagas/1.0.0/vicione.servicebus.sagas.1.0.0.nupkg",
+      "nupkg_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+      "contentHash_sha512": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+      "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+      "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll"
+    }
+  ],
+  "lock_sha256": "c2dee460f845c6e2359efaa3fdce52153140d31c7db2660f4763732b13958d24",
+  "limits": "Selected .NET10 macOS x64 graph only; no production/cloud/ARM or SDK-matrix assertion."
+}

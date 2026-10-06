@@ -1,0 +1,107 @@
+{
+  "utc": "2026-10-06T02:34:44.047502+00:00",
+  "status": "ADVERSARIAL_SOURCE_REVIEWED_TESTONLY_APPLIED_ACTUAL_ORIGINAL_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package306-rabbit-connection-dispose6-record-action-testonly-proposed-r2",
+    "manifest_sha256": "f141d0ee82dfe06e2c23e3497f3b98de721f35f32a362fc51b75b58d2b069520"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package306-rabbit-dispose6-independent-scanner-source-peer-r2",
+    "manifest_sha256": "76ccb084a2546e279c0fcf37d288c31cdaef0ca8ad81cf6c5c9053c3e9d3634b"
+  },
+  "mandatory_count_erratum": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package306-rabbit-dispose6-independent-scanner-count-precision-erratum-r1",
+    "manifest_sha256": "8d264a6dab85ae71272ba2fbf23d99cc50a5ac9730fd4f5eb177550cb73661ad"
+  },
+  "test": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqConnectionDisposeDiagnosticsTests.cs",
+    "sha256": "f47ce7c47077061fbeb108773f59adc492b96b3e8a7933d482c7aa9e78b34f5f",
+    "root_whole_R1": "fcb3ee",
+    "root_whole_one_literal_R2": "f54a4c"
+  },
+  "literal_inverse": {
+    "test": {
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqConnectionDisposeDiagnosticsTests.cs",
+      "before_absent": true,
+      "after_sha256": "f47ce7c47077061fbeb108773f59adc492b96b3e8a7933d482c7aa9e78b34f5f",
+      "lines": 250,
+      "inverse": "delete exactly this new file"
+    },
+    "requirements": {
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+      "before_sha256": "92c32df8b374e937410fb9404f1e375bfdcfbad75abbe553365dbc3f10556210",
+      "after_sha256": "d2868f730a7048128c9a6c38882d34ea7fb04f441646dc39f59f146f5642baf6",
+      "before_rows": 289,
+      "after_rows": 290,
+      "prefix289_objects_exact": true,
+      "inverse": "remove exactly final ADD1 and restore retained original289 bytes; no existing catalog objects changed"
+    },
+    "latest_merge_required": true
+  },
+  "current_source_pins": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqConnectionContext.cs",
+      "sha256": "d87eb938614c19a920bed97daec06634cab69bac34b0e4a767434c09b06b7b8d",
+      "lines": 125
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqExtensions.cs",
+      "sha256": "6cb7adb736919e931f9fe1f636f79201abd802cac884ee1a1be6d03c4b652003",
+      "lines": 141
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/TransportLifetime.cs",
+      "sha256": "f087c605a0482630305dc244bcd689abfae27acbdf8d02286f1c83af0eaac87d",
+      "lines": 196
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqBusConfiguration.cs",
+      "sha256": "4ff4b5e0f85a9c127c699f7e46933038ad52b6fa97f9c05f471f5292a101c4e1",
+      "lines": 52
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqHostConfiguration.cs",
+      "sha256": "60b9a099cdd77fe781e626ec65348a9378f7a11fb81ac1cc062341e4d3dfeca3",
+      "lines": 254
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqTopologyConfiguration.cs",
+      "sha256": "64da68f2e101900d1169a5edd7f9054e8b607ac215ac865d2343261de4a8331e",
+      "lines": 64
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Middleware/BasePipeContext.cs",
+      "sha256": "2303156020d82484c5e11820816eeea2ba27d0699ce51ba56a38fdf93cbfc586",
+      "lines": 150
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqBusFactory.cs",
+      "sha256": "0f5870e66cbe41caf489e7eca2d11645e34b681e43459c1bc06616a6a152efd0",
+      "lines": 44
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Diagnostics/TransportLogMessages.cs",
+      "sha256": "bf888194bae5a699298e52ad7faf34ade633ce567cfcf405ebac90ea698b55d8",
+      "lines": 73
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+      "sha256": "53ac44c04cf794e6ffc05f2b5a8ec47fb6948e1bac181b37155279b0296d3e68",
+      "lines": 31
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+      "sha256": "92c32df8b374e937410fb9404f1e375bfdcfbad75abbe553365dbc3f10556210",
+      "lines": 2025
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+      "sha256": "d78d054d54468692e35500dca6c90e706e6a77bfcbb7d1878bcb4bc97fba4e9e",
+      "lines": 25
+    }
+  ],
+  "native_credit": 0,
+  "grade": null,
+  "finding_registered": false,
+  "compiler_limit": "R1 never applied or compiled; identical expression FuncTask compilerseam identified from actualdifferent EnsureTopic309 CS0619, minimalR2 independentlypeerreviewed. Actual Rabbit compiler pending."
+}

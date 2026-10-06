@@ -1,0 +1,79 @@
+{
+  "utc": "2026-10-05T10:23:37.064887+00:00",
+  "actor": "/root",
+  "status": "ROOT_APPLIED_FOUR_FILES_THREE_INDEPENDENT_SOURCE_PEERS_NATIVE_PENDING",
+  "plan": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqExtensions.cs",
+      "before_sha256": "0fa6d2f84caeba30d37e4ae76cc82256bf95e5e41d014c115e61466a683d5ed8",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package197-rabbit-channel-cleanup-diagnostic-product-proposed-r1/RabbitMqExtensions.proposed.cs",
+      "after_sha256": "6cb7adb736919e931f9fe1f636f79201abd802cac884ee1a1be6d03c4b652003"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/ISqlBusTopology.cs",
+      "before_sha256": "95ad08681b7847726a35a9c07c409facd24dfb3210ad36f07bc268f5d09fc620",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package195-sql-topology-getter-xml2-product-proposed-r1/ISqlBusTopology.proposed.cs",
+      "after_sha256": "b1f36bb901d90111b33c80fff68606b5ace237ddbf56c7f6dac635d3e2be8097"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlConfigurationTests.cs",
+      "before_sha256": "94c14b2452988471af60b02a91b9b1df6b2cb7cc66feb8a7049c692d9c49179f",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package199-sql-queue-validation-original4-oracles-proposed-r1/SqlConfigurationTests.proposed.cs",
+      "after_sha256": "a7e1d6743b4674e17a7bd2fde1adb779463fe5db007fae3dfd140baf99c61c35"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/SqlTransportRequirements.json",
+      "before_sha256": "ad2d948de7dfb952c3f0a10f6e91f95af93b930e1bd080a9befc807018562940",
+      "after_sha256": "5f3dc1fa67b6f6d7b28b76d6f5bb98213007814f10271a9f7e94c8678c56487d",
+      "requirement_before_count": 161,
+      "requirement_after_count": 162
+    }
+  ],
+  "author_and_peer_manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package197-rabbit-channel-cleanup-diagnostic-product-proposed-r1/MANIFEST.json",
+      "sha256": "c91951f92b5840015faea253e5b5571eb7c83b0df2a18303896bb54d25149d83"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package195-sql-topology-getter-xml2-product-proposed-r1/MANIFEST.json",
+      "sha256": "51b56a05e5a211c7e92ea609664e906c6a63a6e88dcc343fb45767bb6cda0187"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package199-sql-queue-validation-original4-oracles-proposed-r1/MANIFEST.json",
+      "sha256": "800a8a58a0cdb852ed3c7694245d08b78d735e0327311fe1968e2fd191c082ce"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package197-rabbit-channel-cleanup-independent-runtime-peer-r1/MANIFEST.json",
+      "sha256": "c75647f44c688391d0ee49a4ee896b66b0a55cd256990b8c7b6150aa6912a6b5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package195-sql-bus-topology-getter-xml2-independent-runtime-peer-r1/MANIFEST.json",
+      "sha256": "9a2ee619c46be8a0f64aae4bf47e039022e3bd05d806a4acac0fb1bbcca6f021"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package199-sql-queue-validation-original4-independent-runtime-peer-r1/MANIFEST.json",
+      "sha256": "cdb019d5c65af3ed8dcf90ffe26d862cbe63afc0febeca7a8900145754704042"
+    }
+  ],
+  "manifest_artifacts_verified": 13,
+  "root_personal_read": "Current entire Rabbit129 and exactguard2 delta; entire SQLTopology24/concrete34/proposed2nodes; entire actual oldSqlTest138 and proposed178 with4caseassertions. Independentwhole product currentSql3 source/fixturepeer retained, not inheritedRootwholecredit.",
+  "original_xml2": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.xml",
+    "sha256": "fc82fd49504284bdb17e8d5966fa2d167ce899cec6c48840d8e97e86cf885b98",
+    "nodes": [
+      {
+        "id": "M:ViciOne.ServiceBus.Providers.Transports.ISqlBusTopology.Publish``1",
+        "original_published_xml": "<member name=\"M:ViciOne.ServiceBus.Providers.Transports.ISqlBusTopology.Publish``1\">\n            <summary>Publishes a message to its configured consumers.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n            <returns>The sql message publish topology produced by the operation.</returns>\n        </member>\n        "
+      },
+      {
+        "id": "M:ViciOne.ServiceBus.Providers.Transports.ISqlBusTopology.Send``1",
+        "original_published_xml": "<member name=\"M:ViciOne.ServiceBus.Providers.Transports.ISqlBusTopology.Send``1\">\n            <summary>Sends a message to the configured destination.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n            <returns>The sql message send topology produced by the operation.</returns>\n        </member>\n        "
+      }
+    ]
+  },
+  "limits": [
+    "SQL LF failing forecast notfinding until actualcompiledoriginal proof.",
+    "No repaired native/fresh XML2 proof yet.",
+    "No wholeAPI A+ or closure."
+  ]
+}

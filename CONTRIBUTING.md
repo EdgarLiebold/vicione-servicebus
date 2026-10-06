@@ -46,9 +46,10 @@ dotnet format --verify-no-changes ViciOne.ServiceBus.Tests.Unit.slnx
 tools/ci/verify_developer_journeys.sh
 ```
 
-The journey gate packs all thirty delivery packages, restores the samples from those packages, and
-compiles all eighteen examples plus three isolated provider-testing consumers without a
-source-project reference. A fourth package-only consumer restores all twenty-nine runtime packages;
+The journey gate packs all thirty-one delivery packages, restores the samples from those packages, and
+compiles all eighteen examples plus four isolated package consumers without a source-project
+reference. Three consumers isolate provider-testing packages; the fourth verifies SignalR without
+Initializers. A dedicated package-only API consumer restores all thirty runtime packages;
 their reflected public surface must match `docs/api/packed-public-api.txt` exactly. When an API
 change is intentional, update that contract explicitly with
 `tools/ci/verify_developer_journeys.sh --update-public-api-contract`. macOS `protoc` startup

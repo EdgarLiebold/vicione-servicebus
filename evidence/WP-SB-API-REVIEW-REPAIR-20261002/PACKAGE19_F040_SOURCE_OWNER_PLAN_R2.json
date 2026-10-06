@@ -1,0 +1,12 @@
+{
+  "status": "ROOT_F040_SOURCE_AND_OWNER_PLAN_R2_BEFORE_AUTHOR",
+  "reason": "Independent reviewer found send-specific wildcard expansion in initial parser re-use. Current receive address is canonically generated from raw configured name. Preserve literal wildcard receive identity, use shared lower-level ParseHostPathAndEntityName once, retain empty ConfigurationException.",
+  "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs",
+  "extra_source_FULL": [
+    "InMemoryReceiveEndpointConfiguration.cs",
+    "IInMemoryReceiveEndpointConfiguration.cs",
+    "QueryStringExtensions.cs"
+  ],
+  "owner_extension": "14Cases:existing10+default/typed wildcard topology-only+default/typed encoded-vhost actual2sends; exact last segment decoded input oracle. No Delivery claim for wildcard because destination wildcard means generated unique name.",
+  "original10_native_preserved": true
+}

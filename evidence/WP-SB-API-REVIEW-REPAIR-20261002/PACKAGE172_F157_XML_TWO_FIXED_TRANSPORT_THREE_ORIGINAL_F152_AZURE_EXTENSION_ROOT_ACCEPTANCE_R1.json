@@ -1,0 +1,229 @@
+{
+  "utc": "2026-10-05T08:19:35.021099+00:00",
+  "actor": "root",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-add-insert-fixed-ownership-azure-original-fresh3-independent-r1/REPORT.json",
+    "sha256": "08a094db43708a72c045c296bae1538d0187867e898167611b7bfb9da859027c",
+    "manifest_sha256": "2e00191254b29b3bad11a1f3773309f2b3eeb2e45f9e0e4f61acfe76b496da84",
+    "freeze_sha256": "2549deb6205053271a043ef129a15bb14511d154d7c1f2df8db603d57ae46c2a"
+  },
+  "root_independent_manifest_and_frozen_current_source_verification": "becd67 all3423 manifest entries/all3407 frozen files, all9 actual original ledger receipts/live logSHA and three CRC-valid physical ZIP DLL/XML. Whole approved qualifier123+a7154c and9refinement51dbe0; parser24e4ca.",
+  "root_personal_causal_reads": {
+    "Core_original_failure_blocks": "69fac0 actual full3 before compaction; first77/44/259 reached; Source source cause whole61240d/44287e/65726d",
+    "Azure_original_failure_blocks": "b14fe9 full3 and actual helpers5d4647/Source100f15, no postfirst96/103 assertion credit",
+    "current172_emitted_XML": "6221fc actual6872sameIDs/exact3child changes, allothernodes equal171; independently confirmed exact qualifier131 and freshZIP."
+  },
+  "native": {
+    "total": 2578,
+    "passed": 2572,
+    "failed": 6,
+    "skipped": 0
+  },
+  "F157": "8 actual mode/lease/cancellation controls pass; selected operation-token factory visibility, canceled actual operation and no created state reached in fixed native. Default/equal/occupied Insert policy source reviewed and old142 all pass.",
+  "F158_F159": "Exact three emitted XML child corrections on two actual member IDs; runtime bytes unchanged for these comments. Fresh physical Core ZIP DLL/XML match qualified172 frames. Native0 for XML-only contract.",
+  "registered_three": [
+    {
+      "id": "F-SB-API-160",
+      "severity": "Medium",
+      "title": "Transport stop skips send and owned contexts after a consume stop failure",
+      "source": "src/ViciOne.ServiceBus/Transports/Hosting/TransportPipeContextSupervisor.cs",
+      "classification": "CONFIRMED_FINITE_NATIVE_ORIGINAL_OWNERSHIP_DEFECT",
+      "status": "ORIGINAL_ROOT_REGISTERED_PRE_REVIEWED_REPAIR_PENDING_APPLICATION",
+      "actual_original_context": {
+        "family": "Transport child stop phase ownership",
+        "case": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorShutdownTests.TransportChildStopFailure_DoesNotSkipSendAndOwnedContextsAsync(failConsume: True)",
+        "first_failure": "77 send.StopCount expected1 actual0 after consume terminal exact primary; later owned-stop/completion assertions unreached.",
+        "cause": "Original await consumeSupervisor.StopAsync throws before sendSupervisor and base owned-context stop. Healthyfalse finishes all phases; finally manually drains actual children then retries supervisor."
+      },
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-add-insert-fixed-ownership-azure-original-fresh3-independent-r1/REPORT.json",
+        "sha256": "08a094db43708a72c045c296bae1538d0187867e898167611b7bfb9da859027c",
+        "manifest_sha256": "2e00191254b29b3bad11a1f3773309f2b3eeb2e45f9e0e4f61acfe76b496da84",
+        "freeze_sha256": "2549deb6205053271a043ef129a15bb14511d154d7c1f2df8db603d57ae46c2a"
+      },
+      "limits": [
+        "First reached finite assertion establishes the named route; later failing-case assertions remain unreached.",
+        "Healthy counterpart passed; actual started tasks terminal-observed with timeout excluded.",
+        "No universal cancellation/noncooperative-child cleanup, physical dispatcher disposal or whole API closure claim."
+      ],
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-161",
+      "severity": "Medium",
+      "title": "Send shutdown diagnostic exception prevents owned agent stop",
+      "source": "src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs",
+      "classification": "CONFIRMED_FINITE_NATIVE_ORIGINAL_OWNERSHIP_DEFECT",
+      "status": "ORIGINAL_ROOT_REGISTERED_PRE_REVIEWED_REPAIR_PENDING_APPLICATION",
+      "actual_original_context": {
+        "family": "Send stop diagnostic ownership",
+        "case": "ViciOne.ServiceBus.Tests.Transports.SendTransportTests.StopDiagnostic_DoesNotPreventOwnedAgentShutdownAsync(loggerThrows: True)",
+        "first_failure": "44 owned.StopCount expected1 actual0 after completed disposeTask, exact selected debug/entity/throw-count and primary ref checks.",
+        "cause": "Original owning StoppingSendTransport expression throws before base.StopSupervisorAsync; owned completion/transport completion/NullFailure later unreached. Finally null logger stops owned and retries transport."
+      },
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-add-insert-fixed-ownership-azure-original-fresh3-independent-r1/REPORT.json",
+        "sha256": "08a094db43708a72c045c296bae1538d0187867e898167611b7bfb9da859027c",
+        "manifest_sha256": "2e00191254b29b3bad11a1f3773309f2b3eeb2e45f9e0e4f61acfe76b496da84",
+        "freeze_sha256": "2549deb6205053271a043ef129a15bb14511d154d7c1f2df8db603d57ae46c2a"
+      },
+      "limits": [
+        "First reached finite assertion establishes the named route; later failing-case assertions remain unreached.",
+        "Healthy counterpart passed; actual started tasks terminal-observed with timeout excluded.",
+        "No universal cancellation/noncooperative-child cleanup, physical dispatcher disposal or whole API closure claim."
+      ],
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-162",
+      "severity": "Medium",
+      "title": "Dispatcher disposal diagnostic exception retains cached receivers permanently",
+      "source": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpointDispatcherFactory.cs",
+      "classification": "CONFIRMED_FINITE_NATIVE_ORIGINAL_OWNERSHIP_DEFECT",
+      "status": "ORIGINAL_ROOT_REGISTERED_PRE_REVIEWED_REPAIR_PENDING_APPLICATION",
+      "actual_original_context": {
+        "family": "Dispatcher cache release despite diagnostics",
+        "case": "ViciOne.ServiceBus.Tests.Transports.ReceiveEndpointDispatcherTests.DispatcherDispose_DiagnosticFailureDoesNotRetainCachedReceiversAsync(loggerThrows: True)",
+        "first_failure": "259 cached receiver count expected0 actual1 after joined Dispose and selected debug throws.",
+        "cause": "Original disposedflag set then metrics logging throws before cache.Clear; second call fastpath cannot clear. Healthyfalse clears; later postfirst259 assertions unreached."
+      },
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-add-insert-fixed-ownership-azure-original-fresh3-independent-r1/REPORT.json",
+        "sha256": "08a094db43708a72c045c296bae1538d0187867e898167611b7bfb9da859027c",
+        "manifest_sha256": "2e00191254b29b3bad11a1f3773309f2b3eeb2e45f9e0e4f61acfe76b496da84",
+        "freeze_sha256": "2549deb6205053271a043ef129a15bb14511d154d7c1f2df8db603d57ae46c2a"
+      },
+      "limits": [
+        "First reached finite assertion establishes the named route; later failing-case assertions remain unreached.",
+        "Healthy counterpart passed; actual started tasks terminal-observed with timeout excluded.",
+        "No universal cancellation/noncooperative-child cleanup, physical dispatcher disposal or whole API closure claim."
+      ],
+      "whole_API_member_review_closed": false
+    }
+  ],
+  "F152_Azure_extension": [
+    {
+      "family": "Azure Table insert diagnostic outcome",
+      "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 0, loggerThrows: True)",
+      "first_failure": "103 Assert.Null(failure)",
+      "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+      "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+      "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+      "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+      "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+    },
+    {
+      "family": "Azure Table insert diagnostic outcome",
+      "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 1, loggerThrows: True)",
+      "first_failure": "103 Assert.Null(failure)",
+      "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+      "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+      "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+      "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+      "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+    },
+    {
+      "family": "Azure Table insert diagnostic outcome",
+      "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 2, loggerThrows: True)",
+      "first_failure": "96 Assert.Same(storageFailure,failure)",
+      "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+      "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+      "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+      "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+      "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+    }
+  ],
+  "family_scope": "Azure three original outcomes are one extension of still-open owning Saga diagnostic family F152; no three duplicate finding IDs, no global public helper policy change. Five prior owning callers accepted separately; Dynamo/EF and connection caller controls remain pending.",
+  "counts_before": {
+    "known": 159,
+    "accepted": 155
+  },
+  "counts_after": {
+    "known": 162,
+    "accepted": 158
+  },
+  "whole_API_closed": false,
+  "fresh3": [
+    {
+      "filename": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "868ccab85760d6fa329401adc59f9fc1dd9d81f2709f76847b4e7ace2897a51d",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.dll",
+        "lib/net10.0/ViciOne.ServiceBus.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/fc8adfdafeef403689028b1cdb671f36.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "624fd9272b3a587c424a33ca619929e8f9ec9c8a08512c031e974059ca055db0",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "9d2c0d9bbe164be085a7e9a958fe39393207ac7e3bb534e431c53449e27c6160",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "7b991009200bf574fe93a0cd5a9663157b7fd2f02712bc8d0f81cc2e351839be"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.Azure.Table.1.0.0.nupkg",
+      "sha256": "51a5789f49ce81aa1552f034e4ad950434ab7c7c1b5132b486cd77ed4c896c0f",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.Azure.Table.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.Azure.Table.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Azure.Table.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/aab5ad5c17ff4c82a21b042eed71fe44.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Azure.Table.dll",
+          "sha256": "1073d508de0ef99442e473ddb45139a6acb8a8b5e08ce92857d4e2ea65201abd",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Azure.Table.xml",
+          "sha256": "40c4cd2d49892dbcf1020a5c4477b70e45b8136f7f132f925373f076f36c93dd",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "05df8b6011585f1ac22bb878cf8b07c16887e57d58a4d332527097bd778e741c"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "120b8c3a4c3bd1c806d782adc72d4aa0c4a6707e180f9d2d7d1a85de8a693994",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.Sagas.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/23f15b1dc0f442889d10fc972506e1a8.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "57a10463d49591e057c7e3d11c62e60a367638cc7e9e045c8f0943a5e2afbd09",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+          "sha256": "f22525e67ab8140d6631849e7746127e68d02c4a3f80bf786fa8b3f11ebb29bb",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "cc1a9aeb1553a6dde14a501e7ff04d96b162d5c68c1fbed6fa6edb22ac8e2467"
+    }
+  ]
+}

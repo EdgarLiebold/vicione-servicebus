@@ -1,0 +1,31 @@
+{
+  "status": "PARTIAL_ROOT_PERSONAL_COMPLETE_LITERAL_DICTIONARY_NO_OWNER_FULL_CREDIT",
+  "actor": "/root",
+  "utc": "2026-10-04T00:02:00.413367+00:00",
+  "source_packs_personally_full_untruncated": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0089.txt",
+      "sha256": "02e83a1ee4aa12edc78062b663c9dab6f1de06a9899f0ae89e6d057009ffab80",
+      "bytes": 13956
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0090.txt",
+      "sha256": "df824ee5540ccfbe62774f698da9808d02b21521b23d9e22c971508e9dc89723",
+      "bytes": 13995
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0091.txt",
+      "sha256": "173210ccf763f14276323089927ea6192a0597ea76519c38ed4cfe3633948d35",
+      "bytes": 13941
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0092.txt",
+      "sha256": "ff097b6fbd763920fc83577498fcf73211e84e8470617226de8327ca169fda04",
+      "bytes": 13986
+    }
+  ],
+  "line_ids": "14854..15466; exact per-file ordered mappings still pending",
+  "whole_owner766": false,
+  "RAW_increment": 0,
+  "read_note": "Combined first tool output truncated SOURCE90/91; both separately personally fully reread untruncated. SOURCE89/92 complete visible first output."
+}

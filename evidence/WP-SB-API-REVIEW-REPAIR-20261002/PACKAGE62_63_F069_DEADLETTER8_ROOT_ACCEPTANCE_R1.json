@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-04T13:31:09.960848+00:00",
+  "finding": "F-SB-API-069",
+  "decision": "ROOT_REPAIR_ACCEPTED_DOC5_AND_BOUNDED8_CONTRACTS",
+  "root_source_and_diff": [
+    "636986",
+    "d41f0c"
+  ],
+  "root_new214test_whole": [
+    "590d89",
+    "fc54ed"
+  ],
+  "root_rawnative12": "9d5913",
+  "root_native_qualification_whole": "38f678",
+  "root_per8_contract_and_actualXML_projection": "78f979",
+  "root_doc_overlay_report": "2691ff",
+  "actual_compiled5XML": "272bd6",
+  "actual_freshZIP_equality": "0b99d1",
+  "independent_native12_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package62-azure-deadletter-independent-r1/REPORT.json",
+    "sha256": "49dfc3dd23bf7fa3639c3c8da86bfbf8d281dcb2d270580e1a139e855481839f"
+  },
+  "independent_doc5_overlay_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package63-azure-doc5-overlay-independent-r1/REPORT.json",
+    "sha256": "20d40c57012abf68d97d8a40e26e678f17a2be64dd195d6dde5b75d446f3d1d2"
+  },
+  "correct64hex_zip_sha256": "7b93f7b42b38927d59db1a8931ecf64456949020accc1ece3cf2362a1c169134",
+  "epoch_limit": "Actual12native ran pre-doc5 frame, current2owners executable lines unchanged, newPE/docXMLfreshZIP independently qualified. No fake currentDLLnative claim.",
+  "native_counts": {
+    "total": 12,
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0
+  },
+  "all_API_Aplus": false
+}

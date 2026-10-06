@@ -1,0 +1,216 @@
+{
+  "status": "READ_FULL",
+  "read_by": "azure_test_scope",
+  "metadata_inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE14_F031_FREEZE.json",
+      "sha256": "dd8260a0f701f3a9c47cf8efe4232e13b12a54c3bbd24cd30d411e85f23fdb2b",
+      "bytes": 18405,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "PERSONAL_FRESH_FULL_TEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE14_F031_ROOT_BINDING.json",
+      "sha256": "e044e55be39bf3c4a4a54e6c79521cf07283d7321b9902a3228ef03b98eaf5d4",
+      "bytes": 54745,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "PERSONAL_FRESH_FULL_TEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE14_F031_MUTATIONS.json",
+      "sha256": "90868856ff71d0b3f2042207b03f795ffd9b0a1e14a498b8cb5a308f3eed6c4d",
+      "bytes": 84443,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "COMPLETE_STRUCTURED_FIELDS_WITH_OWN_FULL_EXACT_REUSE_DESCRIBED_IN_READ_CLOSURE"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE14_F031_SOURCE_PLAN.json",
+      "sha256": "4bbb838533378f3e645d35dd9fde629f1ae51aa720940f59a3b0e3ae44d3b30f",
+      "bytes": 9684,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package14-f031-preflight/READ_CLOSURE.json",
+        "sha256": "66de4482fd7fdc82868eee472f00a1fa0d31097dce949639f9b63af6abe99e08",
+        "bytes": 31362
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE14_F031_PUBLIC_CONSUMER_PLAN.json",
+      "sha256": "fe098c112fc7a0897fa56e05a886dbc2b0d06c31bbc74b79d67357bb11e43f99",
+      "bytes": 1718,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package14-f031-preflight/READ_CLOSURE.json",
+        "sha256": "66de4482fd7fdc82868eee472f00a1fa0d31097dce949639f9b63af6abe99e08",
+        "bytes": 31362
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE14_F031_MUTATION_PLAN.json",
+      "sha256": "c20998592d10a49e3d482d0f63cf1f6f93b0f733f5d4b01d68ce81aaa3a750b3",
+      "bytes": 3582,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package14-f031-preflight/MUTATION_PREFLIGHT_SUPPLEMENT.json",
+        "sha256": "d510e44128e29435b362681420e899fe5430c8b98a976b9773c100830600f2c9",
+        "bytes": 21325
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE14_F031_SETUP_EXCLUSION.json",
+      "sha256": "e236ebfd43004c48fe2a2b34e0cbabaff6135feff245aed4d4fb246d13e27512",
+      "bytes": 1170,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package14-f031-preflight/READ_CLOSURE.json",
+        "sha256": "66de4482fd7fdc82868eee472f00a1fa0d31097dce949639f9b63af6abe99e08",
+        "bytes": 31362
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE14_F031_SETUP_EXCLUSION_R2.json",
+      "sha256": "e67e0013ed81d6fe262d8a8ab1518692f1fbda15335c4d65839b8dd2a01900d5",
+      "bytes": 1176,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package14-f031-preflight/READ_CLOSURE.json",
+        "sha256": "66de4482fd7fdc82868eee472f00a1fa0d31097dce949639f9b63af6abe99e08",
+        "bytes": 31362
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE14_F031_SETUP_EXCLUSION_R3.json",
+      "sha256": "74dd26dd9198ba502b10324a9b556a084500f576f60bc23b35c514818eda860a",
+      "bytes": 1958,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package14-f031-preflight/READ_CLOSURE.json",
+        "sha256": "66de4482fd7fdc82868eee472f00a1fa0d31097dce949639f9b63af6abe99e08",
+        "bytes": 31362
+      }
+    }
+  ],
+  "excluded_setup_sources_and_logs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build.log",
+      "sha256": "d27a15ccc87e22523e2d8563ae160b2882b0abe87a6fc0357073ea59d36359c8",
+      "bytes": 5220,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE_FRESH_HASHCHECK",
+      "native_role": "EXCLUDED_COMPILER_SETUP_NO_PRODUCT_EXECUTION",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/previous-Components.cs.txt",
+      "sha256": "a686aa8cd8d52694544a0b92247cadec1d07b02dc9c25cacfe501ab427782ce1",
+      "bytes": 5055,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE_FRESH_HASHCHECK",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/corrected-Components.cs.txt",
+      "sha256": "a686aa8cd8d52694544a0b92247cadec1d07b02dc9c25cacfe501ab427782ce1",
+      "bytes": 5055,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE_FRESH_HASHCHECK",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build-r2.log",
+      "sha256": "8c5bc0a110ad70fc8e9a1e5172c4791134192e5a6d712de26fa239d6e4c4d8a3",
+      "bytes": 914,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE_FRESH_HASHCHECK",
+      "native_role": "EXCLUDED_COMPILER_SETUP_NO_PRODUCT_EXECUTION",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/previous-Components-r2.cs.txt",
+      "sha256": "117c175219b4b490e02298b58603c97322719606286c6357eb901480c6f2979b",
+      "bytes": 5090,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE_FRESH_HASHCHECK",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/corrected-Components-r2.cs.txt",
+      "sha256": "117c175219b4b490e02298b58603c97322719606286c6357eb901480c6f2979b",
+      "bytes": 5090,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE_FRESH_HASHCHECK",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build-r3.log",
+      "sha256": "02364003441f24dc202bb7ec46d7befdba14fbe425cc2030dceffceb6c1bcac2",
+      "bytes": 2442,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE_FRESH_HASHCHECK",
+      "native_role": "EXCLUDED_COMPILER_SETUP_NO_PRODUCT_EXECUTION",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/previous-Components.cs-r3.txt",
+      "sha256": "439edc10f691004c12cb548b302b5ee737cc7620be16a976d64127b12e1685ff",
+      "bytes": 5122,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE_FRESH_HASHCHECK",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/previous-EndpointCases.cs-r3.txt",
+      "sha256": "df37b07121be8673184a0cc51939dd79e76b63f0571d3a604689fb7d7b655135",
+      "bytes": 6321,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE_FRESH_HASHCHECK",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/corrected-Components.cs-r3.txt",
+      "sha256": "439edc10f691004c12cb548b302b5ee737cc7620be16a976d64127b12e1685ff",
+      "bytes": 5122,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE_FRESH_HASHCHECK",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/corrected-EndpointCases.cs-r3.txt",
+      "sha256": "df37b07121be8673184a0cc51939dd79e76b63f0571d3a604689fb7d7b655135",
+      "bytes": 6321,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE_FRESH_HASHCHECK",
+      "read_by": "azure_test_scope"
+    }
+  ],
+  "source_preflight": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package14-f031-preflight/READ_CLOSURE.json",
+    "sha256": "66de4482fd7fdc82868eee472f00a1fa0d31097dce949639f9b63af6abe99e08",
+    "bytes": 31362
+  },
+  "mutation_preflight": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package14-f031-preflight/MUTATION_PREFLIGHT_SUPPLEMENT.json",
+    "sha256": "d510e44128e29435b362681420e899fe5430c8b98a976b9773c100830600f2c9",
+    "bytes": 21325
+  },
+  "root_read_transfer": false,
+  "notes": [
+    "Only initial6+R2 one+R3 two compiler setup errors excluded; no native product outcome or mutant kill assigned to those failed builds.",
+    "FULL is personal fresh reading or own exact hash-bound prior FULL reuse; never Root owner closure transfer."
+  ]
+}

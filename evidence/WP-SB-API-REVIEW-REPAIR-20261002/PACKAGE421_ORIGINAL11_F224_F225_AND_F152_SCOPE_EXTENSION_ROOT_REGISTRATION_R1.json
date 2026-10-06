@@ -1,0 +1,79 @@
+{
+  "utc": "2026-10-06T10:59:19.925701+00:00",
+  "status": "ACTUAL_CURRENT419_ORIGINAL11_ROOT_ACCEPTED_FINDINGS225_REPAIR_PENDING",
+  "different_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-original11-independent-native-qualification-r1/REPORT.json",
+    "sha256": "11d7b3deb8a554ec5a40d21d8c9d2a71c1b49c77045a55467863b85a2dca0df0"
+  },
+  "root_whole_report_read": "b0a3a0",
+  "actual_counts": {
+    "total": 11,
+    "passed": 5,
+    "failed": 6,
+    "skipped": 0
+  },
+  "new_findings": [
+    {
+      "id": "F-SB-API-224",
+      "severity": "Medium",
+      "title": "Bus-Harness observer disposal failure skips remaining observer and base resource retirement",
+      "classification": "CONFIRMED_FINITE_NATIVE_PUBLIC_LIFECYCLE_DEFECT",
+      "status": "CONFIRMED_CURRENT419_ORIGINAL_PRODUCT_REPAIR_PENDING",
+      "source_owners": [
+        "src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs"
+      ],
+      "actual_original": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-original11-independent-native-qualification-r1/REPORT.json",
+        "sha256": "11d7b3deb8a554ec5a40d21d8c9d2a71c1b49c77045a55467863b85a2dca0df0"
+      },
+      "actual_native_counts": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "causal_bound": "Successful real InMemory Start and rawStop; one actual observer timer inner released then unique cleanup IOException returned; before fallback first saved TestCancellationToken oracle71 actualFalse. Later inactivitytoken/alltimers/disposedGetter oracles unreached. Local all-attempt Dispose XML contradicts skipping later cleanup.",
+      "scope": "Different owning derived Bus cleanup before base entry from F222 entered base callback failure. No ID per timer/test. Unexposed private CTS resource disposal/concurrent calls ungraded.",
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-225",
+      "severity": "Medium",
+      "title": "EF-Outbox second observer admission failure leaves returned first consumer registration attached",
+      "classification": "CONFIRMED_FINITE_NATIVE_PUBLIC_REGISTRATION_DEFECT",
+      "status": "CONFIRMED_CURRENT419_ORIGINAL_PRODUCT_REPAIR_PENDING",
+      "source_owners": [
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs"
+      ],
+      "actual_original": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-original11-independent-native-qualification-r1/REPORT.json",
+        "sha256": "11d7b3deb8a554ec5a40d21d8c9d2a71c1b49c77045a55467863b85a2dca0df0"
+      },
+      "actual_native_counts": {
+        "total": 3,
+        "passed": 1,
+        "failed": 2,
+        "skipped": 0
+      },
+      "causal_bound": "Actual real DI stable bus identity/public setter; configure1 and same optionsobserver; consumer→saga admission, second throws before returned handle. First actual consumer Count72 is1 expected0 after exact admission cause once. Both modes1/2 confirm stale registration, cleanupIO/orderedAggregate remains unreached.",
+      "scope": "Own public EF method returned-handle admission integrity; separate F021 identity repair and related F124/F156/F219/F223 owners retained with no native transfer. Only returned first handle; arbitrary unreturned second side effects not promised.",
+      "whole_API_member_review_closed": false
+    }
+  ],
+  "F152_extension": {
+    "Host4": "Two healthy/2hostile fresh/idempotent publicStart; hostile exact owning loggerIO atNull66; real generation admission/Ready/Stop later unreached.",
+    "Saga2": "Healthy1/hostile1 Configure; exact owning InfoIO atNull82; hostile specadoption/Validate later unreached.",
+    "family": "Same optional owningDiagnostic family reopened, no IDs per expression/case."
+  },
+  "known_before": 223,
+  "known_after": 225,
+  "bounded_before": 223,
+  "bounded_after": 222,
+  "OriginalAPI_remaining_unchanged": 97,
+  "source_pins": {
+    "Root269": "41cc4ac7ddb2402262923c794ca4a7d1544469556cfff910df86dd218e94d961",
+    "AFTER": "a446a4de9438269c4e74476457a11def11c759d290296532303808ff298c7476",
+    "MAN": "4978164c4e54f7bd65bb326f8b62aa316b151c9978c4b83da58afabb9e27f969"
+  },
+  "limits": "Bounded exact public controls only. No fresh build/module/package/cloud/global API grade; all previous histories retained. Product4 proposal420 awaits different peer before apply."
+}

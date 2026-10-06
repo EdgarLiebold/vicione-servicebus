@@ -13,17 +13,14 @@ public interface IConsumeObserver
     Task PreConsumeAsync<T>(ConsumeContext<T> context)
         where T : class;
 
-    /// <summary>
-    /// Called after the message has been dispatched to all consumers - note that in the case of an exception
-    /// this method is not called, and the DispatchFaulted method is called instead.
-    /// </summary>
+    /// <summary>Called after consumer dispatch completes successfully. Dispatch failures are reported to ConsumeFaultAsync.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task PostConsumeAsync<T>(ConsumeContext<T> context)
         where T : class;
 
-    /// <summary>Called after the message has been dispatched to all consumers when one or more exceptions have occurred.</summary>
+    /// <summary>Called when the observed consumer dispatch pipeline fails.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>

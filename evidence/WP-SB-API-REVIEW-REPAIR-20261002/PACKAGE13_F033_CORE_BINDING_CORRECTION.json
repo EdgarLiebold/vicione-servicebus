@@ -1,0 +1,9 @@
+{
+  "status": "IMMUTABLE_METADATA_CORRECTION_NO_INPUT_OR_NATIVE_CHANGE",
+  "binding": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE13_F033_CORE_ROOT_BINDING.json",
+  "binding_sha256": "a4acd774206bcd37387f3da9743e83225f53b690a28ebeb3c303a77ff364aa36",
+  "replaces_field": "excluded",
+  "corrected_text": "Exactly3 typed registration setup failures in first public-original10 log; preserved prior ConsumerCases sources and exclusion plan. No additional rejected compiler receipt exists for F033; no compiler error preservation claim.",
+  "counts_unchanged": "originalR2 fivecausalred/fivepositive;corrected10green;sixstrictcompiledmutants/sixpositive/baseline10rollback10",
+  "freeze_unchanged": true
+}

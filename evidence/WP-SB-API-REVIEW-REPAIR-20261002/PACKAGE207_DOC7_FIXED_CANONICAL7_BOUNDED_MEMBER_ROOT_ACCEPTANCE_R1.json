@@ -1,0 +1,20 @@
+{
+  "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACTS_EXACT_HOLDS_RETAINED",
+  "utc": "2026-10-05T18:47:46.961009+00:00",
+  "semantic_authority": "Root whole7/305 + independent7/305 + actual publication/PDB checks. Intercept precision carries no finding count.",
+  "canonical_source_accepted": 7,
+  "held_exact": [],
+  "original_canonical_before": 12047,
+  "original_canonical_after": 12054,
+  "original_remaining_after": 6515,
+  "raw_before": 12909,
+  "raw_after": 12916,
+  "native_cases_added": 0,
+  "global_grade": null,
+  "whole_API_member_review_closed": false,
+  "history": "Prior complete Master objects/order unchanged; no coherent loaded/runtime claim.",
+  "finding_repair_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE207_F199_F200_F201_DOC7_FRESH_PACKAGE_ROOT_REPAIR_ACCEPTANCE_R1.json",
+    "sha256": "ceabcef45fcdecb9e8550adfd92bba8a04d590547a82cf9f39fec3a229933f0a"
+  }
+}

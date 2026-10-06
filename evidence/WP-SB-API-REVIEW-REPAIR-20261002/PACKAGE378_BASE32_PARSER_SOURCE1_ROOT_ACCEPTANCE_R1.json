@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-06T07:38:56.148753+00:00",
+  "status": "ROOT_ACCEPTED_ONE_BOUNDED_CURRENT_SOURCE_CONTRACT",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package375-base32-parse1-root-source-proposed-r1/MANIFEST.json",
+    "sha256": "5a81783d30b334d6864621bb5259277939c0df732acd0089693dbf39e2cdcced"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package375-base32-parse1-independent-runtime-source-peer-r1/MANIFEST.json",
+    "sha256": "cb22a8fec838aa070c2b6b3da31208c4b3fbb3751dcbe52890149787e5c13513"
+  },
+  "own_research_and_count_precision": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package375-base32-parse1-root-source-research-before-r1/MANIFEST.json",
+    "sha256": "5067f64be87f7de324bbae616c526f9949d4ee6c2230e990f7452bdc018f455c"
+  },
+  "Root_completeNorm": "7c03e4",
+  "Root_whole_peer": "8bde8f",
+  "original_before": 18372,
+  "original_after": 18373,
+  "original_remaining": 196,
+  "master_before": 19234,
+  "master_after": 19235,
+  "known": 218,
+  "bounded": 217,
+  "native_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

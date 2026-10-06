@@ -1,0 +1,112 @@
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-duplicate-counted-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.AmazonSqs -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll
+  ViciOne.ServiceBus.ActiveMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq/release/ViciOne.ServiceBus.ActiveMq.dll
+  ViciOne.ServiceBus.RabbitMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.SqlTransport -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll
+  ViciOne.ServiceBus.Courier -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.AzureServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Futures -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll
+  ViciOne.ServiceBus.EntityFrameworkCore -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll
+  ViciOne.ServiceBus.Testing -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll
+  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:02.22
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-duplicate-counted-duplicate.log
+{"mode":"duplicate","passed":false,"error":"System.InvalidOperationException","Message":"Contract assertion: Duplicate callbacks completed the unique-message total prematurely","parameter":null}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-first-timestamp-overwritten-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.AmazonSqs -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll
+  ViciOne.ServiceBus.Courier -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll
+  ViciOne.ServiceBus.SqlTransport -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll
+  ViciOne.ServiceBus.RabbitMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.ActiveMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq/release/ViciOne.ServiceBus.ActiveMq.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.Futures -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll
+  ViciOne.ServiceBus.AzureServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll
+  ViciOne.ServiceBus.Testing -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll
+  ViciOne.ServiceBus.EntityFrameworkCore -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll
+  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:02.09
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-first-timestamp-overwritten-duplicate.log
+{"mode":"duplicate","passed":false,"error":"System.InvalidOperationException","Message":"Contract assertion: Duplicate callback overwrote the first consume timestamp","parameter":null}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-identity-collapsed-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Courier -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll
+  ViciOne.ServiceBus.ActiveMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq/release/ViciOne.ServiceBus.ActiveMq.dll
+  ViciOne.ServiceBus.SqlTransport -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll
+  ViciOne.ServiceBus.RabbitMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll
+  ViciOne.ServiceBus.AmazonSqs -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.AzureServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.Futures -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll
+  ViciOne.ServiceBus.Testing -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll
+  ViciOne.ServiceBus.EntityFrameworkCore -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll
+  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:02.01
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-identity-collapsed-concurrent-unique.log
+{"mode":"concurrent-unique","passed":false,"error":"System.InvalidOperationException","Message":"Contract assertion: All unique messages did not complete the consume total","parameter":null}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-join-duplicated-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.SqlTransport -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.Courier -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll
+  ViciOne.ServiceBus.RabbitMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.AmazonSqs -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll
+  ViciOne.ServiceBus.ActiveMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq/release/ViciOne.ServiceBus.ActiveMq.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.AzureServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll
+  ViciOne.ServiceBus.Futures -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll
+  ViciOne.ServiceBus.Testing -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll
+  ViciOne.ServiceBus.EntityFrameworkCore -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll
+  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:02.06
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-join-duplicated-unique.log
+{"mode":"unique","passed":false,"error":"System.InvalidOperationException","Message":"Sequence contains more than one element","parameter":null}

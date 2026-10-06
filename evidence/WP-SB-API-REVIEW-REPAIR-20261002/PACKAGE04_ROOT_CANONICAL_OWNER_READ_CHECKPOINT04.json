@@ -1,0 +1,121 @@
+{
+  "status": "PARTIAL_OWNER_CLOSURE_NO_FIXTURE_EDIT_YET",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "1db6c20c1e230044ab8cd65cc0987439f583c726a4f03504fe6ca5dabeb782b9",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkJobServiceConfigurationTests.cs",
+      "sha256": "399622ffb3d049e88279e2579a4053a650c33db2c5cfbc1f61b850c3889b6f55",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOptionsStartupValidationTests.cs",
+      "sha256": "6eeb77d6adc60f95abb344aa271d462495fba602f823a56918da82693abe10e8",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkProviderConfigurationTests.cs",
+      "sha256": "cc13bf4f970c8f166b0e26b9285c3a63292beddd85242def538ff6297ad48d40",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkPublicArgumentValidationTests.cs",
+      "sha256": "065dce00e9fa5dac2d5e0470f0b80040dccf0acf3ddfbc4a8d1df4fb1a800e56",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkTestDatabaseNameTests.cs",
+      "sha256": "32708cd4a79feae8734c499bc3ae0969ba72de051b15d499535db6236a39879f",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkTimeProviderTests.cs",
+      "sha256": "bcddbd9dcc1f4cda31350ba2dd17783fa9609bf7b072ee74fc1d2ab2ff8feeec",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/JsonConversionContractTests.cs",
+      "sha256": "de7e0134a8627915730a75c647fff940f1e9fd4c79cbe04b95a60593c692d3ae",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/DurableSend/EntityFrameworkDurableSendDurabilityTests.cs",
+      "sha256": "3bf352027da460cc6a4871ab4cfd9f1fe160fd81ee5c0aaa2c9cba89bd3ef6b8",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyTests.cs",
+      "sha256": "31ccd19879c7ed675498412408d8c5ebde58e5790beb0645822e6e8f2b03ed46",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/BusOutboxDeliveryTelemetryTests.cs",
+      "sha256": "2c746bb1071327ae4af830f20d3008204af0889fd8366bc6f1d208f240857f01",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/MessagePackOutboxReplayTests.cs",
+      "sha256": "ecca53658b2793b4736bff71d2d4192c9724fb6aa9dd23224d9dd8f526abc4fe",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/OutboxMessageFactoryTests.cs",
+      "sha256": "4e2cb25a0d0d2285f88b8728f713f23acb7a470f7fb845b02f72efe10892708d",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/OutboxMessageTests.cs",
+      "sha256": "c5f3753c5744ea8ac9d5e579ea427ccf591bf58a411e91db14c815a8ed69bf20",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "eecd0f7428421a48bf2c9f104820723764154af8ab61f18fb84240e95f1d6711",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/EntityFrameworkSagaRepositoryFactoryTests.cs",
+      "sha256": "c50837c059b52f9538d19c286a9a0719909e872b344968529d89bd74e6ea1d8e",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/EntityFrameworkSagaRollbackFailureTests.cs",
+      "sha256": "e82bb899fc49f571f26d7f310d476e49729d513204db0aa4a5c52e57619c1330",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/SagaClassMapTests.cs",
+      "sha256": "c6d4ac87e2551f1de5337de754f3ac2d94f71a937ab83280d61bfbf52012c064",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj",
+      "sha256": "9bd99c90560e9786a2f4a147d052acaa1628a636c8d9c1e4f7cbec5f51d52ecc",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    }
+  ],
+  "pending_original_owner_files": 17,
+  "shared_imports_CI": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_ROOT_SHARED_READ_CLOSURE.json"
+}

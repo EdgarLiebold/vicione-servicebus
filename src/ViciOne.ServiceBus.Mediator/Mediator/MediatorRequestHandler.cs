@@ -42,7 +42,7 @@ public abstract class MediatorRequestHandler<TRequest, TResponse> :
 {
     /// <summary>Handles the consumed request and sends the returned response.</summary>
     /// <param name="context">The request delivery context.</param>
-    /// <returns>A task that completes after the response has been dispatched.</returns>
+    /// <returns>A task that completes request handling and the configured response operation. Buffer or outbox policy may complete the response operation after local capture, before transport dispatch; completion does not confirm delivery or consumption.</returns>
     public async Task ConsumeAsync(ConsumeContext<TRequest> context)
     {
         ArgumentNullException.ThrowIfNull(context);

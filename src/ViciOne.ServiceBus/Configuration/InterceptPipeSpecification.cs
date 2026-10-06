@@ -3,7 +3,7 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Adds a fork to the pipe.</summary>
+/// <summary>Adds a pipeline that runs before the next filter in the configured pipe.</summary>
 /// <typeparam name="TContext">The pipeline context carried by the member.</typeparam>
 public class InterceptPipeSpecification<TContext> :
     IPipeSpecification<TContext>

@@ -58,7 +58,16 @@ internal sealed class CompensateActivityFilter<TActivity, TLog> :
                 context.Result = context.Failed(exception);
 
             if (_observers.Count > 0)
-                await _observers.CompensateFailAsync(context, exception).ConfigureAwait(false);
+            {
+                try
+                {
+                    await _observers.CompensateFailAsync(context, exception).ConfigureAwait(false);
+                }
+                catch (Exception observerException)
+                {
+                    throw new AggregateException(exception, observerException);
+                }
+            }
 
             throw;
         }

@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs
++++ src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs
+@@ -22,7 +22,7 @@
+         int keyIdByteCount;
+         try
+         {
+-            keyIdByteCount = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true).GetByteCount(keyId);
++            keyIdByteCount = Encoding.UTF8.GetByteCount(keyId);
+         }
+         catch (EncoderFallbackException exception)
+         {

@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-06T11:42:38.599403+00:00",
+  "status": "ROOT_REVIEWED_TEST_ONLY_DELTA3_APPLIED_NATIVE_RETRY_PENDING",
+  "changes": [
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorOwnedStopAdmissionTests.cs",
+      "before_sha256": "a007998a96b725719c904a660c3416530b6ce9569e42bf268f3489a96a06ab95",
+      "after_sha256": "4649a2b9604a86b7c8bb5f82d0530d49a4ccd68ae6c4b17f5e791c5ceed2ff59",
+      "author": "package428-pipe-test-analyzer1051-explicit-cleanup-token-root-proposed-r1",
+      "peer": "package428-pipe-cleanup-token1-independent-runtime-source-peer-r1",
+      "peer_report_sha256": "1c6dc9f987c84a8ef47210d326151edb8621cd2df980ed21fd423cfacc6c8b8c"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsTopicDiscoveryLifetimeTests.cs",
+      "before_sha256": "882c2d25d71f2e305d3b6ec54d4681780023df8ac0cbaa17aeaf6ae67adb2214",
+      "after_sha256": "8a24f7396b1684b01879cb50cb193b2e6ab054e834e743d50605919e98c1b89e",
+      "author": "package428-topic-test-analyzer2013-single-oracles-root-proposed-r1",
+      "peer": "package428-topic-single2-independent-delta-peer-r1",
+      "peer_report_sha256": "5c783a6fc4b1d0bd3327088eaee90238dcb3efc3c0a4f0dc3633abd6c8310bc3"
+    }
+  ],
+  "original_full_Test_peers_retained": true,
+  "Root_delta_peer_reads": [
+    "508822 PipeNone1 wholepeer",
+    "current TopicSingle2 wholepeer"
+  ],
+  "Req_unchanged": {
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "6fa8bfb8f5f181452afc69b7bcf44865168b5df6863bc09d1bf2bd0a807ed240",
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json": "30825186c34dd81e03beab7a3d611c5ba74a7492930947aff01ec5ca8818c282"
+  },
+  "Product_changes": false,
+  "failed428_actual_native_cases": 0,
+  "no_oracle_weakening": true
+}

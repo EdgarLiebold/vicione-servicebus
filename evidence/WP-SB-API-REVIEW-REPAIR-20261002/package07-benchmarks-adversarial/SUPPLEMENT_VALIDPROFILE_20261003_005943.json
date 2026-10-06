@@ -1,0 +1,130 @@
+{
+  "status": "SUPPLEMENT_VALIDATED_SCOPED_OWNER_EXECUTION",
+  "utc": "2026-10-03T01:03:30.199418+00:00",
+  "role": "INTERNAL_INDEPENDENT_READ_ONLY_ADVERSARIAL_ASSISTANCE",
+  "original_freeze_sha256": "6a3ac93d204488b5f23e2bb003b0ad7c0ff3babe188e38ee7a42c910ed293dac",
+  "original_review_immutable": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks-adversarial/REVIEW.json",
+    "sha256": "7a0ce448c658eb13167ba0af53e6c4f55b152beaefae5bf46dd00d546074dfe0"
+  },
+  "native_receipt": {
+    "phase": "package07-benchmark-native-owner-validprofile",
+    "command": [
+      "env",
+      "VICIONE_TESTS__Profile=UnitArchitecture",
+      "dotnet",
+      "test",
+      "--project",
+      "tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ViciOne.ServiceBus.Benchmark.Tests.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "--minimum-expected-tests",
+      "1"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T00:59:36.288464+00:00",
+    "completed_utc": "2026-10-03T00:59:43.270959+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmark-native-owner-validprofile.log",
+    "log_sha256": "ccc039fc8d306999883a7d4afcf6b7e4a474a5f8865fbe9af45e4b0651a33ba7"
+  },
+  "personally_full_log": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmark-native-owner-validprofile.log",
+    "sha256": "ccc039fc8d306999883a7d4afcf6b7e4a474a5f8865fbe9af45e4b0651a33ba7",
+    "read_mode": "FULL_PERSONAL_CONTENT_READ"
+  },
+  "profile_enum_evidence": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+    "sha256": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83",
+    "personal_read_scope": "lines1..145; complete enum lines1..16",
+    "value": "UnitArchitecture"
+  },
+  "unchanged_owner_files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs",
+      "sha256": "78f1916c5123e7a01c7546ce98d1249ff7394b43996287a65e5934cc40b690d5"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/AnalyticsTests.cs",
+      "sha256": "d6671b294969bf847ba7abdd3115eed211a4ca87fa72e246eda93977d9777d0a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "957ac10734e0b29ec1d3a370c9dd5ffe2197bb7a96525a56fa8e6e006cc46e24"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/BenchmarkRunOutcomeTests.cs",
+      "sha256": "3fb69b7aa261b3b4d0f8adb4216c482d4eec131525096ac3374a7ab0a8ef6dd9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/BenchmarkTestClock.cs",
+      "sha256": "c336a5a321035f40aeed15afe49e6790f0a7a35973b46d6a0d6b5cdb5c839d24"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/BusOutboxDatabaseSettingsTests.cs",
+      "sha256": "d6230b3b648fa57ddfb33161d83efc32fc952417c6b9f75cde1ddf12e0f947f8"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/MessageMetricCaptureTests.cs",
+      "sha256": "d6c9c56b373ceb76876b7bef2f9849f5350905d21db28fbc8da4153776a58e12"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ProcessStateCollection.cs",
+      "sha256": "244ca2236dd29411a4d4bf39f194508bc61e5d0bfcf1e874c8bbf2765409d1cc"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/RabbitMqOptionSetTests.cs",
+      "sha256": "03db7245a936af59c07e102073b3b83dcdd0485156e18e38a75bc9e9c7c574bb"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/Requirements/BenchmarkRequirements.json",
+      "sha256": "9be901c023b45b608393cf01a8989418f137551622fe08a5a7719d2dd6043c13"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "042a3f2099880564506c46dc4391a7361e05e516b343866a766cc3fc9f5ff230"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/SendMetricReporterTests.cs",
+      "sha256": "82dd7f94ef676dbe872d29e5c77bf0a6aa2356405bf12d85234976e14a92f35a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/SqlOptionSetTests.cs",
+      "sha256": "ff0a12cb1de885a769f2e3cb565a9d52a2af57641b204bd490fb7ca19c7a4911"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ViciOne.ServiceBus.Benchmark.Tests.csproj",
+      "sha256": "4f80d0bccf62c53eff397c1221c6971225cdebfe27430744fa459f8c5ef63e4d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/packages.lock.json",
+      "sha256": "7d9342eaf363a236371ffe01ed36cacfba810fe004465821009086c02f5946d2"
+    }
+  ],
+  "unchanged_owned_product_code": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorBatchBenchmark.cs",
+      "sha256": "db4e7d9804ab997fbf0f7fe4d95bdcb0427057c05dc57912b1512f8ad1d16461"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/benchmarks/ViciOne.ServiceBus.BenchmarkConsole/DeserializationBenchmark.cs",
+      "sha256": "eb319c646bbc20c46ecf6366bc898e34988dbe7ca4747eec7b8acc701164049a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/benchmarks/ViciOne.ServiceBus.Benchmark/Latency/MessageMetricCapture.cs",
+      "sha256": "85390534e98ab443589af9f675e59cd4a997b8e25941549a6572fde683d27561"
+    }
+  ],
+  "owner_summary": {
+    "total": 96,
+    "passed": 96,
+    "failed": 0,
+    "skipped": 0
+  },
+  "prior_receipt_limit": "Earlier command is authentic and its checks are observed; its Unit environment text is not a TestProfile enum member and cannot bind a valid profile. This supplement validates the new actual command with UnitArchitecture.",
+  "profile_claim_boundary": "Valid explicit environment value in actual native command; no claim that the Benchmark owner executes the options reader or validates all option groups.",
+  "reviewer_native_runs": 0,
+  "product_edits": 0,
+  "native_lifetime_or_whole_A_plus_claim": false
+}

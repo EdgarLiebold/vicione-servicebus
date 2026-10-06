@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-05T16:12:09.044703+00:00",
+  "status": "REVIEWED_XML12_SEVEN_SOURCES_APPLIED_FRESH_PACKAGE_PENDING",
+  "findings": [
+    "F-SB-API-186",
+    "F-SB-API-187",
+    "F-SB-API-188",
+    "F-SB-API-189",
+    "F-SB-API-190"
+  ],
+  "changes": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqHostSettings.cs",
+      "before_sha256": "a23eef608be9800b1b68830fa02ae12041906f4fb21a65cb059de7a993782e0a",
+      "after_sha256": "1c909e71461a4a7f900115e35599cc5068fc4c677bfd2be790636e4d00aa8f3e"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/BatchSettings.cs",
+      "before_sha256": "485846b6a76a80334cdcbcb2ae11c6bb0abe0f02d12253136c53d65a30711577",
+      "after_sha256": "7bca8ac593f04b9401ce0fa79fc747dc45165d8dd3b746bd8782f67c4be461e4"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/ClusterNode.cs",
+      "before_sha256": "1ba26cc05d65856744a769dbc94bd2d6e331b0344c3fbc4baa0d4653f2178fe0",
+      "after_sha256": "f24bef9ec1c60630fcb059abdcd066138348627064f54e82b52f9c3caee62bc9"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/IRabbitMqBusConfiguration.cs",
+      "before_sha256": "f89cd6f2a8d5d1d3e6c05138353954965138edda2ccadaab72bdc737262d0c8f",
+      "after_sha256": "c1c4db773d80b16de439403693cea6b976e231571624c6965ae723e8bb2e1e2c"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/IRabbitMqReceiveEndpointConfiguration.cs",
+      "before_sha256": "7c9bfffc2155ea163ed47f7b6774e484fd25499202d269e88edded51ec175f1a",
+      "after_sha256": "9cdbb225374c18b126da5f23b8f6b5c8f7a632360d7c06c0db193e510624d088"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqEndpointConfiguration.cs",
+      "before_sha256": "41ac70bc4f62cd25eb5dc72498e5dcf9c676da8c420e22b3d063bc15caceb7ad",
+      "after_sha256": "fb1ca49c194584cabe5b10f9270b188e0a4a44cfc6d7410e43f938471cd3fd54"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveContext.cs",
+      "before_sha256": "00ddc159c9fa65528e699763d2e0bfe494204aabc983ad10d1ce03cfd5b975d3",
+      "after_sha256": "6d155d16be214ce532e3ae94b7e2215a4bd2396fd9f42976d18ddb85835522cb"
+    }
+  ],
+  "xml_elements": 12,
+  "emitted_member_nodes": 10,
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE195_RABBITMQ_F186_TO_F190_XML12_ORIGINAL_ROOT_REGISTRATION_R1.json",
+    "sha256": "24b05a4eb89061225a6142b8e09340c30e6c2565cf6bd1f9fd4452a91cac18cb"
+  },
+  "proposal_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package219-rabbit-settings-copy-property-doc12-product-proposed-r2/MANIFEST.json",
+    "sha256": "9b390fa72f423a87eed22cef0453e61a3ff1e3dca6e46989721d0faf6bd1d830"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package219-rabbit-doc12-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "dc565b2024eeb96cde80991afc2306e73ee4bcd02a9e820eeebc0316e3e62dda"
+  },
+  "tests_requirements_declarations_and_executable_bytes_unchanged": true,
+  "fresh_publication_pending": true,
+  "global_Aplus": false
+}

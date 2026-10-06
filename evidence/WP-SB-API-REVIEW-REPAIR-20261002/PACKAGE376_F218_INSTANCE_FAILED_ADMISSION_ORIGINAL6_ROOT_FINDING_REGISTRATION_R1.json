@@ -1,0 +1,24 @@
+{
+  "utc": "2026-10-06T07:34:53.067328+00:00",
+  "status": "ROOT_REGISTERED_INDEPENDENTLY_QUALIFIED_FINITE_INSTANCE_RETURNED_HANDLE_CLEANUP_DEFECT",
+  "finding": "F-SB-API-218",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package374-instance-original6-independent-qualification-r1/MANIFEST.json",
+    "sha256": "0433cb716ebc4e0eadbb259826358754f252ef54e827e345fc618cdc268d9134"
+  },
+  "Root_whole_actual_raw": "73dfe4",
+  "Root_whole_Report": "5abf41",
+  "known_before": 217,
+  "known_after": 218,
+  "bounded_dispositions": 217,
+  "actual_original": {
+    "total": 6,
+    "passed": 4,
+    "failed": 2,
+    "skipped": 0
+  },
+  "causal_boundary": "Both genuine public object/generic routes fail second returned handle ReleaseAttempts127 expected1 actual0 only after actual first disconnect and unique cleanup failure. Count0/cause-tree asserts are unreached. Healthy actual3contract deliveries and admission-only controls4pass.",
+  "distinct_owner": "InstanceConnector public2overloads; F217 ConsumerConnector retained independently, F124/F156 policy context only",
+  "product_source_unchanged_at_registration": true,
+  "whole_API_closed": false
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "own_prior_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/MANIFEST.json",
+    "sha256": "a03032aee64501bfdb3eac37aea48c2fc238dc7350a2852f63357b816d866b94",
+    "all_artifacts_reverified": 24
+  },
+  {
+    "own_prior_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/002-verification-precision/MANIFEST.json",
+    "sha256": "ac234df60297fea8f32fc1728e8b01a5fd23584197bc875dd12fa36ba7f58003",
+    "all_artifacts_reverified": 2
+  },
+  {
+    "own_prior_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/003-previous-raw-qualification/MANIFEST.json",
+    "sha256": "800f2426f10fa878c3180584e1fde26253f3720532c742e7a720ae0d8c646994",
+    "all_artifacts_reverified": 7
+  },
+  {
+    "own_prior_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/004-corrected-raw-qualification/MANIFEST.json",
+    "sha256": "b4b87ffd4c6fc99bd80cc3059212ee19a18d723380a080732dbc35c35d607983",
+    "all_artifacts_reverified": 13
+  },
+  {
+    "own_prior_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/005-original-pdb-input-supplement/MANIFEST.json",
+    "sha256": "ae3853414da23fce2401481b4c9ed1416701bd399dbbf9d966fbb22013c330ed",
+    "all_artifacts_reverified": 1
+  }
+]

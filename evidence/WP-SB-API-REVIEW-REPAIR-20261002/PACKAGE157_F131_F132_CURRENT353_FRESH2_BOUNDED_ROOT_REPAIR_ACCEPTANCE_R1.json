@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-04T23:50:53.202695+00:00",
+  "decision": "ACCEPT_F131_F132_CURRENT_CORE_REPAIRS",
+  "confirmed_before": 132,
+  "accepted_before": 130,
+  "accepted_after": 132,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package157-fixed-core16-original-respond20-neighbors-fresh2-independent-r1/REPORT.json",
+    "sha256": "41c3f75e63f5870a5f725ca6cb1abf9b72ab932b694dbeb61afee857d051ecb2"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package157-fixed-core16-original-respond20-neighbors-fresh2-independent-r1/MANIFEST.json",
+    "sha256": "990efad8d56beb80e992820bbb3550ad6260fb573c3d9dfd4fc2f001d527bc7a"
+  },
+  "root_manifest_entries_verified": 3340,
+  "root_actual_ZIP_CRC_DLL_XML_equal": true,
+  "root_source_oracle_reads": [
+    "dd4e9d",
+    "2705d9",
+    "e473b0",
+    "c53344",
+    "198170"
+  ],
+  "current_fixed16": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0
+  },
+  "current_serialization337": {
+    "total": 337,
+    "passed": 337,
+    "failed": 0,
+    "skipped": 0
+  },
+  "limits": [
+    "Original value first failed null-versus0 only; fixed now reaches both nullable default and supplied42 assertions. Reference exact supplied fallback identity passes.",
+    "Body4 missing-address actual JSON roundtrip remainsnull and concrete emitted nullability is nowNullable; present-address healthy route remains correct. Deliberate nullable annotation update, no CLR/runtimeprojection change.",
+    "Frozen normal Respond20 contains1 separate finite Original failure; no clean wholeUnit or wholeAPI claim.",
+    "Final integrated gates pending later changes."
+  ],
+  "CLOSED": false
+}

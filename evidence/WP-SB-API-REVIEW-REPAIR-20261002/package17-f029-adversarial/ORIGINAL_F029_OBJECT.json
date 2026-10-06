@@ -1,0 +1,81 @@
+{
+  "input": "/private/tmp/vicione-servicebus-api-review-20261001/FINDINGS.json",
+  "input_sha256": "65e808177cbe5c9f63f1016ee577b591a4de6f56b0df1af65d878103a17a0630",
+  "selected_object": {
+    "id": "F-SB-API-029",
+    "severity": "Medium",
+    "classification": "CONFIRMED_BATCH_CLOCK_CORRECTION_DEFECT",
+    "owner": "Core batch collection and public arrival metadata",
+    "package": "ViciOne.ServiceBus + ViciOne.ServiceBus.Abstractions",
+    "symbols": [
+      "P:ViciOne.ServiceBus.Advanced.IMessageBatch`1.FirstMessageReceived",
+      "P:ViciOne.ServiceBus.Advanced.IMessageBatch`1.LastMessageReceived"
+    ],
+    "locations": [
+      {
+        "path": "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs",
+        "line": 28
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+        "line": 142
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+        "line": 371
+      }
+    ],
+    "contract": "IMessageBatch exposes actual first/last admission UTC. Public context TimeProvider is supported and defaults to system UTC. .NET UTC is wall-clock metadata, no increasing clock contract. ReviewI requires clock-jump correctness and distinguishing monotonic durations from UTC.",
+    "primary_sources": [
+      "https://learn.microsoft.com/en-us/dotnet/api/system.timeprovider.getutcnow?view=net-10.0",
+      "https://raw.githubusercontent.com/dotnet/runtime/v10.0.10/src/libraries/Common/src/System/TimeProvider.cs"
+    ],
+    "trigger": "Ordinary AddViciOneServiceBus, explicit limits, InMemory and batch MessageLimit2/TimeLimit5min. Middleware attaches a valid TimeProvider with system timers. After positively scheduled first admission at03:04:05 UTC, set UTC to03:03:05 and send second unique valid Item.",
+    "actual": "Both original message pipelines positively terminate with ArgumentOutOfRangeException(lastMessageReceived) from internal MessageBatch constructor; application batch consumer never called. Same configuration with forward UTC produces exact two identities, Size mode and one consumer invocation.",
+    "expected": "Deliver the two valid identities exactly once in one size-completed batch and retain true first/last admission UTC; backward wall-clock metadata must not turn valid messages into processing faults.",
+    "causal_path": [
+      "Normal DI batch connector -> immutable runtime settings -> serialized per-context collector",
+      "First admission records provider.GetUtcNow; second records corrected UTC",
+      "Size completion admits actual bounded dispatcher delivery",
+      "MessageBatch constructor rejects last<first independently of valid message count/timer/identity",
+      "Delivery fault propagates through shared completion to both original contexts and actual IConsumeObserver."
+    ],
+    "user_impact": "Legitimate backward UTC correction causes valid batch processing failure before application consumer. Actual two terminal fault receipts proven; no permanent message loss, error queue arrival, OS clock manipulation or universal broker outcome claimed.",
+    "reproduction": [
+      "dotnet BatchTimeOracle.dll backward-clock:2/0/2 with normal clock/max/fraction controls0each",
+      "Exact per-phase observer log JSON receipt count2 and consumer calls0/1/0 verified for every backward case"
+    ],
+    "existing_oracle": "BatchTimeProviderTests4 methods use FakeTimeProvider advancing forward. BatchConsumeContextTests explicitly asserts last<first constructor failure; this encodes the erroneous internal invariant and must be replaced with an external valid clock-correction oracle. BatchRuntimeStateTests already checks admission ordering through sent/transport keys; no actual backwards clock case.",
+    "countermutant": {
+      "status": "EXECUTED_RED_GREEN_RED_CAUSE_CLOSED",
+      "receipt": "mutations/BATCH_BACKWARD_UTC_MUTATION_CLOSURE.json",
+      "source_files_changed": 1,
+      "native_executions": 15,
+      "baseline_return_verified_files": 6209,
+      "actual_corrected_dll_sha256": "51a3601f28cf2699a83fd9e86b4b9f60073d4ba415330547649fabb0bbf1af54",
+      "actual_counter_dll_sha256": "fc02d528397bf50e91dd50cfd57ee323d3e353c7dcb1bad626a5ac0dcff8c40d"
+    },
+    "options": [
+      {
+        "option": "Remove only internal chronological UTC assertion and document timestamps as wall-clock metadata",
+        "pros": "Preserves exact arrival timestamps and all valid message capability; existing relative timer scheduling and ordering stay unchanged",
+        "cons": "Consumers assuming nonnegative Last-First must use a separate monotonic duration; internal guard test must change"
+      },
+      {
+        "option": "Track monotonic elapsed batch duration separately while retaining raw admission UTC fields",
+        "pros": "Gives consumers robust duration and true UTC metadata even under clock correction",
+        "cons": "Public additional duration surface/versioning requires API-design decision; still must not reject valid raw UTC metadata"
+      }
+    ],
+    "recommendation": "Prefer removing unsafe internal chronological UTC invariant; preserve first/last raw UTC semantics, all other constructor guards and exact message ordering. If actual duration is needed, expose it with TimeProvider.GetTimestamp/GetElapsedTime instead of UTC subtraction. Never silently clamp LastMessageReceived or change system clock.",
+    "compatibility": "No source/binary/wire/schema changes for isolated correction. Behavior changes from fault to valid batch completion for backward UTC; true raw arrival metadata can be decreasing. Internal constructor expectation must be replaced, not silently weakened. No persistent migration.",
+    "evidence": [
+      "mutations/BATCH_BACKWARD_UTC_MUTATION_CLOSURE.json",
+      "mutations/eventhub-more-review/BATCH_BACKWARD_UTC/correction.patch",
+      "batch-test-quality/TEST_ANTI_PATTERNS.json"
+    ],
+    "confidence": "High:15 native fresh NuGet cases, actual real InMemory completion/fault receipts, positive first timer gate and distinct target DLLs; unchanged oracle and6209 isolated source rollback.",
+    "open": "Whole provider/restart/inherited API and final unfiltered review closure remain open. Native executable is not MTP discovery or current coverage. Own initial missing extension namespace, invalid global message namespace and isolated candidate wrong Failure overload diagnostics remain archived as failed attempts; do not count as valid boundary proof."
+  },
+  "personal_read": "Only complete selected F029 object FULL; unrelated rows unclaimed."
+}

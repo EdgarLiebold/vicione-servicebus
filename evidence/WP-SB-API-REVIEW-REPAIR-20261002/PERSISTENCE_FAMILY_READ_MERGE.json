@@ -1,0 +1,13 @@
+{
+  "scope": "Persistence family static source FULL, semantic/native closure remains PARTIAL",
+  "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/persistence-family-review/PENDING_TO_FULL_PATHS.json",
+  "proposal_sha256": "d363fc0690575f01291735e2c140d04c313924cf410769406c7121c32298a665",
+  "before_sha256": "7f94f2cd2d176194812b944841b254e997b29463083b55d2b6b1da0eee6cf743",
+  "after_sha256": "a719b2198efd208034b3d1d74fb962e229aec8ff6deb3fc097ae823678b643da",
+  "merged": 91,
+  "preserved_previous_full": 1850,
+  "new_full_count": 1941,
+  "total_files": 6209,
+  "closed_public_symbols": 0,
+  "checks": "Every new row previously PENDING, F bytes and O bytes equal original source hash/size. Existing rows preserved."
+}

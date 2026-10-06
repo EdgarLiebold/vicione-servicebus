@@ -1,0 +1,1351 @@
+{
+  "status": "VERIFIED",
+  "source_effect_count": 128,
+  "source_effects": [
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/results.cs.txt",
+      "bytes": 2662,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/host.cs.txt",
+      "bytes": 2641,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/host_xml.cs.txt",
+      "bytes": 1550,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/batch.cs.txt",
+      "bytes": 13959,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/batch_options.cs.txt",
+      "bytes": 7243,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/registration.cs.txt",
+      "bytes": 4762,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/connector.cs.txt",
+      "bytes": 5099,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/identity.cs.txt",
+      "bytes": 281,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/trace.cs.txt",
+      "bytes": 22480,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/journal_telemetry.cs.txt",
+      "bytes": 6793,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/journal_writer.cs.txt",
+      "bytes": 4896,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/journal_registration.cs.txt",
+      "bytes": 11009,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/transport_registration.cs.txt",
+      "bytes": 14561,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/scope_factory.cs.txt",
+      "bytes": 2132,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/owned_lifetime.cs.txt",
+      "bytes": 1829,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/corrected/inmemory_factory.cs.txt",
+      "bytes": 3639,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/results.cs.txt",
+      "bytes": 2662,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/host.cs.txt",
+      "bytes": 2641,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/host_xml.cs.txt",
+      "bytes": 1550,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/batch.cs.txt",
+      "bytes": 13959,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/batch_options.cs.txt",
+      "bytes": 7243,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/registration.cs.txt",
+      "bytes": 4762,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/connector.cs.txt",
+      "bytes": 5099,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/identity.cs.txt",
+      "bytes": 281,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/trace.cs.txt",
+      "bytes": 22480,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/journal_telemetry.cs.txt",
+      "bytes": 6793,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/journal_writer.cs.txt",
+      "bytes": 4896,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/journal_registration.cs.txt",
+      "bytes": 11009,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/transport_registration.cs.txt",
+      "bytes": 14561,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "4ac00b8633c77db1ce1c1add7585c734b42885c51955a61e5a83cfb96330d016",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/scope_factory.cs.txt",
+      "bytes": 1819,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FULL_CHANGED_MUTANT_TEXT"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/owned_lifetime.cs.txt",
+      "bytes": 1829,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "original-scope-factory",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/original-scope-factory/inmemory_factory.cs.txt",
+      "bytes": 3639,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/results.cs.txt",
+      "bytes": 2662,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/host.cs.txt",
+      "bytes": 2641,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/host_xml.cs.txt",
+      "bytes": 1550,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/batch.cs.txt",
+      "bytes": 13959,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/batch_options.cs.txt",
+      "bytes": 7243,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/registration.cs.txt",
+      "bytes": 4762,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/connector.cs.txt",
+      "bytes": 5099,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/identity.cs.txt",
+      "bytes": 281,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/trace.cs.txt",
+      "bytes": 22480,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/journal_telemetry.cs.txt",
+      "bytes": 6793,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/journal_writer.cs.txt",
+      "bytes": 4896,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/journal_registration.cs.txt",
+      "bytes": 11009,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/transport_registration.cs.txt",
+      "bytes": 14561,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "ade338632945f0f252549375ddaca5ae4d706e4804ac78753ea1b766995899cd",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/scope_factory.cs.txt",
+      "bytes": 2154,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FULL_CHANGED_MUTANT_TEXT"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/owned_lifetime.cs.txt",
+      "bytes": 1829,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "primary-capture-dropped",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/primary-capture-dropped/inmemory_factory.cs.txt",
+      "bytes": 3639,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/results.cs.txt",
+      "bytes": 2662,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/host.cs.txt",
+      "bytes": 2641,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/host_xml.cs.txt",
+      "bytes": 1550,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/batch.cs.txt",
+      "bytes": 13959,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/batch_options.cs.txt",
+      "bytes": 7243,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/registration.cs.txt",
+      "bytes": 4762,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/connector.cs.txt",
+      "bytes": 5099,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/identity.cs.txt",
+      "bytes": 281,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/trace.cs.txt",
+      "bytes": 22480,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/journal_telemetry.cs.txt",
+      "bytes": 6793,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/journal_writer.cs.txt",
+      "bytes": 4896,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/journal_registration.cs.txt",
+      "bytes": 11009,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/transport_registration.cs.txt",
+      "bytes": 14561,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/scope_factory.cs.txt",
+      "bytes": 2132,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "671e163990f481a259a22197b2e6bb8a9bf2aab2875c011f0e710cc173b1fbc4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/owned_lifetime.cs.txt",
+      "bytes": 1829,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FULL_CHANGED_MUTANT_TEXT"
+    },
+    {
+      "variant": "dual-failure-order-reversed",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/dual-failure-order-reversed/inmemory_factory.cs.txt",
+      "bytes": 3639,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/results.cs.txt",
+      "bytes": 2662,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/host.cs.txt",
+      "bytes": 2641,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/host_xml.cs.txt",
+      "bytes": 1550,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/batch.cs.txt",
+      "bytes": 13959,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/batch_options.cs.txt",
+      "bytes": 7243,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/registration.cs.txt",
+      "bytes": 4762,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/connector.cs.txt",
+      "bytes": 5099,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/identity.cs.txt",
+      "bytes": 281,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/trace.cs.txt",
+      "bytes": 22480,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/journal_telemetry.cs.txt",
+      "bytes": 6793,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/journal_writer.cs.txt",
+      "bytes": 4896,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/journal_registration.cs.txt",
+      "bytes": 11009,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/transport_registration.cs.txt",
+      "bytes": 14561,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/scope_factory.cs.txt",
+      "bytes": 2132,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "ba1dedcd73009bd368c59ace310e496a86ea46aa0722562e32044e739ff5c5a7",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/owned_lifetime.cs.txt",
+      "bytes": 1816,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FULL_CHANGED_MUTANT_TEXT"
+    },
+    {
+      "variant": "cleanup-failure-swallowed",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/cleanup-failure-swallowed/inmemory_factory.cs.txt",
+      "bytes": 3639,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/results.cs.txt",
+      "bytes": 2662,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/host.cs.txt",
+      "bytes": 2641,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/host_xml.cs.txt",
+      "bytes": 1550,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/batch.cs.txt",
+      "bytes": 13959,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/batch_options.cs.txt",
+      "bytes": 7243,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/registration.cs.txt",
+      "bytes": 4762,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/connector.cs.txt",
+      "bytes": 5099,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/identity.cs.txt",
+      "bytes": 281,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/trace.cs.txt",
+      "bytes": 22480,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/journal_telemetry.cs.txt",
+      "bytes": 6793,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/journal_writer.cs.txt",
+      "bytes": 4896,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/journal_registration.cs.txt",
+      "bytes": 11009,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/transport_registration.cs.txt",
+      "bytes": 14561,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "3166b929106d9f7aeaaef12356954329ec1ab47602a143a0af22b806bde8eb79",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/scope_factory.cs.txt",
+      "bytes": 2298,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FULL_CHANGED_MUTANT_TEXT"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/owned_lifetime.cs.txt",
+      "bytes": 1829,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "container-consumer-disposed-twice",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/container-consumer-disposed-twice/inmemory_factory.cs.txt",
+      "bytes": 3639,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/results.cs.txt",
+      "bytes": 2662,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/host.cs.txt",
+      "bytes": 2641,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/host_xml.cs.txt",
+      "bytes": 1550,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/batch.cs.txt",
+      "bytes": 13959,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/batch_options.cs.txt",
+      "bytes": 7243,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/registration.cs.txt",
+      "bytes": 4762,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/connector.cs.txt",
+      "bytes": 5099,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/identity.cs.txt",
+      "bytes": 281,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/trace.cs.txt",
+      "bytes": 22480,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/journal_telemetry.cs.txt",
+      "bytes": 6793,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/journal_writer.cs.txt",
+      "bytes": 4896,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/journal_registration.cs.txt",
+      "bytes": 11009,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/transport_registration.cs.txt",
+      "bytes": 14561,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "e2dde34b92b2176bf0cbf8531b4fae51cd667710dffd9a298219030101e59a6a",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/scope_factory.cs.txt",
+      "bytes": 2379,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FULL_CHANGED_MUTANT_TEXT"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/owned_lifetime.cs.txt",
+      "bytes": 1829,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-cancellation-collapsed",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/mixed-cancellation-collapsed/inmemory_factory.cs.txt",
+      "bytes": 3639,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/results.cs.txt",
+      "bytes": 2662,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/host.cs.txt",
+      "bytes": 2641,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/host_xml.cs.txt",
+      "bytes": 1550,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/batch.cs.txt",
+      "bytes": 13959,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/batch_options.cs.txt",
+      "bytes": 7243,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/registration.cs.txt",
+      "bytes": 4762,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/connector.cs.txt",
+      "bytes": 5099,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/identity.cs.txt",
+      "bytes": 281,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/trace.cs.txt",
+      "bytes": 22480,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/journal_telemetry.cs.txt",
+      "bytes": 6793,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/journal_writer.cs.txt",
+      "bytes": 4896,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/journal_registration.cs.txt",
+      "bytes": 11009,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/transport_registration.cs.txt",
+      "bytes": 14561,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/scope_factory.cs.txt",
+      "bytes": 2132,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/owned_lifetime.cs.txt",
+      "bytes": 1829,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package13-f033-core-binaries/rollback/inmemory_factory.cs.txt",
+      "bytes": 3639,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE"
+    }
+  ],
+  "selected_package_chains": [
+    {
+      "consumer": "previous",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package12-shared-graph/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "7edf7b3dfbb20406a476bba3151a0d1dd655f6b4ea3372503f86be6f43c9bbc7",
+      "raw_zip_sha512_base64": "1br+rHJ8rVf8dfmT4HvlKrNTLaVwOI4JaulqX3jncTIXVXnrmCldt+hraUQp2IxgC4n9bwoEx4s6ic5dtEdxvg==",
+      "lock_contentHash": "1br+rHJ8rVf8dfmT4HvlKrNTLaVwOI4JaulqX3jncTIXVXnrmCldt+hraUQp2IxgC4n9bwoEx4s6ic5dtEdxvg==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/previous/restored-packages/vicione.servicebus/1.0.0",
+      "runtime": {
+        "name": "ViciOne.ServiceBus",
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/previous/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+        "sha256": "a827f1324d81df913bd1d8e24b1e6be663dad7268487b71c59f8da2585a7441b"
+      },
+      "verified": true
+    },
+    {
+      "consumer": "previous",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package12-shared-graph/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "3e362398bf1e256571e48b58c61b1b2ff64b2a8e9d0946d93a398a17b4407114",
+      "raw_zip_sha512_base64": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "lock_contentHash": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/previous/restored-packages/vicione.servicebus.abstractions/1.0.0",
+      "runtime": {
+        "name": "ViciOne.ServiceBus.Abstractions",
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/previous/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+        "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+      },
+      "verified": true
+    },
+    {
+      "consumer": "corrected",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package13-f033/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "5ff8dc1ce7fa4d2490d11bafe51a821c0af5ec593b1eb707de6658432548df6e",
+      "raw_zip_sha512_base64": "N+4QC65xpQhBB2YDk+CVuAwfAq42dpuF6JXVVs7NSwUWh9uEgQhkc/pZYVwrWPhelebm1SrJWi9/u8rUwRXCCA==",
+      "lock_contentHash": "N+4QC65xpQhBB2YDk+CVuAwfAq42dpuF6JXVVs7NSwUWh9uEgQhkc/pZYVwrWPhelebm1SrJWi9/u8rUwRXCCA==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/corrected/restored-packages/vicione.servicebus/1.0.0",
+      "runtime": {
+        "name": "ViciOne.ServiceBus",
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+        "sha256": "0442ad59262067ac79e3724e2f19249d3ed20c823d62ca7170bee9d3287eedf0"
+      },
+      "verified": true
+    },
+    {
+      "consumer": "corrected",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package13-f033/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "3e362398bf1e256571e48b58c61b1b2ff64b2a8e9d0946d93a398a17b4407114",
+      "raw_zip_sha512_base64": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "lock_contentHash": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/corrected/restored-packages/vicione.servicebus.abstractions/1.0.0",
+      "runtime": {
+        "name": "ViciOne.ServiceBus.Abstractions",
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+        "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+      },
+      "verified": true
+    }
+  ],
+  "oracle_preserved": true,
+  "runtime_restored_to_selected_packages": true,
+  "original_scope_factory": {
+    "sha256": "4ac00b8633c77db1ce1c1add7585c734b42885c51955a61e5a83cfb96330d016",
+    "bytes": 1819,
+    "frozen_equals_git_HEAD": true
+  }
+}

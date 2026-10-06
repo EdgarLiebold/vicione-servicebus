@@ -1,0 +1,17 @@
+{
+  "phase": "package12-graph-public-previous-build",
+  "exit": 1,
+  "compiler_errors": 3,
+  "cause": "missing public Advanced namespace import for LogContext in new bounded consumer",
+  "classification": "SETUP_COMPILER_FAILURE_NOT_PRODUCT_FINDING_OR_MUTANT_KILL",
+  "source_before": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_GRAPH_SETUP_previous.cs.txt",
+      "sha256": "996cc325daf9383e46c40f58ffd2d32a36c386eff1f321cdd203b3d915825cbe"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_GRAPH_SETUP_corrected.cs.txt",
+      "sha256": "996cc325daf9383e46c40f58ffd2d32a36c386eff1f321cdd203b3d915825cbe"
+    }
+  ]
+}

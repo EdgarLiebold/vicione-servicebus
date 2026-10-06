@@ -1,0 +1,16 @@
+{
+  "evidence": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE331_CURRENT320_FRESH31_GATE_CORE_DOC3_PUBLISHED_SOURCE4_IDENTITY_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "ea556a86bf4ec77fd806402bce68dcd659edcb855b426e5ffda5857b164a734f"
+  },
+  "master_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "ff95d7fcc847f61873e91daad0e6972f0f917ed3787423c52271bec4874838f7"
+  },
+  "state_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+    "sha256": "c564b658acefb112cc4fafb0873d9ab1d27b9dd68b43be1880d9c39a8946e882"
+  },
+  "master_rows": 19040,
+  "Original_remaining": 391
+}

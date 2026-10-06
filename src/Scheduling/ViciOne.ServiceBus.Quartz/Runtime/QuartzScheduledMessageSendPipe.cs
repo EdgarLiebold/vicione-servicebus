@@ -73,8 +73,6 @@ internal sealed class QuartzScheduledMessageSendPipe :
             if (_supportedMessageTypes.Length > 0)
                 context.SupportedMessageTypes = _supportedMessageTypes;
 
-            context.TimeToLive = ScheduledMessageExpiration.GetRemainingTimeToLive(_messageContext.ExpirationTime, _timeProvider);
-
             foreach (KeyValuePair<string, object> header in _messageContext.Headers.GetAll())
                 context.Headers.Set(header.Key, header.Value);
 
@@ -83,8 +81,6 @@ internal sealed class QuartzScheduledMessageSendPipe :
                 transportSendContext.ReadPropertiesFrom(transportProperties);
 
             context.Serializer = serializerContext.GetMessageSerializer();
-
-            return Task.CompletedTask;
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
@@ -92,6 +88,10 @@ internal sealed class QuartzScheduledMessageSendPipe :
                 "The persisted scheduled message could not be reconstructed for delivery.",
                 exception);
         }
+
+        // Clock failures are operational failures, not invalid persisted message data.
+        context.TimeToLive = ScheduledMessageExpiration.GetRemainingTimeToLive(_messageContext.ExpirationTime, _timeProvider);
+        return Task.CompletedTask;
     }
 
     /// <summary>Contributes no additional diagnostic scope.</summary>

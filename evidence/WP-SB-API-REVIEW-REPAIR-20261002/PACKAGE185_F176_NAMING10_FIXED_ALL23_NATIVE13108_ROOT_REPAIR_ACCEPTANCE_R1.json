@@ -1,0 +1,44 @@
+{
+  "utc": "2026-10-05T13:37:06.633716+00:00",
+  "result": "F176_IDENTIFIER_ONLY_NAMING10_ADVERSARIAL_SOURCE_ALL23_NATIVE13108_CURRENT57_ROOT_ACCEPTED_BOUNDED",
+  "finding": "F-SB-API-176",
+  "independent_fixed_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-naming10-fixed-unit-independent-r1/REPORT.json",
+    "sha256": "ccf5f26a0e24f75093adfcf2a242bd444130f80cb68e2504f5093357c366157f"
+  },
+  "independent_fixed_manifest_sha256": "53affffb354505abb52ed0bff66e18a0b5cb016cba50abfb82f662409e3b4516",
+  "root_whole_fixed_report_read": "d7b170",
+  "root_whole77_native_log_read": "7e537c",
+  "root_whole93_qualifier_read": "1b3fcd",
+  "root_independent_reparsed_PE_PDB_frames": 57,
+  "current_changed_source_bindings": 10,
+  "unchanged_rule_binding": 1,
+  "original_fixed_XML_equal": 5,
+  "actual_resource_projection_rows": [
+    4658,
+    220,
+    167
+  ],
+  "native_actual_modules": 23,
+  "native_counts": {
+    "total": 13108,
+    "passed": 13108,
+    "failed": 0,
+    "skipped": 0
+  },
+  "strict_build": {
+    "warnings": 0,
+    "errors": 0,
+    "log_sha256": "cadb04d42dc55d88563f36a8777691c5cbc682b4e537ddfb7261366e051aa9f8"
+  },
+  "root_causal_scope": "Existing Task-return-contract naming convention on ten private/local helper declarations; exact68 identifiers; no public Product API/assertion/requirement/rule changes.",
+  "limits": [
+    "Full summary and actual23 start paths, no individual13108 testcase-body human claim.",
+    "Three executables outside57 remain explicit fingerprint-only, not corruption or loaded-module proof.",
+    "Fresh31 package/currentAPIconsumerGate185R2 still running; no whole API semantic or broker/cloud/globalA+ closure."
+  ],
+  "known_before": 176,
+  "accepted_before": 175,
+  "known_after": 176,
+  "accepted_after": 176
+}

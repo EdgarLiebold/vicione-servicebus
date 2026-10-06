@@ -1,0 +1,3315 @@
+{
+  "utc": "2026-10-05T06:40:59.437137+00:00",
+  "actor": "/root",
+  "status": "ROOT_ADMIN_PRECISION_ONLY",
+  "prior_master_sha256": "12d9efea1a29cbc5cfffe4d8cd97d9cae4c4647d94c815485640d23f596d1d47",
+  "canonical_original_accepted": 7184,
+  "current_historical_r2_canonical_accepted": 7213,
+  "master_raw_rows": 7761,
+  "accessor_counts": {
+    "sidecar_get": 426,
+    "sidecar_set": 122,
+    "sidecar_original_parent_unique": 441,
+    "sidecar_unmapped": 0
+  },
+  "accessor_parent_bindings": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextProxy.get_ActivityName",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextProxy.ActivityName",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextProxy.get_Elapsed",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextProxy.Elapsed",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextProxy.get_ExecutionId",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextProxy.ExecutionId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextProxy.get_Timestamp",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextProxy.Timestamp",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextProxy.get_TrackingNumber",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextProxy.TrackingNumber",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextProxy.get_Variables",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextProxy.Variables",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextScope.get_ActivityName",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextScope.ActivityName",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextScope.get_Elapsed",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextScope.Elapsed",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextScope.get_ExecutionId",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextScope.ExecutionId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextScope.get_Timestamp",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextScope.Timestamp",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextScope.get_TrackingNumber",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextScope.TrackingNumber",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ActivityContextScope.get_Variables",
+      "parent": "P:ViciOne.ServiceBus.Context.ActivityContextScope.Variables",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_CancellationToken",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.CancellationToken",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_ConsumeCompleted",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.ConsumeCompleted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_ConversationId",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.ConversationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_DestinationAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.DestinationAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_ExpirationTime",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.ExpirationTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_FaultAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.FaultAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_Headers",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.Headers",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_Host",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.Host",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_InitiatorId",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.InitiatorId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_MessageId",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.MessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_Outgoing",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.Outgoing",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_ReceiveContext",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.ReceiveContext",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_ResponseAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.ResponseAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_SentTime",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.SentTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_SerializerContext",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.SerializerContext",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_SourceAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.SourceAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.get_SupportedMessageTypes",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.SupportedMessageTypes",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.BaseConsumeContext.set_ReceiveContext(ViciOne.ServiceBus.Advanced.ReceiveContext)",
+      "parent": "P:ViciOne.ServiceBus.Context.BaseConsumeContext.ReceiveContext",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.CompensateContextScope`1.get_Log",
+      "parent": "P:ViciOne.ServiceBus.Context.CompensateContextScope`1.Log",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.CompensateContextScope`1.get_Result",
+      "parent": "P:ViciOne.ServiceBus.Context.CompensateContextScope`1.Result",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.CompensateContextScope`1.set_Result(ViciOne.ServiceBus.Advanced.CompensationResult)",
+      "parent": "P:ViciOne.ServiceBus.Context.CompensateContextScope`1.Result",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_CancellationToken",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.CancellationToken",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_ConsumeCompleted",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.ConsumeCompleted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_ConversationId",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.ConversationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_DestinationAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.DestinationAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_ExpirationTime",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.ExpirationTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_FaultAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.FaultAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_Headers",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.Headers",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_Host",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.Host",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_InitiatorId",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.InitiatorId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_MessageId",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.MessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_ResponseAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.ResponseAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_SentTime",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.SentTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_SourceAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.SourceAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy.get_SupportedMessageTypes",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy.SupportedMessageTypes",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextProxy`1.get_Message",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextProxy`1.Message",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextScope.get_CancellationToken",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextScope.CancellationToken",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ConsumeContextScope`1.get_Message",
+      "parent": "P:ViciOne.ServiceBus.Context.ConsumeContextScope`1.Message",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.DeserializerConsumeContext.get_ConsumeCompleted",
+      "parent": "P:ViciOne.ServiceBus.Context.DeserializerConsumeContext.ConsumeCompleted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ExecuteContextProxy`1.get_Arguments",
+      "parent": "P:ViciOne.ServiceBus.Context.ExecuteContextProxy`1.Arguments",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ExecuteContextProxy`1.get_Result",
+      "parent": "P:ViciOne.ServiceBus.Context.ExecuteContextProxy`1.Result",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ExecuteContextProxy`1.set_Result(ViciOne.ServiceBus.Advanced.ExecutionResult)",
+      "parent": "P:ViciOne.ServiceBus.Context.ExecuteContextProxy`1.Result",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ExecuteContextScope`1.get_Arguments",
+      "parent": "P:ViciOne.ServiceBus.Context.ExecuteContextScope`1.Arguments",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ExecuteContextScope`1.get_Result",
+      "parent": "P:ViciOne.ServiceBus.Context.ExecuteContextScope`1.Result",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.ExecuteContextScope`1.set_Result(ViciOne.ServiceBus.Advanced.ExecutionResult)",
+      "parent": "P:ViciOne.ServiceBus.Context.ExecuteContextScope`1.Result",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_CancellationToken",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.CancellationToken",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_ConsumeCompleted",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.ConsumeCompleted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_ConversationId",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.ConversationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_DestinationAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.DestinationAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_ExpirationTime",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.ExpirationTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_FaultAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.FaultAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_Headers",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.Headers",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_Host",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.Host",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_InitiatorId",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.InitiatorId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_Message",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.Message",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_MessageId",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.MessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_Outgoing",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.Outgoing",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_ReceiveContext",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.ReceiveContext",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_ResponseAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.ResponseAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_SentTime",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.SentTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_SerializerContext",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.SerializerContext",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_SourceAddress",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.SourceAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Context.MessageConsumeContext`1.get_SupportedMessageTypes",
+      "parent": "P:ViciOne.ServiceBus.Context.MessageConsumeContext`1.SupportedMessageTypes",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.ConsumePipe.get_Connected",
+      "parent": "P:ViciOne.ServiceBus.Middleware.ConsumePipe.Connected",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.DynamicFilter`1.OutputFilter`1.get_Filter",
+      "parent": "P:ViciOne.ServiceBus.Middleware.DynamicFilter`1.OutputFilter`1.Filter",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.DynamicFilter`2.KeyOutputFilter`1.get_Filter",
+      "parent": "P:ViciOne.ServiceBus.Middleware.DynamicFilter`2.KeyOutputFilter`1.Filter",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.ILatestFilter`1.get_Latest",
+      "parent": "P:ViciOne.ServiceBus.Middleware.ILatestFilter`1.Latest",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.ITeeFilter`1.get_Count",
+      "parent": "P:ViciOne.ServiceBus.Middleware.ITeeFilter`1.Count",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext.get_CapturedContext",
+      "parent": "P:ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext.CapturedContext",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext.get_ClearToSend",
+      "parent": "P:ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext.ClearToSend",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext`1.get_Message",
+      "parent": "P:ViciOne.ServiceBus.Middleware.InMemoryOutbox.InMemoryOutboxConsumeContext`1.Message",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.InMemoryOutbox.OutboxContext.get_ClearToSend",
+      "parent": "P:ViciOne.ServiceBus.Middleware.InMemoryOutbox.OutboxContext.ClearToSend",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.get_CapturedContext",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.CapturedContext",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.get_ConsumerId",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.ConsumerId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.get_ContinueProcessing",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.ContinueProcessing",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.get_IsMessageConsumed",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.IsMessageConsumed",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.get_IsOutboxDelivered",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.IsOutboxDelivered",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.get_LastSequenceNumber",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.LastSequenceNumber",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.get_Options",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.Options",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.get_ReceiveCount",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.ReceiveCount",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.set_ContinueProcessing(System.Boolean)",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.ContinueProcessing",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.get_CapturedContext",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.CapturedContext",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.get_IsMessageConsumed",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.IsMessageConsumed",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.get_IsOutboxDelivered",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.IsOutboxDelivered",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.get_LastSequenceNumber",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.LastSequenceNumber",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.get_ReceiveCount",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.ReceiveCount",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.set_ContinueProcessing(System.Boolean)",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.ContinueProcessing",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.get_ConsumerId",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.ConsumerId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.get_ConsumerType",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.ConsumerType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.get_MessageDeliveryLimit",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.MessageDeliveryLimit",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.get_MessageDeliveryTimeout",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.MessageDeliveryTimeout",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.set_ConsumerId(System.Guid)",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.ConsumerId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.set_ConsumerType(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.ConsumerType",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.set_MessageDeliveryLimit(System.Int32)",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.MessageDeliveryLimit",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.set_MessageDeliveryTimeout(System.TimeSpan)",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeOptions.MessageDeliveryTimeout",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxMessageContext.get_Body",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxMessageContext.Body",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxMessageContext.get_ContentType",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxMessageContext.ContentType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxMessageContext.get_MessageId",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxMessageContext.MessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxMessageContext.get_MessageType",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxMessageContext.MessageType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxMessageContext.get_Properties",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxMessageContext.Properties",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.OutboxMessageContext.get_SequenceNumber",
+      "parent": "P:ViciOne.ServiceBus.Middleware.OutboxMessageContext.SequenceNumber",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.TeeFilter`1.get_Count",
+      "parent": "P:ViciOne.ServiceBus.Middleware.TeeFilter`1.Count",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.BaseScheduleMessageProvider.get_CancellationMode",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.BaseScheduleMessageProvider.CancellationMode",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.CancelScheduledMessageCommand.get_Timestamp",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.CancelScheduledMessageCommand.Timestamp",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.CancelScheduledMessageCommand.get_TokenId",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.CancelScheduledMessageCommand.TokenId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.CancelScheduledMessageCommand.set_Timestamp(System.DateTimeOffset)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.CancelScheduledMessageCommand.Timestamp",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.CancelScheduledMessageCommand.set_TokenId(System.Guid)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.CancelScheduledMessageCommand.TokenId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.get_ScheduleGroup",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.ScheduleGroup",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.get_ScheduleId",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.ScheduleId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.get_Timestamp",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.Timestamp",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.set_ScheduleGroup(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.ScheduleGroup",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.set_ScheduleId(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.ScheduleId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.set_Timestamp(System.DateTimeOffset)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.CancelScheduledRecurringMessageCommand.Timestamp",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.get_CronExpression",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.CronExpression",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.get_Description",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.Description",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.get_EndTime",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.EndTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.get_MisfirePolicy",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.MisfirePolicy",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.get_ScheduleGroup",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.ScheduleGroup",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.get_ScheduleId",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.ScheduleId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.get_StartTime",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.StartTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.get_TimeZoneId",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.TimeZoneId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.set_CronExpression(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.CronExpression",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.set_Description(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.Description",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.set_EndTime(System.Nullable{System.DateTimeOffset})",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.EndTime",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.set_MisfirePolicy(ViciOne.ServiceBus.Scheduling.MissedEventPolicy)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.MisfirePolicy",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.set_ScheduleGroup(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.ScheduleGroup",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.set_ScheduleId(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.ScheduleId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.set_StartTime(System.DateTimeOffset)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.StartTime",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.set_TimeZoneId(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DefaultRecurringSchedule.TimeZoneId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.DelayedScheduleMessageProvider.get_CancellationMode",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.DelayedScheduleMessageProvider.CancellationMode",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.EndpointRecurringMessageScheduler.get_TimeProvider",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.EndpointRecurringMessageScheduler.TimeProvider",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.EndpointScheduleMessageProvider.get_CancellationMode",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.EndpointScheduleMessageProvider.CancellationMode",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.MessageScheduler.get_CancellationMode",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.MessageScheduler.CancellationMode",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.MessageScheduler.get_TimeProvider",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.MessageScheduler.TimeProvider",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.get_ScheduleGroup",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.ScheduleGroup",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.get_ScheduleId",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.ScheduleId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.get_Timestamp",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.Timestamp",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.set_ScheduleGroup(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.ScheduleGroup",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.set_ScheduleId(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.ScheduleId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.set_Timestamp(System.DateTimeOffset)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand.Timestamp",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.PublishRecurringMessageScheduler.get_TimeProvider",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.PublishRecurringMessageScheduler.TimeProvider",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.PublishScheduleMessageProvider.get_CancellationMode",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.PublishScheduleMessageProvider.CancellationMode",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.get_ScheduleGroup",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.ScheduleGroup",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.get_ScheduleId",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.ScheduleId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.get_Timestamp",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.Timestamp",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.set_ScheduleGroup(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.ScheduleGroup",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.set_ScheduleId(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.ScheduleId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.set_Timestamp(System.DateTimeOffset)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand.Timestamp",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.get_Destination",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.Destination",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.get_Payload",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.Payload",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.get_PayloadType",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.PayloadType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.get_Schedule",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.Schedule",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.set_Destination(System.Uri)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.Destination",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.set_Payload(System.Object)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.Payload",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.set_PayloadType(System.String[])",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.PayloadType",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.set_Schedule(ViciOne.ServiceBus.Scheduling.RecurringSchedule)",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand.Schedule",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.get_Destination",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Destination",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.get_Payload",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Payload",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.get_PayloadType",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.PayloadType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.get_Schedule",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleRecurringMessageCommand`1.Schedule",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleSendPipe`1.get_MessageId",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleSendPipe`1.MessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleSendPipe`1.get_ScheduledMessageId",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleSendPipe`1.ScheduledMessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduleSendPipe`1.set_ScheduledMessageId(System.Nullable{System.Guid})",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduleSendPipe`1.ScheduledMessageId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduledMessageHandle`1.get_Destination",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduledMessageHandle`1.Destination",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduledMessageHandle`1.get_DueAt",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduledMessageHandle`1.DueAt",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduledMessageHandle`1.get_Payload",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduledMessageHandle`1.Payload",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduledMessageHandle`1.get_TokenId",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduledMessageHandle`1.TokenId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduledRecurringMessageHandle`1.get_Destination",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduledRecurringMessageHandle`1.Destination",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduledRecurringMessageHandle`1.get_Payload",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduledRecurringMessageHandle`1.Payload",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Scheduling.ScheduledRecurringMessageHandle`1.get_Schedule",
+      "parent": "P:ViciOne.ServiceBus.Scheduling.ScheduledRecurringMessageHandle`1.Schedule",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_ConversationId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.ConversationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_DestinationAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.DestinationAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_ExpirationTime",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.ExpirationTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_FaultAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.FaultAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_Headers",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.Headers",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_Host",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.Host",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_InitiatorId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.InitiatorId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_MessageId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.MessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_ResponseAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.ResponseAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_SentTime",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.SentTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_SourceAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.SourceAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BaseSerializerContext.get_SupportedMessageTypes",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BaseSerializerContext.SupportedMessageTypes",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_ConversationId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.ConversationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_DestinationAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.DestinationAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_ExpirationTime",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.ExpirationTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_FaultAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.FaultAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_Headers",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.Headers",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_Host",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.Host",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_InitiatorId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.InitiatorId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_MessageId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.MessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_ResponseAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.ResponseAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_SentTime",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.SentTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_SourceAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.SourceAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_SupportedMessageTypes",
+      "parent": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.SupportedMessageTypes",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.CopyBodySerializer.get_ContentType",
+      "parent": "P:ViciOne.ServiceBus.Serialization.CopyBodySerializer.ContentType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EncryptionKey.get_KeyId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EncryptionKey.KeyId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_ConversationId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.ConversationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_DestinationAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.DestinationAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_ExpirationTime",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.ExpirationTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_FaultAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.FaultAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_Headers",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.Headers",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_Host",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.Host",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_InitiatorId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.InitiatorId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_MessageId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.MessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_ResponseAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.ResponseAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_SentTime",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.SentTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.get_SourceAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.EnvelopeMessageContext.SourceAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_ConversationId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.ConversationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_DestinationAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.DestinationAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_ExpirationTime",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.ExpirationTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_FaultAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.FaultAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_Headers",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.Headers",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_Host",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.Host",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_InitiatorId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.InitiatorId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_Message",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.Message",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_MessageId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.MessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_MessageTypes",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.MessageTypes",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_ResponseAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.ResponseAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_SentTime",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.SentTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.get_SourceAddress",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.SourceAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_ConversationId(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.ConversationId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_CorrelationId(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.CorrelationId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_DestinationAddress(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.DestinationAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_ExpirationTime(System.Nullable{System.DateTimeOffset})",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.ExpirationTime",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_FaultAddress(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.FaultAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_Headers(System.Collections.Generic.Dictionary{System.String,System.Object})",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.Headers",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_Host(ViciOne.ServiceBus.HostInfo)",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.Host",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_InitiatorId(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.InitiatorId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_Message(System.Object)",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.Message",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_MessageId(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.MessageId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_MessageTypes(System.String[])",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.MessageTypes",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_RequestId(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.RequestId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_ResponseAddress(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.ResponseAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_SentTime(System.Nullable{System.DateTimeOffset})",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.SentTime",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.set_SourceAddress(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Serialization.JsonMessageEnvelope.SourceAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.SerializedTransportMessage.get_Instance",
+      "parent": "P:ViciOne.ServiceBus.Serialization.SerializedTransportMessage.Instance",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.ServiceBusMetadataJson.get_MessageSerializer",
+      "parent": "P:ViciOne.ServiceBus.Serialization.ServiceBusMetadataJson.MessageSerializer",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.ServiceBusMetadataJson.get_ObjectDeserializer",
+      "parent": "P:ViciOne.ServiceBus.Serialization.ServiceBusMetadataJson.ObjectDeserializer",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.ServiceBusMetadataJson.get_Options",
+      "parent": "P:ViciOne.ServiceBus.Serialization.ServiceBusMetadataJson.Options",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.SystemTextJsonMessageSerializer.get_ContentType",
+      "parent": "P:ViciOne.ServiceBus.Serialization.SystemTextJsonMessageSerializer.ContentType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.SystemTextJsonMessageSerializer.get_JsonContentType",
+      "parent": "P:ViciOne.ServiceBus.Serialization.SystemTextJsonMessageSerializer.JsonContentType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.SystemTextJsonRawMessageSerializer.get_ContentType",
+      "parent": "P:ViciOne.ServiceBus.Serialization.SystemTextJsonRawMessageSerializer.ContentType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Serialization.SystemTextJsonRawMessageSerializer.get_JsonContentType",
+      "parent": "P:ViciOne.ServiceBus.Serialization.SystemTextJsonRawMessageSerializer.JsonContentType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_Body",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Body",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_BodyLength",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.BodyLength",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_ContentType",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.ContentType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_ConversationId",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.ConversationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_Delay",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Delay",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_DestinationAddress",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.DestinationAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_Durable",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Durable",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_FaultAddress",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.FaultAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_Headers",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Headers",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_InitiatorId",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.InitiatorId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_IsPublish",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.IsPublish",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_Mandatory",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Mandatory",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_Message",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Message",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_MessageId",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.MessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_ResponseAddress",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.ResponseAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_ScheduledMessageId",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.ScheduledMessageId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_SentTime",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.SentTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_Serialization",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Serialization",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_Serializer",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Serializer",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_SourceAddress",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.SourceAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_SupportedMessageTypes",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.SupportedMessageTypes",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.get_TimeToLive",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.TimeToLive",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_ContentType(System.Net.Mime.ContentType)",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.ContentType",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_ConversationId(System.Nullable{System.Guid})",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.ConversationId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_CorrelationId(System.Nullable{System.Guid})",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.CorrelationId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_Delay(System.Nullable{System.TimeSpan})",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Delay",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_DestinationAddress(System.Uri)",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.DestinationAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_Durable(System.Boolean)",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Durable",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_FaultAddress(System.Uri)",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.FaultAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_InitiatorId(System.Nullable{System.Guid})",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.InitiatorId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_IsPublish(System.Boolean)",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.IsPublish",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_Mandatory(System.Boolean)",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Mandatory",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_MessageId(System.Nullable{System.Guid})",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.MessageId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_RequestId(System.Nullable{System.Guid})",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.RequestId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_ResponseAddress(System.Uri)",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.ResponseAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_ScheduledMessageId(System.Nullable{System.Guid})",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.ScheduledMessageId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_Serialization(ViciOne.ServiceBus.Advanced.Serialization.ISerialization)",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Serialization",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_Serializer(ViciOne.ServiceBus.Advanced.Serialization.IMessageSerializer)",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.Serializer",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_SourceAddress(System.Uri)",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.SourceAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_SupportedMessageTypes(System.String[])",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.SupportedMessageTypes",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "accessor": "M:ViciOne.ServiceBus.Transports.MessageSendContext`1.set_TimeToLive(System.Nullable{System.TimeSpan})",
+      "parent": "P:ViciOne.ServiceBus.Transports.MessageSendContext`1.TimeToLive",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.AbstractUriException.get_Uri",
+      "parent": "P:ViciOne.ServiceBus.AbstractUriException.Uri",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.CircuitBreakerOpenException.get_ProbeInProgress",
+      "parent": "P:ViciOne.ServiceBus.CircuitBreakerOpenException.ProbeInProgress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.CircuitBreakerOpenException.get_RetryAfter",
+      "parent": "P:ViciOne.ServiceBus.CircuitBreakerOpenException.RetryAfter",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.ConfigurationException.get_Results",
+      "parent": "P:ViciOne.ServiceBus.ConfigurationException.Results",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.ConnectionException.get_IsTransient",
+      "parent": "P:ViciOne.ServiceBus.ConnectionException.IsTransient",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.ExceptionInfoException.get_Data",
+      "parent": "P:ViciOne.ServiceBus.ExceptionInfoException.Data",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.ExceptionInfoException.get_ExceptionInfo",
+      "parent": "P:ViciOne.ServiceBus.ExceptionInfoException.ExceptionInfo",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.ExceptionInfoException.get_Source",
+      "parent": "P:ViciOne.ServiceBus.ExceptionInfoException.Source",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.ExceptionInfoException.get_StackTrace",
+      "parent": "P:ViciOne.ServiceBus.ExceptionInfoException.StackTrace",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.MessageDataNotFoundException.get_Address",
+      "parent": "P:ViciOne.ServiceBus.MessageDataNotFoundException.Address",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.MessageException.get_MessageType",
+      "parent": "P:ViciOne.ServiceBus.MessageException.MessageType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.MessageTooLargeException.get_ActualBytes",
+      "parent": "P:ViciOne.ServiceBus.MessageTooLargeException.ActualBytes",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.MessageTooLargeException.get_EndpointAddress",
+      "parent": "P:ViciOne.ServiceBus.MessageTooLargeException.EndpointAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.MessageTooLargeException.get_MaximumBytes",
+      "parent": "P:ViciOne.ServiceBus.MessageTooLargeException.MaximumBytes",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.PayloadAdmissionException.get_ActualBytes",
+      "parent": "P:ViciOne.ServiceBus.PayloadAdmissionException.ActualBytes",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.PayloadAdmissionException.get_ConfiguredLimitBytes",
+      "parent": "P:ViciOne.ServiceBus.PayloadAdmissionException.ConfiguredLimitBytes",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.PayloadAdmissionException.get_Stage",
+      "parent": "P:ViciOne.ServiceBus.PayloadAdmissionException.Stage",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.RequestCanceledException.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.RequestCanceledException.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.RequestFaultException.get_Fault",
+      "parent": "P:ViciOne.ServiceBus.RequestFaultException.Fault",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.RequestFaultException.get_RequestType",
+      "parent": "P:ViciOne.ServiceBus.RequestFaultException.RequestType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.RequestTimeoutException.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.RequestTimeoutException.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.StaleConcurrencyLimitCommandException.get_CommandTimestamp",
+      "parent": "P:ViciOne.ServiceBus.StaleConcurrencyLimitCommandException.CommandTimestamp",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "accessor": "M:ViciOne.ServiceBus.StaleConcurrencyLimitCommandException.get_LastAppliedTimestamp",
+      "parent": "P:ViciOne.ServiceBus.StaleConcurrencyLimitCommandException.LastAppliedTimestamp",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.get_ConversationId",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.ConversationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.get_CurrentState",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.CurrentState",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.get_ExpirationTime",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.ExpirationTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.get_FaultAddress",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.FaultAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.get_ResponseAddress",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.ResponseAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.get_SagaAddress",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.SagaAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.get_SagaCorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.SagaCorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.get_Version",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.Version",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.set_ConversationId(System.Nullable{System.Guid})",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.ConversationId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.set_CorrelationId(System.Guid)",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.CorrelationId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.set_CurrentState(System.Int32)",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.CurrentState",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.set_ExpirationTime(System.Nullable{System.DateTimeOffset})",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.ExpirationTime",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.set_FaultAddress(System.Uri)",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.FaultAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.set_ResponseAddress(System.Uri)",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.ResponseAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.set_SagaAddress(System.Uri)",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.SagaAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.set_SagaCorrelationId(System.Guid)",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.SagaCorrelationId",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestState.set_Version(System.Int32)",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestState.Version",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestStateMachine.get_Completed",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestStateMachine.Completed",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestStateMachine.get_Faulted",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestStateMachine.Faulted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestStateMachine.get_Pending",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestStateMachine.Pending",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Components.RequestStateMachine.get_Started",
+      "parent": "P:ViciOne.ServiceBus.Components.RequestStateMachine.Started",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.BehaviorContextRetryConfigurator.get_PolicyFactory",
+      "parent": "P:ViciOne.ServiceBus.Configuration.BehaviorContextRetryConfigurator.PolicyFactory",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.ISagaConnectorCache.get_Connector",
+      "parent": "P:ViciOne.ServiceBus.Configuration.ISagaConnectorCache.Connector",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.ISagaDefinition.get_EndpointDefinition",
+      "parent": "P:ViciOne.ServiceBus.Configuration.ISagaDefinition.EndpointDefinition",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.ISagaDefinition.get_SagaType",
+      "parent": "P:ViciOne.ServiceBus.Configuration.ISagaDefinition.SagaType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.ISagaDefinition`1.set_EndpointDefinition(ViciOne.ServiceBus.Configuration.IEndpointDefinition{`0})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.ISagaDefinition`1.EndpointDefinition",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.ISagaMessageConnector.get_MessageType",
+      "parent": "P:ViciOne.ServiceBus.Configuration.ISagaMessageConnector.MessageType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.ISagaMessageSpecification`1.get_MessageType",
+      "parent": "P:ViciOne.ServiceBus.Configuration.ISagaMessageSpecification`1.MessageType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.ISagaRegistration.get_StateMachineType",
+      "parent": "P:ViciOne.ServiceBus.Configuration.ISagaRegistration.StateMachineType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaConfigurator`1.set_ConcurrentMessageLimit(System.Nullable{System.Int32})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaConfigurator`1.ConcurrentMessageLimit",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaConnectorCache`1.get_Connector",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaConnectorCache`1.Connector",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaConnector`1.get_Connectors",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaConnector`1.Connectors",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaConnector`2.SagaMessageConnector.get_ConfigureConsumeTopology",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaConnector`2.SagaMessageConnector.ConfigureConsumeTopology",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaConnector`2.SagaMessageConnector.get_MessageType",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaConnector`2.SagaMessageConnector.MessageType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaConnector`2.SagaMessageSpecification.get_MessageType",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaConnector`2.SagaMessageSpecification.MessageType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaDefinition`1.get_ConcurrentMessageLimit",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaDefinition`1.ConcurrentMessageLimit",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaDefinition`1.get_EndpointDefinition",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaDefinition`1.EndpointDefinition",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaDefinition`1.set_ConcurrentMessageLimit(System.Nullable{System.Int32})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaDefinition`1.ConcurrentMessageLimit",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaDefinition`1.set_EndpointDefinition(ViciOne.ServiceBus.Configuration.IEndpointDefinition{`0})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaDefinition`1.EndpointDefinition",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaDefinition`1.set_EndpointName(System.String)",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaDefinition`1.EndpointName",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaSpecification`1.get_ConcurrentMessageLimit",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaSpecification`1.ConcurrentMessageLimit",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.SagaSpecification`1.set_ConcurrentMessageLimit(System.Nullable{System.Int32})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.SagaSpecification`1.ConcurrentMessageLimit",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.StateMachineSagaMessageConnector.get_ConfigureConsumeTopology",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.StateMachineSagaMessageConnector.ConfigureConsumeTopology",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.get_ConfigureConsumeTopology",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.ConfigureConsumeTopology",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.get_InsertOnInitial",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.InsertOnInitial",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.get_ReadOnly",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.ReadOnly",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.set_ConfigureConsumeTopology(System.Boolean)",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.ConfigureConsumeTopology",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.set_InsertOnInitial(System.Boolean)",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.InsertOnInitial",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.set_ReadOnly(System.Boolean)",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineInterfaceType`2.ViciOneServiceBusEventCorrelationConfigurator.ReadOnly",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.get_ClearRequestIdOnFaulted",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.ClearRequestIdOnFaulted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.get_Completed",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.Completed",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.get_Faulted",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.Faulted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.get_ServiceAddress",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.ServiceAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.get_Settings",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.Settings",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.get_TimeToLive",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.TimeToLive",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.get_Timeout",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.Timeout",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.get_TimeoutExpired",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.TimeoutExpired",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.set_ClearRequestIdOnFaulted(System.Boolean)",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.ClearRequestIdOnFaulted",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.set_Completed(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{`0,`2}})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.Completed",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.set_Faulted(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{`0,ViciOne.ServiceBus.Fault{`1}}})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.Faulted",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.set_ServiceAddress(System.Uri)",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.ServiceAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.set_TimeToLive(System.Nullable{System.TimeSpan})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.TimeToLive",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.set_Timeout(System.TimeSpan)",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.Timeout",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.set_TimeoutExpired(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{`0,ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired{`1}}})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`3.TimeoutExpired",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`4.get_Completed2",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`4.Completed2",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`4.get_Settings",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`4.Settings",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`4.set_Completed2(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{`0,`3}})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`4.Completed2",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`5.get_Completed3",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`5.Completed3",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`5.get_Settings",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`5.Settings",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`5.set_Completed3(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{`0,`4}})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineRequestConfigurator`5.Completed3",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineScheduleConfigurator`2.get_DelayProvider",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineScheduleConfigurator`2.DelayProvider",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineScheduleConfigurator`2.get_Settings",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineScheduleConfigurator`2.Settings",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineScheduleConfigurator`2.set_Delay(System.TimeSpan)",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineScheduleConfigurator`2.Delay",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Configuration.StateMachineScheduleConfigurator`2.set_DelayProvider(ViciOne.ServiceBus.Sagas.ScheduleDelayProvider{`0})",
+      "parent": "P:ViciOne.ServiceBus.Configuration.StateMachineScheduleConfigurator`2.DelayProvider",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Context.DefaultSagaConsumeContext`2.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Context.DefaultSagaConsumeContext`2.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Context.DefaultSagaConsumeContext`2.get_IsCompleted",
+      "parent": "P:ViciOne.ServiceBus.Context.DefaultSagaConsumeContext`2.IsCompleted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Context.DefaultSagaConsumeContext`2.get_Saga",
+      "parent": "P:ViciOne.ServiceBus.Context.DefaultSagaConsumeContext`2.Saga",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Context.SagaConsumeContextProxy`2.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Context.SagaConsumeContextProxy`2.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Context.SagaConsumeContextProxy`2.get_IsCompleted",
+      "parent": "P:ViciOne.ServiceBus.Context.SagaConsumeContextProxy`2.IsCompleted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Context.SagaConsumeContextProxy`2.get_Saga",
+      "parent": "P:ViciOne.ServiceBus.Context.SagaConsumeContextProxy`2.Saga",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestCompleted.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestCompleted.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestCompleted.get_Payload",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestCompleted.Payload",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestCompleted.get_PayloadType",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestCompleted.PayloadType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestCompleted.get_Timestamp",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestCompleted.Timestamp",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestFaulted.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestFaulted.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestFaulted.get_Payload",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestFaulted.Payload",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestFaulted.get_PayloadType",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestFaulted.PayloadType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestStarted.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestStarted.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestStarted.get_ExpirationTime",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestStarted.ExpirationTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestStarted.get_FaultAddress",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestStarted.FaultAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestStarted.get_Payload",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestStarted.Payload",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestStarted.get_PayloadType",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestStarted.PayloadType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestStarted.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestStarted.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestStarted.get_ResponseAddress",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestStarted.ResponseAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired`1.get_CorrelationId",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired`1.CorrelationId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired`1.get_ExpirationTime",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired`1.ExpirationTime",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired`1.get_Message",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired`1.Message",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired`1.get_RequestId",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired`1.RequestId",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired`1.get_Timestamp",
+      "parent": "P:ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired`1.Timestamp",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Rescue.RescueExceptionSagaConsumeContext`1.get_Exception",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Rescue.RescueExceptionSagaConsumeContext`1.Exception",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Rescue.RescueExceptionSagaConsumeContext`1.get_ExceptionInfo",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Rescue.RescueExceptionSagaConsumeContext`1.ExceptionInfo",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Rescue.RescueExceptionSagaConsumeContext`1.get_IsCompleted",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Rescue.RescueExceptionSagaConsumeContext`1.IsCompleted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Middleware.Rescue.RescueExceptionSagaConsumeContext`1.get_Saga",
+      "parent": "P:ViciOne.ServiceBus.Middleware.Rescue.RescueExceptionSagaConsumeContext`1.Saga",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.AnyExistingSagaPolicy`2.get_IsReadOnly",
+      "parent": "P:ViciOne.ServiceBus.Saga.AnyExistingSagaPolicy`2.IsReadOnly",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.DefaultSagaRepositoryQueryContext`1.get_Count",
+      "parent": "P:ViciOne.ServiceBus.Saga.DefaultSagaRepositoryQueryContext`1.Count",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.DefaultSagaRepositoryQueryContext`2.get_Count",
+      "parent": "P:ViciOne.ServiceBus.Saga.DefaultSagaRepositoryQueryContext`2.Count",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.IIndexedSagaProperty`1.get_Count",
+      "parent": "P:ViciOne.ServiceBus.Saga.IIndexedSagaProperty`1.Count",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.IIndexedSagaProperty`1.get_Item(System.Object)",
+      "parent": "P:ViciOne.ServiceBus.Saga.IIndexedSagaProperty`1.Item(System.Object)",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.ISagaRepositoryQueryContext`1.get_Count",
+      "parent": "P:ViciOne.ServiceBus.Saga.ISagaRepositoryQueryContext`1.Count",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.ISagaRepositoryQueryContext`2.get_Count",
+      "parent": "P:ViciOne.ServiceBus.Saga.ISagaRepositoryQueryContext`2.Count",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.IndexedSagaDictionary`1.get_Count",
+      "parent": "P:ViciOne.ServiceBus.Saga.IndexedSagaDictionary`1.Count",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.IndexedSagaDictionary`1.get_Item(System.Guid)",
+      "parent": "P:ViciOne.ServiceBus.Saga.IndexedSagaDictionary`1.Item(System.Guid)",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.IndexedSagaProperty`2.get_Count",
+      "parent": "P:ViciOne.ServiceBus.Saga.IndexedSagaProperty`2.Count",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.IndexedSagaProperty`2.get_Item(System.Object)",
+      "parent": "P:ViciOne.ServiceBus.Saga.IndexedSagaProperty`2.Item(System.Object)",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.LoadedSagaRepositoryQueryContext`1.get_Count",
+      "parent": "P:ViciOne.ServiceBus.Saga.LoadedSagaRepositoryQueryContext`1.Count",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.LoadedSagaRepositoryQueryContext`2.get_Count",
+      "parent": "P:ViciOne.ServiceBus.Saga.LoadedSagaRepositoryQueryContext`2.Count",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.NewOrExistingSagaPolicy`2.get_IsReadOnly",
+      "parent": "P:ViciOne.ServiceBus.Saga.NewOrExistingSagaPolicy`2.IsReadOnly",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.NewSagaPolicy`2.get_IsReadOnly",
+      "parent": "P:ViciOne.ServiceBus.Saga.NewSagaPolicy`2.IsReadOnly",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.PropertyExpressionPropertyValue`1.get_Value",
+      "parent": "P:ViciOne.ServiceBus.Saga.PropertyExpressionPropertyValue`1.Value",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.PropertyExpressionPropertyValue`1.set_Value(`0)",
+      "parent": "P:ViciOne.ServiceBus.Saga.PropertyExpressionPropertyValue`1.Value",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.SagaInstance`1.get_Instance",
+      "parent": "P:ViciOne.ServiceBus.Saga.SagaInstance`1.Instance",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.SagaInstance`1.get_IsRemoved",
+      "parent": "P:ViciOne.ServiceBus.Saga.SagaInstance`1.IsRemoved",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Saga.SagaQuery`1.get_FilterExpression",
+      "parent": "P:ViciOne.ServiceBus.Saga.SagaQuery`1.FilterExpression",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.CatchActivityBinder`2.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.CatchActivityBinder`2.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.CatchBehaviorBuilder`1.get_Behavior",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.CatchBehaviorBuilder`1.Behavior",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.CatchExceptionActivityBinder`2.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.CatchExceptionActivityBinder`2.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.CatchExceptionActivityBinder`2.get_StateMachine",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.CatchExceptionActivityBinder`2.StateMachine",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.CatchExceptionActivityBinder`3.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.CatchExceptionActivityBinder`3.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.CatchExceptionActivityBinder`3.get_StateMachine",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.CatchExceptionActivityBinder`3.StateMachine",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.CatchFaultActivity`2.get_ExceptionType",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.CatchFaultActivity`2.ExceptionType",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.CompositeEventActivity`1.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.CompositeEventActivity`1.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.ConditionalActivityBinder`1.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.ConditionalActivityBinder`1.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.ConditionalActivityBinder`2.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.ConditionalActivityBinder`2.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.ConditionalExceptionActivityBinder`2.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.ConditionalExceptionActivityBinder`2.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.ConditionalExceptionActivityBinder`3.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.ConditionalExceptionActivityBinder`3.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.ExecuteActivityBinder`1.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.ExecuteActivityBinder`1.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.IActivityBinder`1.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.IActivityBinder`1.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.IgnoreEventActivityBinder`1.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.IgnoreEventActivityBinder`1.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.IgnoreEventActivityBinder`2.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.IgnoreEventActivityBinder`2.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.RetryActivityBinder`1.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.RetryActivityBinder`1.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.RetryActivityBinder`2.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.RetryActivityBinder`2.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.SagaStateMachine.TriggerEventActivityBinder`1.get_Event",
+      "parent": "P:ViciOne.ServiceBus.SagaStateMachine.TriggerEventActivityBinder`1.Event",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestConfigurator.set_ClearRequestIdOnFaulted(System.Boolean)",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator.ClearRequestIdOnFaulted",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestConfigurator.set_ServiceAddress(System.Uri)",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator.ServiceAddress",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestConfigurator.set_TimeToLive(System.Nullable{System.TimeSpan})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator.TimeToLive",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestConfigurator.set_Timeout(System.TimeSpan)",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator.Timeout",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestConfigurator`3.set_Completed(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{`0,`2}})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator`3.Completed",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestConfigurator`3.set_Faulted(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{`0,ViciOne.ServiceBus.Fault{`1}}})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator`3.Faulted",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestConfigurator`3.set_TimeoutExpired(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{`0,ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired{`1}}})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator`3.TimeoutExpired",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestConfigurator`4.set_Completed2(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{`0,`3}})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator`4.Completed2",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestConfigurator`5.set_Completed3(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{`0,`4}})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator`5.Completed3",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestSettings`3.get_ClearRequestIdOnFaulted",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.ClearRequestIdOnFaulted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestSettings`3.get_Completed",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.Completed",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestSettings`3.get_Faulted",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.Faulted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestSettings`3.get_ServiceAddress",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.ServiceAddress",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestSettings`3.get_TimeToLive",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.TimeToLive",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestSettings`3.get_Timeout",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.Timeout",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestSettings`3.get_TimeoutExpired",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`3.TimeoutExpired",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestSettings`4.get_Completed2",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`4.Completed2",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequestSettings`5.get_Completed3",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequestSettings`5.Completed3",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`3.get_Completed",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`3.Completed",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`3.get_Faulted",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`3.Faulted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`3.get_Name",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`3.Name",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`3.get_Pending",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`3.Pending",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`3.get_Settings",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`3.Settings",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`3.get_TimeoutExpired",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`3.TimeoutExpired",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`3.set_Completed(ViciOne.ServiceBus.Sagas.IEvent{`2})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`3.Completed",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`3.set_Faulted(ViciOne.ServiceBus.Sagas.IEvent{ViciOne.ServiceBus.Fault{`1}})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`3.Faulted",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`3.set_Pending(ViciOne.ServiceBus.Sagas.IState)",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`3.Pending",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`3.set_TimeoutExpired(ViciOne.ServiceBus.Sagas.IEvent{ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired{`1}})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`3.TimeoutExpired",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`4.get_Completed2",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`4.Completed2",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`4.get_Settings",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`4.Settings",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`4.set_Completed2(ViciOne.ServiceBus.Sagas.IEvent{`3})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`4.Completed2",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`5.get_Completed3",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`5.Completed3",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`5.get_Settings",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`5.Settings",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IRequest`5.set_Completed3(ViciOne.ServiceBus.Sagas.IEvent{`4})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IRequest`5.Completed3",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IScheduleConfigurator`2.set_Received(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{`0,`1}})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IScheduleConfigurator`2.Received",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.IScheduleSettings`2.get_Received",
+      "parent": "P:ViciOne.ServiceBus.Sagas.IScheduleSettings`2.Received",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.get_Completed",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.Completed",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.get_Faulted",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.Faulted",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.get_Name",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.Name",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.get_Pending",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.Pending",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.get_Settings",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.Settings",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.get_TimeoutExpired",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.TimeoutExpired",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.set_Completed(ViciOne.ServiceBus.Sagas.IEvent{`2})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.Completed",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.set_Faulted(ViciOne.ServiceBus.Sagas.IEvent{ViciOne.ServiceBus.Fault{`1}})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.Faulted",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.set_Pending(ViciOne.ServiceBus.Sagas.IState)",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.Pending",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.set_TimeoutExpired(ViciOne.ServiceBus.Sagas.IEvent{ViciOne.ServiceBus.Contracts.IRequestTimeoutExpired{`1}})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`2.TimeoutExpired",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`3.get_Completed2",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`3.Completed2",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`3.get_Settings",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`3.Settings",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`3.set_Completed2(ViciOne.ServiceBus.Sagas.IEvent{`3})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`3.Completed2",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`4.get_Completed3",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`4.Completed3",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`4.get_Settings",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`4.Settings",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`4.set_Completed3(ViciOne.ServiceBus.Sagas.IEvent{`4})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineRequest`4.Completed3",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineSchedule`1.get_AnyReceived",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineSchedule`1.AnyReceived",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineSchedule`1.get_Received",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineSchedule`1.Received",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineSchedule`1.set_AnyReceived(ViciOne.ServiceBus.Sagas.IEvent{`1})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineSchedule`1.AnyReceived",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineSchedule`1.set_Received(ViciOne.ServiceBus.Sagas.IEvent{`1})",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineSchedule`1.Received",
+      "kind": "set"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.get_AfterLeave",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.AfterLeave",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.get_BeforeEnter",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.BeforeEnter",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.get_DeclaredEvents",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.DeclaredEvents",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.get_Enter",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.Enter",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.get_Events",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.Events",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.get_Leave",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.Leave",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.get_Name",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.Name",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.get_SuperState",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateMachineState.SuperState",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.get_Accessor",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.Accessor",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.get_Correlations",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.Correlations",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.get_Events",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.Events",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.get_Final",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.Final",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.get_Initial",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.Initial",
+      "kind": "get"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "accessor": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.get_States",
+      "parent": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.States",
+      "kind": "get"
+    }
+  ],
+  "correction": "After Source331 append the nested get/set/parent subtotal fields had retained older7430-row totals375/104/387. Current548sidecars are426gets+122sets mapped441 alreadyaccepted ORIGINAL canonicalproperties. Original7184 denominator18569 unchanged; no new semantic/native/API credit.",
+  "spec_linecount_precision": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaSpecification.cs",
+    "sha256": "723cc2ba6290163b1bb4d87d70df43601cecadc59c598e313d3cd1e58e8bd217",
+    "actual_lines": 123,
+    "historical_root_receipt": "PACKAGE168_SAGA331_BOUNDED_SOURCE_FOUR_HELD_ROOT_ACCEPTANCE_R1.json",
+    "historical_label": 129,
+    "scope": "Correct numerical line label only. Prior actualwhole source printed in e8a92d remains unchanged; this measurement adds no freshwholehumanread or semanticcredit."
+  },
+  "whole_API_closed": false
+}

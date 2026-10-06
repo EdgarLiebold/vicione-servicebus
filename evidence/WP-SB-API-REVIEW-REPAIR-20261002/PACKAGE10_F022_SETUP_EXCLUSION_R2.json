@@ -1,0 +1,8 @@
+{
+  "excluded_phase": "package10-f022-previous-build-r2",
+  "native_exit": 1,
+  "compiler_errors": 5,
+  "cause": "Missing Advanced.Registration public Handler extension import; ambiguous ActivityContext name from public Advanced namespace; nullable captured ownedBus flow. Consumer setup errors, not proof.",
+  "correction": "Import correct public extension, qualify System.Diagnostics.ActivityContext, positively assert ownedBus nonnull at delivery stop. Behavioral oracles unchanged.",
+  "snapshots": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-setup-exclusion-r2"
+}

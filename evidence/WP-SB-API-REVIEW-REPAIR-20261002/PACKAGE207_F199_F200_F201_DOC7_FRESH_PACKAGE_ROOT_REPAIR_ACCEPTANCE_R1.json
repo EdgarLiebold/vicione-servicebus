@@ -1,0 +1,71 @@
+{
+  "status": "ROOT_ACCEPTED_F199_F200_F201_SEVEN_PUBLISHED_XML_NODES_WITH_ONE_NONFINDING_PRECISION",
+  "utc": "2026-10-05T18:47:46.961009+00:00",
+  "findings": [
+    "F-SB-API-199",
+    "F-SB-API-200",
+    "F-SB-API-201"
+  ],
+  "confirmed_defect_nodes": 6,
+  "nonfinding_precision_nodes": 1,
+  "root_counterproof": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package207-core-doc7-fresh-root-counterproof-r1/REPORT.json",
+    "sha256": "c4bd42ead37a24c199310f40c79b6cbe0c403834c110e81cf942a47bd5ed9e05"
+  },
+  "independent_publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package207-core-doc7-independent-publication-peer-r1/REPORT.json",
+    "sha256": "80132b88485fbf8c824bf95ea678330b42bfcd8ae620d6cf27c0bd6b8c931782"
+  },
+  "own_source_review": "Root whole7/305 and InterceptFilter33; independent own whole7/305, exact XML7 inverse and actual PDB/package proof.",
+  "actual_operations": [
+    {
+      "phase": "package207-core-purpose-provider-doc7-strict-build-r1",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T18:32:29.010804+00:00",
+      "completed_utc": "2026-10-05T18:32:39.689788+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package207-core-purpose-provider-doc7-strict-build-r1.log",
+      "log_sha256": "83b89808550570333be7410747aec30b4a79c86a15e1952b19788b8d70b51445"
+    },
+    {
+      "phase": "package207-core-purpose-provider-doc7-fresh-pack-r1",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-warnaserror",
+        "--output",
+        "artifacts/packages-package207-core-doc7-r1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T18:35:28.592719+00:00",
+      "completed_utc": "2026-10-05T18:35:30.483882+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package207-core-purpose-provider-doc7-fresh-pack-r1.log",
+      "log_sha256": "1ea7511ef8f4d0a5fff4ca2e145c99b88a330be09c349cb06c04bb02e349712f"
+    }
+  ],
+  "package": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/packages-package207-core-doc7-r1/ViciOne.ServiceBus.1.0.0.nupkg",
+    "sha256": "af91c24dd661c7bd25c7160042edc630b28505c1e8c7f71fe7bd857d42e8876a",
+    "CRC_valid": true,
+    "canonical_DLL_XML_byte_equal": true
+  },
+  "source_runtime_signature_bytes_changed": false,
+  "native_cases_added": 0,
+  "global_grade": null,
+  "whole_API_member_review_closed": false
+}

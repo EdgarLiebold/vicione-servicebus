@@ -1,0 +1,370 @@
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResultExtensions.cs", "start_line": 1, "end_line": 120, "kind": "relevant_frozen_source"}
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>Creates configuration-validation results and composes their member paths.</summary>
+public static class ValidationResultExtensions
+{
+    /// <summary>Creates a failure associated with a configuration specification.</summary>
+    /// <param name="specification">The specification whose validation produced the failure.</param>
+    /// <param name="message">The validation failure message.</param>
+    /// <returns>The failure result.</returns>
+    public static ValidationResult Failure(this ISpecification specification, string message)
+    {
+        return new Result(ValidationResultDisposition.Failure, message);
+    }
+
+    /// <summary>Creates a failure for a configuration member.</summary>
+    /// <param name="specification">The specification whose validation produced the failure, when one is available.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="message">The validation failure message.</param>
+    /// <returns>The failure result.</returns>
+    public static ValidationResult Failure(this ISpecification? specification, string key, string message)
+    {
+        return new Result(ValidationResultDisposition.Failure, key, message);
+    }
+
+    /// <summary>Creates a failure for a configuration member and its rejected value.</summary>
+    /// <param name="specification">The specification whose validation produced the failure.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="value">The rejected value.</param>
+    /// <param name="message">The validation failure message.</param>
+    /// <returns>The failure result.</returns>
+    public static ValidationResult Failure(this ISpecification specification, string key, string value, string message)
+    {
+        return new Result(ValidationResultDisposition.Failure, key, value, message);
+    }
+
+    /// <summary>Creates a warning associated with a configuration specification.</summary>
+    /// <param name="specification">The specification whose validation produced the warning.</param>
+    /// <param name="message">The validation warning message.</param>
+    /// <returns>The warning result.</returns>
+    public static ValidationResult Warning(this ISpecification specification, string message)
+    {
+        return new Result(ValidationResultDisposition.Warning, message);
+    }
+
+    /// <summary>Creates a warning for a configuration member.</summary>
+    /// <param name="specification">The specification whose validation produced the warning, when one is available.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="message">The validation warning message.</param>
+    /// <returns>The warning result.</returns>
+    public static ValidationResult Warning(this ISpecification? specification, string key, string message)
+    {
+        return new Result(ValidationResultDisposition.Warning, key, message);
+    }
+
+    /// <summary>Creates a warning for a configuration member and its noteworthy value.</summary>
+    /// <param name="specification">The specification whose validation produced the warning.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="value">The noteworthy value.</param>
+    /// <param name="message">The validation warning message.</param>
+    /// <returns>The warning result.</returns>
+    public static ValidationResult Warning(this ISpecification specification, string key, string value, string message)
+    {
+        return new Result(ValidationResultDisposition.Warning, key, value, message);
+    }
+
+    /// <summary>Creates a success associated with a configuration specification.</summary>
+    /// <param name="specification">The specification whose validation produced the success.</param>
+    /// <param name="message">The validation success message.</param>
+    /// <returns>The success result.</returns>
+    public static ValidationResult Success(this ISpecification specification, string message)
+    {
+        return new Result(ValidationResultDisposition.Success, message);
+    }
+
+    /// <summary>Creates a success for a configuration member.</summary>
+    /// <param name="specification">The specification whose validation produced the success.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="message">The validation success message.</param>
+    /// <returns>The success result.</returns>
+    public static ValidationResult Success(this ISpecification specification, string key, string message)
+    {
+        return new Result(ValidationResultDisposition.Success, key, message);
+    }
+
+    /// <summary>Creates a success for a configuration member and its accepted value.</summary>
+    /// <param name="specification">The specification whose validation produced the success.</param>
+    /// <param name="key">The configuration-member path.</param>
+    /// <param name="value">The accepted value.</param>
+    /// <param name="message">The validation success message.</param>
+    /// <returns>The success result.</returns>
+    public static ValidationResult Success(this ISpecification specification, string key, string value, string message)
+    {
+        return new Result(ValidationResultDisposition.Success, key, value, message);
+    }
+
+    /// <summary>Prefixes a validation result's member path with its parent configuration path.</summary>
+    /// <param name="result">The result whose member path is nested.</param>
+    /// <param name="parentKey">The parent configuration path.</param>
+    /// <returns>A result containing the composed member path.</returns>
+    public static ValidationResult WithParentKey(this ValidationResult result, string parentKey)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        ArgumentException.ThrowIfNullOrWhiteSpace(parentKey);
+
+        var key = string.IsNullOrEmpty(result.Key)
+            ? parentKey
+            : parentKey + "." + result.Key;
+
+        return new Result(result.Disposition, key, result.Value, result.Message);
+    }
+
+    sealed class Result :
+        ValidationResult
+    {
+        public Result(ValidationResultDisposition disposition, string key, string? value, string message)
+        {
+            Validate(disposition, message);
+            ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResultExtensions.cs", "start_line": 121, "end_line": 165, "kind": "relevant_frozen_source"}
+
+            Disposition = disposition;
+            Key = key;
+            Value = value;
+            Message = message;
+        }
+
+        public Result(ValidationResultDisposition disposition, string key, string message)
+        {
+            Validate(disposition, message);
+            ArgumentException.ThrowIfNullOrWhiteSpace(key);
+
+            Disposition = disposition;
+            Key = key;
+            Message = message;
+        }
+
+        public Result(ValidationResultDisposition disposition, string message)
+        {
+            Validate(disposition, message);
+
+            Key = string.Empty;
+            Disposition = disposition;
+            Message = message;
+        }
+
+        public ValidationResultDisposition Disposition { get; }
+        public string Key { get; }
+        public string? Value { get; }
+        public string Message { get; }
+
+        public override string ToString()
+        {
+            return $"[{Disposition}] {(string.IsNullOrEmpty(Key) ? Message : Key + " " + Message)}";
+        }
+
+        static void Validate(ValidationResultDisposition disposition, string message)
+        {
+            if (!Enum.IsDefined(disposition))
+                throw new ArgumentOutOfRangeException(nameof(disposition), disposition, "The validation disposition must be defined.");
+
+            ArgumentException.ThrowIfNullOrWhiteSpace(message);
+        }
+    }
+}
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumerFactory.cs", "start_line": 1, "end_line": 77, "kind": "relevant_frozen_source"}
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Consumers.Contexts;
+using ViciOne.ServiceBus.Context;
+
+namespace ViciOne.ServiceBus.Batching.Runtime;
+
+/// <summary>Connects individual message pipelines to the batch consumer that owns their completion.</summary>
+/// <typeparam name="TMessage">The message contract collected into batches.</typeparam>
+internal sealed class BatchConsumerFactory<TMessage> :
+    IConsumerFactory<BatchConsumer<TMessage>>,
+    IAsyncDisposable
+    where TMessage : class
+{
+    readonly IBatchCollector<TMessage> _collector;
+    readonly BatchRuntimeSettings _settings;
+
+    /// <summary>Creates a factory over the collector owned by one batch registration.</summary>
+    /// <param name="options">The effective batch options exposed through probing.</param>
+    /// <param name="collector">The collector that owns active batches and terminal cleanup.</param>
+    public BatchConsumerFactory(BatchOptions options, IBatchCollector<TMessage> collector)
+    {
+        _settings = new BatchRuntimeSettings(options);
+        _collector = collector ?? throw new ArgumentNullException(nameof(collector));
+    }
+
+    /// <summary>Stops admissions, flushes partial batches, and drains accepted deliveries.</summary>
+    /// <returns>A task that completes after collector shutdown.</returns>
+    public ValueTask DisposeAsync()
+    {
+        return _collector.DisposeAsync();
+    }
+
+    /// <summary>Resolves the owning batch and holds the message pipeline open until that batch completes.</summary>
+    /// <typeparam name="TInputMessage">The runtime message contract supplied by the connector.</typeparam>
+    /// <param name="context">The message context to collect.</param>
+    /// <param name="next">The consumer pipeline that waits on the resolved batch consumer.</param>
+    /// <returns>A task that completes with the individual message outcome.</returns>
+    public async Task SendAsync<TInputMessage>(ConsumeContext<TInputMessage> context,
+        IPipe<ConsumerConsumeContext<BatchConsumer<TMessage>, TInputMessage>> next)
+        where TInputMessage : class
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
+        if (context is not ConsumeContext<TMessage> messageContext)
+            throw new MessageException(typeof(TInputMessage), $"Expected batch message type: {TypeCache<TMessage>.ShortName}");
+
+        BatchConsumer<TMessage> consumer = await _collector.CollectAsync(messageContext).ConfigureAwait(false);
+
+        try
+        {
+            await next.SendAsync(new ConsumerConsumeContextProxy<BatchConsumer<TMessage>, TInputMessage>(context, consumer)).ConfigureAwait(false);
+        }
+        finally
+        {
+            if (consumer.IsCompleted)
+                await _collector.CompleteAsync(consumer).ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>Adds the effective batch limits and collector pipeline to the probe graph.</summary>
+    /// <param name="context">The probe graph to extend.</param>
+    public void Probe(ProbeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        var scope = context.CreateConsumerFactoryScope<IConsumer<TMessage>>("batch");
+
+        scope.Add("timeLimit", _settings.TimeLimit);
+        scope.Add("timeLimitStart", _settings.TimeLimitStart);
+        scope.Add("messageLimit", _settings.MessageLimit);
+        scope.Add("concurrencyLimit", _settings.ConcurrencyLimit);
+
+        _collector.Probe(scope);
+    }
+}
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs", "start_line": 1, "end_line": 120, "kind": "relevant_frozen_source"}
+using System;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.Hosting;
+using ViciOne.ServiceBus.Monitoring.Health;
+using ViciOne.ServiceBus.Providers.Persistence;
+using ViciOne.ServiceBus.Transports;
+
+namespace Microsoft.Extensions.DependencyInjection;
+
+/// <summary>Registers default and typed buses with dependency injection.</summary>
+public static class DependencyInjectionRegistrationExtensions
+{
+    /// <summary>Registers the default bus and applies its endpoint, consumer, saga, activity, and transport configuration.</summary>
+    /// <param name="collection">The service collection that will own the bus.</param>
+    /// <param name="configure">An optional callback that configures the bus registration.</param>
+    /// <returns>The same service collection.</returns>
+    public static IServiceCollection AddViciOneServiceBus(this IServiceCollection collection, Action<IBusRegistrationConfigurator>? configure = null)
+    {
+        ArgumentNullException.ThrowIfNull(collection);
+
+        if (collection.Any(d => d.ServiceType == typeof(IBus)))
+        {
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Registration Extensions", "unknown", "AddViciOneServiceBus() was already called and may only be called once per container. To configure additional bus instances, refer to the documentation: https://github.com/EdgarLiebold/vicione-servicebus/usage/containers/multibus.html", "Correct the named configuration before starting the host"));
+        }
+
+        AddHostedService<IBus>(collection);
+        AddInstrumentation(collection);
+        collection.AddSingleton(BusPersistenceIdentity<IBus>.Default);
+
+        var configurator = new ServiceCollectionBusConfigurator(collection);
+
+        configure?.Invoke(configurator);
+
+        configurator.Complete();
+
+        return collection;
+    }
+
+    /// <summary>Registers a typed bus through an explicit bus-instance implementation.</summary>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <typeparam name="TBusInstance">The implementation that binds the bus contract to its runtime instance.</typeparam>
+    /// <param name="collection">The service collection that will own the bus.</param>
+    /// <param name="configure">The callback that configures the typed bus registration.</param>
+    /// <returns>The same service collection.</returns>
+    public static IServiceCollection AddViciOneServiceBus<TBus, TBusInstance>(this IServiceCollection collection,
+        Action<IBusRegistrationConfigurator<TBus>> configure)
+        where TBus : class, IBus
+        where TBusInstance : BusInstance<TBus>, TBus
+    {
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(configure);
+
+        if (collection.Any(d => d.ServiceType == typeof(TBus)))
+        {
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Registration Extensions", "unknown", $"AddViciOneServiceBus<{typeof(TBus).Name},{typeof(TBusInstance).Name}>() was already called and may only be called once per container. To configure additional bus instances, refer to the documentation: https://github.com/EdgarLiebold/vicione-servicebus/usage/containers/multibus.html", "Correct the named configuration before starting the host"));
+        }
+
+        AddHostedService<TBus>(collection);
+        AddInstrumentation(collection);
+        collection.AddSingleton(BusPersistenceIdentity<TBus>.Unspecified);
+
+        var configurator = new ServiceCollectionBusConfigurator<TBus, TBusInstance>(collection);
+
+        configure(configurator);
+
+        configurator.Complete();
+
+        return collection;
+    }
+
+    /// <summary>Registers a typed bus whose persistent features share an identity that remains stable across type renames.</summary>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <typeparam name="TBusInstance">The implementation that binds the bus contract to its runtime instance.</typeparam>
+    /// <param name="collection">The service collection that will own the bus.</param>
+    /// <param name="persistenceIdentity">The stable identity used to partition all durable state owned by the bus.</param>
+    /// <param name="configure">The callback that configures the typed bus registration.</param>
+    /// <returns>The same service collection.</returns>
+    public static IServiceCollection AddViciOneServiceBus<TBus, TBusInstance>(
+        this IServiceCollection collection,
+        string persistenceIdentity,
+        Action<IBusRegistrationConfigurator<TBus>> configure)
+        where TBus : class, IBus
+        where TBusInstance : BusInstance<TBus>, TBus
+    {
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(configure);
+        BusPersistenceIdentity<TBus> identity = BusPersistenceIdentity<TBus>.Create(persistenceIdentity);
+        return collection.AddViciOneServiceBus<TBus, TBusInstance>(configurator =>
+        {
+            collection.RemoveAll<BusPersistenceIdentity<TBus>>();
+            collection.AddSingleton(identity);
+            configure(configurator);
+        });
+    }
+
+    /// <summary>Registers a typed bus and creates the internal bus-instance binding for its contract.</summary>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <param name="collection">The service collection that will own the bus.</param>
+    /// <param name="configure">The callback that configures the typed bus registration.</param>
+    /// <returns>The same service collection.</returns>
+    public static IServiceCollection AddViciOneServiceBus<TBus>(this IServiceCollection collection, Action<IBusRegistrationConfigurator<TBus>> configure)
+        where TBus : class, IBus
+    {
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(configure);
+
+        var doIt = new Callback<TBus>(collection, configure);
+
+        BusInstanceBuilder.Instance.GetBusInstanceType(doIt);
+
+

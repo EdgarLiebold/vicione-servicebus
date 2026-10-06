@@ -1,53 +1,401 @@
 [
-  { "requirementId": "OBL-R0-SQL-0129", "variantKey": "contained-user-provisioning-preserves-database-identity", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningCredentialTests", "testMethod": "ContainedSqlUser_CanBeProvisionedWithoutAServerLoginAsync" },
-  { "requirementId": "OBL-R0-SQL-0129", "variantKey": "principal-kind-collision-does-not-grant-access", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningCredentialTests", "testMethod": "PrincipalKindMismatch_IsRejectedWithoutTransferringOwnershipOrPermissionsAsync" },
-  { "requirementId": "OBL-R0-SQL-0129", "variantKey": "connection-string-identity-and-membership-repair", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningCredentialTests", "testMethod": "ConnectionStringAccount_RegainsEffectivePermissionsAfterRoleMembershipIsRemovedAsync" },
-  { "requirementId": "OBL-R0-SQL-0129", "variantKey": "same-name-user-for-another-login-is-rejected", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningCredentialTests", "testMethod": "SameNameUserMappedToAnotherLogin_DoesNotGrantThatLoginTransportPermissionsAsync" },
-  { "requirementId": "OBL-R0-SQL-0040", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests", "testMethod": "ExplicitInstanceAndPort_AreProjectedIntoConnectionAndBusAddressesAsync" },
-  { "requirementId": "OBL-R0-SQL-0041", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests", "testMethod": "InstanceWithoutPort_IsProjectedOnlyAsTheBusQueryOptionAsync" },
-  { "requirementId": "OBL-R0-SQL-0045", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests", "testMethod": "Provisioning_CreatesEveryRequiredTableAndIndexAsync" },
-  { "requirementId": "OBL-R0-SQL-0046", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests", "testMethod": "Disposal_DropsTheRunScopedDatabaseEvenWithAnAttachedSessionAsync" },
-  { "requirementId": "OBL-R0-SQL-0047", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests", "testMethod": "ReceiveEndpointWithoutTopology_CreatesItsThreeQueueRowsAsync" },
-  { "requirementId": "OBL-R0-SQL-0127", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests", "testMethod": "RunScopedHost_IsPreservedInTheProviderDataSourceAsync" },
-  { "requirementId": "OBL-R0-SQL-0063", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerScheduleCancellationTests", "testMethod": "ConsumeContextCancellation_DeletesThePersistedFutureDeliveryAsync" },
-  { "requirementId": "OBL-R0-SQL-0065", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerScheduleCancellationTests", "testMethod": "CallerCancellation_DeletesThePersistedFutureDeliveryAsync" },
-  { "requirementId": "OBL-R0-SQL-0067", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerPublishAndPurgeTests", "testMethod": "UnsubscribedPublish_LeavesNeitherMessageNorDeliveryWhileSubscribedControlArrivesAsync" },
-  { "requirementId": "OBL-R0-SQL-0069", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerPublishAndPurgeTests", "testMethod": "PurgeOnStartup_RemovesExistingDeliveryAndThenConsumesOnlyTheNewMessageAsync" },
-  { "requirementId": "OBL-R0-SQL-0091", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSerializationAndRequestTests", "testMethod": "JsonExtensionData_RoundTripsStringAndNumberForElementAndObjectDictionariesAsync" },
-  { "requirementId": "OBL-R0-SQL-0101", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSerializationAndRequestTests", "testMethod": "RequestClient_FiveSequentialRequestsReturnTheirExactResponsesAsync" },
-  { "requirementId": "OBL-R0-SQL-0087", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSchedulingTests", "testMethod": "DelayedSend_PersistsFutureEnqueueTimeAndDeliversExactlyOnceAsync" },
-  { "requirementId": "OBL-R0-SQL-0089", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSchedulingTests", "testMethod": "DelayedPublish_PersistsFutureEnqueueTimeAndDeliversExactlyOnceAsync" },
-  { "requirementId": "OBL-R0-SQL-0071", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests", "testMethod": "CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync" },
-  { "requirementId": "OBL-R0-SQL-0073", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests", "testMethod": "CancelJob_UpdatesStartedStatusToCanceledWithReasonAsync" },
-  { "requirementId": "OBL-R0-SQL-0075", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests", "testMethod": "RetryJob_AfterCancellationUsesANewAttemptAndCompletesAsync" },
-  { "requirementId": "OBL-R0-SQL-0077", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests", "testMethod": "CancelJob_WhileWaitingPublishesTheWaitAndCanceledTransitionsAsync" },
-  { "requirementId": "OBL-R0-SQL-0079", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests", "testMethod": "SubmitJob_CompletesTheAcceptedLifecycleAsync" },
-  { "requirementId": "OBL-R0-SQL-0081", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests", "testMethod": "PublishJob_GeneratesOneNonEmptyIdentityAcrossTheLifecycleAsync" },
-  { "requirementId": "OBL-R0-SQL-0083", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests", "testMethod": "GetJobState_ForUnknownIdentityReturnsNotFoundAsync" },
-  { "requirementId": "OBL-R0-SQL-0097", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConcurrencyTests", "testMethod": "PartitionedReceive_ThirtyMessagesPreserveOrderWithinBothKeysAtConcurrencyTenAsync" },
-  { "requirementId": "OBL-R0-SQL-0099", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConcurrencyTests", "testMethod": "ParallelPublish_OneThousandMessagesFromTenPublishersArriveExactlyOnceAsync" },
-  { "requirementId": "OBL-R0-SQL-0103", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerRedeliveryTests", "testMethod": "RedeliveryHeader_IsConsumedInternallyAndDoesNotLeakToPublishedMessageAsync" },
-  { "requirementId": "OBL-R0-SQL-0085", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerLockRenewalTests", "testMethod": "SlowConsumer_RenewsItsProviderLockThreeTimesAndCompletesExactlyOnceAsync" },
-  { "requirementId": "OBL-R0-SQL-0093", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDeliveryLimitTests", "testMethod": "ConfiguredMaxDeliveryCount_IsPersistedInsteadOfTheDatabaseDefaultAsync" },
-  { "requirementId": "OBL-R0-SQL-0095", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDeliveryLimitTests", "testMethod": "ExhaustedDelivery_IsExcludedFromFetchAndMovedByDeadLetterMaintenanceAsync" },
-  { "requirementId": "OBL-R0-SQL-0130", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDeliveryLimitTests", "testMethod": "FetchProcedures_ProjectTransportTimestampsAsUtcDateTimeOffsetsAsync" },
-  { "requirementId": "OBL-R0-SQL-0117", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests", "testMethod": "MaintenanceExecutesOrphanCleanupForEmptyAndPopulatedBatchesAsync" },
-  { "requirementId": "OBL-R0-SQL-0118", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests", "testMethod": "DeadLetterPassReportsFewerThanAndExactlyTheRequestedBatchAsync" },
-  { "requirementId": "OBL-R0-SQL-0119", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests", "testMethod": "DeadLetterMetricIsAbsentForNoOpAndExactForMovedRowsAsync" },
-  { "requirementId": "OBL-R0-SQL-0121", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests", "testMethod": "ClientFacingStoredProcedureReportsItsExactOutcomeAsync" },
-  { "requirementId": "OBL-R0-SQL-0122", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests", "testMethod": "ConcurrentQueueDeclarationsCreateOneRowForEachQueueTypeAsync" },
-  { "requirementId": "OBL-R0-SQL-0123", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests", "testMethod": "DeletingMiddleTopicRemovesIncomingAndOutgoingSubscriptionsAsync" },
-  { "requirementId": "OBL-R0-SQL-0109", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConfigurationAndRetryTests", "testMethod": "TransientErrorNumberSetIsClosed" },
-  { "requirementId": "OBL-R0-SQL-0113", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConfigurationAndRetryTests", "testMethod": "SubSecondLockDurationIsRejectedBeforeTheEndpointCanStartAsync" },
-  { "requirementId": "OBL-R0-SQL-0105", "variantKey": "sqlserver-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConfigurationAndRetryTests", "testMethod": "ProviderPollingDelayIgnoresQueueIdAndCompletesAtTheConfiguredBoundaryOrCancellationAsync" },
-  { "requirementId": "OBL-R0-SQL-0129", "variantKey": "sqlserver-native-security-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningCredentialTests", "testMethod": "ProvisionedAccountAcceptsQuotedPasswordWithoutPublishingItInStatementTextAsync" },
-  { "requirementId": "REQ-VSB-SQLSERVER-SEND-FAILURE", "variantKey": "numeric-transient-and-permanent-taxonomy", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSendFailureClassifierTests", "testMethod": "NumericTaxonomy_ClassifiesEveryOwnedErrorNumberWithoutUsingMessageText" },
-  { "requirementId": "REQ-VSB-SQLSERVER-SEND-FAILURE", "variantKey": "registration-is-singleton-across-overloads", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSendFailureClassifierTests", "testMethod": "BusRegistration_AddsExactlyOneClassifierAcrossConfigurationOverloads" },
-  { "requirementId": "REQ-VSB-SQLSERVER-ROUTINE-NAMES", "variantKey": "provisioning-exposes-only-unversioned-provider-procedures", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests", "testMethod": "Provisioning_ExposesOnlyTheUnversionedProviderProcedureSetAsync" },
-  { "requirementId": "REQ-VSB-SQLSERVER-PURGE-ISOLATION", "variantKey": "primary-purge-preserves-error-and-dead-letter-deliveries", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerPublishAndPurgeTests", "testMethod": "PurgeQueue_RemovesOnlyPrimaryDeliveriesAndPreservesErrorAndDeadLetterRowsAsync" },
-  { "requirementId": "REQ-VSB-SQLSERVER-SCHEDULE-CANCELLATION", "variantKey": "one-touched-delivery-preserves-the-entire-published-message", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerScheduleCancellationTests", "testMethod": "Cancellation_PreservesEveryPublishedDeliveryWhenAnyDeliveryHasStartedAsync" },
-  { "requirementId": "REQ-VSB-SQLSERVER-QUEUE-REDECLARATION", "variantKey": "omitted-delivery-limit-preserves-the-existing-value", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDeliveryLimitTests", "testMethod": "QueueRedeclaration_WithoutALimitPreservesTheConfiguredDeliveryLimitAsync" },
-  { "requirementId": "REQ-VSB-SQLSERVER-TOPIC-GRAPH", "variantKey": "unique-topic-identity-and-cycle-safe-publish", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests", "testMethod": "CyclicTopicGraph_UsesUniqueTopicsAndCreatesOneDeliveryPerQueueAsync" },
-  { "requirementId": "REQ-VSB-SQLSERVER-TOPOLOGY-CONCURRENCY", "variantKey": "topic-and-subscription-declarations-are-idempotent", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests", "testMethod": "ConcurrentTopicAndSubscriptionDeclarations_ReturnOneIdentityPerTopologyElementAsync" },
-  { "requirementId": "REQ-VSB-SQLSERVER-MESSAGEPACK", "variantKey": "send-and-publish-use-binary-storage-roundtrip", "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMessagePackRoundTripTests", "testMethod": "SendAndPublish_RoundTripTypedMessagesThroughBinaryStorageAsync" }
+  {
+    "requirementId": "OBL-R0-SQL-0040",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests",
+    "testMethod": "ExplicitInstanceAndPort_AreProjectedIntoConnectionAndBusAddressesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0041",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests",
+    "testMethod": "InstanceWithoutPort_IsProjectedOnlyAsTheBusQueryOptionAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0045",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests",
+    "testMethod": "Provisioning_CreatesEveryRequiredTableAndIndexAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0046",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests",
+    "testMethod": "Disposal_DropsTheRunScopedDatabaseEvenWithAnAttachedSessionAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0047",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests",
+    "testMethod": "ReceiveEndpointWithoutTopology_CreatesItsThreeQueueRowsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0063",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerScheduleCancellationTests",
+    "testMethod": "ConsumeContextCancellation_DeletesThePersistedFutureDeliveryAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0065",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerScheduleCancellationTests",
+    "testMethod": "CallerCancellation_DeletesThePersistedFutureDeliveryAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0067",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerPublishAndPurgeTests",
+    "testMethod": "UnsubscribedPublish_LeavesNeitherMessageNorDeliveryWhileSubscribedControlArrivesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0069",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerPublishAndPurgeTests",
+    "testMethod": "PurgeOnStartup_RemovesExistingDeliveryAndThenConsumesOnlyTheNewMessageAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0071",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests",
+    "testMethod": "CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0073",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests",
+    "testMethod": "CancelJob_UpdatesStartedStatusToCanceledWithReasonAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0075",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests",
+    "testMethod": "RetryJob_AfterCancellationUsesANewAttemptAndCompletesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0077",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests",
+    "testMethod": "CancelJob_WhileWaitingPublishesTheWaitAndCanceledTransitionsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0079",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests",
+    "testMethod": "SubmitJob_CompletesTheAcceptedLifecycleAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0081",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests",
+    "testMethod": "PublishJob_GeneratesOneNonEmptyIdentityAcrossTheLifecycleAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0083",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerJobServiceTests",
+    "testMethod": "GetJobState_ForUnknownIdentityReturnsNotFoundAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0085",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerLockRenewalTests",
+    "testMethod": "SlowConsumer_RenewsItsProviderLockThreeTimesAndCompletesExactlyOnceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0087",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSchedulingTests",
+    "testMethod": "DelayedSend_PersistsFutureEnqueueTimeAndDeliversExactlyOnceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0089",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSchedulingTests",
+    "testMethod": "DelayedPublish_PersistsFutureEnqueueTimeAndDeliversExactlyOnceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0091",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSerializationAndRequestTests",
+    "testMethod": "JsonExtensionData_RoundTripsStringAndNumberForElementAndObjectDictionariesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0093",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDeliveryLimitTests",
+    "testMethod": "ConfiguredMaxDeliveryCount_IsPersistedInsteadOfTheDatabaseDefaultAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0095",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDeliveryLimitTests",
+    "testMethod": "ExhaustedDelivery_IsExcludedFromFetchAndMovedByDeadLetterMaintenanceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0097",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConcurrencyTests",
+    "testMethod": "PartitionedReceive_ThirtyMessagesPreserveOrderWithinBothKeysAtConcurrencyTenAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0099",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConcurrencyTests",
+    "testMethod": "ParallelPublish_OneThousandMessagesFromTenPublishersArriveExactlyOnceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0101",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSerializationAndRequestTests",
+    "testMethod": "RequestClient_FiveSequentialRequestsReturnTheirExactResponsesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0103",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerRedeliveryTests",
+    "testMethod": "RedeliveryHeader_IsConsumedInternallyAndDoesNotLeakToPublishedMessageAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0105",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConfigurationAndRetryTests",
+    "testMethod": "ProviderPollingDelayIgnoresQueueIdAndCompletesAtTheConfiguredBoundaryOrCancellationAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0109",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConfigurationAndRetryTests",
+    "testMethod": "TransientErrorNumberSetIsClosed"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0113",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerConfigurationAndRetryTests",
+    "testMethod": "SubSecondLockDurationIsRejectedBeforeTheEndpointCanStartAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0117",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests",
+    "testMethod": "MaintenanceExecutesOrphanCleanupForEmptyAndPopulatedBatchesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0118",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests",
+    "testMethod": "DeadLetterPassReportsFewerThanAndExactlyTheRequestedBatchAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0119",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests",
+    "testMethod": "DeadLetterMetricIsAbsentForNoOpAndExactForMovedRowsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0121",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests",
+    "testMethod": "ClientFacingStoredProcedureReportsItsExactOutcomeAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0122",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests",
+    "testMethod": "ConcurrentQueueDeclarationsCreateOneRowForEachQueueTypeAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0123",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests",
+    "testMethod": "DeletingMiddleTopicRemovesIncomingAndOutgoingSubscriptionsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0127",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests",
+    "testMethod": "RunScopedHost_IsPreservedInTheProviderDataSourceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0129",
+    "variantKey": "connection-string-identity-and-membership-repair",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningCredentialTests",
+    "testMethod": "ConnectionStringAccount_RegainsEffectivePermissionsAfterRoleMembershipIsRemovedAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0129",
+    "variantKey": "contained-user-provisioning-preserves-database-identity",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningCredentialTests",
+    "testMethod": "ContainedSqlUser_CanBeProvisionedWithoutAServerLoginAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0129",
+    "variantKey": "principal-kind-collision-does-not-grant-access",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningCredentialTests",
+    "testMethod": "PrincipalKindMismatch_IsRejectedWithoutTransferringOwnershipOrPermissionsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0129",
+    "variantKey": "same-name-user-for-another-login-is-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningCredentialTests",
+    "testMethod": "SameNameUserMappedToAnotherLogin_DoesNotGrantThatLoginTransportPermissionsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0129",
+    "variantKey": "sqlserver-native-security-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningCredentialTests",
+    "testMethod": "ProvisionedAccountAcceptsQuotedPasswordWithoutPublishingItInStatementTextAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0130",
+    "variantKey": "sqlserver-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDeliveryLimitTests",
+    "testMethod": "FetchProcedures_ProjectTransportTimestampsAsUtcDateTimeOffsetsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-BIGINT-DELIVERY",
+    "variantKey": "send-and-delete-complete-for-bigint-delivery-identities",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDatabaseBoundaryContractTests",
+    "testMethod": "BigintDelivery_SendAndDeleteCompleteWithPersistedIdentitiesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-FRACTIONAL-DELAY",
+    "variantKey": "send-and-unlock-do-not-deliver-before-requested-delay",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDatabaseBoundaryContractTests",
+    "testMethod": "Delay_PersistsAtLeastTheRequestedIntervalForSendAndUnlockAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-MESSAGEPACK",
+    "variantKey": "send-and-publish-use-binary-storage-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMessagePackRoundTripTests",
+    "testMethod": "SendAndPublish_RoundTripTypedMessagesThroughBinaryStorageAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-PURGE-ISOLATION",
+    "variantKey": "primary-purge-preserves-error-and-dead-letter-deliveries",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerPublishAndPurgeTests",
+    "testMethod": "PurgeQueue_RemovesOnlyPrimaryDeliveriesAndPreservesErrorAndDeadLetterRowsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-QUEUE-REDECLARATION",
+    "variantKey": "omitted-delivery-limit-preserves-the-existing-value",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDeliveryLimitTests",
+    "testMethod": "QueueRedeclaration_WithoutALimitPreservesTheConfiguredDeliveryLimitAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-ROUTINE-NAMES",
+    "variantKey": "provisioning-exposes-only-unversioned-provider-procedures",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerProvisioningTests",
+    "testMethod": "Provisioning_ExposesOnlyTheUnversionedProviderProcedureSetAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-SCHEDULE-CANCELLATION",
+    "variantKey": "one-touched-delivery-preserves-the-entire-published-message",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerScheduleCancellationTests",
+    "testMethod": "Cancellation_PreservesEveryPublishedDeliveryWhenAnyDeliveryHasStartedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-SCHEMA-INDEXES",
+    "variantKey": "every-schema-owns-subscription-and-fetch-indexes",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDatabaseBoundaryContractTests",
+    "testMethod": "SecondSchema_OwnsItsCompleteIndexSetAndReapplicationIsIdempotentAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-SEND-FAILURE",
+    "variantKey": "numeric-transient-and-permanent-taxonomy",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSendFailureClassifierTests",
+    "testMethod": "NumericTaxonomy_ClassifiesEveryOwnedErrorNumberWithoutUsingMessageText"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-SEND-FAILURE",
+    "variantKey": "registration-is-singleton-across-overloads",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerSendFailureClassifierTests",
+    "testMethod": "BusRegistration_AddsExactlyOneClassifierAcrossConfigurationOverloads"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-TOPIC-GRAPH",
+    "variantKey": "unique-topic-identity-and-cycle-safe-publish",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests",
+    "testMethod": "CyclicTopicGraph_UsesUniqueTopicsAndCreatesOneDeliveryPerQueueAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-TOPOLOGY-CONCURRENCY",
+    "variantKey": "topic-and-subscription-declarations-are-idempotent",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerMaintenanceAndTopologyTests",
+    "testMethod": "ConcurrentTopicAndSubscriptionDeclarations_ReturnOneIdentityPerTopologyElementAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-UNICODE",
+    "variantKey": "legacy-collation-fetch-and-routing-preserve-unicode",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDatabaseBoundaryContractTests",
+    "testMethod": "UnicodeMetadata_SurvivesNormalPartitionedFetchAndRoutingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-FRACTIONAL-DELAY",
+    "variantKey": "fractional-fetch-and-renew-locks-never-end-early",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDatabaseBoundaryContractTests",
+    "testMethod": "FractionalLocks_KeepAtLeastTheRequestedDatabaseIntervalAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-FRACTIONAL-DELAY",
+    "variantKey": "seconds-overflow-rejects-before-persisting-or-updating-delivery",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDatabaseBoundaryContractTests",
+    "testMethod": "SecondsOverflow_RejectsBeforePersistingOrUpdatingTheDeliveryAsync"
+  }
 ]

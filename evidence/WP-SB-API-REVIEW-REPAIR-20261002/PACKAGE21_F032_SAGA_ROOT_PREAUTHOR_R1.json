@@ -1,0 +1,98 @@
+{
+  "status": "ROOT_SAGA_RESEARCH_PLAN_PREAUTHOR",
+  "utc": "2026-10-03T14:31:26.474933+00:00",
+  "scope": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-saga",
+  "root_prior_full_reused_owner_inputs": [
+    "OwnedLifetime.cs",
+    "OwnedDisposal.cs",
+    "Models.cs",
+    "Program.cs",
+    "FilterOwnership.PublicConsumer.csproj",
+    "NuGet.Config",
+    "global.json"
+  ],
+  "root_current_actual_sources_read": "Root FULL actual seven Saga source bodies, IInitiatedBy, SagaConsumeContext, DefaultSagaFactory, DI Scope providers and observer + unchanged26Source manifestbound. Guid-only/defaultCtor Saga; real AddSaga.InMemoryRepository.ConfigureEndpoints; actual SagaConsumeContext inside business only; filter before repository is regular ConsumeContext.",
+  "all4_actual_packages": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package21-f032-r11/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "a0752ed9e1999d8ca2bd19eeedc82cb011b7e6df35108b1dae0c146fc3b891a8",
+      "bytes": 1500104,
+      "entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "78d166b2d084393c32665ab27f1f82871a9e80f8febdcc80e8c5d67936a49322",
+          "bytes": 3017728
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "acf39d25692784344526d37834dab00ed4b066bd02ac193e09a3c5ee31325db2",
+          "bytes": 2473471
+        }
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package21-f032-r11/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "287d0d419c1bd1da10de4df4d894f1da9e91f80cbdb77bcaab4907044574492d",
+      "bytes": 458581,
+      "entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "c651e3df23a4e4f9c2006a3a61617edfbb38e840eeedaba2aeac195e7acc62c4",
+          "bytes": 770560
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.xml",
+          "sha256": "8b9ea899c03cb5d26ef056e80c222da26514080928eb6771d62ad9e66b181651",
+          "bytes": 1363313
+        }
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package21-f032-r11/corrected/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "sha256": "842a384ad99ca4ae4efa2fb5247b18e65d522f6506e151caa866f8f9a9c2fd34",
+      "bytes": 148262,
+      "entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "sha256": "b351ba421d19669941f20fc8f71058bbd814c65a568bf7eb7994fd921a88f0fa",
+          "bytes": 249344
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Courier.xml",
+          "sha256": "364e93ba995a2a17337d926e50acbec65b88744f398a4f3f46b6abd60b2bd667",
+          "bytes": 318638
+        }
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package21-f032-r11/corrected/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "076c11b3fb8131be4f5daefda2f76189a556a2709c5506d6fb2b514a79b34f5a",
+      "bytes": 449177,
+      "entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "16826802dfd4308c1900087e31bce5f7bc8a6a6844c041453d46c9a52931dcbd",
+          "bytes": 936448
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+          "sha256": "8a496e2bd258c9b5a133416a404ba6917b3ae02609a9e67373fd17976c55fd5c",
+          "bytes": 1244616
+        }
+      ]
+    }
+  ],
+  "previous_baseline_CoreDLL_sha256": "6f72464a107e086df733b391cec0410fd9d3ac149c999e6bfc1be401286df11f",
+  "hold_other3_packages_equal": true,
+  "checklist": {
+    "ordinary/saga/fallback": "two unique actual correlations; business mutation+unfiltered acknowledgement; actualPostConsume wait; raw fallbackAsync1sync0+DI Marker1, marker alive during release",
+    "ordinary/saga/nested-fallback": "registeredOuter + unregisteredInner sameMarker; innerAsync1 withborrowedDI and outerstilllive beforeactualOuter close; correctfinalallcounts",
+    "ordinary/saga/registered": "DI registeredfilter actualAsync1sync0; realbusiness/ack and liveDeps ordering counterpart"
+  },
+  "cleanup": "Own provider immediately; stop actual sharedSDKtask/observer/provider allattempted; alltasks tracked; cancel only synthetic receipt watches onfixtureerror; final postStop repeat exactbusiness/acks/markers/filters counts.",
+  "native_pending": true,
+  "adversarial_preflight_required_beforeSDK": true,
+  "canonical_tests_modified": 0,
+  "product_modified": 0,
+  "test_pipeline": "Inline Root Research\u2192Plan\u2192Implement per existing mandatory code-testing-agent; same actualRoslyn pairing once previous currentnative completed; fresh broad own .testagent files required."
+}

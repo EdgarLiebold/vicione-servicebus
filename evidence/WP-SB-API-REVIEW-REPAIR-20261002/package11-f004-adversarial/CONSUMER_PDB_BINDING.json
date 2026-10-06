@@ -1,0 +1,278 @@
+[
+  {
+    "dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+    "dll_sha256": "86246809d479aaca752e7df81a6e3328c47bf494ec21ed00e0936d5c85f47683",
+    "pdb_kind": "SIDECAR_PORTABLE_PDB_CODEVIEW_ID_MATCHED",
+    "pdb_sha256": "e7ee4d97c2a11fef5a71967c64e3db49eee6e64cb18452e2d7e44d7064344f8f",
+    "documents": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalApplication.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalCases.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalEvidence.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/OwnedLifetime.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/Program.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/obj/Release/net10.0/JournalOwnership.PublicConsumer.GlobalUsings.g.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "8f86a2cbf00ff3eee0bda2bc0eb5e1fc19c8544d5dc650c53d0132325956b592"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/obj/Release/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/obj/Release/net10.0/JournalOwnership.PublicConsumer.AssemblyInfo.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "75ba215c3e8576ca8d4e7c079cf6ac440287baa9159d9d16f50890a73704e899"
+      }
+    ],
+    "personal_FULL_sources_sha256_bound": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalApplication.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalCases.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalEvidence.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/OwnedLifetime.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/Program.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92"
+      }
+    ],
+    "generated_documents_not_semantic_claim": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/obj/Release/net10.0/JournalOwnership.PublicConsumer.GlobalUsings.g.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "8f86a2cbf00ff3eee0bda2bc0eb5e1fc19c8544d5dc650c53d0132325956b592"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/obj/Release/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/obj/Release/net10.0/JournalOwnership.PublicConsumer.AssemblyInfo.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "75ba215c3e8576ca8d4e7c079cf6ac440287baa9159d9d16f50890a73704e899"
+      }
+    ]
+  },
+  {
+    "dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+    "dll_sha256": "dec954178e6e1dc76429ecf597c37e747383c08ee09c60ad65c18df450cedf74",
+    "pdb_kind": "SIDECAR_PORTABLE_PDB_CODEVIEW_ID_MATCHED",
+    "pdb_sha256": "1795b87f7d8ccfaa89af265f18cc22ebee3be9ae4a9604b71fb5625abedc0d7c",
+    "documents": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalApplication.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalCases.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalEvidence.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/OwnedLifetime.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/Program.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/obj/Release/net10.0/JournalOwnership.PublicConsumer.GlobalUsings.g.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "8f86a2cbf00ff3eee0bda2bc0eb5e1fc19c8544d5dc650c53d0132325956b592"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/obj/Release/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/obj/Release/net10.0/JournalOwnership.PublicConsumer.AssemblyInfo.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "75ba215c3e8576ca8d4e7c079cf6ac440287baa9159d9d16f50890a73704e899"
+      }
+    ],
+    "personal_FULL_sources_sha256_bound": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalApplication.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalCases.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalEvidence.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/OwnedLifetime.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/Program.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92"
+      }
+    ],
+    "generated_documents_not_semantic_claim": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/obj/Release/net10.0/JournalOwnership.PublicConsumer.GlobalUsings.g.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "8f86a2cbf00ff3eee0bda2bc0eb5e1fc19c8544d5dc650c53d0132325956b592"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/obj/Release/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/obj/Release/net10.0/JournalOwnership.PublicConsumer.AssemblyInfo.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "75ba215c3e8576ca8d4e7c079cf6ac440287baa9159d9d16f50890a73704e899"
+      }
+    ]
+  },
+  {
+    "dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+    "dll_sha256": "0c7bd637b02d040733f5c25d34d13e525979e4ceaf14d0a10249036ad02b4a13",
+    "pdb_kind": "SIDECAR_PORTABLE_PDB_CODEVIEW_ID_MATCHED",
+    "pdb_sha256": "d304efbe242f4dda53884e9190eada1897163254ae456a00a56f64d934826863",
+    "documents": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalApplication.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalCases.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalEvidence.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/OwnedLifetime.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/Program.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/obj/Release/net10.0/JournalOwnership.PublicConsumer.GlobalUsings.g.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "8f86a2cbf00ff3eee0bda2bc0eb5e1fc19c8544d5dc650c53d0132325956b592"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/obj/Release/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/obj/Release/net10.0/JournalOwnership.PublicConsumer.AssemblyInfo.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "75ba215c3e8576ca8d4e7c079cf6ac440287baa9159d9d16f50890a73704e899"
+      }
+    ],
+    "personal_FULL_sources_sha256_bound": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalApplication.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalCases.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalEvidence.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/OwnedLifetime.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/Program.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92"
+      }
+    ],
+    "generated_documents_not_semantic_claim": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/obj/Release/net10.0/JournalOwnership.PublicConsumer.GlobalUsings.g.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "8f86a2cbf00ff3eee0bda2bc0eb5e1fc19c8544d5dc650c53d0132325956b592"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/obj/Release/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/obj/Release/net10.0/JournalOwnership.PublicConsumer.AssemblyInfo.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "75ba215c3e8576ca8d4e7c079cf6ac440287baa9159d9d16f50890a73704e899"
+      }
+    ]
+  }
+]

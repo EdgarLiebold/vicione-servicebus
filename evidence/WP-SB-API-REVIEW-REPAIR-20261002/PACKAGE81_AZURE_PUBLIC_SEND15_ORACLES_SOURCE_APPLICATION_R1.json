@@ -1,0 +1,17 @@
+{
+  "utc": "2026-10-04T15:39:20.484742+00:00",
+  "decision": "ROOT_INDEPENDENT_SOURCE_ADVERSARIAL_NO_BLOCK_AZURE_PUBLIC_SEND15_ORACLES_APPLIED",
+  "source_sha256": "a22e303b1ea9a5e98be99eba434a4c05b045e203a36e0e27b6447a4a769a205a",
+  "requirements_before": "6f14ad8085a8e7d4dc2619caa4f671c658eedb465b846425cba0120ff477fa52",
+  "requirements_after": "1dd0862254c340992570674f2a5c99876cef716ac5fa985d1e1b2b337a5d2f7c",
+  "rows_before": 207,
+  "rows_after": 211,
+  "root_reads": [
+    "2353bc entire365line proposedtest",
+    "23d29a actualwholeServiceBusSendTransportContext",
+    "cd845e actualScheduleSendAsyncDateTimeOffsetsignature plus actualsessionpartitionsetter logic"
+  ],
+  "oracle_scope": "15 true workflowcases; real publicgenericSendAsync serialization/metadata/tokens/heldactualtypedSPI tasks, exactsuccess/fault/cancel; meaningfulfallback andidempotenterrors. Drain awaitsactualwrapper before snapshot ofproviderTasks, allreleasedgatesjoined. No broker/no new defect claim.",
+  "previous_fixed52_frame": "package80-azure-fixed-native52-independent-r1/FREEZE.json",
+  "limits": "Compile/nativepending. None-owned cleanup awaits actualreleasedcontrolledtasks; test runner cancellation governsmainassertion awaits. No publicpipe-overload or cloud/network claim."
+}

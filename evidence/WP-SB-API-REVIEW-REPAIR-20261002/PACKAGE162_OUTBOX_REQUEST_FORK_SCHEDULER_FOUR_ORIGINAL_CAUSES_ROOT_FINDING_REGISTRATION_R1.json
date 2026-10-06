@@ -1,0 +1,106 @@
+{
+  "utc": "2026-10-05T01:45:22.679056+00:00",
+  "actor": "/root",
+  "status": "FOUR_ORIGINAL_NATIVE_CAUSES_CONFIRMED",
+  "confirmed_before": 141,
+  "confirmed_after": 145,
+  "accepted_current": 140,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package162-header-fixed30-outbox-routing-schedule-original48-neighbors2304-fresh2-independent-r1/REPORT.json",
+    "sha256": "f7d50a7d072c499d4f5373e91a6acbbde3ab921b286198fb8194283a363af8f4"
+  },
+  "actual_six_finite_causes": [
+    {
+      "cases": [
+        "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests.OutboxConsumeFilter_PreservesProviderAndOwnedScopeCleanupOutcomesAsync(providerFails: True, cleanupFails: True)"
+      ],
+      "first_assertion": "Assert.IsType<AggregateException>(observed), actual Source553.",
+      "actual": "Provider IOException followed by owned-scope ApplicationException yields only ApplicationException.",
+      "reached": [
+        "Actual factory call1/context scope wrapper/optionsSame/real OutboxMessagePipe, next0",
+        "Actual owned scope create1/push1, provider→restore→scope-async events and Dispose1",
+        "ProviderTask terminal joined"
+      ],
+      "unreached": [
+        "Both exact ordered AggregateException cause references",
+        "Final operation.IsFaulted assertion"
+      ],
+      "cause": "OutboxConsumeFilter await using scope releases after provider throws; release exception replaces provider cause."
+    },
+    {
+      "cases": [
+        "ViciOne.ServiceBus.Tests.Middleware.DynamicRoutingTests.RequestIdRoute_StaleDisposalCannotDisconnectItsReplacementAsync(disconnectFirst: False)",
+        "ViciOne.ServiceBus.Tests.Middleware.DynamicRoutingTests.RequestIdRoute_StaleDisposalCannotDisconnectItsReplacementAsync(disconnectFirst: True)"
+      ],
+      "first_assertion": "Assert.Equal(2,replacementCalls), actual Source281.",
+      "actual": "After first registration removed and replacement confirmed once, stale first.Dispose removes same-key replacement; count remains1.",
+      "reached": [
+        "First route exact original context once and next1",
+        "First Dispose/Disconnect actual removal, next2",
+        "Replacement active once with same context,next3",
+        "Stale first Dispose followed by real fourth Send"
+      ],
+      "unreached": [
+        "Expected replacement2/first1/next4",
+        "Explicit replacement Disconnect follow-up next5"
+      ],
+      "cause": "Handle retains only key; RemovePipe TryRemove(key) does not compare registration identity or prevent repeat disposal."
+    },
+    {
+      "cases": [
+        "ViciOne.ServiceBus.Tests.Middleware.DynamicRoutingTests.Fork_SecondaryFailureKeepsTheStartedSiblingOwnedAsync(synchronousFailure: True)"
+      ],
+      "first_assertion": "Assert.Null(admissionFailure), actual Source344.",
+      "actual": "Synchronous secondary IOException escapes before public operation Task assigned while first real provider Task remains held.",
+      "reached": [
+        "Both provider calls1 and exact context identities",
+        "First actual TaskCompletionSource.Task still pending",
+        "Record.Exception captures exact synchronous unique IOException"
+      ],
+      "unreached": [
+        "Non-null/pending public operation",
+        "Public joined outcome same cause after gate release",
+        "operation faulted and held sibling success"
+      ],
+      "cause": "Task.WhenAll arguments evaluated sequentially; next.SendAsync synchronous throw prevents Task.WhenAll ownership of already started _pipe Task. Finally releases and independently joins actual providers."
+    },
+    {
+      "cases": [
+        "ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineConfigurationContractTests.ScheduledDelivery_DebugFailureCannotChangeTokenRejectionAsync(deliveryKind: 1, loggerThrows: True)",
+        "ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineConfigurationContractTests.ScheduledDelivery_DebugFailureCannotChangeTokenRejectionAsync(deliveryKind: 0, loggerThrows: True)"
+      ],
+      "first_assertion": "Assert.Null(observed), actual Source205.",
+      "actual": "Hostile Debug logger IOException escapes mismatch-rejection path for foreign token with current or missing current token.",
+      "reached": [
+        "Actual incoming scheduling header exact",
+        "Actual instance stays Waiting; ReceivedCount0",
+        "Token unchanged for mismatch and no-current rejection",
+        "Exact one recorded diagnostic mentions mismatch and foreign token",
+        "Actual public RaiseEvent Task observed to terminal"
+      ],
+      "unreached": [
+        "Assert.Null(observed)",
+        "operation.IsCompletedSuccessfully"
+      ],
+      "cause": "Schedule mismatch branch directly invokes LogContext.Debug.Log before return; diagnostic failure becomes business RaiseEvent failure. Matching/no-header positive cases bypass rejection logging and pass."
+    }
+  ],
+  "root_read": "c673f1 exactall48IDs/4fullfailures and eac180 twofullSchedule blocks; genuinechangedTestsRoot544c2c/8e4722/131bf8; actual Source31/93/51 be016e and mainSchedule1710..1865 10e2b1.",
+  "first_failure_precision": "Each first assertion executed and failed; corresponding intended expectation was not established. Only later assertions are literally not executed.",
+  "native_counts": {
+    "original48": 48,
+    "passed": 42,
+    "finite_failed": 6,
+    "skipped": 0
+  },
+  "limits": [
+    "No SDK/native/Repo mutation by peer; all checks read frozen162 bytes after ACK.",
+    "6finiteOriginal failures retained; no clean wholeCore/wholeAPI grade.",
+    "2304 unique executed neighbor IDs/counts verified mechanically; no2304 human Testbody coverage or allAPI semantics transferred.",
+    "Only7 selectedruntimeDLLs bound equal canonicalframes, notallloadeddependencies.",
+    "Req4632 exactsingle managedpayload matched, resource names notdecoded.",
+    "MTP may elide stringargument displays intrinsically; preserve actual logged IDs only.",
+    "Fresh2 belong to frozen162epoch; no global release claim.",
+    "ScheduleDelay setter doc remains unchanged and pending its separately approved correction; noF141closure in162."
+  ]
+}

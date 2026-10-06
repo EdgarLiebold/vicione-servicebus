@@ -1,0 +1,138 @@
+{
+  "utc": "2026-10-05T22:36:10.291228+00:00",
+  "status": "F147_SQL_DOC4_ROOT_REPAIR_ACCEPTED_BOUNDED_WHOLE_API_OPEN",
+  "root_basis": "Root genuine whole85/5317 SQL currentbefore sources and9/493 helpers, fresh wholecurrent4/44 receipt4a01cb and wholeindSourceReport306b3d + actualpublicationReport128cbc; independent Runtime own wholebefore/proposed4 +8/586 supports, own actualP36/ZIP/XML4inverse. Actual provenance/current pub identity checks separately held from semantic coverage.",
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE254_F147_SQL_HANDLE_DOC4_XML_ONLY_PRODUCT4_ROOT_APPLICATION_R1.json",
+    "sha256": "e6c5d60bcf3853dfa91a24118cdd3e587d5677015dc1174aa9ecfef387e1d883"
+  },
+  "source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-doc4-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "ca0427bcacae92fba25f0a4c2643e754098f6905edff0cc157ca286f6d2c3372"
+  },
+  "publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-doc4-independent-runtime-fresh-publication-r1/REPORT.json",
+    "sha256": "61ad8c985b029f5bb1359f236ce2e1c3fe77989b98003dc63f3106151e8e68e1",
+    "manifest_sha256": "83e2af1c8c690e5a8dab92f37bc0b3358b7ab266a1eae8573cabbe4f09e59bbd"
+  },
+  "root_publication": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-doc4-fresh-root-publication-proof-r1/REPORT.json",
+    "sha256": "6799d51e98e104f4ced084d073ecd11d5cc715eb8aacada45d79644c69e7833b"
+  },
+  "actual_DLL": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll",
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-doc4-fresh-root-publication-proof-r1/ViciOne.ServiceBus.SqlTransport.dll",
+    "sha256": "393a4dce75b082c837326f356625cc6163cfae88b403edc3b6604c7a23706096"
+  },
+  "actual_XML": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.xml",
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-doc4-fresh-root-publication-proof-r1/ViciOne.ServiceBus.SqlTransport.xml",
+    "sha256": "197a1763708dd36507ce7a73fe73bf3307986752d10fe52b494124fc3e5f856e"
+  },
+  "nupkg": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/packages-package254-sql-doc4-r1/ViciOne.ServiceBus.SqlTransport.1.0.0.nupkg",
+    "sha256": "2d6d763e41bdfb405b8b437d893df380e1168dc4a7c1603749476b2f18265961",
+    "bytes": 155771,
+    "CRC_unique_names_NuSpec_net10_DLL_XML_current_frozen_exact": true
+  },
+  "strict_build": {
+    "phase": "package254-sql-doc4-strict-build-r1",
+    "command": [
+      "dotnet",
+      "build",
+      "src/Transports/ViciOne.ServiceBus.SqlTransport/ViciOne.ServiceBus.SqlTransport.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T22:29:45.556779+00:00",
+    "completed_utc": "2026-10-05T22:29:51.630278+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package254-sql-doc4-strict-build-r1.log",
+    "log_sha256": "077f8815fafa808db44f52da57c6af8d5ef427ed99dc02eaefc0262d6c8b8e87"
+  },
+  "fresh_pack": {
+    "phase": "package254-sql-doc4-fresh-pack-r1",
+    "command": [
+      "dotnet",
+      "pack",
+      "src/Transports/ViciOne.ServiceBus.SqlTransport/ViciOne.ServiceBus.SqlTransport.csproj",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "-o",
+      "artifacts/packages-package254-sql-doc4-r1"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T22:30:33.295300+00:00",
+    "completed_utc": "2026-10-05T22:30:35.562117+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package254-sql-doc4-fresh-pack-r1.log",
+    "log_sha256": "8cd0647be87a884f5d6e2dffe1347f6d6b447321274e01cba7c576bab533861a"
+  },
+  "changed_nodes": [
+    {
+      "id": "T:ViciOne.ServiceBus.SqlTransport.Topology.QueueHandle",
+      "after_summary": "Identifies a queue within its owning SQL topology builder.",
+      "before_summary": "Controls the lifetime of queue.",
+      "source_sha256": "616949479708b6e2acdf9f0392c8cfdc4f8149903febda27779b8cb188c5baff",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/QueueHandle.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "616949479708b6e2acdf9f0392c8cfdc4f8149903febda27779b8cb188c5baff",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.SqlTransport.Topology.QueueSubscriptionHandle",
+      "after_summary": "Identifies a topic-to-queue subscription within its owning SQL topology builder.",
+      "before_summary": "Controls the lifetime of queue subscription.",
+      "source_sha256": "9e1cdff37710978e65b938841972a9c648ba3b1410cfb6f40f48051c9f6b5d8e",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/QueueSubscriptionHandle.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "9e1cdff37710978e65b938841972a9c648ba3b1410cfb6f40f48051c9f6b5d8e",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.SqlTransport.Topology.TopicHandle",
+      "after_summary": "Identifies a topic within its owning SQL topology builder.",
+      "before_summary": "Controls the lifetime of topic.",
+      "source_sha256": "9cc69c6d08fc265c373d9f1cdd35ba906a1ddaafd77dda3b8fa5522aa3c17097",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/TopicHandle.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "9cc69c6d08fc265c373d9f1cdd35ba906a1ddaafd77dda3b8fa5522aa3c17097",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.SqlTransport.Topology.TopicSubscriptionHandle",
+      "after_summary": "Identifies a topic-to-topic subscription within its owning SQL topology builder.",
+      "before_summary": "Controls the lifetime of topic subscription.",
+      "source_sha256": "b70ced60d82674f34cf714204c9c7d6785ad21d9d70f69ea73873b02a07d29f1",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/TopicSubscriptionHandle.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b70ced60d82674f34cf714204c9c7d6785ad21d9d70f69ea73873b02a07d29f1",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    }
+  ],
+  "entire_XML_inverse_exact": true,
+  "nonXML_publicdecl_byte_equal": true,
+  "API_count_change": 0,
+  "master_rows": 16936,
+  "master_sha256_unchanged": "7e7f465d3e05c4ca11398152e280b9daec621fe9b441e9e79abeef1387b9c60e",
+  "original_API_remaining": 2495,
+  "SQL369_reserved_member_contracts_still_pending": true,
+  "registered204_bounded204_does_not_close_wholeAPI": true,
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package257-sql-doc4-root-before-r1"
+}

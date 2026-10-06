@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-04T17:24:46.903539+00:00",
+  "decision": "84_BOUNDED_DECLARATIONS_SOURCE_ACCEPTED_ONE_IGET_XML_HOLD",
+  "count": 84,
+  "peer_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package85-fsq-public-declaration85-dispositions-r1/REPORT.json",
+    "sha256": "58491ad6e496731f94cfc91fc7865e91fb4b702111ed1c31e1288fa349e25d01"
+  },
+  "peer_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package85-fsq-public-declaration85-dispositions-r1/PER_ID85_DECLARATION_DISPOSITIONS.json",
+    "sha256": "a0e6035067cf701e4d6803d10bce081c35c63a190058e4aea06e25290c2113fc"
+  },
+  "members": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE101_FUTURE_DECLARATION84_MEMBER_ACCEPTANCE_R1.json",
+    "sha256": "b2ffe1aa83f124002206bfc9e9135eeb72638dc45f908e4a9373351ad36faf95"
+  },
+  "root_whole_reads": [
+    "b51382 actual16source owners",
+    "bbe8b2 IDs0..42 +all4 reasons",
+    "78ddfe IDs43..84"
+  ],
+  "source_guards": {
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Configuration/BuildItineraryCallback.cs": "1d160787fb24566ec72d5318f5a6a4c7cd812fc0840d95bbcddcfa4ad9ad99a9",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Configuration/IFutureDefinition.cs": "cd4ea17ff4473c4b1098dd19965b58679bc5f95916a5874aa603a0e077eccfeb",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Configuration/IFutureFaultConfigurator.cs": "359845d19fa1b692b9bebb97de560842c63fd4b2f182508d8625ba834b6be2e3",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Configuration/IFutureRegistrationConfigurator.cs": "c85b05916287ae26de2bea2e0e19da7325e70cb1d02f2b7f9e322e645c248e08",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Configuration/IFutureRequestConfigurator.cs": "b561c5361135c742b7f4d76cb0e69b6ac238f0638b7994f4108a660b03258a80",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Configuration/IFutureRequestHandle.cs": "4819bec1d5babd377435b978cec8a218568a072e29bd3ed4f7036cd575e85ac9",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Configuration/IFutureResponseConfigurator.cs": "27d6bb3076d9c5f95100f58eb16007e4eb9a365f7a26af2da60e8c6ff3ecf0a1",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Configuration/IFutureResultConfigurator.cs": "8457a7a446be1f02acd7fdfd9ab396fb2f9343361d722ec64e4124d331d4e458",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Configuration/IFutureRoutingSlipConfigurator.cs": "8b3565ebebc348cb3b7e6c8004f869c6bf86f11aca447a4ae8f034708d05395f",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Futures/IItineraryPlanner.cs": "b987dbc71b0e1ee5f21c1dea3dedbe65aee7bd2123681654820efcb9f290f817",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Futures/InitializerValueProvider.cs": "e0728fc581eebcadd94edf4c4032b46ea4b3b2391b87ce225b52b7690f85a783",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Futures/PendingFutureIdProvider.cs": "6247a9f449022d4cc135d3fe5bb60035af8f8a1eb73015491fd3799fe1221bbc",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Futures/RequestAddressProvider.cs": "feb9e76822058e290c5ea8839f43ec1734502cd533f165c6a1757724d9c3f876",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Configuration/IFutureResponseHandle.cs": "afede18bc5255501708a77350b89bcb5d10e10c3ebb9b4127f1108ed87e9af5a",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Configuration/IFutureRoutingSlipHandle.cs": "a33155b8b7ba06d57f0506283013381f556ddd94829a3bacc7d30fb4d021fd58",
+    "repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Futures/Contracts/IGet.cs": "2ac5e75c758487fdc62b83bb166c13b21fa73984b478608221b0191041ae09ae"
+  },
+  "before_metadata_sha256": {
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json": "d146bb382197e50e86ac0222b3dcd3798236ca0cdf735d8555a324f7e1cd58e5",
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json": "7c86088097714dca4fdb0367570a7e9bc54ee967ba60b3941383adc2bd7036f3",
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/PO_BERICHT.txt": "579a1341cb505f5fc81e833197f325f0d1b3b91ace9c4b73c03ec0a5fd50eb1d"
+  },
+  "limits": "Declaration/signature/source review only; IGet XML held, all concrete implementation lifecycle/event/transport obligations separate. No native execution or whole API grade credited."
+}

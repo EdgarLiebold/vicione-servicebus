@@ -1,0 +1,48 @@
+{
+  "utc": "2026-10-06T06:54:14.307531+00:00",
+  "status": "ROOT_ACCEPTED_FIVE_INDIVIDUAL_LOCAL_SOURCE_LANGUAGE_CONTRACTS_NATIVE0",
+  "master_before_sha256": "6a01d6c6750d14e66f8e512c4b7768cc724831d5ab899a168f9b4ca6555e844b",
+  "author_manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package357-rabbit-configure-callback-beginend2-individual-declarative-contracts-proposed-r1/MANIFEST.json",
+      "sha256": "1cbb101ba142515e35728fa140b0bc2038b5a9301f2da8264a7c365c873db4ea"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package357-rabbit-topology-default3-individual-local-constructor-contracts-proposed-r1/MANIFEST.json",
+      "sha256": "9bc042444a23245c880257e5ff883bfa03e849b19682ea88b197ee5d0dd8499c"
+    }
+  ],
+  "independent_different_author_Root_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package365-rabbit-local5-root-independent-source-peer-r1/MANIFEST.json",
+    "sha256": "676b3b7bcdefea39b73803519c68f5c689aed2f9968b4d0d36f7ca72b2b0db1c"
+  },
+  "source_semantics": [
+    "BeginInvoke/EndInvoke emitted borrowed argument shapes and documented .NET6+ unsupported policy; no nativecallcredit",
+    "Three implicit class constructor routes individually rooted in complete owners/base/collections/comparers; no ordinary method or wholeclassruntimecredit"
+  ],
+  "Root_peer_author": true,
+  "Root_Source11_1197_and_delegate7_receipts": [
+    "34c8ad",
+    "b5407e",
+    "ea0561"
+  ],
+  "Root_contract5_entire_receipt": "466dd4",
+  "source_primary_verification": [
+    "turn300view0",
+    "turn301view0"
+  ],
+  "source_bindings": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package365-rabbit-local5-root-independent-source-peer-r1/ROOT_OWN320_RABBIT_P36_METADATA.json",
+    "sha256": "67b807c915c8519d7eb99dd67e460098734495e718c1a8ba7593498cda54537b"
+  },
+  "original_before": 18324,
+  "original_after": 18329,
+  "remaining_after": 240,
+  "master_before": 19186,
+  "master_after": 19191,
+  "native_count_added": 0,
+  "grade": null,
+  "known_unique_findings": 215,
+  "bounded_dispositions": 215,
+  "whole_API_closed": false
+}

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -66,14 +68,50 @@ public sealed class ActiveRequest :
         if (Interlocked.Exchange(ref _disposed, 1) != 0)
             return;
 
-        _registration.Dispose();
-        _cancelTimer?.Dispose();
-        _source.Dispose();
+        List<Exception>? failures = null;
+        try
+        {
+            _registration.Dispose();
+        }
+        catch (Exception exception)
+        {
+            (failures ??= []).Add(exception);
+        }
 
-        if (Interlocked.CompareExchange(ref _settlement, 2, 0) != 0)
-            return;
+        try
+        {
+            _cancelTimer?.Dispose();
+        }
+        catch (Exception exception)
+        {
+            (failures ??= []).Add(exception);
+        }
 
-        _algorithm.CancelRequest(ResultLimit);
+        try
+        {
+            _source.Dispose();
+        }
+        catch (Exception exception)
+        {
+            (failures ??= []).Add(exception);
+        }
+
+        if (Interlocked.CompareExchange(ref _settlement, 2, 0) == 0)
+        {
+            try
+            {
+                _algorithm.CancelRequest(ResultLimit);
+            }
+            catch (Exception exception)
+            {
+                (failures ??= []).Add(exception);
+            }
+        }
+
+        if (failures is { Count: 1 })
+            ExceptionDispatchInfo.Capture(failures[0]).Throw();
+        if (failures is { Count: > 1 })
+            throw new AggregateException("Active request resources failed to release.", failures);
     }
 
     void ScheduleCancellation()

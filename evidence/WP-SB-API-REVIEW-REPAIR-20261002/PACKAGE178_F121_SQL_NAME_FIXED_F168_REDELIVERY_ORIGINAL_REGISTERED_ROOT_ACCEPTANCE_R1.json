@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-05T11:03:54.577299+00:00",
+  "actor": "/root",
+  "status": "F121_SQL_FIFTH_OWNER_REPAIRED_F168_REDELIVERY_ORIGINAL_REGISTERED",
+  "before": {
+    "known_unique": 167,
+    "accepted": 166
+  },
+  "after": {
+    "known_unique": 168,
+    "accepted": 167
+  },
+  "accepted_ids": [
+    "F-SB-API-121"
+  ],
+  "new_original_ids": [
+    "F-SB-API-168"
+  ],
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package178-sql-name-fixed-redelivery-original2-fresh3-independent-r1/REPORT.json",
+    "sha256": "20f45db44d7d31149ea1d06b9a0886d1eb7e46d85c9904705db58a334a2a2c6a",
+    "manifest_sha256": "2a16f170b1e80d253634e8c142c3e16e1e5c6ee594a5970b3abd85aea4575d56",
+    "freeze_sha256": "d2294791a47f66a38ec6365d43f00b986fb4f9c8c438524fa59799d03598a68d"
+  },
+  "root_independent_verification": "1a6a55 all2838 frozen+currentorigins/5serialactualLogs/269exactIDs/old267allP/3CRCZIP; 87e126 all2856MAN/12reparsedPEPDB/2744physicalCS/84embedded/7runtimecopies+wholeactualfirstfailurecontext. CanonicalJSON key normalization resolved parser serialization-only mismatch. R1 qualifier nestedjoin defect corrected under literal Rootdelta3c7508/af4747; no Productfinding.",
+  "actual_native": {
+    "total": 269,
+    "passed": 268,
+    "failed": 1,
+    "skipped": 0
+  },
+  "repair_scope": "ExistingF121 same Dollaranchor terminalLF family SQLfifth owner: actualunchangedoriginal4 namecases allPASS, old267 incl263 retainedP; fresh3 SQL packages exact currentDLL/XML/embeddedPDB. Priorfour transport bounded repairs retained.",
+  "original_scope": "F168 one own RESENDDebug failure after successful actualheld Unlock:true, unique loggerIOException firstNull173; healthycontrol P. Later174success/publicComplete/finalassertions unreached; one new finding, not2case inflation.",
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "final_23Unit_31Package_18Journey_4Consumers_pending": true,
+  "limits": [
+    "ActualSQLproviderSPI seam; no live DB/broker/cloud.",
+    "SQL native269 still one original failure; no cleanwholeSQL claim."
+  ]
+}

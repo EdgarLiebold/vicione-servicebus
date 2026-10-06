@@ -17,7 +17,7 @@ public class SetCorrelationIdFilter<T> :
         _messageCorrelationId = messageCorrelationId;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Applies an available correlation identifier before invoking the continuation.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

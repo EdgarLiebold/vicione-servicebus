@@ -1,0 +1,12 @@
+{
+  "status": "INDEPENDENT_READONLY_CURRENT_ORIGINAL_M_HASH_CHECK",
+  "started_utc": "2026-10-03T03:53:55.342259+00:00",
+  "completed_utc": "2026-10-03T03:53:58.155774+00:00",
+  "ledger_sha256": "085920463e3514d6892de96642ccc4d16c94f574cad17cd059c64769a8559326",
+  "checked": 6209,
+  "mismatches": [],
+  "new_identity_source_removed": true,
+  "limits": [
+    "Current local readonly checkpoint, no native invocation. Frozen Package12 own historical terminal restoration remains distinct from later Package13 mutable work."
+  ]
+}

@@ -95,6 +95,52 @@ public sealed class SystemTextJsonMessageTypeAdmissionTests
         Assert.False(context.HasMessageType(typeof(ShapeCompatibleButUnadvertisedMessage)));
     }
 
+    [Theory]
+    [InlineData(nameof(BodyConsumeContext.SourceAddress))]
+    [InlineData(nameof(BodyConsumeContext.DestinationAddress))]
+    [InlineData(nameof(BodyConsumeContext.ResponseAddress))]
+    [InlineData(nameof(BodyConsumeContext.FaultAddress))]
+    [RequirementCoverage("REQ-VSB-JSON-TYPE-ADMISSION", "body-consume-missing-envelope-address-has-nullable-public-contract")]
+    public void BodyConsumeContext_MissingEnvelopeAddressHasANullablePublicContract(string addressProperty)
+    {
+        var serializer = new SystemTextJsonMessageSerializer(ServiceBusMetadataJson.Options);
+        var sendContext = new ViciOne.ServiceBus.Transports.MessageSendContext<ExpectedMessage>(
+            new ExpectedMessage { Value = 42 }) { Serializer = serializer };
+        SerializerContext deserialized = serializer.Deserialize(serializer.GetMessageBody(sendContext), EmptyHeaders.Instance);
+        ReceiveContext receiveContext = DispatchProxy.Create<ReceiveContext, UnexpectedInvocationProxy>();
+        var context = new BodyConsumeContext(receiveContext, deserialized);
+
+        Assert.True(context.TryGetMessage<ExpectedMessage>(out ConsumeContext<ExpectedMessage>? message));
+        Assert.Equal(42, message.Message.Value);
+        PropertyInfo? property = typeof(BodyConsumeContext).GetProperty(addressProperty);
+        PropertyInfo? contractProperty = typeof(MessageContext).GetProperty(addressProperty);
+        Assert.NotNull(property);
+        Assert.NotNull(contractProperty);
+        Assert.Equal(typeof(Uri), property.PropertyType);
+        Assert.Null(property.GetValue(context));
+        var nullability = new NullabilityInfoContext();
+        Assert.Equal(NullabilityState.Nullable, nullability.Create(contractProperty).ReadState);
+
+        Assert.Equal(NullabilityState.Nullable, nullability.Create(property).ReadState);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JSON-TYPE-ADMISSION", "body-consume-present-envelope-addresses-survive-real-json-roundtrip")]
+    public void BodyConsumeContext_PresentEnvelopeAddressesSurviveTheRealJsonRoundTrip()
+    {
+        SystemTextJsonRoundTripResult<ExpectedMessage> roundTrip =
+            SystemTextJsonRoundTrip.ExecuteWithContext(new ExpectedMessage { Value = 73 });
+        ReceiveContext receiveContext = DispatchProxy.Create<ReceiveContext, UnexpectedInvocationProxy>();
+        var context = new BodyConsumeContext(receiveContext, roundTrip.Context);
+
+        Assert.True(context.TryGetMessage<ExpectedMessage>(out ConsumeContext<ExpectedMessage>? message));
+        Assert.Equal(73, message.Message.Value);
+        Assert.Equal(new Uri("loopback://localhost/source"), context.SourceAddress);
+        Assert.Equal(new Uri("loopback://localhost/destination"), context.DestinationAddress);
+        Assert.Equal(new Uri("loopback://localhost/response"), context.ResponseAddress);
+        Assert.Equal(new Uri("loopback://localhost/fault"), context.FaultAddress);
+    }
+
     public sealed class ExpectedMessage
     {
         public int Value { get; init; }

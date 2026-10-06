@@ -1,0 +1,182 @@
+{
+  "status": "CODE_AND_REGRESSIONS_FROZEN",
+  "findings": [
+    "F-SB-API-036",
+    "F-SB-API-037"
+  ],
+  "pending_finding": "F-SB-API-038",
+  "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdSendTopologyConvention.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/00-SessionIdSendTopologyConvention.cs",
+      "sha256": "d91a49c54b4134418fa566944c8625375cfbdae34433402fe85ab509092d4614",
+      "bytes": 1487,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdSendTopologyConvention.cs",
+      "baseline_sha256": "f75bf5faa15b240bb44409e61c9370df54029fbcf611399361275ecc26ae42ec"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SubscriptionConsumeTopologySpecification.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/01-SubscriptionConsumeTopologySpecification.cs",
+      "sha256": "226adc09363b07341bbaaf76a435f4a761afb3f0280e707e6996bb4f7230b092",
+      "bytes": 2541,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SubscriptionConsumeTopologySpecification.cs",
+      "baseline_sha256": "574b89cc5cdf2b6a635acf5227062ff5c5d86410b623ddba807900395213ba5f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusFamilyRegressionTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/02-ServiceBusFamilyRegressionTests.cs",
+      "sha256": "fc71620d49be733688a2f4854b76ba69445c03effbeba7e1cee7807775815a60",
+      "bytes": 13429,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/03-AzureServiceBusRequirements.json",
+      "sha256": "a1ba8b05aa90849904a44572152e0489555591dcb5a448e3fb558f35ceb6ecc0",
+      "bytes": 71480,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/freeze/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "baseline_sha256": "8ade935241c8e5a059ee9901f88af887abacfa94bce04521dc305b2d4e135105"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/04-product-fixes.md",
+      "sha256": "d79cef7bb2bf0ea8bf1cfb5aa98f39e95ee891019233f4500bab2da689199e43",
+      "bytes": 28416,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity/freeze/02-product-fixes.md",
+      "baseline_sha256": "b008e8799dc0e93ee34c100c324a8516c416555b749623cc40fdb93acd8f252e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package09_azure_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/05-package09_azure_mutations.py",
+      "sha256": "7e170660e8ead9fbaecb715f6eb849aa7e4409a66fe3559ea68be00ea5baeb4c",
+      "bytes": 6089,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    }
+  ],
+  "unchanged_mutation_dependency": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdMessageSendTopologyConvention.cs",
+    "sha256": "bf285c87021afc83d55cec924b87405570f15b435906f4bf70b85c110563f664"
+  },
+  "mutation_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE09_AZURE_MUTATIONS.json",
+  "mutation_evidence_sha256": "1f206c106a136adbd12af920e7ca177c01f3d3ee9581d88e1eefc6b424b7f4cb",
+  "actual_native_mutants_killed": 4,
+  "original_tracked_mutation_rollback_verified": 6209,
+  "original_owner_new_cases": "6/6 fail native exit2",
+  "current_owner": "430 total,429 pass,1 F038 fail,0 skipped native exit2",
+  "targeted_fixed_cases": "5/5 pass native controls; all four contract mutants killed",
+  "native_product_receipts": [
+    {
+      "phase": "package09-azure-original-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:17:43.165410+00:00",
+      "completed_utc": "2026-10-02T22:17:54.309554+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-original-build.log",
+      "log_sha256": "bd5f5e3fab6803b125779c1ac24239fa167cc528906d77b964eb8e114ad4b0c3"
+    },
+    {
+      "phase": "package09-azure-original-six-cases",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusFamilyRegressionTests",
+        "--minimum-expected-tests",
+        "6",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 2,
+      "started_utc": "2026-10-02T22:17:54.403831+00:00",
+      "completed_utc": "2026-10-02T22:17:57.064297+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-original-six-cases.log",
+      "log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641"
+    },
+    {
+      "phase": "package09-azure-two-fixes-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:23:20.668190+00:00",
+      "completed_utc": "2026-10-02T22:23:34.861866+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-two-fixes-build.log",
+      "log_sha256": "e4ed8ecc0de13967aa94c764fbc1baa4bd31230fb76d990b733c9788cdc2daf3"
+    },
+    {
+      "phase": "package09-azure-two-fixes-six-cases",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusFamilyRegressionTests",
+        "--minimum-expected-tests",
+        "6",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 2,
+      "started_utc": "2026-10-02T22:23:34.967195+00:00",
+      "completed_utc": "2026-10-02T22:23:37.561380+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-two-fixes-six-cases.log",
+      "log_sha256": "6a24bac84cef8ce7d32b0c2ab1414e0e210a76e716de9e0dbd7ac5f7249d22ec"
+    },
+    {
+      "phase": "package09-azure-complete-owner-before-naming-decision",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--minimum-expected-tests",
+        "430",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 2,
+      "started_utc": "2026-10-02T22:31:22.830139+00:00",
+      "completed_utc": "2026-10-02T22:31:25.472816+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-complete-owner-before-naming-decision.log",
+      "log_sha256": "560d745230ab576d8f536c4170c348fa21d43e7ecc7a46fa4133dc9d4b273f51"
+    }
+  ],
+  "proof_limits": "No broker started. This scope approves F036/F037 only; F038 assertion retained failing pending PO compatibility decision. Fresh NuGet/integrated profiles/final API review remain pending."
+}

@@ -1,0 +1,9 @@
+{
+  "acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE302_RABBIT_EXISTING_SEND1_TWO_NORM_FIELDS_CURRENT296_ROOT_REVALIDATION_R1.json",
+    "sha256": "2b866046730abb2c656b73d9b93a08c9848e5fcf335493a5878221d692538c76"
+  },
+  "master_after_sha256": "173da49c48f95ab01c34f0a350dfd0532b2145b2fbbbf8df470ff3ea277aa982",
+  "count": 18922,
+  "Original_remaining": 509
+}

@@ -8,6 +8,88 @@ namespace ViciOne.ServiceBus.Tests.Futures;
 
 public sealed class FutureTerminalDispatchContractTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-FUTURE-RESULTS", "tracked-response-membership-and-terminal-replay-preserve-result")]
+    public async Task TrackedResponses_PreserveMembershipAndStoredOutcomeAcrossReplayAsync(bool replayFirst)
+    {
+        var machine = new MembershipFuture();
+        Guid futureId = Guid.Parse("018cc251-f400-7000-8000-000000000501");
+        Guid firstId = Guid.Parse("018cc251-f400-7000-8000-000000000502");
+        Guid secondId = Guid.Parse("018cc251-f400-7000-8000-000000000503");
+        var state = new FutureState { CorrelationId = futureId };
+        var commands = new OutgoingMessageRecorder();
+        await FutureBehaviorContextFactory.UseAsync(machine, machine.CommandReceived, state,
+            new MembershipCommand(futureId, firstId, secondId),
+            context => ((IStateMachine<FutureState>)machine).RaiseEventAsync(context), commands,
+            TestContext.Current.CancellationToken,
+            responseAddress: new Uri("loopback://localhost/membership-result"), requestId: Guid.NewGuid());
+        Assert.Equal(2, commands.Messages.Count);
+        Assert.Equal(2, state.Pending.Count);
+        Assert.Contains(firstId, state.Pending);
+        Assert.Contains(secondId, state.Pending);
+
+        var responses = new OutgoingMessageRecorder();
+        Task RaiseAsync(Guid id, string value) => FutureBehaviorContextFactory.UseAsync(
+            machine, machine.ResponseReceived, state, new MembershipResponse(id, value),
+            context => ((IStateMachine<FutureState>)machine).RaiseEventAsync(context), responses,
+            TestContext.Current.CancellationToken, requestId: futureId);
+        Task VerifyStoredResponseAsync(Guid id, string value) => FutureBehaviorContextFactory.UseAsync(
+            machine, machine.ResponseReceived, state, new MembershipResponse(id, "read-only-inspection"),
+            context =>
+            {
+                Assert.True(context.TryGetResult<MembershipResponse>(id, out var actual));
+                Assert.Equal(new MembershipResponse(id, value), actual);
+                return Task.CompletedTask;
+            }, cancellationToken: TestContext.Current.CancellationToken);
+        Task VerifyFinalAsync() => FutureBehaviorContextFactory.UseAsync(
+            machine, machine.ResponseReceived, state, new MembershipResponse(firstId, "read-only-inspection"),
+            context =>
+            {
+                Assert.True(context.TryGetResult<ResultMessage>(futureId, out var actual));
+                Assert.Equal(new ResultMessage("first,second"), actual);
+                return Task.CompletedTask;
+            }, cancellationToken: TestContext.Current.CancellationToken);
+
+        if (replayFirst)
+        {
+            await RaiseAsync(firstId, "first");
+            await RaiseAsync(firstId, "forged-replay");
+            await VerifyStoredResponseAsync(firstId, "first");
+            Assert.Single(state.Results);
+            Assert.Equal(secondId, Assert.Single(state.Pending));
+        }
+        else
+        {
+            Guid unknown = Guid.Parse("018cc251-f400-7000-8000-000000000504");
+            await RaiseAsync(unknown, "unknown-result");
+            Assert.Empty(state.Results);
+            Assert.Equal(2, state.Pending.Count);
+            Assert.Contains(firstId, state.Pending);
+            Assert.Contains(secondId, state.Pending);
+            await RaiseAsync(firstId, "first");
+        }
+        Assert.Null(state.Completed);
+        Assert.Null(state.Faulted);
+        Assert.Equal(0, machine.FinalFactoryCalls);
+        await RaiseAsync(secondId, "second");
+        Assert.Empty(state.Pending);
+        Assert.NotNull(state.Completed);
+        Assert.Null(state.Faulted);
+        Assert.Equal(1, machine.FinalFactoryCalls);
+        await VerifyFinalAsync();
+        int terminalSends = responses.Messages.Count;
+        Assert.Equal(1, terminalSends);
+
+        await RaiseAsync(firstId, "forged-terminal-replay");
+        await VerifyStoredResponseAsync(firstId, "first");
+        await VerifyStoredResponseAsync(secondId, "second");
+        await VerifyFinalAsync();
+        Assert.Equal(1, machine.FinalFactoryCalls);
+        Assert.Equal(terminalSends, responses.Messages.Count);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-FUTURE-RESULTS", "state-machine-completion-forwards-consume-cancellation")]
     public async Task TrackedRequestCompletion_ForwardsConsumeCancellationToTerminalDispatchAsync()
@@ -161,6 +243,35 @@ public sealed class FutureTerminalDispatchContractTests
         return new ContextMessageFactory<IBehaviorContext<FutureState, Signal>, FaultMessage>(
             context => Task.FromResult(new InitializedMessage<FaultMessage>(new FaultMessage(context.Message.Value))));
     }
+
+    private sealed class MembershipFuture : Future<MembershipCommand, ResultMessage>
+    {
+        public int FinalFactoryCalls { get; private set; }
+        public IEvent<MembershipResponse> ResponseReceived { get; }
+        public MembershipFuture()
+        {
+            ConfigureCommand(configuration => configuration.CorrelateById(context => context.Message.CorrelationId));
+            ResponseReceived = SendRequests<MembershipRequest, MembershipRequest>(
+                    command => new[] { new MembershipRequest(command.FirstId), new MembershipRequest(command.SecondId) },
+                    configuration =>
+                    {
+                        configuration.SetRequestFactory(context => context.Message);
+                        configuration.TrackPendingRequest(request => request.RequestId);
+                    })
+                .OnResponseReceived<MembershipResponse>(configuration =>
+                    configuration.CompletePendingRequest(response => response.RequestId)).Completed;
+            WhenAllCompleted(configuration => configuration.SetResultFactory(context =>
+            {
+                FinalFactoryCalls++;
+                return new ResultMessage(string.Join(",", context.SelectResults<MembershipResponse>()
+                    .Select(response => response.Value).Order(StringComparer.Ordinal)));
+            }));
+        }
+    }
+
+    public sealed record MembershipCommand(Guid CorrelationId, Guid FirstId, Guid SecondId) : ICorrelatedBy<Guid>;
+    public sealed record MembershipRequest(Guid RequestId);
+    public sealed record MembershipResponse(Guid RequestId, string Value);
 
     private sealed class ContextMachine : ViciOneServiceBusStateMachine<FutureState>
     {

@@ -1,0 +1,131 @@
+{
+  "utc": "2026-10-05T07:04:10.327007+00:00",
+  "actor": "/root",
+  "status": "ROOT_QUALIFIED_DEFAULT_CREATED_FIXED_ADDED_FAMILY_EXTENSION_AND_CONSTRUCTOR_CAUSE",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-default-created-fixed-added-ctor-original134-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+    "sha256": "f8716481dbee8a61c8c13d029c0c89c10b4b78c7be02dff159ca940e9ac7796e",
+    "manifest_sha256": "d825a63c6382e5d8540754671c27e378a539f67c1827ad64ec1f9aa0331d128a",
+    "freeze_sha256": "04d1af01d3a724e7909b64259ce5b4591edc05c813d608f64bdc5c1f88ffb2da"
+  },
+  "independent_root_checks": {
+    "all_manifest_entries": 3343,
+    "all_frozen_files": 3326,
+    "live_source_files_checked": 3261,
+    "live_source_changes_exact_authorized171_overlay": [
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Middleware/SagaRepositoryLifecycleDeepContractTests.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryContextTests.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaSpecification.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Middleware/MissingSagaPipe.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+    ],
+    "actual_SDK_receipts": 6,
+    "fresh_ZIP_CRC_DLL_XML": 2,
+    "failed171_source_only_manifest_entries": 10
+  },
+  "root_human_scope": "Whole actual170qualification algorithm112 personally read6dcf16; all4 actualfirstfailureblocks personallyread132eae; actualAdded73/Ctor156 controls59699f44326a, DefaultFactory55whole3e1653 and MultipleConnectHandle945730 (usedlaterrepair, not originalrollbackperformed). Independently all3343MAN/all3326freeze/currentSource5overlay/6actualreceipts/physicalZIP2 checked; peer reached/unreachedcontexts preserved. Source failed171 distinct0W3TESTerrors, no currentTestPE/native attribution.",
+  "existing_F152_added_extension": {
+    "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.MissingSaga_AddedDebugDoesNotPreventOwnedDownstreamProgressAsync(loggerThrows: True)",
+    "classification": "CAUSAL_PRODUCT_ADDED_DEBUG_FAILURE_EXISTING_F152_FAMILY",
+    "first_failure": "Source949 Assert.Null(failure) receives exact unique IOException Added diagnostic failure.",
+    "reached": [
+      "Actual public MissingSagaPipe operation terminal; timeout excluded; actual repository.Add state identity exactlyonce.",
+      "Selected structuredAdded single/Debug/correlation/hostile ThrowCount1; acquired addedcontext AsyncDispose1/Dispose0; borrowedinput disposal0; failure identity Same(loggerFailure,failure) before949."
+    ],
+    "unreached": [
+      "Next/Save exact acquired-context assertions after949",
+      "Post949 public success and unrelated repository route absence assertions"
+    ],
+    "source_cause": "MissingSagaPipe52 calls acquiredContext.LogAdded before next.SendAsync54; diagnostic becomes operationFailure and triggers original discard/disposal then preserved IOException.",
+    "healthy_control": "loggerThrows:false passes exact next/save context, success, no discard/other routes. Source same caller/new fixture valid.",
+    "cleanup": "Public task rejoined/observed with timeout exclusion and ambient logger restored. Runtime reached AsyncDispose1 beforefirst949.",
+    "family_precision": "Adds another concrete caller to still-open F152; no automatic unrelated new finding ID."
+  },
+  "new_finding": {
+    "id": "F-SB-API-156",
+    "severity": "Medium",
+    "title": "SagaSpecification constructor retains already acquired observer registrations when a later connection fails",
+    "classification": "CONFIRMED_FINITE_ORIGINAL_CONTRACT_DEFECT",
+    "status": "CONFIRMED_CURRENT171_PRE_REVIEWED_REPAIR_APPLIED_NATIVE_PENDING",
+    "actual_original_contexts": [
+      {
+        "case": "ViciOne.ServiceBus.Tests.Configuration.SagaConnectorSpecificationAdapterDeepContractTests.Constructor_PartialObserverConnectionsAreRolledBackWithoutLosingFailures(failureAt: 3, cleanupThrows: True)",
+        "classification": "CAUSAL_PRODUCT_PARTIAL_CONSTRUCTOR_OBSERVER_CONNECTION_RETENTION",
+        "first_failure": "Source482 Assert.Equal(expected0,observer.MessageCalls) receives 2 after actual public source.Validate calls.",
+        "reached": [
+          "Actual constructor connectionCalls3, acquired handleCount2, constructed null and original admissionFailure identity (primarySame or soleprimary in actualAggregate) verified before482.",
+          "Actual supplied public observer connected to realRecordingSagaObserver; all three original concrete message specifications Validate returnempty and dispatch configuration notifications through still-retained supplied observer."
+        ],
+        "unreached": [
+          "Per-handle DisconnectCalls assertion483",
+          "Cleanup Aggregate shape/exact two exception identities494..498 when requested",
+          "Post482 original failure identity reassertion"
+        ],
+        "source_cause": "SagaSpecification constructor eagerly connects each source using LINQ Select(...Connect...).ToArray without try/rollback; a later connect failure exits before _handles assignment and leaves earlier observer registrations connected. Genuine Validate forwarding via SagaMessageSpecification->_observers->SagaConfigurationObservable produces retained notifications.",
+        "healthy_control": "failureAt0/cleanupfalse passes three notifications/no rollback expected and original handle ownership; old10classcases allpassed.",
+        "cleanup": "finally detaches observer then individually calls idempotent DisconnectWithoutInjectedFailure on captured handles; injected cleanup not a measured reached constructor behavior in this original run.",
+        "cleanup_fault_requested": true,
+        "precision": "No claim original measured missing cleanup aggregate; firstfailure482 prevents those assertions. Future fixed native must reach them."
+      },
+      {
+        "case": "ViciOne.ServiceBus.Tests.Configuration.SagaConnectorSpecificationAdapterDeepContractTests.Constructor_PartialObserverConnectionsAreRolledBackWithoutLosingFailures(failureAt: 2, cleanupThrows: False)",
+        "classification": "CAUSAL_PRODUCT_PARTIAL_CONSTRUCTOR_OBSERVER_CONNECTION_RETENTION",
+        "first_failure": "Source482 Assert.Equal(expected0,observer.MessageCalls) receives 1 after actual public source.Validate calls.",
+        "reached": [
+          "Actual constructor connectionCalls2, acquired handleCount1, constructed null and original admissionFailure identity (primarySame or soleprimary in actualAggregate) verified before482.",
+          "Actual supplied public observer connected to realRecordingSagaObserver; all three original concrete message specifications Validate returnempty and dispatch configuration notifications through still-retained supplied observer."
+        ],
+        "unreached": [
+          "Per-handle DisconnectCalls assertion483",
+          "Cleanup Aggregate shape/exact two exception identities494..498 when requested",
+          "Post482 original failure identity reassertion"
+        ],
+        "source_cause": "SagaSpecification constructor eagerly connects each source using LINQ Select(...Connect...).ToArray without try/rollback; a later connect failure exits before _handles assignment and leaves earlier observer registrations connected. Genuine Validate forwarding via SagaMessageSpecification->_observers->SagaConfigurationObservable produces retained notifications.",
+        "healthy_control": "failureAt0/cleanupfalse passes three notifications/no rollback expected and original handle ownership; old10classcases allpassed.",
+        "cleanup": "finally detaches observer then individually calls idempotent DisconnectWithoutInjectedFailure on captured handles; injected cleanup not a measured reached constructor behavior in this original run.",
+        "cleanup_fault_requested": false,
+        "precision": "No claim original measured missing cleanup aggregate; firstfailure482 prevents those assertions. Future fixed native must reach them."
+      },
+      {
+        "case": "ViciOne.ServiceBus.Tests.Configuration.SagaConnectorSpecificationAdapterDeepContractTests.Constructor_PartialObserverConnectionsAreRolledBackWithoutLosingFailures(failureAt: 3, cleanupThrows: False)",
+        "classification": "CAUSAL_PRODUCT_PARTIAL_CONSTRUCTOR_OBSERVER_CONNECTION_RETENTION",
+        "first_failure": "Source482 Assert.Equal(expected0,observer.MessageCalls) receives 2 after actual public source.Validate calls.",
+        "reached": [
+          "Actual constructor connectionCalls3, acquired handleCount2, constructed null and original admissionFailure identity (primarySame or soleprimary in actualAggregate) verified before482.",
+          "Actual supplied public observer connected to realRecordingSagaObserver; all three original concrete message specifications Validate returnempty and dispatch configuration notifications through still-retained supplied observer."
+        ],
+        "unreached": [
+          "Per-handle DisconnectCalls assertion483",
+          "Cleanup Aggregate shape/exact two exception identities494..498 when requested",
+          "Post482 original failure identity reassertion"
+        ],
+        "source_cause": "SagaSpecification constructor eagerly connects each source using LINQ Select(...Connect...).ToArray without try/rollback; a later connect failure exits before _handles assignment and leaves earlier observer registrations connected. Genuine Validate forwarding via SagaMessageSpecification->_observers->SagaConfigurationObservable produces retained notifications.",
+        "healthy_control": "failureAt0/cleanupfalse passes three notifications/no rollback expected and original handle ownership; old10classcases allpassed.",
+        "cleanup": "finally detaches observer then individually calls idempotent DisconnectWithoutInjectedFailure on captured handles; injected cleanup not a measured reached constructor behavior in this original run.",
+        "cleanup_fault_requested": false,
+        "precision": "No claim original measured missing cleanup aggregate; firstfailure482 prevents those assertions. Future fixed native must reach them."
+      }
+    ],
+    "source": "src/ViciOne.ServiceBus.Sagas/Configuration/SagaSpecification.cs",
+    "limits": [
+      "Only prior successfully returned nonnull ConnectHandles are owned for rollback; undisclosed failedconnector resources not claimed.",
+      "Original first482 proves retainednotifications; cleanupAggregate/DisconnectCounts after482 unreached. Repairmustverify all cleanup attempts and exactprimary+cleanup identity.",
+      "No globalconfigurationtransaction or asynccleanup promise."
+    ],
+    "original_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-default-created-fixed-added-ctor-original134-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+      "sha256": "f8716481dbee8a61c8c13d029c0c89c10b4b78c7be02dff159ca940e9ac7796e",
+      "manifest_sha256": "d825a63c6382e5d8540754671c27e378a539f67c1827ad64ec1f9aa0331d128a",
+      "freeze_sha256": "04d1af01d3a724e7909b64259ce5b4591edc05c813d608f64bdc5c1f88ffb2da"
+    },
+    "whole_API_member_review_closed": false
+  },
+  "known_before": 155,
+  "known_after": 156,
+  "accepted_findings_unchanged": 154,
+  "limits": [
+    "DefaultCreated4th owningcall fixed170/native2passed but existingF152 remainsopen Addedfamilyextension.",
+    "171currentrepairProduct2 compiled as partofstrict but newTest3errors blockNative; no fixedacceptanceyet.",
+    "No A+/wholeAPI/CLOSED."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "utc": "2026-10-04T23:55:05.308056+00:00",
+  "decision": "ACCEPT721_ABSTRACTIONS_DECLARATION_SOURCE_CONTRACTS_KEEP4_DEFAULT_BODY_TYPES_HELD",
+  "api_before": 4295,
+  "api_after": 5016,
+  "semantic_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-abstract725-source-contract-context-r1/REPORT.json",
+    "sha256": "25ab46475686a90315c6b6453e8fe3e2762b358d58551160567135f6aee1f8bf"
+  },
+  "per_member": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-abstract725-source-contract-context-r1/PER_MEMBER725_CONTRACT_MATRIX.json",
+    "sha256": "7265da36cc12433036fe284197e4a12a42a0ad00dd7eeb673d7a63053901b575"
+  },
+  "owner_norms": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-abstract725-source-contract-context-r1/ALL163_PERSONALLY_READ_OWNER_NORMS.json",
+    "sha256": "e6dadea48ae953fa19ac7f0281ba0bdd47ba0840019727835dee8b096957f78d"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-abstract725-source-contract-context-r1/MANIFEST.json",
+    "sha256": "fc4d71301ac55f68e25ae894b12cfa4a9afb249de2d0f11976c1abd423d32b3b"
+  },
+  "root_verified_all_manifest_entries": 178,
+  "root_norm_reviews": [
+    "ae4ca5",
+    "1f7324",
+    "021c5d",
+    "4963ed",
+    "fcda00",
+    "9de469",
+    "c4f739",
+    "6040c2"
+  ],
+  "root_error_result_accessor_default_refout_review": [
+    "0433f5",
+    "a1cfe0"
+  ],
+  "all_current163_source_and725_XML_equal": true,
+  "held_types": [
+    "T:ViciOne.ServiceBus.Advanced.ConnectHandle",
+    "T:ViciOne.ServiceBus.Advanced.IAdvancedMessageScheduler",
+    "T:ViciOne.ServiceBus.Advanced.IAdvancedPublishEndpoint",
+    "T:ViciOne.ServiceBus.Advanced.IAdvancedSendEndpoint"
+  ],
+  "limits": [
+    "195 interface types/350abstract declared methods/180accessor contracts individually scoped;4 executable inherited-default owners are excluded. No duplicate invented inherited adapter IDs.",
+    "Parsed result/exception prose can omit paramref/see-only text. Root retains complete actualXML and expanded ref tokens as authoritative clauses; no Source/XML finding from that projection.",
+    "82optional cancellation inputs,14default RequestTimeout and nullable callbacks preserved as exact physical defaults; no forced deadline or CTS disposal transfer.",
+    "18NotNullWhen(true) out parameters guarantee non-null only ontrue; other6Out parameters retained asunannotated, no invented false-result default.2In params remain readonlyref.",
+    "Source-only declarations and163 personally read owner norms; implementation bodies, provider delivery, runtime cancellation/resource behavior require separate concrete analysis. All native credits0, allCLOSEDfalse."
+  ],
+  "CLOSED": false
+}

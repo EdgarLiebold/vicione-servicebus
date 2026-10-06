@@ -1,0 +1,131 @@
+{
+  "utc": "2026-10-05T11:06:16.573079+00:00",
+  "actor": "/root",
+  "scope": "14 files: one own RESEND diagnostic guard, 11 XML-only50 owners, one additive Original4 actualrenewal test owner, latestReq163ADD1",
+  "dry_preflight": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package179-root-dry-preflight-r1.json",
+    "sha256": "f704189465cde1bbcb5836a02a627e74a58151acf6bfaf5d73f8a44935bef16a",
+    "root_receipt": "1546ce"
+  },
+  "plan": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/ISqlBusFactoryConfigurator.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-setter-purpose-configuration-xml50-product-proposed-r3/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/ISqlBusFactoryConfigurator.cs",
+      "before_sha256": "7296b0a90b72f565cfb8d7cbf10064f7e86a6624fd163ffe394a22a61fc9e08c",
+      "after_sha256": "3dbae85f2815f5f32d84f440a1397ccb2aca5d1c82ee8a64e913d8f7d9aac028",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/ISqlHostConfigurator.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-setter-purpose-configuration-xml50-product-proposed-r3/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/ISqlHostConfigurator.cs",
+      "before_sha256": "5891dd16bf2e0d07cfcb8c5f2f1ba1503f7aba7de7a4cff3b9325e543c61f545",
+      "after_sha256": "f8403eee74b097d72714c08ed68af44905cb901879f47bdabc118b12132c62c8",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/ISqlTopicSubscriptionConfigurator.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-setter-purpose-configuration-xml50-product-proposed-r3/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/ISqlTopicSubscriptionConfigurator.cs",
+      "before_sha256": "917bc204773b69b5de48f3dfdaa6d026d20d2d56611c7d67cafd9ef79eb9a524",
+      "after_sha256": "98bdce3f8e61a2f7d2e076b0c65357f6512bfc8829b2999cda1485318390227e",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlBusFactoryConfigurator.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-setter-purpose-configuration-xml50-product-proposed-r3/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlBusFactoryConfigurator.cs",
+      "before_sha256": "3d57fd569f43bd114435f43536eb44294142d544c5d364b51497f23364add208",
+      "after_sha256": "15d7a48f21416353eefbee49e783d65b8203ff53760bed89db6018ce00cf248c",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 11
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlHostConfigurator.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-setter-purpose-configuration-xml50-product-proposed-r3/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlHostConfigurator.cs",
+      "before_sha256": "c4e837e09d47a7e022a82e1842f5527fcd08fd74c7de3d7b5eb0e78a8b096935",
+      "after_sha256": "8834b2d2c2d6a9751c65c8293aaa99d1e65c8f48236acc8dcde6c14f92de825f",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 17
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlReceiveEndpointBuilder.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-setter-purpose-configuration-xml50-product-proposed-r3/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlReceiveEndpointBuilder.cs",
+      "before_sha256": "b4dec034c95abc2f2cf8c7029c0a1ac810ad042f6ae3ec79c0932a9a51e418ad",
+      "after_sha256": "2be9ebc9d3912245a550f0d58bcab4204e6e95b57e2296407b2556ab21a12703",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 1
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlReceiveEndpointConfiguration.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-setter-purpose-configuration-xml50-product-proposed-r3/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlReceiveEndpointConfiguration.cs",
+      "before_sha256": "501cd7a4c20d85658db94f60a0b2d234b524f3e16679428b56f394af3f717f83",
+      "after_sha256": "9252440c6eece9ae141f8cc1722eb88dc893fb6e1d2e288fec08a39d35af190e",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 10
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlReceiveSettings.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-setter-purpose-configuration-xml50-product-proposed-r3/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlReceiveSettings.cs",
+      "before_sha256": "d1d2d689f61c635807d788c45110347f9e5182995c3e97f8e3d69352a46d9176",
+      "after_sha256": "efa681fc2a8b3b8c50173e668bce7a4572db86ab8b0fce9ac49e910870fa0e25",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 1
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/Topology/ISqlSendTopologyConfigurator.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-setter-purpose-configuration-xml50-product-proposed-r3/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/Topology/ISqlSendTopologyConfigurator.cs",
+      "before_sha256": "310c25b7cf895e4db786335af4a39d7735ef4341ceff9f92d04dcac1f1710ef4",
+      "after_sha256": "9727d3e6ba76fa190fde8067d91b34cdbcbe724ed4a9d9b19eae702c808e536f",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlHostSettings.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-setter-purpose-configuration-xml50-product-proposed-r3/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlHostSettings.cs",
+      "before_sha256": "7e6366156bdbda83562efe390b305dd48dc0b1490fba42ca6b69dd1191d7bc86",
+      "after_sha256": "75773e4f4251bab582d3dc93401b34f396c239498d47ca4e3e56302e3b664b4a",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 1
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/SqlBusTopology.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-setter-purpose-configuration-xml50-product-proposed-r3/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/SqlBusTopology.cs",
+      "before_sha256": "a945ff7783efee7ee6d5319d6efad4c140b202b4f75da8ee46708be81319c9ea",
+      "after_sha256": "1f4c21971c06b162638d77489af38018b7ca9212e118af65a3d4c3e9fa74cdf2",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 1
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package203-sql-redelivery-own-debug-product-proposed-r1/SqlReceiveLockContext.proposed.cs",
+      "before_sha256": "4a4a922e5818c5818b004f99c4947dced275e0feba3c8a2acbda66e58d5f6288",
+      "after_sha256": "dc68f980c568886b7c2d4c99f510e47260a1f08d77a1e34afe32866e628a9dba",
+      "kind": "OWN_RESEND_DIAGNOSTIC_ONLY"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlReceiveLockContextTests.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package204-sql-renewal-admitted-settlement-original4-oracles-proposed-r1/proposed/tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlReceiveLockContextTests.cs",
+      "before_sha256": "864c1955b71d448f4da75f20702dc7610b912e34b2b0821297a7b46d2ed3ba06",
+      "after_sha256": "1a0a335fce0650d2dc4c477847e63be573224fe6fc9aa5d3f0c0fc07478bca65",
+      "kind": "ORIGINAL_RENEWAL_THEORY4_ADD219"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/SqlTransportRequirements.json",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package179-requirements-add164-proposed.json",
+      "before_sha256": "27612594e5037d1d8bb9455dc4c24f5a49414eb66df581a6918847a48c1c5d4b",
+      "after_sha256": "5e95a2f1d5468c18d76fec938dfe17373fc706d9df1d38da209bb1ec95b9e417",
+      "kind": "LATEST163_ADD1"
+    }
+  ],
+  "root_personal_source_review": "Prior source3260f060b + guardonlyf4f69e/freshpatch current; prior whole925 tenXMLbefore sources cb1447,d1ce45,193034 + all49norm5abb19; additional43proposal e2288f and independentpeer88dca0; entirenew219patch00e565/currentRenewSettle ecc2aa/independentpeer3dfe97. SourceNoBlock before mutation. All8 MAN complete and literalcurrentXML50before/nonXMLinverse 1546ce; no inherited human whole2744source claim.",
+  "independent_source_peers": [
+    "package203-sql-redelivery-own-debug-independent-scanner-r1",
+    "package203-sql-xml49-independent-runtime-peer-r1",
+    "package203-sql-xml50-extra-node-independent-runtime-peer-r3",
+    "package204-sql-renewal-admitted-settlement-original4-independent-scanner-r1"
+  ],
+  "before_frames": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package179-root-before-r1/frames",
+  "native_or_XML_after_pending": true,
+  "whole_API_closed": false
+}

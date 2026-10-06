@@ -1,0 +1,14 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE346_CORE_PUT3_TIMER4_REGISTRATION_CONTEXT3_TOPOLOGY4_SOURCE14_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "dba29c438cea2973b604cc1ee7901b56cea19dda23ae58b08fc1d0060ba2201a"
+  },
+  "Master_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "a88c2a6bbb6a754c63c81a5d7bc4c54ed9edfe1b23a7810a1156a15b3e21d662"
+  },
+  "rows": 19063,
+  "Original_accepted": 18201,
+  "Original_remaining": 368,
+  "administrative_retry": "Prior72c529 metadata-variable shadow failure occurred after immutableReport creation, before any Master/STATE write; preserved samereport and guarded unchangedMaster before completing."
+}

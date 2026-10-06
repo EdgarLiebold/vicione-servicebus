@@ -1,0 +1,38 @@
+{
+  "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected",
+  "fresh_consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+  "reason": "preserve F004-only sixteen native evidence and cache; combine separately repaired shared graph with identical behavioral oracle",
+  "behavioral_source_unchanged": true,
+  "inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalOwnership.PublicConsumer.csproj",
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/Program.cs",
+      "sha256": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalCases.cs",
+      "sha256": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalEvidence.cs",
+      "sha256": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalApplication.cs",
+      "sha256": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/OwnedLifetime.cs",
+      "sha256": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/NuGet.Config",
+      "sha256": "d181fa362b64a8f92e113eb19e914828d8e3371ddf2532d3deaaded6705bb3c9"
+    }
+  ],
+  "selected_abstractions": "copied immutable package11 artifact, NOT freshly packed",
+  "Root_personally_FULL_bounded_owner": true
+}

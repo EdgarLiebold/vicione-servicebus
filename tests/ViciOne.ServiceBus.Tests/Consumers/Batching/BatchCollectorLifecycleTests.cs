@@ -209,7 +209,7 @@ public sealed class BatchCollectorLifecycleTests
             typeof(BatchCollector<LifecycleItem, string>),
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
             binder: null,
-            args: [options, consumerPipe, provider],
+            args: [options, consumerPipe, provider, "unknown"],
             culture: null));
     }
 

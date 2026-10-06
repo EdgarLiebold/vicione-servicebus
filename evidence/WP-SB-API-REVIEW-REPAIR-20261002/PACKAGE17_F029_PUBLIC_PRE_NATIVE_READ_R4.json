@@ -1,0 +1,124 @@
+{
+  "utc": "2026-10-03T07:04:46.538160+00:00",
+  "files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/BatchClock.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961,
+      "root_read": "Root own exactSHA FULL R3 reuse; Clock/Program/Runtime also whole freshly reread this context"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Cases.cs",
+      "sha256": "358acd9650aeca1bd4aeb4c00068267070775d6cec934bf733cdf7d360bf61e7",
+      "bytes": 14198,
+      "root_read": "Root personal FULL current corrected whole body this context; previous exact-byte paired reuse"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Clock.cs",
+      "sha256": "f55322447d24846c5f0a445cb00d04be2c7997aa7bb039207b8915103db3aafb",
+      "bytes": 5174,
+      "root_read": "Root own exactSHA FULL R3 reuse; Clock/Program/Runtime also whole freshly reread this context"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/NuGet.Config",
+      "sha256": "f9c0fc2a5c7a0b52e9d2f5b774277674877fd2c3ded01e3f6bc5353d66a33163",
+      "bytes": 573,
+      "root_read": "Root own exactSHA FULL R3 reuse; Clock/Program/Runtime also whole freshly reread this context"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/OwnedLifetime.cs",
+      "sha256": "b2ef34b3e91c9c39a3aec8a7adb070ccca7679344e06e91b01b4ff16c015b9cf",
+      "bytes": 1757,
+      "root_read": "Root personal FULL current corrected whole body this context; previous exact-byte paired reuse"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Probes.cs",
+      "sha256": "94ac46a178edee917489c08408c5f6500823762f4790810b2d57f2b889e239e5",
+      "bytes": 5647,
+      "root_read": "Root personal FULL current corrected whole body this context; previous exact-byte paired reuse"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Program.cs",
+      "sha256": "a3ee91bdb446fe76f8b56ac0cce664b06a232bb319f5fbcf9ef6e7a87a464bed",
+      "bytes": 2322,
+      "root_read": "Root own exactSHA FULL R3 reuse; Clock/Program/Runtime also whole freshly reread this context"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/RuntimeOwner.cs",
+      "sha256": "d00b5eb15dfe49162cccbce86b0b2a22a19bcbe10a72437c72414cb26b85f411",
+      "bytes": 4079,
+      "root_read": "Root own exactSHA FULL R3 reuse; Clock/Program/Runtime also whole freshly reread this context"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/packages.lock.json",
+      "sha256": "50eaf67fedf39dd38cf44f053bca25ff971497e96a26799389ac88933b66d325",
+      "bytes": 16204,
+      "root_read": "Root own exactSHA FULL R3 reuse; Clock/Program/Runtime also whole freshly reread this context"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/BatchClock.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961,
+      "root_read": "Root own previous whole owner/34 lock entries FULL before prior Native, unchanged exactSHA archived pre-edit"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/Cases.cs",
+      "sha256": "358acd9650aeca1bd4aeb4c00068267070775d6cec934bf733cdf7d360bf61e7",
+      "bytes": 14198,
+      "root_read": "Root personal FULL current corrected whole body this context; previous exact-byte paired reuse"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/Clock.cs",
+      "sha256": "f55322447d24846c5f0a445cb00d04be2c7997aa7bb039207b8915103db3aafb",
+      "bytes": 5174,
+      "root_read": "Root own previous whole owner/34 lock entries FULL before prior Native, unchanged exactSHA archived pre-edit"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/NuGet.Config",
+      "sha256": "bbbd561be1bb5dba3fb2541334b8e79f8e858fea58a2481e66ad54d5a7f7280e",
+      "bytes": 572,
+      "root_read": "Root own previous whole owner/34 lock entries FULL before prior Native, unchanged exactSHA archived pre-edit"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/OwnedLifetime.cs",
+      "sha256": "b2ef34b3e91c9c39a3aec8a7adb070ccca7679344e06e91b01b4ff16c015b9cf",
+      "bytes": 1757,
+      "root_read": "Root personal FULL current corrected whole body this context; previous exact-byte paired reuse"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/Probes.cs",
+      "sha256": "94ac46a178edee917489c08408c5f6500823762f4790810b2d57f2b889e239e5",
+      "bytes": 5647,
+      "root_read": "Root personal FULL current corrected whole body this context; previous exact-byte paired reuse"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/Program.cs",
+      "sha256": "a3ee91bdb446fe76f8b56ac0cce664b06a232bb319f5fbcf9ef6e7a87a464bed",
+      "bytes": 2322,
+      "root_read": "Root own previous whole owner/34 lock entries FULL before prior Native, unchanged exactSHA archived pre-edit"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/RuntimeOwner.cs",
+      "sha256": "d00b5eb15dfe49162cccbce86b0b2a22a19bcbe10a72437c72414cb26b85f411",
+      "bytes": 4079,
+      "root_read": "Root own previous whole owner/34 lock entries FULL before prior Native, unchanged exactSHA archived pre-edit"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/packages.lock.json",
+      "sha256": "dda3c57e7dda5c7b5548ae96604e8db87ae02b0fadec94d3cd1c6eef5980386a",
+      "bytes": 16204,
+      "root_read": "Root own previous whole owner/34 lock entries FULL before prior Native, unchanged exactSHA archived pre-edit"
+    }
+  ],
+  "cases": 26,
+  "change": "duplicate entered-real-serialized-Add positive public SPI witness with null fallback; concurrent task drain; no product change",
+  "additional_root_fresh_full": [
+    "ITransportSequenceNumber",
+    "BaseReceiveContext",
+    "ScopePipeContext",
+    "BasePipeContext",
+    "ListPayloadCache",
+    "PipeContext"
+  ],
+  "dedup": "onlymembership/schedules/terminalcounts;noisolatedretimestampclaim"
+}

@@ -1,0 +1,37 @@
+{
+  "status": "PREAUTHOR_NEW_BOUNDED_PUBLIC_CONSUMER_OWNER",
+  "source_research": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE14_F031_SOURCE_PLAN.json",
+  "entry_skill": "dotnet-test:code-testing-agent Research->Plan->Implement already FULL read current session",
+  "Root_personally_FULL_historical_navigation_Program": true,
+  "historical_is_native_or_owner_authority": false,
+  "new_owner": "14publicCLIcases, no canonical Core/Saga test edits",
+  "paths": [
+    "SharedEndpoint.PublicConsumer.csproj",
+    "Program.cs",
+    "EndpointCases.cs",
+    "Components.cs",
+    "OwnedLifetime.cs",
+    "NuGet.Config",
+    "packages.lock.json"
+  ],
+  "cases": [
+    "dedicated-saga",
+    "same-kind-callbacks",
+    "mixed-callbacks",
+    "same-kind-qos",
+    "mixed-consumer-qos",
+    "mixed-saga-qos",
+    "mixed-topology-conflict",
+    "mixed-compatible",
+    "mixed-reverse",
+    "mixed-typed",
+    "mixed-concurrency-consumer",
+    "mixed-concurrency-saga",
+    "global-override",
+    "same-kind-reverse"
+  ],
+  "oracles": "real awaited consumer+saga terminal receipts, stable callback names/order, exact shared endpoint count, exact QoS/topology configuration error before callback/materialization",
+  "cleanup": "live LoggerFactory isolateF019; ownSagaProbe restore previous; attempt every owned Stop/observer/provider despite failure; primary first; timeout onlyfailure",
+  "positive_controls": "dedicated saga QoS, samekind callbacks/qos rejection and reverse registration, explicit global endpoint override",
+  "bounded_limits": "typed singlebus included; two-bus isolation/canonicalCore766/Cloud/ARM/performance not inferred"
+}

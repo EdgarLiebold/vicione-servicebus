@@ -6,24 +6,21 @@ namespace ViciOne.ServiceBus.Advanced.Observers;
 /// <summary>Receives notifications about filter events.</summary>
 public interface IFilterObserver
 {
-    /// <summary>Called before a message is dispatched to any consumers.</summary>
+    /// <summary>Called before a context is sent through the observed output pipeline.</summary>
     /// <typeparam name="T">The value type.</typeparam>
-    /// <param name="context">The consume context.</param>
+    /// <param name="context">The pipeline context.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task PreSendAsync<T>(T context)
         where T : class, PipeContext;
 
-    /// <summary>
-    /// Called after the message has been dispatched to all consumers - note that in the case of an exception
-    /// this method is not called, and the DispatchFaulted method is called instead.
-    /// </summary>
+    /// <summary>Called after the observed output pipeline completes successfully. Failures are reported to SendFaultAsync.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task PostSendAsync<T>(T context)
         where T : class, PipeContext;
 
-    /// <summary>Called after the message has been dispatched to all consumers when one or more exceptions have occurred.</summary>
+    /// <summary>Called when the observed output pipeline or its observers fail.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
@@ -38,20 +35,17 @@ public interface IFilterObserver
 public interface IFilterObserver<in TContext>
     where TContext : class, PipeContext
 {
-    /// <summary>Called before a message is dispatched to any consumers.</summary>
-    /// <param name="context">The consume context.</param>
+    /// <summary>Called before a context is sent through the observed output pipeline.</summary>
+    /// <param name="context">The pipeline context.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task PreSendAsync(TContext context);
 
-    /// <summary>
-    /// Called after the message has been dispatched to all consumers - note that in the case of an exception
-    /// this method is not called, and the DispatchFaulted method is called instead.
-    /// </summary>
+    /// <summary>Called after the observed output pipeline completes successfully. Failures are reported to SendFaultAsync.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task PostSendAsync(TContext context);
 
-    /// <summary>Called after the message has been dispatched to all consumers when one or more exceptions have occurred.</summary>
+    /// <summary>Called when the observed output pipeline or its observers fail.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="exception">The exception associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

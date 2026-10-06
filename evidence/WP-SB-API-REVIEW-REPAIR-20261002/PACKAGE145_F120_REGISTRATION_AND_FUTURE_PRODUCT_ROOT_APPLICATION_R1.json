@@ -1,0 +1,52 @@
+{
+  "utc": "2026-10-04T20:57:06.571810+00:00",
+  "decision": "REGISTER_QUALIFIED_F120_AND_APPLY_INDEPENDENTLY_APPROVED_ONE_LINE_TIMING_RESET",
+  "new_finding": {
+    "id": "F-SB-API-120",
+    "severity": "Medium",
+    "title": "Immediate future fault configuration retains an earlier deferred timing mode",
+    "source_owner": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+    "source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+    "status": "CONFIRMED_ORIGINAL_NATIVE_SOURCE_BOUND_REPAIR_APPLIED_FIXED_NATIVE_PENDING",
+    "original_native_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package143-future10-consumption252-independent-r1/REPORT.json",
+      "sha256": "8f7e07d63f4b81fedad1bc324ba2f2f25e5ed01da6fb853ff0e55dccf146cbb3"
+    },
+    "original_native_phase": "package143-future-timing-original-native10-r1",
+    "original_native_log_sha256": "0dfaf1bf1c8c92ac6cc8b6ad4df5b2051ed7586015c2005b32c1cc6cd8e17e0d",
+    "causal_boundary": "WhenAllCompletedOrFaulted sets WaitForPending=true; subsequent documented immediate WhenAnyFaulted does not reset it. Actual first accepted Saga fault leaves second pending and suppresses configured factory (Expected1 Actual0).",
+    "proof_limit": "Original10=9P1finiteF0S, deferred false and previous8 controls GREEN. Later terminal reply and replay assertions not reached on RED. Same unchanged10 fixed native pending.",
+    "whole_API_member_review_closed": false
+  },
+  "confirmed_before": 119,
+  "confirmed_after": 120,
+  "known_accepted_unchanged": 117,
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package143-future-immediate-timing-reset-product-proposed-r1/REPORT.json",
+    "sha256": "e73253a7be5f48d1405c7580668880b0d001248337802d2b236ca8e9a5fedbad"
+  },
+  "author_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package143-future-immediate-timing-reset-product-proposed-r1/MANIFEST.json",
+    "sha256": "416aa8d9ad7c22adad1ccc1a93371eefd0dcffb5cd944bfd28af32b9f1399330"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package143-future-immediate-timing-reset-independent-scanner-r1/REPORT.json",
+    "sha256": "60c413cec64155c1de8edd5b905de216c5eb052e810442e37c71c130d128d2c7"
+  },
+  "peer_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package143-future-immediate-timing-reset-independent-scanner-r1/MANIFEST.json",
+    "sha256": "2faf20e9974531f018a34f5374e1632bcc4efee6d909cf882ede1c56ed2cc320"
+  },
+  "prior_freeze_ACK": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package143-future10-consumption252-independent-r1/FREEZE.json",
+    "sha256": "509e0d05f6568761c9b7d885e5b4632925e5f5349ca3c4665746c4eaf2ced39f"
+  },
+  "source_before_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+  "source_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+    "sha256": "0b758a3edbb8d1c56c1658d03ac2f919d1e7da6e45cf15bc2049b27b286f8806"
+  },
+  "root_personal_review": "Entire143qualification6f0d7d+linecountErratum; entireproposal/patch/peer cb7a86; actualSourceFuture whole15owner review Root141 earlier current9efa plus targeted490 callback/nullguard. All3sealedMAN/currentbefore guard9f47d3 before mutation. No wholeSource credit imported from peer.",
+  "scope": "Only timing assignment. Test352/Req4594 remain unchanged. Native fixed and freshFuturesPackage pending. Whole API PARTIAL.",
+  "instrument_precision": "Initial metadata update bb0e12 assumed additional_finding_status dict; actual list inspected0c2a8a, corrected before any central registry/state write. Source and initial application receipt already persisted; no duplicate Source mutation or native claim."
+}

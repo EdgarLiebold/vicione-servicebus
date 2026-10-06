@@ -1,0 +1,57 @@
+{
+  "status": "ORIGINAL_FINITE_OUTGOING_LOSS_OBSERVED_INDEPENDENT_NATIVE_QUALIFICATION_PENDING",
+  "root_full_raw_log_read": true,
+  "parts": [
+    "part-00.txt",
+    "part-01.txt",
+    "part-02.txt"
+  ],
+  "native_log_sha256": "e544a0cdf1b842ff483a2aaaa20f478a493d6f62185a4c013b3fe55d061a69e5",
+  "source_candidate": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE28_PUBLIC_COMPOSITION_SOURCE_CANDIDATE_R6.json",
+  "frozen_private_owner": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-original-r6-frozen/Program.cs",
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/Program.cs",
+      "bytes": 17879,
+      "sha256": "5b53c85d818ee173520b3f73f3bd11cdf0d0904cf6e870f8df8529257784245d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-original-r6-frozen/OwnedLifetime.cs",
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/OwnedLifetime.cs",
+      "bytes": 1921,
+      "sha256": "e01c009117ec2393a503eda5d2cad44d72e55ce9ef00309d51180fbd6ea5bad0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-original-r6-frozen/OwnedDisposal.cs",
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/OwnedDisposal.cs",
+      "bytes": 1013,
+      "sha256": "7b5638775cbc3dd898eccac52dc0f6b9a1dae5cb1300b54ccf31084de5598c95"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-original-r6-frozen/Composition.PublicConsumer.csproj",
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/Composition.PublicConsumer.csproj",
+      "bytes": 1080,
+      "sha256": "65e944038765659fbd99a29043fe6692b2e3fad4e1df7e3542d523236e27205e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-original-r6-frozen/NuGet.Config",
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/NuGet.Config",
+      "bytes": 581,
+      "sha256": "ab5111dff32a56e89cbfbd699369d0259efbee765c365dcb124c2e9bc57b66cc"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-original-r6-frozen/global.json",
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/global.json",
+      "bytes": 135,
+      "sha256": "fcafdeab1b2af8c88b0aac365be7ec1f4fb8e8b2a2b700a01d2a3619687ce760"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-original-r6-frozen/packages.lock.json",
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/packages.lock.json",
+      "bytes": 14388,
+      "sha256": "10c8d7c4f8700cea08474c92e1ebf2a2182584b3df5bbd94a886fe812c92eeda"
+    }
+  ],
+  "native_contract_green_claimed": false,
+  "canonical_core766_root_full_claimed": false
+}

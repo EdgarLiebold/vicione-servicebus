@@ -26,7 +26,7 @@ public class DelaySendPipe<T> :
         _pipe?.Probe(context);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Applies a positive transport delay and invokes an available send pipe.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(SendContext<T> context)

@@ -1,0 +1,105 @@
+{
+  "role": "independent internal context-separated adversarial reviewer; no external developer/red-team/release role",
+  "status": "PATCH_REVIEW_PASS_WITH_STATED_PROOF_LIMITS",
+  "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE02_IDENTITY_FREEZE.json",
+  "freeze_sha256": "4ed7455cc1b1a7416fb906448fbdf01b0a5f96e3bba5b2b4b289992a12334d9c",
+  "mutation_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE02_IDENTITY_MUTATIONS.json",
+  "mutation_evidence_sha256": "69fe2ac63d8a514ac5d36bda03ec4f69d782df9c84889538a6f37291c2ca1ead",
+  "artifacts": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/MUTATION_REVIEW.json",
+      "sha256": "c4bc9f4884878945c2d3e4f7eaec579ec71434399e0691910e643be459612b1d",
+      "bytes": 34111
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/REPORT.md",
+      "sha256": "77d116c4d3ce299c89bacf62eedcceb0fd385cb0998c186f4773b08414ef814d",
+      "bytes": 6373
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/REVIEW.json",
+      "sha256": "46c5732b55cac15b5d8f42a708add71912a34fbad937a45ffa2fbb1a90bc8217",
+      "bytes": 25684
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/VERIFIED_RECEIPTS.json",
+      "sha256": "64ce040c4cd71222cd4f877711af5e48e9bb72c8ca7cfd4a18bb6454e966848e",
+      "bytes": 52098
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-00-EncryptionKey.cs.patch",
+      "sha256": "f5e62c0d98627ae885de5b3c5e6995e02e32ad47ec96ec30bb3a758f295ef137",
+      "bytes": 1899
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-01-MessageContractIdentity.cs.patch",
+      "sha256": "fb158592cb813923f06d73ad5e049e07e84745cb6213382655aeab915301a23a",
+      "bytes": 1867
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-02-product-fixes.md.patch",
+      "sha256": "892f8080e2b20129b471eb56f4ecef5278c4a2ecaf6c2676a1bd0a5e5258afa5",
+      "bytes": 1046
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-03-package02_identity_mutations.py.patch",
+      "sha256": "52e1d9db6fdd08610c29b4bc6aaff32c692aa3f82882889883adec0ae7a8f0ab",
+      "bytes": 9386
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-04-run_operation.py.patch",
+      "sha256": "e6cc1891117ac5a9f0a5e78e3f7f3aa1f9bf42f4862cd445172e88f8eb3b65ab",
+      "bytes": 1813
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-05-Program.cs.patch",
+      "sha256": "1a37ef2c1e3b9678ad9f219b63e63f1da812b27e583b95b9425db48722bde381",
+      "bytes": 9012
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-contract-exclusive-length-bound.patch",
+      "sha256": "7efe23ab423715ca1dd993d81540b244245500b3c6a22d2ed86608763d33094b",
+      "bytes": 501
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-contract-lost-high-surrogate-guard.patch",
+      "sha256": "96db1bc6f257644de1d02d879b634b6cb93b1a75622ec5c5b1b0e22df9c5e31f",
+      "bytes": 601
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-contract-lost-low-surrogate-guard.patch",
+      "sha256": "1fdfea204bef125321c8878237ec22ccb3c2790ac4ba3ca49528103301ca7ff9",
+      "bytes": 577
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-contract-replacement-character-overrejection.patch",
+      "sha256": "b1b7eac096cac8615c097ecba3232e64a0b460d656ec59f8bef76f0a526c1a6f",
+      "bytes": 724
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-contract-valid-pair-not-consumed.patch",
+      "sha256": "5babbf1488eb6abb6fef51a667f67980eb1fe358c9ad5ba19050d175b34b1d6a",
+      "bytes": 575
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-key-character-count-bound.patch",
+      "sha256": "acb6b2aee4406fb3c5cc774afaf2a87c809aa3205e875e6fcc4c0a8ef7b907fc",
+      "bytes": 555
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-key-exclusive-upper-bound.patch",
+      "sha256": "8e7dbcb78d90a67a6b8310067e8e62beeb066c3f3b50733266b95cdfe2993c20",
+      "bytes": 558
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-key-lossy-encoding.patch",
+      "sha256": "c8a760283a3a47865662beee5994a9ddac5c0dadfb2cd4732b95139c1725f318",
+      "bytes": 483
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-key-lost-encoding-cause.patch",
+      "sha256": "f43539e95daf1a14658abbb8149d260f95ecd94d8cdc20deeb9e1c2977679c67",
+      "bytes": 551
+    }
+  ]
+}

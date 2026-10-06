@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.Advanced.Middleware;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ViciOne.ServiceBus.Context;
@@ -12,6 +13,103 @@ namespace ViciOne.ServiceBus.Tests.Transports;
 
 public sealed class SendTransportTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-SEND-TRANSPORT-FAULT", "stop-diagnostic-does-not-skip-owned-agents")]
+    public async Task StopDiagnostic_DoesNotPreventOwnedAgentShutdownAsync(bool loggerThrows)
+    {
+        var primary = new IOException("send stopping diagnostic failed");
+        var logger = new SelectedStoppingLogger(loggerThrows ? primary : null);
+        var owned = new RecordingStopAgent();
+        var context = new RecordingSendTransportContext([], ownedAgents: [owned]);
+        var transport = new SendTransport<TestTransportContext>(context);
+        ILogContext? previous = LogContext.Current;
+        Task? stop = null;
+        try
+        {
+            Assert.False(owned.Completed.IsCompleted);
+            Assert.Equal(0, owned.StopCount);
+            LogContext.ConfigureCurrentLogContext(logger);
+            stop = transport.DisposeAsync().AsTask();
+            Exception? failure = await Record.ExceptionAsync(() => stop.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None));
+            Assert.IsNotType<TimeoutException>(failure);
+            Assert.True(stop.IsCompleted);
+            Assert.Equal(1, logger.TargetCount);
+            Assert.Equal("orders", logger.Destination);
+            Assert.Equal(loggerThrows ? 1 : 0, logger.ThrowCount);
+            if (failure is not null)
+                Assert.Same(primary, failure);
+
+            Assert.Equal(1, owned.StopCount);
+            Assert.True(owned.Completed.IsCompletedSuccessfully);
+            Assert.True(transport.Completed.IsCompletedSuccessfully);
+            Assert.Null(failure);
+            Assert.True(stop.IsCompletedSuccessfully);
+        }
+        finally
+        {
+            try
+            {
+                if (stop is not null)
+                {
+                    try { await stop.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None); }
+                    catch (Exception failure) when (failure is not TimeoutException && (stop.IsFaulted || stop.IsCanceled)) { }
+                }
+            }
+            finally
+            {
+                LogContext.ConfigureCurrentLogContext(NullLogger.Instance);
+                try
+                {
+                    if (!owned.Completed.IsCompleted)
+                        await owned.StopAsync(CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+                    await transport.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+                    await owned.Completed.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+                }
+                finally { LogContext.Current = previous!; }
+            }
+        }
+    }
+
+    private sealed class RecordingStopAgent : Agent
+    {
+        public RecordingStopAgent() => SetReady();
+        public int StopCount { get; private set; }
+        protected override Task StopAgentAsync(StopContext context)
+        {
+            StopCount++;
+            SetCompleted(Task.CompletedTask);
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class SelectedStoppingLogger(Exception? failure) : ILogger
+    {
+        public int TargetCount { get; private set; }
+        public int ThrowCount { get; private set; }
+        public string? Destination { get; private set; }
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => true;
+        public void Log<TState>(LogLevel level, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            if (level != LogLevel.Debug || state is not IEnumerable<KeyValuePair<string, object?>> values)
+                return;
+            Dictionary<string, object?> fields = values.ToDictionary(x => x.Key, x => x.Value);
+            if (!fields.TryGetValue("{OriginalFormat}", out object? template)
+                || !Equals(template, "Send Transport Stopping: {Destination}"))
+                return;
+            TargetCount++;
+            Destination = fields.GetValueOrDefault("Destination") as string;
+            if (failure is not null)
+            {
+                ThrowCount++;
+                throw failure;
+            }
+        }
+    }
+
     private static readonly Uri DestinationAddress = new("loopback://localhost/orders");
 
     [Fact]
@@ -150,7 +248,8 @@ public sealed class SendTransportTests
 
     private sealed class RecordingSendTransportContext(
         List<string> trace,
-        Exception? sendFailure = null) : BasePipeContext, SendTransportContext<TestTransportContext>
+        Exception? sendFailure = null,
+        IEnumerable<IAgent>? ownedAgents = null) : BasePipeContext, SendTransportContext<TestTransportContext>
     {
         private readonly List<string> _trace = trace ?? throw new ArgumentNullException(nameof(trace));
 
@@ -164,7 +263,7 @@ public sealed class SendTransportTests
         public CancellationToken ObservedCancellationToken { get; private set; }
         public SendContext? ObservedSendContext { get; private set; }
 
-        public IEnumerable<IAgent> GetAgentHandles() => [];
+        public IEnumerable<IAgent> GetAgentHandles() => ownedAgents ?? [];
 
         public Task<SendContext<T>> CreateSendContextAsync<T>(
             T message,

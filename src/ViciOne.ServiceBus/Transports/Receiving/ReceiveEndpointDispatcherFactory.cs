@@ -83,15 +83,35 @@ public sealed class ReceiveEndpointDispatcherFactory :
         if (Interlocked.Exchange(ref _disposed, 1) != 0)
             return default;
 
-        IEnumerable<IReceiveEndpointDispatcher> dispatchers = _dispatchers.Values.Where(x => x.IsValueCreated).Select(x => x.Value);
-        foreach (var dispatcher in dispatchers)
+        try
         {
-            var metrics = dispatcher.GetMetrics();
-            LogContext.Debug?.Log("Dispatcher completed {InputAddress}: {DeliveryCount} received, {ConcurrentDeliveryCount} concurrent",
-                dispatcher.InputAddress, metrics.DeliveryCount, metrics.MaxConcurrentDeliveryCount);
+            IEnumerable<IReceiveEndpointDispatcher> dispatchers = _dispatchers.Values.Where(x => x.IsValueCreated).Select(x => x.Value);
+            foreach (var dispatcher in dispatchers)
+            {
+                var metrics = dispatcher.GetMetrics();
+                var logger = LogContext.Debug;
+                if (logger is null)
+                    continue;
+
+                Uri inputAddress = dispatcher.InputAddress;
+                long deliveryCount = metrics.DeliveryCount;
+                int maxConcurrentDeliveryCount = metrics.MaxConcurrentDeliveryCount;
+                try
+                {
+                    logger.Log("Dispatcher completed {InputAddress}: {DeliveryCount} received, {ConcurrentDeliveryCount} concurrent",
+                        inputAddress, deliveryCount, maxConcurrentDeliveryCount);
+                }
+                catch (Exception)
+                {
+                    // Optional metrics logging must not retain cached dispatcher references.
+                }
+            }
+        }
+        finally
+        {
+            _dispatchers.Clear();
         }
 
-        _dispatchers.Clear();
         return default;
     }
 

@@ -1,0 +1,29 @@
+{
+  "utc": "2026-10-04T20:14:09.581377+00:00",
+  "decision": "APPLY_F117_THREE_MEDIATOR_DIAGNOSTIC_GUARDS_AFTER_INDEPENDENT_SOURCE_NO_BLOCK",
+  "finding": "F-SB-API-117",
+  "independent_source_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package133-mediator-three-diagnostics-independent-runtime-source-r2/REPORT.json",
+    "sha256": "e33ab4da4803b4c81bb38b37802def9df3a0c04c86ee16490d01a18e917b8c82"
+  },
+  "author_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package133-mediator-diagnostic-three-callsite-product-proposed-r1/MANIFEST.json",
+    "sha256": "c8bdf41613393ca51271765f5a83c061123ae1836571a325bf2967ca27ea68e2"
+  },
+  "original_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package133-fixed-courier6-dispatch11-original-mediator54-independent-r1/REPORT.json",
+    "sha256": "d56229d1b2b15b0ced3c4d3818dd6bbd6fddedd21737a887a550f1214377d6ce"
+  },
+  "before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorReceiveContext.cs",
+    "sha256": "4f298c6762e1f656390d537510ce9bce6a25196e953c2e008e17e37affeabb8d"
+  },
+  "root_personal_review": "Entireoriginal185L owner8272ec plus exact3deltas/authorreportca07fd, wholeSourcepeer12b37c and actualBasepolicy455e65. Whole509tests retainedunchanged, all54originalnative personallyread79f1ee/bcda79. CatchonlysyncDiagnostics, actualObservers/Taskidentity/guards/payloadoutsidecatch.",
+  "tests_changed": false,
+  "requirements_delta": 0,
+  "current_strict_native_fresh_pack_pending": true,
+  "after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/Mediator/Contexts/MediatorReceiveContext.cs",
+    "sha256": "97c453fa3d0e2723b79600a7e78bc4a45fdd324ba69f012f480a76560caf7441"
+  }
+}

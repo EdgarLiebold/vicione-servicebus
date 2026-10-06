@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-04T15:44:53.157395+00:00",
+  "decision": "ROOT_F082_F085_ACTUAL_NATIVE_CONFIRMED_AND_INDEPENDENT_REVIEWED_SOURCE_FIXES_APPLIED",
+  "sources": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqQueueRedeliveryPlan.cs",
+      "before": "5c8c981e47737dfeb047e7495fc3d12d5db5750b3eb3dde4b622d558c0c0248c",
+      "after": "6e6a61b37a1145829bf13c79e2cb4722385625e56b1352c9bb77b668d249d168"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/SequentialEndpointResolver.cs",
+      "before": "d615202b2d58a1c4bbcc918166ce2470b9e200925782497af26b4201262c9276",
+      "after": "aa2390ee1bd4bfe5abd8f1c3ec2d3718ccc2ac240202454ed85587a0390a4f54"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Topology/RabbitMqEntityNameValidator.cs",
+      "before": "04f7eaa2abeea322d56dfc40e10e5de67a72f3823aa1d8a49db6142ea7a55fc7",
+      "after": "50bbff34f69eb0c526b238939be3329229efac508339b4ecbf3967e7a8a40368"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Topology/RabbitMqSendSettings.cs",
+      "before": "6743879af7c1d347d60425b0efcae398ca6b7f37a7fc4c8a8298d6b0f506429e",
+      "after": "6ae0d0cdcf56921e073220aa124ac60156589b153f01e483f716470378d4a011"
+    }
+  ],
+  "root_whole_reads": [
+    "c8e23b threecompleteoriginalproductowners",
+    "292e29 completeSendSettings171L",
+    "bef970 exactRootauthoredminimal4productdiff",
+    "cf2506 completeindependentruntimeadversarial3d05a89report",
+    "557ecb completenative10raw fourfiniteRED sixPurgepositivecontrols"
+  ],
+  "independent_adversarial_report_sha256": "3d05a89a52b5081c5be7997fdfcb757c952398889238fc768bf3e02cbf777ccd",
+  "original_native_sha256": "76cae2c46899e0730b8ea4383befb88857cc89446b37d2c44f223fe096bc94cb",
+  "original_freeze_sha256": "a69496eaf273fc96146760bda49ca1299362065b3063527945e379a18d558001",
+  "limits": "Actualcontrolledboundaryoracles, no livebroker. CorrectedNative/freshpackagepending."
+}

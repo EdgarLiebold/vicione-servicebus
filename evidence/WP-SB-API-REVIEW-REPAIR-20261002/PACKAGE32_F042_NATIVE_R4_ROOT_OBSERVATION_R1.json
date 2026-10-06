@@ -1,0 +1,20 @@
+{
+  "status": "ROOT_FULL_RAW_NATIVE_FOUR_CASES_SIX_RECEIVES_OBSERVED_PHYSICAL_QUALIFICATION_PENDING",
+  "actor": "/root",
+  "utc": "2026-10-03T23:20:39.010870+00:00",
+  "raw_log": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package32-public-native-r4.log",
+    "bytes": 13911,
+    "sha256": "0a3619c4ffd2c80e05b5ed63276440b12e4299e4c470fb900ac36e63a684b83d",
+    "root_personal_full_untruncated": true
+  },
+  "candidate_sha256": "b42763b7ca7d9795976220f9af79735cb59ec13fcc024853fb83c3c357d9e6cf",
+  "four_cases": true,
+  "six_actual_source_receives": true,
+  "all_cleanup_joined": true,
+  "loaded_actual_assemblies": 2,
+  "EF_loaded_claimed": false,
+  "whole_F042": false,
+  "compiled_mutations_executed": false,
+  "canonical_core766_full": false
+}

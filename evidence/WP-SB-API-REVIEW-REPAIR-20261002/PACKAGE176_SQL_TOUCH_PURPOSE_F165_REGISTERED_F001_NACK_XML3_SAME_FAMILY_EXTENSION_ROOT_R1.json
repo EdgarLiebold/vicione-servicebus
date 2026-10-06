@@ -1,0 +1,134 @@
+{
+  "utc": "2026-10-05T09:57:38.052118+00:00",
+  "actor": "/root",
+  "before": {
+    "known_unique": 164,
+    "accepted": 164
+  },
+  "after": {
+    "known_unique": 165,
+    "accepted": 163
+  },
+  "F-SB-API-165": "One SQL Touch-purpose documentation family:6methods8publishednodes. Four generic descriptions falsely promise conversion or last-used queue timestamp; actual two current DB implementations insert timestamped zero-counter metriccapture. Comments-only9owner application includes corrected8nodes; no newruntime/cancellation/storage behavior. Fresh afterDLL/XML/ZIP closure pending.",
+  "F-SB-API-001": "Same completion-vs-broker-work contract family extended by3exactRabbit BasicNack returns. Built-in unavailable lifetime or AlreadyClosed completion can succeed without rejection write; published interface/wrapper returns falselypromiseactualwrite. No three newIDs. Actualsource/publication paired original4PE/PDB checks done prior mutation. CurrentafterXML/fresh proof pending.",
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE176_SQL_TOUCH_XML8_RABBIT_NACK_XML3_CLEANUP_ORIGINAL_TEST1_REQ1_ROOT_APPLICATION_R1.json",
+    "sha256": "ab1c44dd0645d2e38740b61c9ecffd7a693f435eebe46b0931e88706b3a7ecfa"
+  },
+  "Root_personal_read": "ActualentireRabbithelper129/Test227R1+exactR2finally/main/helperliteralguards; actual fourNack method/declarations and two concrete completeTouch SQLroutines plus6Touchselectedmembers; independentSourcepeers allauthorMAN pins/literalinverse source9/11XML/currentbefore4DLL/PDB/Xml exactnodes. No whole21SQLTopology credit.",
+  "current_original_XML11": [
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Converts this value to uch queue.",
+      "after": "Records usage of the specified primary queue through the provider."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SqlClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Updates a queue's last-used timestamp.",
+      "after": "Records usage of the specified primary queue through the provider."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ScopeClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Converts this value to uch queue.",
+      "after": "Records usage of the specified primary queue through the provider."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SharedClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Converts this value to uch queue.",
+      "after": "Records usage of the specified primary queue through the provider."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgreSqlClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Updates a queue's last-used timestamp.",
+      "after": "Records activity for the specified primary queue with a zero-counter metric capture."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgreSqlClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "returns",
+      "before": "A task that completes after PostgreSQL updates the queue timestamp.",
+      "after": "A task that completes after PostgreSQL records the queue activity."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Updates a queue's last-used timestamp.",
+      "after": "Records activity for the specified primary queue with a zero-counter metric capture."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "returns",
+      "before": "A task that completes after SQL Server updates the queue timestamp.",
+      "after": "A task that completes after SQL Server records the queue activity."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.ChannelContext.BasicNackAsync(System.UInt64,System.Boolean,System.Boolean,System.Threading.CancellationToken)",
+      "node": "returns",
+      "before": "A task that completes after the negative acknowledgement is written.",
+      "after": "A task that completes after rejection handling, which may be a no-op when the channel is unavailable or already closed."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.ScopeChannelContext.BasicNackAsync(System.UInt64,System.Boolean,System.Boolean,System.Threading.CancellationToken)",
+      "node": "returns",
+      "before": "A task that completes after the negative acknowledgement is written.",
+      "after": "A task that completes after rejection handling, which may be a no-op when the channel is unavailable or already closed."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.SharedChannelContext.BasicNackAsync(System.UInt64,System.Boolean,System.Boolean,System.Threading.CancellationToken)",
+      "node": "returns",
+      "before": "A task that completes after the rejection has been written to the channel.",
+      "after": "A task that completes after rejection handling, which may be a no-op when the channel is unavailable or already closed."
+    }
+  ],
+  "original4frames": [
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "dll_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll",
+      "dll_sha256": "b2198537098d5128824ddb4eb485aba75abe3a27a0f6679c6827e6f5ae27bd9d",
+      "xml_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.xml",
+      "xml_sha256": "d8181bd705feba18dbcca3df2fdd795fee6027059a8a8ad4d0ce1b8399cbc392",
+      "pdb_sha256": "171a2d15cd3e7a5112a08f66a4f4cc279bdba0de25c18fee46095829ff726be1"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "dll_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll",
+      "dll_sha256": "1c40ad088878f589630110f37a0ef1ef19f7d19880d4e3e71a96515172688871",
+      "xml_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.xml",
+      "xml_sha256": "97e52e0018833c7dd1a612ebdfd68321bec9a9e89756cafab5eae26967b996a1",
+      "pdb_sha256": "928cb290e90c78d17f14bd93b66cfe490b36419b14aad5b2021bac0ed6c889eb"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+      "dll_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll",
+      "dll_sha256": "d82f115ac7e86d3b391eb0ae9b7b8fb72cc6d6d80980f9cd53a3d5e1965a6f42",
+      "xml_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.xml",
+      "xml_sha256": "cc3f7615deec8242e20549ec4c3b2c7b6dd89d37348b2de357213d6510d4c35e",
+      "pdb_sha256": "ffec6fd7727c7204bc46bbcfbcf5f8ea8263afa5e58a73b7567dd8e88bf4a083"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "dll_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer/release/ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+      "dll_sha256": "d37a410372ee9a27ccfed857eb6dbdad9f22afa4ecd05bc3b8a75ce04e9a0912",
+      "xml_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer/release/ViciOne.ServiceBus.SqlTransport.SqlServer.xml",
+      "xml_sha256": "005d16fb9e2e1b6f58ac4c5dec8b3c22daf761e1d665b30608a23a4e6c5711c9",
+      "pdb_sha256": "4d4e34069c9ee49128f0d68cbb6569f9c2f38e4cb6492d08b7dc72f887bf4c53"
+    }
+  ],
+  "whole_API_closed": false,
+  "new_native_count_from_XML": 0
+}

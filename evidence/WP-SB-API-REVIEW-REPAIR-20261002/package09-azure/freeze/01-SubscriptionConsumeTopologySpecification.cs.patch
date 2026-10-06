@@ -1,0 +1,18 @@
+--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SubscriptionConsumeTopologySpecification.cs
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SubscriptionConsumeTopologySpecification.cs
+@@ -27,11 +27,12 @@
+         _filter = filter;
+     }
+ 
+-    /// <summary>Returns no additional validation because the entity configurators validate these options.</summary>
+-    /// <returns>An empty sequence.</returns>
++    /// <summary>Validates mutually exclusive rule configuration retained by the forwarding subscription.</summary>
++    /// <returns>Failures when both a complete rule and a default-rule filter are specified.</returns>
+     public IEnumerable<ValidationResult> Validate()
+     {
+-        yield break;
++        if (_rule != null && _filter != null)
++            yield return this.Failure("Rule/Filter", "only a rule or a filter may be specified");
+     }
+ 
+     /// <summary>Creates the source topic and a subscription that forwards deliveries to the endpoint queue.</summary>

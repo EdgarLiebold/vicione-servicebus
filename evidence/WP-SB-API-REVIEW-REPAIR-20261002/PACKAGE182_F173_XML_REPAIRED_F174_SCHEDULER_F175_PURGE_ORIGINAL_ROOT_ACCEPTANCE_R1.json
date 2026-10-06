@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-05T12:17:01.899367+00:00",
+  "actor": "/root",
+  "status": "F173_CONSUMER_XML1_REPAIRED_F174_SCHEDULER3_F175_PURGE2_ORIGINAL_CAUSES_REGISTERED",
+  "before": {
+    "known_unique": 173,
+    "accepted": 172
+  },
+  "after": {
+    "known_unique": 175,
+    "accepted": 173
+  },
+  "accepted_ids": [
+    "F-SB-API-173"
+  ],
+  "new_original_ids": [
+    "F-SB-API-174",
+    "F-SB-API-175"
+  ],
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package182-sql-consumer-xml1-scheduler-purge-original10-fresh3-independent-r1/REPORT.json",
+    "sha256": "b673879cdfbf0614a5c1c610798ff3aa332c6ff4c75ba3ef2f0fed276d75152a",
+    "manifest_sha256": "c1ced16956e5c6d69ec3ec83f96f1f1d342276df73a8a3eed036a635011d6d91",
+    "freeze_sha256": "fa2589cd083fe18eb3c3297f2d75e6a177d75be021aba0d608192af5e80ec4cc"
+  },
+  "root_independent_verification": "Whole143pureQualifierd35f8a beforeGO, Rootall2857MAN/2839frozenliveorigins/12reparsedPEPDB/2744CS/84Emb/7runtime/Req167exhaustiveresource/fiveSerial/old275P+new5healthyP5finiteF/CRC3/exactXML1/unchanged2causeSources d149fa. Rootwholeactual5firstfailureblocks479cc2; genuine new416Patch981cdb+12fdbc and actualProduct174+60dbea11/Consumer46 33dddc; no all285Testbody or2744humanwholeSourceclaim.",
+  "actual_native": {
+    "total": 285,
+    "passed": 280,
+    "failed": 5,
+    "skipped": 0
+  },
+  "repair_scope": "F173exactConsumerclasspublishedsummary corrected toactualSQLreceiver/observer lifecycle, sameoperativebody andallothernodes preserved.",
+  "original_scope": {
+    "F174": "One ownSchedulerdiagnosticfamily onScheduleSend+bothCanceloverloads. Threeactualhostilepubliccalls finiteFIRSTNull293 after exactSameuniqueIOException292 and actualSend/DeleteTasksuccess, structuredtemplate/args. Healthy3controlsP. L336finallystackonly; returnedScheduledHandlelaterassertionsunreached.",
+    "F175": "One ownPurgeoptionaldiagnosticfamily atcompletion/skip, distinct from priorgate/cancellationcauseF094. Actualfirstsuccessfulpurge thencompletiondebugIO preventsflag; secondactualpublicpipelinepurgesagain FIRST165expected1actual2, laterNull166/167unreached. ActualskipdebugIO FIRSTSecondNull167 afterCalls1/FirstNull166. Healthy2controlsP. L197finallyonly, laterdownstreamsuccessunreached."
+  },
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "final_23Unit_31Package_18Journey_4Consumers_pending": true,
+  "limits": [
+    "Realpublicroutes andactualSPIheldtasks, no realDB/broker success.",
+    "Provider failures/falseDelete/hostretry/callerCancel not newly covered, preservedindependentobligations.",
+    "Fivecases counted as two causes, no case-countFindinginflation."
+  ]
+}

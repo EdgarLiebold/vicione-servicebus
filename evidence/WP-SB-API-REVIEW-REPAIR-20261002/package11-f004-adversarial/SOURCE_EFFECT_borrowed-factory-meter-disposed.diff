@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs
++++ borrowed-factory-meter-disposed/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs
+@@ -66,7 +66,7 @@
+                 "s",
+                 "Duration of processing one message-journal observation.");
+             _activitySource = source;
+-            _processMeter = processMeter;
++            _processMeter = meter;
+         }
+         catch
+         {

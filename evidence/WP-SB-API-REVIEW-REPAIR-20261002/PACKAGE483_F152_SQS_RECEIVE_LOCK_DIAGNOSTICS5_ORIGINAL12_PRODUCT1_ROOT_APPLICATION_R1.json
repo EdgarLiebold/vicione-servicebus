@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-06T14:46:14.139863+00:00",
+  "status": "ROOT_APPLIED_DIFFERENT_WHOLE_REVIEWED_PRODUCT1_F152_FIVE_STATEMENTS_FRESH_FIXED_PENDING",
+  "finding": "F-SB-API-152",
+  "source": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+  "before": "9aed84f4b739cb3d08a4173a8399da74ae28b91c1e309642b328064c000d95d7",
+  "after": "9eaacd0d4c3e4625a454cd99322be3e1e2c801cc306c0b56f1f20d4ba6a496b4",
+  "before_manifest": "52106a6a1c88120f9b6f813463e1387810db0566a090187bb25762eb2c255f27",
+  "different_peers": {
+    "Source": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package476-receive-lock5-independent-source-peer-r1/REPORT.json",
+      "sha256": "d521bf435b22e06501bb0de50e3bff3ae328733eb5f6d773cd760f24a168b8b6"
+    },
+    "Original10": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package472-sqs-original10-fixed24-independent-native-qualification-r1/REPORT.json",
+      "sha256": "2ce7a86a53d2e98fded243dc0fec8e29e203c0130c81fd9dc16c7e7ea443e1fe"
+    },
+    "OriginalMax2": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package480-max2-independent-native-qualification-r1/REPORT.json",
+      "sha256": "a3107175e8d2a99162a3d8323cd1ca0c393e9068eda7bccff8f709f1434d3509"
+    }
+  },
+  "Root_full_peer_read_receipts": [
+    "25ecae",
+    "107c92",
+    "be6630"
+  ],
+  "actual_unique_original12": {
+    "472Original10": [
+      10,
+      5,
+      5
+    ],
+    "480maximum2": [
+      2,
+      1,
+      1
+    ],
+    "total12": [
+      12,
+      6,
+      6
+    ]
+  },
+  "scope": "Only five owning optional logger expressions; actual SDK calls, first operative clock read, cancellation/join/token disposal and public signatures/XML remain outside containment and unchanged. No separate newFinding ID for same established F152 policy.",
+  "test_req_unchanged": true,
+  "public_api_acceptance": 0,
+  "grade": null,
+  "next": "Fresh unchanged12 +existing24, SQSmodule, strict and new developer package journeys; final global review remains open."
+}

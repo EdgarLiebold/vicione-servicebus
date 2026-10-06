@@ -1,0 +1,11 @@
+--- a/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs
++++ b/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs
+@@ -57,7 +57,7 @@
+     }
+ 
+     /// <summary>Gets the current session lock expiration in UTC, including SDK-owned renewals.</summary>
+-    public DateTimeOffset LockedUntilUtc => _session.SessionLockedUntil.ToUniversalTime();
++    public DateTimeOffset LockedUntilUtc => _session.Message.LockedUntil.ToUniversalTime();
+ 
+     /// <summary>Gets the accepted Azure Service Bus session identifier.</summary>
+     public string SessionId => _session.SessionId;

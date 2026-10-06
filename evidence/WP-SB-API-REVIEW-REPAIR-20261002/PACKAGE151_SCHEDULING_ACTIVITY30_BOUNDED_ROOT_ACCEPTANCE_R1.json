@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-04T22:32:00.296232+00:00",
+  "decision": "ACCEPT30_SCHEDULING_ACTIVITY_INDIVIDUAL_SOURCE_AND_ROUTE_SPECIFIC_ASSERTION_CONTRACTS",
+  "api_before": 3352,
+  "api_after": 3382,
+  "semantic_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-scheduling-activity30-current-contracts-r1/REPORT.json",
+    "sha256": "3e3fdbdfe4df45cb4bd74aa67ac1ecb0fbb7cccf88a08d9690199b8c1f818c05"
+  },
+  "semantic_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-scheduling-activity30-current-contracts-r1/PER_MEMBER_CONTRACT_MATRIX.json",
+    "sha256": "facffaefb2e75c6dce58a65fc059d73da8f5a5dae2ccb05225862da12c0e63d3"
+  },
+  "assertion_bindings": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-scheduling-activity30-current-contracts-r1/ASSERTION_CATALOG_AND_ACTUAL_BINDINGS.json",
+    "sha256": "e93c534f248c1c9c9c69aee62a43bca8f2e6a2c04bc18617a196a60953a31eb8"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-scheduling-activity30-current-contracts-r1/MANIFEST.json",
+    "sha256": "e1c91841a8495d7ffe5ffd5351790ad4fe2e3b84f61bb5cc7f5389fcf93cc296"
+  },
+  "root_personal_norms": [
+    "Whole report and0..14 contracts afbd94;15..29 contracts15f438; every30 exact typed signature/default/nullable/constraint/result/accessorsb0c96d. All28 genuine named assertion clauses+7 actual PDB binds074758.",
+    "Mechanical all actual69 catalogcases occur in genuine independently qualified147log, per30 direct subsetjoins checked before mutation; catalogaggregate not30-member closure.",
+    "Genuine Runtime peer personally whole3owners410L+2causal270L+2testowners2903L, with previously truncated521..780 independently recovered. Root personally reviews precise contracts/claims, not own whole2903L newly here."
+  ],
+  "scope": "7 stateful async routes+7 exact pureTaskforwarders+4ctors+4Accept+4Probe+4types. Schedule`2 generic data bridge gets sharedhelper Source evidence only; Schedule`3 TMessage is incoming while T is scheduled outgoing. FaultedUnschedule exception generic alone is untyped and typed filtering occurs only with extra event-data generic.",
+  "limits": [
+    "No typed cross-credit from untyped24-distinct-saga concurrency, no same-saga/customSchedule-thread-safety/distributed atomicity guarantee. Typed ownership Fact only proves foreign-held branch; other branches remain untyped.",
+    "Accepted newToken persists when oldcancel faults; failed new schedule keeps oldToken. Caller cancellation cooperative; no noncooperative abandonment or DateTime overflow rewrite.",
+    "Normal fault-forwarder exactTask statement Source-derived, no invented direct fixtureTaskidentity. Faulted success forwarding actual uniquePendingTask controls separately genuine.",
+    "Historical147 qualified actual native69 catalogcases and7 selected current unchangedPDBsources. No old PE/package rebadged current150; no full runtime/APIgrade."
+  ],
+  "whole_api_status": "PARTIAL"
+}

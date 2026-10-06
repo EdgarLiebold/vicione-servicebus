@@ -68,14 +68,14 @@ public class DefaultEndpointNameFormatter :
     /// <summary>Gets the prefix.</summary>
     protected string? Prefix { get; }
     /// <summary>Gets the join separator between the words.</summary>
-    protected string JoinSeparator { get; } = null!;
+    protected string? JoinSeparator { get; } = null;
     /// <summary>Gets the instance.</summary>
     public static IEndpointNameFormatter Instance { get; } = new DefaultEndpointNameFormatter();
 
     /// <summary>Gets or sets the separator.</summary>
     public string Separator { get; protected set; } = "";
 
-    /// <summary>Configures a temporary endpoint.</summary>
+    /// <summary>Generates a temporary endpoint name using the supplied tag, host metadata, and a new identifier.</summary>
     /// <param name="tag">The tag.</param>
     /// <returns>The string produced by the operation.</returns>
     public virtual string TemporaryEndpoint(string tag)
@@ -92,7 +92,7 @@ public class DefaultEndpointNameFormatter :
         return GetConsumerName(typeof(T));
     }
 
-    /// <summary>Applies the message configuration.</summary>
+    /// <summary>Formats the endpoint name for the selected message type.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <returns>The string produced by the operation.</returns>
     public virtual string Message<T>()
@@ -101,7 +101,7 @@ public class DefaultEndpointNameFormatter :
         return GetMessageName(typeof(T));
     }
 
-    /// <summary>Applies the saga configuration.</summary>
+    /// <summary>Formats the endpoint name for the selected saga type.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <returns>The string produced by the operation.</returns>
     public virtual string Saga<T>()
@@ -110,7 +110,7 @@ public class DefaultEndpointNameFormatter :
         return GetSagaName(typeof(T));
     }
 
-    /// <summary>Executes activity.</summary>
+    /// <summary>Formats the execution endpoint name for the selected activity and arguments types.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <returns>The string produced by the operation.</returns>
@@ -123,7 +123,7 @@ public class DefaultEndpointNameFormatter :
         return $"{activityName}_execute";
     }
 
-    /// <summary>Compensates activity.</summary>
+    /// <summary>Formats the compensation endpoint name for the selected activity and log types.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <returns>The string produced by the operation.</returns>

@@ -1,0 +1,11 @@
+--- frozen-corrected-Registrar
++++ CollapseKnownAliases
+@@ -399,7 +399,7 @@
+         });
+         Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
+             Bind<TBus>.Create(provider.GetRequiredService<DefinitionOwner<TDefinition>>().Value));
+-        Collection.AddSingleton<Bind<TBus, T>>(provider =>
++        Collection.TryAddSingleton<Bind<TBus, T>>(provider =>
+             Bind<TBus>.Create<T>(provider.GetRequiredService<Bind<TBus, TDefinition>>().Value));
+     }
+ 

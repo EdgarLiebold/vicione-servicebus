@@ -1,0 +1,131 @@
+{
+  "status": "FROZEN_ADVERSARIAL_PENDING",
+  "original_findings": [
+    "F-SB-API-027",
+    "F-SB-API-028",
+    "F-SB-API-030"
+  ],
+  "owned_inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/00-ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/01-ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/02-ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/03-BatchCollector.cs",
+      "sha256": "df09223331e2acd9be04e5e241510bd39cc2572618b3d3b0d16f0548e4f9c0d0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/04-BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/05-packages.lock.json",
+      "sha256": "67b4ca31e0cd16ce001ed3a42122dfbfc76131e717a0ffc6cd4518216eb648d4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/06-NuGet.Config",
+      "sha256": "eee60fab9218839e3754d13bae2fc98e755e6dd45a7711015f64de9fca80d3ac"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/BatchTimerAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/07-BatchTimerAssertions.cs",
+      "sha256": "dc72e10b31f3ee1ecd5ae8b6a746d3185a3453fe876988588ca39899dfc98baa"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/HostTimeoutAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/08-HostTimeoutAssertions.cs",
+      "sha256": "10ab3e81f227587b50486e9052021c85638502e3b9fb03b17ebb7046483c6358"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/CorePackage05.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/09-CorePackage05.PublicConsumer.csproj",
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/10-OwnedLifetime.cs",
+      "sha256": "cd94fc8c143a9ce057002fda15e29ac76c684f2845dc264ad0dfe3a031a0ae6b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/ResultsAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/11-ResultsAssertions.cs",
+      "sha256": "9a75db2b72535847674eaa3314c59041ff8b71c0900bbea7a9a021cb8fa2e1f1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/12-Program.cs",
+      "sha256": "dddba44e9f9e1376c612093ffe7f14ecc1b68875173b0fa49c30dd1e5a729df8"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package05_core_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/13-package05_core_mutations.py",
+      "sha256": "9731c0bc67bcb4b857a5008c8a92891b4eec41c39a9a49184d990d0f1749bec8"
+    }
+  ],
+  "proofs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_PLAN.json",
+      "sha256": "7d45851f8d957465fcf364367361eae9a913d653233a25ef162177cc4d6e8908"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_ROOT_PUBLIC_READ_CLOSURE.json",
+      "sha256": "d700d5d8df85c7557ab0cfce971a2a34815404b68558da1860a4873accabf37e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+      "sha256": "244737bde95c98ebc2ec5e82d1ecc2636b4c72a09368ecd6ffa61c3e33b6dcb1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_ROOT_INDEPENDENT_MUTATION_BINDING.json",
+      "sha256": "4944c079031ea76b906b199aa802e18b2adf8a2057cd35c638ecf61ffcde4346"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_PUBLIC_BINDING.json",
+      "sha256": "22ab8e9da4384e71fba359a9909dc82c5634e7fbbc1b89f701209482d187eebf"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_SETUP_EXCLUSION.json",
+      "sha256": "26b0452dad795b78e8abbd0850283af1860e160068eec00b5f93f811b9fcba41"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_METADATA_PLAN_DELTA.json",
+      "sha256": "8955f18727b986d515196c977a193f92ec8295fcf36d15ddf76867d7e5b849ec"
+    }
+  ],
+  "original_causes": {
+    "phase": "package05-original-final-metadata-run42",
+    "cases": 42,
+    "causal_red": 10,
+    "positive_controls": 32
+  },
+  "corrected": {
+    "phase": "package05-corrected-final-metadata-run42",
+    "cases": 42,
+    "failed": 0
+  },
+  "limits": [
+    "42CLIcases, no MTP discovery count",
+    "No canonical766-file Core owner edit/full acceptance",
+    "Host options positive/null and ConsumerStop<=Stop retained",
+    "F030 default System bound checked before first new batch constructor/admission, not before host startup",
+    "Custom ITimer intervals preserved; no arbitrary provider capability inference",
+    "Ungrouped actual batch route; grouped base guard static only",
+    "Quiescent host stop, no active ConsumerAgent shutdown outcome proof",
+    "No global API CLOSED/A+ or cloud/ARM performance claim"
+  ]
+}

@@ -1,0 +1,132 @@
+[
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "sha256": "0ea2c6c187131d7d822c647d0a107377b87d8dc2d5483babfa4c299d4b9083a2"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "sha256": "6c42108b365710a384e9376cb872b30eb85ae98801a2038f066d0fe249e24dcd"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "sha256": "d44c52e1c11fc61bc423fdbc35edcb84ddd57c2f25c81db8304c498060c19181"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "sha256": "a689b557031f8c9d08df3c09dfeff774f9dfa25e7b01c76c81e4daa5a7eea16c"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "sha256": "c41fe496133493750337eec78ed3718157f9762072dff2c4a290316558ca9062"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "sha256": "d674136886bc706ef596fe3d2017c8608d0171e0a9a6c02f3d9d03ca74f46d5b"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "sha256": "3ae4735449c76fb29ca75718ef96f5babef34bd80cd11a3a51ccaea33d822942"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "sha256": "46e4802ba192be64b6f817feb04de970aefc612a66592b4f3219889c5616bd6e"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "sha256": "60e923caa37a2bc1c2b575f2b07df0decdb13580d07f3d0695cc784a285a91c1"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "sha256": "672d5f6461fbe03e13ab7b25113cd88d24a2cc3b4bf446a3e395e7bcca97cd54"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "sha256": "f95f5d127c948345ea85bd6506415e8f97024b9ee5ae7f3c6def384dda27268b"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "sha256": "001a5f302aea41f3ff95804997c93644310ec45a41f571a508c15e529f5dc94f"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+    "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+    "sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+    "sha256": "4ac00b8633c77db1ce1c1add7585c734b42885c51955a61e5a83cfb96330d016"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+    "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+    "sha256": "f236623fdb28e5745365501bee6c15c2bfd42855e640877747ab159b13c13bf6"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+    "sha256": "4e2f6717ad21d08723ae083ce1c46ce4dba652d9f76239916844d515ab724608"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+    "sha256": "59bb94ea1dbc25064b7237e373708e7fc5e594721ded3dd3ac98b6542d0b696c"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+    "sha256": "780c76084ef0c3568b27b6a16c5fc2ccb41256f411c1f884cd1c59a7929f0c7f"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+    "sha256": "c1e4aa43f1c3ed7dfc4cd7b667eced1cba86f7909706c857cf6e6b141341afb2"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+    "sha256": "1a247eefbce695aa4e08a0f5efec2e2d2daf7ee6ab254bd75e89c4e06329ed41"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+    "sha256": "fd78240543cd1f2b1e9334c5929177163ccb58d8f47d789e23ade834ac7a94e1"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs",
+    "sha256": "9a46e174c4a7bd38c2294b31e615fd82d829fc10a60a0fe579e96e186a032650"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs",
+    "sha256": "53e53c4cbc614df6105a29a05f06c9c87c0ca868cc8667e1ccd1434f68e7a616"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+    "sha256": "200faf06c504e69bf3849aa2d4531fcbc15b749b355b4aeee08f17ccaaf2e058"
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-04T21:58:57.695700+00:00",
+  "decision": "REGISTER_ORIGINAL_NORMAL_SEND_CANCELLATION_DEFECT",
+  "confirmed_before": 124,
+  "confirmed_after": 125,
+  "known_accepted_unchanged": 123,
+  "finding": {
+    "id": "F-SB-API-125",
+    "severity": "Medium",
+    "title": "Normal saga Send activities omit context cancellation during endpoint resolution and message factory admission",
+    "source_owner": "src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/SendActivity.cs",
+    "source_sha256": "5211ee156a418b60edf48cf8a4eb660bc37b26ba9b121f5cd90c1e0d7ef0f5f0",
+    "status": "CONFIRMED_ORIGINAL_NATIVE_SOURCE_BOUND_REPAIR_PENDING",
+    "original_native_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package149-normal-send-original15-independent-r1/REPORT.json",
+      "sha256": "e8127629a83e630649d2f20850a61c64de6ff4d83a9f0a24a7c25d6fb8196269"
+    },
+    "linecount_precision_erratum": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package149-normal-send-original15-independent-r1/PERSONAL_READ_LINECOUNT_PRECISION_ERRATUM_R1.json",
+      "sha256": "eebe2f698eb4e2a7c02bdf54a7e2e29b4a7c489a210287ec21447a10fc85ac4c"
+    },
+    "original_native_phase": "package149-normal-send-original-class-native15-r1",
+    "original_native": {
+      "total": 15,
+      "passed": 9,
+      "failed": 6,
+      "skipped": 0,
+      "new8_passed2_failed6": true,
+      "old7_passed_unchanged": true
+    },
+    "causal_boundary": "Both normal activity families call GetSendEndpointAsync and ContextMessageFactory.UseAsync without context token. Supplied-token2 fail exact endpoint token639; heldcooperative2 fail finite cancellation685; postresolution2 show actual message factory admitted after cancellation726. None-token healthy2 and existing7 green. SendAsync itself already forwards token.",
+    "proof_limit": "Original15=9P6finiteF; subsequent assertions on failed methods not empirically credited. First generic activity typed Execute<T> shared helper Source routing only, no third runtime entrypoint claim. Real ContextFactory/proxy seam; no broker runtime.",
+    "whole_API_member_review_closed": false
+  },
+  "original_qualification_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package149-normal-send-original15-independent-r1/MANIFEST.json",
+    "sha256": "d3ef245c24712b60b15ea18d50caf0f67e5566e94336fc233bd964e6d968899f"
+  },
+  "verified_manifest_rows": 3328,
+  "root_personal_review": "Whole actual15 raw d9db9e, author/peer fullnormsc46455+newdelta b1b924+actual original4Sources464eff; complete independent149report+precisionerratum138980. No testfixture failure or timeout inferred.",
+  "whole_api_status": "PARTIAL"
+}

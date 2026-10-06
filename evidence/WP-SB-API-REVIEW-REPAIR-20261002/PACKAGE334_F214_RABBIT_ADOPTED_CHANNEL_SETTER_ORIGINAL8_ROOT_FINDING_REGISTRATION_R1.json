@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T04:20:35.958320+00:00",
+  "finding": "F-SB-API-214",
+  "status": "ACTUAL_ORIGINAL8_INDEPENDENTLY_QUALIFIED_REGISTERED_REPAIR_PENDING",
+  "severity": "Medium",
+  "cause": "A supported public IConnection/IChannel SPI can return an acquired channel whose ContinuationTimeout setter throws. Both public creation entry routes surface the setter cause without admitting acquired channel Close.",
+  "scope": "Custom public SPI setter failure only; no standard Rabbit concrete auto-property setter or real broker resource leak proved.",
+  "original": {
+    "capture": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package333-rabbit-original8-native-source-capture-r1",
+    "independent_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package333-rabbit-original8-independent-qualification-r1/REPORT.json",
+    "independent_report_sha256": "e3fef17693c02d6560c9883801aefa00cf04d32a5d4948e612e221f9f9d011ea",
+    "independent_manifest_sha256": "ff0be512aa1aeb8d84bd740c3a914bf093f8e38991ff3eb80d9597acc1b38002",
+    "log_sha256": "37eabcf19b7b1fae9f22744e1e16985e87675c06ac00d7d1e48900812912f465",
+    "total": 8,
+    "passed": 4,
+    "failed": 4,
+    "skipped": 0,
+    "first_failure": "Four mode1/2 cases at line84 CloseCalls 0 expected1, after actualSetter1/exactTimeout/terminalFaulted/SameSetter. Later disposal/cleanup/logger assertions were not reached."
+  },
+  "known_before": 213,
+  "known_after": 214,
+  "bounded_before": 213,
+  "bounded_after": 213,
+  "root_own_authority": "Full Product146 588199; full native8 e83fbb and Test334 b25bfc retained; full independent native and product reports bf22e1; current actual cleanup141 83ef94; all manifests and literal inverse guarded before mutation.",
+  "grade": null,
+  "whole_API_closed": false
+}

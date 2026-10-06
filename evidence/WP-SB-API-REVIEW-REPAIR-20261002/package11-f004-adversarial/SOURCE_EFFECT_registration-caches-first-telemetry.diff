@@ -1,0 +1,20 @@
+--- src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs
++++ registration-caches-first-telemetry/src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs
+@@ -189,6 +189,8 @@
+     MessageJournalOptions options) : IMessageJournalRegistration
+     where TBus : class, IBus
+ {
++    MessageJournalTelemetry? _cachedTelemetry;
++
+     public Type BusType => typeof(TBus);
+ 
+     public string BusKey { get; } = BusRegistrationIdentity.GetKey(typeof(TBus));
+@@ -198,7 +200,7 @@
+         ArgumentNullException.ThrowIfNull(configurator);
+         ArgumentNullException.ThrowIfNull(provider);
+         var writer = new MessageJournalWriter(store, policy, options,
+-            provider.GetRequiredService<MessageJournalTelemetry>());
++            _cachedTelemetry ??= provider.GetRequiredService<MessageJournalTelemetry>());
+         _ = MessageJournalConfigurationExtensions.ConnectMessageJournal(configurator, writer);
+     }
+ }

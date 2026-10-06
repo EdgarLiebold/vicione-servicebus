@@ -1,0 +1,191 @@
+{
+  "utc": "2026-10-03T13:00:33.186819+00:00",
+  "package_count": 3,
+  "source_f032_freeze": "e4925bf67fcc2b789ec9654a4845905fa8cf1ffe4c261951d55a2a23d0e1b1f2",
+  "source_f001_freeze": "5d020a2efef1a01a0d19dd2df085dba40e96fcaf6bd7f7c293a9248b2e35fcab",
+  "packages": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package21-f032-r1/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "a0752ed9e1999d8ca2bd19eeedc82cb011b7e6df35108b1dae0c146fc3b891a8",
+      "bytes": 1500104,
+      "files": [
+        {
+          "name": "_rels/.rels",
+          "bytes": 508,
+          "sha256": "fdaac079a76370573c8cc3c00b2cf8da34f695080f74846ec3c84f34298e31f1"
+        },
+        {
+          "name": "ViciOne.ServiceBus.nuspec",
+          "bytes": 1849,
+          "sha256": "a1e5c1d2c96baffd98944b948aa171ce20428b7c10f2f1f2f6dea518a39e444b"
+        },
+        {
+          "name": "NuGet.README.md",
+          "bytes": 4697,
+          "sha256": "f6e6b2052d5404786d47b3ac5c8ff016d6b83da2a801cf5537447f579eb9a7f4"
+        },
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "bytes": 3017728,
+          "sha256": "78d166b2d084393c32665ab27f1f82871a9e80f8febdcc80e8c5d67936a49322"
+        },
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "bytes": 2473471,
+          "sha256": "acf39d25692784344526d37834dab00ed4b066bd02ac193e09a3c5ee31325db2"
+        },
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 582,
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e"
+        },
+        {
+          "name": "package/services/metadata/core-properties/02ce0877db1a4d8ebe949db1803366ea.psmdcp",
+          "bytes": 724,
+          "sha256": "397820bd681a78d2f106e5ac974be69577469be0add0222986642bd5acac1b9d"
+        }
+      ],
+      "dll": [
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "bytes": 3017728,
+          "sha256": "78d166b2d084393c32665ab27f1f82871a9e80f8febdcc80e8c5d67936a49322"
+        }
+      ],
+      "xml": [
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "bytes": 2473471,
+          "sha256": "acf39d25692784344526d37834dab00ed4b066bd02ac193e09a3c5ee31325db2"
+        },
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 582,
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e"
+        }
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package21-f032-r1/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "287d0d419c1bd1da10de4df4d894f1da9e91f80cbdb77bcaab4907044574492d",
+      "bytes": 458581,
+      "files": [
+        {
+          "name": "_rels/.rels",
+          "bytes": 521,
+          "sha256": "bb8c7c1fca75aaeac453d762282c600e7e2c89893359487ed88f9a12741e7e4c"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions.nuspec",
+          "bytes": 972,
+          "sha256": "efe97b026c202b41c6893ce7df23995bf40781eae9c14a95d0b16f241e98b825"
+        },
+        {
+          "name": "NuGet.README.md",
+          "bytes": 4697,
+          "sha256": "f6e6b2052d5404786d47b3ac5c8ff016d6b83da2a801cf5537447f579eb9a7f4"
+        },
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "bytes": 770560,
+          "sha256": "c651e3df23a4e4f9c2006a3a61617edfbb38e840eeedaba2aeac195e7acc62c4"
+        },
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.Abstractions.xml",
+          "bytes": 1363313,
+          "sha256": "8b9ea899c03cb5d26ef056e80c222da26514080928eb6771d62ad9e66b181651"
+        },
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 582,
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e"
+        },
+        {
+          "name": "package/services/metadata/core-properties/ffc2509803fc4bb6ba4ad206d30bd5b8.psmdcp",
+          "bytes": 733,
+          "sha256": "aec40168007dfae5eadcb150284d9afc2e299918a24fc699eb83ecb65c83a5e5"
+        }
+      ],
+      "dll": [
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "bytes": 770560,
+          "sha256": "c651e3df23a4e4f9c2006a3a61617edfbb38e840eeedaba2aeac195e7acc62c4"
+        }
+      ],
+      "xml": [
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.Abstractions.xml",
+          "bytes": 1363313,
+          "sha256": "8b9ea899c03cb5d26ef056e80c222da26514080928eb6771d62ad9e66b181651"
+        },
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 582,
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e"
+        }
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package21-f032-r1/corrected/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "sha256": "842a384ad99ca4ae4efa2fb5247b18e65d522f6506e151caa866f8f9a9c2fd34",
+      "bytes": 148262,
+      "files": [
+        {
+          "name": "_rels/.rels",
+          "bytes": 516,
+          "sha256": "ebccd1f9dbac1632912eb7efe841ca26f1c2eb69a1c60389da2fd555aac535eb"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier.nuspec",
+          "bytes": 1833,
+          "sha256": "3a70bc6aa63a796f05d25fb16d0fef7f352f07e0eff360243d174c634c4152ea"
+        },
+        {
+          "name": "NuGet.README.md",
+          "bytes": 4697,
+          "sha256": "f6e6b2052d5404786d47b3ac5c8ff016d6b83da2a801cf5537447f579eb9a7f4"
+        },
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "bytes": 249344,
+          "sha256": "b351ba421d19669941f20fc8f71058bbd814c65a568bf7eb7994fd921a88f0fa"
+        },
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.Courier.xml",
+          "bytes": 318638,
+          "sha256": "364e93ba995a2a17337d926e50acbec65b88744f398a4f3f46b6abd60b2bd667"
+        },
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 582,
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e"
+        },
+        {
+          "name": "package/services/metadata/core-properties/2961b3448dac4f6e9928be2bd5cd9040.psmdcp",
+          "bytes": 721,
+          "sha256": "7b8fee84d4ea087423366dbca17ff7c12a8ffd707d17be844fe47e4c2e725f3f"
+        }
+      ],
+      "dll": [
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "bytes": 249344,
+          "sha256": "b351ba421d19669941f20fc8f71058bbd814c65a568bf7eb7994fd921a88f0fa"
+        }
+      ],
+      "xml": [
+        {
+          "name": "lib/net10.0/ViciOne.ServiceBus.Courier.xml",
+          "bytes": 318638,
+          "sha256": "364e93ba995a2a17337d926e50acbec65b88744f398a4f3f46b6abd60b2bd667"
+        },
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 582,
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e"
+        }
+      ]
+    }
+  ]
+}

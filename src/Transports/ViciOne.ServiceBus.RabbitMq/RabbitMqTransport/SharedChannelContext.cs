@@ -204,7 +204,7 @@ public class SharedChannelContext :
     /// <param name="multiple">Whether to reject all unacknowledged deliveries through <paramref name="deliveryTag"/>.</param>
     /// <param name="requeue">Whether RabbitMQ should make the rejected deliveries available again.</param>
     /// <param name="cancellationToken">The token that cancels this rejection in addition to the shared-channel token.</param>
-    /// <returns>A task that completes after the rejection has been written to the channel.</returns>
+    /// <returns>A task that completes after rejection handling, which may be a no-op when the channel is unavailable or already closed.</returns>
     public async Task BasicNackAsync(ulong deliveryTag, bool multiple, bool requeue, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);

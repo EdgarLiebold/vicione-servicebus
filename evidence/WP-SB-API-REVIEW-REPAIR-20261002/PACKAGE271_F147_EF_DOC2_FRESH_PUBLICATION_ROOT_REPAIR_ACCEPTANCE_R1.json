@@ -1,0 +1,24 @@
+{
+  "utc": "2026-10-05T23:54:56.928583+00:00",
+  "status": "BOUNDED_F147_EF_DOC2_REPAIR_CLOSED_ACTUAL_PUBLICATION_INDEPENDENTLY_VERIFIED_WHOLE_API_OPEN",
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE267_EF_DOC2_XML_ONLY_PRODUCT2_ROOT_APPLICATION_R1.json",
+    "sha256": "d7efd4232537823a35c155565d10333b9354bb2ea49fa7e4e056f7752396cb8d"
+  },
+  "root_publication": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package267-ef-doc2-fresh-root-publication-proof-r1/REPORT.json",
+    "sha256": "3eae69821c308e951c524871ac899d607c5ea255a89af41dd781b9b9da3414e9"
+  },
+  "independent_publication": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package267-ef-doc2-independent-runtime-publication-peer-r1/REPORT.json",
+    "sha256": "0300f953683ec1e4a6c7750644388b4c878f8e5877a027505ad53c44165bc1b9"
+  },
+  "Root_whole_peer": "db9a0e; Sourcepeerwhole15a5be/088d7c",
+  "changes": "Two summaries corrected: mutable settings object performs no self-validation; DisableInboxCleanupService prevents later registration rather than removing an existing descriptor. Code/public declarations unchanged. Both Source changes independently reviewed before application; strict0W0E and fresh actual NuGet pair verified independently.",
+  "existing_master_owner_rows": 0,
+  "api_count_change": 0,
+  "master_unchanged_sha256": "7be79dffcc271d714fd53b1be495e987255efc1ab73e2d4f8e2cc023fec1101e",
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

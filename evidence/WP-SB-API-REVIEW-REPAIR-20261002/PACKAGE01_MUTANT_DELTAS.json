@@ -1,0 +1,331 @@
+{
+  "status": "17_EXECUTED_ONE_CAUSE_DELTAS_VERIFIED_AGAINST_RUNTIME_SOURCE_HASHES",
+  "definition_runner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package01_mutations.py",
+  "definition_runner_sha256": "71ec05ea2d8822c3f14a062335ab2af7541392cd794eb0179eb78e8a5af9e27b",
+  "closure_sha256": "0b734bf802a0ab1461a019173e45d3ff36c72b96a4cdf7057a09c138d2a7e37c",
+  "mutants": [
+    {
+      "mutant": "messaging-delay",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs",
+      "baseline_sha256": "a693723e346542fbec2c921651db0f633b64fae47a275eaafbbaff7a8f9d636d",
+      "mutant_sha256": "8aab77d3b96e1887b1effea195768942f4d11899925e4ad029c4725bb08bc62c",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/messaging-delay.patch",
+      "patch_sha256": "f4872ac390db084e7fef72587c1a6c76bde8ab94271a441e48b288478bf6a945",
+      "phase": "package01-r2-mutant-messaging-delay",
+      "class": "ServiceBusClientOwnershipAndRetryTests",
+      "method": "MinimumBackoff_ReachesBothCreatedSdkClientsAsync",
+      "tests_executed": 5,
+      "tests_failed": 5,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "administration-delay",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs",
+      "baseline_sha256": "a693723e346542fbec2c921651db0f633b64fae47a275eaafbbaff7a8f9d636d",
+      "mutant_sha256": "44757dc6b0036d2ae97f92ab81e29077b9dfeb0636a0cdb6321a290e4db83e18",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/administration-delay.patch",
+      "patch_sha256": "2b484390211ca35f70e3cdeb826f06254c60b2f560d66e9595ed7c9c62ea8b45",
+      "phase": "package01-r2-mutant-administration-delay",
+      "class": "ServiceBusClientOwnershipAndRetryTests",
+      "method": "MinimumBackoff_ReachesBothCreatedSdkClientsAsync",
+      "tests_executed": 5,
+      "tests_failed": 5,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "minimum-bound",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/HostSettings.cs",
+      "baseline_sha256": "e3ebda96dcf52830f12ba2baca06bbdd94873cddb2bed08f14dbf18423e022a8",
+      "mutant_sha256": "024bc928116b27ab7361bfb4a614061705790bb0976da8f07d12965c613c53d0",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/minimum-bound.patch",
+      "patch_sha256": "d0b1d0843ea057d70263bcee94b25f844eb0af11a6753ecb4de3662e01decba7",
+      "phase": "package01-r2-mutant-minimum-bound",
+      "class": "ServiceBusClientOwnershipAndRetryTests",
+      "method": "MinimumBackoff_RejectsSdkInvalidBoundsWithoutChangingSettings",
+      "tests_executed": 4,
+      "tests_failed": 3,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "maximum-bound",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/HostSettings.cs",
+      "baseline_sha256": "e3ebda96dcf52830f12ba2baca06bbdd94873cddb2bed08f14dbf18423e022a8",
+      "mutant_sha256": "c81966db670bc140ce4ec525b5c6aa80f716ecbb28e460d3301d1e63cabc6ed0",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/maximum-bound.patch",
+      "patch_sha256": "e69d217fc7957fd97c4e6f3e94206eba31c32efd6e79869ad63efd450f6b5d95",
+      "phase": "package01-r2-mutant-maximum-bound",
+      "class": "ServiceBusClientOwnershipAndRetryTests",
+      "method": "MinimumBackoff_RejectsSdkInvalidBoundsWithoutChangingSettings",
+      "tests_executed": 4,
+      "tests_failed": 1,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "minimum-exclusive",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/HostSettings.cs",
+      "baseline_sha256": "e3ebda96dcf52830f12ba2baca06bbdd94873cddb2bed08f14dbf18423e022a8",
+      "mutant_sha256": "8133c4b6339b68c920ddde39ea4585fbc6171596064f9bb442d7719947c0097d",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/minimum-exclusive.patch",
+      "patch_sha256": "082f24485e757fc7d78b439a38460e8846e35e1d07df259e29e94b6eed57d65c",
+      "phase": "package01-r3-mutant-minimum-exclusive",
+      "class": "ServiceBusClientOwnershipAndRetryTests",
+      "method": "MinimumBackoff_ReachesBothCreatedSdkClientsAsync",
+      "tests_executed": 5,
+      "tests_failed": 1,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "maximum-exclusive",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/HostSettings.cs",
+      "baseline_sha256": "e3ebda96dcf52830f12ba2baca06bbdd94873cddb2bed08f14dbf18423e022a8",
+      "mutant_sha256": "a74c0078e33ec74b5f3d78b9e149678be438f18a3cc27241aa9e0d711a5e9562",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/maximum-exclusive.patch",
+      "patch_sha256": "bbd827f3871d46c97a8f452b08367f54c9e232b8890e3817966264a9d60c1887",
+      "phase": "package01-r3-mutant-maximum-exclusive",
+      "class": "ServiceBusClientOwnershipAndRetryTests",
+      "method": "MinimumBackoff_ReachesBothCreatedSdkClientsAsync",
+      "tests_executed": 5,
+      "tests_failed": 1,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "borrowed-client-owned",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs",
+      "baseline_sha256": "a693723e346542fbec2c921651db0f633b64fae47a275eaafbbaff7a8f9d636d",
+      "mutant_sha256": "f52058b2e2057d48db048138af40cffb06fa9a7c2b424d1c1e54c13f964cca91",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/borrowed-client-owned.patch",
+      "patch_sha256": "19cb6cf04eb9a2c018f17f7ac328ceecd815142388835415dd49991e19b44b3d",
+      "phase": "package01-r3-mutant-borrowed-client-owned",
+      "class": "ServiceBusClientOwnershipAndRetryTests",
+      "method": "SuppliedMessagingClient_SurvivesTwoTerminalContextsAsync",
+      "tests_executed": 2,
+      "tests_failed": 2,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "created-client-borrowed",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs",
+      "baseline_sha256": "a693723e346542fbec2c921651db0f633b64fae47a275eaafbbaff7a8f9d636d",
+      "mutant_sha256": "f0d4ff39b243f2d4d6a7f02aca15e05c1950e00c1cbd0cd249867a2f05adb3ed",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/created-client-borrowed.patch",
+      "patch_sha256": "715cb5e868ea82ce82bed042063a1b8a97ca44da3549b6f928dd7d23084d615e",
+      "phase": "package01-r3-mutant-created-client-borrowed",
+      "class": "ServiceBusClientOwnershipAndRetryTests",
+      "method": "CreatedMessagingClient_ClosesAfterTerminalStopAsync",
+      "tests_executed": 2,
+      "tests_failed": 2,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "direct-constructor-borrowed",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+      "baseline_sha256": "baaf584e5293b7fd896ab11a2c4e78b79182f9d5a8ed98eefb9987aa683f650b",
+      "mutant_sha256": "477d57e5132e1a2a49c258048036313d2fea0feeaa81df453323bb14bd0050da",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/direct-constructor-borrowed.patch",
+      "patch_sha256": "098e076a4d8090640fc866ef2a1a4f77ad6ee983b2f20c5dcd549f0026b2ba2a",
+      "phase": "package01-r3-mutant-direct-constructor-borrowed",
+      "class": "ServiceBusClientOwnershipAndRetryTests",
+      "method": "DirectConstructor_PreservesOwnedClientDisposalFailureAsync",
+      "tests_executed": 1,
+      "tests_failed": 1,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "dispose-unawaited",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+      "baseline_sha256": "baaf584e5293b7fd896ab11a2c4e78b79182f9d5a8ed98eefb9987aa683f650b",
+      "mutant_sha256": "00b0a09dd63dfa09bf6c2155a804bfece1b8e0aa2f7cb704e474d42ebedbe7db",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/dispose-unawaited.patch",
+      "patch_sha256": "58362571d49a4c204b3e60a64cf54fedb32f1f7615ca56ebf09888024a5a40dd",
+      "phase": "package01-r3-mutant-dispose-unawaited",
+      "class": "ServiceBusClientOwnershipAndRetryTests",
+      "method": "DirectConstructor_AwaitsOwnedClientDisposalAsync",
+      "tests_executed": 1,
+      "tests_failed": 1,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "message-lock",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs",
+      "baseline_sha256": "4bf182e49632282f7908f16a777c981807e6d6e18c5271f8b57d841051f9ccd7",
+      "mutant_sha256": "5dec09443e4368938eb5bf0ceb866dba9bd9ed1fc778427d6f22d2fa82218c2e",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/message-lock.patch",
+      "patch_sha256": "b014d1796ba6c941497331bd96d5bea8e182c06b20200dfefd092067bdacf526",
+      "phase": "package01-r3-mutant-message-lock",
+      "class": "ServiceBusMessageSessionContextTests",
+      "method": "LockedUntilUtc_FollowsSuccessfulSessionRenewalsAsync",
+      "tests_executed": 1,
+      "tests_failed": 1,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "session-snapshot",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs",
+      "baseline_sha256": "4bf182e49632282f7908f16a777c981807e6d6e18c5271f8b57d841051f9ccd7",
+      "mutant_sha256": "dfd17f77d35b1a2f8444a35d88a4696299d6e7a055e27602fdd195e338b4a86f",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/session-snapshot.patch",
+      "patch_sha256": "5ca2745303e6068010050aaeec2779b43191a1c549d50a6d9014cd4e8f7533f5",
+      "phase": "package01-r3-mutant-session-snapshot",
+      "class": "ServiceBusMessageSessionContextTests",
+      "method": "LockedUntilUtc_FollowsSuccessfulSessionRenewalsAsync",
+      "tests_executed": 1,
+      "tests_failed": 1,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "non-utc-session",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs",
+      "baseline_sha256": "4bf182e49632282f7908f16a777c981807e6d6e18c5271f8b57d841051f9ccd7",
+      "mutant_sha256": "973c29abdfa695a2e756c8df4856fe0639855e9dceaddcd7aa80354339c2053f",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/non-utc-session.patch",
+      "patch_sha256": "94e5a18cc7643dfdca01840b0da00f9313c2c1feb0cdf9fc0fc2cf38d31812ec",
+      "phase": "package01-r3-mutant-non-utc-session",
+      "class": "ServiceBusMessageSessionContextTests",
+      "method": "LockedUntilUtc_FollowsSuccessfulSessionRenewalsAsync",
+      "tests_executed": 1,
+      "tests_failed": 1,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "query-leak",
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs",
+      "baseline_sha256": "f2cb75c8d811a285b1a777b647b543619302d4f1b7b59c0aafc90bdc1c67b047",
+      "mutant_sha256": "22aade0078bef601b381222194a81752afaffbeed8df4c918979d02ddaa2560f",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/query-leak.patch",
+      "patch_sha256": "97e5b16f0a7ec058f8ab8d4c50d971f5afa769511084c5c4a1c8e360b1544e1f",
+      "phase": "package01-r3-mutant-query-leak",
+      "class": "EventHubCheckpointProbeSecurityTests",
+      "method": null,
+      "tests_executed": 4,
+      "tests_failed": 3,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "fragment-leak",
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs",
+      "baseline_sha256": "f2cb75c8d811a285b1a777b647b543619302d4f1b7b59c0aafc90bdc1c67b047",
+      "mutant_sha256": "3ea3eba436bd820750b8a03c761755e87d64a1b73d77d48ad505f1a34424b589",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/fragment-leak.patch",
+      "patch_sha256": "4977c49f7ca2bce892e230bc3a764270b4a16efc399febdc1826d6d72114d44a",
+      "phase": "package01-r3-mutant-fragment-leak",
+      "class": "EventHubCheckpointProbeSecurityTests",
+      "method": null,
+      "tests_executed": 4,
+      "tests_failed": 2,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "userinfo-leak",
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs",
+      "baseline_sha256": "f2cb75c8d811a285b1a777b647b543619302d4f1b7b59c0aafc90bdc1c67b047",
+      "mutant_sha256": "e7077f700cdc6188d044cac7b0093027c3572f2ef850c686fd08b9f93a81bb19",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/userinfo-leak.patch",
+      "patch_sha256": "7186e6b3d96a1a79425086062ca6349aa9ece271977c898a426729553a30d4b0",
+      "phase": "package01-r3-mutant-userinfo-leak",
+      "class": "EventHubCheckpointProbeSecurityTests",
+      "method": null,
+      "tests_executed": 4,
+      "tests_failed": 1,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    },
+    {
+      "mutant": "container-name-leak",
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs",
+      "baseline_sha256": "f2cb75c8d811a285b1a777b647b543619302d4f1b7b59c0aafc90bdc1c67b047",
+      "mutant_sha256": "27c5efbef1137af1ee83ea46cf608e7c7be1f9a347d57fb34161ad2d5a2847c9",
+      "one_cause_files": 1,
+      "patch": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/container-name-leak.patch",
+      "patch_sha256": "64dee8c61a038ce7443fee65fb45bcf4779a291355bb1aba311d4155817d4628",
+      "phase": "package01-r3-mutant-container-name-leak",
+      "class": "EventHubCheckpointProbeSecurityTests",
+      "method": null,
+      "tests_executed": 4,
+      "tests_failed": 2,
+      "test_hashes": {
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785"
+      }
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "status": "ROOT_TARGETED_F002_ACCEPTANCE_FINAL_INTEGRATED_REVIEW_PENDING",
+  "utc": "2026-10-03T12:12:44.524081+00:00",
+  "finding": "F-SB-API-002",
+  "accepted_inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.github/workflows/native-tests.yml",
+      "sha256": "2cd77f10f95e87fea7c5bbefcae9908adadb5dd27f7add3e289898100a10406d",
+      "bytes": 9790,
+      "Root_personally_FULL_pre_and_exact_diff_post": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/build.md",
+      "sha256": "9be928a7d2fd835d614be489f7d3ba2f88d5a1689bfb31a4608dd5ce73b2c658",
+      "bytes": 8150,
+      "Root_personally_FULL_pre_and_exact_diff_post": true
+    }
+  ],
+  "freeze_sha256": "08578984be9546f919c2200dd966ca5f3b4ed267a796a5bebf3095c0530672cc",
+  "adversarial_manifest_sha256": "12b78ee1c6bfb6ac30ad2f816b9c90d86d3a86d85a3dbd34a9e1d0f4a0ee5ab7",
+  "adversarial_report_sha256": "56327e4c04209232b0b17d07a1ce813d95378d8077bb3e9127fb3c406e5aeb4f",
+  "root_independent_manifest_artifacts_verified": 25,
+  "root_personal_full": "Both actual unfiltered raw logs and all finite countercase direct failure/positive blocks, both final reviewer bodies; no allcanonicaltestownership claim.",
+  "outcomes": {
+    "original_unfiltered": {
+      "total": 12324,
+      "pass": 12323,
+      "fail": 1,
+      "skips": 0
+    },
+    "corrected_unfiltered": {
+      "total": 12324,
+      "pass": 12324,
+      "fail": 0,
+      "skips": 0
+    },
+    "countercase_negative": {
+      "total": 1,
+      "finite_equal_true_vs_empty_at_source_line": 67,
+      "exit": 2
+    },
+    "countercase_unrelated_positive": {
+      "total": 1,
+      "pass": 1
+    },
+    "countercase_restore_only_same_rule_positive": {
+      "total": 1,
+      "pass": 1
+    }
+  },
+  "same_source_and_built_bytes_causal_countercase": {
+    "source": 6209,
+    "built": 4648,
+    "pre_completed_before_restore": true,
+    "assets": {
+      "before": 61,
+      "after": 78
+    }
+  },
+  "limits": [
+    "Physical SDK/runtimehost not retrospectively process-bound; raw MTP net10/x64 and compiled source/PDB/deps qualified separately.",
+    "Fresh local generated directories, existing global NuGet cache; no cold global cache or actual remote Linux/GitHub-CI assertion.",
+    "Original previous frame capture4s overlap is not strictly-pre-restore proof; fresh independent countercase completed-pre/post frame supplies causal control.",
+    "No changed test assertion, no canonical-owner grade, no wholeAPI/integratedA+ acceptance."
+  ],
+  "whole_API_closed": false
+}

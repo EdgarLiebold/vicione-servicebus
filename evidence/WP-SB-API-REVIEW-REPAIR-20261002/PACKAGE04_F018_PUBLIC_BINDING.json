@@ -1,0 +1,352 @@
+{
+  "status": "FOUR_OWNED_CONSUMERS_EIGHT_PRODUCTS_EACH_EXACTLY_BOUND",
+  "consumers": [
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original",
+      "lock_sha256": "65179c6635f9cdcfe2671069fce059eba57394d67d0e17307ce5a332472e79b0",
+      "product_packages": [
+        {
+          "package": "ViciOne.ServiceBus",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.1.0.0.nupkg",
+          "nupkg_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "contentHash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "nupkg_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "contentHash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+          "nupkg_sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+          "contentHash": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "dll_sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "b3fba9d2130a1a96435de7e07bf5ce74f967c2ddabe2e96f1d38e627fc43fc4a",
+          "contentHash": "OIae2JMqb9TJTMmYShLtFHsYewLHhi2oOKWynWpAQTNWb4/S+dq3V9xFuObJsCkRKs9eteu7FJn+/Aft/S+3cA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "dll_sha256": "fc09b8faf17f995df0fc5bf3e4dc8568f547c0ebee36aa190a98cc061494f967"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+          "nupkg_sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+          "contentHash": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "dll_sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+          "nupkg_sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+          "contentHash": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "dll_sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714"
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+          "nupkg_sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+          "contentHash": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "dll_sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "contentHash": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da"
+        }
+      ]
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original",
+      "lock_sha256": "65179c6635f9cdcfe2671069fce059eba57394d67d0e17307ce5a332472e79b0",
+      "product_packages": [
+        {
+          "package": "ViciOne.ServiceBus",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.1.0.0.nupkg",
+          "nupkg_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "contentHash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "nupkg_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "contentHash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+          "nupkg_sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+          "contentHash": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "dll_sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "b3fba9d2130a1a96435de7e07bf5ce74f967c2ddabe2e96f1d38e627fc43fc4a",
+          "contentHash": "OIae2JMqb9TJTMmYShLtFHsYewLHhi2oOKWynWpAQTNWb4/S+dq3V9xFuObJsCkRKs9eteu7FJn+/Aft/S+3cA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "dll_sha256": "fc09b8faf17f995df0fc5bf3e4dc8568f547c0ebee36aa190a98cc061494f967"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+          "nupkg_sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+          "contentHash": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "dll_sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+          "nupkg_sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+          "contentHash": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "dll_sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714"
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+          "nupkg_sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+          "contentHash": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "dll_sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "contentHash": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da"
+        }
+      ]
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "lock_sha256": "d1ae1b628391b20621dcdc896d41f1ac13f99927d07fae8cbf2687d32494f1e8",
+      "product_packages": [
+        {
+          "package": "ViciOne.ServiceBus",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+          "nupkg_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "contentHash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "nupkg_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "contentHash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+          "nupkg_sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+          "contentHash": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "dll_sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "209f5441ac5ece0edd31eaafa08567eb20d6e863304ed33912c422e6e1af7891",
+          "contentHash": "GMV6R/u6im5M1pmpC7NUnNqkoRS4lIoPZZf9ahXEbeO5rNdHp78dVDNbFrOP+kkKzYPc1jtI61LlOP78lpcyrA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "dll_sha256": "3d9cfe2389b8ae86292c476479ae1cd6ee752c707969cd10a272e00ecfe471af"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+          "nupkg_sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+          "contentHash": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "dll_sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+          "nupkg_sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+          "contentHash": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "dll_sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714"
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+          "nupkg_sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+          "contentHash": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "dll_sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "contentHash": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da"
+        }
+      ]
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "lock_sha256": "d1ae1b628391b20621dcdc896d41f1ac13f99927d07fae8cbf2687d32494f1e8",
+      "product_packages": [
+        {
+          "package": "ViciOne.ServiceBus",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+          "nupkg_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "contentHash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "nupkg_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "contentHash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+          "nupkg_sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+          "contentHash": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "dll_sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "209f5441ac5ece0edd31eaafa08567eb20d6e863304ed33912c422e6e1af7891",
+          "contentHash": "GMV6R/u6im5M1pmpC7NUnNqkoRS4lIoPZZf9ahXEbeO5rNdHp78dVDNbFrOP+kkKzYPc1jtI61LlOP78lpcyrA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "dll_sha256": "3d9cfe2389b8ae86292c476479ae1cd6ee752c707969cd10a272e00ecfe471af"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+          "nupkg_sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+          "contentHash": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "dll_sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+          "nupkg_sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+          "contentHash": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "dll_sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714"
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+          "nupkg_sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+          "contentHash": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "dll_sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "contentHash": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da"
+        }
+      ]
+    }
+  ],
+  "root_independent_original_files_restored": 6209,
+  "mutants": 6,
+  "limits": "SQLite/macOSx64 graph only; no provider retry matrix or cross-database atomicity."
+}

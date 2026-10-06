@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Advanced.Middleware;
 using System.Reflection;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -8,6 +11,130 @@ namespace ViciOne.ServiceBus.Tests.Transports;
 
 public sealed class HostHandleApiTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-HOST-LIFECYCLE", "stop-debug-does-not-skip-rider-and-agent-shutdown")]
+    public async Task HostStoppingDiagnostic_DoesNotSkipRiderAndAgentShutdownAsync(bool loggerThrows)
+    {
+        ILogContext? previous = LogContext.Current;
+        var logger = new HostStopAdmissionLogger(loggerThrows);
+        LogContext.ConfigureCurrentLogContext(logger);
+        IHostConfiguration configuration = CreateHostConfiguration();
+        var configurationProxy = (HostConfigurationProxy)(object)configuration;
+        configurationProxy.LogContext = LogContext.Current;
+        var rider = new TrackingRider();
+        var agent = new HostOwnedStopAgent();
+        var host = new TestHost(configuration, DispatchProxy.Create<IBusTopology, BusTopologyProxy>(), [agent]);
+        host.AddRider("owned", rider);
+        IHostHandle? handle = null;
+        Task<HostReady>? ready = null;
+        Task? stop = null;
+        try
+        {
+            handle = host.Start(CancellationToken.None);
+            ready = handle.Ready;
+            HostReady actualReady = await ready.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+            Assert.Equal(configuration.HostAddress, actualReady.HostAddress);
+            Assert.Equal(1, rider.StartCount);
+            stop = handle.StopAsync(CancellationToken.None);
+            Exception? failure = await Record.ExceptionAsync(() =>
+                stop.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None));
+            Assert.Equal(1, logger.SelectedCalls);
+            Assert.Equal(configuration.HostAddress, logger.Address);
+            Assert.Equal(loggerThrows ? 1 : 0, logger.ThrowCount);
+            if (failure is not null)
+                Assert.Same(logger.Failure, failure);
+
+            // FIRST finite ownership oracle: optional diagnostics must not skip the started rider.
+            Assert.Equal(1, rider.StopCount);
+            Assert.Equal(1, agent.StopCount);
+            Assert.Equal(CancellationToken.None, agent.StopToken);
+            Assert.True(agent.Completed.IsCompletedSuccessfully);
+            Assert.Null(failure);
+            Assert.True(stop.IsCompletedSuccessfully);
+        }
+        finally
+        {
+            LogContext.ConfigureCurrentLogContext();
+            configurationProxy.LogContext = LogContext.Current;
+            try
+            {
+                if (stop is not null)
+                    await ObserveHostStopAdmissionTaskAsync(stop);
+            }
+            finally
+            {
+                try
+                {
+                    if (ready is not null)
+                        await ObserveHostStopAdmissionTaskAsync(ready);
+                }
+                finally
+                {
+                    try
+                    {
+                        await host.StopAsync(CancellationToken.None)
+                            .WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+                        await agent.Completed.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+                    }
+                    finally
+                    {
+                        LogContext.Current = previous;
+                    }
+                }
+            }
+        }
+    }
+
+    private static async Task ObserveHostStopAdmissionTaskAsync(Task task)
+    {
+        try
+        {
+            await task.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+        }
+        catch (Exception failure) when (failure is not TimeoutException && (task.IsFaulted || task.IsCanceled))
+        {
+        }
+    }
+
+    private sealed class HostOwnedStopAgent : Agent
+    {
+        public int StopCount { get; private set; }
+        public CancellationToken StopToken { get; private set; }
+        protected override Task StopAgentAsync(StopContext context)
+        {
+            StopCount++;
+            StopToken = context.CancellationToken;
+            return base.StopAgentAsync(context);
+        }
+    }
+
+    private sealed class HostStopAdmissionLogger(bool throws) : ILogger
+    {
+        public IOException Failure { get; } = new("Host stop admission debug failure");
+        public int SelectedCalls { get; private set; }
+        public int ThrowCount { get; private set; }
+        public Uri? Address { get; private set; }
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Debug;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            IEnumerable<KeyValuePair<string, object?>> fields = state as IEnumerable<KeyValuePair<string, object?>>
+                ?? Array.Empty<KeyValuePair<string, object?>>();
+            if (fields.FirstOrDefault(field => field.Key == "{OriginalFormat}").Value as string != "Stopping bus: {HostAddress}")
+                return;
+            SelectedCalls++;
+            Address = fields.FirstOrDefault(field => field.Key == "HostAddress").Value as Uri;
+            if (throws)
+            {
+                ThrowCount++;
+                throw Failure;
+            }
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-HOST-HANDLE-API", "canonical-interface-shape-and-hidden-implementation")]
     public void HostHandle_UsesCanonicalInterfaceShapeWithoutLeakingItsImplementation()
@@ -73,7 +200,7 @@ public sealed class HostHandleApiTests
         return configuration;
     }
 
-    private sealed class TestHost(IHostConfiguration configuration, IBusTopology topology) : BaseHost(configuration, topology)
+    private sealed class TestHost(IHostConfiguration configuration, IBusTopology topology, IAgent[]? agents = null) : BaseHost(configuration, topology)
     {
         public override IHostReceiveEndpointHandle ConnectReceiveEndpoint(
             IEndpointDefinition definition,
@@ -87,11 +214,14 @@ public sealed class HostHandleApiTests
         protected override void Probe(ProbeContext context)
         {
         }
+
+        protected override IAgent[] GetAgentHandles() => agents ?? [];
     }
 
     private class HostConfigurationProxy : DispatchProxy
     {
         public required Uri HostAddress { get; set; }
+        public ILogContext? LogContext { get; set; }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
@@ -99,7 +229,7 @@ public sealed class HostHandleApiTests
             return targetMethod.Name switch
             {
                 $"get_{nameof(IHostConfiguration.HostAddress)}" => HostAddress,
-                $"get_{nameof(IHostConfiguration.LogContext)}" => null,
+                $"get_{nameof(IHostConfiguration.LogContext)}" => LogContext,
                 _ => throw new NotSupportedException(targetMethod.Name),
             };
         }

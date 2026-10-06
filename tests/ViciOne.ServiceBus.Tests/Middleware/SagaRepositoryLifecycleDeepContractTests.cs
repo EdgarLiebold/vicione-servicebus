@@ -613,18 +613,24 @@ public sealed class SagaRepositoryLifecycleDeepContractTests
             {
                 LoadHandler = _ => Task.FromResult<SagaConsumeContext<TestSaga, TestMessage>?>(existing.Context),
             };
-            var existingPolicy = new PolicyHarness();
+            var existingNext = new RecordingPipe();
+            var existingPolicy = new PolicyHarness { ExistingHandler = existingNext.SendAsync };
 
-            InvalidOperationException existingActual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                new SendQuerySagaPipe<TestSaga, TestMessage>(existingPolicy, new RecordingPipe())
+            Exception? existingActual = await Record.ExceptionAsync(() =>
+                new SendQuerySagaPipe<TestSaga, TestMessage>(existingPolicy, existingNext)
                     .SendAsync(existingRepository.QueryContext));
 
-            Assert.Same(loggingFailure, existingActual);
-            Assert.Empty(existingPolicy.ExistingContexts);
+            Assert.Null(existingActual);
+            Assert.Same(existing.Context, Assert.Single(existingPolicy.ExistingContexts));
+            Assert.Same(existingNext, Assert.Single(existingPolicy.ExistingNextPipes));
+            Assert.Same(existing.Context, Assert.Single(existingNext.SendContexts));
+            Assert.Equal(existing.Saga.CorrelationId, Assert.Single(existingRepository.LoadIds));
             Assert.Empty(existingRepository.UndoContexts);
-            Assert.Empty(existingRepository.UpdateContexts);
+            Assert.Same(existing.Context, Assert.Single(existingRepository.UpdateContexts));
             Assert.Empty(existingRepository.DeleteContexts);
+            Assert.Empty(existingRepository.DiscardContexts);
             Assert.Equal(1, existing.AsyncDisposeCount);
+            Assert.Equal(0, existing.DisposeCount);
 
             var added = new SagaContextHarness(new TestSaga { CorrelationId = Guid.NewGuid() });
             var addedRepository = new RepositoryHarness
@@ -634,14 +640,18 @@ public sealed class SagaRepositoryLifecycleDeepContractTests
             var addedNext = new RecordingPipe();
             var input = new SagaContextHarness(new TestSaga { CorrelationId = Guid.NewGuid() });
 
-            InvalidOperationException addedActual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            Exception? addedActual = await Record.ExceptionAsync(() =>
                 new MissingSagaPipe<TestSaga, TestMessage>(addedRepository.Context, addedNext).SendAsync(input.Context));
 
-            Assert.Same(loggingFailure, addedActual);
-            Assert.Empty(addedNext.SendContexts);
-            Assert.Same(added.Context, Assert.Single(addedRepository.DiscardContexts));
-            Assert.Empty(addedRepository.SaveContexts);
+            Assert.Null(addedActual);
+            Assert.Same(input.Saga, Assert.Single(addedRepository.AddInstances));
+            Assert.Same(added.Context, Assert.Single(addedNext.SendContexts));
+            Assert.Same(added.Context, Assert.Single(addedRepository.SaveContexts));
+            Assert.Empty(addedRepository.DiscardContexts);
             Assert.Equal(1, added.AsyncDisposeCount);
+            Assert.Equal(0, added.DisposeCount);
+            Assert.Equal(0, input.AsyncDisposeCount);
+            Assert.Equal(0, input.DisposeCount);
         }
         finally
         {
@@ -800,6 +810,177 @@ public sealed class SagaRepositoryLifecycleDeepContractTests
 
         Assert.Contains($"null {action.ToString().ToLowerInvariant()} task", actual.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(1, owned.AsyncDisposeCount);
+    }
+
+    [Theory]
+    [InlineData("Created", false)]
+    [InlineData("Created", true)]
+    [InlineData("Used", false)]
+    [InlineData("Used", true)]
+    [InlineData("Removed", false)]
+    [InlineData("Removed", true)]
+    [RequirementCoverage("REQ-VSB-SAGA-REPOSITORY-CAPABILITY", "saga-debug-diagnostics-do-not-change-healthy-lifecycle")]
+    public async Task SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(string emission, bool loggerThrows)
+    {
+        string selectedTemplate = $"SAGA:{{SagaType}}:{{CorrelationId}} {emission} {{MessageType}}";
+        var loggerFailure = new InvalidOperationException($"Saga {emission} diagnostic failure");
+        var logger = new SelectiveSagaDiagnosticLogger(selectedTemplate, loggerThrows ? loggerFailure : null);
+        ILogContext? previous = LogContext.Current;
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            var state = new TestSaga { CorrelationId = Guid.NewGuid() };
+            var next = new RecordingPipe();
+            var input = new SagaContextHarness(state, isCompleted: emission == "Removed");
+            int factoryCalls = 0;
+            ConsumeContext<TestMessage>? factoryContext = null;
+            ConsumeContext<TestMessage>? creationInput = null;
+            RepositoryHarness? repository = null;
+
+            Exception? operationFailure = await Record.ExceptionAsync(async () =>
+            {
+                if (emission == "Created")
+                {
+                    creationInput = ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox.InMemoryOutboxTestContextFactory.Create(
+                        new TestMessage(), TestContext.Current.CancellationToken, correlationId: state.CorrelationId);
+                    Assert.Equal(state.CorrelationId, creationInput.CorrelationId);
+                    var factory = new FactoryMethodSagaFactory<TestSaga, TestMessage>(context =>
+                    {
+                        factoryCalls++;
+                        factoryContext = context;
+                        return state;
+                    });
+                    await factory.SendAsync(creationInput, next);
+                }
+                else
+                {
+                    repository = new RepositoryHarness
+                    {
+                        LoadHandler = _ => Task.FromResult<SagaConsumeContext<TestSaga, TestMessage>?>(input.Context),
+                    };
+                    var policy = new AnyExistingSagaPolicy<TestSaga, TestMessage>();
+                    await new SendSagaPipe<TestSaga, TestMessage>(policy, next, state.CorrelationId).SendAsync(repository.Context);
+                }
+            });
+
+            SelectiveSagaDiagnosticLogger.Entry selected = Assert.Single(logger.Entries, entry => entry.Template == selectedTemplate);
+            Assert.Equal(LogLevel.Debug, selected.Level);
+            Assert.Equal(state.CorrelationId, selected.CorrelationId);
+            Assert.Equal(loggerThrows ? 1 : 0, logger.ThrowCount);
+            if (emission == "Created")
+            {
+                Assert.Equal(1, factoryCalls);
+                Assert.Same(creationInput, factoryContext);
+            }
+            else
+            {
+                Assert.NotNull(repository);
+                Assert.Equal(state.CorrelationId, Assert.Single(repository.LoadIds));
+                Assert.Equal(1, input.AsyncDisposeCount);
+                Assert.Equal(0, input.DisposeCount);
+                if (emission == "Removed")
+                    Assert.Same(input.Context, Assert.Single(repository.DeleteContexts));
+            }
+
+            Assert.Null(operationFailure);
+            SagaConsumeContext<TestSaga, TestMessage> continued = Assert.Single(next.SendContexts);
+            Assert.Same(state, continued.Saga);
+            Assert.Equal(state.CorrelationId, continued.CorrelationId);
+            if (emission == "Created")
+                Assert.IsType<ViciOne.ServiceBus.Context.DefaultSagaConsumeContext<TestSaga, TestMessage>>(continued);
+            else
+            {
+                Assert.NotNull(repository);
+                Assert.Same(input.Context, continued);
+                Assert.Empty(repository.SaveContexts);
+                Assert.Empty(repository.DiscardContexts);
+                Assert.Empty(repository.UndoContexts);
+                if (emission == "Removed")
+                    Assert.Empty(repository.UpdateContexts);
+                else
+                {
+                    Assert.Same(input.Context, Assert.Single(repository.UpdateContexts));
+                    Assert.Empty(repository.DeleteContexts);
+                }
+            }
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-SAGA-REPOSITORY-CAPABILITY", "added-debug-does-not-prevent-owned-downstream-progress")]
+    public async Task MissingSaga_AddedDebugDoesNotPreventOwnedDownstreamProgressAsync(bool loggerThrows)
+    {
+        const string template = "SAGA:{SagaType}:{CorrelationId} Added {MessageType}";
+        var loggerFailure = new IOException("Added diagnostic failure");
+        var logger = new SelectiveSagaDiagnosticLogger(template, loggerThrows ? loggerFailure : null);
+        var state = new TestSaga { CorrelationId = Guid.NewGuid() };
+        var input = new SagaContextHarness(state);
+        var added = new SagaContextHarness(state);
+        var repository = new RepositoryHarness
+        {
+            AddHandler = _ => Task.FromResult(added.Context),
+        };
+        var next = new RecordingPipe();
+        Task? operation = null;
+        ILogContext? previous = LogContext.Current;
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            operation = new MissingSagaPipe<TestSaga, TestMessage>(repository.Context, next).SendAsync(input.Context);
+            Exception? failure = await Record.ExceptionAsync(async () =>
+                await operation.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None));
+
+            Assert.True(operation.IsCompleted);
+            Assert.False(failure is TimeoutException);
+            Assert.Same(state, Assert.Single(repository.AddInstances));
+            SelectiveSagaDiagnosticLogger.Entry selected = Assert.Single(logger.Entries, entry => entry.Template == template);
+            Assert.Equal(LogLevel.Debug, selected.Level);
+            Assert.Equal(state.CorrelationId, selected.CorrelationId);
+            Assert.Equal(loggerThrows ? 1 : 0, logger.ThrowCount);
+            Assert.Equal(1, added.AsyncDisposeCount);
+            Assert.Equal(0, added.DisposeCount);
+            Assert.Equal(0, input.AsyncDisposeCount);
+            Assert.Equal(0, input.DisposeCount);
+            if (failure is not null)
+                Assert.Same(loggerFailure, failure);
+
+            Assert.Null(failure);
+            Assert.True(operation.IsCompletedSuccessfully);
+            Assert.Same(added.Context, Assert.Single(next.SendContexts));
+            Assert.Same(added.Context, Assert.Single(repository.SaveContexts));
+            Assert.Empty(repository.DiscardContexts);
+            Assert.Empty(repository.InsertInstances);
+            Assert.Empty(repository.LoadIds);
+            Assert.Empty(repository.UndoContexts);
+            Assert.Empty(repository.UpdateContexts);
+            Assert.Empty(repository.DeleteContexts);
+        }
+        finally
+        {
+            try
+            {
+                if (operation is not null)
+                {
+                    try
+                    {
+                        await operation.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+                    }
+                    catch (Exception failure) when (failure is not TimeoutException && (operation.IsFaulted || operation.IsCanceled))
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                LogContext.Current = previous;
+            }
+        }
     }
 
     private static void AssertParameter(string expected, Action action)
@@ -1087,6 +1268,34 @@ public sealed class SagaRepositoryLifecycleDeepContractTests
         public void Set(object values) => throw new NotSupportedException();
         public void Set(IEnumerable<KeyValuePair<string, object?>> values) => throw new NotSupportedException();
         public ProbeContext CreateScope(string key) => this;
+    }
+
+    private sealed class SelectiveSagaDiagnosticLogger(string selectedTemplate, Exception? failure) : ILogger
+    {
+        public sealed record Entry(LogLevel Level, string? Template, Guid? CorrelationId);
+
+        public List<Entry> Entries { get; } = [];
+        public int ThrowCount { get; private set; }
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Debug;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state,
+            Exception? exception, Func<TState, Exception?, string> formatter)
+        {
+            IEnumerable<KeyValuePair<string, object?>> values = state as IEnumerable<KeyValuePair<string, object?>>
+                ?? Array.Empty<KeyValuePair<string, object?>>();
+            string? template = values.FirstOrDefault(value => value.Key == "{OriginalFormat}").Value as string;
+            object? correlation = values.FirstOrDefault(value => value.Key == "CorrelationId").Value;
+            Entries.Add(new Entry(logLevel, template, correlation is Guid id ? id : null));
+            if (template == selectedTemplate && failure is not null)
+            {
+                ThrowCount++;
+                throw failure;
+            }
+        }
     }
 
     private sealed class ThrowingLogger(Exception failure) : ILogger

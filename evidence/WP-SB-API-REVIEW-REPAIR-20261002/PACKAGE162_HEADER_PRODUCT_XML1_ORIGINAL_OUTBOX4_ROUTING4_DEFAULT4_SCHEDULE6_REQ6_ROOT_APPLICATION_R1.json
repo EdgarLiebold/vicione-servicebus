@@ -1,0 +1,74 @@
+{
+  "utc": "2026-10-05T01:26:50.140559+00:00",
+  "actor": "/root",
+  "status": "SOURCE_APPLIED_AFTER_INDEPENDENT_ADVERSARIAL_NO_BLOCK_CURRENT_BUILD_PENDING",
+  "original161_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package161-scope-fixed19-output-fixed14-dictionary-original25-neighbors-fresh2-independent-r1/REPORT.json",
+    "sha256": "eda165ece52e29cca65c4c9556b80f2cc8938737d1cd9319c1ca786a5bb22ef3"
+  },
+  "root_preflight": "65b951 all10 earlier MAN verified; c60f56 both Schedule author17+peer1 MAN verified and whole peer report read. Root whole468new test/helper lines104+78+76+210 via544c2c/8e4722 and Schedule112 via131bf8; actual SourceFork31/Request93/Outbox51 be016e and Schedule1710..1865 via10e2b1; Header274 genuine prior1f33ee; peer reports144112/e26e44/c60f56. No native finding prediction from new18 cases.",
+  "changes": [
+    {
+      "path": "src/ViciOne.ServiceBus/Serialization/Headers/DictionarySendHeaders.cs",
+      "kind": "product",
+      "author": "package160-dictionary-header-safe-conversion-proposed-r3",
+      "before_sha256": "e76eee2740b6734252e0d72e607cf962219465e4a4753d1dea2d2b23c6a0adf6",
+      "after_sha256": "49127396dd7f0d0778f8a33fc08e56ad1cac1acda31ef064e39ccbca3b066010"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/SetSerializerFilter.cs",
+      "kind": "xml",
+      "author": "package161-setserializer-summary-xml1-product-proposed-r1",
+      "before_sha256": "83948113bc8f098a51398138eb75291c27d7aeaf1c20379c2d3843fd82addf53",
+      "after_sha256": "8f08e69cdd49eef1f2246b23954a62fd956989a3df20a1b6111e35153e7c33a8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConsumeScopeLifecycleTests.cs",
+      "kind": "additive",
+      "author": "package161-outbox-consume-scope4-oracles-proposed-r1",
+      "before_sha256": "3ad07832232da15000dea074fa4b041eb8425b18059faa7ddb73704ca0097598",
+      "after_sha256": "9af967a38015cb859338fc2176672dd4d54542b898f704502b1bfabf220751ce"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs",
+      "kind": "additive",
+      "author": "package161-requestid-fork4-oracles-proposed-r2",
+      "before_sha256": "da3181445e47533d8aaad10fef66290af803107cab61bfe3d459ad70d359b868",
+      "after_sha256": "498ee2a56d3f463de3fd6cff77bd6b2c70a284b8a56e96951ac606457c2113ef"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConfigurationContractTests.cs",
+      "kind": "additive",
+      "author": "package162-schedule-mismatch-debug6-oracles-proposed-r1",
+      "before_sha256": "176851c03203593bbb12462067ca10d2f09093ccbb3cd49c311c79e54d0b979d",
+      "after_sha256": "baaac9368efca93be7653b27f26a848dea76ecadd73ab79f3bac91049451840c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/AdvancedSchedulerDefaultAdapterTests.cs",
+      "kind": "new4",
+      "author": "package160-advanced-scheduler-default4-controls-proposed-r1",
+      "before_sha256": null,
+      "after_sha256": "979a313d53215dcc35f9f808478fe035aeec2286d7c975d5234def85cbfa0f73"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "kind": "add6",
+      "before_sha256": "a39d3d087756c882da032f241f00bebf16352d4957d68d1223aa70fe9673d844",
+      "after_sha256": "5943dfcfe15fc23420f2c54cce64ce24dedf33fe298220ca2a824e58a0157871"
+    }
+  ],
+  "test_case_additions": {
+    "outbox_scope": 4,
+    "routing_request_and_fork": 4,
+    "genuine_default_scheduler": 4,
+    "schedule_diagnostic": 6
+  },
+  "requirements_before": 4626,
+  "requirements_after": 4632,
+  "literal_old_test_bytes_preserved": true,
+  "limits": [
+    "Original Header25 qualified before Sourcefix; existingHeader478 unchanged.",
+    "New18 cases require actual native execution before any finding or runtime-grade credit.",
+    "No global API closure or commit/push/deployment."
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "utc": "2026-10-05T00:24:39.879335+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED_BOUNDED_F133_CURRENT_REPAIR",
+  "confirmed_findings": 133,
+  "accepted_before": 132,
+  "accepted_after": 133,
+  "finding_id": "F-SB-API-133",
+  "qualified_current": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package158-respond-fixed21-dictionary-original10-neighbors-fresh2-independent-r1/REPORT.json",
+    "sha256": "b242d1dfe713a7b8b09eac9a1295ef00255502212126a7a3966854ae6270f536"
+  },
+  "qualification_manifest_sha256": "79567162a24a77d429ab663bb4ba9e4d9a394c7bac75145ebbd8a37f2fa68dad",
+  "root_verification": [
+    "WholeRespond21actualraw7e3bc9; all3347MANandactual2ZIPCRC/DLLXMLfrozenmatch192e50",
+    "Actual6RespondcaseIDs cc9fbd; wholeOriginal15720 firstfinite648df7534; oldwholeRespond60 b86607/new62adcd46/helpers3067a0; safeR2peerwholeaea395",
+    "Sourceguard/token only, nullcontextsameArgumentNull(context); previous20Source/caseIDs identical,21currentP0F0S",
+    "921neighbors actualqualifierwholelosslessfactored raw, Rootobservedexact921summary587a62; noRoot921Testbodyclaim"
+  ],
+  "native": {
+    "respond": {
+      "total": 21,
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0
+    },
+    "neighbors": {
+      "total": 921,
+      "passed": 921,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "adversarial_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package157-normal-respond-token-product-independent-scanner-r2/REPORT.json",
+    "sha256": "bd23809b12435cadbb8d199ab4a4a55b334bb1c049de8a0f6d84afcd98798f71"
+  },
+  "source_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE158_RESPOND_SAFE_SOURCE_NULL_CONTROL_AND_DICTIONARY_ORIGINAL2_ROOT_APPLICATION_R1.json",
+    "sha256": "dd5949a10764a63303052b5f6bd421837ed9cdcd59205ee4d0e0733fce398294"
+  },
+  "limits": [
+    "DictionaryOriginal10 has2separatefinitefailures; no cleanwholeCore/wholeAPI gate.",
+    "Respond cooperativefactoryadmission suppliedcontexttoken, no forcedlateabort of customresponse/providerTasks.",
+    "Borrowedresources/context lifetime preserved; no ownership/continuationnextguard additions."
+  ],
+  "whole_API_member_review_closed": false
+}

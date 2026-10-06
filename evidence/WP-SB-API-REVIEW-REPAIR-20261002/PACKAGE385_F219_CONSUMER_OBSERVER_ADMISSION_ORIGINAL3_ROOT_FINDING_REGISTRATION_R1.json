@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T08:18:38.724665+00:00",
+  "status": "ROOT_REGISTERED_DISTINCT_PUBLIC_CONSUMER_SPECIFICATION_OBSERVER_ADMISSION_RETIREMENT_DEFECT",
+  "finding": "F-SB-API-219",
+  "known_before": 218,
+  "known_after": 219,
+  "bounded_dispositions_unchanged": 217,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package382-observer3-original-independent-qualification-r1/MANIFEST.json",
+    "sha256": "32f63258d582d26030f3c77dab183e8e1e2bcb47ecde0c02743341cfef52fcb0"
+  },
+  "whole_Root_actual_raw": "9f396c complete",
+  "whole_Root_final_Report": "e7fb4e",
+  "original_counts": {
+    "total": 3,
+    "passed": 1,
+    "failed": 2,
+    "skipped": 0
+  },
+  "causal_boundary": "Both actual later admission failures first observe a genuine earlier registration Count1 instead of0 at72, after exact tracked third origin/acquired2/sharedobserver prerequisites. Second Count/allattempt/injectedcleanup/publicprimaryidentity/cause-tree assertions unreached; no claimed actual cleanup fault. Healthy real public Validate/typed projections pass.",
+  "source_owner": "src/ViciOne.ServiceBus/Configuration/ConsumerSpecification.cs",
+  "distinct_owner_rationale": "Constructor adopts configuration observer handles; independent of existing ConsumerConnector/InstanceConnector failed message registration families F217/F218 and optional logging family F152. No new count per two variants.",
+  "existing_Master_ctor_UID6707": true,
+  "new_canonical_API_UIDs": 0,
+  "Product_changed_at_registration": false,
+  "whole_API_closed": false
+}

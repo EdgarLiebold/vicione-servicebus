@@ -1,0 +1,11 @@
+--- frozen-corrected-Registrar
++++ DropKnownDefinitionOwner
+@@ -398,7 +398,7 @@
+             return owner;
+         });
+         Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
+-            Bind<TBus>.Create(provider.GetRequiredService<DefinitionOwner<TDefinition>>().Value));
++            Bind<TBus>.Create(ActivatorUtilities.CreateInstance<TDefinition>(provider)));
+         Collection.AddSingleton<Bind<TBus, T>>(provider =>
+             Bind<TBus>.Create<T>(provider.GetRequiredService<Bind<TBus, TDefinition>>().Value));
+     }

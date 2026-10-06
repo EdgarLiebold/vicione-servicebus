@@ -1,0 +1,13 @@
+{
+  "status": "BOUNDED_F055_SOURCE_ADVERSARIAL_ORIGINAL_RED_CURRENT_GREEN_FRESH_PACK_ACCEPTED",
+  "finding": "F-SB-API-055",
+  "created_utc": "2026-10-04T11:07:27.037459+00:00",
+  "root_full_report_read": "Own whole final and immutable frame reports",
+  "report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package45-job-fanout-final-packed-qualification-r1/REPORT.md",
+    "sha256": "3365244bc0f90f6ab870749e75248188dd6b33926ac3eaab1535854bc683b9b4"
+  },
+  "native": "Actual17/17 whole JobLifecycle owner green;3 original finite RED;strict0W/E. True privateheartbeat fanout case has no inferred multitypepublicgeneration proof. Exact tokens/tasks/originalfault; callerownedstartedpublication fullyjoined.",
+  "package": "Fresh JobService nupkg CRC, exact DLL/XML and actualembedded PDB/source checksums qualified independently.",
+  "whole_api_review_closed": false
+}

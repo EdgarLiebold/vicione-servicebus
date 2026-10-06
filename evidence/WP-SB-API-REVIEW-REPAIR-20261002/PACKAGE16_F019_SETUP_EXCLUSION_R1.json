@@ -1,0 +1,6 @@
+{
+  "status": "COMPILER_SETUP_EXCLUDED_NOT_CAUSAL_OR_MUTANT",
+  "phase": "package16-f019-public-corrected-build",
+  "error": "one CS0104 IHost namespace ambiguity; fixed fully qualified Microsoft.Extensions.Hosting.IHost identically in both owner copies; Root FULL delta before Native",
+  "log_sha256": "3fe2b39bde6f7a2a03b75c62fbbcf425d8e00193acb52d4741df17a7815134ee"
+}

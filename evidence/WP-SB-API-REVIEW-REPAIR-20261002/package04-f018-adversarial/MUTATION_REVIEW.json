@@ -1,0 +1,148 @@
+{
+  "status": "ALL6_ACTUAL_MUTANTS_CAUSALLY_BOUND",
+  "oracle_hashes_exact": true,
+  "original_corrected_oracles_identical": true,
+  "mutants": [
+    {
+      "name": "send-marker-only",
+      "source_sha256": "00081c048b0febdac28caa7373706bc1b0d740f51f1bf4d2ff5fed4c27d2b859",
+      "binary_sha256": "e14f3a517c3b72996633cd5c7721d976c4123661f24fabe4aa971d3408cc48ed",
+      "countercase": "send-separate-success",
+      "assertion": "Xunit.Sdk.NotNullException",
+      "positive": "query-separate-success",
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -101,9 +101,7 @@\n",
+        "                 await next.SendAsync(repositoryContext).ConfigureAwait(false);",
+        "             }",
+        " ",
+        "-            if (context.TryGetPayload(out IDbTransactionContext? transactionContext)",
+        "-                && dbContext.Database.CurrentTransaction is { } currentTransaction",
+        "-                && currentTransaction.TransactionId == transactionContext.TransactionId)",
+        "+            if (context.TryGetPayload(out IDbTransactionContext? _))",
+        "                 await SendCallbackAsync().ConfigureAwait(false);",
+        "             else",
+        "             {"
+      ],
+      "status": "ACTUAL_STRICT_BUILT_ASSERTION_KILL_BOUND"
+    },
+    {
+      "name": "query-marker-only",
+      "source_sha256": "65aecddd92991e00ff4a2b53ccc3ad59dff24933c6610e1c3e4d66ac7c7d07dd",
+      "binary_sha256": "52ebdbc7aaabcaf861b4cb7b012c4e4bb91e6b145b6fab41c597ffc61a395b3f",
+      "countercase": "query-separate-success",
+      "assertion": "Xunit.Sdk.NotNullException",
+      "positive": "send-separate-success",
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -148,9 +148,7 @@\n",
+        "                 await next.SendAsync(queryContext).ConfigureAwait(false);",
+        "             }",
+        " ",
+        "-            var hasOuterTransaction = context.TryGetPayload(out IDbTransactionContext? transactionContext)",
+        "-                && dbContext.Database.CurrentTransaction is { } currentTransaction",
+        "-                && currentTransaction.TransactionId == transactionContext.TransactionId;",
+        "+            var hasOuterTransaction = context.TryGetPayload(out IDbTransactionContext? _);",
+        " ",
+        "             async Task SendQueryAsync()",
+        "             {"
+      ],
+      "status": "ACTUAL_STRICT_BUILT_ASSERTION_KILL_BOUND"
+    },
+    {
+      "name": "send-id-comparison-lost",
+      "source_sha256": "2b90cd4499148b021f3437fe12e9eb74f6a9efe506967dfa42adaf3dabee220f",
+      "binary_sha256": "3cca58dcb2f1f005917c950707e962db0d863dc243f38085fe3edd54b1326f4d",
+      "countercase": "send-foreign",
+      "assertion": "Xunit.Sdk.IsTypeException",
+      "positive": "send-matching",
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -102,8 +102,7 @@\n",
+        "             }",
+        " ",
+        "             if (context.TryGetPayload(out IDbTransactionContext? transactionContext)",
+        "-                && dbContext.Database.CurrentTransaction is { } currentTransaction",
+        "-                && currentTransaction.TransactionId == transactionContext.TransactionId)",
+        "+                && dbContext.Database.CurrentTransaction is { } currentTransaction)",
+        "                 await SendCallbackAsync().ConfigureAwait(false);",
+        "             else",
+        "             {"
+      ],
+      "status": "ACTUAL_STRICT_BUILT_ASSERTION_KILL_BOUND"
+    },
+    {
+      "name": "query-id-comparison-lost",
+      "source_sha256": "e01aec0cacd3e7a6932ebf658e0bda1007d4a70850dc1992dd7116cd174b05a9",
+      "binary_sha256": "f80708ea2a645407451287a30f56404a8e1cdc7020952395d1bc041c1009d890",
+      "countercase": "query-foreign",
+      "assertion": "Xunit.Sdk.IsTypeException",
+      "positive": "query-matching",
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -149,8 +149,7 @@\n",
+        "             }",
+        " ",
+        "             var hasOuterTransaction = context.TryGetPayload(out IDbTransactionContext? transactionContext)",
+        "-                && dbContext.Database.CurrentTransaction is { } currentTransaction",
+        "-                && currentTransaction.TransactionId == transactionContext.TransactionId;",
+        "+                && dbContext.Database.CurrentTransaction is { } currentTransaction;",
+        " ",
+        "             async Task SendQueryAsync()",
+        "             {"
+      ],
+      "status": "ACTUAL_STRICT_BUILT_ASSERTION_KILL_BOUND"
+    },
+    {
+      "name": "send-valid-owner-rejected",
+      "source_sha256": "101534469702cc596a462fd2f167fc997b1bb03407810fb91e338f7e945ef048",
+      "binary_sha256": "4ec322fb0727bd4c470383e90ed4305e95e410661d6d7643d35ecf48e1498636",
+      "countercase": "send-matching",
+      "assertion": "Xunit.Sdk.NullException",
+      "positive": "query-matching",
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -103,7 +103,7 @@\n",
+        " ",
+        "             if (context.TryGetPayload(out IDbTransactionContext? transactionContext)",
+        "                 && dbContext.Database.CurrentTransaction is { } currentTransaction",
+        "-                && currentTransaction.TransactionId == transactionContext.TransactionId)",
+        "+                && currentTransaction.TransactionId != transactionContext.TransactionId)",
+        "                 await SendCallbackAsync().ConfigureAwait(false);",
+        "             else",
+        "             {"
+      ],
+      "status": "ACTUAL_STRICT_BUILT_ASSERTION_KILL_BOUND"
+    },
+    {
+      "name": "query-valid-owner-rejected",
+      "source_sha256": "be675b5d5c6554b950dc41bbab358db6bbbdf5deb712539a86b4b691837f2f41",
+      "binary_sha256": "34e002d9a33ba06938639910fdae670f7b486403c93fe47f600a83ca42659f99",
+      "countercase": "query-matching",
+      "assertion": "Xunit.Sdk.NullException",
+      "positive": "send-matching",
+      "diff": [
+        "--- \n",
+        "+++ \n",
+        "@@ -150,7 +150,7 @@\n",
+        " ",
+        "             var hasOuterTransaction = context.TryGetPayload(out IDbTransactionContext? transactionContext)",
+        "                 && dbContext.Database.CurrentTransaction is { } currentTransaction",
+        "-                && currentTransaction.TransactionId == transactionContext.TransactionId;",
+        "+                && currentTransaction.TransactionId != transactionContext.TransactionId;",
+        " ",
+        "             async Task SendQueryAsync()",
+        "             {"
+      ],
+      "status": "ACTUAL_STRICT_BUILT_ASSERTION_KILL_BOUND"
+    }
+  ],
+  "corrected_controls": 16,
+  "terminal_rollback_cases": 16,
+  "limits": "Reconstructed variant text was checked against native-recorded source SHA and retained DLL SHA; no reviewer compilation or IL equivalence claim."
+}

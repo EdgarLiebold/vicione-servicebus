@@ -1,0 +1,61 @@
+{
+  "utc": "2026-10-04T16:13:23.107298+00:00",
+  "files": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureRegistrationBoundaryTests.cs",
+      "before": "06ef31c56d5bac49819e381c1c03de9b9bbf4dcbc6dc3b34ef1513eb45dda154",
+      "after": "9c0950c3c082a5e05f42791e52cc720db583cc1bfab429a8abe39626da140ed7"
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduledMessageSendPipeTests.cs",
+      "before": "891521c46acc7c921e9e2ac70f34563bb038f18d8805000a532d05ca822d55d9",
+      "after": "db37c2ff46858c25cdab8c709aec58afd62ce1a0f583a3a4f7ae5b4f2ce9e979"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureTerminalDispatchContractTests.cs",
+      "before": "f8f932b935afb0d796ab7ca19387bedb73e1344562c2bdaf5f08c7dc8c4a529a",
+      "after": "462dc773e6006ade322120f04d5a4473d24fbdefe87dff88c4157fbcf3b9d8ec"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SignalR.Tests/SignalRBackplaneIsolationContractTests.cs",
+      "before": null,
+      "after": "fedc02776c274a9edf6443c478550f01655fb8cabb3f313ee1b069ab81c58edb"
+    }
+  ],
+  "requirements": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before": "668e1540d1071525ac29be1f1b37ec50dfcd6f674bd4dfb8f709ecdae03e39e5",
+      "after": "96706e608fbda960c909043c0325cb896722b10d468e5eba2c820e0a24372598",
+      "rows": 4581
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/QuartzIntegrationRequirements.json",
+      "before": "7565d338788aca51b5afc94518c9d24bbd2454b50c45961d73f6fa5431561f90",
+      "after": "eb520ca32b6678a66cb400c01c592dbe3c893093e3c616b62c28f263db7160fc",
+      "rows": 178
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SignalR.Tests/Requirements/SignalRRequirements.json",
+      "before": "1211adc431a27e3947cb55a58222a414e3d17cf3bbc6ad540e274d40c678379a",
+      "after": "8da9837d2adaea8fd7c59ee5a52fe317e0dbb6455bb7573c3e7252c18863a97d",
+      "rows": 78
+    }
+  ],
+  "root_independent_test_review": "Whole exact proposed deltas and new176L owner3b539a; actual testmethods4+1+2 retained. Requirement add-only5 entries independently inspected0692a0. Unknown/duplicate membership inspect without side effects; transient clock exactcause plus recovery; SignalR actual two BusControls and positive client forwarding, held Features task released/joined before disposal.",
+  "independent_reviews": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package71-fsq-local-oracles-adversarial-r1/REPORT.json",
+      "sha256": "48677a6278c1b112d29b1749bc2c9c34d1e0a4f107e2e52b83e57773c612a471"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package71-future-membership-adversarial-r1/REPORT.json",
+      "sha256": "e60af8cc4ad099d23631761fc469e211bbc7d85aa2a7f2b18a5f80dcc9f1c7a8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package71-signalr-two-oracles-adversarial-r1/REPORT.json",
+      "sha256": "2df1b50cccb39f6c3941af0cdf328a4c808b46c6221bef1c453a6be8fffd8498"
+    }
+  ],
+  "native_status": "PENDING_EXPECTED_CAUSAL_RED_NOT_CLAIMED"
+}

@@ -1,0 +1,274 @@
+{
+  "utc": "2026-10-05T22:33:50.408040+00:00",
+  "status": "COLLECTIVE_INDIVIDUAL_SOURCE104_ROOT_ACCEPTED_EXACT16_HELD_WHOLE_API_OPEN",
+  "basis": "Author and independent Runtime each own whole41/2572 and10/1008 helpers plus actual OneTimeContext10, all120 individual norms. Root own whole author/independent reports and exact16heldnorms/reasons; Root does not claim own whole41 or all120 norms. Root independently mechanically actual P36 Azure223/source41/sourceSnapshot/current/XML116 and4 individually-heldabsences/all120Originals/disjoint/allmanifestpayloads verified. Count-onlyOneTime10 erratum mandatory and preserved.",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure-servicebus120-current-contract-context-r1/REPORT.json",
+    "sha256": "a9326e31a183da634f8c41bddf6e2f2c9a9cc1ea938048bcdcb35ab0ec613f35"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure120-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "43d1aff97549c27cc4599d5628327ffff2ab68721854e6ba82570a6f9a006c70"
+  },
+  "mandatory_erratum": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure120-onetime-helper-count-erratum-r1/ERRATUM.json",
+    "sha256": "ec1e87e0d74f9751f1c6e6304675a44df49326497112151c32087447bcbedcb8"
+  },
+  "verified_manifest_payloads": 16,
+  "actual_DLL": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll",
+    "sha256": "2f324facd36039d42b3d59a9f9874da82b2cbc1a67fc7124327309b7edd857e5"
+  },
+  "actual_XML": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.xml",
+    "sha256": "fc84dbb54a4e4e45d6488897aac0cc89670690c2fe2e38bc9dfa7f7f5dc6c34e"
+  },
+  "PDB_sha256": "8d3a7520a08f4eff799dc52b20ca0ec472f732fd170f0da007b93793a170b74a",
+  "actual_PDB_documents": 223,
+  "source_owners": 41,
+  "accepted_ids": [
+    "F:ViciOne.ServiceBus.AzureServiceBus.Middleware.MessageReceiverFilter.Context",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.CreateReceiveEndpointContext",
+    "M:ViciOne.ServiceBus.AzureServiceBus.DelegateSessionIdFormatter`1.#ctor(System.Func{ViciOne.ServiceBus.Advanced.SendContext{`0},System.String})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.DelegateSessionIdFormatter`1.FormatSessionId(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor.CreateClientContextSupervisor(System.Func{ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory{ViciOne.ServiceBus.AzureServiceBus.ClientContext}})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor.CreatePublishTransportAsync``1(ViciOne.ServiceBus.Transports.ReceiveEndpointContext,System.Uri,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor.CreateSendEndpointContextSupervisor(ViciOne.ServiceBus.AzureServiceBus.SendSettings)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor.CreateSendTransportAsync(ViciOne.ServiceBus.Transports.ReceiveEndpointContext,System.Uri,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor.NormalizeAddress(System.Uri)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.IMessageSessionIdFormatter`1.FormatSessionId(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.IReceiver.Start",
+    "M:ViciOne.ServiceBus.AzureServiceBus.IServiceBusHost.ConnectSubscriptionEndpoint(System.String,System.String,System.Action{ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.IServiceBusHost.ConnectSubscriptionEndpoint``1(System.String,System.Action{ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.IServiceBusMessageReceiver.HandleAsync(Azure.Messaging.ServiceBus.ServiceBusReceivedMessage,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ISessionIdFormatter.FormatSessionId``1(ViciOne.ServiceBus.Advanced.SendContext{``0})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.MessageSessionIdFormatter`1.#ctor(ViciOne.ServiceBus.AzureServiceBus.ISessionIdFormatter)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.MessageSessionIdFormatter`1.FormatSessionId(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.MessageReceiverFilter.#ctor(ViciOne.ServiceBus.AzureServiceBus.ServiceBusReceiveEndpointContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.MessageReceiverFilter.CreateMessageReceiver(ViciOne.ServiceBus.AzureServiceBus.ClientContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.MessageReceiverFilter.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.MessageSessionReceiverFilter.#ctor(ViciOne.ServiceBus.AzureServiceBus.ServiceBusReceiveEndpointContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.MessageSessionReceiverFilter.CreateMessageReceiver(ViciOne.ServiceBus.AzureServiceBus.ClientContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.MessageSessionReceiverFilter.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ServiceBusSendContextFilter`1.#ctor(ViciOne.ServiceBus.Advanced.Middleware.IFilter{ViciOne.ServiceBus.AzureServiceBus.ServiceBusSendContext{`0}})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ServiceBusSendContextFilter`1.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ServiceBusSendContextFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.SetSessionIdFilter`1.#ctor(ViciOne.ServiceBus.AzureServiceBus.IMessageSessionIdFormatter{`0})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.SetSessionIdFilter`1.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.SetSessionIdFilter`1.SendAsync(ViciOne.ServiceBus.AzureServiceBus.ServiceBusSendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AzureServiceBus.ServiceBusSendContext{`0}})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.SendEndpointContextSupervisor.#ctor(ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory{ViciOne.ServiceBus.AzureServiceBus.SendEndpointContext})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusEntityReceiveEndpointContext.#ctor(ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusHostConfiguration,ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusEntityEndpointConfiguration,ViciOne.ServiceBus.AzureServiceBus.Topology.BrokerTopology,System.Func{ViciOne.ServiceBus.AzureServiceBus.IClientContextSupervisor})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusEntityReceiveEndpointContext.AddConsumeAgent(ViciOne.ServiceBus.Advanced.Middleware.IAgent)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusEntityReceiveEndpointContext.AddSendAgent(ViciOne.ServiceBus.Advanced.Middleware.IAgent)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusEntityReceiveEndpointContext.ConvertException(System.Exception,System.String)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusEntityReceiveEndpointContext.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost.#ctor(ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusHostConfiguration,ViciOne.ServiceBus.AzureServiceBus.IServiceBusBusTopology)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost.ConnectReceiveEndpoint(System.String,System.Action{ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost.ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition,ViciOne.ServiceBus.Advanced.IEndpointNameFormatter,System.Action{ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost.ConnectReceiveEndpoint(ViciOne.ServiceBus.Configuration.IEndpointDefinition,ViciOne.ServiceBus.Advanced.IEndpointNameFormatter,System.Action{ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost.GetAgentHandles",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusInstance.#ctor(ViciOne.ServiceBus.IBusControl,ViciOne.ServiceBus.Transports.IHost{ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator},ViciOne.ServiceBus.Configuration.IHostConfiguration,ViciOne.ServiceBus.Configuration.IBusRegistrationContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusInstance.ConnectSubscriptionEndpoint(System.String,System.String,System.Action{ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusInstance.ConnectSubscriptionEndpoint(System.String,System.String,System.Action{ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusInstance.ConnectSubscriptionEndpoint``1(System.String,System.Action{ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusInstance.ConnectSubscriptionEndpoint``1(System.String,System.Action{ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusMessageNameFormatter.#ctor(System.Boolean,System.String)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusMessageNameFormatter.#ctor(System.String)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusMessageNameFormatter.GetMessageName(System.Type)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusPublishTransportProvider.#ctor(ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.Transports.ReceiveEndpointContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusPublishTransportProvider.GetPublishTransportAsync``1(System.Uri,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueDeadLetterTransport.#ctor(ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.AzureServiceBus.SendSettings)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueDeadLetterTransport.SendAsync(ViciOne.ServiceBus.Advanced.ReceiveContext,System.String,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueErrorTransport.#ctor(ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.AzureServiceBus.SendSettings)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueErrorTransport.SendAsync(ViciOne.ServiceBus.Advanced.ExceptionReceiveContext,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueMoveTransport.MoveAsync(ViciOne.ServiceBus.Advanced.ReceiveContext,System.Action{Azure.Messaging.ServiceBus.ServiceBusMessage,ViciOne.ServiceBus.Advanced.SendHeaders})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusRegistrationBusFactory.#ctor(System.Action{ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AzureServiceBus.IServiceBusBusFactoryConfigurator})",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusRegistrationBusFactory.CreateBus(ViciOne.ServiceBus.Configuration.IBusRegistrationContext,System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.IBusInstanceSpecification},System.String)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusRegistrationBusFactory.CreateBusInstance(ViciOne.ServiceBus.IBusControl,ViciOne.ServiceBus.Transports.IHost{ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator},ViciOne.ServiceBus.Configuration.IHostConfiguration,ViciOne.ServiceBus.Configuration.IBusRegistrationContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusSendTransportProvider.#ctor(ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.Transports.ReceiveEndpointContext)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusSendTransportProvider.NormalizeAddress(System.Uri)",
+    "M:ViciOne.ServiceBus.Configuration.ServiceBusReceiveEndpointBuilder.CreateReceiveEndpointContext",
+    "M:ViciOne.ServiceBus.Configuration.ServiceBusSubscriptionEndpointBuilder.CreateReceiveEndpointContext",
+    "M:ViciOne.ServiceBus.Scheduling.ServiceBusScheduleMessageProvider.CancelScheduledSendAsync(System.Uri,System.Guid,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.Scheduling.ServiceBusScheduleMessageProvider.ScheduleSendAsync``1(System.Uri,System.DateTimeOffset,``0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)",
+    "P:ViciOne.ServiceBus.AzureServiceBus.NamespaceContext.ConnectionContext",
+    "P:ViciOne.ServiceBus.AzureServiceBus.ServiceBusEntityReceiveEndpointContext.BrokerTopology",
+    "P:ViciOne.ServiceBus.AzureServiceBus.ServiceBusEntityReceiveEndpointContext.ClientContextSupervisor",
+    "P:ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost.Topology",
+    "P:ViciOne.ServiceBus.AzureServiceBus.ServiceBusMessageSessionContext.LockedUntilUtc",
+    "P:ViciOne.ServiceBus.AzureServiceBus.ServiceBusReceiveEndpointContext.BrokerTopology",
+    "P:ViciOne.ServiceBus.AzureServiceBus.ServiceBusReceiveEndpointContext.ClientContextSupervisor",
+    "T:ViciOne.ServiceBus.AzureServiceBus.DelegateSessionIdFormatter`1",
+    "T:ViciOne.ServiceBus.AzureServiceBus.EmptySessionIdFormatter",
+    "T:ViciOne.ServiceBus.AzureServiceBus.IClientContextSupervisor",
+    "T:ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor",
+    "T:ViciOne.ServiceBus.AzureServiceBus.IMessageSessionIdFormatter`1",
+    "T:ViciOne.ServiceBus.AzureServiceBus.IReceiver",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ISendEndpointContextSupervisor",
+    "T:ViciOne.ServiceBus.AzureServiceBus.IServiceBusHost",
+    "T:ViciOne.ServiceBus.AzureServiceBus.IServiceBusMessageReceiver",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ISessionIdFormatter",
+    "T:ViciOne.ServiceBus.AzureServiceBus.MessageSessionIdFormatter`1",
+    "T:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureTopologyContext`1",
+    "T:ViciOne.ServiceBus.AzureServiceBus.Middleware.DeadLetterQueueExceptionFilter",
+    "T:ViciOne.ServiceBus.AzureServiceBus.Middleware.DeadLetterQueueFilter",
+    "T:ViciOne.ServiceBus.AzureServiceBus.Middleware.MessageReceiverFilter",
+    "T:ViciOne.ServiceBus.AzureServiceBus.Middleware.MessageSessionReceiverFilter",
+    "T:ViciOne.ServiceBus.AzureServiceBus.Middleware.ServiceBusMessageSchedulerFilter",
+    "T:ViciOne.ServiceBus.AzureServiceBus.Middleware.ServiceBusSendContextFilter`1",
+    "T:ViciOne.ServiceBus.AzureServiceBus.Middleware.SetSessionIdFilter`1",
+    "T:ViciOne.ServiceBus.AzureServiceBus.NamespaceContext",
+    "T:ViciOne.ServiceBus.AzureServiceBus.SendEndpointContextSupervisor",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ServiceBusEntityReceiveEndpointContext",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ServiceBusInstance",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ServiceBusMessageNameFormatter",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ServiceBusPublishTransportProvider",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueDeadLetterTransport",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueErrorTransport",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueMoveTransport",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ServiceBusReceiveEndpointContext",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ServiceBusRegistrationBusFactory",
+    "T:ViciOne.ServiceBus.AzureServiceBus.ServiceBusSendTransportProvider"
+  ],
+  "held_original_ids": [
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+      "reason": "Multi-stage transport/context/topology filter construction and receive registration partial-failure ownership remains operative; Source hypothesis only.",
+      "individual_contract_norm": "Build configures dead-letter and error transports first, creates endpoint context, appends topology filter carrying settings/remove-subscriptions/context, then registers receive endpoint. Partial configuration and registration effects are retained on failure; no local rollback."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.EmptySessionIdFormatter.#ctor",
+      "reason": "Exact implicit parameterless constructor has no explicit body/emitted XML; identity requires separate compiler/member reconciliation.",
+      "individual_contract_norm": "Implicit parameterless constructor has no explicit body or emitted XML; class implements session formatter explicitly returning null. Exact generated member identity remains held."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.ConfigureAsync(ViciOne.ServiceBus.AzureServiceBus.NamespaceContext,System.Threading.CancellationToken)",
+      "reason": "Optional removal-agent registration and composed OneTime/SDK topology deployment resource cleanup remain operative; private remover admission/join semantics need genuine public original before any new finding. Existing F072 creation-stage join repair is retained, not reopened.",
+      "individual_contract_norm": "Awaits namespace OneTimeSetupAsync keyed by ConfigureTopologyContext<TSettings>. Setup callback adds settings payload, optionally registers removal agent when context/nonfalse flag, then deploys groups Topics/Queues/Subscriptions/QueueSubscriptions/TopicSubscriptions in order. Each group uses bounded admission catch/null-task check and actual WhenAll; supplied token flows to setup and provider calls. No cross-group rollback."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AzureServiceBus.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AzureServiceBus.ClientContext})",
+      "reason": "Custom bodyless OneTimeContext.Evict can fail before rethrow of downstream failure; causal error preservation requires bounded public Original and exact eviction contract before any finding.",
+      "individual_contract_norm": "Awaits ConfigureAsync using context.CancellationToken before next.SendAsync. Downstream failure invokes one-time Evict then bare rethrow; eviction failure can replace downstream failure. No continuation when setup fails."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.DeadLetterQueueExceptionFilter.#ctor",
+      "reason": "Exact implicit empty filter constructor has no explicit body/emitted XML; no automatic generated-NA acceptance.",
+      "individual_contract_norm": "Implicit constructor has no explicit source body or emitted XML. Explicit filter method requires lock payload, awaits dead-letter with context.Exception then continuation; generated selected ctor identity held."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.DeadLetterQueueFilter.#ctor",
+      "reason": "Exact implicit empty filter constructor has no explicit body/emitted XML; generated identity remains individually held.",
+      "individual_contract_norm": "Implicit constructor has no explicit source body or emitted XML. Explicit filter requires lock payload, awaits dead-letter then continuation; exact generated ctor identity held."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ServiceBusMessageSchedulerFilter.#ctor",
+      "reason": "Exact implicit scheduler filter constructor has no explicit body/emitted XML; generated identity remains individually held.",
+      "individual_contract_norm": "Implicit constructor has no explicit body or emitted XML. Explicit filter adds scheduler payload lazily then returns continuation Task; generated ctor identity held separately."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.QueueClientContext.CloseAsync(System.Threading.CancellationToken)",
+      "reason": "Owning close catch invokes optional Warning logger without containment; actual processor failure plus hostile logger needs meaningful public Original. No empirical/new finding claim.",
+      "individual_contract_norm": "Async Close attempts nonclosed ordinary processor then nonclosed session processor with caller token. Catches all close/getter failures and invokes owning Warning log; logger failure remains visible. No processor Dispose, once guard or stop-task join."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.QueueClientContext.DisposeAsync",
+      "reason": "Dispose delegates Close(default) without new diagnostic shielding or fault-stop-task drain; exact owned SDK-task/cleanup route remains operative.",
+      "individual_contract_norm": "DisposeAsync awaits CloseAsync with default token; no separate SDK Dispose or retained fault-stop-task join. Underlying Close containment remains subject to Warning logger errors."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.QueueClientContext.ShutdownAsync(System.Threading.CancellationToken)",
+      "reason": "Owning stop catch invokes optional Warning logger without containment; genuine shutdown progression/error policy requires public Original, no broad logging policy.",
+      "individual_contract_norm": "Async Shutdown attempts StopProcessing on nonclosed ordinary then session processor using caller token. Catches all failures and logs Warning; logger failure propagates and earlier failure skips later processor call."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusConnectionContext.DisposeAsync",
+      "reason": "Existing F076 diagnostic guards are repaired and closed. Current client FullyQualifiedNamespace getter precedes guarded diagnostics and owned disposal; arbitrary SDK getter failure versus owned cleanup remains unqualified separate source hypothesis, not duplicate F076/new finding.",
+      "individual_contract_norm": "Reads messaging client FullyQualifiedNamespace first, contains DisconnectHost diagnostic errors, awaits client.DisposeAsync only when owned, then contains DisconnectedHost diagnostic errors. Administration client is not disposed. Provider getter/disposal failures remain visible; public ctor owns messaging client, internal host path can retain external ownership."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost.ConnectReceiveEndpoint(System.String,System.Action{ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator})",
+      "reason": "Connect diagnostic precedes endpoint Build/Start; callback/build/start/diagnostic failure ownership remains operative pending genuine public Original, no failed-start assumption.",
+      "individual_contract_norm": "Sets ambient LogContext only when absent, creates named endpoint configuration with callback, enumerates validation, invokes ConnectReceiveEndpoint diagnostic, builds against this host, then ReceiveEndpoints.Start(settings.Path). No local rollback if log/build/start fails."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost.ConnectSubscriptionEndpoint(System.String,System.String,System.Action{ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator})",
+      "reason": "Subscription diagnostic precedes validation/build/start; owning workflow continuation under hostile diagnostic remains unqualified, exact Source-only hypothesis.",
+      "individual_contract_norm": "Sets ambient logger if absent, creates named-topic subscription configuration using exact names/callback, then private helper logs, validates, builds and starts by settings.Path. Diagnostics/callback failures can prevent subsequent workflow; no local rollback."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusHost.ConnectSubscriptionEndpoint``1(System.String,System.Action{ViciOne.ServiceBus.AzureServiceBus.IServiceBusSubscriptionEndpointConfigurator})",
+      "reason": "Same owning subscription diagnostic boundary reached through typed configuration; no separate finding/empirical identity assumed.",
+      "individual_contract_norm": "Class-constrained typed subscription overload sets ambient logger if absent and creates typed topic configuration; private helper logs then validates/builds/starts. Generic declaration does not itself prove successful SDK startup."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueMoveTransport.#ctor(ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.AzureServiceBus.SendSettings)",
+      "reason": "Lazy factory creates child supervisor then parent AddSendAgent; registration failure rollback/owned child lifetime is unqualified, no public Original yet.",
+      "individual_contract_norm": "Protected move constructor creates Recycle closure: on generation demand creates endpoint supervisor, calls parent AddSendAgent, then returns it. Supplied references are not guarded; registration failure may occur after child creation, no local disposal rollback."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusSendTransportContext.SendAsync``1(ViciOne.ServiceBus.AzureServiceBus.SendEndpointContext,ViciOne.ServiceBus.Advanced.SendContext{``0},System.Threading.CancellationToken)",
+      "reason": "Existing normal/past/rejected/cancel-scheduled diagnostics can affect broker-result visibility or fallback progress. Exact provider/SDK error and send/schedule ownership routes remain operative until genuine public Original; no global logger suppression or cancellation hardstop claimed.",
+      "individual_contract_norm": "Checks explicit admission token, requires AzureServiceBusSendContext<T>, optionally tags active Activity, checks send-context token, then selects cancellation, future scheduling or ordinary send. Broker calls use send-context token. Scheduling materializes body/headers, accepts server sequence identity; past/server ArgumentOutOfRange paths log then ordinary send. Cancellation contains only specific notfound/already-canceling outcomes and logs; no broad business exception suppression."
+    }
+  ],
+  "preserved_prior_rows": 16832,
+  "master_before_sha256": "13f88aeacff030832c5a2fd8de129499a0c77af802ddcd10f187fe3a974f3f26",
+  "canonical_accounting": {
+    "original_canonical_denominator": 18569,
+    "historical_current_r2_basic_denominator": 18598,
+    "original_canonical_accepted": 16074,
+    "historical_current_r2_new_canonical_accepted": 29,
+    "current_canonical_accepted": 16103,
+    "accessor_sidecar_accepted": 833,
+    "master_unique_rows": 16936,
+    "master_declared_accepted_count_field": 16936,
+    "master_declared_denominator_field": 18598,
+    "original_canonical_remaining": 2495,
+    "historical_current_r2_canonical_remaining": 2495,
+    "sidecar_get": 690,
+    "sidecar_set": 137,
+    "sidecar_original_parent_unique": 714,
+    "sidecar_unmapped": 0,
+    "original_duplicate_keys": 0,
+    "master_duplicate_keys": 0,
+    "evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE168_MASTER_CANONICAL_ACCESSOR_ROOT_COUNT_PRECISION_R1.json",
+      "sha256": "8be3bc5b82aa65ef6139de4002fd86789583c9a4fbf28a3d88f73496afc12b57"
+    },
+    "historical_current_r2_inventory_is_not_fresh168_metadata": true,
+    "latest_source_append_evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE256_AZURE120_SOURCE104_EXACT16_HELD_COLLECTIVE_ROOT_ACCEPTANCE_R1.json"
+    },
+    "latest_subtotal_precision": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE170_MASTER548_ACCESSOR_AND_SPEC_LINECOUNT_ROOT_PRECISION_R1.json",
+      "sha256": "b41b9e72fbcf91d8314f882fd469a082ce1582994f521ffcb04718adf615fdd2"
+    },
+    "sidecar_event_add": 3,
+    "sidecar_event_remove": 3
+  },
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "product_test_req_sdk_changes": 0,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package256-azure104-root-before-r1",
+  "master_after_sha256": "7e7f465d3e05c4ca11398152e280b9daec621fe9b441e9e79abeef1387b9c60e"
+}

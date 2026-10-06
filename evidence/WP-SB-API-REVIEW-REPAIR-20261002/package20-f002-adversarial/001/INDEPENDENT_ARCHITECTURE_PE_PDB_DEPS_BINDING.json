@@ -1,0 +1,2408 @@
+[
+  {
+    "generation": "previous",
+    "dll": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll",
+    "dll_sha256": "66759b0276d367dc314e7baa2734a9de51f0cd64fc4b68ef9cf575878d2268d5",
+    "pdb": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.pdb",
+    "pdb_sha256": "d9f878acd2e17d457213f96196ee0078e8cee2ceb204d1487766776ab4131b29",
+    "codeview": {
+      "guid_hex": "0f4fb854c182354a86d02360b8da084c",
+      "stamp": 3884683700,
+      "age": 1,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.pdb"
+    },
+    "all_document_source_SHA_checks_with_explicit_generated_absences": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ApiSurfaceGlobalUsings.cs",
+        "sha256": "92a91807b899850c048356982d623be2d372f1cf2b903612969d07f297b7c0c6",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ApiSurfaceGlobalUsings.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
+        "sha256": "90e8902627b6b2b78a16c65eba73031ba5ea93d59d0db163755f91fcdaa67132",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs",
+        "sha256": "a66a17c405cd379e1e24a4d2164b88e0dfbf4002bfe8434affce761c36c7afe7",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs",
+        "sha256": "749afe60c9686bab6d9cd9ca184babf63284e757f3ceed06acabdb1841e85cf6",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs",
+        "sha256": "3096dbd65f0e9bb9d1085ae3579b0910c69e104a00e905af6f8318c99ff3a7fa",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ApiSurfaceArchitectureTests.cs",
+        "sha256": "ab76acec294342bf17e526675204791e1cf819625d0fb0ff2cde2b416b4943db",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ApiSurfaceArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/AsyncApiConventionArchitectureTests.cs",
+        "sha256": "6539af9d0930d261bdb62cad1abe9fc98e414ce62deca35d0fdff5f6976aa751",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/AsyncApiConventionArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/BackgroundWorkOwnershipTests.cs",
+        "sha256": "5ca25d6761a2450163b337bc2e62800f6f94d79af216d9e43268f4d480193add",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/BackgroundWorkOwnershipTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CancellationTokenFlowArchitectureTests.cs",
+        "sha256": "8c15fefcb80429a61aab8e3dc6bbdcbd60132302d3b8891ecad4dca128484b17",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CancellationTokenFlowArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CapabilityPackageArchitectureTests.cs",
+        "sha256": "3087abee44f0a199d64af956dd30564545acb0881a88a90f12126258abbd2525",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CapabilityPackageArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ConfigurationExceptionArchitectureTests.cs",
+        "sha256": "1d1e05dc78d16d075c3255adc7c7990811366e9a8675788875912176fdae1383",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ConfigurationExceptionArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DeveloperJourneyArchitectureTests.cs",
+        "sha256": "71f0b5ff78bdfe0e48af11e79ab4240ece590dbd2c2695d5ff33aee19f200a42",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DeveloperJourneyArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DurableSenderArchitectureTests.cs",
+        "sha256": "61118dfebdd02b99bf8a6dc468fb3a573f7dc2c7f6e04b5bd81b4a1537bcb3f2",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DurableSenderArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/GreenfieldApiArchitectureTests.cs",
+        "sha256": "ea41a73ed91c3e9bbd893d2db3f08dbc4646ee4e034c1301c56500c3b1e2b3d1",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/GreenfieldApiArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/InboundMessageLimitsArchitectureTests.cs",
+        "sha256": "3a00c83369d22c461c428a4fe764b000ddf66227069c8356233bb48869ecf478",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/InboundMessageLimitsArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/PayloadAdmissionArchitectureTests.cs",
+        "sha256": "a115ad1cfdb0b13220a77ae63e7869b1373855c067a342fc6e2ce1a006b5b001",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/PayloadAdmissionArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProductDocumentationArchitectureTests.cs",
+        "sha256": "b15c9050363b940a7f59f5d68bc1b7375bc307bfac26298cebb7ab43153f3916",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProductDocumentationArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProviderCapabilityMatrixTests.cs",
+        "sha256": "dc241247b2d057c2a057af1216b977dc74042c97b21bde2028f5461ed12a58f7",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProviderCapabilityMatrixTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TechnicalRetryArchitectureTests.cs",
+        "sha256": "2b4b21227d2e618b063c22bab4dd512c4fd4e851325dd4931b88c277b12a8e28",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TechnicalRetryArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs",
+        "sha256": "04ebf3be68e717bd85d2cb2ec36b6319cabf58e516db2426c70dcf269e6c9dfb",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs",
+        "sha256": "4dbc0964a5fae7068b682717e5db7d7f0f362b5bebbf730be8206428d8790831",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs",
+        "sha256": "df6b180b30ef306efda2a0eae6c0f779b9812eb14747c15cca7e08ddfe0629b1",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/ProductProjectMetadataTests.cs",
+        "sha256": "bc564640aaac69b4f21f8e5440b9bc3de610d6445a5ff37f9baf210693b0bc24",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/ProductProjectMetadataTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/PublicDocumentationArchitectureTests.cs",
+        "sha256": "3f2c96da47bfc24f67a3c582c71581243236c6cfa4f494e65baa75e1d186ebf0",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/PublicDocumentationArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs",
+        "sha256": "15571481c01454521fc6f158a1a30d4b41c3e1b01cf34fb0f4358d12c51bfa3d",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs",
+        "sha256": "326e412c06597e85b1c47f7557a6dcfc88a3546d736725504b3b2f6cbd726603",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayoutTests.cs",
+        "sha256": "11d08bf1faa3fce21dae486ed8fd49d7483f749f44c35806d323e502989836c1",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayoutTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceFileNamingArchitectureTests.cs",
+        "sha256": "c96ffe3797e4760a5bd7b849907486b5d23974c1358bfa4f40ccbc41cc3d38d3",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceFileNamingArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceHygieneArchitectureTests.cs",
+        "sha256": "9704879e1982e8e6dd3c2c2fa645e5bdf52bfa9a33fd28d4d25528310af9132e",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceHygieneArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs",
+        "sha256": "660f883a15e95ab1d51587dc3328cdb9cfec3936116241b78981d19900a65a3b",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "sha256": "e8fda40be2674c55d0b101869247b809100568cf993f540048c9afc37c271e88",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs",
+        "sha256": "2cf88561bd7bbf56ce855d5240a01be7ef5c1443c49c25a5de624b2fa5079ea4",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+        "sha256": "7d584a00ccee0d028bcaa9e1ca48bf46d1501f71c35413266d0c7299015debd7",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/ProviderFixtureRunnerTests.cs",
+        "sha256": "46d2eb00a290a64c6d5b560bfa38740aa62692cf5856c809d367e1e58b43c0cb",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/ProviderFixtureRunnerTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiBaselineTests.cs",
+        "sha256": "9b169f88ad57ceec31c5955d6d6e2cfb8f1ae8a9f71f9ea0b7f34abf66da496f",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiBaselineTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiGenericContractTests.cs",
+        "sha256": "16d8a45c355c445f2b032abf7a390a06136bc21d6b696080fb392a876d1d9086",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiGenericContractTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberModifierTests.cs",
+        "sha256": "86ff1418277d2ffd1ef4ea5107b322eb7622682d8d71de7898747d1c8df35458",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberModifierTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberNullabilityTests.cs",
+        "sha256": "727e36c963dc6c8b57b888f18bec3091ee3e45a31d31253ecdaa475a6fcb2788",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberNullabilityTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiRuntimeContractTests.cs",
+        "sha256": "4307b28bcca465a9021b8e6d15a1a8c1ce111c04cc21c8b2397f5a19e6bf1f70",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiRuntimeContractTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.GlobalUsings.g.cs",
+        "sha256": "8e89e93fccedb22931dd50889be488d84a527215f29f97af0e2a6f7d67bfae04",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.GlobalUsings.g.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "sha256": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/SelfRegisteredExtensions.cs",
+        "sha256": "8a9f9ab8e924f96fbbe9686f689e029f7abb2b8e0d5ec107b71397f8c883e541",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/SelfRegisteredExtensions.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultRunnerReporters.cs",
+        "sha256": "e110bb9fe21ca6c3120a00382c773a086d62a008a0b0d2b76d08416f27d92bf2",
+        "relative": null,
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultResultWriters.cs",
+        "sha256": "754b9bc2c837fca63c737bad7b98d798508da60216387af1c6a5140177599dbb",
+        "relative": null,
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/XunitAutoGeneratedEntryPoint.cs",
+        "sha256": "65b316b911a03060d25e11330f69ec2c3253b98a3126abd86a236fcb6593deab",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/XunitAutoGeneratedEntryPoint.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.AssemblyInfo.cs",
+        "sha256": "f633abcebe2434a375283e4891e422de3f146a359e85634673954cf8101c9cf4",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.AssemblyInfo.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/System.Text.RegularExpressions.Generator/System.Text.RegularExpressions.Generator.RegexGenerator/RegexGenerator.g.cs",
+        "sha256": "42a8d21fb961660b96c363afe5847de31f4aa8cc6db75292b667b79cf2f0ea02",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/System.Text.RegularExpressions.Generator/System.Text.RegularExpressions.Generator.RegexGenerator/RegexGenerator.g.cs",
+        "current_PDB_source_equal": false,
+        "frozen_original_equal": false
+      }
+    ],
+    "deps_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.deps.json",
+    "deps_sha256": "54cfdae49361c6fb9a91965f8af2f9978dafe8108d43e31d1c450faa3d1c25a6",
+    "runtimeconfig": {
+      "runtimeOptions": {
+        "tfm": "net10.0",
+        "frameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.0"
+          },
+          {
+            "name": "Microsoft.AspNetCore.App",
+            "version": "10.0.0"
+          }
+        ],
+        "configProperties": {
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Reflection.NullabilityInfoContext.IsSupported": true,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+        }
+      }
+    },
+    "runtimeconfig_sha256": "bdbb6b43e509fbbab6c78b7004c4debf1e9791a648a08f730ff5997f71ef7099",
+    "physical_dependency_assets": [
+      {
+        "dependency": "ViciOne.ServiceBus.Architecture.Tests/1.0.0",
+        "asset": "ViciOne.ServiceBus.Architecture.Tests.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll",
+        "sha256": "66759b0276d367dc314e7baa2734a9de51f0cd64fc4b68ef9cf575878d2268d5"
+      },
+      {
+        "dependency": "CycleDetection/2.0.0",
+        "asset": "lib/netcoreapp2.0/StronglyConnectedComponents.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/StronglyConnectedComponents.dll",
+        "sha256": "5ae636b7d2646db86128d86717c46b46702e98f6f9a4a3aed855ce9c98d1edd8"
+      },
+      {
+        "dependency": "FastExpressionCompiler/5.4.1",
+        "asset": "lib/net9.0/FastExpressionCompiler.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/FastExpressionCompiler.dll",
+        "sha256": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a"
+      },
+      {
+        "dependency": "Humanizer.Core/2.14.1",
+        "asset": "lib/net6.0/Humanizer.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Humanizer.dll",
+        "sha256": "d6853075547d7e303efd60354d911a2ff18edba582cda2fa59d91a2e5dcf9e98"
+      },
+      {
+        "dependency": "JetBrains.Annotations/2026.2.0",
+        "asset": "lib/netstandard2.0/JetBrains.Annotations.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/JetBrains.Annotations.dll",
+        "sha256": "0295966b8d44522eec6a3c560fbe4efcfa878d3e16ff1ab0fb3478ab17001381"
+      },
+      {
+        "dependency": "Microsoft.ApplicationInsights/2.23.0",
+        "asset": "lib/netstandard2.0/Microsoft.ApplicationInsights.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.ApplicationInsights.dll",
+        "sha256": "bf9a4b88c7f94267e1cc7ed0700c575d3eb3266ff25bcb76e4f40f1b0fba022d"
+      },
+      {
+        "dependency": "Microsoft.Bcl.AsyncInterfaces/6.0.0",
+        "asset": "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Bcl.AsyncInterfaces.dll",
+        "sha256": "5705d245072d3eb78400547b32147dbb6e2c8b02ba8bda76729798f5efdeaecb"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.Common/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.dll",
+        "sha256": "55618d457128eec582017545b8929ebf195669003b6ec737110f9519e1711d28"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.CSharp/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.CSharp.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.CSharp.dll",
+        "sha256": "fc571a6647ac45b0b0dc1866b795529bb2eeb93adf9be97fcd5903cf482f700a"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.CSharp.Workspaces/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.CSharp.Workspaces.dll",
+        "sha256": "af851edb8f0c128cbfa32be81596381eb2c806e4a961b50b47825536f3fb36d9"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.Workspaces.Common/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.Workspaces.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.Workspaces.dll",
+        "sha256": "e405cbe085bb8f1a3fcc7308af0dc6c5b3be495196046a1840607b17babe13a0"
+      },
+      {
+        "dependency": "Microsoft.EntityFrameworkCore/10.0.12",
+        "asset": "lib/net10.0/Microsoft.EntityFrameworkCore.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.EntityFrameworkCore.dll",
+        "sha256": "f5b1703d608e241314952b2ede8dcdd1b8d8adda8c91a13cb7e6b1007414cef4"
+      },
+      {
+        "dependency": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.EntityFrameworkCore.Abstractions.dll",
+        "sha256": "74bc17c936d66ea090b6a5b4cc4307d2154c9692e57edd4c55d68dd4a99c11b6"
+      },
+      {
+        "dependency": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+        "asset": "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.EntityFrameworkCore.Relational.dll",
+        "sha256": "a1e4f36208650b15b75a4b01a5821d61d5be417ac2e86ec3c65e2560a87e0d7d"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Caching.Abstractions.dll",
+        "sha256": "eb027242c11808fe0d8faf851bd30d0c6e39944b773713ffb04e17e196bece0f"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Caching.Memory/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Caching.Memory.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Caching.Memory.dll",
+        "sha256": "dca415c48a9d6af45c7f28f6481a88baa9cb9f09d3090ca5878d1acbd446048d"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.dll",
+        "sha256": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "sha256": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.Binder.dll",
+        "sha256": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.FileExtensions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.FileExtensions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.FileExtensions.dll",
+        "sha256": "bcbdc341e7134c620e6427ab136cd80d8686f63152e17276aa80c63afa6357ce"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.Json/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.Json.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.Json.dll",
+        "sha256": "91238276267ea5ad2986a9ba6aefbb6dc4643ccfd48167745ef963509407cf84"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.UserSecrets/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.UserSecrets.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.UserSecrets.dll",
+        "sha256": "c235c7a18dcd91cb045bdb98ff26d78afb06f7ed935b0f2cf1a1ada07ec20a55"
+      },
+      {
+        "dependency": "Microsoft.Extensions.DependencyInjection/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.DependencyInjection.dll",
+        "sha256": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc"
+      },
+      {
+        "dependency": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "sha256": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.dll",
+        "sha256": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+        "sha256": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+        "sha256": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+        "sha256": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a"
+      },
+      {
+        "dependency": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "sha256": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216"
+      },
+      {
+        "dependency": "Microsoft.Extensions.FileProviders.Physical/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.FileProviders.Physical.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.FileProviders.Physical.dll",
+        "sha256": "d57f6e1bcf47468a053696ea34b08e7d04edcc2681a5df586145835bd3f0db66"
+      },
+      {
+        "dependency": "Microsoft.Extensions.FileSystemGlobbing/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.FileSystemGlobbing.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.FileSystemGlobbing.dll",
+        "sha256": "56756b08cdffe4f47f4cba71c839375023930df5a16227cf7523085d9137d08e"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "sha256": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Logging/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Logging.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Logging.dll",
+        "sha256": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Logging.Abstractions.dll",
+        "sha256": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Options/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Options.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Options.dll",
+        "sha256": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+        "sha256": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Primitives/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Primitives.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Primitives.dll",
+        "sha256": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc"
+      },
+      {
+        "dependency": "Microsoft.Testing.Extensions.Telemetry/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Extensions.Telemetry.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Extensions.Telemetry.dll",
+        "sha256": "4a03c95584ab11527e541fce9d7466fc65779a2cc37b317cdafe2bc5d7169410"
+      },
+      {
+        "dependency": "Microsoft.Testing.Extensions.TrxReport.Abstractions/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Extensions.TrxReport.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Extensions.TrxReport.Abstractions.dll",
+        "sha256": "4065f9179d0f97eff5f23624be508992d7e57e1b331f330051c76e2731fcef79"
+      },
+      {
+        "dependency": "Microsoft.Testing.Platform/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Platform.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Platform.dll",
+        "sha256": "92db7b51a0e878e84d17a0ffef92abe22b3033ce5655f8bdbda06a3a93651c2e"
+      },
+      {
+        "dependency": "Microsoft.Testing.Platform.MSBuild/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Extensions.MSBuild.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Extensions.MSBuild.dll",
+        "sha256": "d364d5954dacfc2cf9239e29d1aeee37212019677447ccd1bd746710476bd703"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.Mdb.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.Mdb.dll",
+        "sha256": "28cb367972bdc1cd43e4006306af2fd96d37f4ed4b239ee90e1dc7237a93af7f"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.Pdb.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.Pdb.dll",
+        "sha256": "a332332633fbcb20e8d50e49b4db7bd1557721417122cf0c5f4c42f2332391d0"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.Rocks.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.Rocks.dll",
+        "sha256": "bf992f3dce364ebcc3200fa7832ef07e20b4e2dbc3a8a6213ce44e3d239db984"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.dll",
+        "sha256": "831dca77470d85cb6ffbea3072daa7a3df5b7c9fcfd9c3f43674a9be99d4bfcf"
+      },
+      {
+        "dependency": "Newtonsoft.Json/13.0.4",
+        "asset": "lib/net6.0/Newtonsoft.Json.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Newtonsoft.Json.dll",
+        "sha256": "a28c251dfe36d881e9e2462e171441b8b0ec156fe3f452602c9149b1b9efe05b"
+      },
+      {
+        "dependency": "System.Composition.AttributedModel/10.0.1",
+        "asset": "lib/net10.0/System.Composition.AttributedModel.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.AttributedModel.dll",
+        "sha256": "75a980d33643c4d053246e4cd2a26d17ce6892d609bbf99ad6d9fc43cfbf79a7"
+      },
+      {
+        "dependency": "System.Composition.Convention/10.0.1",
+        "asset": "lib/net10.0/System.Composition.Convention.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.Convention.dll",
+        "sha256": "e97f2e6b99f9801d752042419b55ab2da7faa6f3350dcb91d030f7ede0425cae"
+      },
+      {
+        "dependency": "System.Composition.Hosting/10.0.1",
+        "asset": "lib/net10.0/System.Composition.Hosting.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.Hosting.dll",
+        "sha256": "dbd0a3c9fe826e5fa87c616aa345a563cc5e79a563193caf4356767a097e2343"
+      },
+      {
+        "dependency": "System.Composition.Runtime/10.0.1",
+        "asset": "lib/net10.0/System.Composition.Runtime.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.Runtime.dll",
+        "sha256": "65db10e03408098984916ce2a004d38f272a6c677f6fae5b2a4397537f5040b8"
+      },
+      {
+        "dependency": "System.Composition.TypedParts/10.0.1",
+        "asset": "lib/net10.0/System.Composition.TypedParts.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.TypedParts.dll",
+        "sha256": "48497c3d1c37b0b9e98179105679ce143d425332aac9d070d74787675f4a8870"
+      },
+      {
+        "dependency": "TngTech.ArchUnitNET/0.13.4",
+        "asset": "lib/netstandard2.0/ArchUnitNET.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ArchUnitNET.dll",
+        "sha256": "fec2214fb07829e78701cc771b84524c75f9c156888b2696dff11f7fc78eba57"
+      },
+      {
+        "dependency": "xunit.v3.assert/4.0.0",
+        "asset": "lib/net8.0/xunit.v3.assert.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.assert.dll",
+        "sha256": "d14ea33253a7e289af5254617203b02f0643ba7ff618670de837d642ef22af11"
+      },
+      {
+        "dependency": "xunit.v3.common/4.0.0",
+        "asset": "lib/netstandard2.0/xunit.v3.common.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.common.dll",
+        "sha256": "e8e5bf50c6e739812ab5daaaefcc1187b54768a499ccc4b262d4533cc3cab93d"
+      },
+      {
+        "dependency": "xunit.v3.core.mtp-v2/4.0.0",
+        "asset": "lib/net8.0/xunit.v3.mtp-v2.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.mtp-v2.dll",
+        "sha256": "5396efa072a4c925f58f1a4181b022cdc911c1a359d8dd5db838b79a8c741b50"
+      },
+      {
+        "dependency": "xunit.v3.extensibility.core/4.0.0",
+        "asset": "lib/netstandard2.0/xunit.v3.core.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.core.dll",
+        "sha256": "0155a245478403afefd0b363ef24b7588ad6dbf59ff3a88c1a8d8995eba873a1"
+      },
+      {
+        "dependency": "xunit.v3.runner.common/4.0.0",
+        "asset": "lib/netstandard2.0/xunit.v3.runner.common.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.runner.common.dll",
+        "sha256": "059a41ab6c3cc8a00f9ec87846565cb3d2a29a7e46fa2089f461ffbb462355fa"
+      },
+      {
+        "dependency": "xunit.v3.runner.inproc.console/4.0.0",
+        "asset": "lib/net8.0/xunit.v3.runner.inproc.console.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.runner.inproc.console.dll",
+        "sha256": "bde56080928f7f617512d0dbe4043276ac0a15f2e377e71c204f7c12ebea082b"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus/1.0.0",
+        "asset": "ViciOne.ServiceBus.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.dll",
+        "sha256": "b9e312ad4f058812de3145dd0a3cc161fc891de0cf02ac0694a8838de4289d95"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Abstractions/1.0.0",
+        "asset": "ViciOne.ServiceBus.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Abstractions.dll",
+        "sha256": "df11e4db740d6e6c5df066394cca93d7eeb85fe21c5ff8a8df91cb5ef51f6344"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/1.0.0",
+        "asset": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll",
+        "sha256": "3c01a95ba277f6ecf1498de5f214be8d6a375862b2f4e6f5e9df206dd2a641cc"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Build.PublicApiBaseline/1.0.0",
+        "asset": "ViciOne.ServiceBus.Build.PublicApiBaseline.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Build.PublicApiBaseline.dll",
+        "sha256": "3454d4e505b1f6846b9756cd249f880259e6b3bcd437f233bcfdfe90bf3fed00"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Courier/1.0.0",
+        "asset": "ViciOne.ServiceBus.Courier.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Courier.dll",
+        "sha256": "1f2fc8da3dfd4319499278df8f26b4cd39a1cf6c02a181ca72b518e9d6fa15a8"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+        "asset": "ViciOne.ServiceBus.EntityFrameworkCore.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+        "sha256": "903cc86e6facd7b91942d0814bb546c138869952274535f8a42c9074822f6892"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+        "asset": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "sha256": "3cc3e7ee3a5190d7cb1adc98329ca424edf8f39a832af3ac843f1b787cf49bda"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Futures/1.0.0",
+        "asset": "ViciOne.ServiceBus.Futures.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Futures.dll",
+        "sha256": "1079c427a58283413f4a208e8b26c92654d939ca3aca77da529ad21c2ba20fe0"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Initializers/1.0.0",
+        "asset": "ViciOne.ServiceBus.Initializers.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Initializers.dll",
+        "sha256": "65eb5ab8c8f2a7d4f94d434f30dac83b1c02b74cbeab60d09ac755c41a6e459d"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.JobService/1.0.0",
+        "asset": "ViciOne.ServiceBus.JobService.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.JobService.dll",
+        "sha256": "ffbb71cf253a546e848cda919390f282807708ae9c6412cff14cf73bc9cbe36d"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Mediator/1.0.0",
+        "asset": "ViciOne.ServiceBus.Mediator.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Mediator.dll",
+        "sha256": "974da32d5189412bf9da86e342baf387b5b4e9dd2920fe007712fc367c9e7d7d"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/1.0.0",
+        "asset": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll",
+        "sha256": "04a38cafb4cd3fcba94c0ceeb98d562bf3b9ac3405589735d30b673e394036f2"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Sagas/1.0.0",
+        "asset": "ViciOne.ServiceBus.Sagas.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Sagas.dll",
+        "sha256": "1c5eada2a4fde9d7857781763d8efd41b56cc72b0a087d0d9925d64934968646"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+        "asset": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+        "sha256": "94ab89ca35d868b4c280a84605e86d4aac2c4b202733fc908a8045d49584d6c8"
+      }
+    ],
+    "scope": "PE/sidecar portablePDB content-ID and document SHA/source bytes, deps physical outputs; not proof of exact live loaded SDK/runtimehost."
+  },
+  {
+    "generation": "corrected",
+    "dll": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll",
+    "dll_sha256": "eaa48c592625401e9546965140ebc7cf546ae76dd6060bd85cd74506cedc9282",
+    "pdb": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.pdb",
+    "pdb_sha256": "15a10f9df09b044e0f22fcf9c16c0c3557c2caa4bcf291a14d1ea13ed388ece5",
+    "codeview": {
+      "guid_hex": "484ee7c81c97c3429622fddbefc83486",
+      "stamp": 3433376603,
+      "age": 1,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.pdb"
+    },
+    "all_document_source_SHA_checks_with_explicit_generated_absences": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ApiSurfaceGlobalUsings.cs",
+        "sha256": "92a91807b899850c048356982d623be2d372f1cf2b903612969d07f297b7c0c6",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ApiSurfaceGlobalUsings.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
+        "sha256": "90e8902627b6b2b78a16c65eba73031ba5ea93d59d0db163755f91fcdaa67132",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs",
+        "sha256": "a66a17c405cd379e1e24a4d2164b88e0dfbf4002bfe8434affce761c36c7afe7",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs",
+        "sha256": "749afe60c9686bab6d9cd9ca184babf63284e757f3ceed06acabdb1841e85cf6",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs",
+        "sha256": "3096dbd65f0e9bb9d1085ae3579b0910c69e104a00e905af6f8318c99ff3a7fa",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ApiSurfaceArchitectureTests.cs",
+        "sha256": "ab76acec294342bf17e526675204791e1cf819625d0fb0ff2cde2b416b4943db",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ApiSurfaceArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/AsyncApiConventionArchitectureTests.cs",
+        "sha256": "6539af9d0930d261bdb62cad1abe9fc98e414ce62deca35d0fdff5f6976aa751",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/AsyncApiConventionArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/BackgroundWorkOwnershipTests.cs",
+        "sha256": "5ca25d6761a2450163b337bc2e62800f6f94d79af216d9e43268f4d480193add",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/BackgroundWorkOwnershipTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CancellationTokenFlowArchitectureTests.cs",
+        "sha256": "8c15fefcb80429a61aab8e3dc6bbdcbd60132302d3b8891ecad4dca128484b17",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CancellationTokenFlowArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CapabilityPackageArchitectureTests.cs",
+        "sha256": "3087abee44f0a199d64af956dd30564545acb0881a88a90f12126258abbd2525",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CapabilityPackageArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ConfigurationExceptionArchitectureTests.cs",
+        "sha256": "1d1e05dc78d16d075c3255adc7c7990811366e9a8675788875912176fdae1383",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ConfigurationExceptionArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DeveloperJourneyArchitectureTests.cs",
+        "sha256": "71f0b5ff78bdfe0e48af11e79ab4240ece590dbd2c2695d5ff33aee19f200a42",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DeveloperJourneyArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DurableSenderArchitectureTests.cs",
+        "sha256": "61118dfebdd02b99bf8a6dc468fb3a573f7dc2c7f6e04b5bd81b4a1537bcb3f2",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DurableSenderArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/GreenfieldApiArchitectureTests.cs",
+        "sha256": "ea41a73ed91c3e9bbd893d2db3f08dbc4646ee4e034c1301c56500c3b1e2b3d1",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/GreenfieldApiArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/InboundMessageLimitsArchitectureTests.cs",
+        "sha256": "3a00c83369d22c461c428a4fe764b000ddf66227069c8356233bb48869ecf478",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/InboundMessageLimitsArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/PayloadAdmissionArchitectureTests.cs",
+        "sha256": "a115ad1cfdb0b13220a77ae63e7869b1373855c067a342fc6e2ce1a006b5b001",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/PayloadAdmissionArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProductDocumentationArchitectureTests.cs",
+        "sha256": "b15c9050363b940a7f59f5d68bc1b7375bc307bfac26298cebb7ab43153f3916",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProductDocumentationArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProviderCapabilityMatrixTests.cs",
+        "sha256": "dc241247b2d057c2a057af1216b977dc74042c97b21bde2028f5461ed12a58f7",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProviderCapabilityMatrixTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TechnicalRetryArchitectureTests.cs",
+        "sha256": "2b4b21227d2e618b063c22bab4dd512c4fd4e851325dd4931b88c277b12a8e28",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TechnicalRetryArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs",
+        "sha256": "04ebf3be68e717bd85d2cb2ec36b6319cabf58e516db2426c70dcf269e6c9dfb",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs",
+        "sha256": "4dbc0964a5fae7068b682717e5db7d7f0f362b5bebbf730be8206428d8790831",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs",
+        "sha256": "df6b180b30ef306efda2a0eae6c0f779b9812eb14747c15cca7e08ddfe0629b1",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/ProductProjectMetadataTests.cs",
+        "sha256": "bc564640aaac69b4f21f8e5440b9bc3de610d6445a5ff37f9baf210693b0bc24",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/ProductProjectMetadataTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/PublicDocumentationArchitectureTests.cs",
+        "sha256": "3f2c96da47bfc24f67a3c582c71581243236c6cfa4f494e65baa75e1d186ebf0",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/PublicDocumentationArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs",
+        "sha256": "15571481c01454521fc6f158a1a30d4b41c3e1b01cf34fb0f4358d12c51bfa3d",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs",
+        "sha256": "326e412c06597e85b1c47f7557a6dcfc88a3546d736725504b3b2f6cbd726603",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayoutTests.cs",
+        "sha256": "11d08bf1faa3fce21dae486ed8fd49d7483f749f44c35806d323e502989836c1",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayoutTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceFileNamingArchitectureTests.cs",
+        "sha256": "c96ffe3797e4760a5bd7b849907486b5d23974c1358bfa4f40ccbc41cc3d38d3",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceFileNamingArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceHygieneArchitectureTests.cs",
+        "sha256": "9704879e1982e8e6dd3c2c2fa645e5bdf52bfa9a33fd28d4d25528310af9132e",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceHygieneArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs",
+        "sha256": "660f883a15e95ab1d51587dc3328cdb9cfec3936116241b78981d19900a65a3b",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "sha256": "e8fda40be2674c55d0b101869247b809100568cf993f540048c9afc37c271e88",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs",
+        "sha256": "2cf88561bd7bbf56ce855d5240a01be7ef5c1443c49c25a5de624b2fa5079ea4",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+        "sha256": "7d584a00ccee0d028bcaa9e1ca48bf46d1501f71c35413266d0c7299015debd7",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/ProviderFixtureRunnerTests.cs",
+        "sha256": "46d2eb00a290a64c6d5b560bfa38740aa62692cf5856c809d367e1e58b43c0cb",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/ProviderFixtureRunnerTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiBaselineTests.cs",
+        "sha256": "9b169f88ad57ceec31c5955d6d6e2cfb8f1ae8a9f71f9ea0b7f34abf66da496f",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiBaselineTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiGenericContractTests.cs",
+        "sha256": "16d8a45c355c445f2b032abf7a390a06136bc21d6b696080fb392a876d1d9086",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiGenericContractTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberModifierTests.cs",
+        "sha256": "86ff1418277d2ffd1ef4ea5107b322eb7622682d8d71de7898747d1c8df35458",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberModifierTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberNullabilityTests.cs",
+        "sha256": "727e36c963dc6c8b57b888f18bec3091ee3e45a31d31253ecdaa475a6fcb2788",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberNullabilityTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiRuntimeContractTests.cs",
+        "sha256": "4307b28bcca465a9021b8e6d15a1a8c1ce111c04cc21c8b2397f5a19e6bf1f70",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiRuntimeContractTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.GlobalUsings.g.cs",
+        "sha256": "8e89e93fccedb22931dd50889be488d84a527215f29f97af0e2a6f7d67bfae04",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.GlobalUsings.g.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "sha256": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/SelfRegisteredExtensions.cs",
+        "sha256": "8a9f9ab8e924f96fbbe9686f689e029f7abb2b8e0d5ec107b71397f8c883e541",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/SelfRegisteredExtensions.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultRunnerReporters.cs",
+        "sha256": "e110bb9fe21ca6c3120a00382c773a086d62a008a0b0d2b76d08416f27d92bf2",
+        "relative": null,
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultResultWriters.cs",
+        "sha256": "754b9bc2c837fca63c737bad7b98d798508da60216387af1c6a5140177599dbb",
+        "relative": null,
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/XunitAutoGeneratedEntryPoint.cs",
+        "sha256": "2780f87a4e8722c979ea9c17835cf9b7ad6016f24998f91291f64070a70c786c",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/XunitAutoGeneratedEntryPoint.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.AssemblyInfo.cs",
+        "sha256": "f633abcebe2434a375283e4891e422de3f146a359e85634673954cf8101c9cf4",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.AssemblyInfo.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/System.Text.RegularExpressions.Generator/System.Text.RegularExpressions.Generator.RegexGenerator/RegexGenerator.g.cs",
+        "sha256": "42a8d21fb961660b96c363afe5847de31f4aa8cc6db75292b667b79cf2f0ea02",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/System.Text.RegularExpressions.Generator/System.Text.RegularExpressions.Generator.RegexGenerator/RegexGenerator.g.cs",
+        "current_PDB_source_equal": false,
+        "frozen_original_equal": false
+      }
+    ],
+    "deps_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.deps.json",
+    "deps_sha256": "54cfdae49361c6fb9a91965f8af2f9978dafe8108d43e31d1c450faa3d1c25a6",
+    "runtimeconfig": {
+      "runtimeOptions": {
+        "tfm": "net10.0",
+        "frameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.0"
+          },
+          {
+            "name": "Microsoft.AspNetCore.App",
+            "version": "10.0.0"
+          }
+        ],
+        "configProperties": {
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Reflection.NullabilityInfoContext.IsSupported": true,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+        }
+      }
+    },
+    "runtimeconfig_sha256": "bdbb6b43e509fbbab6c78b7004c4debf1e9791a648a08f730ff5997f71ef7099",
+    "physical_dependency_assets": [
+      {
+        "dependency": "ViciOne.ServiceBus.Architecture.Tests/1.0.0",
+        "asset": "ViciOne.ServiceBus.Architecture.Tests.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll",
+        "sha256": "eaa48c592625401e9546965140ebc7cf546ae76dd6060bd85cd74506cedc9282"
+      },
+      {
+        "dependency": "CycleDetection/2.0.0",
+        "asset": "lib/netcoreapp2.0/StronglyConnectedComponents.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/StronglyConnectedComponents.dll",
+        "sha256": "5ae636b7d2646db86128d86717c46b46702e98f6f9a4a3aed855ce9c98d1edd8"
+      },
+      {
+        "dependency": "FastExpressionCompiler/5.4.1",
+        "asset": "lib/net9.0/FastExpressionCompiler.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/FastExpressionCompiler.dll",
+        "sha256": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a"
+      },
+      {
+        "dependency": "Humanizer.Core/2.14.1",
+        "asset": "lib/net6.0/Humanizer.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Humanizer.dll",
+        "sha256": "d6853075547d7e303efd60354d911a2ff18edba582cda2fa59d91a2e5dcf9e98"
+      },
+      {
+        "dependency": "JetBrains.Annotations/2026.2.0",
+        "asset": "lib/netstandard2.0/JetBrains.Annotations.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/JetBrains.Annotations.dll",
+        "sha256": "0295966b8d44522eec6a3c560fbe4efcfa878d3e16ff1ab0fb3478ab17001381"
+      },
+      {
+        "dependency": "Microsoft.ApplicationInsights/2.23.0",
+        "asset": "lib/netstandard2.0/Microsoft.ApplicationInsights.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.ApplicationInsights.dll",
+        "sha256": "bf9a4b88c7f94267e1cc7ed0700c575d3eb3266ff25bcb76e4f40f1b0fba022d"
+      },
+      {
+        "dependency": "Microsoft.Bcl.AsyncInterfaces/6.0.0",
+        "asset": "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Bcl.AsyncInterfaces.dll",
+        "sha256": "5705d245072d3eb78400547b32147dbb6e2c8b02ba8bda76729798f5efdeaecb"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.Common/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.dll",
+        "sha256": "55618d457128eec582017545b8929ebf195669003b6ec737110f9519e1711d28"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.CSharp/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.CSharp.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.CSharp.dll",
+        "sha256": "fc571a6647ac45b0b0dc1866b795529bb2eeb93adf9be97fcd5903cf482f700a"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.CSharp.Workspaces/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.CSharp.Workspaces.dll",
+        "sha256": "af851edb8f0c128cbfa32be81596381eb2c806e4a961b50b47825536f3fb36d9"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.Workspaces.Common/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.Workspaces.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.Workspaces.dll",
+        "sha256": "e405cbe085bb8f1a3fcc7308af0dc6c5b3be495196046a1840607b17babe13a0"
+      },
+      {
+        "dependency": "Microsoft.EntityFrameworkCore/10.0.12",
+        "asset": "lib/net10.0/Microsoft.EntityFrameworkCore.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.EntityFrameworkCore.dll",
+        "sha256": "f5b1703d608e241314952b2ede8dcdd1b8d8adda8c91a13cb7e6b1007414cef4"
+      },
+      {
+        "dependency": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.EntityFrameworkCore.Abstractions.dll",
+        "sha256": "74bc17c936d66ea090b6a5b4cc4307d2154c9692e57edd4c55d68dd4a99c11b6"
+      },
+      {
+        "dependency": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+        "asset": "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.EntityFrameworkCore.Relational.dll",
+        "sha256": "a1e4f36208650b15b75a4b01a5821d61d5be417ac2e86ec3c65e2560a87e0d7d"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Caching.Abstractions.dll",
+        "sha256": "eb027242c11808fe0d8faf851bd30d0c6e39944b773713ffb04e17e196bece0f"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Caching.Memory/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Caching.Memory.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Caching.Memory.dll",
+        "sha256": "dca415c48a9d6af45c7f28f6481a88baa9cb9f09d3090ca5878d1acbd446048d"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.dll",
+        "sha256": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "sha256": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.Binder.dll",
+        "sha256": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.FileExtensions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.FileExtensions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.FileExtensions.dll",
+        "sha256": "bcbdc341e7134c620e6427ab136cd80d8686f63152e17276aa80c63afa6357ce"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.Json/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.Json.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.Json.dll",
+        "sha256": "91238276267ea5ad2986a9ba6aefbb6dc4643ccfd48167745ef963509407cf84"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.UserSecrets/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.UserSecrets.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.UserSecrets.dll",
+        "sha256": "c235c7a18dcd91cb045bdb98ff26d78afb06f7ed935b0f2cf1a1ada07ec20a55"
+      },
+      {
+        "dependency": "Microsoft.Extensions.DependencyInjection/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.DependencyInjection.dll",
+        "sha256": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc"
+      },
+      {
+        "dependency": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "sha256": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.dll",
+        "sha256": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+        "sha256": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+        "sha256": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+        "sha256": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a"
+      },
+      {
+        "dependency": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "sha256": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216"
+      },
+      {
+        "dependency": "Microsoft.Extensions.FileProviders.Physical/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.FileProviders.Physical.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.FileProviders.Physical.dll",
+        "sha256": "d57f6e1bcf47468a053696ea34b08e7d04edcc2681a5df586145835bd3f0db66"
+      },
+      {
+        "dependency": "Microsoft.Extensions.FileSystemGlobbing/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.FileSystemGlobbing.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.FileSystemGlobbing.dll",
+        "sha256": "56756b08cdffe4f47f4cba71c839375023930df5a16227cf7523085d9137d08e"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "sha256": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Logging/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Logging.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Logging.dll",
+        "sha256": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Logging.Abstractions.dll",
+        "sha256": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Options/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Options.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Options.dll",
+        "sha256": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+        "sha256": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Primitives/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Primitives.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Primitives.dll",
+        "sha256": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc"
+      },
+      {
+        "dependency": "Microsoft.Testing.Extensions.Telemetry/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Extensions.Telemetry.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Extensions.Telemetry.dll",
+        "sha256": "4a03c95584ab11527e541fce9d7466fc65779a2cc37b317cdafe2bc5d7169410"
+      },
+      {
+        "dependency": "Microsoft.Testing.Extensions.TrxReport.Abstractions/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Extensions.TrxReport.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Extensions.TrxReport.Abstractions.dll",
+        "sha256": "4065f9179d0f97eff5f23624be508992d7e57e1b331f330051c76e2731fcef79"
+      },
+      {
+        "dependency": "Microsoft.Testing.Platform/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Platform.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Platform.dll",
+        "sha256": "92db7b51a0e878e84d17a0ffef92abe22b3033ce5655f8bdbda06a3a93651c2e"
+      },
+      {
+        "dependency": "Microsoft.Testing.Platform.MSBuild/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Extensions.MSBuild.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Extensions.MSBuild.dll",
+        "sha256": "d364d5954dacfc2cf9239e29d1aeee37212019677447ccd1bd746710476bd703"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.Mdb.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.Mdb.dll",
+        "sha256": "28cb367972bdc1cd43e4006306af2fd96d37f4ed4b239ee90e1dc7237a93af7f"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.Pdb.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.Pdb.dll",
+        "sha256": "a332332633fbcb20e8d50e49b4db7bd1557721417122cf0c5f4c42f2332391d0"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.Rocks.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.Rocks.dll",
+        "sha256": "bf992f3dce364ebcc3200fa7832ef07e20b4e2dbc3a8a6213ce44e3d239db984"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.dll",
+        "sha256": "831dca77470d85cb6ffbea3072daa7a3df5b7c9fcfd9c3f43674a9be99d4bfcf"
+      },
+      {
+        "dependency": "Newtonsoft.Json/13.0.4",
+        "asset": "lib/net6.0/Newtonsoft.Json.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Newtonsoft.Json.dll",
+        "sha256": "a28c251dfe36d881e9e2462e171441b8b0ec156fe3f452602c9149b1b9efe05b"
+      },
+      {
+        "dependency": "System.Composition.AttributedModel/10.0.1",
+        "asset": "lib/net10.0/System.Composition.AttributedModel.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.AttributedModel.dll",
+        "sha256": "75a980d33643c4d053246e4cd2a26d17ce6892d609bbf99ad6d9fc43cfbf79a7"
+      },
+      {
+        "dependency": "System.Composition.Convention/10.0.1",
+        "asset": "lib/net10.0/System.Composition.Convention.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.Convention.dll",
+        "sha256": "e97f2e6b99f9801d752042419b55ab2da7faa6f3350dcb91d030f7ede0425cae"
+      },
+      {
+        "dependency": "System.Composition.Hosting/10.0.1",
+        "asset": "lib/net10.0/System.Composition.Hosting.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.Hosting.dll",
+        "sha256": "dbd0a3c9fe826e5fa87c616aa345a563cc5e79a563193caf4356767a097e2343"
+      },
+      {
+        "dependency": "System.Composition.Runtime/10.0.1",
+        "asset": "lib/net10.0/System.Composition.Runtime.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.Runtime.dll",
+        "sha256": "65db10e03408098984916ce2a004d38f272a6c677f6fae5b2a4397537f5040b8"
+      },
+      {
+        "dependency": "System.Composition.TypedParts/10.0.1",
+        "asset": "lib/net10.0/System.Composition.TypedParts.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.TypedParts.dll",
+        "sha256": "48497c3d1c37b0b9e98179105679ce143d425332aac9d070d74787675f4a8870"
+      },
+      {
+        "dependency": "TngTech.ArchUnitNET/0.13.4",
+        "asset": "lib/netstandard2.0/ArchUnitNET.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ArchUnitNET.dll",
+        "sha256": "fec2214fb07829e78701cc771b84524c75f9c156888b2696dff11f7fc78eba57"
+      },
+      {
+        "dependency": "xunit.v3.assert/4.0.0",
+        "asset": "lib/net8.0/xunit.v3.assert.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.assert.dll",
+        "sha256": "d14ea33253a7e289af5254617203b02f0643ba7ff618670de837d642ef22af11"
+      },
+      {
+        "dependency": "xunit.v3.common/4.0.0",
+        "asset": "lib/netstandard2.0/xunit.v3.common.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.common.dll",
+        "sha256": "e8e5bf50c6e739812ab5daaaefcc1187b54768a499ccc4b262d4533cc3cab93d"
+      },
+      {
+        "dependency": "xunit.v3.core.mtp-v2/4.0.0",
+        "asset": "lib/net8.0/xunit.v3.mtp-v2.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.mtp-v2.dll",
+        "sha256": "5396efa072a4c925f58f1a4181b022cdc911c1a359d8dd5db838b79a8c741b50"
+      },
+      {
+        "dependency": "xunit.v3.extensibility.core/4.0.0",
+        "asset": "lib/netstandard2.0/xunit.v3.core.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.core.dll",
+        "sha256": "0155a245478403afefd0b363ef24b7588ad6dbf59ff3a88c1a8d8995eba873a1"
+      },
+      {
+        "dependency": "xunit.v3.runner.common/4.0.0",
+        "asset": "lib/netstandard2.0/xunit.v3.runner.common.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.runner.common.dll",
+        "sha256": "059a41ab6c3cc8a00f9ec87846565cb3d2a29a7e46fa2089f461ffbb462355fa"
+      },
+      {
+        "dependency": "xunit.v3.runner.inproc.console/4.0.0",
+        "asset": "lib/net8.0/xunit.v3.runner.inproc.console.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.runner.inproc.console.dll",
+        "sha256": "bde56080928f7f617512d0dbe4043276ac0a15f2e377e71c204f7c12ebea082b"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus/1.0.0",
+        "asset": "ViciOne.ServiceBus.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.dll",
+        "sha256": "61b2908c135582216c620fc6206b88c04715beb92853aade6536e6e2e1420065"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Abstractions/1.0.0",
+        "asset": "ViciOne.ServiceBus.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Abstractions.dll",
+        "sha256": "22612804d3d6edd60e941fa48cba2d8182bd27f84e557d31787ed50a248d7650"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/1.0.0",
+        "asset": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll",
+        "sha256": "3211073651162197a0fa81a0b2a53f861ee631788bcc982bf85bf4a8b68a17ff"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Build.PublicApiBaseline/1.0.0",
+        "asset": "ViciOne.ServiceBus.Build.PublicApiBaseline.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Build.PublicApiBaseline.dll",
+        "sha256": "cecd914605f54ebf52cb128e6b810c314e3f3f242b084ef9130b4b22d9602e37"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Courier/1.0.0",
+        "asset": "ViciOne.ServiceBus.Courier.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Courier.dll",
+        "sha256": "d1fbb28779f3c7ad86ce997badf0ca8792aed7e9e33a31f5864761f9cc45bb24"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+        "asset": "ViciOne.ServiceBus.EntityFrameworkCore.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+        "sha256": "bffa372bccb07bc052866a00a0195d3bc523eb09b31fd92e0df5f21391ccf688"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+        "asset": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "sha256": "9af229995b10133147bf0e77d8b30855747a8672d277a3b1e518a08f3a4838c6"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Futures/1.0.0",
+        "asset": "ViciOne.ServiceBus.Futures.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Futures.dll",
+        "sha256": "820cbd9318fc064782bc592c2790775bc0201466762edca528ec1f5990691811"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Initializers/1.0.0",
+        "asset": "ViciOne.ServiceBus.Initializers.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Initializers.dll",
+        "sha256": "db2cf8bf8b3273b0298ee6900ef4e18c424584f19ce0991f387676cb434abe32"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.JobService/1.0.0",
+        "asset": "ViciOne.ServiceBus.JobService.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.JobService.dll",
+        "sha256": "7bc377bab67378817ae4a14e9690662e58c1493c5c3a45f2227e16eb41c0cdc3"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Mediator/1.0.0",
+        "asset": "ViciOne.ServiceBus.Mediator.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Mediator.dll",
+        "sha256": "3d916b9c91decc8031b9987f447872b0688741997749c70ce2a95ab3e7c5e8c5"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/1.0.0",
+        "asset": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll",
+        "sha256": "0231a2c1fd68b3e868acfdc91d8173f415cfc6068930eb579a82cd5a730cd0c2"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Sagas/1.0.0",
+        "asset": "ViciOne.ServiceBus.Sagas.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Sagas.dll",
+        "sha256": "69aa76ff21612fce02d7d4df9eed109cbd58f5acaaf96ff00787cb69041c0643"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+        "asset": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+        "sha256": "a157b5174f70a265835aef0e6c1cb3353a309cf67adfe4765ededbcf5e27b066"
+      }
+    ],
+    "scope": "PE/sidecar portablePDB content-ID and document SHA/source bytes, deps physical outputs; not proof of exact live loaded SDK/runtimehost."
+  },
+  {
+    "generation": "countercase",
+    "dll": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll",
+    "dll_sha256": "c05490ffccd52b58552d68f9ec495fa33a18ff12fb67d5dca986b6de6df69c0c",
+    "pdb": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.pdb",
+    "pdb_sha256": "b9318d230bc0eda262030a5a1ab516f000b10cb74c3943d95cc2b75b31f65be1",
+    "codeview": {
+      "guid_hex": "f69567384cb37a4e8fea344fe59c380f",
+      "stamp": 2889991368,
+      "age": 1,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.pdb"
+    },
+    "all_document_source_SHA_checks_with_explicit_generated_absences": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ApiSurfaceGlobalUsings.cs",
+        "sha256": "92a91807b899850c048356982d623be2d372f1cf2b903612969d07f297b7c0c6",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ApiSurfaceGlobalUsings.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
+        "sha256": "90e8902627b6b2b78a16c65eba73031ba5ea93d59d0db163755f91fcdaa67132",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs",
+        "sha256": "a66a17c405cd379e1e24a4d2164b88e0dfbf4002bfe8434affce761c36c7afe7",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs",
+        "sha256": "749afe60c9686bab6d9cd9ca184babf63284e757f3ceed06acabdb1841e85cf6",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs",
+        "sha256": "3096dbd65f0e9bb9d1085ae3579b0910c69e104a00e905af6f8318c99ff3a7fa",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ApiSurfaceArchitectureTests.cs",
+        "sha256": "ab76acec294342bf17e526675204791e1cf819625d0fb0ff2cde2b416b4943db",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ApiSurfaceArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/AsyncApiConventionArchitectureTests.cs",
+        "sha256": "6539af9d0930d261bdb62cad1abe9fc98e414ce62deca35d0fdff5f6976aa751",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/AsyncApiConventionArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/BackgroundWorkOwnershipTests.cs",
+        "sha256": "5ca25d6761a2450163b337bc2e62800f6f94d79af216d9e43268f4d480193add",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/BackgroundWorkOwnershipTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CancellationTokenFlowArchitectureTests.cs",
+        "sha256": "8c15fefcb80429a61aab8e3dc6bbdcbd60132302d3b8891ecad4dca128484b17",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CancellationTokenFlowArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CapabilityPackageArchitectureTests.cs",
+        "sha256": "3087abee44f0a199d64af956dd30564545acb0881a88a90f12126258abbd2525",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CapabilityPackageArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ConfigurationExceptionArchitectureTests.cs",
+        "sha256": "1d1e05dc78d16d075c3255adc7c7990811366e9a8675788875912176fdae1383",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ConfigurationExceptionArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DeveloperJourneyArchitectureTests.cs",
+        "sha256": "71f0b5ff78bdfe0e48af11e79ab4240ece590dbd2c2695d5ff33aee19f200a42",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DeveloperJourneyArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DurableSenderArchitectureTests.cs",
+        "sha256": "61118dfebdd02b99bf8a6dc468fb3a573f7dc2c7f6e04b5bd81b4a1537bcb3f2",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DurableSenderArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/GreenfieldApiArchitectureTests.cs",
+        "sha256": "ea41a73ed91c3e9bbd893d2db3f08dbc4646ee4e034c1301c56500c3b1e2b3d1",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/GreenfieldApiArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/InboundMessageLimitsArchitectureTests.cs",
+        "sha256": "3a00c83369d22c461c428a4fe764b000ddf66227069c8356233bb48869ecf478",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/InboundMessageLimitsArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/PayloadAdmissionArchitectureTests.cs",
+        "sha256": "a115ad1cfdb0b13220a77ae63e7869b1373855c067a342fc6e2ce1a006b5b001",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/PayloadAdmissionArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProductDocumentationArchitectureTests.cs",
+        "sha256": "b15c9050363b940a7f59f5d68bc1b7375bc307bfac26298cebb7ab43153f3916",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProductDocumentationArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProviderCapabilityMatrixTests.cs",
+        "sha256": "dc241247b2d057c2a057af1216b977dc74042c97b21bde2028f5461ed12a58f7",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProviderCapabilityMatrixTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TechnicalRetryArchitectureTests.cs",
+        "sha256": "2b4b21227d2e618b063c22bab4dd512c4fd4e851325dd4931b88c277b12a8e28",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TechnicalRetryArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs",
+        "sha256": "04ebf3be68e717bd85d2cb2ec36b6319cabf58e516db2426c70dcf269e6c9dfb",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs",
+        "sha256": "4dbc0964a5fae7068b682717e5db7d7f0f362b5bebbf730be8206428d8790831",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs",
+        "sha256": "df6b180b30ef306efda2a0eae6c0f779b9812eb14747c15cca7e08ddfe0629b1",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/ProductProjectMetadataTests.cs",
+        "sha256": "bc564640aaac69b4f21f8e5440b9bc3de610d6445a5ff37f9baf210693b0bc24",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/ProductProjectMetadataTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/PublicDocumentationArchitectureTests.cs",
+        "sha256": "3f2c96da47bfc24f67a3c582c71581243236c6cfa4f494e65baa75e1d186ebf0",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/PublicDocumentationArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs",
+        "sha256": "15571481c01454521fc6f158a1a30d4b41c3e1b01cf34fb0f4358d12c51bfa3d",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs",
+        "sha256": "326e412c06597e85b1c47f7557a6dcfc88a3546d736725504b3b2f6cbd726603",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayoutTests.cs",
+        "sha256": "11d08bf1faa3fce21dae486ed8fd49d7483f749f44c35806d323e502989836c1",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayoutTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceFileNamingArchitectureTests.cs",
+        "sha256": "c96ffe3797e4760a5bd7b849907486b5d23974c1358bfa4f40ccbc41cc3d38d3",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceFileNamingArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceHygieneArchitectureTests.cs",
+        "sha256": "9704879e1982e8e6dd3c2c2fa645e5bdf52bfa9a33fd28d4d25528310af9132e",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceHygieneArchitectureTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs",
+        "sha256": "660f883a15e95ab1d51587dc3328cdb9cfec3936116241b78981d19900a65a3b",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "sha256": "e8fda40be2674c55d0b101869247b809100568cf993f540048c9afc37c271e88",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs",
+        "sha256": "2cf88561bd7bbf56ce855d5240a01be7ef5c1443c49c25a5de624b2fa5079ea4",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+        "sha256": "7d584a00ccee0d028bcaa9e1ca48bf46d1501f71c35413266d0c7299015debd7",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/ProviderFixtureRunnerTests.cs",
+        "sha256": "46d2eb00a290a64c6d5b560bfa38740aa62692cf5856c809d367e1e58b43c0cb",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/ProviderFixtureRunnerTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiBaselineTests.cs",
+        "sha256": "9b169f88ad57ceec31c5955d6d6e2cfb8f1ae8a9f71f9ea0b7f34abf66da496f",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiBaselineTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiGenericContractTests.cs",
+        "sha256": "16d8a45c355c445f2b032abf7a390a06136bc21d6b696080fb392a876d1d9086",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiGenericContractTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberModifierTests.cs",
+        "sha256": "86ff1418277d2ffd1ef4ea5107b322eb7622682d8d71de7898747d1c8df35458",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberModifierTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberNullabilityTests.cs",
+        "sha256": "727e36c963dc6c8b57b888f18bec3091ee3e45a31d31253ecdaa475a6fcb2788",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberNullabilityTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiRuntimeContractTests.cs",
+        "sha256": "4307b28bcca465a9021b8e6d15a1a8c1ce111c04cc21c8b2397f5a19e6bf1f70",
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiRuntimeContractTests.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": true
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.GlobalUsings.g.cs",
+        "sha256": "8e89e93fccedb22931dd50889be488d84a527215f29f97af0e2a6f7d67bfae04",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.GlobalUsings.g.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "sha256": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/SelfRegisteredExtensions.cs",
+        "sha256": "8a9f9ab8e924f96fbbe9686f689e029f7abb2b8e0d5ec107b71397f8c883e541",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/SelfRegisteredExtensions.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultRunnerReporters.cs",
+        "sha256": "e110bb9fe21ca6c3120a00382c773a086d62a008a0b0d2b76d08416f27d92bf2",
+        "relative": null,
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultResultWriters.cs",
+        "sha256": "754b9bc2c837fca63c737bad7b98d798508da60216387af1c6a5140177599dbb",
+        "relative": null,
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/XunitAutoGeneratedEntryPoint.cs",
+        "sha256": "914c5a99a598a09de43d70bc6328f40b015643088e7b33730a2ff3cf9861604f",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/XunitAutoGeneratedEntryPoint.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.AssemblyInfo.cs",
+        "sha256": "f633abcebe2434a375283e4891e422de3f146a359e85634673954cf8101c9cf4",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.AssemblyInfo.cs",
+        "current_PDB_source_equal": true,
+        "frozen_original_equal": false
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/System.Text.RegularExpressions.Generator/System.Text.RegularExpressions.Generator.RegexGenerator/RegexGenerator.g.cs",
+        "sha256": "42a8d21fb961660b96c363afe5847de31f4aa8cc6db75292b667b79cf2f0ea02",
+        "relative": "artifacts/sdk/obj/ViciOne.ServiceBus.Architecture.Tests/release/System.Text.RegularExpressions.Generator/System.Text.RegularExpressions.Generator.RegexGenerator/RegexGenerator.g.cs",
+        "current_PDB_source_equal": false,
+        "frozen_original_equal": false
+      }
+    ],
+    "deps_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.deps.json",
+    "deps_sha256": "54cfdae49361c6fb9a91965f8af2f9978dafe8108d43e31d1c450faa3d1c25a6",
+    "runtimeconfig": {
+      "runtimeOptions": {
+        "tfm": "net10.0",
+        "frameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.0"
+          },
+          {
+            "name": "Microsoft.AspNetCore.App",
+            "version": "10.0.0"
+          }
+        ],
+        "configProperties": {
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Reflection.NullabilityInfoContext.IsSupported": true,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
+        }
+      }
+    },
+    "runtimeconfig_sha256": "bdbb6b43e509fbbab6c78b7004c4debf1e9791a648a08f730ff5997f71ef7099",
+    "physical_dependency_assets": [
+      {
+        "dependency": "ViciOne.ServiceBus.Architecture.Tests/1.0.0",
+        "asset": "ViciOne.ServiceBus.Architecture.Tests.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll",
+        "sha256": "c05490ffccd52b58552d68f9ec495fa33a18ff12fb67d5dca986b6de6df69c0c"
+      },
+      {
+        "dependency": "CycleDetection/2.0.0",
+        "asset": "lib/netcoreapp2.0/StronglyConnectedComponents.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/StronglyConnectedComponents.dll",
+        "sha256": "5ae636b7d2646db86128d86717c46b46702e98f6f9a4a3aed855ce9c98d1edd8"
+      },
+      {
+        "dependency": "FastExpressionCompiler/5.4.1",
+        "asset": "lib/net9.0/FastExpressionCompiler.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/FastExpressionCompiler.dll",
+        "sha256": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a"
+      },
+      {
+        "dependency": "Humanizer.Core/2.14.1",
+        "asset": "lib/net6.0/Humanizer.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Humanizer.dll",
+        "sha256": "d6853075547d7e303efd60354d911a2ff18edba582cda2fa59d91a2e5dcf9e98"
+      },
+      {
+        "dependency": "JetBrains.Annotations/2026.2.0",
+        "asset": "lib/netstandard2.0/JetBrains.Annotations.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/JetBrains.Annotations.dll",
+        "sha256": "0295966b8d44522eec6a3c560fbe4efcfa878d3e16ff1ab0fb3478ab17001381"
+      },
+      {
+        "dependency": "Microsoft.ApplicationInsights/2.23.0",
+        "asset": "lib/netstandard2.0/Microsoft.ApplicationInsights.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.ApplicationInsights.dll",
+        "sha256": "bf9a4b88c7f94267e1cc7ed0700c575d3eb3266ff25bcb76e4f40f1b0fba022d"
+      },
+      {
+        "dependency": "Microsoft.Bcl.AsyncInterfaces/6.0.0",
+        "asset": "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Bcl.AsyncInterfaces.dll",
+        "sha256": "5705d245072d3eb78400547b32147dbb6e2c8b02ba8bda76729798f5efdeaecb"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.Common/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.dll",
+        "sha256": "55618d457128eec582017545b8929ebf195669003b6ec737110f9519e1711d28"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.CSharp/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.CSharp.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.CSharp.dll",
+        "sha256": "fc571a6647ac45b0b0dc1866b795529bb2eeb93adf9be97fcd5903cf482f700a"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.CSharp.Workspaces/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.CSharp.Workspaces.dll",
+        "sha256": "af851edb8f0c128cbfa32be81596381eb2c806e4a961b50b47825536f3fb36d9"
+      },
+      {
+        "dependency": "Microsoft.CodeAnalysis.Workspaces.Common/5.9.0",
+        "asset": "lib/net10.0/Microsoft.CodeAnalysis.Workspaces.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.CodeAnalysis.Workspaces.dll",
+        "sha256": "e405cbe085bb8f1a3fcc7308af0dc6c5b3be495196046a1840607b17babe13a0"
+      },
+      {
+        "dependency": "Microsoft.EntityFrameworkCore/10.0.12",
+        "asset": "lib/net10.0/Microsoft.EntityFrameworkCore.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.EntityFrameworkCore.dll",
+        "sha256": "f5b1703d608e241314952b2ede8dcdd1b8d8adda8c91a13cb7e6b1007414cef4"
+      },
+      {
+        "dependency": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.EntityFrameworkCore.Abstractions.dll",
+        "sha256": "74bc17c936d66ea090b6a5b4cc4307d2154c9692e57edd4c55d68dd4a99c11b6"
+      },
+      {
+        "dependency": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+        "asset": "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.EntityFrameworkCore.Relational.dll",
+        "sha256": "a1e4f36208650b15b75a4b01a5821d61d5be417ac2e86ec3c65e2560a87e0d7d"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Caching.Abstractions.dll",
+        "sha256": "eb027242c11808fe0d8faf851bd30d0c6e39944b773713ffb04e17e196bece0f"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Caching.Memory/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Caching.Memory.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Caching.Memory.dll",
+        "sha256": "dca415c48a9d6af45c7f28f6481a88baa9cb9f09d3090ca5878d1acbd446048d"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.dll",
+        "sha256": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "sha256": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.Binder.dll",
+        "sha256": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.FileExtensions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.FileExtensions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.FileExtensions.dll",
+        "sha256": "bcbdc341e7134c620e6427ab136cd80d8686f63152e17276aa80c63afa6357ce"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.Json/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.Json.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.Json.dll",
+        "sha256": "91238276267ea5ad2986a9ba6aefbb6dc4643ccfd48167745ef963509407cf84"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Configuration.UserSecrets/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Configuration.UserSecrets.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Configuration.UserSecrets.dll",
+        "sha256": "c235c7a18dcd91cb045bdb98ff26d78afb06f7ed935b0f2cf1a1ada07ec20a55"
+      },
+      {
+        "dependency": "Microsoft.Extensions.DependencyInjection/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.DependencyInjection.dll",
+        "sha256": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc"
+      },
+      {
+        "dependency": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "sha256": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.dll",
+        "sha256": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+        "sha256": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+        "sha256": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+        "sha256": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a"
+      },
+      {
+        "dependency": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "sha256": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216"
+      },
+      {
+        "dependency": "Microsoft.Extensions.FileProviders.Physical/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.FileProviders.Physical.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.FileProviders.Physical.dll",
+        "sha256": "d57f6e1bcf47468a053696ea34b08e7d04edcc2681a5df586145835bd3f0db66"
+      },
+      {
+        "dependency": "Microsoft.Extensions.FileSystemGlobbing/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.FileSystemGlobbing.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.FileSystemGlobbing.dll",
+        "sha256": "56756b08cdffe4f47f4cba71c839375023930df5a16227cf7523085d9137d08e"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "sha256": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Logging/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Logging.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Logging.dll",
+        "sha256": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Logging.Abstractions.dll",
+        "sha256": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Options/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Options.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Options.dll",
+        "sha256": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+        "sha256": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f"
+      },
+      {
+        "dependency": "Microsoft.Extensions.Primitives/10.0.12",
+        "asset": "lib/net10.0/Microsoft.Extensions.Primitives.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Extensions.Primitives.dll",
+        "sha256": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc"
+      },
+      {
+        "dependency": "Microsoft.Testing.Extensions.Telemetry/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Extensions.Telemetry.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Extensions.Telemetry.dll",
+        "sha256": "4a03c95584ab11527e541fce9d7466fc65779a2cc37b317cdafe2bc5d7169410"
+      },
+      {
+        "dependency": "Microsoft.Testing.Extensions.TrxReport.Abstractions/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Extensions.TrxReport.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Extensions.TrxReport.Abstractions.dll",
+        "sha256": "4065f9179d0f97eff5f23624be508992d7e57e1b331f330051c76e2731fcef79"
+      },
+      {
+        "dependency": "Microsoft.Testing.Platform/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Platform.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Platform.dll",
+        "sha256": "92db7b51a0e878e84d17a0ffef92abe22b3033ce5655f8bdbda06a3a93651c2e"
+      },
+      {
+        "dependency": "Microsoft.Testing.Platform.MSBuild/2.3.3",
+        "asset": "lib/net9.0/Microsoft.Testing.Extensions.MSBuild.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Microsoft.Testing.Extensions.MSBuild.dll",
+        "sha256": "d364d5954dacfc2cf9239e29d1aeee37212019677447ccd1bd746710476bd703"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.Mdb.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.Mdb.dll",
+        "sha256": "28cb367972bdc1cd43e4006306af2fd96d37f4ed4b239ee90e1dc7237a93af7f"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.Pdb.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.Pdb.dll",
+        "sha256": "a332332633fbcb20e8d50e49b4db7bd1557721417122cf0c5f4c42f2332391d0"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.Rocks.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.Rocks.dll",
+        "sha256": "bf992f3dce364ebcc3200fa7832ef07e20b4e2dbc3a8a6213ce44e3d239db984"
+      },
+      {
+        "dependency": "Mono.Cecil/0.11.6",
+        "asset": "lib/netstandard2.0/Mono.Cecil.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Mono.Cecil.dll",
+        "sha256": "831dca77470d85cb6ffbea3072daa7a3df5b7c9fcfd9c3f43674a9be99d4bfcf"
+      },
+      {
+        "dependency": "Newtonsoft.Json/13.0.4",
+        "asset": "lib/net6.0/Newtonsoft.Json.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/Newtonsoft.Json.dll",
+        "sha256": "a28c251dfe36d881e9e2462e171441b8b0ec156fe3f452602c9149b1b9efe05b"
+      },
+      {
+        "dependency": "System.Composition.AttributedModel/10.0.1",
+        "asset": "lib/net10.0/System.Composition.AttributedModel.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.AttributedModel.dll",
+        "sha256": "75a980d33643c4d053246e4cd2a26d17ce6892d609bbf99ad6d9fc43cfbf79a7"
+      },
+      {
+        "dependency": "System.Composition.Convention/10.0.1",
+        "asset": "lib/net10.0/System.Composition.Convention.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.Convention.dll",
+        "sha256": "e97f2e6b99f9801d752042419b55ab2da7faa6f3350dcb91d030f7ede0425cae"
+      },
+      {
+        "dependency": "System.Composition.Hosting/10.0.1",
+        "asset": "lib/net10.0/System.Composition.Hosting.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.Hosting.dll",
+        "sha256": "dbd0a3c9fe826e5fa87c616aa345a563cc5e79a563193caf4356767a097e2343"
+      },
+      {
+        "dependency": "System.Composition.Runtime/10.0.1",
+        "asset": "lib/net10.0/System.Composition.Runtime.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.Runtime.dll",
+        "sha256": "65db10e03408098984916ce2a004d38f272a6c677f6fae5b2a4397537f5040b8"
+      },
+      {
+        "dependency": "System.Composition.TypedParts/10.0.1",
+        "asset": "lib/net10.0/System.Composition.TypedParts.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/System.Composition.TypedParts.dll",
+        "sha256": "48497c3d1c37b0b9e98179105679ce143d425332aac9d070d74787675f4a8870"
+      },
+      {
+        "dependency": "TngTech.ArchUnitNET/0.13.4",
+        "asset": "lib/netstandard2.0/ArchUnitNET.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ArchUnitNET.dll",
+        "sha256": "fec2214fb07829e78701cc771b84524c75f9c156888b2696dff11f7fc78eba57"
+      },
+      {
+        "dependency": "xunit.v3.assert/4.0.0",
+        "asset": "lib/net8.0/xunit.v3.assert.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.assert.dll",
+        "sha256": "d14ea33253a7e289af5254617203b02f0643ba7ff618670de837d642ef22af11"
+      },
+      {
+        "dependency": "xunit.v3.common/4.0.0",
+        "asset": "lib/netstandard2.0/xunit.v3.common.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.common.dll",
+        "sha256": "e8e5bf50c6e739812ab5daaaefcc1187b54768a499ccc4b262d4533cc3cab93d"
+      },
+      {
+        "dependency": "xunit.v3.core.mtp-v2/4.0.0",
+        "asset": "lib/net8.0/xunit.v3.mtp-v2.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.mtp-v2.dll",
+        "sha256": "5396efa072a4c925f58f1a4181b022cdc911c1a359d8dd5db838b79a8c741b50"
+      },
+      {
+        "dependency": "xunit.v3.extensibility.core/4.0.0",
+        "asset": "lib/netstandard2.0/xunit.v3.core.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.core.dll",
+        "sha256": "0155a245478403afefd0b363ef24b7588ad6dbf59ff3a88c1a8d8995eba873a1"
+      },
+      {
+        "dependency": "xunit.v3.runner.common/4.0.0",
+        "asset": "lib/netstandard2.0/xunit.v3.runner.common.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.runner.common.dll",
+        "sha256": "059a41ab6c3cc8a00f9ec87846565cb3d2a29a7e46fa2089f461ffbb462355fa"
+      },
+      {
+        "dependency": "xunit.v3.runner.inproc.console/4.0.0",
+        "asset": "lib/net8.0/xunit.v3.runner.inproc.console.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/xunit.v3.runner.inproc.console.dll",
+        "sha256": "bde56080928f7f617512d0dbe4043276ac0a15f2e377e71c204f7c12ebea082b"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus/1.0.0",
+        "asset": "ViciOne.ServiceBus.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.dll",
+        "sha256": "d0ab9bec037bdec8bf59abcd96773315239b7b33ab93c3e33e1a85e23aa51577"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Abstractions/1.0.0",
+        "asset": "ViciOne.ServiceBus.Abstractions.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Abstractions.dll",
+        "sha256": "5949d9ec1f67c9b729943398a74d59cd63b5c2e3aef54b3347dc4a0f21a7e527"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/1.0.0",
+        "asset": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll",
+        "sha256": "7e953aefe4aaa1e826af6d13c553e1b551e03018039d58b5937ce23e3445ddac"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Build.PublicApiBaseline/1.0.0",
+        "asset": "ViciOne.ServiceBus.Build.PublicApiBaseline.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Build.PublicApiBaseline.dll",
+        "sha256": "4131077a87cd4271ee35fbbc2e28e2d0ca5dce46987029a9024bcdfde8470e3d"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Courier/1.0.0",
+        "asset": "ViciOne.ServiceBus.Courier.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Courier.dll",
+        "sha256": "b51f97c59cf673d9fffa414d1f755b1d818f19292b0e6a41380eb16b7ebff631"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+        "asset": "ViciOne.ServiceBus.EntityFrameworkCore.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+        "sha256": "40a6085a643ca5d4ecae5f1093660c447c4b3977ca765575b1fa694f6360ca39"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+        "asset": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "sha256": "7afe6006a1273ec05e1a5ee5bd46cb1cad59bc1df5cf6d2f5d68967c1ca43e85"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Futures/1.0.0",
+        "asset": "ViciOne.ServiceBus.Futures.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Futures.dll",
+        "sha256": "41568afb72f4ffd76fab604b8be1c84ebdf01ade29c55ed3264a5bd1afc43d52"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Initializers/1.0.0",
+        "asset": "ViciOne.ServiceBus.Initializers.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Initializers.dll",
+        "sha256": "5c23952fc4c06820ffec9e03de860738d34fb40190f511c2070a3f6eb369a574"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.JobService/1.0.0",
+        "asset": "ViciOne.ServiceBus.JobService.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.JobService.dll",
+        "sha256": "7ece530ce213fef37b603537794a8ac43200a12b1d0a0a9912fb43a878d6d51a"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Mediator/1.0.0",
+        "asset": "ViciOne.ServiceBus.Mediator.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Mediator.dll",
+        "sha256": "e9b80f3e0e54d77542279c0f0e98e94088e58f4f48a7fda8ee01d0d5e81d97c1"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/1.0.0",
+        "asset": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll",
+        "sha256": "69e454f4d11d6fdd4131deed8878831dd3ab3240a012d66238c97ca54938fe06"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Sagas/1.0.0",
+        "asset": "ViciOne.ServiceBus.Sagas.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Sagas.dll",
+        "sha256": "e538705ef9f08219d1a17ee502b1a6be9bbc578fab46f9ba75dac91831b43c7d"
+      },
+      {
+        "dependency": "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+        "asset": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+        "actual_path": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+        "sha256": "009ae7e5d0563fd65b7aea16a62da92f7b3739a5dfab577b8a7fbbe78cb98f1a"
+      }
+    ],
+    "scope": "PE/sidecar portablePDB content-ID and document SHA/source bytes, deps physical outputs; not proof of exact live loaded SDK/runtimehost."
+  }
+]

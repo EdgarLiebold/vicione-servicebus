@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-04T21:40:58.823882+00:00",
+  "status": "ROOT_ACCEPTED_182_BOUNDED_FACTORY_AND_CONFIGURATION_MEMBER_CONTRACTS_DOWNSTREAM_RUNTIME_OPEN",
+  "count_before": 2365,
+  "count_after": 2547,
+  "peer_whole_sources15": {
+    "manifest_sha256": "9ebce066502c5210f26f009e2238c7db30e00d770f8013cb335bf044eee86807",
+    "report_sha256": "6155b86b27c8450db109c4881bd91a77a15ecef6e0b7920fd96e1e6be39ee192",
+    "source_read_authority": "/root/runtime_spi_adversarial_r2 personally whole4product+5test+6helper owners. Root does not relabel those foreign whole reads as own."
+  },
+  "root_semantic_review": {
+    "exact38contract_clauses_and16fullrecommendation_NA_gapprofiles": "351763",
+    "all41inputtype_records_callback_pipe_binder_destination_constraint_dictionary": "4070e8",
+    "all182route_assignments": "94e8a7",
+    "assertion_catalog23actualmethods24cases": "1dffb5 prior current pinned catalog",
+    "complete_peer_report_and_matrix_structure": "ea2d08",
+    "fresh_root_whole_Send_ContextFactory_TaskFactory_EndpointProvider": "464eff"
+  },
+  "current_named_runtime": {
+    "qualification_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package147-core-originals-fixed-futures-independent-r1/REPORT.json",
+    "sha256": "be3f95c8a7e07e403cf69be14a2db7e74eb69ed89c1ce8e0f2e6a7a7a553cbae",
+    "epoch": 147,
+    "classes": 5,
+    "cases": 24,
+    "passed": 24,
+    "failed": 0,
+    "skipped": 0,
+    "proof_limit": "Contains Publish-only tests; only actual per-member assertion route mapping transfers a specific semantic obligation. Does not prove all40configured successful convention routes or all40callback adapters."
+  },
+  "remaining_obligations": "All exact matrix per-row obligations retained; normal Send token admission is active Q149 candidate, factory produced-null/default InitializedMessage and successful convention routing explicitly open.",
+  "CLOSED": false,
+  "whole_implementation_runtime_closed": false
+}

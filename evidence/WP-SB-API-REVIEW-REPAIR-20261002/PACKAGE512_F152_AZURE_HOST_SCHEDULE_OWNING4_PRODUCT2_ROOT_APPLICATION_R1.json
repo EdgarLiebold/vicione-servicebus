@@ -1,0 +1,80 @@
+{
+  "utc": "2026-10-06T16:23:58.690753+00:00",
+  "status": "ROOT_APPLIED_DIFFERENT_REVIEWED_PRODUCT2_EXACT_OWNING4_UNCHANGED_FIXED11_PENDING",
+  "before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package512-azure-host-schedule-product2-root-application-before-r1/BEFORE.json",
+    "sha256": "8f81a53f1e62556dbb48c91e2e002843834d7c0140f4716b5f18e167f9d39c0e",
+    "MAN": "1f13698c3ec94525c903d2ccaa8fbc2b73361efcd2f5e98280c57a1b7c89e205"
+  },
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package509-azure-host-schedule-owning4-product2-runtime-proposed-r1/REPORT.json",
+    "sha256": "c934e729e8cc3054c83ca6a0f92284baa9bce1f61fd610268897614cbc16846a",
+    "MAN": "044298e80de20b93a87d1940fb6afc033c337459f0aae486232653d64716f178"
+  },
+  "different_adversarial_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package509-azure-host-schedule-product2-independent-source-peer-r1/REPORT.json",
+    "sha256": "81da8e310eea578d63796fdc65f9d9c0c3bdfb326b720f1b5b268dacc3c31521",
+    "MAN": "9898009d299e42607e2fcebe7567da2d83c4b89f912a61c76ace301dad4312c6"
+  },
+  "mandatory_read_label_precision": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package509-azure-product2-own-read-label-count-precision-r1/ERRATUM.json",
+    "sha256": "3fc2bcc6d8741c6363bff0588cdf2188e1a5b53152e303712cd26f161b2aaac1",
+    "MAN": "abaa0b70f6a998a68f3bd5ab7b8039f90619a5d6e51a55c1506b813c965550ec"
+  },
+  "whole_Root_source_authority": "BeforeHost1462404ba/Send274aaa841; afterHost1606cdbfb/Send2883b8ddf+cec97c; differentwholepeer d1dd4c; full literal inverses mechanically rechecked here, every other byte exact",
+  "changes": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusHost.cs",
+      "before_sha256": "ccb778c9a402fa210b7aa9817cf062aab619c619b2cf9bb9625a5d2b4019a088",
+      "after_sha256": "000bd31c43552295b1fabbaeeed707b476747b723f24980245c0344454166d37",
+      "before_lines": 146,
+      "after_lines": 160,
+      "literal_changes": [
+        {
+          "before": "        TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);",
+          "after": "        try\n        {\n            TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);\n        }\n        catch (Exception)\n        {\n            // Optional diagnostics cannot replace the endpoint or broker operation.\n        }"
+        },
+        {
+          "before": "        LogContext.Debug?.Log(\"Connect subscription endpoint: {Topic}/{SubscriptionName}\", configuration.Settings.Path, configuration.Settings.Name);",
+          "after": "        try\n        {\n            LogContext.Debug?.Log(\"Connect subscription endpoint: {Topic}/{SubscriptionName}\", configuration.Settings.Path, configuration.Settings.Name);\n        }\n        catch (Exception)\n        {\n            // Optional diagnostics cannot replace the endpoint or broker operation.\n        }"
+        }
+      ],
+      "full_inverse_byte_equal": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusSendTransportContext.cs",
+      "before_sha256": "7e8cd7bb8ad8a260cd8a33ac3019d5c0a9fbac9a17bda0963aeabeb5978f1568",
+      "after_sha256": "834fae2411dd970d05177f23f833f9452fdff30411d7212daa5dbb9fdf3b2623",
+      "before_lines": 274,
+      "after_lines": 288,
+      "literal_changes": [
+        {
+          "before": "            context.LogScheduled(enqueueTimeUtc.UtcDateTime);",
+          "after": "            try\n            {\n                context.LogScheduled(enqueueTimeUtc.UtcDateTime);\n            }\n            catch (Exception)\n            {\n                // Optional diagnostics cannot replace the endpoint or broker operation.\n            }"
+        },
+        {
+          "before": "            ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log(\"CANCEL {DestinationAddress} {TokenId}\", EntityName, tokenId);",
+          "after": "            try\n            {\n                ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log(\"CANCEL {DestinationAddress} {TokenId}\", EntityName, tokenId);\n            }\n            catch (Exception)\n            {\n                // Optional diagnostics cannot replace the endpoint or broker operation.\n            }"
+        }
+      ],
+      "full_inverse_byte_equal": true
+    }
+  ],
+  "confirmed_original_references": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package500-azure-host6-independent-original-native-qualification-r1/REPORT.json",
+      "sha256": "86993934170efb62568e2d9b367a57d813066a44cc4e1b2a06368c2e27eab1e2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package506-schedule5-independent-original-native-qualification-r1/REPORT.json",
+      "sha256": "b55245fc8cb19c9d65bb28ff643ceb3782f06271141ac0c217decfe65678e649"
+    }
+  ],
+  "family_disposition": "F152 owning optional diagnostics extension at4 additional statements: Hostqueue/privateSubscription and Scheduleaccepted/CANCELaccepted. Native schedule accepted followed by diagnosticAORE causing unintended normalSDKSend is concrete effect of existing diagnostic exception leakage; no duplicate new Finding ID. No live broker delivery count claim.",
+  "remaining_four_schedule_diagnostics": "Past/rejected/idempotentnotfound/idempotentalreadycancelled remain Sourceexact and open PLAN8 7019b4/d3b4a6; this Product2 does not close entireSend2505.",
+  "native_cases_added": 0,
+  "original_member_acceptance_added": 0,
+  "master_unchanged": "69b14622cb48bd31977ef3023dfbfc3dd113521022646195023b09ec3266f8b9",
+  "grade": null,
+  "whole_API_member_review_closed": false
+}

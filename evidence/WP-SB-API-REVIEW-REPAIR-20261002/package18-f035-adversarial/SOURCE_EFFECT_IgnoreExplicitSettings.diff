@@ -1,0 +1,11 @@
+--- frozen-corrected-Registrar
++++ IgnoreExplicitSettings
+@@ -416,7 +416,7 @@
+         var definitionKey = new object();
+         Collection.AddKeyedTransient<TDefinition>(definitionKey, (provider, _) => settings == null
+             ? ActivatorUtilities.CreateInstance<TDefinition>(provider)
+-            : ActivatorUtilities.CreateInstance<TDefinition>(provider, settings));
++            : ActivatorUtilities.CreateInstance<TDefinition>(provider));
+         Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
+             Bind<TBus>.Create(provider.GetRequiredKeyedService<TDefinition>(definitionKey)));
+ 

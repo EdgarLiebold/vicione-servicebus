@@ -1,0 +1,1118 @@
+{
+  "status": "ALL13_OWNED_FULL_AND_PUBLIC_ROUTE_FULL_REVIEW_OPEN_ORIGINAL_SOURCE_BINDING",
+  "read_by": "azure_test_scope internal independent reviewer; no product/fixture/runner authorship",
+  "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_FREEZE.json",
+  "freeze_sha256": "886a76ea04353b018937a3e8455954be58a9fb0b73f9fd941e699b900f668444",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/00-Saga-EntityFrameworkSagaRepositoryContextFactory.cs",
+      "sha256": "53473b843b6a9d28ed03fcc5c9de7848bd15c2772efb9018e39b1d7054ce43cd",
+      "bytes": 13175,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete untruncated numbered text personally read, including all callback bodies, helpers, assertions, CLI/error paths and mutation runner; actual bytes equal frozen snapshot."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/F018.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/01-ownership-corrected-F018.PublicConsumer.csproj",
+      "sha256": "769b70d0fabeb7f431a8880a5db33da8a35d0b41a3e80c4e8a4d3d2e68afc01a",
+      "bytes": 979,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete untruncated numbered text personally read, including all callback bodies, helpers, assertions, CLI/error paths and mutation runner; actual bytes equal frozen snapshot."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/02-ownership-corrected-NuGet.Config",
+      "sha256": "7d8c2eecb4d465c44c1c1c2bf7042019b54676f55d7aa05e54b927e97ae7f9cf",
+      "bytes": 524,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete untruncated numbered text personally read, including all callback bodies, helpers, assertions, CLI/error paths and mutation runner; actual bytes equal frozen snapshot."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/OwnershipAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/03-ownership-corrected-OwnershipAssertions.cs",
+      "sha256": "2c86c35df3eea44d49908e82c8325ba8c9921947397f45b61c3ee04d86e4c988",
+      "bytes": 17595,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete untruncated numbered text personally read, including all callback bodies, helpers, assertions, CLI/error paths and mutation runner; actual bytes equal frozen snapshot."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/04-ownership-corrected-Program.cs",
+      "sha256": "7fa84ce937741215dc387fbbf6037e3b5568072c0eb2bccc02d39cc856492e08",
+      "bytes": 2911,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete untruncated numbered text personally read, including all callback bodies, helpers, assertions, CLI/error paths and mutation runner; actual bytes equal frozen snapshot."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/05-ownership-corrected-packages.lock.json",
+      "sha256": "d1ae1b628391b20621dcdc896d41f1ac13f99927d07fae8cbf2687d32494f1e8",
+      "bytes": 18534,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete untruncated numbered text personally read, including all callback bodies, helpers, assertions, CLI/error paths and mutation runner; actual bytes equal frozen snapshot."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/F018.IdentityGateConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/06-identity-corrected-F018.IdentityGateConsumer.csproj",
+      "sha256": "769b70d0fabeb7f431a8880a5db33da8a35d0b41a3e80c4e8a4d3d2e68afc01a",
+      "bytes": 979,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete numbered text read; duplicate csproj/config/lock reuse independently byte-equal to personally FULL read primary copy."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/07-identity-corrected-IdentityGateAssertions.cs",
+      "sha256": "fff81707b8646971e90ddcea5ad768ead70a214044d6f37dc2a71250da98e57e",
+      "bytes": 20258,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete untruncated numbered text personally read, including all callback bodies, helpers, assertions, CLI/error paths and mutation runner; actual bytes equal frozen snapshot."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/08-identity-corrected-NuGet.Config",
+      "sha256": "7d8c2eecb4d465c44c1c1c2bf7042019b54676f55d7aa05e54b927e97ae7f9cf",
+      "bytes": 524,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete numbered text read; duplicate csproj/config/lock reuse independently byte-equal to personally FULL read primary copy."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/09-identity-corrected-Program.cs",
+      "sha256": "b98bbf5094705aa844ea77f4622c48b0d61ef752be31b0c804f533f056823ced",
+      "bytes": 2256,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete untruncated numbered text personally read, including all callback bodies, helpers, assertions, CLI/error paths and mutation runner; actual bytes equal frozen snapshot."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/10-identity-corrected-packages.lock.json",
+      "sha256": "d1ae1b628391b20621dcdc896d41f1ac13f99927d07fae8cbf2687d32494f1e8",
+      "bytes": 18534,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete numbered text read; duplicate csproj/config/lock reuse independently byte-equal to personally FULL read primary copy."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package04_f018_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/11-SERVICEBUS_API_REVIEW_AND_REPAIR-package04_f018_mutations.py",
+      "sha256": "9d54a2d34e95a15d7bae2c7da8c8e01d16faa8f1dcb39d6b5047e35bbad61da9",
+      "bytes": 7358,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete untruncated numbered text personally read, including all callback bodies, helpers, assertions, CLI/error paths and mutation runner; actual bytes equal frozen snapshot."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/12-changelog-product-fixes.md",
+      "sha256": "8ae00f5b4d58734f6b265aaec8183829e2999e39253e58e93e3722c75e4743e2",
+      "bytes": 30637,
+      "read_status": "READ_FULL",
+      "kind": "OWNED_FROZEN_INPUT",
+      "semantic_notes": "Complete untruncated numbered text personally read, including all callback bodies, helpers, assertions, CLI/error paths and mutation runner; actual bytes equal frozen snapshot."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_PLAN.json",
+      "sha256": "b26e88c1bcdf5d3b751b6dd89c1aead36110a2836ee9a8c25e72f2347ba531bb",
+      "bytes": 767,
+      "read_status": "READ_FULL",
+      "kind": "NATIVE_PROOF_METADATA_OR_DELTA",
+      "semantic_notes": "Entire structured object read in complete bounded sections; every mutant including complete exception strings personally read after truncated attempts fully reread separately."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_ROOT_PUBLIC_READ_CLOSURE.json",
+      "sha256": "064eb181614094da459dea8177332310e53b084db1bb3238c19cc25694902af6",
+      "bytes": 13294,
+      "read_status": "READ_FULL",
+      "kind": "NATIVE_PROOF_METADATA_OR_DELTA",
+      "semantic_notes": "Entire structured object read in complete bounded sections; every mutant including complete exception strings personally read after truncated attempts fully reread separately."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_ORIGINAL_CAUSES.json",
+      "sha256": "fcac884dffbca49221136ef98d56c9327defca5ebe18596138ecd9e0704940e3",
+      "bytes": 11369,
+      "read_status": "READ_FULL",
+      "kind": "NATIVE_PROOF_METADATA_OR_DELTA",
+      "semantic_notes": "Entire structured object read in complete bounded sections; every mutant including complete exception strings personally read after truncated attempts fully reread separately."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_MUTATIONS.json",
+      "sha256": "bffbc8a1b52aab3de619a11ae30e7d9087a4cc4cd9d39be997313511386d00fc",
+      "bytes": 63573,
+      "read_status": "READ_FULL",
+      "kind": "NATIVE_PROOF_METADATA_OR_DELTA",
+      "semantic_notes": "Entire structured object read in complete bounded sections; every mutant including complete exception strings personally read after truncated attempts fully reread separately."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_PUBLIC_BINDING.json",
+      "sha256": "9f2fac083beeed11a6710f816825bcf40aeee63fa4ea7b228be91864725bb4a6",
+      "bytes": 27219,
+      "read_status": "READ_FULL",
+      "kind": "NATIVE_PROOF_METADATA_OR_DELTA",
+      "semantic_notes": "Entire structured object read in complete bounded sections; every mutant including complete exception strings personally read after truncated attempts fully reread separately."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-product-delta.patch",
+      "sha256": "a9d0659b4b6a6e28e561f10e2211f655f03fef64987951c635aa6372caea5c13",
+      "bytes": 1537,
+      "read_status": "READ_FULL",
+      "kind": "NATIVE_PROOF_METADATA_OR_DELTA",
+      "semantic_notes": "Entire structured object read in complete bounded sections; every mutant including complete exception strings personally read after truncated attempts fully reread separately."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-setup-exclusions.json",
+      "sha256": "4cc2b76671150e80c8186d231172bf27e7ba38f4b5b729a3705e36311b0bfa6f",
+      "bytes": 679,
+      "read_status": "READ_FULL",
+      "kind": "NATIVE_PROOF_METADATA_OR_DELTA",
+      "semantic_notes": "Entire structured object read in complete bounded sections; every mutant including complete exception strings personally read after truncated attempts fully reread separately."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_FREEZE.json",
+      "sha256": "886a76ea04353b018937a3e8455954be58a9fb0b73f9fd941e699b900f668444",
+      "bytes": 18283,
+      "read_status": "READ_FULL",
+      "kind": "NATIVE_PROOF_METADATA_OR_DELTA",
+      "semantic_notes": "Entire structured object read in complete bounded sections; every mutant including complete exception strings personally read after truncated attempts fully reread separately."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Context/Consumption/ConsumeContextProxy.cs",
+      "sha256": "8597758ccda665fd6def683861bfdaf5cd0716da441be9c10cdc54d27f744bc7",
+      "bytes": 6684,
+      "read_status": "READ_FULL_OWN_PRIOR_EXACT_SHA_REUSE",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Proxy forwards consume metadata and cancellation; prior own Core FULL exact SHA reused.",
+      "reuse_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-family-review/READ_MANIFEST_CHECKPOINT207.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Context/Consumption/ConsumeContextScope.cs",
+      "sha256": "4c2bb79d4e6b198f14f481699a07bbd1b91a2d9e9c9ba3d0376552b221509541",
+      "bytes": 5228,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Local payload layer reads own marker before parent, AddOrUpdate stores local replacement while parent remains untouched; inherited cancellation."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/IConsumePipeConfigurator.cs",
+      "sha256": "e15bdb9ded6a59de7ca79cbc42329bf3b2a44032b38d8604800cf8c59af7e8cc",
+      "bytes": 1364,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Consume configurator exposes saga observer connector and pre/message pipes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContext.cs",
+      "sha256": "8e6f1feedef6aa7cfcd27b97ed30283e01def8e8bf98100f358150cb929ff952",
+      "bytes": 2188,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Typed payload SPI promises nonnull true lookup and pipeline token."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/BasePipeContext.cs",
+      "sha256": "2303156020d82484c5e11820816eeea2ba27d0699ce51ba56a38fdf93cbfc586",
+      "bytes": 6831,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Base self payload precedes cache; null factory/type guards; thread-safe lazy cache."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/FilterConfigurationExtensions.cs",
+      "sha256": "fd96119847fbebc00ad51023502222c8626bdae28a483d0e778d7a6c97a43a54",
+      "bytes": 6590,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Filter specification appends exactly supplied typed filter to configurator; atomic null guards."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/IReceiveEndpointConfigurator.cs",
+      "sha256": "ed6a88334c88732a3895d6dcde062b56431dce880110f9075f1638e596894c38",
+      "bytes": 3891,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Receive endpoint configurator inherits consume/observer topology; no internal reflection route."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Sagas/ISagaRepository.cs",
+      "sha256": "cae62b96489eddcd9be616fff289415c6c8ce45d7fb1e8a9cc062ced78804d1a",
+      "bytes": 1723,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Public saga repository correlated Send and Query contract."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Saga/SagaRepository.cs",
+      "sha256": "c05b3048530236fc86a686775a03076719fb007da9d7424e1f96342bb8c219b0",
+      "bytes": 9560,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "SagaRepository passes exact context to storage factory after argument/correlation guards; load/query adapters preserve capability."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/DependencyInjectionSagaRepository.cs",
+      "sha256": "e0dc9ee83ea0d7fdc213b8d887766e9424147cd57d95cbf3226b63b893491a21",
+      "bytes": 3819,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "DI repository passes Send/Query through scoped context factory."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaPipeConfiguratorExtensions.cs",
+      "sha256": "034faacf372235d81a4bb9b70788c60b8fca86f9569f7ba51be797e9f573d02d",
+      "bytes": 1049,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Saga filter overload targets post-selected saga context; gate correctly uses message-context overload instead."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs",
+      "sha256": "3c0fb87def3c20a1c16dc5449a444e5ab655a08ec36720c4ba7920a7d6c75c46",
+      "bytes": 14169,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Normal UseEntityFrameworkOutbox installs actual observer on saga pipeline; Sqlite selects Serializable; model maps real inbox/outbox entities."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/DependencyInjectionSagaRepositoryContextFactory.cs",
+      "sha256": "2c8ea57384de49afdf3e206242de456d117cc4dc967657ef1cd6ba4ffad7a94e",
+      "bytes": 9197,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Existing IServiceScope reuses same registered factory/context; restores consume state preserving operation failure; owned-created scopes dispose async and aggregate secondary failures."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/ISagaConfigurator.cs",
+      "sha256": "ba58a3f8f96622d8ab288a6ed53b560bd9ae8ca9d7743112918f69b45fc418c6",
+      "bytes": 1263,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Saga configurator distinguishes before repository Message from after-selection SagaMessage."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/ISagaMessageConfigurator.cs",
+      "sha256": "98c362801c7aebb71135bc1ca2989451a04a297a8a5bdc49fffc9135eda5b9c1",
+      "bytes": 1146,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Message-context configurator is public inherited interface exposed by runtime specification."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaConfigurator.cs",
+      "sha256": "4bb737acc62d46207b6f192c39b4fc8e8a63bbb9b36f9b7b9e2682661dfb4637",
+      "bytes": 4910,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "SagaConfigurator obtains spec from normal connector cache and attaches endpoint observers before validation/build."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InMemoryOutbox/OutboxConsumePipeSpecificationObserver.cs",
+      "sha256": "e8ce214465493f57191f4de419ef597dce40fb541abb1d380099a34c4f16eb52",
+      "bytes": 9904,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Outbox observer appends real scoped outbox filter to message specification; no extra observer connection inside constructor. Gate invokes this first then appends its filter."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaConnector.SagaMessageSpecification.cs",
+      "sha256": "08a1fe2448ea011f8a67e3eb5cdbc1bacbd95fe98c3a1845e7e535144fea790f",
+      "bytes": 8824,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Specification implements saga/message interfaces; replayable message pipeline appends filters in order before repository dispatch; notification once."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaSpecification.cs",
+      "sha256": "723cc2ba6290163b1bb4d87d70df43601cecadc59c598e313d3cd1e58e8bd217",
+      "bytes": 5185,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "SagaSpecification validates all message specifications after observer callback; propagates SagaConfigurationObservable."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/Registration/Sagas/SagaRegistration.cs",
+      "sha256": "e8e76678219e34786fdce69c67df251baf17b7d2b86be4f0cb7352331d68e30e",
+      "bytes": 3942,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Normal registration creates DI repository and SagaConfigurator, not a replacement repository."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/SagaConfigurationObservable.cs",
+      "sha256": "6fd2e8fd720d7ef7ccad1935fd9f4fb56f2aabe80c2be20026affeec5a3e45be",
+      "bytes": 2169,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Saga observable dispatches complete message spec to registered observers."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxConsumeFilter.cs",
+      "sha256": "fd7593ccb8020ab0639baa265a9d5b6877933325bce91668f4233c105360bfe4",
+      "bytes": 2296,
+      "read_status": "READ_FULL_OWN_PRIOR_EXACT_SHA_REUSE",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Outbox filter obtains real DI scope and context factory then awaits its Send; prior own Core FULL exact SHA reused.",
+      "reuse_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-family-review/READ_MANIFEST_CHECKPOINT207.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/ISagaConfigurationObserver.cs",
+      "sha256": "7ab5d29efcd7e48cba5b1eddfea204f53ddb5f8ee8c3a1eddeaeac3aa3f4e5a6",
+      "bytes": 1858,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Public observer invoked before compiled message pipeline."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Util/Connectable.cs",
+      "sha256": "0d52a1b09abceec67844e2bd88992188ce1749cac9a6e77dd47cc0e2487e7536",
+      "bytes": 5969,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Connectable invokes ordered snapshot of registrations; gate single observer avoids relative-order ambiguity."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "sha256": "69df491d234a51e9b8722e65ae90fafcaa72e3518b03d5d3cb2c796a33226d2d",
+      "bytes": 6104,
+      "read_status": "READ_FULL",
+      "kind": "PUBLIC_SPI_ROUTE",
+      "semantic_notes": "Outbox message pipe awaits inner saga and completion then marks Consumed; injected consumed-save fault occurs after local separate saga transaction commit."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs",
+      "sha256": "152d185032cee3ade09fdb1d83af32a8d14e778b68968224fd0d5579725b6079",
+      "bytes": 10345,
+      "read_status": "READ_FULL",
+      "kind": "REAL_OUTBOX_ROUTE",
+      "semantic_notes": "Real outbox context owns Begin/Commit/Rollback and loops inbox initialization before consume; linked cancellation and original-failure guards retained."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/DbContextOutboxConsumeContext.cs",
+      "sha256": "b401ceb57d5ba5d8140e45b36a275ee12f1630fc85044d043fa92ee3b31e281d",
+      "bytes": 15148,
+      "read_status": "READ_FULL",
+      "kind": "REAL_OUTBOX_ROUTE",
+      "semantic_notes": "Real marker TransactionId delegates to actual wrapper; consumed save stages the exact fault; coordinator ownership and cancellation linking preserved."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/freeze/08-product-fixes.md",
+      "sha256": "d5f673cb05db52cd4711a62279c1d099e1e71c73fa0bd4e896f019616d3840ad",
+      "bytes": 30273,
+      "read_status": "READ_FULL_EXACT_PREFIX_REUSE",
+      "kind": "CHANGELOG_BASELINE",
+      "semantic_notes": "All baseline bytes are the exact prefix of personally FULL-read current373-line changelog; only6 appended lines differ."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-run.log",
+      "sha256": "fd10344da7c6affaec8899cadd7b5cea4834fa7c06f92cff4b6cd9499db852ce",
+      "bytes": 722,
+      "phase": "package04-f018-ownership-corrected-run",
+      "cases": 12,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-run.log",
+      "sha256": "2521c2da24290ba2d2093e4f9733cb97f7486c05a896d485a9372ef66b70d711",
+      "bytes": 235,
+      "phase": "package04-f018-identity-corrected-run",
+      "cases": 4,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-marker-only-ownership-send-separate-success.log",
+      "sha256": "cfe35bceb9a11f23bfa95c6e2a8655f43524254ebef8bfa222af6f48b7a4fd4c",
+      "bytes": 1721,
+      "phase": "package04-f018-mut-send-marker-only-ownership-send-separate-success",
+      "cases": 1,
+      "failures": 1,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-marker-only-ownership-query-separate-success.log",
+      "sha256": "092ac953b4354507088ca9bb4d4b1834cd15deb5191f84d1509c331d3b1ba63e",
+      "bytes": 94,
+      "phase": "package04-f018-mut-send-marker-only-ownership-query-separate-success",
+      "cases": 1,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-marker-only-ownership-query-separate-success.log",
+      "sha256": "745087bcc43a6838ab63aaeb956d16eaba9e9e499495c2371759fbf705f4ec53",
+      "bytes": 1722,
+      "phase": "package04-f018-mut-query-marker-only-ownership-query-separate-success",
+      "cases": 1,
+      "failures": 1,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-marker-only-ownership-send-separate-success.log",
+      "sha256": "5059a515ab0a9ec3aa1826523b188c6950b369824f23ca5562d4c98afeec4d11",
+      "bytes": 93,
+      "phase": "package04-f018-mut-query-marker-only-ownership-send-separate-success",
+      "cases": 1,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-id-comparison-lost-identity-send-foreign.log",
+      "sha256": "6421bd5ebbd25747cb75b8787c0a4d0c6f716d4fcfada4166ce0ec9665ca958f",
+      "bytes": 1241,
+      "phase": "package04-f018-mut-send-id-comparison-lost-identity-send-foreign",
+      "cases": 1,
+      "failures": 1,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-id-comparison-lost-identity-send-matching.log",
+      "sha256": "21531b5e24b3e00a2549036b382e236f9d2fb6bdea45a5522ae7f7159fe319ce",
+      "bytes": 85,
+      "phase": "package04-f018-mut-send-id-comparison-lost-identity-send-matching",
+      "cases": 1,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-id-comparison-lost-identity-query-foreign.log",
+      "sha256": "c2522758a6791acc4c8db6bc273644cb07eff477abe1be8065a5b7631d367fa6",
+      "bytes": 1242,
+      "phase": "package04-f018-mut-query-id-comparison-lost-identity-query-foreign",
+      "cases": 1,
+      "failures": 1,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-id-comparison-lost-identity-query-matching.log",
+      "sha256": "0f3d3de2836ae5058004e25c5a8673beb00608f0e4cfe1f16d34c34dd8ed8fee",
+      "bytes": 86,
+      "phase": "package04-f018-mut-query-id-comparison-lost-identity-query-matching",
+      "cases": 1,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-valid-owner-rejected-identity-send-matching.log",
+      "sha256": "9fa8381647ea742bfceeca846eb339a4f71e38cffabd0dbb8925ce6af74f106e",
+      "bytes": 11396,
+      "phase": "package04-f018-mut-send-valid-owner-rejected-identity-send-matching",
+      "cases": 1,
+      "failures": 1,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-valid-owner-rejected-identity-query-matching.log",
+      "sha256": "0f3d3de2836ae5058004e25c5a8673beb00608f0e4cfe1f16d34c34dd8ed8fee",
+      "bytes": 86,
+      "phase": "package04-f018-mut-send-valid-owner-rejected-identity-query-matching",
+      "cases": 1,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-valid-owner-rejected-identity-query-matching.log",
+      "sha256": "983edb9824bb4d6468cb50d37f574a72e339af88c5c46b4b0a974058a1fbfa58",
+      "bytes": 12265,
+      "phase": "package04-f018-mut-query-valid-owner-rejected-identity-query-matching",
+      "cases": 1,
+      "failures": 1,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-valid-owner-rejected-identity-send-matching.log",
+      "sha256": "21531b5e24b3e00a2549036b382e236f9d2fb6bdea45a5522ae7f7159fe319ce",
+      "bytes": 85,
+      "phase": "package04-f018-mut-query-valid-owner-rejected-identity-send-matching",
+      "cases": 1,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-corrected-ownership-all.log",
+      "sha256": "fd10344da7c6affaec8899cadd7b5cea4834fa7c06f92cff4b6cd9499db852ce",
+      "bytes": 722,
+      "phase": "package04-f018-mut-corrected-ownership-all",
+      "cases": 12,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-corrected-identity-all.log",
+      "sha256": "2521c2da24290ba2d2093e4f9733cb97f7486c05a896d485a9372ef66b70d711",
+      "bytes": 235,
+      "phase": "package04-f018-mut-corrected-identity-all",
+      "cases": 4,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-rollback-ownership-all.log",
+      "sha256": "fd10344da7c6affaec8899cadd7b5cea4834fa7c06f92cff4b6cd9499db852ce",
+      "bytes": 722,
+      "phase": "package04-f018-mut-rollback-ownership-all",
+      "cases": 12,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-rollback-identity-all.log",
+      "sha256": "2521c2da24290ba2d2093e4f9733cb97f7486c05a896d485a9372ef66b70d711",
+      "bytes": 235,
+      "phase": "package04-f018-mut-rollback-identity-all",
+      "cases": 4,
+      "failures": 0,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-original-run12.log",
+      "sha256": "6477137789b1634cc6cc645e4a6c505a70f2b332f56710ca3731ac50c7d7fbe5",
+      "bytes": 7214,
+      "phase": "package04-f018-ownership-original-run12",
+      "cases": 12,
+      "failures": 4,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-original-run4.log",
+      "sha256": "39752dfd711f06c7f68b8a105f2e14ce61113f43c49050c433d8b8700f98fea9",
+      "bytes": 2543,
+      "phase": "package04-f018-identity-original-run4",
+      "cases": 4,
+      "failures": 2,
+      "read_status": "READ_FULL_JSON_SEMANTICS_EXACT_MATCH_OWN_PERSONAL_FULL_METADATA",
+      "explanation": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference.",
+      "kind": "ACTUAL_NATIVE_JSON_LOG",
+      "semantic_notes": "Entire JSON object including every exception Message and StackTrace was personally FULL read in the native proof object; actual immutable log parsed whole and compared recursively exactly. No summarized-field or substring PASS inference."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-corrected-build.log",
+      "sha256": "4f8600215e58e73dc2b9305ec89d8d4fdee5885c6a41274cce35f71cb38d8eda",
+      "bytes": 1771,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-corrected-fresh-pack.log",
+      "sha256": "cd24beb1afd80f8ad7b67de707eb2f75dc7c016165826e0cb5cf64632bb0b19c",
+      "bytes": 192,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-restore.log",
+      "sha256": "ed3801359cc9f8c12af7b94eb83da9d3bbbf3d1dc565d1765f8810e0e434f869",
+      "bytes": 214,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-build.log",
+      "sha256": "c094303a211c9a0591fa6ffad525d94742ea73ac4b41aa84ed774d1115301c16",
+      "bytes": 279,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-restore.log",
+      "sha256": "e8cbb94419fa35f580ea7ac42e6596f8bde28e63f536917a83075d697da6ff4d",
+      "bytes": 219,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-build.log",
+      "sha256": "262eebfea558d5323c231601ae289252d75871fb7b868211756b0df9ba48954a",
+      "bytes": 290,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-locked.log",
+      "sha256": "ce511d72a9f22194a5211941b61765caaee979810b2e19817a14286f17c4cee1",
+      "bytes": 214,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-locked.log",
+      "sha256": "8bdd1ac7b43c226b52cc7660753a294a28e14d067061e754ac59b2425281c6a7",
+      "bytes": 219,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-marker-only-build.log",
+      "sha256": "886085474263c62177e9d94635a8d52e7081d8ae62451a8fe9f98fc83ab070db",
+      "bytes": 1715,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-marker-only-build.log",
+      "sha256": "5b10c9671ea50d2c81b58a0de766efcfca65ce0bb2c15a5d68ff4ed14363e6bd",
+      "bytes": 1715,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-id-comparison-lost-build.log",
+      "sha256": "d806c55734df0dfdfc10d0c2479d1524e08f163d1c856d2ae9a3c42e00839380",
+      "bytes": 1715,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-id-comparison-lost-build.log",
+      "sha256": "b5bc8b4aafdfc7ffdb7ee653b4f3e25d1fa75119770b4c456c47ebe47f7d6d4f",
+      "bytes": 1715,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-valid-owner-rejected-build.log",
+      "sha256": "0ee009c7a1827f3bc1a23d07ceb530ce6074d2285cfbfa6c84ffe2e8229b242d",
+      "bytes": 1715,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-valid-owner-rejected-build.log",
+      "sha256": "2692a7fb8cdc76e0a6dceac709eeb88651e6fc12a43b68c3e7bc28e8df071d4e",
+      "bytes": 1715,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-locked-restore.log",
+      "sha256": "d7558ed960c2b2ad78b436a3d1c3781262f5976ca9646ebb7b91265bead3fb6c",
+      "bytes": 124,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-corrected-build.log",
+      "sha256": "ad788b3baccd6784c06cd196ce96f1a6cb0281da2f746cd4ec5a906657744463",
+      "bytes": 1715,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-rollback-build.log",
+      "sha256": "cfe56d56fd6c824b62f5e4ec06a1e0a119e381f098199d7e74317151ea7c46c7",
+      "bytes": 1715,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-existing-native-owner-r2.log",
+      "sha256": "4e3fc55f89a49e73865c81f656885f72525ba125eb1cf9c3b617798c3a67f2ad",
+      "bytes": 3281,
+      "read_status": "READ_FULL_LOSSLESS_LINE_DICTIONARY",
+      "kind": "ACTUAL_NATIVE_BUILD_RESTORE_PACK_OR_OWNER_LOG",
+      "semantic_notes": "Every exact line plus ordered references personally read, including complete native owner failure and summary; map reconstructs all bytes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/AGENTS.md",
+      "sha256": "12b6cf76e745490c1fb5e40e3375bd5c4a627b21c166954697cf6426353dcec2",
+      "bytes": 1201,
+      "read_status": "READ_FULL_OWN_PRIOR_EXACT_SHA_REUSE",
+      "kind": "receipt_binding_or_governance",
+      "semantic_notes": "Entire text personally read; receipt/metadata checked against owned freeze, or product navigation scope.",
+      "reuse_manifest": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-anti-patterns/SKILL.md",
+      "sha256": "0f589352ba88c5873e85a2bde65d44f72c75ec76a0547105ff6698271d813bf0",
+      "bytes": 20609,
+      "read_status": "READ_FULL_OWN_PRIOR_EXACT_SHA_REUSE",
+      "kind": "pinned_skill",
+      "semantic_notes": "Pinned Microsoft test analysis guidance; anti-pattern skill identical to installed bytes freshly read in this turn.",
+      "reuse_manifest": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/SKILL.md",
+      "sha256": "ec6f69ed00a627c0319a2bbdcfd71fcfab84eaae28900b2f814af3b27e44bd70",
+      "bytes": 4594,
+      "read_status": "READ_FULL_OWN_PRIOR_EXACT_SHA_REUSE",
+      "kind": "pinned_skill",
+      "semantic_notes": "Pinned Microsoft test analysis guidance; anti-pattern skill identical to installed bytes freshly read in this turn.",
+      "reuse_manifest": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/extensions/dotnet.md",
+      "sha256": "ef257a931a25501697fde8a36e027ba9195ff624ff701dd5fd276d746c0d25be",
+      "bytes": 6883,
+      "read_status": "READ_FULL_OWN_PRIOR_EXACT_SHA_REUSE",
+      "kind": "pinned_skill",
+      "semantic_notes": "Pinned Microsoft test analysis guidance; anti-pattern skill identical to installed bytes freshly read in this turn.",
+      "reuse_manifest": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public-adversarial/READ_CLOSURE.json"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/Configuration/EntityFrameworkSagaRepositoryConfigurator.cs",
+      "current_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/Configuration/EntityFrameworkSagaRepositoryConfigurator.cs",
+      "sha256": "efd8814504e7e91948c93678c448efbcdb7593b5a99c067de8cb654b719cf571",
+      "bytes": 10589,
+      "read_status": "READ_FULL_OWN_PRE_FREEZE_READ_EXACT_SHA_REUSE",
+      "kind": "ORIGINAL_HELPER_CONTRACT",
+      "semantic_notes": "Normal DI registration wires factory/lock and capabilities; optimistic default ReadCommitted may explicitly overridden Serializable.",
+      "evidence": "Personal complete untruncated source reading in preceding F018 prefreeze task turn; freshly checked hashes and byte identity against current helper."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/Configuration/IEntityFrameworkSagaRepositoryConfigurator.cs",
+      "current_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/Configuration/IEntityFrameworkSagaRepositoryConfigurator.cs",
+      "sha256": "dfa047c525762bdb5242a132509523f7df4664917f42a21956693d0a4c8d6293",
+      "bytes": 3329,
+      "read_status": "READ_FULL_OWN_PRE_FREEZE_READ_EXACT_SHA_REUSE",
+      "kind": "ORIGINAL_HELPER_CONTRACT",
+      "semantic_notes": "Public transaction opt-out, delegate factory and existing scoped DI factory contract.",
+      "evidence": "Personal complete untruncated source reading in preceding F018 prefreeze task turn; freshly checked hashes and byte identity against current helper."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/ISagaDbContextFactory.cs",
+      "current_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/ISagaDbContextFactory.cs",
+      "sha256": "e0946958eb71dc3ae591396016fa0f5d003ffd0342a9fe56d3f9d8da4cfa73ea",
+      "bytes": 1337,
+      "read_status": "READ_FULL_OWN_PRE_FREEZE_READ_EXACT_SHA_REUSE",
+      "kind": "ORIGINAL_HELPER_CONTRACT",
+      "semantic_notes": "Create scoped/nonconsume contexts and release ValueTask ownership SPI.",
+      "evidence": "Personal complete untruncated source reading in preceding F018 prefreeze task turn; freshly checked hashes and byte identity against current helper."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/ContainerSagaDbContextFactory.cs",
+      "current_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/ContainerSagaDbContextFactory.cs",
+      "sha256": "ec2172054277f3af8e68c4e198c93bb29572c7e451687d52cac44300769bcb01",
+      "bytes": 2126,
+      "read_status": "READ_FULL_OWN_PRE_FREEZE_READ_EXACT_SHA_REUSE",
+      "kind": "ORIGINAL_HELPER_CONTRACT",
+      "semantic_notes": "Borrowed DI-owned context; Release is completed no disposal.",
+      "evidence": "Personal complete untruncated source reading in preceding F018 prefreeze task turn; freshly checked hashes and byte identity against current helper."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/DelegateSagaDbContextFactory.cs",
+      "current_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/DelegateSagaDbContextFactory.cs",
+      "sha256": "29df147f739000570feaff4f357171f5cfbfb1d5fdd28bc43bcfdcbf76a12e0b",
+      "bytes": 2222,
+      "read_status": "READ_FULL_OWN_PRE_FREEZE_READ_EXACT_SHA_REUSE",
+      "kind": "ORIGINAL_HELPER_CONTRACT",
+      "semantic_notes": "Creates independent context on each call; Release owns DisposeAsync.",
+      "evidence": "Personal complete untruncated source reading in preceding F018 prefreeze task turn; freshly checked hashes and byte identity against current helper."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/OptimisticSagaLockContext.cs",
+      "current_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/OptimisticSagaLockContext.cs",
+      "sha256": "8ec8884e53988ce6791234d74958a4c8ac71077acb3d50c4e250b1624cc02288",
+      "bytes": 2450,
+      "read_status": "READ_FULL_OWN_PRE_FREEZE_READ_EXACT_SHA_REUSE",
+      "kind": "ORIGINAL_HELPER_CONTRACT",
+      "semantic_notes": "Deferred Where/AsTracking query load occurs within configured transaction with captured/override cancellation.",
+      "evidence": "Personal complete untruncated source reading in preceding F018 prefreeze task turn; freshly checked hashes and byte identity against current helper."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/OptimisticSagaRepositoryLockStrategy.cs",
+      "current_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/OptimisticSagaRepositoryLockStrategy.cs",
+      "sha256": "dcc623bf17a387ceb46eb349963fc4cf405d88050811c560de54eb6d3727fa7d",
+      "bytes": 3929,
+      "read_status": "READ_FULL_OWN_PRE_FREEZE_READ_EXACT_SHA_REUSE",
+      "kind": "ORIGINAL_HELPER_CONTRACT",
+      "semantic_notes": "Transaction enabled flag/isolation preserved; lock context creation defers actual SQL load.",
+      "evidence": "Personal complete untruncated source reading in preceding F018 prefreeze task turn; freshly checked hashes and byte identity against current helper."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs",
+      "current_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs",
+      "sha256": "139de8bee856a1c1d07fce15c746d5f6d3549fe6321e6aa26605e2fe071a4e1a",
+      "bytes": 6245,
+      "read_status": "READ_FULL_OWN_PRE_FREEZE_READ_EXACT_SHA_REUSE",
+      "kind": "ORIGINAL_HELPER_CONTRACT",
+      "semantic_notes": "Retries wrap whole local transaction; failed attempt clears tracked state/outbox checkpoint; cleanup failure blocks retry and preserves original cause.",
+      "evidence": "Personal complete untruncated source reading in preceding F018 prefreeze task turn; freshly checked hashes and byte identity against current helper."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/IDbTransactionContext.cs",
+      "current_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/IDbTransactionContext.cs",
+      "sha256": "5cc780d553950adf1f41ed837a544ba4a1b6dc6f01b233f5b11fc863796e421e",
+      "bytes": 314,
+      "read_status": "READ_FULL_OWN_PRE_FREEZE_READ_EXACT_SHA_REUSE",
+      "kind": "ORIGINAL_HELPER_CONTRACT",
+      "semantic_notes": "Public marker carries transaction identity only, no physical DbContext owner reference.",
+      "evidence": "Personal complete untruncated source reading in preceding F018 prefreeze task turn; freshly checked hashes and byte identity against current helper."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs",
+      "sha256": "befc6519928c8c7db1b6eb3bfb46938bbd4f902099f544da20d265c6cd30571a",
+      "bytes": 12799,
+      "read_status": "READ_FULL_OWN_PRE_FREEZE_READ_EXACT_SHA_REUSE",
+      "kind": "ORIGINAL_FACTORY",
+      "semantic_notes": "Both Send and Query trust marker presence only; all original lifecycle/null/cancellation/owntransaction callbacks read. Corrected patch changes only2predicates."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/PessimisticSagaRepositoryLockStrategy.cs",
+      "sha256": "103d858c8556f61b99d8d5897534ad2902ddccc6601a3ab909e1c6f2ebbc5359",
+      "bytes": 4041,
+      "read_status": "READ_FULL",
+      "kind": "ADVERSARIAL_STRATEGY_BOUNDARY",
+      "semantic_notes": "CreateLockContext executes initial ID-selection SQL before returning per-row lock context; factory Query calls it before local WithinTransaction. Therefore pre-all-SQL foreign-ID rejection in optimistic gate cannot be generalized to pessimistic Query. Existing ordering, no F018 delta."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-original-restore.log",
+      "sha256": "4e640a550397a258dce02380693a95f7486b3a6a790658b8295dd6ab9e4f23bd",
+      "bytes": 1023,
+      "read_status": "READ_FULL",
+      "kind": "EXCLUDED_SETUP_FAILURE_LOG",
+      "semantic_notes": "Full compiler or restore failure read; native1 and zero claimed assertion cases. Missing dependency graph/imports explicitly excluded from causal evidence."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-original-restore-r2.log",
+      "sha256": "6b4dfb75a6630d5215ec93d1d6761a54020329061f8e2aa6cd6b6399ab0b0ba0",
+      "bytes": 1023,
+      "read_status": "READ_FULL",
+      "kind": "EXCLUDED_SETUP_FAILURE_LOG",
+      "semantic_notes": "Full compiler or restore failure read; native1 and zero claimed assertion cases. Missing dependency graph/imports explicitly excluded from causal evidence."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-original-build.log",
+      "sha256": "68407147e58c85cad560f45ae36baaf80a93873fc6be58add0dc9803040de1e4",
+      "bytes": 2552,
+      "read_status": "READ_FULL",
+      "kind": "EXCLUDED_SETUP_FAILURE_LOG",
+      "semantic_notes": "Full compiler or restore failure read; native1 and zero claimed assertion cases. Missing dependency graph/imports explicitly excluded from causal evidence."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-original-build-r2.log",
+      "sha256": "2545f9368007aa2e6145489e1e4fdaa89fe843e3eff0d735cee8a50f0eb9310b",
+      "bytes": 2640,
+      "read_status": "READ_FULL",
+      "kind": "EXCLUDED_SETUP_FAILURE_LOG",
+      "semantic_notes": "Full compiler or restore failure read; native1 and zero claimed assertion cases. Missing dependency graph/imports explicitly excluded from causal evidence."
+    }
+  ],
+  "public_sources_personally_full": 25,
+  "owned_inputs": 13,
+  "logs": 38,
+  "foreign_read_reuse": false,
+  "native_operations_executed": 0,
+  "product_writes": 0,
+  "generated_graph_status": "MACHINE_STRUCTURAL_CHECK_ONLY",
+  "ancestor_build_inputs": [],
+  "limits": [
+    "Canonical EF unit owner36 and shared57 are not claimed personally FULL here. \u00a74.3 test-change owner prerequisite remains Root responsibility.",
+    "Original source bef\u2026 personally FULL before freeze, original package runtime exact bound; historical source\u2192Package01 DLL provenance remains pending Root checksum or fresh proof.",
+    "Original factory plus9contract helpers personally FULL in preceding prefreeze task turn, freshly SHA-bound here;25public SPI paths independently FULL(23fresh+2exactownCoreReuse).",
+    "No whole EF owner PASS, grade, wholeAPI CLOSED, distributed atomicity, cloud, ARM512MiB or provider retry/commit-fault matrix claim."
+  ],
+  "archive_text_members": [
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.nuspec",
+      "sha256": "a1e5c1d2c96baffd98944b948aa171ce20428b7c10f2f1f2f6dea518a39e444b",
+      "bytes": 1849,
+      "read_status": "READ_FULL_EXACT_BYTES_OWN_REUSE",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.nuspec",
+      "sha256": "a1e5c1d2c96baffd98944b948aa171ce20428b7c10f2f1f2f6dea518a39e444b",
+      "bytes": 1849,
+      "read_status": "READ_FULL",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.Abstractions.nuspec",
+      "sha256": "efe97b026c202b41c6893ce7df23995bf40781eae9c14a95d0b16f241e98b825",
+      "bytes": 972,
+      "read_status": "READ_FULL_EXACT_BYTES_OWN_REUSE",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.Abstractions.nuspec",
+      "sha256": "efe97b026c202b41c6893ce7df23995bf40781eae9c14a95d0b16f241e98b825",
+      "bytes": 972,
+      "read_status": "READ_FULL",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.EntityFrameworkCore.nuspec",
+      "sha256": "7c35ace3ec99105a2eab9073ca4626b5c5ab0be8c6ad30a65b3d4b1fc57b9559",
+      "bytes": 2276,
+      "read_status": "READ_FULL_EXACT_BYTES_OWN_REUSE",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.EntityFrameworkCore.nuspec",
+      "sha256": "7c35ace3ec99105a2eab9073ca4626b5c5ab0be8c6ad30a65b3d4b1fc57b9559",
+      "bytes": 2276,
+      "read_status": "READ_FULL",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.nuspec",
+      "sha256": "bb1696c7586253fbebde296102eb7dfdc036a2a576fb0335c3f310a2d8dded7f",
+      "bytes": 2591,
+      "read_status": "READ_FULL_EXACT_BYTES_OWN_REUSE",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.nuspec",
+      "sha256": "bb1696c7586253fbebde296102eb7dfdc036a2a576fb0335c3f310a2d8dded7f",
+      "bytes": 2591,
+      "read_status": "READ_FULL",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.Courier.nuspec",
+      "sha256": "3a70bc6aa63a796f05d25fb16d0fef7f352f07e0eff360243d174c634c4152ea",
+      "bytes": 1833,
+      "read_status": "READ_FULL_EXACT_BYTES_OWN_REUSE",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.Courier.nuspec",
+      "sha256": "3a70bc6aa63a796f05d25fb16d0fef7f352f07e0eff360243d174c634c4152ea",
+      "bytes": 1833,
+      "read_status": "READ_FULL",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.Futures.nuspec",
+      "sha256": "0f7ef063e9d26a9e491d39dcd84c2ecba66e3caf66ba54847b5f0a62c09476f5",
+      "bytes": 2019,
+      "read_status": "READ_FULL_EXACT_BYTES_OWN_REUSE",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.Futures.nuspec",
+      "sha256": "0f7ef063e9d26a9e491d39dcd84c2ecba66e3caf66ba54847b5f0a62c09476f5",
+      "bytes": 2019,
+      "read_status": "READ_FULL",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.JobService.nuspec",
+      "sha256": "f70de954781b230c217e0852e7ceaa80cae6d48d22a96228809751b4460440ef",
+      "bytes": 1925,
+      "read_status": "READ_FULL_EXACT_BYTES_OWN_REUSE",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.JobService.nuspec",
+      "sha256": "f70de954781b230c217e0852e7ceaa80cae6d48d22a96228809751b4460440ef",
+      "bytes": 1925,
+      "read_status": "READ_FULL",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.Sagas.nuspec",
+      "sha256": "7b754ff7204fa18b6bf2dda1a3539c10b9487a0dcf7e717ce2d27088c6713c03",
+      "bytes": 1828,
+      "read_status": "READ_FULL_EXACT_BYTES_OWN_REUSE",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    },
+    {
+      "archive": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "member": "ViciOne.ServiceBus.Sagas.nuspec",
+      "sha256": "7b754ff7204fa18b6bf2dda1a3539c10b9487a0dcf7e717ce2d27088c6713c03",
+      "bytes": 1828,
+      "read_status": "READ_FULL",
+      "semantic_notes": "Entire corrected metadata personally read; original archive nuspec byte-equal. Dependencies match actual lock/runtime graph; repository head metadata alone does not prove dirty source bytes."
+    }
+  ]
+}

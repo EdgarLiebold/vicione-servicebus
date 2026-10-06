@@ -60,7 +60,7 @@ public class RedeliveryRetryPipeSpecification<TMessage> :
         return _observers.Connect(observer);
     }
 
-    /// <summary>Gets or sets the replace message id.</summary>
+    /// <summary>Sets whether redelivery replaces the original message identifier.</summary>
     public bool ReplaceMessageId
     {
         set

@@ -1,0 +1,38 @@
+{
+  "status": "ROOT_ACCEPTED_ORIGINAL_BINARY_SERVICEBUS_TEAM_QUALIFICATION",
+  "utc": "2026-10-03T18:12:38.523883+00:00",
+  "qualification_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/continuation-archive-review/ARCHIVE_SERVICEBUS_TEAM_QUALIFICATION_COMPLETE.json",
+  "qualification_sha256": "dd1d979fb93f35c58afec696de1077a88d688bb191ccdbb223d5ccec2f039a79",
+  "root_personally_full_reviewed_codecs": [
+    "build_lossless_codec.py",
+    "build_compact_codec.py",
+    "verify_displayed_member.py",
+    "merge_archive_team_qualification.py"
+  ],
+  "codec_hashes": {
+    "build_lossless_codec.py": "af15510b8c3ed0509153171de27a3ce5a5d320de9283ac9e77cadabbc777a7a8",
+    "build_compact_codec.py": "c45beeb7f4d74534e273a50b4d778866970c61474f69cd34e8f4330d5ca1b531",
+    "verify_displayed_member.py": "fa236075fecff2457deb0afa8766764daf6dd1172afcca98d6206411c8258c48",
+    "merge_archive_team_qualification.py": "ac42e7143354d4bcd147cc7d7276c56f0168133cbaf63176eaa4a6eec7595911"
+  },
+  "root_independent_actual_reconstruction": {
+    "archive_members_sha": 71,
+    "servicebus_members": 33,
+    "servicebus_original_bytes": 15434685,
+    "ordered_exact_original_parts": 1384,
+    "compact_new_symbol_rows": 9364,
+    "member55_prior_raw_prefix_symbols": 1439,
+    "eleven_remaining_lossless_codecs": true
+  },
+  "actor_quality": {
+    "prior_actor_raw": 555,
+    "own_actor_raw": 6,
+    "own_actor_lossless_semantic": 823
+  },
+  "ordinary_raw_full_credit": 0,
+  "complete_original_file_qualification_count": 6209,
+  "ordinary_raw_files": 6208,
+  "current_api_symbol_closure": false,
+  "whole_review_A_plus": false,
+  "foreign_payloads_semantic_credit": 0
+}

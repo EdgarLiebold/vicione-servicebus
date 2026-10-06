@@ -1,0 +1,337 @@
+{
+  "role": "adversarial_package_01",
+  "review_scope": "PACKAGE09_F036_F037_ONLY",
+  "internal_role": "independent adversarial reviewer; not patch author; no external product role",
+  "freeze_manifest_sha256": "0f52f76e6882ca9fff256b4aeca5f965727aea68402c30a90e3e292526955025",
+  "delta_count": 6,
+  "deltas": [
+    {
+      "scope": "frozen_delta",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdSendTopologyConvention.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/00-SessionIdSendTopologyConvention.cs",
+      "sha256": "d91a49c54b4134418fa566944c8625375cfbdae34433402fe85ab509092d4614",
+      "bytes": 1487,
+      "read_mode": "FULL_CONTENT_FRESH",
+      "baseline_sha256": "f75bf5faa15b240bb44409e61c9370df54029fbcf611399361275ecc26ae42ec"
+    },
+    {
+      "scope": "frozen_delta",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SubscriptionConsumeTopologySpecification.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/01-SubscriptionConsumeTopologySpecification.cs",
+      "sha256": "226adc09363b07341bbaaf76a435f4a761afb3f0280e707e6996bb4f7230b092",
+      "bytes": 2541,
+      "read_mode": "FULL_CONTENT_FRESH",
+      "baseline_sha256": "574b89cc5cdf2b6a635acf5227062ff5c5d86410b623ddba807900395213ba5f"
+    },
+    {
+      "scope": "frozen_delta",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusFamilyRegressionTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/02-ServiceBusFamilyRegressionTests.cs",
+      "sha256": "fc71620d49be733688a2f4854b76ba69445c03effbeba7e1cee7807775815a60",
+      "bytes": 13429,
+      "read_mode": "FULL_CONTENT_FRESH"
+    },
+    {
+      "scope": "frozen_delta",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/03-AzureServiceBusRequirements.json",
+      "sha256": "a1ba8b05aa90849904a44572152e0489555591dcb5a448e3fb558f35ceb6ecc0",
+      "bytes": 71480,
+      "read_mode": "REUSED_PERSONAL_FULL_HASH_VERIFIED_AND_COMPLETE_SEMANTIC_DELTA",
+      "baseline_sha256": "8ade935241c8e5a059ee9901f88af887abacfa94bce04521dc305b2d4e135105",
+      "unchanged_requirement_rows": 188,
+      "added_requirement_rows": [
+        {
+          "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+          "variantKey": "default-session-formatter-reaches-send-filter-with-explicit-override",
+          "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusFamilyRegressionTests",
+          "testMethod": "DefaultSessionFormatter_ReachesTheSendFilterAndPreservesExplicitOverridesAsync"
+        },
+        {
+          "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-OPTIONS",
+          "variantKey": "consume-subscriptions-retain-rule-filter-validation",
+          "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusFamilyRegressionTests",
+          "testMethod": "ConsumeSubscriptions_RetainRuleFilterValidation"
+        },
+        {
+          "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-OPTIONS",
+          "variantKey": "bus-construction-rejects-conflicting-consume-rule-filter",
+          "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusFamilyRegressionTests",
+          "testMethod": "BusConstruction_RejectsConflictingConsumeRuleAndFilter"
+        },
+        {
+          "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-NAME",
+          "variantKey": "nested-queue-destinations-have-distinct-automatic-subscriptions",
+          "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusFamilyRegressionTests",
+          "testMethod": "NestedQueueDestinations_HaveDistinctAutomaticSubscriptionsAsync"
+        }
+      ]
+    },
+    {
+      "scope": "frozen_delta",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/04-product-fixes.md",
+      "sha256": "d79cef7bb2bf0ea8bf1cfb5aa98f39e95ee891019233f4500bab2da689199e43",
+      "bytes": 28416,
+      "read_mode": "FULL_DELTA_READ; unchanged document prefix byte verified; whole historical body not re-reviewed",
+      "baseline_sha256": "b008e8799dc0e93ee34c100c324a8516c416555b749623cc40fdb93acd8f252e",
+      "complete_doc_delta": "- Azure Service Bus session-id conventions now pass the configured default formatter to new\n  message conventions. Explicit message formatters retain precedence; a null formatter result\n  preserves routing metadata already supplied by the sender.\n- Azure Service Bus consuming subscriptions now reject a complete rule combined with a separate\n  default-rule filter before bus construction. Named and typed subscriptions retain this validation;\n  configuring either option alone remains supported.\n"
+    },
+    {
+      "scope": "frozen_delta",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package09_azure_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/05-package09_azure_mutations.py",
+      "sha256": "7e170660e8ead9fbaecb715f6eb849aa7e4409a66fe3559ea68be00ea5baeb4c",
+      "bytes": 6089,
+      "read_mode": "FULL_CONTENT_FRESH"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdMessageSendTopologyConvention.cs",
+      "sha256": "bf285c87021afc83d55cec924b87405570f15b435906f4bf70b85c110563f664",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/SetSessionIdMessageSendTopology.cs",
+      "sha256": "ffb398aa66718d16af39d87eb4950c3d4ca05a4f29a19505f84d11d278d9731f",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/SetSessionIdFilter.cs",
+      "sha256": "499a813c863ecfcac65915ec6d739ddf2888ea0b445dbce4dbbc364cc447c460",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/Topology/ServiceBusSessionIdConventionExtensions.cs",
+      "sha256": "8faf38b98fe0889ce11beaf9ab2ff60352b50a6bb94b92df8dc64b41d4cb9cb1",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/Topology/TopologyConventionCache.cs",
+      "sha256": "683a18c4abc503ca843503b58f0860f7e62008f3cce7d479d170236e4b388988",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/MessageSessionIdFormatter.cs",
+      "sha256": "2426f6465e1fc3e2ecdf4084a4b4b20a286b6738d356b01731a5bb665d1c7997",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/EmptySessionIdFormatter.cs",
+      "sha256": "57255db94795f25000fdba504b06fe48a5bb22c7dabbf1c5b4e6b1846b49506c",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusConsumeTopology.cs",
+      "sha256": "683c40632c68eb826978ea50e909f11663bdbcc70bc52a88e5c1b4328bb77c86",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusMessageConsumeTopology.cs",
+      "sha256": "dc16b12b21852595887bd85c422fb587d1e0913cfddca5cabfaa85495b29aa56",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionConfigurator.cs",
+      "sha256": "1877d3e6680fc319a403149e66756c75b8065ee83dfb6a439045ffd7864b9442",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ServiceBusSendContextFilter.cs",
+      "sha256": "81a06ae067dadcddb0539dc52cf59cf9d24da2fc7df3e62b5fb6acd782713fa3",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusMessageSendTopology.cs",
+      "sha256": "983a7d67253e3b5d1295bb58d1671b2786d42186e719950f2caaee4aaedeb665",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/ISessionIdSendTopologyConvention.cs",
+      "sha256": "5626f158f6849030e8fd21edd7c0fe5a5562776d9e4b97a635bd22886e296431",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusSendTopology.cs",
+      "sha256": "f1438707eae68e24f911c68cf51f564517780e41698a74221388f45752b36044",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/AzureServiceBusSendContext.cs",
+      "sha256": "9be7d9aa09a1fdb1e2061d11c4dfe2b6a3fc6521a7fc694a81a11347f6c39a13",
+      "read": "FULL_CONTENT"
+    }
+  ],
+  "test_owner_full_read_reuse": {
+    "closure": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/azure-lease-regression/READ_CLOSURE.json",
+    "sha256": "6edc0afe9104d6e254ea933ba0e2da83190fc8d3e5073d5a3beb72a9ee5fdf99",
+    "own_role": true,
+    "input_files": 76,
+    "read_mode": "38 original Azure owner + 35 shared inputs + 3 new fixtures personally full read; binary signing key bytes/hash only"
+  },
+  "skills": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-anti-patterns/SKILL.md",
+      "sha256": "0f589352ba88c5873e85a2bde65d44f72c75ec76a0547105ff6698271d813bf0",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-gap-analysis/SKILL.md",
+      "sha256": "cfec7d0e13deaee15fb97151d0cd5339fa5f14c109a10c49de81e9a5512231b7",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/SKILL.md",
+      "sha256": "ec6f69ed00a627c0319a2bbdcfd71fcfab84eaae28900b2f814af3b27e44bd70",
+      "read": "FULL_CONTENT"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/extensions/dotnet.md",
+      "sha256": "ef257a931a25501697fde8a36e027ba9195ff624ff701dd5fd276d746c0d25be",
+      "read": "FULL_CONTENT"
+    }
+  ],
+  "actual_logs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-original-build.log",
+      "sha256": "bd5f5e3fab6803b125779c1ac24239fa167cc528906d77b964eb8e114ad4b0c3",
+      "read": "FULL_CONTENT",
+      "phase": "package09-azure-original-build",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-original-six-cases.log",
+      "sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+      "read": "FULL_CONTENT",
+      "phase": "package09-azure-original-six-cases",
+      "exit_code": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-two-fixes-build.log",
+      "sha256": "e4ed8ecc0de13967aa94c764fbc1baa4bd31230fb76d990b733c9788cdc2daf3",
+      "read": "FULL_CONTENT",
+      "phase": "package09-azure-two-fixes-build",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-two-fixes-six-cases.log",
+      "sha256": "6a24bac84cef8ce7d32b0c2ab1414e0e210a76e716de9e0dbd7ac5f7249d22ec",
+      "read": "FULL_CONTENT",
+      "phase": "package09-azure-two-fixes-six-cases",
+      "exit_code": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-complete-owner-before-naming-decision.log",
+      "sha256": "560d745230ab576d8f536c4170c348fa21d43e7ecc7a46fa4133dc9d4b273f51",
+      "read": "FULL_CONTENT",
+      "phase": "package09-azure-complete-owner-before-naming-decision",
+      "exit_code": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-isolated-restore.log",
+      "sha256": "d7558ed960c2b2ad78b436a3d1c3781262f5976ca9646ebb7b91265bead3fb6c",
+      "read": "FULL_CONTENT",
+      "phase": "package09-isolated-restore",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-isolated-original-0.log",
+      "sha256": "a6578f17a0f785cdf234b809146616ef5a06033569ad331ba064dd46d096b6f5",
+      "read": "FULL_CONTENT",
+      "phase": "package09-isolated-original-0",
+      "exit_code": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-isolated-original-1.log",
+      "sha256": "22b3f8b325fd06d639fe505a56611b6f5fbe990b2c105b33692b334aead0d66b",
+      "read": "FULL_CONTENT",
+      "phase": "package09-isolated-original-1",
+      "exit_code": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-isolated-original-2.log",
+      "sha256": "fe2b16aad7e7ea53e3bc66395d9908a7b815c4d0b6684044ce62608100b78b56",
+      "read": "FULL_CONTENT",
+      "phase": "package09-isolated-original-2",
+      "exit_code": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-isolated-corrected-0.log",
+      "sha256": "7c3a30510862d4a39bd468894d03a4c1f9c04df3ac0925e112b2a41b0b72334c",
+      "read": "FULL_CONTENT",
+      "phase": "package09-isolated-corrected-0",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-isolated-corrected-1.log",
+      "sha256": "fb1b6cf31ee075405d0338b11ce2c12238e50d1202bd07e50585a17dd5f1d86f",
+      "read": "FULL_CONTENT",
+      "phase": "package09-isolated-corrected-1",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-isolated-corrected-2.log",
+      "sha256": "cc9ca0ab0091f62c7154d5110a9e4be7e5e1aa939e0ac7d9ab392c7e262a4bd8",
+      "read": "FULL_CONTENT",
+      "phase": "package09-isolated-corrected-2",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-isolated-rollback-0.log",
+      "sha256": "8a092ae90c9f09ce3851aae4691ba73f6ca479d1c668754cdbc7f6a3f679fb45",
+      "read": "FULL_CONTENT",
+      "phase": "package09-isolated-rollback-0",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-isolated-rollback-1.log",
+      "sha256": "a611485fb17763937d5d30ef5f0f8e4c2814ec352a14bfefe0e6647a95eb5c22",
+      "read": "FULL_CONTENT",
+      "phase": "package09-isolated-rollback-1",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-isolated-rollback-2.log",
+      "sha256": "a1da46397cf6e660984e389376dd23adad158057e1c0a77ecd8d6233eb07938a",
+      "read": "FULL_CONTENT",
+      "phase": "package09-isolated-rollback-2",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-mutant-default-formatter-ignored.log",
+      "sha256": "f132cc9ce12c6bb07a087ef3da9482b6b12d73a76113d4b84d22774e3997df92",
+      "read": "FULL_CONTENT",
+      "phase": "package09-mutant-default-formatter-ignored",
+      "exit_code": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-mutant-typed-override-ignored.log",
+      "sha256": "a47310e7349e5db079bf709ff17ea890b01a39a55f05ec1c4c5e61fc33e7bc93",
+      "read": "FULL_CONTENT",
+      "phase": "package09-mutant-typed-override-ignored",
+      "exit_code": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-mutant-conflict-validation-removed.log",
+      "sha256": "7c175f53d3651484ba2dc28a6a8d6596d3b7ddbd7b51c4c4ca413dc0d2748686",
+      "read": "FULL_CONTENT",
+      "phase": "package09-mutant-conflict-validation-removed",
+      "exit_code": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-mutant-single-rule-overrejected.log",
+      "sha256": "d99c8d75d463528ad50de8e0220b794abb195c7a630ad280415911859fff00e2",
+      "read": "FULL_CONTENT",
+      "phase": "package09-mutant-single-rule-overrejected",
+      "exit_code": 2
+    }
+  ],
+  "mutations_manifest_sha256": "1f206c106a136adbd12af920e7ca177c01f3d3ee9581d88e1eefc6b424b7f4cb",
+  "writes": "this review evidence directory only",
+  "builds_tests_sdk_processes_executed_by_this_reviewer": false
+}

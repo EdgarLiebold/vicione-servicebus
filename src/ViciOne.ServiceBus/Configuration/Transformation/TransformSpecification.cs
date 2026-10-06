@@ -34,7 +34,7 @@ public abstract class TransformSpecification<TMessage> :
     /// <summary>Gets or sets the replace.</summary>
     public bool Replace { get; set; }
 
-    /// <summary>Returns the default configured value.</summary>
+    /// <summary>Configures the selected property to use its type's default value.</summary>
     /// <typeparam name="TProperty">The property type.</typeparam>
     /// <param name="propertyExpression">The property expression.</param>
     public void Default<TProperty>(Expression<Func<TMessage, TProperty>> propertyExpression)

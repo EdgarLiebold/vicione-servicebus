@@ -87,7 +87,13 @@ public class SqlReceiveLockContext :
             if (!unlocked)
                 throw LockLost("reschedule");
 
-            LogContext.Debug?.Log("RESEND {DestinationAddress} {MessageId} (delay: {Delay})", _inputAddress, _message.MessageId, delay);
+            try
+            {
+                LogContext.Debug?.Log("RESEND {DestinationAddress} {MessageId} (delay: {Delay})", _inputAddress, _message.MessageId, delay);
+            }
+            catch (Exception)
+            {
+            }
         }, cancellationToken);
     }
 
@@ -232,7 +238,7 @@ public class SqlReceiveLockContext :
 
         var duration = _settings.LockDuration;
 
-        var delay = CalculateDelay(duration);
+        var delay = CalculateDelay(TimeSpan.FromSeconds(Math.Min(60, duration.TotalSeconds)));
 
         duration = TimeSpan.FromSeconds(Math.Min(60, duration.TotalSeconds));
 
@@ -256,8 +262,14 @@ public class SqlReceiveLockContext :
                             duration,
                             _activeTokenSource.Token).ConfigureAwait(false))
                     {
-                        LogContext.Warning?.Log("Message Lock Lost: {InputAddress} - {MessageDeliveryId} ({LockId})", _inputAddress,
-                            _message.MessageDeliveryId, _message.LockId);
+                        try
+                        {
+                            LogContext.Warning?.Log("Message Lock Lost: {InputAddress} - {MessageDeliveryId} ({LockId})", _inputAddress,
+                                _message.MessageDeliveryId, _message.LockId);
+                        }
+                        catch (Exception)
+                        {
+                        }
 
                         Volatile.Write(ref _locked, 0);
 
@@ -281,8 +293,14 @@ public class SqlReceiveLockContext :
             catch (Exception exception)
             {
                 Volatile.Write(ref _locked, 0);
-                LogContext.Warning?.Log(exception, "Message lock renewal failed: {InputAddress} {MessageDeliveryId} {LockId}", _inputAddress,
-                    _message.MessageDeliveryId, _message.LockId);
+                try
+                {
+                    LogContext.Warning?.Log(exception, "Message lock renewal failed: {InputAddress} {MessageDeliveryId} {LockId}", _inputAddress,
+                        _message.MessageDeliveryId, _message.LockId);
+                }
+                catch (Exception)
+                {
+                }
                 break;
             }
         }
@@ -297,19 +315,65 @@ public class SqlReceiveLockContext :
             if (Interlocked.CompareExchange(ref _locked, 0, 1) != 1)
                 return;
 
-            _activeTokenSource.Cancel();
+            Exception? failure = null;
+
+            void CaptureFailure(Exception exception)
+            {
+                if (failure == null)
+                    failure = exception;
+                else if (!ReferenceEquals(failure, exception))
+                    failure = new AggregateException(failure, exception);
+            }
 
             try
             {
-                if (_renewLockTask != null)
-                    await _renewLockTask.ConfigureAwait(false);
+                try
+                {
+                    _activeTokenSource.Cancel();
+                }
+                catch (Exception exception)
+                {
+                    CaptureFailure(exception);
+                }
 
-                await settle().ConfigureAwait(false);
+                try
+                {
+                    if (_renewLockTask != null)
+                        await _renewLockTask.ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    CaptureFailure(_renewLockTask?.Exception is AggregateException aggregate && aggregate.InnerExceptions.Count > 1
+                        ? aggregate
+                        : exception);
+                }
+
+                if (failure == null)
+                {
+                    try
+                    {
+                        await settle().ConfigureAwait(false);
+                    }
+                    catch (Exception exception)
+                    {
+                        CaptureFailure(exception);
+                    }
+                }
             }
             finally
             {
-                _activeTokenSource.Dispose();
+                try
+                {
+                    _activeTokenSource.Dispose();
+                }
+                catch (Exception exception)
+                {
+                    CaptureFailure(exception);
+                }
             }
+
+            if (failure != null)
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
         }
         finally
         {

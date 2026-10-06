@@ -1,0 +1,25 @@
+{
+  "utc": "2026-10-06T15:06:32.907562+00:00",
+  "status": "ROOT_APPLIED_DIFFERENT_WHOLE_TEST1_REQADD2_PUBLIC_ORIGINAL5_NATIVE_PENDING",
+  "author_REPORT": "8831cb5040efa702755780c7e59b72587cf3ce031ac6f37102b164deee83eb1a",
+  "different_REPORT": "386de0108ab4cfc0a226aa403b0e8d420fdc44f000e7a67b01f2f691699b2b74",
+  "before_MAN": "a26412d77dc41009c6e18446fa18df60c18abc1cd909dfbdfbbb97a86dfb1e72",
+  "Root_whole_Test481": [
+    "37e8cd",
+    "3c6fde"
+  ],
+  "Root_whole_peer": "518bd9",
+  "mandatory_reference_ERR": "40344241dc1824f7459442c1195ba7d0c101e8523aa48e569f3fb2720a2d75b2",
+  "test": {
+    "relative": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerDuplicateAndTypedObserverAdmissionTests.cs",
+    "sha256": "bd0102b937629dcf0115f2954fc79676d8753251bc0ed7d6a1873aae5e3dc5a3"
+  },
+  "requirements": {
+    "relative": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "before4683": "0a9fe27f7fedfff0c09dda1b2182f8998d91c0eee1716478b4df682d7368faf6",
+    "after4685": "4e66ca29fa487ec49b533c909e4086f68b29f26679daf8dc4e871c3ace086d59"
+  },
+  "Product_changed": false,
+  "native_credit": 0,
+  "grade": null
+}

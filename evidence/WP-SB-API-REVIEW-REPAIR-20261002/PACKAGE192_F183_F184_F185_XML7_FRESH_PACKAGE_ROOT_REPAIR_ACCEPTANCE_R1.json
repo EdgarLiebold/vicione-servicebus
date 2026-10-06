@@ -1,0 +1,53 @@
+{
+  "utc": "2026-10-05T15:56:11.009058+00:00",
+  "status": "THREE_DOCUMENTATION_CAUSES_REPAIRED_REVIEWED_FRESH_PACKAGE_ROOT_ACCEPTED_CLOSED",
+  "findings": [
+    "F-SB-API-183",
+    "F-SB-API-184",
+    "F-SB-API-185"
+  ],
+  "counts": {
+    "known": 185,
+    "accepted_before": 182,
+    "accepted_after": 185
+  },
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE192_ACTIVEMQ_F183_F184_F185_XML7_ORIGINAL_ROOT_REGISTRATION_R1.json",
+    "sha256": "7838ddc6ed04faedd033f9c6dff64480ef51e0ef7fc3e88dd1f4c1c7879fb16a"
+  },
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE192_ACTIVEMQ_F183_F184_F185_XML7_ROOT_APPLICATION_R1.json",
+    "sha256": "2d7c4a09322f37994992ae08572c78cce2e2803dc2da7d629d7c79738e7013f2"
+  },
+  "actual_root_counterproof": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-activemq-doc7-fresh-root-counterproof-r2/REPORT.json",
+    "sha256": "cbed6540fa2e71088ff7674b35d4fca35f1aa76761434ea43df5fac01702e6dc"
+  },
+  "independent_actual_fresh_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-activemq-fresh-doc7-independent-scanner-peer-r1/REPORT.json",
+    "sha256": "40e9de8898c618a8cf13858601630f9057786d2bc2f73faa4ed58715c2a0bac1"
+  },
+  "strict_build": {
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log_sha256": "f3ff825514414734f2900274072f9915bb824c8843b1021bff17d5234ee49105"
+  },
+  "fresh_pack": {
+    "exit_code": 0,
+    "log_sha256": "e5291bb666febb999a00fb69bc221bb052e71aefdb1646b79edc40470757dfa0"
+  },
+  "root_review": {
+    "whole_source6_706": [
+      "41b551",
+      "fd6b0f"
+    ],
+    "own_actual157_PDB_and_XML7": "19d0d6",
+    "whole_independent_fresh_report": "b32f7c"
+  },
+  "native_count": 0,
+  "comments_only_no_mirrored_runtime_tests": true,
+  "fresh31_package_gate_pending": true,
+  "whole_API_member_review_closed": false,
+  "global_Aplus": false
+}

@@ -1,0 +1,64 @@
+{
+  "utc": "2026-10-05T00:03:17.610935+00:00",
+  "decision": "APPLY_RESPOND_SAFE_R2_SOURCE_NULLCONTROL_AND_DICTIONARY2_ORIGINAL_ORACLES",
+  "after157freeze": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package157-fixed-core16-original-respond20-neighbors-fresh2-independent-r1/FREEZE.json",
+    "sha256": "83a2e71d390387f6f63fd3a99d0901ef442c772505359ba5883780114443ff3a"
+  },
+  "source_test_requirements": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachinePublishSendRespondActivitiesDeepContractTests.cs",
+      "before_sha256": "18b42a5192875c6097abcd57710d879b091ae9b5578a589d404a4da9dd7afc48",
+      "after_sha256": "c5a8cab170004bb1b4cd3cbe332eb815596c3c3682d297545d1324d4a389eb02"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RespondActivity.cs",
+      "before_sha256": "b21cb22fe9f5178e8c397e3418c492cdb346959f5d63bd8309c23a6d4e41cb51",
+      "after_sha256": "5517604400a302db5d0c37ab033efb1ab3747db4508312c103aac30df7846b51"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/DictionarySendHeadersTests.cs",
+      "before_sha256": "7bed044f757d4adc1bd7364928f9a49023ac6bd4d903c6fc45a95888e2d0d284",
+      "after_sha256": "eea0faf3705e17212557c65e1816c9577d05658ed62920b002292b98ccae6053"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "352e8d5a52f00197fa15af881f354f53674a6e9618992e8912a85152b8907298",
+      "after_sha256": "a9bd6b6f371a91f33f2ac30a0b71f50b2651d527524dc9e63215f8c03eec0b86"
+    }
+  ],
+  "manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package157-normal-respond-token-product-proposed-r2/MANIFEST.json",
+      "sha256": "67320cc94396fa3ae1b256fd2b928aa4c5a1598a4fc9b240da327f09b76a8734"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package157-normal-respond-token-product-independent-scanner-r2/MANIFEST.json",
+      "sha256": "eb29aeb30ff7da5963c3743703315aa971ca6f77d6051d41bf9c4ead373625f7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package158-dictionary-header-fallback2-oracles-proposed-r2/MANIFEST.json",
+      "sha256": "823674536e9c72ecdaab588aa4afa94586625aee309b621a3dd79e0d0c1c3cea"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package158-dictionary-header-fallback2-independent-runtime-r1/MANIFEST.json",
+      "sha256": "f7a79f68b5ccbef69b3d6854fbadeeb3376a960998c6c53a2ee74832a51e89fc"
+    }
+  ],
+  "root_source_and_oracle_review": [
+    "3fa926",
+    "adcd46",
+    "a313dc",
+    "e807dc",
+    "c584e7"
+  ],
+  "requirements_before": 4616,
+  "requirements_after": 4619,
+  "limits": [
+    "R1 Respondtoken proposal never applied; R2explicitcontext guard preserves supported previous factoryArgumentNull(context), plus1newpreservationFact. Double-invalid nullfactory/nullcontext unspecified priority explicitly bounded.",
+    "Existing20Respondcases and149Dictionaryoldtestlines unchanged.2Dictionarynewcases contain independent IO/OCE/JsonExceptionWrite controls before real Guidtype mismatch; wholecodec catch is rejected.",
+    "Dictionaryproduct remains originalunchanged; candidate not a finding until actualnative qualified.",
+    "Strictcompile/fixedRespond21/originalDictionary10/nativeNeighbors/fresh2 allpending."
+  ],
+  "CLOSED": false
+}

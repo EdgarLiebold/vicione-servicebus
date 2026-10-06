@@ -1,0 +1,52 @@
+{
+  "status": "REPAIRED_REVIEWED_SOURCE_BOUND_FIXED2_FULL_RABBIT549_TARGETED_FINDING_ACCEPTED_CLOSED",
+  "utc": "2026-10-05T17:48:25.607254+00:00",
+  "finding_id": "F-SB-API-192",
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE196_RABBITMQ_F192_VALIDATION_ORIGINAL2_ROOT_REGISTRATION_R1.json",
+    "sha256": "d4f69696f5bbdfdd7ee55380d6d3e99dfdb894e482b12fe9fdace0d836d7ca26"
+  },
+  "root_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE198_RABBITMQ_F192_VALIDATION_PRODUCT1_ROOT_APPLICATION_R1.json",
+    "sha256": "6d25646b62bebcf8473eab1ac83b37d4eda8672677f8f8788b2ca9409585d5cc"
+  },
+  "qualified_fixed_actual": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package198-fixed2-independent-r1/REPORT.json",
+    "sha256": "c1997852d6c34c5daa0761589326777c3f6aab7c2bbc377acf14eed8cb18ddf9",
+    "manifest_sha256": "f3919802ccc2814cbe12854af1f7e085aeddee2dba6c4cfb775de7609b715433"
+  },
+  "independent_final_result_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package198-fixed2-final-independent-runtime-result-peer-r1/REPORT.json",
+    "sha256": "5f6f297647561c6db5d86be4367297ec56d0437192eea1bedbe443c5313c252b",
+    "manifest_sha256": "a7c8a684e9c331fa969c90d77e685b6b7643e10b9f974e0f16e5c813a09d955c"
+  },
+  "actual_targeted_cases": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0
+  },
+  "actual_regression": {
+    "actual_cases": 549,
+    "passed": 549,
+    "failed": 0,
+    "skipped": 0,
+    "focused2_included": true,
+    "Root_source_frame_continuity_counterproof_sha256": "f11b98002c03f1a79d750efc1897f8884ad31e2a0ef8bff14df20cab89927edb",
+    "all549_body_human_grade": false
+  },
+  "exact_original_two_case_IDs_and_Test77_preserved": true,
+  "actual_assertions_now_reached": "Selected validator1/opposite0; unique marker and Failure disposition; exact full validation-orders.specKey; exact controlled Value; no Apply calls. Original firstselectedcall0 no later marker/key credit.",
+  "source_preservation": "Exact415 owner inverse from421 after removing six own-validator lines plus ValidateSummary1; both unchanged support hashes; public API/Test77/Req284 preserved.",
+  "physical_scope": "All11 P36 reparsed metadata/canonical-runtime DLL exact, actual frozenSource/PDBTest77+Product421+Support2 checksums, Req284 exactly once/prefix283+ADD1, fresh Rabbit CRC/DLL/XML and summary1inverse to195 entireXML. Separately accepted currentDoc200 binds changed Abstractions dependency.",
+  "root_read_scope": "Own Source/Native actual2 retained; fullfinalqualification995138; toolentire46c0e9c3/Sourcepeerde7be9/exactGO; current final peer whole read in this operation. All549 outcomes mechanically verified, no whole549 human body claim.",
+  "limits": [
+    "Configured specification validation only; connection runtime wiring, endpoint Build/broker/cloud/lifetime remain separate audit obligations.",
+    "No all23/fresh31 final integration or whole API grade/closure transferred."
+  ],
+  "accepted_findings_before": 196,
+  "accepted_findings_after": 197,
+  "known_findings": 197,
+  "whole_API_review_closed": false,
+  "global_grade": null
+}

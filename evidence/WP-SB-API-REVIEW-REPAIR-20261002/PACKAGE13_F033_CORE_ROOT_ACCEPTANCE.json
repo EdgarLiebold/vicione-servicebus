@@ -1,0 +1,21 @@
+{
+  "status": "ROOT_SCOPED_CORE_F033_ACCEPTED_SHARED_FINAL_PENDING",
+  "whole_F033_closed": false,
+  "SignalR": "OPEN",
+  "Root_personally_FULL_review_txt_json": true,
+  "all9_adversarial_artifacts_hash_verified": true,
+  "all32_current_and_snapshot_owned_inputs_verified": true,
+  "manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package13-f033-core-adversarial/MANIFEST.json",
+  "manifest_sha256": "b692aca3212d3ef5148e1b881c08bbd9f85e290ca80bc8737837280dab762d79",
+  "review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package13-f033-core-adversarial/REVIEW.json",
+  "review_sha256": "27a82d8cea70a5f6ffdcac71f37653bc035aeeda28dc98faed4dcb90b5000bbd",
+  "limits": [
+    "F033 Core transferred-scope operation/release arbitration only. SignalR provider/manager/nested custom request-handle obligations remain OPEN.",
+    "Ten NuGet-only console modes are bounded independent public cases, not canonical Core766 test-owner closure or a whole API grade. No symbol CLOSED or whole-F033 acceptance.",
+    "Dependency-cancellation controls use their own actually cancelled token while CLI caller remains active. Active caller-cancellation timing, acquisition failure, borrowed/existing scope, custom SPI context-getter failure, nested aggregate inputs and parallel scopes are not newly runtime-proved.",
+    "Only .NET10.0.10 X64 runtime and selected Extensions10.0.12 dependency graph observed; no ARM, cloud, load, leak/heap stress or alternate container/SDK guarantee.",
+    "WaitAsync bounds observation and does not universally cancel underlying stop/disposal. Correct runs and accepted kills have no deadline guard failures. DI cleanup continuation after another dependency throws is not guaranteed.",
+    "Owned current bytes are rechecked; imported BusRegistrationContext binds own FULL frozen F/Git and selected PDB separately because later F031 changes current file. No whole-current-Core provenance claim.",
+    "Root reading claims and canonical closure are not transferred to this reviewer. No native operations, product writes, test writes or CSV promotions were performed by this reviewer."
+  ]
+}

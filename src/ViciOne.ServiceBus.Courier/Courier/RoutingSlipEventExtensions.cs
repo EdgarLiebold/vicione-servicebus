@@ -127,7 +127,7 @@ public static class RoutingSlipEventExtensions
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>Gets a typed activity argument, with the activity's argument entry taking precedence over a routing-slip variable.</summary>
+    /// <summary>Gets a typed activity argument, using non-null argument entries in preference to variables. A null argument preserves an existing variable entry, or remains null when that variable entry is absent.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
     /// <param name="context">The received activity-completed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
@@ -139,7 +139,7 @@ public static class RoutingSlipEventExtensions
         return GetDictionaryValue(context.Advanced().SerializerContext, context.Message.Arguments, context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>Gets a typed activity argument, with the activity's argument entry taking precedence over a routing-slip variable.</summary>
+    /// <summary>Gets a typed activity argument, using non-null argument entries in preference to variables. A null argument preserves an existing variable entry, or remains null when that variable entry is absent.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
     /// <param name="context">The received activity-completed event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
@@ -199,7 +199,7 @@ public static class RoutingSlipEventExtensions
         return context.Advanced().SerializerContext.GetValue(context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>Gets a typed faulted-activity argument, with the activity's argument entry taking precedence over a routing-slip variable.</summary>
+    /// <summary>Gets a typed faulted-activity argument, using non-null argument entries in preference to variables. A null argument preserves an existing variable entry, or remains null when that variable entry is absent.</summary>
     /// <typeparam name="T">The requested reference type.</typeparam>
     /// <param name="context">The received activity-faulted event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>
@@ -211,7 +211,7 @@ public static class RoutingSlipEventExtensions
         return GetDictionaryValue(context.Advanced().SerializerContext, context.Message.Arguments, context.Message.Variables, key, defaultValue);
     }
 
-    /// <summary>Gets a typed faulted-activity argument, with the activity's argument entry taking precedence over a routing-slip variable.</summary>
+    /// <summary>Gets a typed faulted-activity argument, using non-null argument entries in preference to variables. A null argument preserves an existing variable entry, or remains null when that variable entry is absent.</summary>
     /// <typeparam name="T">The requested value type.</typeparam>
     /// <param name="context">The received activity-faulted event.</param>
     /// <param name="key">The key used to identify the requested entry.</param>

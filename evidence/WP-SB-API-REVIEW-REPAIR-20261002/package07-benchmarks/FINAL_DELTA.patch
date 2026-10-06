@@ -1,0 +1,82 @@
+--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorBatchBenchmark.cs
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorBatchBenchmark.cs
+@@ -26,11 +26,13 @@
+     {
+         _mediator = MediatorFactory.Create(cfg =>
+         {
++            cfg.Limits(MessageLimits.Conservative);
+             cfg.Handler<BenchmarkCommand>(context => Task.CompletedTask);
+         });
+ 
+         _responder = MediatorFactory.Create(cfg =>
+         {
++            cfg.Limits(MessageLimits.Conservative);
+             cfg.Handler<BenchmarkRequest>(context => context.RespondAsync(new BenchmarkResponse()));
+         });
+ 
+--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/benchmarks/ViciOne.ServiceBus.BenchmarkConsole/DeserializationBenchmark.cs
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/benchmarks/ViciOne.ServiceBus.BenchmarkConsole/DeserializationBenchmark.cs
+@@ -70,7 +70,7 @@
+     [Benchmark(Baseline = true)]
+     public bool SystemTextJson_Deserialize()
+     {
+-        var serializerContext = _systemTextJsonSerializer.Deserialize(_systemTextJsonMessageBody, null, null);
++        var serializerContext = _systemTextJsonSerializer.Deserialize(_systemTextJsonMessageBody, EmptyHeaders.Instance, null);
+         return serializerContext.TryGetMessage<TypeToDeserialize>(out _);
+     }
+ 
+--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/benchmarks/ViciOne.ServiceBus.Benchmark/Latency/MessageMetricCapture.cs
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/benchmarks/ViciOne.ServiceBus.Benchmark/Latency/MessageMetricCapture.cs
+@@ -27,7 +27,7 @@
+     IReportConsumerMetric
+ {
+     readonly TaskCompletionSource<TimeSpan> _consumeCompleted;
+-    readonly ConcurrentBag<ConsumedMessage> _consumedMessages;
++    readonly ConcurrentDictionary<Guid, ConsumedMessage> _consumedMessages;
+     readonly long _messageCount;
+     readonly TaskCompletionSource<TimeSpan> _sendCompleted;
+     readonly ConcurrentDictionary<Guid, SentMessage> _sentMessages;
+@@ -45,7 +45,7 @@
+         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
+         _messageCount = messageCount;
+ 
+-        _consumedMessages = new ConcurrentBag<ConsumedMessage>();
++        _consumedMessages = new ConcurrentDictionary<Guid, ConsumedMessage>();
+         _sentMessages = new ConcurrentDictionary<Guid, SentMessage>();
+         _sendCompleted = new TaskCompletionSource<TimeSpan>(TaskCreationOptions.RunContinuationsAsynchronously);
+         _consumeCompleted = new TaskCompletionSource<TimeSpan>(TaskCreationOptions.RunContinuationsAsynchronously);
+@@ -56,7 +56,8 @@
+ 
+     Task IReportConsumerMetric.ConsumedAsync<T>(Guid messageId)
+     {
+-        _consumedMessages.Add(new ConsumedMessage(messageId, _clock.ElapsedTicks));
++        if (!_consumedMessages.TryAdd(messageId, new ConsumedMessage(messageId, _clock.ElapsedTicks)))
++            return TaskResults.Completed;
+ 
+         var consumed = Interlocked.Increment(ref _consumed);
+         if (consumed == _messageCount)
+@@ -146,7 +147,7 @@
+     {
+         return _sentMessages
+             .Where(entry => entry.Value.IsCompleted)
+-            .Join(_consumedMessages, x => x.Key, x => x.MessageId, (sent, consumed) =>
++            .Join(_consumedMessages.Values, x => x.Key, x => x.MessageId, (sent, consumed) =>
+                 new MessageMetric(sent.Key, sent.Value.CompletionTimestamp - sent.Value.SendTimestamp,
+                     consumed.Timestamp - sent.Value.SendTimestamp))
+             .ToArray();
+--- /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/11-product-fixes.md
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md
+@@ -355,3 +355,13 @@
+ - F-SB-API-014: Validate positive EventHub checkpoint/admission/delivery settings before construction, preserving inherited limits and native whole-millisecond timer boundaries.
+ - F-SB-API-016: Snapshot EventHub receive policy and the selected SDK options callback for the completed Build generation.
+ - F-SB-API-017: Honor individual caller cancellation while waiting for a shared deferred EventHub producer without cancelling the shared resolution.
++
++- Mediator batch benchmarks now declare conservative message limits for both
++  normal sends and request/response setup, allowing all declared batch sizes
++  to exercise the intended workload.
++- JSON deserialization benchmarks supply the existing empty headers object
++  when the serialized benchmark envelope has no headers. This exercises
++  deserialization instead of failing the header constructor.
++- Latency benchmark capture records only the first consume callback for each
++  message identity. Repeated and simultaneous duplicate callbacks cannot
++  complete the unique-message total early or replace its first timestamp.

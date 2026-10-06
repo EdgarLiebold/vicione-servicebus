@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Internals;
@@ -207,6 +209,112 @@ public sealed class ReceiveEndpointDispatcherTests
         finally
         {
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RECEIVE-DISPATCHER", "dispose-diagnostics-do-not-retain-cached-receivers")]
+    public async Task DispatcherDispose_DiagnosticFailureDoesNotRetainCachedReceiversAsync(bool loggerThrows)
+    {
+        TimeSpan timeout = OperationTimeout();
+        var observation = new DispatchObservation();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(observation)
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.AddConsumer<DispatchCommandConsumer>();
+                configuration.AddConfigureEndpointsCallback((_, endpoint) =>
+                    endpoint.UseRawJsonSerializer(RawSerializerOptions.AnyMessageType));
+            })
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken)
+            .WaitAsync(timeout, TestContext.Current.CancellationToken);
+        ILogContext? previous = LogContext.Current;
+        Task? dispose = null;
+        try
+        {
+            var factory = Assert.IsType<ReceiveEndpointDispatcherFactory>(provider.GetRequiredService<IReceiveEndpointDispatcherFactory>());
+            string queue = "factory-dispose-" + NewId.NextGuid().ToString("N");
+            IReceiveEndpointDispatcher receiver = factory.CreateReceiver(queue,
+                (endpoint, registration) => registration.ConfigureConsumer<DispatchCommandConsumer>(endpoint));
+            Assert.Same(receiver, factory.CreateReceiver(queue,
+                (endpoint, registration) => registration.ConfigureConsumer<DispatchCommandConsumer>(endpoint)));
+            Assert.Equal(1, ReadCachedReceiverCount(factory));
+            var primary = new IOException("dispatcher disposal diagnostic failed");
+            var logger = new SelectedDispatcherCompletionLogger(loggerThrows ? primary : null);
+            LogContext.ConfigureCurrentLogContext(logger);
+            dispose = DisposeFactoryAsync(factory);
+            Exception? failure = await Record.ExceptionAsync(() => dispose.WaitAsync(timeout, CancellationToken.None));
+            Assert.IsNotType<TimeoutException>(failure);
+            Assert.True(dispose.IsCompleted);
+            Assert.Equal(1, logger.TargetCount);
+            Assert.Equal(receiver.InputAddress, logger.InputAddress);
+            Assert.Equal(loggerThrows ? 1 : 0, logger.ThrowCount);
+            if (failure is not null)
+                Assert.Same(primary, failure);
+
+            Assert.Equal(0, ReadCachedReceiverCount(factory));
+            Assert.Null(failure);
+            await factory.DisposeAsync();
+            Assert.Equal(1, logger.TargetCount);
+            Assert.Throws<ObjectDisposedException>(() => factory.CreateReceiver(queue));
+        }
+        finally
+        {
+            try
+            {
+                if (dispose is not null)
+                {
+                    try { await dispose.WaitAsync(timeout, CancellationToken.None); }
+                    catch (Exception failure) when (failure is not TimeoutException && (dispose.IsFaulted || dispose.IsCanceled)) { }
+                }
+            }
+            finally
+            {
+                LogContext.Current = previous!;
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            }
+        }
+    }
+
+    private static async Task DisposeFactoryAsync(ReceiveEndpointDispatcherFactory factory) => await factory.DisposeAsync();
+
+    private static int ReadCachedReceiverCount(ReceiveEndpointDispatcherFactory factory)
+    {
+        // Observe cache retirement only. No private state is modified or dispatcher disposal inferred.
+        var field = typeof(ReceiveEndpointDispatcherFactory).GetField("_dispatchers",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("The dispatcher cache observation seam is absent.");
+        return Assert.IsType<System.Collections.Concurrent.ConcurrentDictionary<string, Lazy<IReceiveEndpointDispatcher>>>(
+            field.GetValue(factory)).Count;
+    }
+
+    private sealed class SelectedDispatcherCompletionLogger(Exception? failure) : ILogger
+    {
+        public int TargetCount { get; private set; }
+        public int ThrowCount { get; private set; }
+        public Uri? InputAddress { get; private set; }
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => true;
+        public void Log<TState>(LogLevel level, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            if (level != LogLevel.Debug || state is not IEnumerable<KeyValuePair<string, object?>> values)
+                return;
+            Dictionary<string, object?> fields = values.ToDictionary(x => x.Key, x => x.Value);
+            if (!fields.TryGetValue("{OriginalFormat}", out object? template)
+                || !Equals(template, "Dispatcher completed {InputAddress}: {DeliveryCount} received, {ConcurrentDeliveryCount} concurrent"))
+                return;
+            TargetCount++;
+            InputAddress = fields.GetValueOrDefault("InputAddress") as Uri;
+            if (failure is not null)
+            {
+                ThrowCount++;
+                throw failure;
+            }
         }
     }
 

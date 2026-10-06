@@ -44,7 +44,7 @@ public class SerializationConfiguration :
         _source = source;
     }
 
-    /// <summary>Gets or sets the default content type.</summary>
+    /// <summary>Sets the fallback content type used when an incoming message does not declare one.</summary>
     public ContentType DefaultContentType
     {
         set
@@ -54,7 +54,7 @@ public class SerializationConfiguration :
         }
     }
 
-    /// <summary>Gets or sets the serializer content type.</summary>
+    /// <summary>Sets the content type used to select the serializer for outgoing messages.</summary>
     public ContentType SerializerContentType
     {
         set

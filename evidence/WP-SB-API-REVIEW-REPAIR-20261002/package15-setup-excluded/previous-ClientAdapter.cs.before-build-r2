@@ -1,0 +1,190 @@
+using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+
+namespace ViciOneReview.SignalRLifetime;
+
+public sealed class ClientAdapter<TRequest> : IRequestClient<TRequest>, IAdvancedRequestClient<TRequest> where TRequest : class
+{
+    readonly Probe _probe;
+    readonly IRequestClient<TRequest> _client;
+    public ClientAdapter(Probe probe, IServiceProvider provider)
+    {
+        _probe = probe;
+        if (probe.Mode.StartsWith("groupclientresolution")) probe.FailPrimary();
+        _client = provider.GetRequiredService<IScopedClientFactory>().CreateRequestClient<TRequest>();
+    }
+    public Task<Response<TResponse>> GetResponseAsync<TResponse>(TRequest request, CancellationToken cancellationToken = default)
+        where TResponse : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse>> GetResponseAsync<TResponse>(TRequest request, RequestOptions options,
+        CancellationToken cancellationToken = default)
+        where TResponse : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public RequestHandle<TRequest> Create(TRequest message, RequestTimeout timeout, CancellationToken cancellationToken)
+    {
+        Interlocked.Increment(ref _probe.RequestCreated); _probe.CreateToken = cancellationToken;
+        var handle = new TrackingHandle<TRequest>(_client.Create(message, timeout, cancellationToken), _probe);
+        _probe.Handles.Add((handle, handle.Message)); return handle;
+    }
+
+    public RequestHandle<TRequest> Create(object values, RequestTimeout timeout, CancellationToken cancellationToken)
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse>> GetResponseAsync<TResponse>(TRequest message, RequestTimeout timeout = default,
+        CancellationToken cancellationToken = default)
+        where TResponse : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse>> GetResponseAsync<TResponse>(TRequest message, RequestPipeConfiguratorCallback<TRequest> callback,
+        RequestTimeout timeout = default, CancellationToken cancellationToken = default)
+        where TResponse : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse>> GetResponseAsync<TResponse>(object values, RequestTimeout timeout = default,
+        CancellationToken cancellationToken = default)
+        where TResponse : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse>> GetResponseAsync<TResponse>(object values, RequestPipeConfiguratorCallback<TRequest> callback,
+        RequestTimeout timeout = default, CancellationToken cancellationToken = default)
+        where TResponse : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse1, TResponse2>> GetResponseAsync<TResponse1, TResponse2>(TRequest message, RequestTimeout timeout = default,
+        CancellationToken cancellationToken = default)
+        where TResponse1 : class
+        where TResponse2 : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse1, TResponse2>> GetResponseAsync<TResponse1, TResponse2>(TRequest message, RequestPipeConfiguratorCallback<TRequest> callback,
+        RequestTimeout timeout = default,
+        CancellationToken cancellationToken = default)
+        where TResponse1 : class
+        where TResponse2 : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse1, TResponse2>> GetResponseAsync<TResponse1, TResponse2>(object values, RequestTimeout timeout = default,
+        CancellationToken cancellationToken = default)
+        where TResponse1 : class
+        where TResponse2 : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse1, TResponse2>> GetResponseAsync<TResponse1, TResponse2>(object values, RequestPipeConfiguratorCallback<TRequest> callback,
+        RequestTimeout timeout = default, CancellationToken cancellationToken = default)
+        where TResponse1 : class
+        where TResponse2 : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse1, TResponse2, TResponse3>> GetResponseAsync<TResponse1, TResponse2, TResponse3>(TRequest message, RequestTimeout timeout = default,
+        CancellationToken cancellationToken = default)
+        where TResponse1 : class
+        where TResponse2 : class
+        where TResponse3 : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse1, TResponse2, TResponse3>> GetResponseAsync<TResponse1, TResponse2, TResponse3>(TRequest message, RequestPipeConfiguratorCallback<TRequest> callback,
+        RequestTimeout timeout = default, CancellationToken cancellationToken = default)
+        where TResponse1 : class
+        where TResponse2 : class
+        where TResponse3 : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse1, TResponse2, TResponse3>> GetResponseAsync<TResponse1, TResponse2, TResponse3>(object values, RequestTimeout timeout = default,
+        CancellationToken cancellationToken = default)
+        where TResponse1 : class
+        where TResponse2 : class
+        where TResponse3 : class
+    {
+        throw _probe.Unexpected();
+    }
+
+    public Task<Response<TResponse1, TResponse2, TResponse3>> GetResponseAsync<TResponse1, TResponse2, TResponse3>(object values, RequestPipeConfiguratorCallback<TRequest> callback,
+        RequestTimeout timeout = default, CancellationToken cancellationToken = default)
+        where TResponse1 : class
+        where TResponse2 : class
+        where TResponse3 : class
+    {
+        throw _probe.Unexpected();
+    }
+}
+
+public sealed class BasicClient<T>(Probe probe) : IRequestClient<T> where T : class
+{
+    public Task<Response<R>> GetResponseAsync<R>(T message, CancellationToken cancellationToken = default) where R : class => throw probe.Unexpected();
+    public Task<Response<R>> GetResponseAsync<R>(T message, RequestOptions options, CancellationToken cancellationToken = default) where R : class => throw probe.Unexpected();
+}
+
+public sealed class TrackingHandle<T>(RequestHandle<T> inner, Probe probe) : RequestHandle<T>, IAsyncDisposable where T : class
+{
+    public Task<T> Message => inner.Message;
+    public Guid RequestId => inner.RequestId;
+    public RequestTimeout TimeToLive { set => inner.TimeToLive = value; }
+    public void AddPipeSpecification(IPipeSpecification<SendContext<T>> specification) => inner.AddPipeSpecification(specification);
+    public void Cancel() => inner.Cancel();
+    public async Task<Response<R>> GetResponseAsync<R>(bool readyToSend = true, CancellationToken cancellationToken = default) where R : class
+    {
+        probe.ResponseToken = cancellationToken;
+        try
+        {
+            if (probe.CustomPrimary) probe.FailPrimary();
+            Response<R> response = await inner.GetResponseAsync<R>(readyToSend, cancellationToken);
+            return probe.InvalidAck ? new ReplacedResponse<R>(response, JsonSerializer.Deserialize<R>("{\"NodeId\":\"\"}")!) : response;
+        }
+        catch (Exception failure) { probe.ActualPrimary = failure; throw; }
+    }
+    public void Dispose()
+    {
+        inner.Dispose(); Interlocked.Increment(ref probe.RequestDisposed); probe.Events.Enqueue("request");
+        if (probe.RequestFault && !probe.HealthyShutdown) throw probe.RequestFailure;
+    }
+    public ValueTask DisposeAsync() { Interlocked.Increment(ref probe.RequestAsyncDisposed); return ValueTask.CompletedTask; }
+}
+
+public sealed class ReplacedResponse<T>(Response<T> source, T message) : Response<T> where T : class
+{
+    public T Message => message;
+    object Response.Message => message;
+    public Guid? MessageId => source.MessageId;
+    public Guid? RequestId => source.RequestId;
+    public Guid? CorrelationId => source.CorrelationId;
+    public Guid? ConversationId => source.ConversationId;
+    public Guid? InitiatorId => source.InitiatorId;
+    public DateTimeOffset? ExpirationTime => source.ExpirationTime;
+    public Uri? SourceAddress => source.SourceAddress;
+    public Uri? DestinationAddress => source.DestinationAddress;
+    public Uri? ResponseAddress => source.ResponseAddress;
+    public Uri? FaultAddress => source.FaultAddress;
+    public DateTimeOffset? SentTime => source.SentTime;
+    public Headers Headers => source.Headers;
+    public HostInfo Host => source.Host;
+}

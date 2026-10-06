@@ -1,0 +1,28 @@
+{
+  "status": "ROOT_ACCEPTED_TWO_CURRENT_SAGA_SEND_SOURCE_XML_MEMBER_CONTRACTS",
+  "utc": "2026-10-05T18:17:07.428288+00:00",
+  "finding_repair_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE205_F198_F147_SAGA_DOC3_FRESH_PACKAGE_ROOT_REPAIR_ACCEPTANCE_R1.json",
+    "sha256": "5d0df5cd1041cd762db47d989a085d58dd9238bb684bf0a105191eaa2b468a14"
+  },
+  "members": [
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.Configuration.DefaultSagaFactory`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SagaConsumeContext{`0,`1}})"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.Saga.FactoryMethodSagaFactory`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SagaConsumeContext{`0,`1}})"
+    }
+  ],
+  "already_accepted_type_current_doc_precision": "T:ViciOne.ServiceBus.Saga.FactoryMethodSagaFactory`2",
+  "original_canonical_before": 11341,
+  "original_canonical_after": 11343,
+  "original_remaining_after": 7226,
+  "raw_before": 12203,
+  "raw_after": 12205,
+  "native_cases_added": 0,
+  "global_grade": null,
+  "source_scope": "Root own whole2/121 + independent121 + actual PDB374 current SHA and rawXML3 publication. Borrowed/custom factory and next pipeline contracts held independently; no native claims.",
+  "history": "All previous12203 complete Master objects and order retained unchanged."
+}

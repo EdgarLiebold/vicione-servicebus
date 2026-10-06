@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
@@ -18,8 +19,9 @@ public class ConsumerRegistration<TConsumer> :
     where TConsumer : class, IConsumer
 {
     readonly List<Action<IRegistrationContext, IConsumerConfigurator<TConsumer>>> _configureActions;
+    readonly object _definitionLock = new();
     readonly IContainerSelector _selector;
-    IConsumerDefinition<TConsumer> _definition = null!;
+    readonly ConditionalWeakTable<IServiceProvider, IConsumerDefinition<TConsumer>> _definitions = new();
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="selector">The selector.</param>
@@ -46,6 +48,10 @@ public class ConsumerRegistration<TConsumer> :
     }
 
     void IConsumerRegistration.Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
+        => Configure(configurator, context, null);
+
+    internal void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context,
+        Action<IConsumerConfigurator<TConsumer>>? configure)
     {
         IConsumeScopeProvider scopeProvider = new ConsumeScopeProvider(context);
         IConsumerFactory<TConsumer> consumerFactory = new ScopeConsumerFactory<TConsumer>(scopeProvider);
@@ -55,12 +61,16 @@ public class ConsumerRegistration<TConsumer> :
             consumerFactory = decoratorRegistration.DecorateConsumerFactory(consumerFactory);
 
         var consumerConfigurator = new ConsumerConfigurator<TConsumer>(consumerFactory, configurator);
+        consumerConfigurator.Options(new ConsumerBusIdentityOptions(
+            context is IBusRegistrationIdentity identity ? identity.BusKey : "unknown"));
 
         GetConsumerDefinition(context)
             .Configure(configurator, consumerConfigurator, context);
 
         foreach (Action<IRegistrationContext, IConsumerConfigurator<TConsumer>> action in _configureActions)
             action(context, consumerConfigurator);
+
+        configure?.Invoke(consumerConfigurator);
 
         var endpointName = configurator.InputAddress.GetEndpointName();
 
@@ -87,15 +97,19 @@ public class ConsumerRegistration<TConsumer> :
 
     IConsumerDefinition<TConsumer> GetConsumerDefinition(IServiceProvider provider)
     {
-        if (_definition != null)
-            return _definition;
+        lock (_definitionLock)
+        {
+            if (_definitions.TryGetValue(provider, out IConsumerDefinition<TConsumer>? definition))
+                return definition;
 
-        _definition = _selector.GetDefinition<IConsumerDefinition<TConsumer>>(provider) ?? new DefaultConsumerDefinition<TConsumer>();
+            definition = _selector.GetDefinition<IConsumerDefinition<TConsumer>>(provider) ?? new DefaultConsumerDefinition<TConsumer>();
 
-        IEndpointDefinition<TConsumer>? endpointDefinition = _selector.GetEndpointDefinition<TConsumer>(provider);
-        if (endpointDefinition != null)
-            _definition.EndpointDefinition = endpointDefinition;
+            IEndpointDefinition<TConsumer>? endpointDefinition = _selector.GetEndpointDefinition<TConsumer>(provider);
+            if (endpointDefinition != null)
+                definition.EndpointDefinition = endpointDefinition;
 
-        return _definition;
+            _definitions.Add(provider, definition);
+            return definition;
+        }
     }
 }

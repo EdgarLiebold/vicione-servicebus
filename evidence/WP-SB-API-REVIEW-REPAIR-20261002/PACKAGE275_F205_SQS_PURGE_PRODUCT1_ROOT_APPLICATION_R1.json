@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T00:03:12.799043+00:00",
+  "status": "REVIEWED_PRODUCT1_APPLIED_FIXED_UNCHANGED_TESTS_AND_PUBLICATION_PENDING",
+  "finding_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE272_F205_SQS_SUCCESSFUL_PURGE_DEBUG_ORIGINAL2_ROOT_FINDING_REGISTRATION_R1.json",
+    "sha256": "f97447f9b11596686cb1286cee3fdd4ab8516be702d7275572b548d9967ed11d"
+  },
+  "proposal": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package272-sqs-purge-diagnostic-safe-product1-proposed-r1/REPORT.json",
+    "sha256": "cdb308c49655fbdf274a5dcaf837589c88557a06094d56db1a2bc037054a07e1"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package270-purge-original2-and272-product-independent-peer-r1/REPORT.json",
+    "sha256": "f21d8026c0b0d5bccebcb442867b092f4a58ed6e28cb56d84aa10937b1400540"
+  },
+  "Source_before_sha256": "4ac90e2a8347ac3a2ffdaed5ddd6c513bf95adbc1d04e7317a1c7a6cbb90c076",
+  "Source_after_sha256": "08c47571640f63af7d10b10a668d8e7f7b7c103d08e8d592cdc1e015c1693de3",
+  "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/PurgeOnStartupFilter.cs",
+  "root_whole_proposed69": "current toolwhole read beforeapply; before62 retained35133b",
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package275-sqs-f205-product1-root-before-r1",
+  "body_scope": "Only optional own Debug after successful SDK await; providerawait, next, reset/retry, locks, public declarations/XML unchanged.",
+  "unchanged_test_sha256": "e4f42543104326f6fdb59bf5aaf6c48f1f44b7d9266bb5790a3e7c9a5a0af974",
+  "unchanged_Req187_sha256": "3b6e00d25239c9cebfa0c3aa4e17b1b7f6f3b2c854c0a433659a6f912da38ed9",
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

@@ -1,0 +1,437 @@
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs", "start_line": 1, "end_line": 120, "kind": "relevant_frozen_source"}
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Batching.Contexts;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Batching.Runtime;
+
+/// <summary>Tracks one batch until size, time, cancellation, or terminal flushing selects its outcome.</summary>
+/// <typeparam name="TMessage">The message contract collected into the batch.</typeparam>
+internal sealed class BatchConsumer<TMessage> :
+    IConsumer<TMessage>
+    where TMessage : class
+{
+    readonly TaskCompletionSource _completed;
+    readonly IPipe<ConsumeContext<IMessageBatch<TMessage>>> _consumerPipe;
+    readonly TaskExecutor _dispatcher;
+    readonly TaskExecutor _executor;
+    readonly Dictionary<Guid, BatchEntry> _messages;
+    readonly BatchRuntimeSettings _settings;
+    readonly ITimer _timer;
+    readonly TimeProvider _timeProvider;
+    int _completionState;
+    Activity? _currentActivity;
+    DateTimeOffset _firstMessage;
+    DateTimeOffset _lastMessage;
+    ILogContext? _logContext;
+    ulong _nextAdmissionOrder;
+
+    /// <summary>Creates an empty batch whose completion timer starts with its first message.</summary>
+    /// <param name="settings">The immutable batch size and timing limits.</param>
+    /// <param name="executor">The executor that serializes changes to this batch.</param>
+    /// <param name="dispatcher">The executor that bounds completed-batch delivery.</param>
+    /// <param name="consumerPipe">The pipeline that receives this batch after completion.</param>
+    /// <param name="timeProvider">The clock and timer source for batch metadata and expiration.</param>
+    public BatchConsumer(BatchRuntimeSettings settings, TaskExecutor executor, TaskExecutor dispatcher, IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe,
+        TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+        ArgumentNullException.ThrowIfNull(executor);
+        ArgumentNullException.ThrowIfNull(dispatcher);
+        ArgumentNullException.ThrowIfNull(consumerPipe);
+
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+        _executor = executor;
+        _consumerPipe = consumerPipe;
+        _dispatcher = dispatcher;
+        _messages = new Dictionary<Guid, BatchEntry>();
+        _completed = TaskCompletionSources.Create();
+        _settings = settings;
+
+        _timer = _timeProvider.CreateTimer(TimeLimitExpired, null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+    }
+
+    /// <summary>Gets whether this collector has stopped accepting messages and chosen its terminal outcome.</summary>
+    public bool IsCompleted => Volatile.Read(ref _completionState) != 0;
+
+    /// <summary>Holds one message pipeline open until this batch reaches its terminal outcome.</summary>
+    /// <param name="context">The message context waiting on the batch.</param>
+    /// <returns>A task that completes with the batch delivery outcome.</returns>
+    public async Task ConsumeAsync(ConsumeContext<TMessage> context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        try
+        {
+            await _completed.Task.WaitAsync(context.CancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(context.CancellationToken);
+        }
+        catch
+        {
+            // Successfully delivered messages are excluded from the batch fault set.
+            if (context.Advanced().ReceiveContext.IsDelivered)
+                return;
+
+            throw;
+        }
+    }
+
+    void TimeLimitExpired(object? state)
+    {
+        if (IsCompleted)
+            return;
+
+        _ = CompleteExpiredBatchAsync();
+    }
+
+    async Task CompleteExpiredBatchAsync()
+    {
+        try
+        {
+            await _executor.ExecuteAsync(() => CompleteBatchAsync(BatchCompletionMode.Time)).ConfigureAwait(false);
+        }
+        catch (ObjectDisposedException) when (IsCompleted)
+        {
+            // Terminal cleanup already owns the batch and has stopped the collector executor.
+        }
+        catch (Exception exception)
+        {
+            TerminateWithFailure(exception);
+        }
+    }
+
+    /// <summary>Adds a message, or terminates the batch when admission infrastructure fails.</summary>
+    /// <param name="context">The message context to add.</param>
+    /// <param name="currentActivity">The trace activity associated with the admission.</param>
+    /// <param name="cancellationToken">Cancels admission of a size-completed batch to the delivery queue.</param>
+    /// <returns>A task that completes after any required delivery-queue admission.</returns>
+    public Task AddAsync(ConsumeContext<TMessage> context, Activity? currentActivity, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs", "start_line": 121, "end_line": 240, "kind": "relevant_frozen_source"}
+        var messageId = context.MessageId ?? NewId.NextGuid();
+
+        ulong? sequenceNumber = context.Advanced().ReceiveContext.TryGetPayload<ITransportSequenceNumber>(out var payload)
+            ? payload.SequenceNumber
+            : null;
+        ulong GetSentTimeAsSequenceFallback() => (ulong)(context.SentTime ?? context.Advanced().ReceiveContext.GetSentTime()
+            ?? _timeProvider.GetUtcNow().UtcDateTime).Ticks;
+
+        var batchEntry = new BatchEntry(
+            context,
+            sequenceNumber ?? GetSentTimeAsSequenceFallback(),
+            _nextAdmissionOrder++,
+            () => RemoveCanceledMessage(messageId));
+
+        if (!_messages.TryAdd(messageId, batchEntry))
+        {
+            batchEntry.Unregister();
+            return Task.CompletedTask;
+        }
+
+        try
+        {
+            _logContext ??= LogContext.Current;
+            _currentActivity = currentActivity;
+
+            DateTimeOffset receivedAt = _timeProvider.GetUtcNow();
+            if (_messages.Count == 1)
+                _firstMessage = receivedAt;
+
+            if (_messages.Count == 1 || _settings.TimeLimitStart == BatchTimeLimitStart.FromLast)
+            {
+                if (!_timer.Change(_settings.TimeLimit, Timeout.InfiniteTimeSpan))
+                    throw new InvalidOperationException("The batch completion timer could not be scheduled.");
+            }
+
+            _lastMessage = receivedAt;
+
+            if (IsReadyToDeliver(context.Advanced()))
+                return CompleteBatchAsync(BatchCompletionMode.Size, context.Advanced(), cancellationToken);
+
+            return Task.CompletedTask;
+        }
+        catch (Exception exception)
+        {
+            return TerminateFailedAdmissionAsync(exception);
+        }
+    }
+
+    Task TerminateFailedAdmissionAsync(Exception admissionFailure)
+    {
+        return Task.FromException(TerminateWithFailure(admissionFailure));
+    }
+
+    Exception TerminateWithFailure(Exception failure)
+    {
+        if (Interlocked.CompareExchange(ref _completionState, 1, 0) != 0)
+            return failure;
+
+        Exception? cleanupFailure = StopTimerAndRegistrations();
+        _messages.Clear();
+        Exception terminalFailure = CombinePrimaryAndCleanupFailures(failure, cleanupFailure);
+        _completed.TrySetException(terminalFailure);
+        return terminalFailure;
+    }
+
+    static Exception CombinePrimaryAndCleanupFailures(Exception primaryFailure, Exception? cleanupFailure)
+    {
+        if (cleanupFailure == null || ReferenceEquals(primaryFailure, cleanupFailure))
+            return primaryFailure;
+
+        var failures = new List<Exception> { primaryFailure };
+        if (cleanupFailure is AggregateException aggregateException)
+        {
+            foreach (Exception exception in aggregateException.InnerExceptions)
+            {
+                if (!ReferenceEquals(primaryFailure, exception))
+                    failures.Add(exception);
+            }
+        }
+        else
+            failures.Add(cleanupFailure);
+
+        return failures.Count == 1
+            ? primaryFailure
+            : new AggregateException("Batch operation and cleanup encountered multiple failures.", failures);
+    }
+
+    void RemoveCanceledMessage(Guid messageId)
+    {
+        if (IsCompleted)
+            return;
+
+        _ = RemoveCanceledMessageAsync(messageId);
+    }
+
+    async Task RemoveCanceledMessageAsync(Guid messageId)
+    {
+        try
+        {
+            await _executor.ExecuteAsync(() =>
+            {
+                if (IsCompleted)
+                    return Task.CompletedTask;
+
+                if (_messages.Remove(messageId, out BatchEntry batchEntry))
+                {
+                    batchEntry.Unregister();
+
+                    if (_messages.Count == 0 && Interlocked.CompareExchange(ref _completionState, 1, 0) == 0)
+                    {
+                        Exception? cleanupFailure = StopTimerAndRegistrations();
+                        if (cleanupFailure == null)
+                            _completed.TrySetCanceled(batchEntry.Context.CancellationToken);
+                        else
+                        {
+                            _completed.TrySetException(cleanupFailure);
+                            return Task.FromException(cleanupFailure);
+                        }
+                    }
+                }
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs", "start_line": 241, "end_line": 360, "kind": "relevant_frozen_source"}
+
+                return Task.CompletedTask;
+            }).ConfigureAwait(false);
+        }
+        catch (ObjectDisposedException) when (IsCompleted)
+        {
+            // Terminal cleanup already owns the batch and has stopped the collector executor.
+        }
+        catch (Exception exception)
+        {
+            TerminateWithFailure(exception);
+        }
+    }
+
+    bool IsReadyToDeliver(ConsumeContext context)
+    {
+        if (context.GetRetryAttempt() > 0)
+            return true;
+
+        return _messages.Count >= _settings.MessageLimit;
+    }
+
+    /// <summary>Closes the current partial batch and schedules it for immediate delivery.</summary>
+    /// <param name="cancellationToken">Cancels only admission to the batch-dispatch queue.</param>
+    /// <returns>A task that completes after the forced batch is admitted to the dispatch queue.</returns>
+    public Task ForceCompleteAsync(CancellationToken cancellationToken = default)
+    {
+        return CompleteBatchAsync(BatchCompletionMode.Forced, cancellationToken: cancellationToken);
+    }
+
+    Task CompleteBatchAsync(
+        BatchCompletionMode completionMode,
+        ConsumeContext? completionContext = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (Interlocked.CompareExchange(ref _completionState, 1, 0) != 0)
+            return Task.CompletedTask;
+
+        List<ConsumeContext<TMessage>> messages = GetMessageBatchInOrder();
+        Exception? cleanupFailure = StopTimerAndRegistrations();
+        _messages.Clear();
+        if (cleanupFailure != null)
+        {
+            _completed.TrySetException(cleanupFailure);
+            return Task.FromException(cleanupFailure);
+        }
+
+        if (messages.Count == 0)
+        {
+            _completed.TrySetResult();
+            return Task.CompletedTask;
+        }
+
+        ConsumeContext context = completionContext ?? messages[messages.Count - 1].Advanced();
+        return EnqueueDeliveryAsync(context, messages, completionMode, cancellationToken);
+    }
+
+    async Task EnqueueDeliveryAsync(
+        ConsumeContext context,
+        IReadOnlyList<ConsumeContext<TMessage>> messages,
+        BatchCompletionMode completionMode,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _dispatcher.EnqueueAsync(
+                    () => DeliverAsync(context, messages, completionMode),
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception)
+        {
+            _completed.TrySetCanceled(exception.CancellationToken);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _completed.TrySetException(exception);
+            throw;
+        }
+    }
+
+    Exception? StopTimerAndRegistrations()
+    {
+        List<Exception>? failures = null;
+        try
+        {
+            _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        }
+        catch (Exception exception)
+        {
+            (failures ??= []).Add(exception);
+        }
+
+        try
+        {
+            _timer.Dispose();
+        }
+        catch (Exception exception)
+        {
+            (failures ??= []).Add(exception);
+        }
+
+        foreach (BatchEntry batchEntry in _messages.Values)
+        {
+            try
+            {
+                batchEntry.Unregister();
+            }
+            catch (Exception exception)
+            {
+                (failures ??= []).Add(exception);
+            }
+        }
+
+        return failures switch
+        {
+            null => null,
+            { Count: 1 } => failures[0],
+            _ => new AggregateException("Batch cleanup encountered multiple failures.", failures),
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs", "start_line": 361, "end_line": 429, "kind": "relevant_frozen_source"}
+        };
+    }
+
+    async Task DeliverAsync(ConsumeContext context, IReadOnlyList<ConsumeContext<TMessage>> messages, BatchCompletionMode batchCompletionMode)
+    {
+        ConsumeContext<IMessageBatch<TMessage>>? batchConsumeContext = null;
+
+        try
+        {
+            LogContext.SetCurrentIfNull(_logContext);
+            Activity.Current = _currentActivity;
+
+            IMessageBatch<TMessage> batch = new MessageBatch<TMessage>(_firstMessage, _lastMessage, batchCompletionMode, messages);
+            batchConsumeContext = new BatchConsumeContext<TMessage>(context, batch);
+
+            await _consumerPipe.SendAsync(batchConsumeContext).ConfigureAwait(false);
+
+            _completed.TrySetResult();
+        }
+        catch (OperationCanceledException exception) when (exception.CancellationToken == context.CancellationToken)
+        {
+            _completed.TrySetCanceled(context.CancellationToken);
+        }
+        catch (Exception exception)
+        {
+            if (batchConsumeContext != null
+                && batchConsumeContext.TryGetPayload(out RetryContext<ConsumeContext<IMessageBatch<TMessage>>>? retryContext))
+            {
+                for (var i = 0; i < messages.Count; i++)
+                    messages[i].GetOrAddPayload(() => retryContext);
+            }
+
+            _completed.TrySetException(exception);
+        }
+    }
+
+    List<ConsumeContext<TMessage>> GetMessageBatchInOrder()
+    {
+        return _messages.Values
+            .OrderBy(static entry => entry.Index)
+            .ThenBy(static entry => entry.AdmissionOrder)
+            .Select(static entry => entry.Context)
+            .ToList();
+    }
+
+
+    readonly struct BatchEntry
+    {
+        public readonly ConsumeContext<TMessage> Context;
+        public readonly ulong Index;
+        public readonly ulong AdmissionOrder;
+        readonly CancellationTokenRegistration _registration;
+
+        public BatchEntry(ConsumeContext<TMessage> context, ulong index, ulong admissionOrder, Action canceled)
+        {
+            Context = context;
+            Index = index;
+            AdmissionOrder = admissionOrder;
+
+            if (context.CancellationToken.CanBeCanceled)
+                _registration = context.CancellationToken.Register(() => canceled());
+        }
+
+        public void Unregister()
+        {
+            _registration.Dispose();
+        }
+    }
+}
+

@@ -1,0 +1,48 @@
+{
+  "status": "PARTIAL_OWNER_CLOSURE_NO_EDIT_AUTHORITY_YET",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "1db6c20c1e230044ab8cd65cc0987439f583c726a4f03504fe6ca5dabeb782b9",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkJobServiceConfigurationTests.cs",
+      "sha256": "399622ffb3d049e88279e2579a4053a650c33db2c5cfbc1f61b850c3889b6f55",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOptionsStartupValidationTests.cs",
+      "sha256": "6eeb77d6adc60f95abb344aa271d462495fba602f823a56918da82693abe10e8",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkPublicArgumentValidationTests.cs",
+      "sha256": "065dce00e9fa5dac2d5e0470f0b80040dccf0acf3ddfbc4a8d1df4fb1a800e56",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkTestDatabaseNameTests.cs",
+      "sha256": "32708cd4a79feae8734c499bc3ae0969ba72de051b15d499535db6236a39879f",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkTimeProviderTests.cs",
+      "sha256": "bcddbd9dcc1f4cda31350ba2dd17783fa9609bf7b072ee74fc1d2ab2ff8feeec",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/JsonConversionContractTests.cs",
+      "sha256": "de7e0134a8627915730a75c647fff940f1e9fd4c79cbe04b95a60593c692d3ae",
+      "read_by": "/root",
+      "status": "FULL_PERSONAL_TEXT_READ"
+    }
+  ],
+  "excluded": "Truncated bulk request included DurableSend fixtures; these are NOT marked FULL. Remaining owner+shared/CI required before fixture edit."
+}

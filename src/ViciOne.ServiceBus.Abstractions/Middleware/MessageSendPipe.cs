@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Converts an inbound context type to a pipe context type post-dispatch.</summary>
-/// <typeparam name="TOutput">The subsequent pipe context type.</typeparam>
+/// <summary>Forwards a typed send context to the retained output pipeline.</summary>
+/// <typeparam name="TOutput">The message contract carried by the send context.</typeparam>
 public class MessageSendPipe<TOutput> :
     IMessageSendPipe<TOutput>
     where TOutput : class

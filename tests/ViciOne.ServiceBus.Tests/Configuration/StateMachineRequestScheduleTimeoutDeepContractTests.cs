@@ -137,6 +137,158 @@ public sealed class StateMachineRequestScheduleTimeoutDeepContractTests
         Assert.Same(timeProvider, ReadField<TimeProvider>(specification, "_timeProvider"));
     }
 
+
+    [Theory]
+    [InlineData(1, "Completed")]
+    [InlineData(1, "Faulted")]
+    [InlineData(1, "TimeoutExpired")]
+    [InlineData(2, "Completed2")]
+    [InlineData(3, "Completed3")]
+    [InlineData(0, "Received")]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST-SETTINGS", "optional-callback-default-reset-and-public-nullability")]
+    public void OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(int family, string member)
+    {
+        var observations = new List<object>();
+        (object configurator, Type settingsType, Type configuratorType, Func<object> declare) = CreateCallbackProjection(family);
+        PropertyInfo settingsProperty = Assert.IsAssignableFrom<PropertyInfo>(settingsType.GetProperty(member));
+        PropertyInfo setterProperty = Assert.IsAssignableFrom<PropertyInfo>(configuratorType.GetProperty(member));
+        PropertyInfo? concreteProperty = family == 0 ? null : configurator.GetType().GetProperty(member);
+        if (family != 0)
+            Assert.NotNull(concreteProperty);
+        Assert.Null(settingsProperty.GetValue(configurator));
+        if (concreteProperty is not null)
+            Assert.Null(concreteProperty.GetValue(configurator));
+
+        Delegate callback = member switch
+        {
+            "Completed" => CaptureCallback<ResponseOne>(observations),
+            "Faulted" => CaptureCallback<Fault<RequestMessage>>(observations),
+            "TimeoutExpired" => CaptureCallback<IRequestTimeoutExpired<RequestMessage>>(observations),
+            "Completed2" => CaptureCallback<ResponseTwo>(observations),
+            "Completed3" => CaptureCallback<ResponseThree>(observations),
+            "Received" => CaptureCallback<ScheduledMessage>(observations),
+            _ => throw new ArgumentOutOfRangeException(nameof(member)),
+        };
+        setterProperty.SetValue(configurator, callback);
+        Assert.Same(callback, settingsProperty.GetValue(configurator));
+        if (concreteProperty is not null)
+            Assert.Same(callback, concreteProperty.GetValue(configurator));
+        object declaredWithCallback = declare();
+        Assert.NotNull(declaredWithCallback);
+        object correlation = Assert.Single(observations);
+        Type actualCallbackContextType = callback.GetType().GetGenericArguments()[0];
+        Assert.True(actualCallbackContextType.IsInstanceOfType(correlation));
+
+        setterProperty.SetValue(configurator, null);
+        Assert.Null(settingsProperty.GetValue(configurator));
+        if (concreteProperty is not null)
+            Assert.Null(concreteProperty.GetValue(configurator));
+        object declaredWithoutCallback = declare();
+        Assert.NotSame(declaredWithCallback, declaredWithoutCallback);
+        Assert.Same(correlation, Assert.Single(observations));
+
+        var metadata = new NullabilityInfoContext();
+        Assert.Equal(NullabilityState.Nullable, metadata.Create(settingsProperty).ReadState);
+        Assert.Equal(NullabilityState.Nullable, metadata.Create(setterProperty).WriteState);
+        if (concreteProperty is not null)
+        {
+            Assert.Equal(NullabilityState.Nullable, metadata.Create(concreteProperty).ReadState);
+            Assert.Equal(NullabilityState.Nullable, metadata.Create(concreteProperty).WriteState);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST-SETTINGS", "required-delay-and-declared-events-remain-nonnullable")]
+    public void RequiredDelayProviderAndDeclaredRequestEvents_RemainInitializedAndNonNullable()
+    {
+        var schedule = new StateMachineScheduleConfigurator<RequestState, ScheduledMessage>();
+        Assert.NotNull(schedule.Settings.DelayProvider);
+        Assert.Equal(TimeSpan.FromSeconds(30), schedule.Settings.DelayProvider(null!));
+        var settings = new StateMachineRequestConfigurator<RequestState, RequestMessage, ResponseOne, ResponseTwo, ResponseThree>();
+        var machine = new NullableThreeMachine(settings.Settings);
+        Assert.NotNull(machine.Fetch.Completed);
+        Assert.NotNull(machine.Fetch.Completed2);
+        Assert.NotNull(machine.Fetch.Completed3);
+        Assert.NotNull(machine.Fetch.Faulted);
+        Assert.NotNull(machine.Fetch.TimeoutExpired);
+        Assert.NotNull(machine.Fetch.Pending);
+        var metadata = new NullabilityInfoContext();
+        PropertyInfo delay = Assert.IsAssignableFrom<PropertyInfo>(typeof(IScheduleSettings<RequestState, ScheduledMessage>).GetProperty("DelayProvider"));
+        Assert.Equal(NullabilityState.NotNull, metadata.Create(delay).ReadState);
+        foreach (string member in new[] { "Completed", "Faulted", "TimeoutExpired", "Pending" })
+        {
+            PropertyInfo property = Assert.IsAssignableFrom<PropertyInfo>(typeof(IRequest<RequestState, RequestMessage, ResponseOne>).GetProperty(member));
+            Assert.Equal(NullabilityState.NotNull, metadata.Create(property).ReadState);
+        }
+        PropertyInfo second = Assert.IsAssignableFrom<PropertyInfo>(typeof(IRequest<RequestState, RequestMessage, ResponseOne, ResponseTwo>).GetProperty("Completed2"));
+        PropertyInfo third = Assert.IsAssignableFrom<PropertyInfo>(typeof(IRequest<RequestState, RequestMessage, ResponseOne, ResponseTwo, ResponseThree>).GetProperty("Completed3"));
+        Assert.Equal(NullabilityState.NotNull, metadata.Create(second).ReadState);
+        Assert.Equal(NullabilityState.NotNull, metadata.Create(third).ReadState);
+    }
+
+    static Action<IEventCorrelationConfigurator<RequestState, T>> CaptureCallback<T>(List<object> observations)
+        where T : class => context => observations.Add(context);
+
+    static (object Configurator, Type SettingsType, Type ConfiguratorType, Func<object> Declare) CreateCallbackProjection(int family)
+    {
+        switch (family)
+        {
+            case 1:
+            {
+                var value = new StateMachineRequestConfigurator<RequestState, RequestMessage, ResponseOne>();
+                return (value, typeof(IRequestSettings<RequestState, RequestMessage, ResponseOne>),
+                    typeof(IRequestConfigurator<RequestState, RequestMessage, ResponseOne>), () => new NullableOneMachine(value.Settings));
+            }
+            case 2:
+            {
+                var value = new StateMachineRequestConfigurator<RequestState, RequestMessage, ResponseOne, ResponseTwo>();
+                return (value, typeof(IRequestSettings<RequestState, RequestMessage, ResponseOne, ResponseTwo>),
+                    typeof(IRequestConfigurator<RequestState, RequestMessage, ResponseOne, ResponseTwo>), () => new NullableTwoMachine(value.Settings));
+            }
+            case 3:
+            {
+                var value = new StateMachineRequestConfigurator<RequestState, RequestMessage, ResponseOne, ResponseTwo, ResponseThree>();
+                return (value, typeof(IRequestSettings<RequestState, RequestMessage, ResponseOne, ResponseTwo, ResponseThree>),
+                    typeof(IRequestConfigurator<RequestState, RequestMessage, ResponseOne, ResponseTwo, ResponseThree>), () => new NullableThreeMachine(value.Settings));
+            }
+            case 0:
+            {
+                var value = new StateMachineScheduleConfigurator<RequestState, ScheduledMessage>();
+                return (value, typeof(IScheduleSettings<RequestState, ScheduledMessage>),
+                    typeof(IScheduleConfigurator<RequestState, ScheduledMessage>), () => new NullableScheduleMachine(value.Settings));
+            }
+            default: throw new ArgumentOutOfRangeException(nameof(family));
+        }
+    }
+
+    sealed class NullableOneMachine : ViciOneServiceBusStateMachine<RequestState>
+    {
+        public NullableOneMachine(IRequestSettings<RequestState, RequestMessage, ResponseOne> settings) =>
+            Request(() => Fetch, saga => saga.ActiveRequestId, settings);
+        public IRequest<RequestState, RequestMessage, ResponseOne> Fetch { get; private set; } = null!;
+    }
+
+    sealed class NullableTwoMachine : ViciOneServiceBusStateMachine<RequestState>
+    {
+        public NullableTwoMachine(IRequestSettings<RequestState, RequestMessage, ResponseOne, ResponseTwo> settings) =>
+            Request(() => Fetch, saga => saga.ActiveRequestId, settings);
+        public IRequest<RequestState, RequestMessage, ResponseOne, ResponseTwo> Fetch { get; private set; } = null!;
+    }
+
+    sealed class NullableThreeMachine : ViciOneServiceBusStateMachine<RequestState>
+    {
+        public NullableThreeMachine(IRequestSettings<RequestState, RequestMessage, ResponseOne, ResponseTwo, ResponseThree> settings) =>
+            Request(() => Fetch, saga => saga.ActiveRequestId, settings);
+        public IRequest<RequestState, RequestMessage, ResponseOne, ResponseTwo, ResponseThree> Fetch { get; private set; } = null!;
+    }
+
+    sealed class NullableScheduleMachine : ViciOneServiceBusStateMachine<RequestState>
+    {
+        public NullableScheduleMachine(IScheduleSettings<RequestState, ScheduledMessage> settings) =>
+            Schedule(() => Notice, saga => saga.NoticeTokenId, settings);
+        public ISchedule<RequestState, ScheduledMessage> Notice { get; private set; } = null!;
+    }
+
     static void AssertArgument(string parameterName, Action action) =>
         Assert.Equal(parameterName, Assert.Throws<ArgumentNullException>(action).ParamName);
 
@@ -236,6 +388,8 @@ public sealed class StateMachineRequestScheduleTimeoutDeepContractTests
     sealed class RequestState : ISagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
+        public Guid? ActiveRequestId { get; set; }
+        public Guid? NoticeTokenId { get; set; }
     }
 
     sealed class RequestMessage;

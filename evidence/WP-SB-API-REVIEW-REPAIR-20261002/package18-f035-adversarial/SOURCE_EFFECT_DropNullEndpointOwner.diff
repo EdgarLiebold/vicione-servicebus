@@ -1,0 +1,11 @@
+--- frozen-corrected-Registrar
++++ DropNullEndpointOwner
+@@ -418,7 +418,7 @@
+             ? ActivatorUtilities.CreateInstance<TDefinition>(provider)
+             : ActivatorUtilities.CreateInstance<TDefinition>(provider, settings));
+         Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
+-            Bind<TBus>.Create(provider.GetRequiredKeyedService<TDefinition>(definitionKey)));
++            Bind<TBus>.Create(settings == null ? ActivatorUtilities.CreateInstance<TDefinition>(provider) : provider.GetRequiredKeyedService<TDefinition>(definitionKey)));
+ 
+         Collection.AddSingleton<Bind<TBus, IEndpointDefinition<T>>>(provider =>
+             Bind<TBus>.Create<IEndpointDefinition<T>>(

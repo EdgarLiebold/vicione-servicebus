@@ -1,0 +1,47 @@
+{
+  "status": "SOURCE_CANDIDATE_BEFORE_SDK",
+  "parent_owner": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package31-outbox-boundaries",
+  "parent_program_sha256": "1cc3480aaaafb267a50f9b48fc22282a0b7f28ca21f94c1588a203cba3480c7a",
+  "inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package33-outbox-mutations/Composition.PublicConsumer.csproj",
+      "sha256": "65e944038765659fbd99a29043fe6692b2e3fad4e1df7e3542d523236e27205e",
+      "bytes": 1080
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package33-outbox-mutations/MetadataContexts.cs",
+      "sha256": "47bb022569eaaad3e12582532fc06286af289d014bc277cbb076a3af0ab83f49",
+      "bytes": 2111
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package33-outbox-mutations/NuGet.Config",
+      "sha256": "cb5b91dbe139cb56c8d3fd4bc586bb46cc37896aa60c195b279dc0cd7acbef28",
+      "bytes": 576
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package33-outbox-mutations/OwnedDisposal.cs",
+      "sha256": "7b5638775cbc3dd898eccac52dc0f6b9a1dae5cb1300b54ccf31084de5598c95",
+      "bytes": 1013
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package33-outbox-mutations/OwnedLifetime.cs",
+      "sha256": "e01c009117ec2393a503eda5d2cad44d72e55ce9ef00309d51180fbd6ea5bad0",
+      "bytes": 1921
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package33-outbox-mutations/Program.cs",
+      "sha256": "0b76ca153448dde3c28a2f2be10df8e56a7124dc82f4b4b8ff4c8fef8e61eb75",
+      "bytes": 24736
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package33-outbox-mutations/global.json",
+      "sha256": "fcafdeab1b2af8c88b0aac365be7ec1f4fb8e8b2a2b700a01d2a3619687ce760",
+      "bytes": 135
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package33-outbox-mutations/packages.lock.json",
+      "sha256": "3ab12f88947840acebbdb86f89ba483581047708d488ea76c2504d4705cd2a16",
+      "bytes": 14388
+    }
+  ]
+}

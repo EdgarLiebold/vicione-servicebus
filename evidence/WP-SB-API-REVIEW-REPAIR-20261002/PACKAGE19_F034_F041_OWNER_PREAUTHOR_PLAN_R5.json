@@ -1,0 +1,33 @@
+{
+  "status": "ROOT_RESEARCH_PLAN_BEFORE_41CASE_OWNER_AUTHORING",
+  "existing_cases": 34,
+  "new_cases": [
+    "definition-compensation-full",
+    "typed-definition-compensation-full",
+    "definition-literal-full",
+    "typed-definition-literal-full",
+    "definition-aligned-full",
+    "typed-definition-aligned-full",
+    "typed-definition-full"
+  ],
+  "scenario_modes": "Definition and single detected consistently by Contains definition-. Literal omits fluent registrations. Aligned uses literal name in fluent settings. Divergent retains both explicitstandalones. Extra compensation mode adds failendpoint to multiset.",
+  "lower_settings": "Fluent companion settings Prefetch13/Concurrent3 with public registration-aware endpoint callback. Assert exact actualcontext identity with context captured before real ConfigureEndpoints; exactserviceProbe Same. Exact name/settings callbacks nonempty pair divergent/single aligned/empty literal, preserved real business/slip/terminal routes.",
+  "source_basis": "Actual endpoint wrapper + settings public callback/source bodies personally read; independent reviewer verified ordering and callback route. No API seam/private reflection/IVT.",
+  "root_full_inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034-r4/corrected/Models.cs",
+      "sha256": "49df54a744a47413351827df38fa1dcb63f60cf5ecc393b5b03a6b196626f570"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034-r4/corrected/RuntimeOwner.cs",
+      "sha256": "b1410033dc71ea80b88d9373696f8873b865f5ed62f0eda9af9d10ade2be7a96"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034-r4/corrected/Cases.cs",
+      "sha256": "7292593d3498a58b8c061c9be489040e85ed946a3cfba38c27d9db488b09da8e"
+    }
+  ],
+  "preserved": "Existing34 oraclecases and all business/owner/orderedexecute+inversecompensation/terminal/pre-cancel/cleanup assertions preserved. New finite F041 controls isolatedsamepairedpublicNuGet fresh original/final41owner.",
+  "adversarial": "adversarial_package_01 preauthor exactplan and lowercallback ordering confirmed; authoredwholecode mustfreshreviewbeforebehavior.",
+  "limits": "Current R4native33green1finiteF041collision. F034original causality requiresfreshpaired same41oracles; guards nevercredited asfinding."
+}

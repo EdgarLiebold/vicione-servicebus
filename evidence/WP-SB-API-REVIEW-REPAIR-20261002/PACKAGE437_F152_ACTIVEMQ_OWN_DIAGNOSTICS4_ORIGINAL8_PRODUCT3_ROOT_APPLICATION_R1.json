@@ -1,0 +1,891 @@
+{
+  "utc": "2026-10-06T12:27:14.399419+00:00",
+  "status": "F152_CONFIRMED_ACTIVE_OWN_DIAGNOSTICS4_SCOPE_EXTENSION_PRODUCT3_APPLIED_FIXED8_PENDING",
+  "pins": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package436-activemq-own-diagnostics4-product3-root-proposed-r1/REPORT.json",
+      "sha256": "410109f469475720209a215ee82ecd5d35b8bae7765afecb9310ac65659cfe3c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package436-activemq-own-diagnostics4-product3-root-proposed-r1/MANIFEST.json",
+      "sha256": "802155dcf8f63519180837c3f6123e00b0cde6a585c09200a33315de3b4e33a5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package436-activemq-debug4-independent-source-peer-r1/REPORT.json",
+      "sha256": "56c2d37267aa9da835edf24b253462cd71db538ccc43add1881d3726c3820688"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package436-activemq-debug4-independent-source-peer-r1/MANIFEST.json",
+      "sha256": "dace1fa5e41ffa447c17c6fa18a4ae54724e8e5f6f88cebbcb889252acb6d259"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package434-activemq-original8-independent-native-qualification-r1/REPORT.json",
+      "sha256": "a81743918d7bd6de6f262e28b54ce996ce44022853d5619e06d3ee94df13ec5e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package434-activemq-original8-independent-native-qualification-r1/MANIFEST.json",
+      "sha256": "e8db764a7f08c47bf7af9067a0c30bb3672fc2e498fd12e6b71fc5bf58416ccc"
+    }
+  ],
+  "changes": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqHost.cs",
+      "before_sha256": "145b45616b50e2d74d670ca52213af33a17ce1dadf001339b230e31137d2ef27",
+      "proposed_sha256": "e213fc2c52e09bf911a86fe56cbdb8ecd5f35a00a97d3f5a82133b5d16338519",
+      "before_lines": 113,
+      "proposed_lines": 120,
+      "owning_log_sites": [
+        "TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);"
+      ],
+      "literal_inverse_equal": true,
+      "XML_comments_unchanged": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ConnectionContextSupervisor.cs",
+      "before_sha256": "92ac17e111b196c2ea6e55ed8facbeba53af8eaf003fafd50fe7c940b055742e",
+      "proposed_sha256": "615c67938e93cc0a419db55dedd55db76342c1664f3cfc5a76c09c95e69f5715",
+      "before_lines": 93,
+      "proposed_lines": 100,
+      "owning_log_sites": [
+        "TransportLogMessages.CreateSendTransport(endpointAddress);"
+      ],
+      "literal_inverse_equal": true,
+      "XML_comments_unchanged": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Middleware/ConfigureActiveMqTopologyFilter.cs",
+      "before_sha256": "8a88158d1b75eeda48fe73397a52fe7c1deee8339ef42590235cc2d6c5e70d62",
+      "proposed_sha256": "0fb47a5949ea5eb7a64a56792196e53eef4d077f0932e334eb271c6e4bf16901",
+      "before_lines": 108,
+      "proposed_lines": 122,
+      "owning_log_sites": [
+        "LogContext.Debug?.Log(\"Declare topic {Topic}\", topic);",
+        "LogContext.Debug?.Log(\"Get queue {Queue}\", queue);"
+      ],
+      "literal_inverse_equal": true,
+      "XML_comments_unchanged": true
+    }
+  ],
+  "prior_F152_full_object": {
+    "id": "F-SB-API-152",
+    "severity": "Medium",
+    "title": "Product-owned Saga Created, Used and Removed diagnostics interrupt healthy processing and persistence progress",
+    "classification": "CONFIRMED_FINITE_NATIVE_PRODUCT_DIAGNOSTIC_WORKFLOW_DEFECT",
+    "actual_original_contexts": [
+      {
+        "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Removed\", loggerThrows: True)",
+        "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+        "first_failure": "Source867 Assert.Null(operationFailure) receives unique InvalidOperationException from selected Removed Debug logger.",
+        "reached": [
+          "Exact selected template single, Debug level, correlation ID and hostile logger throwcount1",
+          "Actual repository load ID once; actual saga consume context async-disposed1/sync0",
+          "Actual Delete received exact saga context before diagnostic"
+        ],
+        "unreached": [
+          "Next continuation single/context assertions869 onward",
+          "Post-Assert.Null repository update/delete/suppression assertions"
+        ],
+        "source_cause": "SendSagaPipe existing lifecycle invokes LogRemoved unguarded at109 after actual Delete; lifecycle captures logger error as operation failure and rethrows after actual cleanup.",
+        "healthy_control": "Same emission/loggerThrows:false passes complete continuation/persistence assertions."
+      },
+      {
+        "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Used\", loggerThrows: True)",
+        "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+        "first_failure": "Source867 Assert.Null(operationFailure) receives unique InvalidOperationException from selected Used Debug logger.",
+        "reached": [
+          "Exact selected template single, Debug level, correlation ID and hostile logger throwcount1",
+          "Actual repository load ID once; actual saga consume context async-disposed1/sync0"
+        ],
+        "unreached": [
+          "Next continuation single/context assertions869 onward",
+          "Post-Assert.Null repository update/delete/suppression assertions"
+        ],
+        "source_cause": "SendSagaPipe existing lifecycle invokes LogUsed unguarded at89 before policy.ExistingAsync; lifecycle captures logger error as operation failure and rethrows after actual cleanup.",
+        "healthy_control": "Same emission/loggerThrows:false passes complete continuation/persistence assertions."
+      }
+    ],
+    "policy": "Product-owned processing diagnostics must not replace business processing/persistence outcome. Global public LogContext and explicit logging extension propagation contracts remain separate. Existing ownership-on-logger-fault test must be deliberately reconciled when guarded owner callsite changes.",
+    "limits": "Current167 Created healthy control passes and hostile first871 finite diagnostic failure is qualified. Historical166 Created remains fixture failure; Added/Inserted/Dupe/Fault outside this family evidence.",
+    "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_FIXED425_INDEPENDENT_NATIVE_MODULE_PUBLICATION",
+    "original_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-inner-outbox-fixed100-parent18-saga-original38-neighbors2268-fresh2-independent-r1/REPORT.json",
+      "sha256": "f8c594350912b23d430ef0743b6d5a9b63a4888a784416e0f43776a138048381"
+    },
+    "whole_API_member_review_closed": false,
+    "root_registration": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA_DIAGNOSTIC_TRANSITION_TWO_CAUSES_ROOT_FINDING_REGISTRATION_R1.json",
+      "sha256": "332a0d74720708b8ab2d8e7947a8d801eb8c3d55c98964443136e3849264eb62"
+    },
+    "current167_original_contexts": [
+      {
+        "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Removed\", loggerThrows: True)",
+        "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+        "first_failure": "Source871 Assert.Null(operationFailure) receives unique Removed InvalidOperationException diagnostic.",
+        "reached": [
+          "Real selected structured diagnostic single; Debug level; exact saga CorrelationId; hostile ThrowCount1",
+          "Actual repository load identity; actual AsyncDispose1/Dispose0",
+          "Exact Delete context already reached"
+        ],
+        "unreached": [
+          "Next continuation/context/state assertions after871",
+          "Later repository persistence assertions"
+        ],
+        "source_cause": "SendSagaPipe unguarded LogRemoved at109 after actual Delete",
+        "healthy_control": "Same emission/loggerThrows:false passes full continuation and applicable persistence assertions.",
+        "prior166_precision": "Created both cases in166 failed earlier852 fixture; current realinput correction now makes healthyCreatedpass and hostilecase reach actuallogger. Do not retroactively upgrade166 fixture outcomes."
+      },
+      {
+        "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Used\", loggerThrows: True)",
+        "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+        "first_failure": "Source871 Assert.Null(operationFailure) receives unique Used InvalidOperationException diagnostic.",
+        "reached": [
+          "Real selected structured diagnostic single; Debug level; exact saga CorrelationId; hostile ThrowCount1",
+          "Actual repository load identity; actual AsyncDispose1/Dispose0"
+        ],
+        "unreached": [
+          "Next continuation/context/state assertions after871",
+          "Later repository persistence assertions"
+        ],
+        "source_cause": "SendSagaPipe unguarded LogUsed at89 before policy",
+        "healthy_control": "Same emission/loggerThrows:false passes full continuation and applicable persistence assertions.",
+        "prior166_precision": "Created both cases in166 failed earlier852 fixture; current realinput correction now makes healthyCreatedpass and hostilecase reach actuallogger. Do not retroactively upgrade166 fixture outcomes."
+      },
+      {
+        "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Created\", loggerThrows: True)",
+        "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+        "first_failure": "Source871 Assert.Null(operationFailure) receives unique Created InvalidOperationException diagnostic.",
+        "reached": [
+          "Real selected structured diagnostic single; Debug level; exact saga CorrelationId; hostile ThrowCount1",
+          "Valid concrete InMemory message input correlation guard; real factory invocation1; exact input callback reference"
+        ],
+        "unreached": [
+          "Next continuation/context/state assertions after871",
+          "Later repository persistence assertions"
+        ],
+        "source_cause": "FactoryMethodSagaFactory.SendAsync proxy.LogCreated at55 synchronously throws before actual next.SendAsync",
+        "healthy_control": "Same emission/loggerThrows:false passes full continuation and applicable persistence assertions.",
+        "prior166_precision": "Created both cases in166 failed earlier852 fixture; current realinput correction now makes healthyCreatedpass and hostilecase reach actuallogger. Do not retroactively upgrade166 fixture outcomes."
+      }
+    ],
+    "created_extension_qualification": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE167_CREATED_DIAGNOSTIC_F152_EXTENSION_ROOT_QUALIFICATION_R1.json",
+      "sha256": "8324890f91d07a010f33ffaff07d6a2ef62009d51d9e8fe0355b56dd33f7a374"
+    },
+    "current_three_call_fix_qualification": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE168_F153_REPAIR_F152_PARTIAL_AND_TWO_NEW_CAUSES_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "11575430e85031232a683d5e6d0b2c661d6a8fd008a80c20625b949a9988ea60"
+    },
+    "remaining_family_candidate": "Actual Azure Insert success/409/500 diagnostic extension qualified172; pre-reviewed repair182 ready. Actual Dynamo/EF Original12 pre-reviewed181 not yet executed; connection owning boundaries research pending.",
+    "current169_default_created_original": {
+      "case": "ViciOne.ServiceBus.Tests.Configuration.SagaInstanceFactoryDeepContractTests.DefaultSend_CreatedDebugDoesNotPreventDownstreamProgressAsync(loggerThrows: True)",
+      "classification": "CAUSAL_PRODUCT_DEFAULT_FACTORY_CREATED_DEBUG_FAILURE_EXISTING_F152_FAMILY",
+      "first_failure": "Source375 Assert.Null(failure) receives unique IOException Default saga Created diagnostic failure after public async wrapper terminal and manually released completion TCS completed successfully.",
+      "reached": [
+        "Actual public DefaultSagaFactory.SendAsync with valid correlated concrete message, selected structuredCreated single/Debug/correlation and hostile ThrowCount1; fixture logger.ThrownFailure identity equals unique expected IOException.",
+        "Actual public wrapper joined and timeout excluded; wrapper terminal and fixture completion TCS successful before375."
+      ],
+      "unreached": [
+        "Actual returned downstream-task identity, pipe.Count1/context/result/source metadata assertions after375"
+      ],
+      "source_cause": "DefaultSagaFactory.SendAsync44 calls proxy.LogCreated synchronously before next.SendAsync47; diagnostic exception exits first, so downstream is not invoked. Same captured public wrapper produces native unique IOException.",
+      "healthy_control": "loggerThrows:false proves real downstream invoked once; public task pending on completion TCS; exact returned TCS task; all saga/message/receive/serializer identity assertions passed.",
+      "precision": "The released fixture completion TCS in hostile case is not evidence the downstream ran; exact returned-task/pipe assertions are unreached. Original family F152 remains open for this sibling until actual fix qualifies.",
+      "cleanup": "Finally releases/joins completion task and observes actual wrapper even terminal fault; timeout excluded; exact ambient LogContext restored. No transport/durable/wholeSaga claim."
+    },
+    "default_created_original_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package169-load-outbox-fixed-default-created-original118-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+      "sha256": "fe50839abafc15255e2d2e7c6a9d13a3a434a7ab742ab879ab2081a1d09e7d2e",
+      "manifest_sha256": "ad68c05f26e8eb0a7eff5fd3769b1ca80ef189fef1cacc95870e0ff3235815ca",
+      "freeze_sha256": "d1bde8c30a7c52c41f4a651a3a2e4a714301c19b98c8082329d57697adf7926e"
+    },
+    "current170_default_fixed_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-default-created-fixed-added-ctor-original134-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+      "sha256": "f8716481dbee8a61c8c13d029c0c89c10b4b78c7be02dff159ca940e9ac7796e",
+      "manifest_sha256": "d825a63c6382e5d8540754671c27e378a539f67c1827ad64ec1f9aa0331d128a",
+      "freeze_sha256": "04d1af01d3a724e7909b64259ce5b4591edc05c813d608f64bdc5c1f88ffb2da"
+    },
+    "current170_added_original": {
+      "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.MissingSaga_AddedDebugDoesNotPreventOwnedDownstreamProgressAsync(loggerThrows: True)",
+      "classification": "CAUSAL_PRODUCT_ADDED_DEBUG_FAILURE_EXISTING_F152_FAMILY",
+      "first_failure": "Source949 Assert.Null(failure) receives exact unique IOException Added diagnostic failure.",
+      "reached": [
+        "Actual public MissingSagaPipe operation terminal; timeout excluded; actual repository.Add state identity exactlyonce.",
+        "Selected structuredAdded single/Debug/correlation/hostile ThrowCount1; acquired addedcontext AsyncDispose1/Dispose0; borrowedinput disposal0; failure identity Same(loggerFailure,failure) before949."
+      ],
+      "unreached": [
+        "Next/Save exact acquired-context assertions after949",
+        "Post949 public success and unrelated repository route absence assertions"
+      ],
+      "source_cause": "MissingSagaPipe52 calls acquiredContext.LogAdded before next.SendAsync54; diagnostic becomes operationFailure and triggers original discard/disposal then preserved IOException.",
+      "healthy_control": "loggerThrows:false passes exact next/save context, success, no discard/other routes. Source same caller/new fixture valid.",
+      "cleanup": "Public task rejoined/observed with timeout exclusion and ambient logger restored. Runtime reached AsyncDispose1 beforefirst949.",
+      "family_precision": "Adds another concrete caller to still-open F152; no automatic unrelated new finding ID."
+    },
+    "current170_added_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-default-created-fixed-added-ctor-original134-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+      "sha256": "f8716481dbee8a61c8c13d029c0c89c10b4b78c7be02dff159ca940e9ac7796e",
+      "manifest_sha256": "d825a63c6382e5d8540754671c27e378a539f67c1827ad64ec1f9aa0331d128a",
+      "freeze_sha256": "04d1af01d3a724e7909b64259ce5b4591edc05c813d608f64bdc5c1f88ffb2da"
+    },
+    "current170_root_registration": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE170_DEFAULT_CREATED_FIXED_ADDED_EXTENSION_F156_CTOR_ROOT_REGISTRATION_R1.json",
+      "sha256": "05331b027a1d4772e8eb91eefd108db578b0b0e488c68333ab0c8057b32ee468"
+    },
+    "added_controls": 2,
+    "scope": "MissingSagaPipe acquired Add context progresses through exact next and Save; optional hostile Added logger cannot turn success into discard; owned async disposal remains once, borrowed input unowned.",
+    "family_open": true,
+    "current_added_root_acceptance": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE171_F156_FIXED_F152_ADDED_EXTENSION_AND_F157_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "33bdd3550f81b047cb2fb8b60e2a24316d4a071a81d68c01af3463d203db5f82"
+    },
+    "current172_azure_original_contexts": [
+      {
+        "family": "Azure Table insert diagnostic outcome",
+        "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 0, loggerThrows: True)",
+        "first_failure": "103 Assert.Null(failure)",
+        "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+        "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+        "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+        "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+        "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+      },
+      {
+        "family": "Azure Table insert diagnostic outcome",
+        "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 1, loggerThrows: True)",
+        "first_failure": "103 Assert.Null(failure)",
+        "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+        "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+        "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+        "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+        "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+      },
+      {
+        "family": "Azure Table insert diagnostic outcome",
+        "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 2, loggerThrows: True)",
+        "first_failure": "96 Assert.Same(storageFailure,failure)",
+        "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+        "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+        "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+        "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+        "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+      }
+    ],
+    "current172_azure_original_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-add-insert-fixed-ownership-azure-original-fresh3-independent-r1/REPORT.json",
+      "sha256": "08a094db43708a72c045c296bae1538d0187867e898167611b7bfb9da859027c",
+      "manifest_sha256": "2e00191254b29b3bad11a1f3773309f2b3eeb2e45f9e0e4f61acfe76b496da84",
+      "freeze_sha256": "2549deb6205053271a043ef129a15bb14511d154d7c1f2df8db603d57ae46c2a"
+    },
+    "current_azure_source_application": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE173_TRANSPORT_PRODUCT3_AZURE_PRODUCT1_MULTISTOP_TEST1_PROVIDER_ORIGINAL_TEST2_REQ3_ROOT_APPLICATION_R1.json",
+      "sha256": "7ce81c5c9bcf4d25855d7e031c7fef8275e05d60ae49bbb523b7bd40cb66b10d"
+    },
+    "current173_root_acceptance": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE173_TRANSPORT_THREE_FIXED_F152_AZURE_FIXED_PROVIDER_FIVE_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "e13eb819d80bf4b1d26550977499ef6ec1289e2eca42e74b4d293a8c4b341ac4"
+    },
+    "current173_provider_original_contexts": [
+      {
+        "scope": "dynamo",
+        "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 2, loggerThrows: True)",
+        "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:117 Assert.Same",
+        "actual_cause": "DynamoDB insert diagnostic failure",
+        "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+        "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+        "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+        "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+      },
+      {
+        "scope": "dynamo",
+        "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 0, loggerThrows: True)",
+        "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:107 Assert.Null",
+        "actual_cause": "DynamoDB insert diagnostic failure",
+        "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+        "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+        "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+        "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+      },
+      {
+        "scope": "dynamo",
+        "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 1, loggerThrows: True)",
+        "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:117 Assert.Same",
+        "actual_cause": "DynamoDB insert diagnostic failure",
+        "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+        "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+        "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+        "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+      },
+      {
+        "scope": "ef",
+        "case": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.DbContextSagaRepositoryContextTests.Insert_DebugDiagnosticsPreservePersistedOutcomeAsync(outcome: 0, loggerThrows: True)",
+        "first_assertion": "DbContextSagaRepositoryContextTests.cs:104 Assert.Null",
+        "actual_cause": "EF insert diagnostic failure",
+        "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+        "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+        "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+        "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+      },
+      {
+        "scope": "ef",
+        "case": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.DbContextSagaRepositoryContextTests.Insert_DebugDiagnosticsPreservePersistedOutcomeAsync(outcome: 1, loggerThrows: True)",
+        "first_assertion": "DbContextSagaRepositoryContextTests.cs:104 Assert.Null",
+        "actual_cause": "EF insert diagnostic failure",
+        "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+        "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+        "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+        "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+      }
+    ],
+    "current173_Azure_fixed_scope": "All39 current Azure tests pass, including original6 real SDK-table success/409/500 healthy and hostile diagnostics. Three owning optional diagnostic calls guarded; storage/factory/token/ETag contracts unchanged.",
+    "current174_root_acceptance": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE174_PROVIDER_FIXED_F152_CONFIG_ORIGINAL_HOST_CONSUMER_TWO_REGISTERED_F001_XML5_EXTENSION_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "bcc34fc92291a4991c54b732f522d3fa6c3974f2f7712fbc1b2bff315cfc81e2"
+    },
+    "current174_provider_fixed_scope": "All36 Dynamo and19EF unchanged selected case IDs pass, including all12 original insert cases with actual later identity, context/state, primary storage error, terminal operation and owned SDK disposal assertions. Azure39, Coreold160, prior117/neighbors2263 pass. Twelve owningSaga/Azure/Dynamo/EF callsites fixed; two ConfigSaga routes now qualified Original failures awaiting175 repair.",
+    "current174_config_original_contexts": [
+      {
+        "scope": "core",
+        "case": "ViciOne.ServiceBus.Tests.Sagas.LegacySagaIntegrationTests.SagaRegistration_DebugFailureDoesNotPreventPublicMessageDeliveryAsync(directConnection: True, loggerThrows: True)",
+        "first_assertion": "LegacySagaIntegrationTests.cs:91 Assert.Null",
+        "actual_unique_diagnostic": "Saga registration diagnostic failure",
+        "source_cause": "Actual optional Saga/ConnectSaga log executes before repository specification/configuration/connection admission.",
+        "reached": "Actual bus startup/direct registration joined; selected structured debug Saga type identity, level, call count and exact logger cause were checked.",
+        "unreached": "Configuration callback count, selected public-send persistence, delivered snapshot and healthy handle after firstNull were not reached.",
+        "controls": "Matching healthy logger route passes; actual finally restores logging and joins owned work. No inferred later assertions on failure."
+      },
+      {
+        "scope": "core",
+        "case": "ViciOne.ServiceBus.Tests.Sagas.LegacySagaIntegrationTests.SagaRegistration_DebugFailureDoesNotPreventPublicMessageDeliveryAsync(directConnection: False, loggerThrows: True)",
+        "first_assertion": "LegacySagaIntegrationTests.cs:91 Assert.Null",
+        "actual_unique_diagnostic": "Saga registration diagnostic failure",
+        "source_cause": "Actual optional Saga/ConnectSaga log executes before repository specification/configuration/connection admission.",
+        "reached": "Actual bus startup/direct registration joined; selected structured debug Saga type identity, level, call count and exact logger cause were checked.",
+        "unreached": "Configuration callback count, selected public-send persistence, delivered snapshot and healthy handle after firstNull were not reached.",
+        "controls": "Matching healthy logger route passes; actual finally restores logging and joins owned work. No inferred later assertions on failure."
+      }
+    ],
+    "current175_application": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE175_CONFIG_HOST_CONSUMER_PRODUCT3_INITIALIZER_MEDIATOR_XML3_ROOT_APPLICATION_R1.json",
+      "sha256": "1a76a37b0a7d67f16f281164d036fce6b62c751e0e861417a2ec70ee871d7420"
+    },
+    "historical_pre175_root_acceptance_status": "CURRENT175_INDEPENDENT_REPAIR_APPLIED_STRICT_NATIVE_FRESH_PENDING",
+    "current175_root_acceptance": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE175_F001_XML5_F152_ALL14_HOST_CONSUMER_CURRENT2677_FRESH7_ROOT_REPAIR_ACCEPTANCE_R1.json",
+      "sha256": "983c8b5e8845387d8cd662a3eaef8c99efbbf474daaa6897b63e3fbb1e7d7df9"
+    },
+    "current175_repair_scope": "All14 reviewed owning optional diagnostics: Saga5,Azure3,Dynamo2,EF2,ConfigSaga2. Last two real public registration routes now pass healthy/hostile controls plus genuine send/persistence/consume. Earlier12 fixed under independent prior receipts and current retained case sets. Public direct Log helpers retain their own propagation contract.",
+    "historical_pre342_status": "CURRENT_REPAIR_ROOT_ACCEPTED_BOUNDED",
+    "current342_consumer_extension": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE342_F152_CONSUMER8_ORIGINAL16_SCOPE_EXTENSION_AND_PRODUCT1_ROOT_APPLICATION_R1.json",
+      "sha256": "60587dae32447777e91a4ccb4aa06fb90714e6b6f7a16fdb29fd9be398694b42"
+    },
+    "current344_azure_extension": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE344_F152_AZURE2_ORIGINAL12_R2_SCOPE_EXTENSION_PRODUCT1_ROOT_APPLICATION_R1.json",
+      "sha256": "881058ccb9041ee216bee39edd1105d74b49fb0a5f508ffbc060bba9e77bb22b"
+    },
+    "current347_extended24_root_acceptance": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE347_F152_EXTENDED24_CONSUMER16_AZURE12_FIXED_FRESH2_SOURCE8_NORM2_IDENTITY14_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "8ca5f12aabcfeb0ba33e83dfe033d421fc6405902b5f41f0bd148b8b166d7823"
+    },
+    "current347_scope": "Historical14 +Consumer8/AzureBlob2. Actual unchangedfixed16/12 independently qualified +Core7878/Azure37 strictfresh2; fullAPI remains open.",
+    "historical_pre383_status": "CURRENT_REPAIR_ROOT_ACCEPTED_BOUNDED",
+    "current383_rabbit_basic6_extension": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE383_F152_RABBIT_BASIC6_ORIGINAL12_ROOT_SCOPE_EXTENSION_REGISTRATION_R1.json",
+      "sha256": "33eb061e11504a2c652226233dbefc3bd09c4155762b1089bd6e6a9f4fbf15ca"
+    },
+    "current383_scope": "Current new6 owning Log sites only; Original12 six healthy controls pass/six hostile fail. Historical24-site repair acceptance retained in its original scope. Extra EndOfStream/private channel-shutdown calls held.",
+    "historical_pre388_status": "CURRENT383_RABBIT_BASIC6_INDEPENDENT_ORIGINAL_CONFIRMED_REPAIR_PENDING",
+    "current388_joint_product_application": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE388_F152_BASIC6_F219_OBSERVER_F220_DEPENDENCY_JOINT_PRODUCT3_ROOT_APPLICATION_R1.json",
+      "sha256": "1d263820971892354c1fa8a19ab3240877541cdd6265469f5280054025e02b78"
+    },
+    "historical_pre391_status": "CURRENT388_REPAIR_APPLIED_FOCUSED_NATIVE_MODULE_STRICT_FRESH_PENDING",
+    "current391_extra2_extension": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE391_F152_BASIC_EXTRA2_ORIGINAL4_ROOT_SCOPE_EXTENSION_REGISTRATION_R1.json",
+      "sha256": "df4d56aea9da698a9b861f4c634690acbfeccd666ed133ef7b7d3f800629cac7"
+    },
+    "current391_scope": "Historical24 and current6 repair/focusedproof preserved; extra2 original4 actual2P2F firstNull86; no newFinding or currentF152 closure",
+    "historical_pre394_status": "CURRENT390_RABBIT_EXTRA2_INDEPENDENT_ORIGINAL_CONFIRMED_REPAIR_PENDING",
+    "current394_root_application": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE394_F152_BASIC_EXTRA2_PRODUCT1_ROOT_APPLICATION_R1.json",
+      "sha256": "e885a4bcd72409bdd20b99d9c838ebf2374be75f731458f128b27d9b0249d97a"
+    },
+    "historical_pre398_status": "CURRENT394_REPAIR_APPLIED_FIXED4_PRIOR12_MODULE_STRICT_FRESH_PENDING",
+    "current398_root_acceptance": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE398_F152_BASIC8_FIXED16_RABBIT595_STRICT_FRESH_SOURCE6_OWNER4_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "af61bcce9255710227de7dfefe4722345aa083522a2360bcbc3666c2745ea484"
+    },
+    "current398_scope": [
+      "Only eight optional owning diagnostic expressions; mandatory state/SDK/base work and general transportfault helper policy unchanged.",
+      "Native public lifecycle and event removal evidence finite16; private worker/drain, broker/network, arbitrary replay/concurrent SPI remain separate."
+    ],
+    "historical_pre408_status": "CURRENT398_BASIC8_FIXED16_MODULE595_STRICT_FRESH_ROOT_REPAIR_ACCEPTED_BOUNDED",
+    "current408_extension": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE408_ORIGINAL30_F221_F222_F223_F152_ROOT_FINDING_REGISTRATION_R1.json",
+      "sha256": "57c60573316d54dff62d03a617ea615d76f39ed9799c307934bb533e32a63c25"
+    },
+    "historical_pre411_status": "CURRENT407_OWNING_COURIER_AND_HARNESS_DIAGNOSTICS_CONFIRMED_REPAIR_PENDING",
+    "current411_product_application": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE411_F152_F221_F222_F223_PRODUCT5_ROOT_APPLICATION_R1.json",
+      "sha256": "7fbc13579435815b0c7db1bfe8e6e9287e4fcc7a7ae89318c1327737fa517cdb"
+    },
+    "historical_pre416_status": "CURRENT411_PRODUCT_APPLIED_UNCHANGED_FOCUSED30_MODULE_STRICT_FRESH_PENDING",
+    "root_repair_acceptance": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE416_F152_F221_F222_F223_FIXED30_CORE7935_FRESH3_SOURCE12_OWNER_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "2db64416416c9dbec310a502a410779a8e6dab1cff6501a60ff6df777c7215a3"
+    },
+    "root416_admin_completion": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE416_ADMIN_COMPLETION_FINDING_ID_FORMAT_PRECISION_R1.json",
+      "sha256": "17da477334a91c925dacd127e3f4d86ecc15041bac5f13cc0c4856583876484d"
+    },
+    "historical_pre421_status": "ROOT_ACCEPTED_BOUNDED_REPAIR_CURRENT411_FIXED30_MODULE7935_STRICT3_FRESH3",
+    "current421_extension": {
+      "root_registration": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE421_ORIGINAL11_F224_F225_AND_F152_SCOPE_EXTENSION_ROOT_REGISTRATION_R1.json",
+        "sha256": "b460b14aebd23f1645e1df5cfd66af8aa4edb06303f334be4d6994021cbf529b"
+      },
+      "original": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-original11-independent-native-qualification-r1/REPORT.json",
+        "sha256": "11d7b3deb8a554ec5a40d21d8c9d2a71c1b49c77045a55467863b85a2dca0df0"
+      },
+      "native_total": 6,
+      "passed": 3,
+      "failed": 3,
+      "scopes": [
+        "BaseHost.Start Debug/Warning",
+        "SagaStateMachineRegistration.Configure Info"
+      ],
+      "all_prior_repairs_retained": true
+    },
+    "historical_pre423_status": "REOPENED_CURRENT419_HOST_SAGA_OWNING_DIAGNOSTICS_PRODUCT_REPAIR_PENDING",
+    "current423_product_application": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE423_F152_F224_F225_PRODUCT4_ROOT_APPLICATION_R1.json",
+      "sha256": "22579f9da2ae9428cbe73846ca6b2d5a0705e1d7267e128918ca080ac06ebcc9"
+    },
+    "historical_pre429_full_finding_object": {
+      "id": "F-SB-API-152",
+      "severity": "Medium",
+      "title": "Product-owned Saga Created, Used and Removed diagnostics interrupt healthy processing and persistence progress",
+      "classification": "CONFIRMED_FINITE_NATIVE_PRODUCT_DIAGNOSTIC_WORKFLOW_DEFECT",
+      "actual_original_contexts": [
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Removed\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source867 Assert.Null(operationFailure) receives unique InvalidOperationException from selected Removed Debug logger.",
+          "reached": [
+            "Exact selected template single, Debug level, correlation ID and hostile logger throwcount1",
+            "Actual repository load ID once; actual saga consume context async-disposed1/sync0",
+            "Actual Delete received exact saga context before diagnostic"
+          ],
+          "unreached": [
+            "Next continuation single/context assertions869 onward",
+            "Post-Assert.Null repository update/delete/suppression assertions"
+          ],
+          "source_cause": "SendSagaPipe existing lifecycle invokes LogRemoved unguarded at109 after actual Delete; lifecycle captures logger error as operation failure and rethrows after actual cleanup.",
+          "healthy_control": "Same emission/loggerThrows:false passes complete continuation/persistence assertions."
+        },
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Used\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source867 Assert.Null(operationFailure) receives unique InvalidOperationException from selected Used Debug logger.",
+          "reached": [
+            "Exact selected template single, Debug level, correlation ID and hostile logger throwcount1",
+            "Actual repository load ID once; actual saga consume context async-disposed1/sync0"
+          ],
+          "unreached": [
+            "Next continuation single/context assertions869 onward",
+            "Post-Assert.Null repository update/delete/suppression assertions"
+          ],
+          "source_cause": "SendSagaPipe existing lifecycle invokes LogUsed unguarded at89 before policy.ExistingAsync; lifecycle captures logger error as operation failure and rethrows after actual cleanup.",
+          "healthy_control": "Same emission/loggerThrows:false passes complete continuation/persistence assertions."
+        }
+      ],
+      "policy": "Product-owned processing diagnostics must not replace business processing/persistence outcome. Global public LogContext and explicit logging extension propagation contracts remain separate. Existing ownership-on-logger-fault test must be deliberately reconciled when guarded owner callsite changes.",
+      "limits": "Current167 Created healthy control passes and hostile first871 finite diagnostic failure is qualified. Historical166 Created remains fixture failure; Added/Inserted/Dupe/Fault outside this family evidence.",
+      "status": "PRODUCT_CURRENT423_APPLIED_FIXED11_INDEPENDENT_MODULE_PUBLICATION_PENDING",
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-inner-outbox-fixed100-parent18-saga-original38-neighbors2268-fresh2-independent-r1/REPORT.json",
+        "sha256": "f8c594350912b23d430ef0743b6d5a9b63a4888a784416e0f43776a138048381"
+      },
+      "whole_API_member_review_closed": false,
+      "root_registration": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA_DIAGNOSTIC_TRANSITION_TWO_CAUSES_ROOT_FINDING_REGISTRATION_R1.json",
+        "sha256": "332a0d74720708b8ab2d8e7947a8d801eb8c3d55c98964443136e3849264eb62"
+      },
+      "current167_original_contexts": [
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Removed\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source871 Assert.Null(operationFailure) receives unique Removed InvalidOperationException diagnostic.",
+          "reached": [
+            "Real selected structured diagnostic single; Debug level; exact saga CorrelationId; hostile ThrowCount1",
+            "Actual repository load identity; actual AsyncDispose1/Dispose0",
+            "Exact Delete context already reached"
+          ],
+          "unreached": [
+            "Next continuation/context/state assertions after871",
+            "Later repository persistence assertions"
+          ],
+          "source_cause": "SendSagaPipe unguarded LogRemoved at109 after actual Delete",
+          "healthy_control": "Same emission/loggerThrows:false passes full continuation and applicable persistence assertions.",
+          "prior166_precision": "Created both cases in166 failed earlier852 fixture; current realinput correction now makes healthyCreatedpass and hostilecase reach actuallogger. Do not retroactively upgrade166 fixture outcomes."
+        },
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Used\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source871 Assert.Null(operationFailure) receives unique Used InvalidOperationException diagnostic.",
+          "reached": [
+            "Real selected structured diagnostic single; Debug level; exact saga CorrelationId; hostile ThrowCount1",
+            "Actual repository load identity; actual AsyncDispose1/Dispose0"
+          ],
+          "unreached": [
+            "Next continuation/context/state assertions after871",
+            "Later repository persistence assertions"
+          ],
+          "source_cause": "SendSagaPipe unguarded LogUsed at89 before policy",
+          "healthy_control": "Same emission/loggerThrows:false passes full continuation and applicable persistence assertions.",
+          "prior166_precision": "Created both cases in166 failed earlier852 fixture; current realinput correction now makes healthyCreatedpass and hostilecase reach actuallogger. Do not retroactively upgrade166 fixture outcomes."
+        },
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Created\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source871 Assert.Null(operationFailure) receives unique Created InvalidOperationException diagnostic.",
+          "reached": [
+            "Real selected structured diagnostic single; Debug level; exact saga CorrelationId; hostile ThrowCount1",
+            "Valid concrete InMemory message input correlation guard; real factory invocation1; exact input callback reference"
+          ],
+          "unreached": [
+            "Next continuation/context/state assertions after871",
+            "Later repository persistence assertions"
+          ],
+          "source_cause": "FactoryMethodSagaFactory.SendAsync proxy.LogCreated at55 synchronously throws before actual next.SendAsync",
+          "healthy_control": "Same emission/loggerThrows:false passes full continuation and applicable persistence assertions.",
+          "prior166_precision": "Created both cases in166 failed earlier852 fixture; current realinput correction now makes healthyCreatedpass and hostilecase reach actuallogger. Do not retroactively upgrade166 fixture outcomes."
+        }
+      ],
+      "created_extension_qualification": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE167_CREATED_DIAGNOSTIC_F152_EXTENSION_ROOT_QUALIFICATION_R1.json",
+        "sha256": "8324890f91d07a010f33ffaff07d6a2ef62009d51d9e8fe0355b56dd33f7a374"
+      },
+      "current_three_call_fix_qualification": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE168_F153_REPAIR_F152_PARTIAL_AND_TWO_NEW_CAUSES_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "11575430e85031232a683d5e6d0b2c661d6a8fd008a80c20625b949a9988ea60"
+      },
+      "remaining_family_candidate": "Actual Azure Insert success/409/500 diagnostic extension qualified172; pre-reviewed repair182 ready. Actual Dynamo/EF Original12 pre-reviewed181 not yet executed; connection owning boundaries research pending.",
+      "current169_default_created_original": {
+        "case": "ViciOne.ServiceBus.Tests.Configuration.SagaInstanceFactoryDeepContractTests.DefaultSend_CreatedDebugDoesNotPreventDownstreamProgressAsync(loggerThrows: True)",
+        "classification": "CAUSAL_PRODUCT_DEFAULT_FACTORY_CREATED_DEBUG_FAILURE_EXISTING_F152_FAMILY",
+        "first_failure": "Source375 Assert.Null(failure) receives unique IOException Default saga Created diagnostic failure after public async wrapper terminal and manually released completion TCS completed successfully.",
+        "reached": [
+          "Actual public DefaultSagaFactory.SendAsync with valid correlated concrete message, selected structuredCreated single/Debug/correlation and hostile ThrowCount1; fixture logger.ThrownFailure identity equals unique expected IOException.",
+          "Actual public wrapper joined and timeout excluded; wrapper terminal and fixture completion TCS successful before375."
+        ],
+        "unreached": [
+          "Actual returned downstream-task identity, pipe.Count1/context/result/source metadata assertions after375"
+        ],
+        "source_cause": "DefaultSagaFactory.SendAsync44 calls proxy.LogCreated synchronously before next.SendAsync47; diagnostic exception exits first, so downstream is not invoked. Same captured public wrapper produces native unique IOException.",
+        "healthy_control": "loggerThrows:false proves real downstream invoked once; public task pending on completion TCS; exact returned TCS task; all saga/message/receive/serializer identity assertions passed.",
+        "precision": "The released fixture completion TCS in hostile case is not evidence the downstream ran; exact returned-task/pipe assertions are unreached. Original family F152 remains open for this sibling until actual fix qualifies.",
+        "cleanup": "Finally releases/joins completion task and observes actual wrapper even terminal fault; timeout excluded; exact ambient LogContext restored. No transport/durable/wholeSaga claim."
+      },
+      "default_created_original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package169-load-outbox-fixed-default-created-original118-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+        "sha256": "fe50839abafc15255e2d2e7c6a9d13a3a434a7ab742ab879ab2081a1d09e7d2e",
+        "manifest_sha256": "ad68c05f26e8eb0a7eff5fd3769b1ca80ef189fef1cacc95870e0ff3235815ca",
+        "freeze_sha256": "d1bde8c30a7c52c41f4a651a3a2e4a714301c19b98c8082329d57697adf7926e"
+      },
+      "current170_default_fixed_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-default-created-fixed-added-ctor-original134-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+        "sha256": "f8716481dbee8a61c8c13d029c0c89c10b4b78c7be02dff159ca940e9ac7796e",
+        "manifest_sha256": "d825a63c6382e5d8540754671c27e378a539f67c1827ad64ec1f9aa0331d128a",
+        "freeze_sha256": "04d1af01d3a724e7909b64259ce5b4591edc05c813d608f64bdc5c1f88ffb2da"
+      },
+      "current170_added_original": {
+        "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.MissingSaga_AddedDebugDoesNotPreventOwnedDownstreamProgressAsync(loggerThrows: True)",
+        "classification": "CAUSAL_PRODUCT_ADDED_DEBUG_FAILURE_EXISTING_F152_FAMILY",
+        "first_failure": "Source949 Assert.Null(failure) receives exact unique IOException Added diagnostic failure.",
+        "reached": [
+          "Actual public MissingSagaPipe operation terminal; timeout excluded; actual repository.Add state identity exactlyonce.",
+          "Selected structuredAdded single/Debug/correlation/hostile ThrowCount1; acquired addedcontext AsyncDispose1/Dispose0; borrowedinput disposal0; failure identity Same(loggerFailure,failure) before949."
+        ],
+        "unreached": [
+          "Next/Save exact acquired-context assertions after949",
+          "Post949 public success and unrelated repository route absence assertions"
+        ],
+        "source_cause": "MissingSagaPipe52 calls acquiredContext.LogAdded before next.SendAsync54; diagnostic becomes operationFailure and triggers original discard/disposal then preserved IOException.",
+        "healthy_control": "loggerThrows:false passes exact next/save context, success, no discard/other routes. Source same caller/new fixture valid.",
+        "cleanup": "Public task rejoined/observed with timeout exclusion and ambient logger restored. Runtime reached AsyncDispose1 beforefirst949.",
+        "family_precision": "Adds another concrete caller to still-open F152; no automatic unrelated new finding ID."
+      },
+      "current170_added_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-default-created-fixed-added-ctor-original134-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+        "sha256": "f8716481dbee8a61c8c13d029c0c89c10b4b78c7be02dff159ca940e9ac7796e",
+        "manifest_sha256": "d825a63c6382e5d8540754671c27e378a539f67c1827ad64ec1f9aa0331d128a",
+        "freeze_sha256": "04d1af01d3a724e7909b64259ce5b4591edc05c813d608f64bdc5c1f88ffb2da"
+      },
+      "current170_root_registration": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE170_DEFAULT_CREATED_FIXED_ADDED_EXTENSION_F156_CTOR_ROOT_REGISTRATION_R1.json",
+        "sha256": "05331b027a1d4772e8eb91eefd108db578b0b0e488c68333ab0c8057b32ee468"
+      },
+      "added_controls": 2,
+      "scope": "MissingSagaPipe acquired Add context progresses through exact next and Save; optional hostile Added logger cannot turn success into discard; owned async disposal remains once, borrowed input unowned.",
+      "family_open": true,
+      "current_added_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE171_F156_FIXED_F152_ADDED_EXTENSION_AND_F157_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "33bdd3550f81b047cb2fb8b60e2a24316d4a071a81d68c01af3463d203db5f82"
+      },
+      "current172_azure_original_contexts": [
+        {
+          "family": "Azure Table insert diagnostic outcome",
+          "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 0, loggerThrows: True)",
+          "first_failure": "103 Assert.Null(failure)",
+          "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+          "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+          "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+          "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+          "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+        },
+        {
+          "family": "Azure Table insert diagnostic outcome",
+          "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 1, loggerThrows: True)",
+          "first_failure": "103 Assert.Null(failure)",
+          "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+          "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+          "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+          "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+          "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+        },
+        {
+          "family": "Azure Table insert diagnostic outcome",
+          "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 2, loggerThrows: True)",
+          "first_failure": "96 Assert.Same(storageFailure,failure)",
+          "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+          "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+          "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+          "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+          "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+        }
+      ],
+      "current172_azure_original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-add-insert-fixed-ownership-azure-original-fresh3-independent-r1/REPORT.json",
+        "sha256": "08a094db43708a72c045c296bae1538d0187867e898167611b7bfb9da859027c",
+        "manifest_sha256": "2e00191254b29b3bad11a1f3773309f2b3eeb2e45f9e0e4f61acfe76b496da84",
+        "freeze_sha256": "2549deb6205053271a043ef129a15bb14511d154d7c1f2df8db603d57ae46c2a"
+      },
+      "current_azure_source_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE173_TRANSPORT_PRODUCT3_AZURE_PRODUCT1_MULTISTOP_TEST1_PROVIDER_ORIGINAL_TEST2_REQ3_ROOT_APPLICATION_R1.json",
+        "sha256": "7ce81c5c9bcf4d25855d7e031c7fef8275e05d60ae49bbb523b7bd40cb66b10d"
+      },
+      "current173_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE173_TRANSPORT_THREE_FIXED_F152_AZURE_FIXED_PROVIDER_FIVE_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "e13eb819d80bf4b1d26550977499ef6ec1289e2eca42e74b4d293a8c4b341ac4"
+      },
+      "current173_provider_original_contexts": [
+        {
+          "scope": "dynamo",
+          "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 2, loggerThrows: True)",
+          "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:117 Assert.Same",
+          "actual_cause": "DynamoDB insert diagnostic failure",
+          "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+          "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+          "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+          "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+        },
+        {
+          "scope": "dynamo",
+          "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 0, loggerThrows: True)",
+          "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:107 Assert.Null",
+          "actual_cause": "DynamoDB insert diagnostic failure",
+          "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+          "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+          "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+          "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+        },
+        {
+          "scope": "dynamo",
+          "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 1, loggerThrows: True)",
+          "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:117 Assert.Same",
+          "actual_cause": "DynamoDB insert diagnostic failure",
+          "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+          "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+          "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+          "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+        },
+        {
+          "scope": "ef",
+          "case": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.DbContextSagaRepositoryContextTests.Insert_DebugDiagnosticsPreservePersistedOutcomeAsync(outcome: 0, loggerThrows: True)",
+          "first_assertion": "DbContextSagaRepositoryContextTests.cs:104 Assert.Null",
+          "actual_cause": "EF insert diagnostic failure",
+          "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+          "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+          "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+          "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+        },
+        {
+          "scope": "ef",
+          "case": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.DbContextSagaRepositoryContextTests.Insert_DebugDiagnosticsPreservePersistedOutcomeAsync(outcome: 1, loggerThrows: True)",
+          "first_assertion": "DbContextSagaRepositoryContextTests.cs:104 Assert.Null",
+          "actual_cause": "EF insert diagnostic failure",
+          "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+          "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+          "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+          "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+        }
+      ],
+      "current173_Azure_fixed_scope": "All39 current Azure tests pass, including original6 real SDK-table success/409/500 healthy and hostile diagnostics. Three owning optional diagnostic calls guarded; storage/factory/token/ETag contracts unchanged.",
+      "current174_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE174_PROVIDER_FIXED_F152_CONFIG_ORIGINAL_HOST_CONSUMER_TWO_REGISTERED_F001_XML5_EXTENSION_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "bcc34fc92291a4991c54b732f522d3fa6c3974f2f7712fbc1b2bff315cfc81e2"
+      },
+      "current174_provider_fixed_scope": "All36 Dynamo and19EF unchanged selected case IDs pass, including all12 original insert cases with actual later identity, context/state, primary storage error, terminal operation and owned SDK disposal assertions. Azure39, Coreold160, prior117/neighbors2263 pass. Twelve owningSaga/Azure/Dynamo/EF callsites fixed; two ConfigSaga routes now qualified Original failures awaiting175 repair.",
+      "current174_config_original_contexts": [
+        {
+          "scope": "core",
+          "case": "ViciOne.ServiceBus.Tests.Sagas.LegacySagaIntegrationTests.SagaRegistration_DebugFailureDoesNotPreventPublicMessageDeliveryAsync(directConnection: True, loggerThrows: True)",
+          "first_assertion": "LegacySagaIntegrationTests.cs:91 Assert.Null",
+          "actual_unique_diagnostic": "Saga registration diagnostic failure",
+          "source_cause": "Actual optional Saga/ConnectSaga log executes before repository specification/configuration/connection admission.",
+          "reached": "Actual bus startup/direct registration joined; selected structured debug Saga type identity, level, call count and exact logger cause were checked.",
+          "unreached": "Configuration callback count, selected public-send persistence, delivered snapshot and healthy handle after firstNull were not reached.",
+          "controls": "Matching healthy logger route passes; actual finally restores logging and joins owned work. No inferred later assertions on failure."
+        },
+        {
+          "scope": "core",
+          "case": "ViciOne.ServiceBus.Tests.Sagas.LegacySagaIntegrationTests.SagaRegistration_DebugFailureDoesNotPreventPublicMessageDeliveryAsync(directConnection: False, loggerThrows: True)",
+          "first_assertion": "LegacySagaIntegrationTests.cs:91 Assert.Null",
+          "actual_unique_diagnostic": "Saga registration diagnostic failure",
+          "source_cause": "Actual optional Saga/ConnectSaga log executes before repository specification/configuration/connection admission.",
+          "reached": "Actual bus startup/direct registration joined; selected structured debug Saga type identity, level, call count and exact logger cause were checked.",
+          "unreached": "Configuration callback count, selected public-send persistence, delivered snapshot and healthy handle after firstNull were not reached.",
+          "controls": "Matching healthy logger route passes; actual finally restores logging and joins owned work. No inferred later assertions on failure."
+        }
+      ],
+      "current175_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE175_CONFIG_HOST_CONSUMER_PRODUCT3_INITIALIZER_MEDIATOR_XML3_ROOT_APPLICATION_R1.json",
+        "sha256": "1a76a37b0a7d67f16f281164d036fce6b62c751e0e861417a2ec70ee871d7420"
+      },
+      "historical_pre175_root_acceptance_status": "CURRENT175_INDEPENDENT_REPAIR_APPLIED_STRICT_NATIVE_FRESH_PENDING",
+      "current175_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE175_F001_XML5_F152_ALL14_HOST_CONSUMER_CURRENT2677_FRESH7_ROOT_REPAIR_ACCEPTANCE_R1.json",
+        "sha256": "983c8b5e8845387d8cd662a3eaef8c99efbbf474daaa6897b63e3fbb1e7d7df9"
+      },
+      "current175_repair_scope": "All14 reviewed owning optional diagnostics: Saga5,Azure3,Dynamo2,EF2,ConfigSaga2. Last two real public registration routes now pass healthy/hostile controls plus genuine send/persistence/consume. Earlier12 fixed under independent prior receipts and current retained case sets. Public direct Log helpers retain their own propagation contract.",
+      "historical_pre342_status": "CURRENT_REPAIR_ROOT_ACCEPTED_BOUNDED",
+      "current342_consumer_extension": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE342_F152_CONSUMER8_ORIGINAL16_SCOPE_EXTENSION_AND_PRODUCT1_ROOT_APPLICATION_R1.json",
+        "sha256": "60587dae32447777e91a4ccb4aa06fb90714e6b6f7a16fdb29fd9be398694b42"
+      },
+      "current344_azure_extension": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE344_F152_AZURE2_ORIGINAL12_R2_SCOPE_EXTENSION_PRODUCT1_ROOT_APPLICATION_R1.json",
+        "sha256": "881058ccb9041ee216bee39edd1105d74b49fb0a5f508ffbc060bba9e77bb22b"
+      },
+      "current347_extended24_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE347_F152_EXTENDED24_CONSUMER16_AZURE12_FIXED_FRESH2_SOURCE8_NORM2_IDENTITY14_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "8ca5f12aabcfeb0ba33e83dfe033d421fc6405902b5f41f0bd148b8b166d7823"
+      },
+      "current347_scope": "Historical14 +Consumer8/AzureBlob2. Actual unchangedfixed16/12 independently qualified +Core7878/Azure37 strictfresh2; fullAPI remains open.",
+      "historical_pre383_status": "CURRENT_REPAIR_ROOT_ACCEPTED_BOUNDED",
+      "current383_rabbit_basic6_extension": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE383_F152_RABBIT_BASIC6_ORIGINAL12_ROOT_SCOPE_EXTENSION_REGISTRATION_R1.json",
+        "sha256": "33eb061e11504a2c652226233dbefc3bd09c4155762b1089bd6e6a9f4fbf15ca"
+      },
+      "current383_scope": "Current new6 owning Log sites only; Original12 six healthy controls pass/six hostile fail. Historical24-site repair acceptance retained in its original scope. Extra EndOfStream/private channel-shutdown calls held.",
+      "historical_pre388_status": "CURRENT383_RABBIT_BASIC6_INDEPENDENT_ORIGINAL_CONFIRMED_REPAIR_PENDING",
+      "current388_joint_product_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE388_F152_BASIC6_F219_OBSERVER_F220_DEPENDENCY_JOINT_PRODUCT3_ROOT_APPLICATION_R1.json",
+        "sha256": "1d263820971892354c1fa8a19ab3240877541cdd6265469f5280054025e02b78"
+      },
+      "historical_pre391_status": "CURRENT388_REPAIR_APPLIED_FOCUSED_NATIVE_MODULE_STRICT_FRESH_PENDING",
+      "current391_extra2_extension": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE391_F152_BASIC_EXTRA2_ORIGINAL4_ROOT_SCOPE_EXTENSION_REGISTRATION_R1.json",
+        "sha256": "df4d56aea9da698a9b861f4c634690acbfeccd666ed133ef7b7d3f800629cac7"
+      },
+      "current391_scope": "Historical24 and current6 repair/focusedproof preserved; extra2 original4 actual2P2F firstNull86; no newFinding or currentF152 closure",
+      "historical_pre394_status": "CURRENT390_RABBIT_EXTRA2_INDEPENDENT_ORIGINAL_CONFIRMED_REPAIR_PENDING",
+      "current394_root_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE394_F152_BASIC_EXTRA2_PRODUCT1_ROOT_APPLICATION_R1.json",
+        "sha256": "e885a4bcd72409bdd20b99d9c838ebf2374be75f731458f128b27d9b0249d97a"
+      },
+      "historical_pre398_status": "CURRENT394_REPAIR_APPLIED_FIXED4_PRIOR12_MODULE_STRICT_FRESH_PENDING",
+      "current398_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE398_F152_BASIC8_FIXED16_RABBIT595_STRICT_FRESH_SOURCE6_OWNER4_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "af61bcce9255710227de7dfefe4722345aa083522a2360bcbc3666c2745ea484"
+      },
+      "current398_scope": [
+        "Only eight optional owning diagnostic expressions; mandatory state/SDK/base work and general transportfault helper policy unchanged.",
+        "Native public lifecycle and event removal evidence finite16; private worker/drain, broker/network, arbitrary replay/concurrent SPI remain separate."
+      ],
+      "historical_pre408_status": "CURRENT398_BASIC8_FIXED16_MODULE595_STRICT_FRESH_ROOT_REPAIR_ACCEPTED_BOUNDED",
+      "current408_extension": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE408_ORIGINAL30_F221_F222_F223_F152_ROOT_FINDING_REGISTRATION_R1.json",
+        "sha256": "57c60573316d54dff62d03a617ea615d76f39ed9799c307934bb533e32a63c25"
+      },
+      "historical_pre411_status": "CURRENT407_OWNING_COURIER_AND_HARNESS_DIAGNOSTICS_CONFIRMED_REPAIR_PENDING",
+      "current411_product_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE411_F152_F221_F222_F223_PRODUCT5_ROOT_APPLICATION_R1.json",
+        "sha256": "7fbc13579435815b0c7db1bfe8e6e9287e4fcc7a7ae89318c1327737fa517cdb"
+      },
+      "historical_pre416_status": "CURRENT411_PRODUCT_APPLIED_UNCHANGED_FOCUSED30_MODULE_STRICT_FRESH_PENDING",
+      "root_repair_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE416_F152_F221_F222_F223_FIXED30_CORE7935_FRESH3_SOURCE12_OWNER_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "2db64416416c9dbec310a502a410779a8e6dab1cff6501a60ff6df777c7215a3"
+      },
+      "root416_admin_completion": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE416_ADMIN_COMPLETION_FINDING_ID_FORMAT_PRECISION_R1.json",
+        "sha256": "17da477334a91c925dacd127e3f4d86ecc15041bac5f13cc0c4856583876484d"
+      },
+      "historical_pre421_status": "ROOT_ACCEPTED_BOUNDED_REPAIR_CURRENT411_FIXED30_MODULE7935_STRICT3_FRESH3",
+      "current421_extension": {
+        "root_registration": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE421_ORIGINAL11_F224_F225_AND_F152_SCOPE_EXTENSION_ROOT_REGISTRATION_R1.json",
+          "sha256": "b460b14aebd23f1645e1df5cfd66af8aa4edb06303f334be4d6994021cbf529b"
+        },
+        "original": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-original11-independent-native-qualification-r1/REPORT.json",
+          "sha256": "11d7b3deb8a554ec5a40d21d8c9d2a71c1b49c77045a55467863b85a2dca0df0"
+        },
+        "native_total": 6,
+        "passed": 3,
+        "failed": 3,
+        "scopes": [
+          "BaseHost.Start Debug/Warning",
+          "SagaStateMachineRegistration.Configure Info"
+        ],
+        "all_prior_repairs_retained": true
+      },
+      "historical_pre423_status": "REOPENED_CURRENT419_HOST_SAGA_OWNING_DIAGNOSTICS_PRODUCT_REPAIR_PENDING",
+      "current423_product_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE423_F152_F224_F225_PRODUCT4_ROOT_APPLICATION_R1.json",
+        "sha256": "22579f9da2ae9428cbe73846ca6b2d5a0705e1d7267e128918ca080ac06ebcc9"
+      }
+    },
+    "current429_root_acceptance": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE429_F152_F224_F225_FIXED11_MODULE8362_STRICT_FRESH4_SQL17_SQS1_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "d5c4a247e7ba36142d85fb94766a4e34e9397f1f41d893e3ca29bd241a81fbd5"
+    }
+  },
+  "actual_original8_counts": {
+    "total": 8,
+    "passed": 4,
+    "failed": 4,
+    "skipped": 0
+  },
+  "first_causal_failures": "Four hostile cases first Null56/153/253/253 after structured exactownlogger/exact uniqueIO prerequisites; healthy trueBuild/Start/Ready/Stop or distinct twoagentadoption or nativeheld consumer→materialization/producerretirement/next/reuse. Later hostile oracles explicitly unreached.",
+  "family_decision": "F152 existing optional-owning diagnostic family extended exactly four Active sites; no new finding count. Previous owned diagnostic repairs retained history and bounded; four current failures require fresh repair acceptance.",
+  "counts": {
+    "known": 227,
+    "bounded_before": 225,
+    "bounded_after": 224,
+    "API_original_remaining": 70
+  },
+  "root_source_reads": [
+    "492643 current3whole",
+    "f7d62d differentSourcewhole",
+    "c90527 differentOriginal8 all substantive fields; repeatedFixed6 artifacts central cut not human Sourcecredit"
+  ],
+  "Test_Req_Master_delta": false,
+  "XML_API_unchanged": true,
+  "SourcePeer_only_guards4": true,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package437-f152-activemq4-product3-root-application-before-r1",
+  "next": "Unchanged Test8 fixedactual, different Native, wholeActive module; bundle strict/current freshCore-SQS-Active publication after qualified local repairs. Final wholeAPI/gates still open."
+}

@@ -25,7 +25,7 @@ public class SequentialEndpointResolver :
         if (nodes.Length == 0)
             throw new ArgumentException("At least one cluster node must be specified", nameof(nodes));
 
-        _nodes = nodes;
+        _nodes = (ClusterNode[])nodes.Clone();
         _settings = settings;
         _nextHostIndex = 0;
     }

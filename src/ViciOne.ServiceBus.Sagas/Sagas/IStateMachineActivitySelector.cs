@@ -26,7 +26,7 @@ public interface IStateMachineActivitySelector<TInstance, TData>
 public interface IStateMachineActivitySelector<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
-    /// <summary>An activity which accepts the instance and data from the event.</summary>
+    /// <summary>An activity that accepts the saga instance without requiring an event data contract.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <returns>The event activity binder produced by the operation.</returns>
     IEventActivityBinder<TInstance> OfType<TActivity>()

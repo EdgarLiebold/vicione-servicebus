@@ -1,0 +1,223 @@
+[
+  {
+    "id": "F-SB-API-027",
+    "severity": "Low",
+    "classification": "CONFIRMED_CONTRACT_DEFECT",
+    "owner": "Core configuration diagnostic exception snapshot",
+    "package": "ViciOne.ServiceBus.Abstractions",
+    "symbols": [
+      "P:ViciOne.ServiceBus.ConfigurationException.Results",
+      "M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ValidationResult},System.String)",
+      "M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ValidationResult},System.String,System.Exception)"
+    ],
+    "locations": [
+      {
+        "path": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+        "line": 54
+      },
+      {
+        "path": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+        "line": 60
+      }
+    ],
+    "contract": "Results XML promises an immutable snapshot. API review sectionK requires ownership/immutability XML match. Container membership is mutable independently of caller-defined entry internals.",
+    "trigger": "Construct public ConfigurationException with builtin immutable Failure result, then cast returned Results object to IList<ValidationResult> and replace index0 with builtin Success result.",
+    "actual": "Both results-taking constructors return ValidationResult[] under IReadOnlyList. Public IList index assignment succeeds and changes Failure to Success. Original listclear positive control is independently correct; original exceptionMessage andinnerIdentity remain stable. Fresh NuGet baseline modes0/0/2, candidateall0, countermutant0/0/2; repeated original overwriteoracle2/0/2.",
+    "expected": "Result membership stays frozen after construction; attempted listreplacement is rejected or cannot alter retained failure, with input sequence snapshot/message/inner controls preserved.",
+    "causal_path": [
+      "Public results-taking constructor",
+      "Snapshot(results) returns results.ToArray()",
+      "Public Results exposes exact array object",
+      "IList<ValidationResult> indexsetter overwrites retained result"
+    ],
+    "user_impact": "Diagnostic consumers can observe altered failure metadata despite immutable XML promise. No changed startup acceptance, retryclassification, security boundary, remote exploit, or deep immutability of arbitrary callerprovided entries claimed.",
+    "reproduction": [
+      "dotnet ResultsOracle.dll returned-overwrite; cwd mutations/eventhub-more-review/CONFIGURATION_RESULTS_IMMUTABILITY/baseline/original; actualexit2, exactlog inclosure"
+    ],
+    "existing_oracle": "ConfigurationFailure_SnapshotsItsValidationResults checks original list.Clear, IReadOnlyList assignability and getterCanWritefalse; no mutation of returned runtime collection. FailedResults_ArePreservedOnTheConfigurationException checks exact failure reference and ContainsFailure only.",
+    "countermutant": {
+      "status": "EXECUTED_RED_GREEN_RED_CAUSE_CLOSED",
+      "receipt": "mutations/CONFIGURATION_RESULTS_IMMUTABILITY_MUTATION_CLOSURE.json",
+      "source_files_changed": 1,
+      "native_executions": 12,
+      "baseline_return_verified_files": 6209,
+      "actual_corrected_dll_sha256": "db953a0246d317e10c2dd068fb1e8375820fab0e47e0ed2034d1207c2ce2955c",
+      "actual_counter_dll_sha256": "c33db2969a6a245bf4fe669ea037ebef806906ada5ed3c27faa722b0bdf99647"
+    },
+    "options": [
+      {
+        "option": "Expose Array.AsReadOnly(results.ToArray()) at existing snapshot owner",
+        "pros": "Small one-line ownership correction; stable input sequence snapshot and public signatures preserved",
+        "cons": "Undocumented concrete array casts now fail; callerowned ValidationResult internals remain external"
+      },
+      {
+        "option": "Document an independent but structurally mutable snapshot honestly",
+        "pros": "Preserves actual runtime array behavior and avoids concrete-layout behavior change",
+        "cons": "Weakens advertised ownership promise and leaves mutable diagnostic collection exposed; less consistent with intended diagnostic snapshot"
+      }
+    ],
+    "recommendation": "Prefer the first option. Freeze container structure without cloning or taking ownership of arbitrary ValidationResult implementation objects; define that shallow boundary explicitly in XML.",
+    "compatibility": "Source/binary/wire/schema signatures unchanged. Behavioral difference: returned collection cannot be overwritten through IList; undocumented arraycast fails. No stored-data migration or removed capability required.",
+    "evidence": [
+      "mutations/CONFIGURATION_RESULTS_IMMUTABILITY_MUTATION_CLOSURE.json",
+      "mutations/eventhub-more-review/CONFIGURATION_RESULTS_IMMUTABILITY/correction.patch"
+    ],
+    "confidence": "High: actual package/DLL-bound same oracle and one-line cause correction/counter; exact input rollback. Scope is structural result membership only.",
+    "open": "Deep snapshots of externally implemented ValidationResult entries and other diagnostic APIs not covered."
+  },
+  {
+    "id": "F-SB-API-028",
+    "severity": "Medium",
+    "classification": "CONFIRMED_STARTUP_VALIDATION_DEFECT",
+    "owner": "Core host options validation and application-host lifecycle",
+    "package": "ViciOne.ServiceBus + ViciOne.ServiceBus.Abstractions",
+    "symbols": [
+      "M:ViciOne.ServiceBus.Configuration.ValidateViciOneServiceBusHostOptions.Validate(System.String,ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions)",
+      "P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.StartTimeout",
+      "P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.StopTimeout",
+      "P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.ConsumerStopTimeout"
+    ],
+    "locations": [
+      {
+        "path": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+        "line": 42
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+        "line": 150
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+        "line": 201
+      }
+    ],
+    "contract": "Review sectionC requires invalid static options rejected before receivers start with feature/bus/property/correction. Existing ValidateOnStart declares a lifecycle-policy validation boundary. Actual .NET10.0.10 CTS checks the truncated whole-millisecond delay against uint.MaxValue-1.",
+    "primary_sources": [
+      "https://learn.microsoft.com/en-us/dotnet/api/system.threading.cancellationtokensource.-ctor?view=net-10.0",
+      "https://github.com/dotnet/runtime/blob/v10.0.10/src/libraries/System.Private.CoreLib/src/System/Threading/CancellationTokenSource.cs"
+    ],
+    "trigger": "Ordinary DI AddViciOneServiceBus + explicit MessageLimits.Conservative + InMemory; set StartTimeout or StopTimeout to TimeSpan.FromMilliseconds(uint.MaxValue), ConsumerStopTimeout same with StopTimeout unset, or StartTimeout TimeSpan.MaxValue.",
+    "actual": "IStartupValidator.Validate accepts all four invalid scenarios. Actual ordinary IHostedService runtime start/stop rejects StartTimeout/StopTimeout with ArgumentOutOfRangeException(delay) at ServiceBusHostedService.ExecuteWithTimeoutAsync. Existing negative and relation checks remain functional.",
+    "expected": "Early OptionsValidationException names Host lifecycle, all bus scope, exact offending property and corrective supported range; null and actual maximum/fractional controls accepted.",
+    "causal_path": [
+      "AddViciOneServiceBus registers ValidateOnStart and ValidateViciOneServiceBusHostOptions",
+      "AddPositiveTimeoutFailure checks only positivity; relation only Consumer<=Stop",
+      "ServiceBusHostedService.ExecuteWithTimeoutAsync constructs actual CTS(timeout, TimeProvider)",
+      "Too-large static configuration fails late during start/stop; ConsumerAgent uses CTS timeout when active (source-only downstream evidence)"
+    ],
+    "user_impact": "A configuration declared valid cannot start or stop via the normal hosted runtime. StopTimeout failure occurs after successful actual bus startup and before depot stop. No lost-message, hung active-consumer, custom clock or cloud claim.",
+    "reproduction": [
+      "dotnet HostTimeoutOracle.dll invalid-start: baseline2, correction0, counter2",
+      "dotnet HostTimeoutOracle.dll runtime-start/runtime-stop: baseline0 characterization logs show late delay exception; corrected0 logs show early validation"
+    ],
+    "existing_oracle": "ViciOneServiceBusHostOptionsValidationTests covers zero/negative Start/Stop/Consumer, Consumer>Stop and positive ten-second policies. HostedServiceLifecycleOwnershipTests covers normal ownership, fake clock and cancellation; no upper-bound case.",
+    "countermutant": {
+      "status": "EXECUTED_RED_GREEN_RED_CAUSE_CLOSED",
+      "receipt": "mutations/HOST_TIMEOUT_BOUNDS_MUTATION_CLOSURE.json",
+      "source_files_changed": 1,
+      "native_executions": 36,
+      "baseline_return_verified_files": 6209,
+      "actual_corrected_dll_sha256": "2066f48f2e8cf155ec7872ac0a1cc3e964d590a18166f930faa3512799329c73",
+      "actual_counter_dll_sha256": "fc02d528397bf50e91dd50cfd57ee323d3e353c7dcb1bad626a5ac0dcff8c40d"
+    },
+    "options": [
+      {
+        "option": "Validate representable CTS range at existing common host-policy validator",
+        "pros": "One ownership boundary, invalid Start/Stop/Consumer diagnosed early, preserves all timer-supported whole-millisecond and fractional controls",
+        "cons": "Adds early rejection for previously accepted but unusable configuration; XML supported range should be explicit"
+      },
+      {
+        "option": "Implement long durations by an owned timer abstraction that chunks delay using TimeProvider",
+        "pros": "Can retain genuinely useful longer host policies without a smaller supported range",
+        "cons": "Requires new time/overflow/cancellation/lifetime semantics across all consuming owners; disproportional unless product needs multiweek timeouts"
+      }
+    ],
+    "recommendation": "Prefer early common range guard matching actual .NET10 timer truncation, with exact boundary controls and existing policy checks. Keep Consumer<=Stop invariant. No arbitrary maximum-days policy or silent clipping.",
+    "compatibility": "No source/binary/wire/schema changes or migration. Previously unusable delay rejected earlier. Actual uint.MaxValue-1 milliseconds plus one tick must remain accepted by truncation; isolated patch proves it.",
+    "evidence": [
+      "mutations/HOST_TIMEOUT_BOUNDS_MUTATION_CLOSURE.json",
+      "mutations/eventhub-more-review/HOST_TIMEOUT_BOUNDS-verified/correction.patch",
+      "mutations/eventhub-more-review/HOST_TIMEOUT_BOUNDS-verified/baseline/supplemental/runtime-start.log",
+      "mutations/eventhub-more-review/HOST_TIMEOUT_BOUNDS-verified/baseline/supplemental/runtime-stop.log"
+    ],
+    "confidence": "High for actual normal DI and hosted Start/Stop owners; three distinct target DLLs, unchanged oracles,36 native executions and6209 source rollback.",
+    "open": "Active ConsumerAgent shutdown outcome, all provider host adapters, custom clocks and long-duration alternative remain outside executed scope. First attempt lacked two test-only helper extensions; own compile failure preserved, corrected public API consumer used identically across final phases."
+  },
+  {
+    "id": "F-SB-API-030",
+    "severity": "Medium",
+    "classification": "CONFIRMED_BATCH_STARTUP_VALIDATION_DEFECT",
+    "owner": "BatchOptions validation and system timer boundary",
+    "package": "ViciOne.ServiceBus.Abstractions + ViciOne.ServiceBus",
+    "symbols": [
+      "M:ViciOne.ServiceBus.Configuration.BatchOptions.Validate",
+      "P:ViciOne.ServiceBus.Configuration.BatchOptions.TimeLimit"
+    ],
+    "locations": [
+      {
+        "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+        "line": 59
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+        "line": 17
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+        "line": 152
+      }
+    ],
+    "contract": "Selected static batch interval must be usable by default system timer and fail validation before receivers start; actual .NET10.0.10 TimerQueueTimer.Change converts whole milliseconds then rejects >4294967294. ReviewC demands startup validation; positivity alone is insufficient.",
+    "primary_sources": [
+      "https://raw.githubusercontent.com/dotnet/runtime/v10.0.10/src/libraries/System.Private.CoreLib/src/System/Threading/Timer.cs",
+      "https://raw.githubusercontent.com/dotnet/runtime/v10.0.10/src/libraries/Common/src/System/TimeProvider.cs"
+    ],
+    "trigger": "Normal public DI batch registration with MessageLimit2 and TimeLimit=TimeSpan.FromMilliseconds(uint.MaxValue). Explicit MessageLimits and InMemory selected; no external resources.",
+    "actual": "Public BatchOptions.Validate and actual normal DI startup/composition accept interval with no failures. Actual first valid delivered Item then faults ArgumentOutOfRangeException(dueTime) in .NET timer.Change, propagated from BatchConsumer.AddAsync.",
+    "expected": "Reject unsupported default-timer interval before bus/receiver startup with Batch.TimeLimit and supported range/correction; accept4294967294ms and max+1tick matching whole-millisecond timer conversion.",
+    "causal_path": [
+      "BatchOptions.Validate checks positive interval only",
+      "Normal registration runs validation then captures immutable BatchRuntimeSettings",
+      "BatchConsumer creates initially disabled system timer successfully",
+      "First input calls timer.Change(oversized TimeLimit) and positively terminates with .NET ArgumentOutOfRangeException",
+      "Normal bus stop and isolated cleanup complete; no application consumer reached for invalid interval"
+    ],
+    "user_impact": "Configuration marked valid starts receivers but cannot process its first batch message because its configured timer is unrepresentable. Actual source and public native fault proven; no multiweek waiting or all-provider guarantees inferred.",
+    "reproduction": [
+      "dotnet BatchTimeOracle.dll timer-startup-too-large:2/0/2",
+      "dotnet BatchTimeOracle.dll timer-runtime-too-large: baseline/counter0 log actual late fault; corrected0 log early public Results rejection",
+      "normal-clock/valid-maximum/valid-fraction0allphases with actual size2 delivery"
+    ],
+    "existing_oracle": "BatchRuntimeStateTests checks injected timer rejection/fault ownership and option snapshot. BatchTimeProviderTests checks forward interval boundaries with FakeTimeProvider; no default System timer upper-range configuration case. Existing positivity/product/enum checks retained.",
+    "countermutant": {
+      "status": "EXECUTED_RED_GREEN_RED_CAUSE_CLOSED",
+      "receipt": "mutations/BATCH_TIMER_UPPER_BOUND_MUTATION_CLOSURE.json",
+      "source_files_changed": 1,
+      "native_executions": 18,
+      "baseline_return_verified_files": 6209,
+      "actual_corrected_dll_sha256": "eb291718241d143e01426dbf32ff20c2505525b1d05fbc683137811f76967131",
+      "actual_counter_dll_sha256": "c33db2969a6a245bf4fe669ea037ebef806906ada5ed3c27faa722b0bdf99647"
+    },
+    "options": [
+      {
+        "option": "Validate supported default system timer range in common BatchOptions validator",
+        "pros": "Minimal single owner guard protects ordinary API, preserves exact maximum+fraction and makes invalid static options fail early",
+        "cons": "Earlier rejection changes unsupported configurations; custom TimeProvider implementations may support longer values and require explicit capability semantics"
+      },
+      {
+        "option": "Support long intervals with provider-aware validated scheduler or monotonic segmented timer",
+        "pros": "Retains useful longer intervals/custom-provider capability without silently clipping",
+        "cons": "Additional scheduling, overflow, cancellation and lifecycle contract; requires provider-bound settings validation before receivers start"
+      }
+    ],
+    "recommendation": "Prefer default-timer upper guard using actual whole-millisecond truncation and documented supported range. Carry the bus identity into final diagnostic owner. Preserve positive checks and maximum+tick; explicitly model custom longer timer support if required, never hard-code an arbitrary number of days or silently clip.",
+    "compatibility": "Single isolated options guard changes no public signatures/source/binary/wire/schema. Unusable ordinary intervals rejected earlier. Custom longer-support provider capability must be decided before product implementation; not remove it implicitly.",
+    "evidence": [
+      "mutations/BATCH_TIMER_UPPER_BOUND_MUTATION_CLOSURE.json",
+      "mutations/eventhub-more-review/BATCH_TIMER_UPPER_BOUND-named-property/correction.patch",
+      "reproductions/batch-time-public-namespaced/timer-runtime-too-large.log"
+    ],
+    "confidence": "High for ordinary default .NET timer:18 native cases, unchanged public diagnostics oracle, distinct Axi DLLs and6209 source rollback.",
+    "open": "Whole provider/restart/inherited API and final unfiltered review closure remain open. Native executable is not MTP discovery or current coverage. Own initial missing extension namespace, invalid global message namespace and isolated candidate wrong Failure overload diagnostics remain archived as failed attempts; do not count as valid boundary proof. Full bus/feature diagnostic identity and custom-provider supported-range policy are product implementation tasks; isolated causal correction proves TimeLimit guard, not all configuration diagnostics."
+  }
+]

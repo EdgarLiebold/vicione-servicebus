@@ -85,10 +85,21 @@ public sealed class MultiTestConsumer
 
             return new MultipleConnectHandle(handles);
         }
-        catch
+        catch (Exception admissionFailure)
         {
+            List<Exception>? cleanupFailures = null;
             foreach (var handle in handles)
-                handle.Dispose();
+            {
+                try { handle.Dispose(); }
+                catch (Exception exception) { (cleanupFailures ??= new List<Exception>()).Add(exception); }
+            }
+
+            if (cleanupFailures is not null)
+            {
+                var failures = new List<Exception>(cleanupFailures.Count + 1) { admissionFailure };
+                failures.AddRange(cleanupFailures);
+                throw new AggregateException("Consumer admission failed and one or more acquired registrations could not be released.", failures);
+            }
             throw;
         }
     }

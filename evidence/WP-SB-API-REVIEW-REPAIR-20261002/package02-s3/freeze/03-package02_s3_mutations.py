@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+"""Execute isolated single-cause S3 validation mutants against the actual regression."""
+import hashlib
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+W = Path(__file__).resolve().parent.parent
+D = W / "SERVICEBUS_API_REVIEW_AND_REPAIR"
+O = W / "repositories/vicione-servicebus"
+R = Path("/private/tmp/vicione-servicebus-api-review-20261001")
+F = R / "frozen-repository"
+M = R / "mutations/source-main"
+E = O / "evidence/WP-SB-API-REVIEW-REPAIR-20261002"
+SOURCE = "src/Persistence/ViciOne.ServiceBus.AmazonS3/MessageData/AmazonS3MessageDataRepositoryOptions.cs"
+TEST = "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataConfigurationTests.cs"
+PROJECT = "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj"
+RESULT = E / "PACKAGE02_S3_MUTATIONS.json"
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def run(phase, command, expected):
+    rc = subprocess.run([sys.executable, str(D / "run_operation.py"), phase, str(M), "--", *command]).returncode
+    receipts = [json.loads(line) for line in (E / "VERIFICATION_LOG.jsonl").read_text().splitlines()]
+    receipt = next(item for item in receipts if item["phase"] == phase)
+    assert rc == receipt["exit_code"] == expected, (phase, rc, expected)
+    log = Path(receipt["log"]).read_text()
+    assert sha(Path(receipt["log"]).read_bytes()) == receipt["log_sha256"]
+    if command[1] == "test":
+        assert "gesamt: 1" in log and "übersprungen: 0" in log, phase
+        if expected == 2:
+            assert "Options_EnforceBucketAndRetentionBoundaries" in log and "Assert.All() Failure" in log, phase
+            assert "fehlgeschlagen: 1" in log, phase
+        else:
+            assert "erfolgreich: 1" in log and "fehlgeschlagen: 0" in log, phase
+    return receipt
+
+
+def main():
+    corrected = (O / SOURCE).read_bytes()
+    regression = (O / TEST).read_bytes()
+    original = {path: (F / path).read_bytes() for path in [SOURCE, TEST]}
+    for path, data in original.items():
+        assert (M / path).read_bytes() == data, path
+    result = {"status": "RUNNING", "source_sha256": sha(corrected), "regression_sha256": sha(regression), "checks": [], "mutants": []}
+    test_command = ["dotnet", "test", "--project", PROJECT, "-c", "Release", "--no-restore", "--filter-class", "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests", "--filter-method", "*.Options_EnforceBucketAndRetentionBoundaries", "--minimum-expected-tests", "1", "--max-parallel-test-modules", "1"]
+    mutations = [
+        ("wrong-reserved-prefix", '"amzn-s3-demo-"', '"amzn_s3_demo_"'),
+        ("substring-overrejection", 'bucketName.StartsWith("amzn-s3-demo-", StringComparison.Ordinal)', 'bucketName.Contains("amzn-s3-demo-", StringComparison.Ordinal)'),
+        ("prefix-boundary-overrejection", '"amzn-s3-demo-"', '"amzn-s3-demo"'),
+    ]
+    try:
+        (M / TEST).write_bytes(regression)
+        (M / SOURCE).write_bytes(corrected)
+        result["checks"].append(run("package02-s3-isolated-restore", ["dotnet", "restore", PROJECT, "--locked-mode", "--disable-parallel"], 0))
+        result["checks"].append(run("package02-s3-isolated-corrected", test_command, 0))
+        for name, before, after in mutations:
+            text = corrected.decode()
+            assert text.count(before) == 1, name
+            mutant = text.replace(before, after).encode()
+            (M / SOURCE).write_bytes(mutant)
+            assert (M / TEST).read_bytes() == regression
+            receipt = run("package02-s3-mutant-" + name, test_command, 2)
+            result["mutants"].append({"name": name, "status": "KILLED_BY_CONTRACT_ASSERTION", "source_sha256": sha(mutant), "test_sha256": sha(regression), "replacement": {"before": before, "after": after}, "native_receipt": receipt})
+            (M / SOURCE).write_bytes(corrected)
+        result["checks"].append(run("package02-s3-isolated-rollback-green", test_command, 0))
+        result["status"] = "EXECUTED_ALL_MUTANTS_KILLED_CORRECTED_ROLLBACK_GREEN"
+    finally:
+        for path, data in original.items():
+            (M / path).write_bytes(data)
+        result["original_source_and_test_restored"] = all((M / path).read_bytes() == data for path, data in original.items())
+        RESULT.write_text(json.dumps(result, indent=2) + "\n")
+    assert result["original_source_and_test_restored"]
+
+
+if __name__ == "__main__":
+    main()

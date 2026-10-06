@@ -1,0 +1,31 @@
+{
+  "status": "ROOT_AUTHORED_FOR_ADVERSARIAL_PREFLIGHT",
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkInboxIdentityMigration.cs",
+      "relative": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkInboxIdentityMigration.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f021-migration-source-r1/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkInboxIdentityMigration.cs",
+      "bytes": 14815,
+      "sha256": "c62cd63e3ccb750ccce8da162302d2d3f8b949e1dd14574c98017f2ece5479cd"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/migrations/classic-ef-inbox-identities.md",
+      "relative": "docs/migrations/classic-ef-inbox-identities.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f021-migration-source-r1/docs/migrations/classic-ef-inbox-identities.md",
+      "bytes": 3630,
+      "sha256": "58dd811e4a8dd8527c2d1a5a35011e5711dad3ca8b33c2b23dcd928b1164745a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/migrations/README.md",
+      "relative": "docs/migrations/README.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f021-migration-source-r1/docs/migrations/README.md",
+      "bytes": 1622,
+      "sha256": "2a25ffeabe244ddcc50c582a7b37b0a55d619415af543145f6ccc54b2699d4bc"
+    }
+  ],
+  "product_files": 1,
+  "new_public_types": 3,
+  "new_public_methods": 3,
+  "identity_source_r2": "b0eb9eb618d87418d65d7f83d338c18ce3333704d54d6e6bc117b3b9f2f3bc0b",
+  "native_pending": true
+}

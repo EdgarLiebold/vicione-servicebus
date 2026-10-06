@@ -1,0 +1,348 @@
+{
+  "utc": "2026-10-06T12:02:39.005719+00:00",
+  "status": "TESTONLY_APPLIED_NO_NATIVE_CREDIT",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package420-activemq-original8-testonly-proposed-r1",
+    "report_sha256": "97fd3e8e7fdb9aa0f92c04cd1badc56427d8487043485cfea37660e75cfd4da1",
+    "manifest_sha256": "d1a6e8f6f16e9640f18b3ef1ebf485904216000ab521743a102187bb136a47fa"
+  },
+  "different_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package420-activemq8-independent-runtime-test-source-peer-r1",
+    "report_sha256": "0624d541ca04f99419668ad9958fdcc7ad38d86fca3434d11dc4e7a9b6c9da06",
+    "manifest_sha256": "4338e6131c292c757fde29f464f640a33cb88b50e74b6c8b627c11536c7ae6bf"
+  },
+  "root_whole_test": [
+    "dc8839 lines1..285",
+    "b85d64 lines286..562"
+  ],
+  "root_reports": "5bf4ea all author/peer nontruncated",
+  "source_guards": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqHost.cs",
+      "sha256": "145b45616b50e2d74d670ca52213af33a17ce1dadf001339b230e31137d2ef27",
+      "lines": 113
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ConnectionContextSupervisor.cs",
+      "sha256": "92ac17e111b196c2ea6e55ed8facbeba53af8eaf003fafd50fe7c940b055742e",
+      "lines": 93
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Middleware/ConfigureActiveMqTopologyFilter.cs",
+      "sha256": "8a88158d1b75eeda48fe73397a52fe7c1deee8339ef42590235cc2d6c5e70d62",
+      "lines": 108
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/SessionContextFactory.cs",
+      "sha256": "5ba60a018cda6d2d4815dd1fce717afa5bd8e92d5b7a9669a1bf22c9ae871f00",
+      "lines": 94
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Configuration/IActiveMqHostConfiguration.cs",
+      "sha256": "1cae8cdc555257635799c74665620cc6808a2f8f9ac07973f8bb2250d16b7d0c",
+      "lines": 42
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Configuration/IActiveMqReceiveEndpointConfiguration.cs",
+      "sha256": "e8eee30ab362fbb74f364be63fec0a491a24d68a1d3193f647b6013d7e2e0bae",
+      "lines": 17
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Configuration/IActiveMqTopologyConfiguration.cs",
+      "sha256": "a50bb6ca7432f88da1c76fef40c130b6bd3d4cbbdaca36d69803360396353d13",
+      "lines": 17
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ConnectionContextFactory.cs",
+      "sha256": "a5c28943fa7b05563653e48470cadf7e18af9df2071b30d545422a4e60dfc9bd",
+      "lines": 222
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/SessionContext.cs",
+      "sha256": "6a60648326a94df98be536f6bfb38f864d06836245a98334a28221b6d8563026",
+      "lines": 107
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqReceiveEndpointContext.cs",
+      "sha256": "525efc2700900445b8c8b4ce199168eaf9c076d8c7bb7de8fb5b4b1689b18836",
+      "lines": 18
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/BrokerTopology.cs",
+      "sha256": "f4c9c774c81bebf02ba8d008b43886a63b09291ab25afae7d0d944cc36cbd931",
+      "lines": 13
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs",
+      "sha256": "b16a8873c80786616168406f25604b285ad128b57169e6dab8c60959054549ab",
+      "lines": 318
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Diagnostics/TransportLogMessages.cs",
+      "sha256": "bf888194bae5a699298e52ad7faf34ade633ce567cfcf405ebac90ea698b55d8",
+      "lines": 73
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpointCollection.cs",
+      "sha256": "51eaa162283a52a913294b79f35fcfa3846ee627b9b03bae21505b10721fffd4",
+      "lines": 289
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpoint.cs",
+      "sha256": "d78d7cb4eb85b16b428ec50e31912611dd28a76cead5b9d92316ca7dd9167587",
+      "lines": 567
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Hosting/IHost.cs",
+      "sha256": "9aa4588c3b06afe6b128a65b91dcc17004f47c18f7a51a1876b2672f807f72ea",
+      "lines": 58
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqSendTransportContext.cs",
+      "sha256": "beb0ba768f8a44760595516ab9a3c5fced0a9b6e4a4dad1a43cf5d391778237a",
+      "lines": 226
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/SessionContextSupervisor.cs",
+      "sha256": "1df37cc1863b094555e9f657c54275ea4dbe24e9753d2e5b965c3999862c58ef",
+      "lines": 25
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqSessionContext.cs",
+      "sha256": "3b529b33838114123c489731c2413579bb87f4c71c76adca27b9f6ac2c6e75e3",
+      "lines": 322
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/IActiveMqReceiveEndpointConfigurator.cs",
+      "sha256": "2277af73ef6173c20bcd4280c99023476d0692abd4ea14527803e8c8bb78c1d7",
+      "lines": 25
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ISessionContextSupervisor.cs",
+      "sha256": "9f1944e6ef4ae30a827c8527bc06ca78e9127e71b1c28db11ab13e73c08ab838",
+      "lines": 9
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Receiving/IReceiveTransport.cs",
+      "sha256": "34e6aa279f95091d48599ba21d3b658f7b977bdbae805eceac60de843b6f7399",
+      "lines": 14
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveTransportHandle.cs",
+      "sha256": "7304227dd4ee82b3bc8a5e1da39d854708452f77317911ca011fbfc02f1e116d",
+      "lines": 13
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Events/Receiving/ReceiveTransportReadyEvent.cs",
+      "sha256": "988182f9a234d0f7df6cd3aa08b9ac68af8b9a43e4bbd6964222b927d845f031",
+      "lines": 23
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Sending/BaseSendTransportContext.cs",
+      "sha256": "429749d02c48102f9cb56bce111ec1fbfda2e94ad630996c24fc28cecff60715",
+      "lines": 104
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpointContext.cs",
+      "sha256": "6d16c2cd9a874d6ab8d6594d8acd90e6b4200ab3bbd10773c3b5f13841d16c6b",
+      "lines": 98
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqEnsureTopicProducerOutcomeTests.cs",
+      "sha256": "95477dc31c2dfeb4aaa4e87c6cdc76cdcaa4c81a5865e96a3009e64be6a0b089",
+      "lines": 294
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/TestDoubles/InterfaceProxy.cs",
+      "sha256": "f44c0e9aa656c42ca326cbe9c3691b27abe00530a3ddaf05fc4a8cc54a3bd309",
+      "lines": 23
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ViciOne.ServiceBus.ActiveMq.Tests.csproj",
+      "sha256": "8038fc39db9225d4855b67efd16cc70a49125d3257f560beb369a711fa01288b",
+      "lines": 32
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "acf1f215df6a5fc23406ce82b48483cbe4c4423654f1740cadbc0691436741fa",
+      "lines": 16
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/Requirements/ActiveMqRequirements.json",
+      "sha256": "5d2c8f734fe15634656c43b4d5409d252ac8439e003d54f99582325d300fcd11",
+      "lines": 940
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Contracts/ReceiveTransportReady.cs",
+      "sha256": "d2c495529173c73b5086434928deb6d57e6f976c08f431b2ad3e73beda0d567a",
+      "lines": 9
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Observers/Observables/ReceiveEndpointObservable.cs",
+      "sha256": "224e41170f9b077da9f2b37cfeb46083833eaeecbe1cd670a75a2a3551f45ed1",
+      "lines": 42
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Hosting/TransportPipeContextSupervisor.cs",
+      "sha256": "177ca94caa46399cc8f210138ecc24dfabf9635730dccca726e2b276590787cb",
+      "lines": 89
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ScopeSessionContextFactory.cs",
+      "sha256": "8f0756e4ffcb1eed007b8df2c284c21561ba40a148077795aabe974bef929d12",
+      "lines": 89
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs",
+      "sha256": "9c3ae2d9e4976a94b3f4c4ab5ba9132d53438197568ebba8fed0f8e34c0efb19",
+      "lines": 259
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Middleware/OneTimeContextPayload.cs",
+      "sha256": "5333dcd4aa68ec096fe916948f05b100c3796512cfa1930ecde7080acb22d39c",
+      "lines": 82
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Middleware/OneTimeContext.cs",
+      "sha256": "7b3a67b7b582788ab30954f36972bd9400a27f9ec61cd4dcaac776d08c502ba3",
+      "lines": 10
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/Supervisor.cs",
+      "sha256": "2ee56d44806512cd6e873d154f87df29f16fa0ec5abcad0dad53ddc29974d201",
+      "lines": 166
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+      "sha256": "03d4e0b667f35b672a602bae5a295fa4250076d4c381c98dad4a792bd5588ec1",
+      "lines": 183
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+      "sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+      "lines": 325
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Logging/ILogContext.cs",
+      "sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca",
+      "lines": 31
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/Entities/TopicEntity.cs",
+      "sha256": "2d34756649598158a2db97a973f5f41dc3974ae536d852b855b626a72c7fd708",
+      "lines": 107
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/Entities/QueueEntity.cs",
+      "sha256": "c4b730b31117588e24d811e54fb31a8187241dd19abc1049ebb9687791eb4ffa",
+      "lines": 98
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Configuration/ActiveMqTopologyConfiguration.cs",
+      "sha256": "8338e839d2fd210b9a4cd6ff7f3a6945c761231476c9fb879966e7c4419a7d76",
+      "lines": 63
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/IAgent.cs",
+      "sha256": "fca17b77d5a2624f1f846753ecf02df42a43d723a8587d74840d39d3abe6c96e",
+      "lines": 46
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161",
+      "lines": 23
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IHostReceiveEndpointHandle.cs",
+      "sha256": "0cb0409a9bafe3022762c5e12bbd66490ea1b82d1082ccaff175833baea35463",
+      "lines": 22
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Contracts/ReceiveTransportEvent.cs",
+      "sha256": "85f27a18c9b820d55a63ec4b3f6987bc40735e0d14ff52939ef049c83af30dcd",
+      "lines": 10
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSupervisor.cs",
+      "sha256": "dc597dadc11cfa8f13fd8b4363a897dfafe0bf2cfca9d77b0ba07985cf01999f",
+      "lines": 27
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Serialization/ISerialization.cs",
+      "sha256": "875627b61a3dc0dedc3428bec07007d017de5a61d48b3f6412a57ef0c49ba737",
+      "lines": 34
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Middleware/BasePipeContext.cs",
+      "sha256": "2303156020d82484c5e11820816eeea2ba27d0699ce51ba56a38fdf93cbfc586",
+      "lines": 150
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/Middleware/SupervisorExtensions.cs",
+      "sha256": "330ee2e900ab2b6872aaf77fd5ac023a89bd3f2d186b6b0a2143b30d7a27699f",
+      "lines": 249
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Diagnostics/HealthResultReceiveEndpointObserver.cs",
+      "sha256": "0921f39b6d96866e7568358829a7ba7eef51da44050fcdcddac5aa8fcf060220",
+      "lines": 94,
+      "signature_final_check": "Fresh own public/source seam check during unsealed concrete author review, not before-plan credit."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Contracts/ReceiveEndpointReady.cs",
+      "sha256": "f82a6e89c07c6d2a45bc1dd25206968e54081da4f4016196af1b6c0ca5d20f76",
+      "lines": 9,
+      "signature_final_check": "Fresh own public/source seam check during unsealed concrete author review, not before-plan credit."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Logging/EnabledLogger.cs",
+      "sha256": "ef5aa89d3cf563ec3af0cb6ac5e36cc6371afc8ccf85a57eb92589f69344ef17",
+      "lines": 37,
+      "signature_final_check": "Fresh own public/source seam check during unsealed concrete author review, not before-plan credit."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Configuration/ActiveMqTopicConfigurator.cs",
+      "sha256": "4b31e5ef0fa7a289bdd318b05a429f2d76d5aa36d88957204d08937080b41df7",
+      "lines": 29,
+      "signature_final_check": "Fresh own public/source seam check during unsealed concrete author review, not before-plan credit."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Configuration/EntityConfigurator.cs",
+      "sha256": "3a116d4ca05738a6a8f73b80be4b6ffa766f20c7312082de6971179a3dc05a5e",
+      "lines": 36,
+      "signature_final_check": "Fresh own public/source seam check during unsealed concrete author review, not before-plan credit."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/SendSettings.cs",
+      "sha256": "6b8e8886f15fcb92f7e77a621882f94413df38a932c7a5065572a3c27c5962fd",
+      "lines": 18,
+      "signature_final_check": "Fresh own public/source seam check during unsealed concrete author review, not before-plan credit."
+    }
+  ],
+  "changes": [
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqPublicContinuationDiagnosticsTests.cs",
+      "before_absent": true,
+      "after_sha256": "f075369255a2a951dc553787772fe742db2ef4edff35c3a74e594a11abb8073e"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/Requirements/ActiveMqRequirements.json",
+      "before_sha256": "5d2c8f734fe15634656c43b4d5409d252ac8439e003d54f99582325d300fcd11",
+      "after_sha256": "61ccf95b061f290cb478e166d64a3751027dc34e5f2a5bc61bb3f375c50b0bd5",
+      "old_rows": 134,
+      "new_rows": 137,
+      "exact_literal_inverse": true
+    }
+  ],
+  "Product_changes": false,
+  "Master_changes": false,
+  "Original_cases": 8,
+  "native_credit": 0,
+  "Finding_changes": false,
+  "limits": [
+    "Actual Original8 compile/run/frozen capture and different Native qualification pending.",
+    "Callback780 and broker delivery remain ungraded.",
+    "Three theory methods/eight cases, ADD3 requirements rows."
+  ],
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package432-activemq-original8-testonly-root-application-before-r1"
+}

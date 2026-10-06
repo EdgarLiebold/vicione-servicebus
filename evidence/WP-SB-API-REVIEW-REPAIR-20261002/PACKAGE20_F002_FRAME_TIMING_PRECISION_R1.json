@@ -1,0 +1,9 @@
+{
+  "status": "FRAME_TIMING_OVERLAP_QUALIFIED_NOT_STRICT_PRE_RESTORE_FRAME",
+  "frame_sha256": "040f1ae2fbecb3585b4153ae101dcc41a0a8df3e7ee849fe4e8787d05e3d1c6c",
+  "frame_completed_utc": "2026-10-03T11:26:08.360269+00:00",
+  "Engineering_restore_started_utc": "2026-10-03T11:26:04.270598+00:00",
+  "explanation": "Root did not await completion of yielded Python frame cell before starting serial Native restore. Four-second hash-capture overlap; no product/test edit and no second Native overlapped. All4648builtfiles now equal frame; original failures remain valid, but this capture alone is not a strictly completed pre-restore checkpoint. Fresh countercase will capture same-owner bytes and await completed frame BEFORE its Engineering control.",
+  "built_files_verified_unchanged_since_frame": 4648,
+  "countercase_strict_before_after_still_required": true
+}

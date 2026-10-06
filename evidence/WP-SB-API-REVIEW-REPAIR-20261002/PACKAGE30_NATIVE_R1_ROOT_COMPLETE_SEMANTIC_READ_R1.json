@@ -1,0 +1,10 @@
+{
+  "status": "ROOT_ALL_FIVE_CASES_TEN_RECEIVES_FULL_SEMANTIC_NATIVE_PROJECTION_READ_NATIVE_QUALIFICATION_PENDING",
+  "root_projection_all_four_parts_personally_full": true,
+  "raw_log_full_read_claimed": false,
+  "projection_all_nonempty_lines_roundtripped": true,
+  "projection_sha256": "5db2c7ef6e02e52cce450475d9fbf922f2949b00b3be0dee01c4d29842e59beb",
+  "raw_log_sha256": "ecd262d9c00b579749bf71a9512606a3ffcfdb2d3e02f5a6a15cf28236b9104b",
+  "native_exit": 0,
+  "whole_F042_Aplus": false
+}

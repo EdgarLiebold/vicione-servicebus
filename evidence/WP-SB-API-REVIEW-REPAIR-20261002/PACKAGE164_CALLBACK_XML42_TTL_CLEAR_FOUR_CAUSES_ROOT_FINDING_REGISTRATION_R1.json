@@ -1,0 +1,598 @@
+{
+  "utc": "2026-10-05T02:36:54.834190+00:00",
+  "actor": "/root",
+  "status": "FOUR_BOUNDED_CAUSES_CONFIRMED",
+  "confirmed_before": 145,
+  "confirmed_after": 149,
+  "accepted_current": 145,
+  "causes": [
+    {
+      "id": "F-SB-API-146",
+      "severity": "Medium",
+      "title": "Optional saga callbacks expose non-nullable metadata despite supported null defaults and reset",
+      "classification": "CONFIRMED_FINITE_NATIVE_PUBLIC_NULLABILITY_CONTRACT_DEFECT",
+      "actual_original_contexts": [
+        {
+          "family": 0,
+          "member": "Received",
+          "actual_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 0, member: \"Received\")",
+          "first_actual_failure": "Test source191 Assert.Equal(Nullable, settingsProperty ReadState) receives NotNull.",
+          "reached": [
+            "Settings getter initially returns null; concrete public getter also null when applicable",
+            "Public configurator setter stores exact callback reference; concrete getter identity when applicable",
+            "Actual Request/Schedule declaration invokes callback once with real correctly typed correlation configurator",
+            "Setter reset to null succeeds, settings/concrete getter null",
+            "Second actual declaration yields distinct machine object and does not invoke reset callback"
+          ],
+          "unreached": [
+            "Configurator interface WriteState Nullable at192",
+            "Concrete property Read/WriteState Nullable at195/196"
+          ],
+          "cause": "Non-nullable Action declaration/backing null! conflicts with legitimate optional callback runtime behavior. Native verifies public emitted read metadata FIRST; no later write metadata native credit.",
+          "limits": "Six actual settings read-metadata failures, not six provider runtime faults or tests of arbitrary external implementations."
+        },
+        {
+          "family": 1,
+          "member": "Completed",
+          "actual_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 1, member: \"Completed\")",
+          "first_actual_failure": "Test source191 Assert.Equal(Nullable, settingsProperty ReadState) receives NotNull.",
+          "reached": [
+            "Settings getter initially returns null; concrete public getter also null when applicable",
+            "Public configurator setter stores exact callback reference; concrete getter identity when applicable",
+            "Actual Request/Schedule declaration invokes callback once with real correctly typed correlation configurator",
+            "Setter reset to null succeeds, settings/concrete getter null",
+            "Second actual declaration yields distinct machine object and does not invoke reset callback"
+          ],
+          "unreached": [
+            "Configurator interface WriteState Nullable at192",
+            "Concrete property Read/WriteState Nullable at195/196"
+          ],
+          "cause": "Non-nullable Action declaration/backing null! conflicts with legitimate optional callback runtime behavior. Native verifies public emitted read metadata FIRST; no later write metadata native credit.",
+          "limits": "Six actual settings read-metadata failures, not six provider runtime faults or tests of arbitrary external implementations."
+        },
+        {
+          "family": 1,
+          "member": "Faulted",
+          "actual_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 1, member: \"Faulted\")",
+          "first_actual_failure": "Test source191 Assert.Equal(Nullable, settingsProperty ReadState) receives NotNull.",
+          "reached": [
+            "Settings getter initially returns null; concrete public getter also null when applicable",
+            "Public configurator setter stores exact callback reference; concrete getter identity when applicable",
+            "Actual Request/Schedule declaration invokes callback once with real correctly typed correlation configurator",
+            "Setter reset to null succeeds, settings/concrete getter null",
+            "Second actual declaration yields distinct machine object and does not invoke reset callback"
+          ],
+          "unreached": [
+            "Configurator interface WriteState Nullable at192",
+            "Concrete property Read/WriteState Nullable at195/196"
+          ],
+          "cause": "Non-nullable Action declaration/backing null! conflicts with legitimate optional callback runtime behavior. Native verifies public emitted read metadata FIRST; no later write metadata native credit.",
+          "limits": "Six actual settings read-metadata failures, not six provider runtime faults or tests of arbitrary external implementations."
+        },
+        {
+          "family": 1,
+          "member": "TimeoutExpired",
+          "actual_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 1, member: \"TimeoutExpired\")",
+          "first_actual_failure": "Test source191 Assert.Equal(Nullable, settingsProperty ReadState) receives NotNull.",
+          "reached": [
+            "Settings getter initially returns null; concrete public getter also null when applicable",
+            "Public configurator setter stores exact callback reference; concrete getter identity when applicable",
+            "Actual Request/Schedule declaration invokes callback once with real correctly typed correlation configurator",
+            "Setter reset to null succeeds, settings/concrete getter null",
+            "Second actual declaration yields distinct machine object and does not invoke reset callback"
+          ],
+          "unreached": [
+            "Configurator interface WriteState Nullable at192",
+            "Concrete property Read/WriteState Nullable at195/196"
+          ],
+          "cause": "Non-nullable Action declaration/backing null! conflicts with legitimate optional callback runtime behavior. Native verifies public emitted read metadata FIRST; no later write metadata native credit.",
+          "limits": "Six actual settings read-metadata failures, not six provider runtime faults or tests of arbitrary external implementations."
+        },
+        {
+          "family": 2,
+          "member": "Completed2",
+          "actual_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 2, member: \"Completed2\")",
+          "first_actual_failure": "Test source191 Assert.Equal(Nullable, settingsProperty ReadState) receives NotNull.",
+          "reached": [
+            "Settings getter initially returns null; concrete public getter also null when applicable",
+            "Public configurator setter stores exact callback reference; concrete getter identity when applicable",
+            "Actual Request/Schedule declaration invokes callback once with real correctly typed correlation configurator",
+            "Setter reset to null succeeds, settings/concrete getter null",
+            "Second actual declaration yields distinct machine object and does not invoke reset callback"
+          ],
+          "unreached": [
+            "Configurator interface WriteState Nullable at192",
+            "Concrete property Read/WriteState Nullable at195/196"
+          ],
+          "cause": "Non-nullable Action declaration/backing null! conflicts with legitimate optional callback runtime behavior. Native verifies public emitted read metadata FIRST; no later write metadata native credit.",
+          "limits": "Six actual settings read-metadata failures, not six provider runtime faults or tests of arbitrary external implementations."
+        },
+        {
+          "family": 3,
+          "member": "Completed3",
+          "actual_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 3, member: \"Completed3\")",
+          "first_actual_failure": "Test source191 Assert.Equal(Nullable, settingsProperty ReadState) receives NotNull.",
+          "reached": [
+            "Settings getter initially returns null; concrete public getter also null when applicable",
+            "Public configurator setter stores exact callback reference; concrete getter identity when applicable",
+            "Actual Request/Schedule declaration invokes callback once with real correctly typed correlation configurator",
+            "Setter reset to null succeeds, settings/concrete getter null",
+            "Second actual declaration yields distinct machine object and does not invoke reset callback"
+          ],
+          "unreached": [
+            "Configurator interface WriteState Nullable at192",
+            "Concrete property Read/WriteState Nullable at195/196"
+          ],
+          "cause": "Non-nullable Action declaration/backing null! conflicts with legitimate optional callback runtime behavior. Native verifies public emitted read metadata FIRST; no later write metadata native credit.",
+          "limits": "Six actual settings read-metadata failures, not six provider runtime faults or tests of arbitrary external implementations."
+        }
+      ],
+      "affected_public_member_mapping": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-product-proposed-r1/EXACT_OPTIONAL_CALLBACK39_ORIGINAL_MEMBER_MAPPING.json",
+        "sha256": "cb2e2b4ba2ec77bbf978bb11afef8d79b5e7ee3d5c536d43deeef5051f675dc7"
+      },
+      "limits": "Original six settings ReadState assertions fail first191. Later write/concrete assertions unexecuted until repaired run; no arbitrary SPI/runtime callback fault.",
+      "status": "CONFIRMED_REPAIR_SOURCE_PEER_APPROVED_APPLICATION_PENDING",
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package163-fixed53-header30-callback-original13-neighbors2304-fresh2-independent-r1/REPORT.json",
+        "sha256": "1a7d4a139bae6e6f419a2d9076fea3fbc7283fe4ee0326021f4cc568618f7483"
+      },
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-147",
+      "severity": "Low",
+      "title": "42 middleware Send summaries claim configured-destination sending for unrelated local pipeline operations",
+      "classification": "CONFIRMED_PUBLISHED_XML_DOCUMENTATION_DEFECT",
+      "actual_published_nodes": [
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ConsumeContextMessageTypeFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ConsumeContextMessageTypeFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ConsumeContextMessageTypeFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Dispatches the consume context through the registered message pipelines and their continuation policy."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Dispatches a compatible typed consume context with an awaited continuation, or forwards an incompatible context to the continuation."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ConsumePipe.SendAsync(ViciOne.ServiceBus.ConsumeContext)",
+          "path": "src/ViciOne.ServiceBus/Middleware/ConsumePipe.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ConsumePipe.SendAsync(ViciOne.ServiceBus.ConsumeContext)\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Runs the consume context through the configured input pipeline."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ConsumerMergePipe`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ConsumerMergePipe.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ConsumerMergePipe`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Forwards a compatible consumer and message view to the configured output pipeline."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ConsumerMessageMergePipe`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ConsumerMessageMergePipe.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ConsumerMessageMergePipe`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Forwards the message through the output pipeline with the associated consumer context."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ConsumerSplitFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ConsumerSplitFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ConsumerSplitFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Runs the consumer filter with a continuation adapted to the typed message context."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ContextFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ContextFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ContextFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Invokes the continuation only when the configured asynchronous predicate accepts the context."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.CorrelationIdMessageFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/CorrelationIdMessageFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.CorrelationIdMessageFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Forwards a consume-context view with the selected correlation identifier."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.DelayedMessageRedeliveryFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/DelayedMessageRedeliveryFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.DelayedMessageRedeliveryFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Provides delayed-redelivery context when absent, then forwards the consumed message."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.DelayedMessageSchedulerFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+          "path": "src/ViciOne.ServiceBus/Middleware/DelayedMessageSchedulerFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.DelayedMessageSchedulerFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Provides a transport-delay message scheduler when absent, then forwards the consume context."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.DelaySendPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/DelaySendPipe.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.DelaySendPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Applies a positive transport delay and invokes an available send pipe."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.FaultDeadLetterFilter.SendAsync(ViciOne.ServiceBus.Advanced.ReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ReceiveContext})",
+          "path": "src/ViciOne.ServiceBus/Middleware/FaultDeadLetterFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.FaultDeadLetterFilter.SendAsync(ViciOne.ServiceBus.Advanced.ReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ReceiveContext})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Throws a message-not-consumed failure for the supplied receive context."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.FutureRequestPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/FutureRequestPipe.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.FutureRequestPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Assigns request and response metadata before invoking an available send pipe."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.FutureResultPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/FutureResultPipe.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.FutureResultPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Assigns request metadata before invoking an available send pipe."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.GenerateFaultFilter.SendAsync(ViciOne.ServiceBus.Advanced.ExceptionReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExceptionReceiveContext})",
+          "path": "src/ViciOne.ServiceBus/Middleware/GenerateFaultFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.GenerateFaultFilter.SendAsync(ViciOne.ServiceBus.Advanced.ExceptionReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExceptionReceiveContext})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Generates and reports a receive fault when needed, then invokes the continuation."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.InlineFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/InlineFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.InlineFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Delegates context handling and continuation policy to the supplied filter callback."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.KeyFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/KeyFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.KeyFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Awaits an available matching keyed pipeline before invoking the continuation."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.MessageSchedulerFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+          "path": "src/ViciOne.ServiceBus/Middleware/MessageSchedulerFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.MessageSchedulerFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Provides the configured endpoint message scheduler when absent, then forwards the consume context."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.MessageSplitFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/MessageSplitFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.MessageSplitFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Runs the message filter with a continuation adapted to the consumer context."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.OutboxMessagePipe`1.SendAsync(ViciOne.ServiceBus.Middleware.OutboxConsumeContext{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.OutboxMessagePipe`1.SendAsync(ViciOne.ServiceBus.Middleware.OutboxConsumeContext{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Processes inline consumption and provider-controlled outbox delivery for the supplied context."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.OutboxMessageSendPipe.SendAsync(ViciOne.ServiceBus.Advanced.SendContext)",
+          "path": "src/ViciOne.ServiceBus/Middleware/OutboxMessageSendPipe.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.OutboxMessageSendPipe.SendAsync(ViciOne.ServiceBus.Advanced.SendContext)\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Reconstructs the stored outbox message metadata and serialized body in the send context."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.PayloadFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/PayloadFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.PayloadFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Provides the captured payload when absent, then invokes the continuation."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.PipeContextSourceBindFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/PipeContextSourceBindFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.PipeContextSourceBindFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Binds the input context to the supplied context source, runs the output pipeline, then invokes the continuation."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ReceiveEndpointDependencyFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ReceiveEndpointDependencyFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ReceiveEndpointDependencyFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Waits for receive-endpoint dependencies before invoking the continuation."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.RequestIdFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/RequestIdFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.RequestIdFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Awaits an available matching request pipeline before invoking the continuation."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.RethrowErrorTransportFilter.SendAsync(ViciOne.ServiceBus.Advanced.ExceptionReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExceptionReceiveContext})",
+          "path": "src/ViciOne.ServiceBus/Middleware/RethrowErrorTransportFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.RethrowErrorTransportFilter.SendAsync(ViciOne.ServiceBus.Advanced.ExceptionReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExceptionReceiveContext})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Returns a faulted task carrying the receive context's exception."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ScheduleMessageRedeliveryFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ScheduleMessageRedeliveryFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ScheduleMessageRedeliveryFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Provides scheduler-based redelivery context when absent, then forwards the consumed message."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ScopeCompensateFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.CompensateContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.CompensateContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ScopeCompensateFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ScopeCompensateFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.CompensateContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.CompensateContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Runs the continuation in an acquired compensate scope and releases the owned scope."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ScopeConsumeFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ScopeConsumeFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ScopeConsumeFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Runs the continuation in an acquired consume scope and releases the owned scope."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ScopedCompensateFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.CompensateContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.CompensateContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ScopedCompensateFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ScopedCompensateFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.CompensateContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.CompensateContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Resolves and runs the configured filter in an acquired compensate scope, then releases the owned scope."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ScopedConsumeFilter`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ScopedConsumeFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ScopedConsumeFilter`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Resolves and runs the configured filter in an acquired consume scope, then releases the owned scope."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ScopedExecuteFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ExecuteContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExecuteContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ScopedExecuteFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ScopedExecuteFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ExecuteContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExecuteContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Resolves and runs the configured filter in an acquired execute scope, then releases the owned scope."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ScopedFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ScopedFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ScopedFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Runs the acquired scope's filter and releases the owned scope."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ScopeExecuteFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.ExecuteContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExecuteContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ScopeExecuteFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ScopeExecuteFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.ExecuteContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExecuteContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Runs the continuation in an acquired execute scope and releases the owned scope."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.ScopeMessageFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/ScopeMessageFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.ScopeMessageFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Runs the continuation in an acquired typed consume scope and releases the owned scope."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.SetCorrelationIdFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/SetCorrelationIdFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.SetCorrelationIdFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Applies an available correlation identifier before invoking the continuation."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.SetPartitionKeyFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/SetPartitionKeyFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.SetPartitionKeyFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Applies the formatted partition key to an available transport payload before invoking the continuation."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.SetRoutingKeyFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/SetRoutingKeyFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.SetRoutingKeyFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Applies the formatted routing key to an available transport payload before invoking the continuation."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.SetSerializerFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+          "path": "src/ViciOne.ServiceBus/Middleware/SetSerializerFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.SetSerializerFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Selects an available serializer for the configured content type before invoking the continuation."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.TimeoutFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/TimeoutFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.TimeoutFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Runs the continuation with a linked timeout context and awaits its consume completion."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.TransactionFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/TransactionFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.TransactionFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Runs the continuation with an existing or owned transaction and finalizes only the owned transaction."
+        },
+        {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Middleware.TransportReadyFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+          "path": "src/ViciOne.ServiceBus/Middleware/TransportReadyFilter.cs",
+          "compiled161XMLBefore": "<member name=\"M:ViciOne.ServiceBus.Middleware.TransportReadyFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+          "summary": "Notifies transport readiness, registers an agent, runs the continuation and awaits agent completion."
+        }
+      ],
+      "limits": "One copy-template family across42 current published methods; executable behavior preserved. OutboxConsumeFilter already correct and excluded.",
+      "status": "CONFIRMED_REPAIR_SOURCE_PEER_APPROVED_APPLICATION_PENDING",
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package163-fixed53-header30-callback-original13-neighbors2304-fresh2-independent-r1/REPORT.json",
+        "sha256": "1a7d4a139bae6e6f419a2d9076fea3fbc7283fe4ee0326021f4cc568618f7483"
+      },
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-148",
+      "severity": "Low",
+      "title": "Request TimeToLive configurator XML promises an automatic timeout fallback absent from supported runtime policy",
+      "classification": "CONFIRMED_PUBLISHED_XML_DOCUMENTATION_DEFECT",
+      "actual_published_node": {
+        "id": "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator.TimeToLive",
+        "raw": "<member name=\"P:ViciOne.ServiceBus.Sagas.IRequestConfigurator.TimeToLive\">\n            <summary>\n            Set the time to live of the request message sent by the saga. If not specified, and the timeout\n            is &gt; TimeSpan.Zero, the <see cref=\"P:ViciOne.ServiceBus.Sagas.IRequestConfigurator.Timeout\" /> value is used.\n            </summary>\n        </member>\n        "
+      },
+      "cause": "Required settings contract and actual SetSendContextHeaders use positive explicitly configured TTL only; null stays unspecified despite default positive request timeout. Correct documentation to existing policy.",
+      "status": "CONFIRMED_REPAIR_SOURCE_PEER_APPROVED_APPLICATION_PENDING",
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package163-fixed53-header30-callback-original13-neighbors2304-fresh2-independent-r1/REPORT.json",
+        "sha256": "1a7d4a139bae6e6f419a2d9076fea3fbc7283fe4ee0326021f4cc568618f7483"
+      },
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-149",
+      "severity": "Low",
+      "title": "CancelRequestTimeout XML promises unconditional request data clearing instead of conditional request ID clearing",
+      "classification": "CONFIRMED_PUBLISHED_XML_DOCUMENTATION_DEFECT",
+      "actual_published_node": {
+        "id": "M:ViciOne.ServiceBus.Sagas.StateMachineRequestExtensions.CancelRequestTimeout``4(ViciOne.ServiceBus.Sagas.IEventActivityBinder{``0,``1},ViciOne.ServiceBus.Sagas.IRequest{``0,``2,``3},System.Boolean)",
+        "raw": "<member name=\"M:ViciOne.ServiceBus.Sagas.StateMachineRequestExtensions.CancelRequestTimeout``4(ViciOne.ServiceBus.Sagas.IEventActivityBinder{``0,``1},ViciOne.ServiceBus.Sagas.IRequest{``0,``2,``3},System.Boolean)\">\n            <summary>Cancels the request timeout, and clears the request data from the state instance.</summary>\n            <typeparam name=\"TInstance\">The instance type.</typeparam>\n            <typeparam name=\"TData\">The data type.</typeparam>\n            <typeparam name=\"TRequest\">The request type.</typeparam>\n            <typeparam name=\"TResponse\">The response type.</typeparam>\n            <param name=\"binder\">The binder.</param>\n            <param name=\"request\">The request.</param>\n            <param name=\"completed\">The completed.</param>\n            <returns>The event activity binder produced by the operation.</returns>\n        </member>\n        "
+      },
+      "cause": "Actual activity cancels only configured active timeout then clears stored request ID iff completed or ClearOnFaulted; unrelated saga data are not cleared.",
+      "status": "CONFIRMED_REPAIR_SOURCE_PEER_APPROVED_APPLICATION_PENDING",
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package163-fixed53-header30-callback-original13-neighbors2304-fresh2-independent-r1/REPORT.json",
+        "sha256": "1a7d4a139bae6e6f419a2d9076fea3fbc7283fe4ee0326021f4cc568618f7483"
+      },
+      "whole_API_member_review_closed": false
+    }
+  ],
+  "root_read_authority": "Source and exact XML deltas as recorded1cd8be/e89e1f/6a8470/b79f86/ace85d/bf86c9; full sourcepeerReports9e7ade and combinedReport bca7a0. All44 current published original XML nodes verified here against qualified163. Six finiteCallback cases remain actual qualified163 originals.",
+  "proposal_peers": [
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-product-proposed-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-product-proposed-r1/MANIFEST.json",
+        "sha256": "40993ee48a4d30c05aa34b666ee220c803739fb3c6cb00e53c8c26b873b18f19"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-product-proposed-r1/REPORT.json",
+        "sha256": "a55d1a1a510801c98888bfb3619744788c24253ae6f6faed5c89fbf1f849b3ab"
+      },
+      "files_verified": 16
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-independent-scanner-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-independent-scanner-r1/MANIFEST.json",
+        "sha256": "160df082152147814d5672a7ce2b77ef2ca424f286d84f45e8bf5111aa548bc6"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-independent-scanner-r1/REPORT.json",
+        "sha256": "7ac8960b881c58f7d4edf9bf3ee555d7b6750a67faf12f4d74c44d7325a6f0b2"
+      },
+      "files_verified": 3
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-send-purpose-xml42-product-proposed-r2",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-send-purpose-xml42-product-proposed-r2/MANIFEST.json",
+        "sha256": "170da238371ca8409b0c572c72d6cc7267840e0f29f0bf61e5e34b56128c96f3"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-send-purpose-xml42-product-proposed-r2/REPORT.json",
+        "sha256": "fbf088a20300b201fbe059952a93942955a6dd4ef7e2f4b26d387c9057d7122d"
+      },
+      "files_verified": 88
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-xml42-independent-rebase-r2",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-xml42-independent-rebase-r2/MANIFEST.json",
+        "sha256": "a6edab64327b076f707cfc1e5e63c4cfa9a1c245bfb5706c895a16f18a6ec87b"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-xml42-independent-rebase-r2/REPORT.json",
+        "sha256": "11fa392dca7fb1e768f98d75d762cd3d64f12d5b8bbf23b4ba7d7b34cbb78748"
+      },
+      "files_verified": 1
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-product-proposed-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-product-proposed-r1/MANIFEST.json",
+        "sha256": "cc7db1feb4bba9dc603cb0a016e40629a401ccdd4913cb7d98584a6ccac79c95"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-product-proposed-r1/REPORT.json",
+        "sha256": "9bb933597c00a262c78d885445674c92561977e86c63e61bd11392571aa91f6e"
+      },
+      "files_verified": 13
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-independent-scanner-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-independent-scanner-r1/MANIFEST.json",
+        "sha256": "9873235ed4d2548eda70ffa54705f983a9939b3d3813cd4ad64c52b915a2ddcd"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-independent-scanner-r1/REPORT.json",
+        "sha256": "a4061b8819a9b970702cb58b895306493297842a0d9071b2c4f93ebf102a2885"
+      },
+      "files_verified": 3
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-combined-request-config-independent-scanner-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-combined-request-config-independent-scanner-r1/MANIFEST.json",
+        "sha256": "cb374339f99a1b1b2d99c37ebfce4d15450dab6a9ee7efbba3d83941205d7fac"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-combined-request-config-independent-scanner-r1/REPORT.json",
+        "sha256": "0484d249dee1526d04708738e426e6141082ae1407ecde21f7171253a0b64148"
+      },
+      "files_verified": 2
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-oracles-proposed-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-oracles-proposed-r1/MANIFEST.json",
+        "sha256": "78be63e0bb080a2fa3f54d6e5701476f7a36e4c16c055dd1d4f969d385261a11"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-oracles-proposed-r1/REPORT.json",
+        "sha256": "dd41e02e7c9663de4efbc28b3bc97c0edf977d738ae25405477fac501936266c"
+      },
+      "files_verified": 6
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-independent-runtime-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-independent-runtime-r1/MANIFEST.json",
+        "sha256": "23b733b737aa59668238ac148d8bf59dc8773810ff425b97ec695759cf3b71b5"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-independent-runtime-r1/REPORT.json",
+        "sha256": "b8a809418bd5d987b7f05b7ce12feb4840c493896fd14e3deed729dcbebc706c"
+      },
+      "files_verified": 1
+    }
+  ],
+  "CLOSED": false
+}

@@ -7,6 +7,7 @@ using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Logging.Monitoring;
 using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware;
 
@@ -31,55 +32,83 @@ public class OutboxMessagePipe<TMessage> :
         _next = next;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Processes inline consumption and provider-controlled outbox delivery for the supplied context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(OutboxConsumeContext<TMessage> context)
     {
-        using var pop = _scopeContext.PushConsumeContext(context);
-
-        TimeProvider timeProvider = context.GetTimeProvider();
-        long startedAt = timeProvider.GetTimestamp();
-
-        if (!context.IsMessageConsumed)
+        var pop = _scopeContext.PushConsumeContext(context);
+        Exception? operationFailure = null;
+        try
         {
-            await _next.SendAsync(context).ConfigureAwait(false);
+            TimeProvider timeProvider = context.GetTimeProvider();
+            long startedAt = timeProvider.GetTimestamp();
 
-            await context.ConsumeCompleted.ConfigureAwait(false);
+            if (!context.IsMessageConsumed)
+            {
+                await _next.SendAsync(context).ConfigureAwait(false);
+
+                await context.ConsumeCompleted.ConfigureAwait(false);
+
+                try
+                {
+                    await context.SetConsumedAsync().ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    if (!context.ReceiveContext.IsFaulted)
+                        await ConsumerIngressFailure.NotifyFaultedAsync(context, timeProvider.GetElapsedTime(startedAt), TypeCache<TMessage>.ShortName,
+                            exception, exception).ConfigureAwait(false);
+
+                    throw;
+                }
+
+                return;
+            }
+
+            if (!context.IsOutboxDelivered)
+            {
+                await DeliverOutboxMessagesAsync(context).ConfigureAwait(false);
+
+                await context.ConsumeCompleted.ConfigureAwait(false);
+
+                return;
+            }
+
+            await context.RemoveOutboxMessagesAsync().ConfigureAwait(false);
 
             try
             {
-                await context.SetConsumedAsync().ConfigureAwait(false);
+                LogContext.Debug?.Log("Outbox Completed: {MessageId} ({ReceiveCount})", context.MessageId, context.ReceiveCount);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                if (!context.ReceiveContext.IsFaulted)
-                    await ConsumerIngressFailure.NotifyFaultedAsync(context, timeProvider.GetElapsedTime(startedAt), TypeCache<TMessage>.ShortName,
-                        exception, exception).ConfigureAwait(false);
-
-                throw;
             }
 
-            return;
-        }
+            if (context.ReceiveContext is { IsDelivered: false, IsFaulted: false })
+                await context.NotifyConsumedAsync(context, timeProvider.GetElapsedTime(startedAt), _options.ConsumerType).ConfigureAwait(false);
 
-        if (!context.IsOutboxDelivered)
+            context.ContinueProcessing = false;
+        }
+        catch (Exception exception)
         {
-            await DeliverOutboxMessagesAsync(context).ConfigureAwait(false);
-
-            await context.ConsumeCompleted.ConfigureAwait(false);
-
-            return;
+            operationFailure = exception;
+            throw;
         }
-
-        await context.RemoveOutboxMessagesAsync().ConfigureAwait(false);
-
-        LogContext.Debug?.Log("Outbox Completed: {MessageId} ({ReceiveCount})", context.MessageId, context.ReceiveCount);
-
-        if (context.ReceiveContext is { IsDelivered: false, IsFaulted: false })
-            await context.NotifyConsumedAsync(context, timeProvider.GetElapsedTime(startedAt), _options.ConsumerType).ConfigureAwait(false);
-
-        context.ContinueProcessing = false;
+        finally
+        {
+            try
+            {
+                pop?.Dispose();
+            }
+            catch (Exception restoreFailure) when (operationFailure is not null)
+            {
+                throw new AggregateException(
+                    "Outbox pipeline and ambient context restoration encountered multiple failures.",
+                    operationFailure,
+                    restoreFailure);
+            }
+        }
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>
@@ -120,6 +149,15 @@ public class OutboxMessagePipe<TMessage> :
                 var endpoint = await context.CapturedContext.GetSendEndpointAsync(message.DestinationAddress, cancellationToken: token.Token)
                     .ConfigureAwait(false);
 
+                // Captured messages already have an outbox owner. Delivery must await the transport,
+                // rather than capture them again in an enclosing volatile outbox before recording progress.
+                ISendEndpoint deliveryEndpoint = endpoint is ConsumeSendEndpoint consumeEndpoint ? consumeEndpoint.Endpoint : endpoint;
+                ISendEndpoint capturedEndpoint = deliveryEndpoint;
+                while (deliveryEndpoint is InMemoryOutbox.OutboxSendEndpoint volatileEndpoint)
+                    deliveryEndpoint = volatileEndpoint.Endpoint;
+                if (!ReferenceEquals(deliveryEndpoint, capturedEndpoint))
+                    endpoint = endpoint is ConsumeSendEndpoint consume ? consume.WithEndpoint(deliveryEndpoint) : deliveryEndpoint;
+
                 StartedActivity? activity = MessageActivity.TryStartOutboxDelivery(message);
                 MetricOperation? instrument = LogContext.Current?.TryStartOutboxDeliveryMetrics();
                 try
@@ -139,8 +177,14 @@ public class OutboxMessagePipe<TMessage> :
                     instrument?.Complete();
                 }
 
-                LogContext.Debug?.Log("Outbox Sent: {InboxMessageId} {SequenceNumber} {MessageId}", context.MessageId, message.SequenceNumber,
-                    message.MessageId);
+                try
+                {
+                    LogContext.Debug?.Log("Outbox Sent: {InboxMessageId} {SequenceNumber} {MessageId}", context.MessageId, message.SequenceNumber,
+                        message.MessageId);
+                }
+                catch (Exception)
+                {
+                }
 
                 await context.NotifyOutboxMessageDeliveredAsync(message).ConfigureAwait(false);
 

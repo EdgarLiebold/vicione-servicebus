@@ -1,0 +1,19 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE549_CURRENT546_SOURCE133_MIXED_SCHEMA_HISTORY_ROOT_APPLICATION_R1.json",
+    "bytes": 3407,
+    "sha256": "1f7750f9000206fcbe5fdffaf9cabaca9af0a4ef684667b99afd205ac9330c7c"
+  },
+  "master_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "bytes": 86390467,
+    "sha256": "7b3df9eccf3eb89e18d26f1e728695e2462cacf256c3a6acbd32e2c0ff601b23"
+  },
+  "unchanged19298_other_rows": true,
+  "current19431_census_bound": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-additional133-mixed-schema-current546-identity-migration-proposed-r1/ALL19431_AFTER_ROOT548_PLUS133_EXACT_PRIMARY_SOURCE_CENSUS.json",
+    "bytes": 19635423,
+    "sha256": "00d6be127972290b159f028bf7b9415f7ae99a0d941e301caaaa6daf6d9d4602"
+  },
+  "STATE_PO_Product_Test_Req_unchanged": true
+}

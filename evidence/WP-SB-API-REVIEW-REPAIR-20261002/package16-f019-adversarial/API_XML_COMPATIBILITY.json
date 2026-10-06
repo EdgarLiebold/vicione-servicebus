@@ -1,0 +1,11 @@
+{
+  "original_public_id": "M:ViciOne.ServiceBus.Advanced.LogContext.ConfigureCurrentLogContextIfNull(System.IServiceProvider)",
+  "signature_preserved": true,
+  "public_surface_added": false,
+  "new_internal_origin_property_and_factory_reference": true,
+  "factory_context_constructor_public_source_is_internal_class": "BusLogContext itself internal; original internal binary dependencies not blanket public API guarantee",
+  "packed_members": {
+    "previous": "<member name=\"M:ViciOne.ServiceBus.Advanced.LogContext.ConfigureCurrentLogContextIfNull(System.IServiceProvider)\">\n            <summary>\n            Configures the current context from dependency injection when no usable logger is present,\n            then attaches available logging instrumentation.\n            </summary>\n            <param name=\"provider\">The service provider used to resolve dependencies.</param>\n        </member>\n        ",
+    "corrected": "<member name=\"M:ViciOne.ServiceBus.Advanced.LogContext.ConfigureCurrentLogContextIfNull(System.IServiceProvider)\">\n            <summary>\n            Configures the current context from dependency injection when no usable logger is present\n            or an automatically configured context uses a different logger factory,\n            then attaches available logging instrumentation.\n            </summary>\n            <param name=\"provider\">The service provider used to resolve dependencies.</param>\n            <remarks>Usable caller-configured contexts are preserved. Logger factories remain owned by their callers or service containers.</remarks>\n        </member>\n        "
+  }
+}

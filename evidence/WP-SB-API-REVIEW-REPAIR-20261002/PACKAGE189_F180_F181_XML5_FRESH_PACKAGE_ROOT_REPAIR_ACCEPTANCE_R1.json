@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-05T15:08:59.730480+00:00",
+  "status": "F180_TOPOLOGY_COPY_F181_IMMUTABLE_XML_FIXED_ADVERSARIAL_FRESH_PACKAGE_ROOT_REPAIR_ACCEPTED",
+  "findings": [
+    "F-SB-API-180",
+    "F-SB-API-181"
+  ],
+  "counts": {
+    "known": 181,
+    "accepted_before": 179,
+    "accepted_after": 181
+  },
+  "exact_summary_nodes": 5,
+  "changed_sources": 4,
+  "implementation_and_public_declarations_preserved": true,
+  "strict_build": {
+    "phase": "package189-azure-xml5-strict-build-r1",
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log_sha256": "01e28dc8401a0a115792f3f7850a51dd7e32881f35cd5d47efcc1034bd897fc4"
+  },
+  "fresh_pack": {
+    "phase": "package189-azure-xml5-fresh-pack-r1",
+    "exit_code": 0,
+    "log_sha256": "2dae4bb93e2e77ca85211470f4e1e5c063f4616cbbd87e1d6e8ec09ebd569a2e",
+    "package_sha256": "c16d21d17e154688f3356194e40c3b54bdb09907d45f7aa61a6806416ade5957"
+  },
+  "root_actual_counterproof": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-azure-xml5-fresh-result-root-counterproof-r3/ROOT_COUNTERPROOF.json",
+    "sha256": "d905b7a63546062b1dfe6d5085dfd7fb9db93793f41e697bef56c74c143d9350",
+    "receipt": "30b279",
+    "actual_embedded_PDB_documents": 223,
+    "all_changed4_match_reviewed_source": true,
+    "whole_actual_XML_inverse5_equals_original185": true
+  },
+  "independent_fresh_publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-azure-fresh-xml5-independent-qualification-peer-r1/REPORT.json",
+    "sha256": "3940d78ed2bcd9998cfd9239aa654cb69557d90cb2d5b061e63e055c65e77dd3",
+    "root_whole_report_receipt": "792554"
+  },
+  "native_tests_added": 0,
+  "native_reason": "Comments only; meaningful proof is exact unchanged non-document source, actual fresh compiled/package XML and source/PDB binding; no mirrored runtime tests.",
+  "limits": [
+    "Four unrelated Azure concrete workflow/lifetime holds and the remaining API inventory stay open.",
+    "No continuous sourcefreeze or cloud claim from instantaneous canonical/runtime equality."
+  ],
+  "global_Aplus": false
+}

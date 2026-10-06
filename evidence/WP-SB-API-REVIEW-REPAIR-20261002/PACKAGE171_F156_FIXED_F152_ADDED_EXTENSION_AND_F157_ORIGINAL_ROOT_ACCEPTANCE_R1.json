@@ -1,0 +1,128 @@
+{
+  "utc": "2026-10-05T07:45:13.216721+00:00",
+  "actor": "/root",
+  "status": "ROOT_F156_BOUNDED_FIXED_F152_ADDED_FIXED_EXTENSION_F157_ORIGINAL_REGISTRATION",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package171-added-ctor-fixed-add-insert-original142-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+    "sha256": "ef7c470246a1e375a437dcda17407854ea754479623e92e323e43c7f7a9865ed",
+    "manifest_sha256": "06d6abc1cedb9e4ac0b21dfcb11e350ba8121b188d774f15c5ae458e11522f05",
+    "freeze_sha256": "0083ee482cc19f1c4e3c17fe0ed7ae031120b0ab3b6dcc4771309a3cd7923af5"
+  },
+  "independent_root_checks": {
+    "all_manifest_entries": 3344,
+    "all_frozen_files": 3326,
+    "live_source_files_equal": 3261,
+    "actual_SDK_receipts": 7,
+    "fresh_ZIP_CRC_DLL_XML": 2
+  },
+  "root_human_scope": "Whole127 qualification source1f9d9e; actual firstfailure/healthy/Added2/Ctor4 blocks2c22f1 previouslyread; current412 repository first155a545eb and original ConsumeContextScope159 d2a1f4 plus fullProxy1831b3baa independentlyread. All7actualreceipts/3344MAN/3326freeze/currentLiveSource3261 and physicalZIP2 independentlychecked791845. No full2522testbody or wholeAPI claim.",
+  "F156": {
+    "status": "CURRENT_REPAIR_ROOT_ACCEPTED_BOUNDED",
+    "native_controls": 4,
+    "scope": "Actual previously returned observer handles are all disconnected on partial construction failure; admitted primary preserved and primary plus cleanup causes retained in aggregate. Success path unchanged.",
+    "newly_reached": "No retained notifications; all acquired handles disconnect once; cleanup-fault case reaches and verifies exact two primary/cleanup causes."
+  },
+  "F152": {
+    "status": "FIVE_CREATED_USED_REMOVED_ADDED_OWNING_CALLERS_FIXED_OTHER_PROVIDER_CONNECT_RESEARCH_OPEN",
+    "added_controls": 2,
+    "scope": "MissingSagaPipe acquired Add context progresses through exact next and Save; optional hostile Added logger cannot turn success into discard; owned async disposal remains once, borrowed input unowned.",
+    "family_open": "Provider Insert/Dupe and connection owning boundaries remain under separate real Original controls; direct public SagaLog SPI is not globally suppressed."
+  },
+  "new_finding": {
+    "id": "F-SB-API-157",
+    "severity": "Medium",
+    "title": "Message-specific InMemory Add and Insert omit the selected explicit operation token from the configured saga factory context",
+    "status": "CONFIRMED_PRE_REVIEWED_REPAIR_R2_PENDING_ROOT_APPLICATION",
+    "classification": "CONFIRMED_FINITE_ORIGINAL_CONTRACT_DEFECT",
+    "actual_original_contexts": [
+      {
+        "case": "ViciOne.ServiceBus.Tests.Saga.InMemoryRepository.InMemorySagaRepositoryContextTests.MessageCreation_SelectedBudgetReachesTheActualCooperativeFactoryAsync(mode: Insert, initialLease: True, cancelCaller: True)",
+        "classification": "CAUSAL_PRODUCT_ADD_INSERT_SELECTED_OPERATION_TOKEN_OMITTED_FROM_FACTORY_CONTEXT",
+        "first_failure": "Source789 Assert.True(factory.ObservedToken.IsCancellationRequested): actualFalse after operationCancellation.Cancel; consume token intentionally remains live.",
+        "reached": [
+          "Actual Add/Insert initial or reacquired dictionary-lease branch admits factory once; exact dictionary/state/mode/message/Advanced.ReceiveContext identity and distinct caller/consume tokens checked.",
+          "Factory task/public operation/Continue are held, dictionary empty and factory token initially live; explicit operation token canceled while consume token remains live before first789."
+        ],
+        "unreached": [
+          "Post789 canceled task/OCE/no-createdcontext/no-state assertions.",
+          "Post-finally dictionary/saga availability assertions; original assertion rethrows after finally."
+        ],
+        "source_cause": "Add and Insert select explicit operation token for precancel/dictionary acquisition, then pass original _context into factory in both initial and reacquired lease routes. Actual factory awaits context.CancellationToken, so caller cancellation never reaches its held wait. Load has OperationConsumeContext and remains unchanged.",
+        "healthy_control": "Four same mode/lease cases with cancelCallerfalse pass manual release and exact created context/state/message/ReceiveContext, dictionary registration, terminal success and lease checks.",
+        "cleanup": "Finally releases Continue then joins actual factory Task and public operation with timeout exclusion; disposes created/seed context and repository, releases any caller-owned dictionary lease. No post-finally assertion credit for failed cases.",
+        "family_precision": "Four original cases establish one coherent Add/Insert explicit-token forwarding omission, no automatic ID or SagaInstance defect."
+      },
+      {
+        "case": "ViciOne.ServiceBus.Tests.Saga.InMemoryRepository.InMemorySagaRepositoryContextTests.MessageCreation_SelectedBudgetReachesTheActualCooperativeFactoryAsync(mode: Add, initialLease: False, cancelCaller: True)",
+        "classification": "CAUSAL_PRODUCT_ADD_INSERT_SELECTED_OPERATION_TOKEN_OMITTED_FROM_FACTORY_CONTEXT",
+        "first_failure": "Source789 Assert.True(factory.ObservedToken.IsCancellationRequested): actualFalse after operationCancellation.Cancel; consume token intentionally remains live.",
+        "reached": [
+          "Actual Add/Insert initial or reacquired dictionary-lease branch admits factory once; exact dictionary/state/mode/message/Advanced.ReceiveContext identity and distinct caller/consume tokens checked.",
+          "Factory task/public operation/Continue are held, dictionary empty and factory token initially live; explicit operation token canceled while consume token remains live before first789."
+        ],
+        "unreached": [
+          "Post789 canceled task/OCE/no-createdcontext/no-state assertions.",
+          "Post-finally dictionary/saga availability assertions; original assertion rethrows after finally."
+        ],
+        "source_cause": "Add and Insert select explicit operation token for precancel/dictionary acquisition, then pass original _context into factory in both initial and reacquired lease routes. Actual factory awaits context.CancellationToken, so caller cancellation never reaches its held wait. Load has OperationConsumeContext and remains unchanged.",
+        "healthy_control": "Four same mode/lease cases with cancelCallerfalse pass manual release and exact created context/state/message/ReceiveContext, dictionary registration, terminal success and lease checks.",
+        "cleanup": "Finally releases Continue then joins actual factory Task and public operation with timeout exclusion; disposes created/seed context and repository, releases any caller-owned dictionary lease. No post-finally assertion credit for failed cases.",
+        "family_precision": "Four original cases establish one coherent Add/Insert explicit-token forwarding omission, no automatic ID or SagaInstance defect."
+      },
+      {
+        "case": "ViciOne.ServiceBus.Tests.Saga.InMemoryRepository.InMemorySagaRepositoryContextTests.MessageCreation_SelectedBudgetReachesTheActualCooperativeFactoryAsync(mode: Add, initialLease: True, cancelCaller: True)",
+        "classification": "CAUSAL_PRODUCT_ADD_INSERT_SELECTED_OPERATION_TOKEN_OMITTED_FROM_FACTORY_CONTEXT",
+        "first_failure": "Source789 Assert.True(factory.ObservedToken.IsCancellationRequested): actualFalse after operationCancellation.Cancel; consume token intentionally remains live.",
+        "reached": [
+          "Actual Add/Insert initial or reacquired dictionary-lease branch admits factory once; exact dictionary/state/mode/message/Advanced.ReceiveContext identity and distinct caller/consume tokens checked.",
+          "Factory task/public operation/Continue are held, dictionary empty and factory token initially live; explicit operation token canceled while consume token remains live before first789."
+        ],
+        "unreached": [
+          "Post789 canceled task/OCE/no-createdcontext/no-state assertions.",
+          "Post-finally dictionary/saga availability assertions; original assertion rethrows after finally."
+        ],
+        "source_cause": "Add and Insert select explicit operation token for precancel/dictionary acquisition, then pass original _context into factory in both initial and reacquired lease routes. Actual factory awaits context.CancellationToken, so caller cancellation never reaches its held wait. Load has OperationConsumeContext and remains unchanged.",
+        "healthy_control": "Four same mode/lease cases with cancelCallerfalse pass manual release and exact created context/state/message/ReceiveContext, dictionary registration, terminal success and lease checks.",
+        "cleanup": "Finally releases Continue then joins actual factory Task and public operation with timeout exclusion; disposes created/seed context and repository, releases any caller-owned dictionary lease. No post-finally assertion credit for failed cases.",
+        "family_precision": "Four original cases establish one coherent Add/Insert explicit-token forwarding omission, no automatic ID or SagaInstance defect."
+      },
+      {
+        "case": "ViciOne.ServiceBus.Tests.Saga.InMemoryRepository.InMemorySagaRepositoryContextTests.MessageCreation_SelectedBudgetReachesTheActualCooperativeFactoryAsync(mode: Insert, initialLease: False, cancelCaller: True)",
+        "classification": "CAUSAL_PRODUCT_ADD_INSERT_SELECTED_OPERATION_TOKEN_OMITTED_FROM_FACTORY_CONTEXT",
+        "first_failure": "Source789 Assert.True(factory.ObservedToken.IsCancellationRequested): actualFalse after operationCancellation.Cancel; consume token intentionally remains live.",
+        "reached": [
+          "Actual Add/Insert initial or reacquired dictionary-lease branch admits factory once; exact dictionary/state/mode/message/Advanced.ReceiveContext identity and distinct caller/consume tokens checked.",
+          "Factory task/public operation/Continue are held, dictionary empty and factory token initially live; explicit operation token canceled while consume token remains live before first789."
+        ],
+        "unreached": [
+          "Post789 canceled task/OCE/no-createdcontext/no-state assertions.",
+          "Post-finally dictionary/saga availability assertions; original assertion rethrows after finally."
+        ],
+        "source_cause": "Add and Insert select explicit operation token for precancel/dictionary acquisition, then pass original _context into factory in both initial and reacquired lease routes. Actual factory awaits context.CancellationToken, so caller cancellation never reaches its held wait. Load has OperationConsumeContext and remains unchanged.",
+        "healthy_control": "Four same mode/lease cases with cancelCallerfalse pass manual release and exact created context/state/message/ReceiveContext, dictionary registration, terminal success and lease checks.",
+        "cleanup": "Finally releases Continue then joins actual factory Task and public operation with timeout exclusion; disposes created/seed context and repository, releases any caller-owned dictionary lease. No post-finally assertion credit for failed cases.",
+        "family_precision": "Four original cases establish one coherent Add/Insert explicit-token forwarding omission, no automatic ID or SagaInstance defect."
+      }
+    ],
+    "source": "src/ViciOne.ServiceBus.Sagas/Saga/InMemoryRepository/InMemorySagaRepositoryContext.cs",
+    "original_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package171-added-ctor-fixed-add-insert-original142-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+      "sha256": "ef7c470246a1e375a437dcda17407854ea754479623e92e323e43c7f7a9865ed",
+      "manifest_sha256": "06d6abc1cedb9e4ac0b21dfcb11e350ba8121b188d774f15c5ae458e11522f05",
+      "freeze_sha256": "0083ee482cc19f1c4e3c17fe0ed7ae031120b0ab3b6dcc4771309a3cd7923af5"
+    },
+    "limits": [
+      "One coherent omission in four actual mode/lease branches, not four finding IDs.",
+      "Default and equal-token context identity, occupied Insert early return and actual configured public factory must remain intact.",
+      "Supported repository context already requires Advanced through original Scope/Proxy constructor; unsupported typed-only hypothetical does not create a finding.",
+      "No linked-budget or forced cancellation of a noncooperative custom factory."
+    ],
+    "whole_API_member_review_closed": false
+  },
+  "known_before": 156,
+  "known_after": 157,
+  "accepted_before": 154,
+  "accepted_after": 155,
+  "whole_API_closed": false,
+  "grade": null
+}

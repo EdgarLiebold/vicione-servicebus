@@ -86,7 +86,14 @@ public class InMemoryOutboxConsumeContext :
             }
             catch (Exception e)
             {
-                LogContext.Warning?.Log(e, "One or more messages could not be unscheduled.", e);
+                try
+                {
+                    LogContext.Warning?.Log(e, "One or more messages could not be unscheduled.", e);
+                }
+                catch
+                {
+                    // Diagnostic logging must not replace the contained scheduler outcome.
+                }
             }
         }
     }
@@ -107,7 +114,14 @@ public class InMemoryOutboxConsumeContext :
             }
             catch (Exception e)
             {
-                LogContext.Warning?.Log(e, "One or more messages could not be unscheduled.", e);
+                try
+                {
+                    LogContext.Warning?.Log(e, "One or more messages could not be unscheduled.", e);
+                }
+                catch
+                {
+                    // Diagnostic logging must not replace the contained scheduler outcome.
+                }
             }
         }
     }

@@ -1,0 +1,63 @@
+{
+  "utc": "2026-10-06T01:45:27.120932+00:00",
+  "status": "ROOT_ACCEPTED14_INDIVIDUAL_LOCAL_SOURCE_CONSTRUCTOR_CONTRACTS_NATIVE0",
+  "master_before_sha256": "4d5c0f0eaaba20932a1c9a24bffc3beaa2c3687e10ed2911da0bfa32e9e98e69",
+  "source14": {
+    "Courier": 4,
+    "Analyzers": 8,
+    "Codefix": 2
+  },
+  "mandatory_author_independent_manifest_composition": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package286-courier-implicit-ctor4-source-contracts-proposed-r1",
+      "sha256": "71bc84c9f0fb84a20160445050699cdfe91a2120df0144b24d35ec4b81b75fa1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package286-courier-implicit-ctor4-count-and-projection-precision-r1",
+      "sha256": "a7b3b6ed2c85174edd61adf8ef6368a6d9bd89f5e17695d731be462765b24f93"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package286-courier-implicit4-independent-runtime-source-peer-r1",
+      "sha256": "ca9b42895bacdafe0d6b4edf879ae6cd505483570cfbdaccafb5bb0fe01f75af"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package286-courier-implicit4-independent-runtime-read-count-erratum-r1",
+      "sha256": "d7648ae5e6a63399f49ce1275964d409392d50b8743ec1f84b66039f7f69a735"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package288-analyzer-codefix-implicit10-current-source-contracts-proposed-r1",
+      "sha256": "bbe5f08c198b83f00734b9ec8f51d459e20927f491b35fd2d25b02a122d09e0c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package288-analyzer-implicit10-local12-norm-precision-overlay-r1",
+      "sha256": "a976bc42f9edbb9424d597b040dddc8e8f2705e4dd0c4adf6caa334412efd446"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package288-analyzer-implicit10-proposal12-sync-overlay-r1",
+      "sha256": "e9641336b6b6ff0f2061187f1a963fa8bea2beb3026dba54759d1ce66fad4ae9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package288-analyzer-codefix-ctor10-independent-scanner-source-peer-r1",
+      "sha256": "9614f1805b753d86b8bfb59fbe7252f4c1f5c6ece46dfcadcbe08eb22caf1461"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package288-analyzer-codefix-ctor10-independent-scanner-report-count-erratum-r1",
+      "sha256": "baf570e4d0b2ea24a3b8372a07504544fc1eadc9a069a55553a75e0fb74af9da"
+    }
+  ],
+  "root_authority": "RootwholeCourier4 norms19633e/count-errata9893c3; Analyzer tennormsaf631e/mandatoryprimary145824/row37302d3801ae. Fresh wholepeer+errata406a10/7c5e43. Fresh14 Source/PDB/XML/Original/manifests guard8b535f; no decodedctorIL/ABI/native activation credit. Initial heterogeneousMAN read-only guard49329f failed before any mutation; inspectedschemas70fb7b then successful fresh guard8b535f.",
+  "preservation": "All18904 old Master rows preserved exactly; immutable337/54 source matrices untouched. ResolvedCourierDoc9 and ten operativecallbacks remain separate. Append14 individually reviewed local constructor facts; no blanket implicitNA.",
+  "counts_before": {
+    "master": 18904,
+    "Original_accepted": 18042,
+    "Original_remaining": 527
+  },
+  "counts_after": {
+    "master": 18918,
+    "Original_accepted": 18056,
+    "Original_remaining": 513
+  },
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_review_closed": false
+}

@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Caching;
 
 namespace ViciOne.ServiceBus.ActiveMq;
 
-/// <summary>Decorates an Apache NMS producer and reports each operation as cache usage.</summary>
+/// <summary>Decorates an Apache NMS producer and reports cache usage from send, message-creation, and asynchronous-close methods.</summary>
 public class CachedMessageProducer :
     IMessageProducer,
     IResourceUsageSource
@@ -321,6 +321,6 @@ public class CachedMessageProducer :
         set => _producer.DeliveryDelay = value;
     }
 
-    /// <summary>Occurs whenever an operation uses the wrapped producer.</summary>
+    /// <summary>Occurs when a send, message-creation, or asynchronous-close method reports use of the wrapped producer.</summary>
     public event Action? Used;
 }

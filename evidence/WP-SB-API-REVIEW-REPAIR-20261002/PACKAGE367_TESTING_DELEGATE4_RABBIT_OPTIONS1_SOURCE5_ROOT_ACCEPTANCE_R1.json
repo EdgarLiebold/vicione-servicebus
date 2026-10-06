@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-06T07:07:46.813431+00:00",
+  "status": "ROOT_ACCEPTED_DELEGATE4_OPTIONS_DEFAULT1_INDIVIDUAL_BOUNDED_SOURCE_LANGUAGE_CONTRACTS",
+  "master_before_sha256": "3ee50d01ce24a95d741188c9fccae42811fe5f574ce55f5164673b5766ecbfe4",
+  "root_author_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package367-testing-delegate4-rabbit-options1-root-source-proposed-r1/MANIFEST.json",
+    "sha256": "0050f940453d52f44dd8838d10520edf00195de86b66c132109cd4e8b5c89fdd"
+  },
+  "independent_different_agent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package367-delegate-options5-independent-source-peer-r1/MANIFEST.json",
+    "sha256": "9593a144cef82c0d34bf2089c05a5c3583c45b9537590e5524c0608771dd506b"
+  },
+  "research_before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package367-testing-delegate4-rabbit-options1-root-research-before-r1/MANIFEST.json",
+    "sha256": "d506761bd60075106f15745adf5759974dfc883d91e69f5e723c4dba4a0f70dd"
+  },
+  "Root_Source2_33_whole_receipt": "6414b7 complete8+25 outside explicitly recovered separate Rate omission",
+  "Root_actualTYPE2_whole_receipt": "5b52dc",
+  "Root_approved_P36_frozen320_research": "023e51",
+  "Root_handwritten5_norm_author": "1e8570",
+  "Root_complete5semantic_norms_and_entire_independentREPORT": "3633cf",
+  "Root_primary_exact_invoke_spec_clauses_verified": "turn303view0 clauses21.6; no rawpointerbody proof",
+  "source_epoch": "Frozen actual320 Testing/RabbitTesting producer, selected2 exact-current-source docs; no newly executed native runtime grade",
+  "original_before": 18352,
+  "original_after": 18357,
+  "remaining_after": 212,
+  "master_before": 19214,
+  "master_after": 19219,
+  "native_count_added": 0,
+  "grade": null,
+  "known_unique_findings": 216,
+  "bounded_dispositions": 215,
+  "whole_API_closed": false,
+  "limits": "Individual constructor/delegate declarations and primary-documented .NET6+ asyncdelegate policy only. Actual callback success, rawpointer/IL/ABI/binding, predicate/harness observation/provider workflows remain separate."
+}

@@ -4,6 +4,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.DependencyInjection.Registration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Transports;
 using Xunit;
@@ -193,36 +194,57 @@ public sealed class SagaRegistrationRuntimeDeepContractTests
         var registration = Registration<FirstSaga>(events: events);
         var selector = new RecordingContainerSelector(registration);
         IRegistrationContext registrationContext = CreateRegistrationContext(selector);
-        ISagaConfigurator<FirstSaga>? callbackConfigurator = null;
-        Action<ISagaConfigurator<FirstSaga>> callback = configurator =>
-        {
-            events.Add("Callback");
-            callbackConfigurator = configurator;
-        };
-
-        Assert.True(typed.TryConfigure<FirstSaga>(endpoint, registrationContext, callback));
-
-        Assert.Equal(["AddConfigureAction:FirstSaga", "Configure:FirstSaga"], events);
-        Assert.Equal(1, registration.AddConfigureActionCount);
-        Assert.Equal(1, registration.ConfigureCount);
+        ConfigurationException unsupported = Assert.Throws<ConfigurationException>(() =>
+            typed.TryConfigure<FirstSaga>(endpoint, registrationContext,
+                new Action<ISagaConfigurator<FirstSaga>>(_ => throw new InvalidOperationException("Local callback must not run."))));
+        Assert.Contains("endpoint-local callback", unsupported.Message, StringComparison.Ordinal);
+        Assert.Empty(events);
+        Assert.Equal(0, registration.AddConfigureActionCount);
+        Assert.Equal(0, registration.ConfigureCount);
+        Assert.Null(registration.ConfigureAction);
+        Assert.Null(registration.EndpointConfigurator);
+        Assert.Null(registration.DefinitionContext);
         Assert.Equal(1, selector.TryGetCount);
         Assert.Equal(typeof(FirstSaga), Assert.Single(selector.RequestedTypes));
+
+        Assert.True(typed.TryConfigure<FirstSaga>(endpoint, registrationContext));
+        Assert.Equal(["Configure:FirstSaga"], events);
+        Assert.Equal(0, registration.AddConfigureActionCount);
+        Assert.Equal(1, registration.ConfigureCount);
         Assert.Same(endpoint, registration.EndpointConfigurator);
         Assert.Same(registrationContext, registration.ConfigurationContext);
-
-        Action<IRegistrationContext, ISagaConfigurator<FirstSaga>> forwarded =
-            Assert.IsType<Action<IRegistrationContext, ISagaConfigurator<FirstSaga>>>(registration.ConfigureAction);
-        ISagaConfigurator<FirstSaga> sagaConfigurator = CreateProxy<ISagaConfigurator<FirstSaga>>();
-        forwarded(registrationContext, sagaConfigurator);
-
-        Assert.Same(sagaConfigurator, callbackConfigurator);
-        Assert.Equal(
-            ["AddConfigureAction:FirstSaga", "Configure:FirstSaga", "Callback"],
-            events);
-
         Assert.False(typed.TryConfigure<SecondSaga>(endpoint, registrationContext));
-        Assert.Equal(1, registration.AddConfigureActionCount);
+        Assert.Equal(0, registration.AddConfigureActionCount);
         Assert.Equal(1, registration.ConfigureCount);
+
+        var builtin = new SagaRegistration<InitiatedSaga>(new RecordingContainerSelector());
+        var builtinSelector = new RecordingContainerSelector(builtin);
+        using ServiceProvider provider = new ServiceCollection().BuildServiceProvider();
+        var builtinContext = new RegistrationContext(provider, builtinSelector, CreateProxy<ISetScopedConsumeContext>());
+        IReceiveEndpointConfigurator builtinEndpoint = DispatchProxy.Create<IReceiveEndpointConfigurator, SagaEndpointProxy>();
+        var recorder = (SagaEndpointProxy)(object)builtinEndpoint;
+        ISagaConfigurator<InitiatedSaga>? globalConfigurator = null;
+        ISagaConfigurator<InitiatedSaga>? localConfigurator = null;
+        ((ISagaRegistration)builtin).AddConfigureAction<InitiatedSaga>((context, configurator) =>
+        {
+            Assert.Same(builtinContext, context);
+            Assert.Empty(recorder.Specifications);
+            recorder.Events.Add("Global");
+            globalConfigurator = configurator;
+        });
+        Assert.True(typed.TryConfigure<InitiatedSaga>(builtinEndpoint, builtinContext,
+            new Action<ISagaConfigurator<InitiatedSaga>>(configurator =>
+            {
+                Assert.Empty(recorder.Specifications);
+                Assert.Same(globalConfigurator, configurator);
+                recorder.Events.Add("Local");
+                localConfigurator = configurator;
+            })));
+        Assert.NotNull(localConfigurator);
+        Assert.Same(globalConfigurator, localConfigurator);
+        Assert.Same(localConfigurator, Assert.Single(recorder.Specifications));
+        Assert.Equal(["Global", "Local", "Attachment"], recorder.Events);
+        Assert.Equal(1, builtinSelector.TryGetCount);
     }
 
     [Fact]
@@ -576,6 +598,26 @@ public sealed class SagaRegistrationRuntimeDeepContractTests
                 return Selector;
 
             throw new NotSupportedException(targetMethod.Name);
+        }
+    }
+
+    private class SagaEndpointProxy : DispatchProxy
+    {
+        public List<object> Specifications { get; } = [];
+
+        public List<string> Events { get; } = [];
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name == "get_InputAddress")
+                return new Uri("loopback://localhost/saga-forwarding");
+            if (targetMethod?.Name == "AddEndpointSpecification" && args is [object specification])
+            {
+                Specifications.Add(specification);
+                Events.Add("Attachment");
+                return null;
+            }
+            throw new NotSupportedException(targetMethod?.Name);
         }
     }
 

@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs
++++ src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs
+@@ -99,7 +99,7 @@
+             if (char.IsLowSurrogate(character))
+                 throw new ArgumentException("A message contract name must contain well-formed UTF-16.", nameof(name));
+ 
+-            if (char.IsControl(character) || char.IsWhiteSpace(character) || character == ';')
++            if (char.IsControl(character) || char.IsWhiteSpace(character) || character == ';' || character == '\uFFFD')
+             {
+                 throw new ArgumentException(
+                     "A message contract name cannot contain whitespace, control characters, or ';'.",

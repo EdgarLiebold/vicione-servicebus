@@ -1,0 +1,158 @@
+{
+  "utc": "2026-10-06T20:12:52.047535+00:00",
+  "status": "EXACT2_CURRENT_PUBLIC_SOURCE_PROPERTY_CONTRACTS_ACCEPTED_BOUNDED_NATIVE0",
+  "actor": "/root",
+  "before_master": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "bytes": 86390467,
+    "sha256": "7b3df9eccf3eb89e18d26f1e728695e2462cacf256c3a6acbd32e2c0ff601b23"
+  },
+  "before_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package550-current2-property-contract-root-acceptance-before-r1/MANIFEST.json",
+    "bytes": 282,
+    "sha256": "7f9dd6f8a25509b138ac3e2efcf21fb75c5887121c43104192e9eaf050feb62d"
+  },
+  "author_and_different_peer": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-current546-public-property2-individual-source-contracts-proposed-r1/REPORT.json",
+      "bytes": 2460,
+      "sha256": "fc908684018b459a990ce72afb1b9490fc580f0af3bf32a53d6479161922ab8f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-current546-public-property2-individual-source-contracts-proposed-r1/MANIFEST.json",
+      "bytes": 2084,
+      "sha256": "d7aa81060a27099bbab5e752f53c94cb33e50fc0e5d857bf617ed69bc9770c9b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-current546-public-property2-individual-source-contracts-proposed-r1/PER_ID2_HAND_AUTHORED_PROPOSED_SOURCE_CONTRACTS.json",
+      "bytes": 10048,
+      "sha256": "cea57b2f2117878f57373884dff8d77655734a18a19d84b88246de1d989bc91a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-property2-independent-current546-source-norm-peer-r1/REPORT.json",
+      "bytes": 2957,
+      "sha256": "23ccdc7b2717c9584e99a4ed1d52b559e6816f502e0098a81a89e1478f9f6754"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-property2-independent-current546-source-norm-peer-r1/MANIFEST.json",
+      "bytes": 169,
+      "sha256": "459f27b2505716bb802bd03d32e8ca48995a2893714eb6671629772093cda897"
+    }
+  ],
+  "root_reads": [
+    "3a7949 wholeauthor",
+    "a43508 complete2norms",
+    "11e2a6 owner272 complete;wrong secondhelperpath corrected no false wholecommandPASS",
+    "c93c79 wholebase183/Advanced96/State43",
+    "this operation whole differentpeer"
+  ],
+  "member_UIDs": [
+    "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.CancellationToken",
+    "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.CancellationToken"
+  ],
+  "entire_hand_authored_proposed_norms": [
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.CancellationToken",
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Sagas/ViciOneServiceBusStateMachine.BehaviorContextProxy.cs",
+      "source_sha256": "17435cad1c9301199a66954c598ed0dab4a10021a6804cb4ac7207fae86c6182",
+      "member_contract": "Public getter-only override returns the readonly nullable operation token when populated; a populated CancellationToken.None is returned without evaluating the base getter. The public machine/context/event constructor leaves this field null, so each ordinary getter call instead evaluates ConsumeContextProxy.CancellationToken on the retained saga consume context. The internal context/token constructor stores the supplied token; operation-aware CreateProxy paths retain that token in returned wrappers. The null-coalescing getter neither links/cancels tokens nor registers callbacks, allocates a cancellation source, checks cancellation, waits, or owns/disposes the underlying context. The fallback is a fresh underlying getter evaluation and any actual getter exception propagates unchanged; no universal cancellation/completion or custom-context lifetime guarantee follows.",
+      "owner_context": "Nested public behavior context of ViciOneServiceBusStateMachine<TInstance>; TInstance : class, ISagaStateMachineInstance. Overrides the inherited cancellation property while preserving IBehaviorContext→SagaConsumeContext→ConsumeContext→PipeContext shape. Existing type/member approvals remain independent.",
+      "current_compiled_identity_binding_546": {
+        "uid": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.CancellationToken",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_relative": "src/ViciOne.ServiceBus.Sagas/Sagas/ViciOneServiceBusStateMachine.BehaviorContextProxy.cs",
+        "source_line": 44,
+        "source_sha256": "17435cad1c9301199a66954c598ed0dab4a10021a6804cb4ac7207fae86c6182",
+        "PDB_document_RID": 269,
+        "PDB_document": {
+          "path": "/_/src/ViciOne.ServiceBus.Sagas/Sagas/ViciOneServiceBusStateMachine.BehaviorContextProxy.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "17435cad1c9301199a66954c598ed0dab4a10021a6804cb4ac7207fae86c6182",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual546_DLL_SHA256": "ee8e8f9f879073e75f6b0b66b7bd6bb8d94804363314ad0ba520cd8fc718d711",
+        "actual546_PDB_SHA256": "2ac645e83b6f0a5693da70e180a0c7ba61d64fee426b5429b63b0f67fb77b2b8",
+        "actual546_XML_SHA256": "c35dbbd5c06e5a63538f5936c902079bde4b133336e518927dc7d9b556a6fe87",
+        "actual_XML_node_structural": "<member name=\"P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.CancellationToken\">\n            <inheritdoc />\n        </member>\n        ",
+        "XML_not_raw_window": true,
+        "actual546_reflection_file_sha256": "493c48624b80c801824bf6caee9b7e6b960b6608335bebaee97da97208e44252",
+        "actual_reflection_type_line": 13518,
+        "actual_reflection_type_record": "TYPE class public ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine<TInstance>.BehaviorContextProxy [base=ViciOne.ServiceBus.Context.ConsumeContextProxy,interfaces=ViciOne.ServiceBus.Sagas.IBehaviorContext<TInstance>]",
+        "actual_reflection_property_line": 13527,
+        "actual_reflection_property_record": "  PROPERTY System.Threading.CancellationToken CancellationToken { public-get[modifiers=override];  }",
+        "UID_join_basis": "Exact actual XML member UID + whole-source declaration + exact known packed parent/property record; no newly invented reflection-to-UID parser",
+        "existing_parent_type_master_index": 8231,
+        "existing_parent_type_uid": "T:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy"
+      },
+      "source_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-current546-public-property2-individual-source-contracts-proposed-r1",
+      "runtime_obligations": "Property local selection/delegation only. No executed getter/native case credit, callback/transition/message operations, cancellation observation timing, reentry/concurrency, custom underlying getter behavior or resource retirement closure. Internal token carrier language/source fact does not claim external constructor accessibility.",
+      "canonical_original_member": false,
+      "compiler_accessor_sidecar": false,
+      "current_inventory_supplement": true,
+      "status": "PROPOSED_BOUNDED_CURRENT_SOURCE_MEMBER_CONTRACT",
+      "native_cases_added": 0,
+      "native_qualified": false,
+      "test_grade": null,
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.CancellationToken",
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Sagas/ViciOneServiceBusStateMachine.BehaviorContextProxy.cs",
+      "source_sha256": "17435cad1c9301199a66954c598ed0dab4a10021a6804cb4ac7207fae86c6182",
+      "member_contract": "Public getter-only override returns the readonly nullable operation token when populated, including a populated CancellationToken.None without evaluating the base getter. The public machine/saga-context/message-consume-context/event constructor leaves this field null. Its fallback follows ConsumeContextProxy<TMessage> to ConsumeContextProxy.CancellationToken and therefore reads the retained message consume context, not the separately retained saga context. The typed base constructor requires that message context expose the infrastructure ConsumeContext through Advanced(), which returns the same object or throws NotSupportedException during construction. The internal typed behavior-context/token constructor stores the supplied token; operation-aware CreateProxy paths retain it in returned wrappers. Each null-field access evaluates the underlying getter anew and propagates its actual exception unchanged. This getter does not link/cancel/register/check tokens, create or dispose a cancellation source, wait for tasks, or establish universal cancellation/completion/custom-SPI lifetime behavior.",
+      "owner_context": "Nested public behavior context of ViciOneServiceBusStateMachine<TInstance>; TInstance : class, ISagaStateMachineInstance; nested TMessage : class. Overrides the inherited cancellation property while preserving IBehaviorContext→SagaConsumeContext→ConsumeContext→PipeContext shape. Existing type/member approvals remain independent.",
+      "current_compiled_identity_binding_546": {
+        "uid": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.CancellationToken",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_relative": "src/ViciOne.ServiceBus.Sagas/Sagas/ViciOneServiceBusStateMachine.BehaviorContextProxy.cs",
+        "source_line": 174,
+        "source_sha256": "17435cad1c9301199a66954c598ed0dab4a10021a6804cb4ac7207fae86c6182",
+        "PDB_document_RID": 269,
+        "PDB_document": {
+          "path": "/_/src/ViciOne.ServiceBus.Sagas/Sagas/ViciOneServiceBusStateMachine.BehaviorContextProxy.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "17435cad1c9301199a66954c598ed0dab4a10021a6804cb4ac7207fae86c6182",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual546_DLL_SHA256": "ee8e8f9f879073e75f6b0b66b7bd6bb8d94804363314ad0ba520cd8fc718d711",
+        "actual546_PDB_SHA256": "2ac645e83b6f0a5693da70e180a0c7ba61d64fee426b5429b63b0f67fb77b2b8",
+        "actual546_XML_SHA256": "c35dbbd5c06e5a63538f5936c902079bde4b133336e518927dc7d9b556a6fe87",
+        "actual_XML_node_structural": "<member name=\"P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.CancellationToken\">\n            <inheritdoc />\n        </member>\n        ",
+        "XML_not_raw_window": true,
+        "actual546_reflection_file_sha256": "493c48624b80c801824bf6caee9b7e6b960b6608335bebaee97da97208e44252",
+        "actual_reflection_type_line": 13531,
+        "actual_reflection_type_record": "TYPE class public ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine<TInstance>.BehaviorContextProxy<TMessage> [base=ViciOne.ServiceBus.Context.ConsumeContextProxy<TMessage>,interfaces=ViciOne.ServiceBus.Sagas.IBehaviorContext<TInstance,TMessage>]",
+        "actual_reflection_property_line": 13541,
+        "actual_reflection_property_record": "  PROPERTY System.Threading.CancellationToken CancellationToken { public-get[modifiers=override];  }",
+        "UID_join_basis": "Exact actual XML member UID + whole-source declaration + exact known packed parent/property record; no newly invented reflection-to-UID parser",
+        "existing_parent_type_master_index": 8247,
+        "existing_parent_type_uid": "T:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1"
+      },
+      "source_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-current546-public-property2-individual-source-contracts-proposed-r1",
+      "runtime_obligations": "Property local selection/delegation only. No executed getter/native case credit, callback/transition/message operations, cancellation observation timing, reentry/concurrency, custom underlying getter behavior or resource retirement closure. Internal token carrier language/source fact does not claim external constructor accessibility.",
+      "canonical_original_member": false,
+      "compiler_accessor_sidecar": false,
+      "current_inventory_supplement": true,
+      "status": "PROPOSED_BOUNDED_CURRENT_SOURCE_MEMBER_CONTRACT",
+      "native_cases_added": 0,
+      "native_qualified": false,
+      "test_grade": null,
+      "whole_API_member_review_closed": false
+    }
+  ],
+  "original_canonical_denominator": 18569,
+  "original_canonical_accepted": 18569,
+  "preserved_historical_new_canonical": 29,
+  "new_current_property_supplement": 2,
+  "current_source_canonical_count": 18600,
+  "accessor_sidecars_unchanged": 833,
+  "master_after_count": 19433,
+  "old19431_member_objects_unchanged": true,
+  "Source_Test_Requirement_Product_changes": 0,
+  "new_findings": 0,
+  "new_native_cases": 0,
+  "SDK_actions": 0,
+  "fresh552_current18600_graph_join": "25705a; independent graph qualification remains separate"
+}

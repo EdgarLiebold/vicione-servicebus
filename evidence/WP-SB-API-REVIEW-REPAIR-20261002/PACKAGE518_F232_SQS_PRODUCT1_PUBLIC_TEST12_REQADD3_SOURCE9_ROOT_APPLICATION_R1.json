@@ -1,0 +1,132 @@
+{
+  "utc": "2026-10-06T17:07:16.943840+00:00",
+  "status": "ROOT_DIFFERENT_REVIEWED_PRODUCT1_TEST12_SOURCE9_APPLIED_NATIVE_GLOBAL_OPEN",
+  "before": {
+    "API_MEMBER_ACCEPTANCE_CURRENT.json": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package518-sqs-source1-public-tests12-norm9-root-application-before-r1/API_MEMBER_ACCEPTANCE_CURRENT.json",
+      "sha256": "25b3a2abfa7337df097ffe8d0c542a760889b34ae8f22acb4a47dfeed84e91bc"
+    },
+    "STATE.json": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package518-sqs-source1-public-tests12-norm9-root-application-before-r1/STATE.json",
+      "sha256": "f4e42663ac2bf7676918a117d4f5b46733d15c20f2d02d5c1eb5194b4504220f"
+    },
+    "PO_BERICHT.txt": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package518-sqs-source1-public-tests12-norm9-root-application-before-r1/PO_BERICHT.txt",
+      "sha256": "6007c30bd3db96694d0bb67ad7c092e650cd4ffcc12b3e95c5503babc9bfdfca"
+    }
+  },
+  "before_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package518-sqs-source1-public-tests12-norm9-root-application-before-r1/MANIFEST.json",
+    "sha256": "c11227966311548640c99608dd0f2825e9cc3b191240810866b0cb5b8c123f0a"
+  },
+  "authorities": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package517-sqs-owned-renewal-callback-source1-root-proposed-r1/MANIFEST.json",
+      "sha256": "296acb979f0a561e1c0751270ddc95c63746f0e4c1684cf5208fd489a0ec40da"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package517-sqs-owned-worker-product1-independent-source-peer-r1/MANIFEST.json",
+      "sha256": "7208ff6977f7e3dfe687d25580110f9cdab42dfd5b502266a102cfb2aaa266da"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package515-azure-event-source9-current508-512-individual-runtime-proposed-r2/MANIFEST.json",
+      "sha256": "194cbb243a3765d68e3badb5481f94555f03446c74a4a79ed1ae386d9f83faf4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package515-azure-event-source9-independent-norm-peer-r1/MANIFEST.json",
+      "sha256": "0f6b61165b8e28249d198f381bd4175f11cdef350140f9706226ba33ab4695f5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package450-scheduling-extra-debug8-testonly-proposed-r1/MANIFEST.json",
+      "sha256": "de76ee6da6ebc2661a8893e3d34b90e5c1da92d7bc2c8762ca21ccb198758279"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package450-scheduling8-independent-runtime-source-peer-r1/MANIFEST.json",
+      "sha256": "a7e0923849d689dd6c1c830f3de6d57b1c5ae1ad584826c648a1878ebbb3e01f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package450-event-build-stop-public4-testonly-composition-r2/MANIFEST.json",
+      "sha256": "9a29138f39ae8cd9596f7da8540b661cb9434c27ccb9964bf21e99a73f7dd098"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package450-event-stop2-combined4-independent-runtime-source-peer-r2/MANIFEST.json",
+      "sha256": "2015343c403099c7c4843b2e514ba11659a38b70639566cef8d3e4f4a0c553ce"
+    }
+  ],
+  "own_reads": {
+    "Product299": "aa4966 full plus inverse26c886",
+    "Norm9": "26c886 nine complete norms/limits plus full different report; retained personally whole507/512 owners",
+    "Schedule281": "848b1a full plus different fb7fa0",
+    "Event419": "a9b3fa full recovered Factory45..85 ee35c6; full different fb7fa0"
+  },
+  "source_indices": [
+    2365,
+    2368,
+    2370,
+    3524,
+    3624,
+    3639,
+    2432,
+    2436,
+    2437
+  ],
+  "new_finding": "F-SB-API-232",
+  "explicit_source_policy": "Once this concrete StopRenewalAsync is entered, attempt cancellation of its own active source if not already requested; retain any failure of that attempt. Independently await the already stored own visibility-renewal Task before returning or throwing to the public settlement finally that disposes its sources. Sole cancellation failure retains that exact aggregate/cause object through EDI; sole worker failure follows normal await propagation. If both fail, explicitly choose a new ordered unflattened AggregateException(cancellationFailure,workerFailure), preserving full causes. A cancellation-attempt failure still prevents delete/redelivery admission. Caller precancellation before entering StopRenewal, concurrency/repeated settlement, indefinite noncooperative SDK, pre-return collaborator side effects and unrelated worker cancellation classification are unchanged/excluded.",
+  "count_precision": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package517-sqs-private-helper-count-label-precision-root-r1/ERRATUM.json",
+    "sha256": "cb1eac684d24f77905e5b90d8005a38ef4f28a224fb7023f0a92c4034aaa5028"
+  },
+  "changes": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+      "sha256": "330919b04a8c6692e7c3a8710a903751ef9249b6a8fb98066b560d531c9ac3c8",
+      "kind": "PRODUCT_OWNED_WORKER_JOIN"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ScheduledFallbackOwningDiagnosticsTests.cs",
+      "sha256": "83951ff9fc94a6ed18f21cc4e2bf5d810c500ee37f2f399957f870dc82223500",
+      "kind": "NEW_PUBLIC_REGRESSION_TEST"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "sha256": "2f69e90f37908cbd23e0681b6f04deeeb28668f4d8a9ecd66479a28fce58fa6f",
+      "kind": "LITERAL_REQUIREMENT_ADD"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/ReceiverStopLeaseRetirementTests.cs",
+      "sha256": "1c8f68ae32b977350ce7b644d07974c3bcec2e04193ca4f01740861645314f7e",
+      "kind": "NEW_PUBLIC_REGRESSION_TEST"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/FactoryBuildObserverRetirementTests.cs",
+      "sha256": "e933ece439619583452e5bf5b892c0e0078a8638117ed0a2eb997ecd439e40c0",
+      "kind": "NEW_PUBLIC_REGRESSION_TEST"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "sha256": "5498d939af80b2e918c9d86ad051730e8d0256fd2c62ae8f90196dddfd1fe25d",
+      "kind": "LITERAL_REQUIREMENT_ADD"
+    }
+  ],
+  "accounting": {
+    "master_before": 19413,
+    "master_after": 19422,
+    "original_before": 18551,
+    "original_after": 18560,
+    "remaining": 9,
+    "known": 232,
+    "bounded": 225,
+    "pending": 7
+  },
+  "native_credit": 0,
+  "new_test_cases": 12,
+  "ReqAdd": 3,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": [
+    "Original5154 PASS remains ZERO early-exit/drain/API proof. F232 source-confirmed control-flow under expressly adopted owned-task policy.",
+    "Source9 only local norms: full prior held rows retained, frozen508/512 selected PDB/XML epochs separately bound, no whole currentgraph/Native transfer.",
+    "Test12 originally unexecuted, no forecast. Strict/module/NuGet/global closure pending; internal peers are not formal external-model product roles."
+  ],
+  "preflight_transparency": "First03f2f2/e44527 stopped read-only before snapshots or mutations because older master1452 use symbol_id. Actual mixed schema inspected55ef99 and normalized id-or-symbol_id without row rewriting."
+}

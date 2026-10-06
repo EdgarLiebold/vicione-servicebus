@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-03T02:59:27.776682+00:00",
+  "review_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/activemq-family-review/FINAL_MANIFEST.json",
+  "manifest_sha256": "e1f4428fa02a712d8e718440b073382098a7fd9f7072ef972164bdf58513d046",
+  "artifacts_verified": 22,
+  "before_sha256": "24cbe9a188d7a8c487ba337d9b193cab235720cabcd1798853b6c845daec0613",
+  "after_sha256": "1e979a798c8ce93a607990f6b3693ce53ee1ebe94954fa6096628c360e7a371b",
+  "prior_FULL_rows_preserved": 4164,
+  "new_original_source_FULL": 156,
+  "total_original_FULL": 4320,
+  "total_original_files": 6209,
+  "API_CLOSED": 0,
+  "root_personally_FULL_review": [
+    "REVIEW.txt",
+    "REVIEW.json",
+    "ORACLE_LITERAL_CLARIFICATION.json"
+  ],
+  "limits": "Agent source reading credited only; no Root entire-family reading or Native candidate closure"
+}

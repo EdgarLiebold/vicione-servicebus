@@ -1,0 +1,47 @@
+{
+  "utc": "2026-10-04T23:01:58.946181+00:00",
+  "decision": "ACCEPT441_BODYLESS_SAGA_INTERFACE_DECLARATIONS_WITH_TEN_DOC_METHOD_HOLDS",
+  "api_before": 3382,
+  "api_after": 3823,
+  "semantic_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-saga-state-event-behavior451-scanner-r1/REPORT.json",
+    "sha256": "28c1e368c35d27365b7120c2af4a7cb2e27d4b27e7eee6635bf1bfa7d1edda2a"
+  },
+  "per_ID_source_norms": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-saga-state-event-behavior451-scanner-r1/PER_ID451_CURRENT_DECLARATION_CONTRACT_REVIEW.json",
+    "sha256": "1f46c0f5baf38579c352562f7567ef3989b9db9dd49772c3851387be248d8322"
+  },
+  "source_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-saga-state-event-behavior451-scanner-r1/MANIFEST.json",
+    "sha256": "5126d30e9d22f3c7f0d19260c6338ad18877a3039ce2e404b66ca3ee9190ed7f"
+  },
+  "precision_overlay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-untyped-selector-owner-two-norm-precision-r1/EXACT_TWO_TYPE_NORM_OVERLAY.json",
+    "sha256": "92dc14f3e558dd439891484ebe7cf3de4b182511660554dcd78055a48d84ac43"
+  },
+  "held_ids": [
+    "M:ViciOne.ServiceBus.Configuration.ISagaDefinition.GetEndpointName(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter)",
+    "M:ViciOne.ServiceBus.Configuration.ISagaDefinition`1.Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.ISagaConfigurator{`0},ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+    "M:ViciOne.ServiceBus.Saga.ISagaRepositoryContext`2.UndoAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext{`0},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator`2.SelectId(System.Func{ViciOne.ServiceBus.ConsumeContext{`1},System.Guid})",
+    "M:ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator`2.SetSagaFactory(ViciOne.ServiceBus.Sagas.SagaFactoryMethod{`0,`1})",
+    "M:ViciOne.ServiceBus.Sagas.ISagaPolicy`2.PreInsertInstance(ViciOne.ServiceBus.ConsumeContext{`1},`0@)",
+    "M:ViciOne.ServiceBus.Sagas.IStateMachineActivitySelector`1.OfType``1",
+    "M:ViciOne.ServiceBus.Sagas.IStateMachineEventActivitiesBuilder`1.CommitActivities",
+    "M:ViciOne.ServiceBus.Sagas.IStateMachineFaultedActivitySelector`2.OfType``1",
+    "M:ViciOne.ServiceBus.Sagas.IStateMachineModifier`1.Finally(System.Func{ViciOne.ServiceBus.Sagas.IEventActivityBinder{`0},ViciOne.ServiceBus.Sagas.IEventActivityBinder{`0}})"
+  ],
+  "root_personal_review": [
+    "All84 owner-specific norms979bce/e90da1/0dad24;112constraints/variance/inheritancec0fa5e;117propertyaccessor/type/nullability/summary7a97c7;all222method exact signatures+summaries1ba557/680f8f/e4d15f.",
+    "All67 distinct parameter profiles and every assignment51d0e7;281 distinct actual XMLchild clauses including references/texttails and every row assignment3cbb94/e0f0de/30f08d. All summary childreferences16 and scope/NA classifications187cc9.",
+    "Two exact untyped type-specific norm overlay personally979940; PreInsert/Selector held rationale d09e16. No data/OfInstanceType norm transferred to untyped selector.",
+    "Full4sealedMAN141file entries plus84currentnonXMLbyteguards, all441actualcurrentemittedXML normalized equality and currentMasterdedup8bbe01. SDK original154 core strict0W/E retains sameSagasXML SHA0011982969fb379b061ca26b2c6d3b8a363d2cc26b207913d685846cb6e2f3b6."
+  ],
+  "scope": "112 interface types,117properties,222methods original451 minus10held methods; abstract source contracts only, no executable/default-body native credit",
+  "limits": [
+    "Concrete storage/observer/factory/callback/lifecycle runtime and inherited executable members retain separate obligations. Readonly does not guarantee deep immutability. Required Task is distinct from nullable nested result; optional token does not force operation abortion.",
+    "Historical149 literal typed inventory preserved; current84 sources differ only by independently reviewed XML changes;441 selected XMLnodes unchanged. No fresh153/154 PE or package provenance claim until independent qualifier.",
+    "Ten repaired XML methods remain pending separate currentpackage root acceptance, not automatically promoted. No interface mirror tests or blanket implementation NA."
+  ],
+  "whole_api_status": "PARTIAL"
+}

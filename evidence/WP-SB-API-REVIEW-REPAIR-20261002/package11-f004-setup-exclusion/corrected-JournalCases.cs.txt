@@ -1,0 +1,259 @@
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.MessageJournal;
+using ViciOne.ServiceBus.Monitoring;
+using Xunit;
+
+namespace ViciOneReview.JournalOwnership;
+
+public static class JournalCases
+{
+    public static async Task RunAsync(string mode, TimeSpan timeout, CancellationToken caller)
+    {
+        // F019 is a separate pending logging-owner defect; use a valid explicit public override here.
+        var previousLog = LogContext.Current;
+        using var callerLogging = LoggerFactory.Create(_ => { });
+        LogContext.ConfigureCurrentLogContext(callerLogging);
+        using var ambient = new Activity("owned-journal-caller").Start();
+        using var evidence = new JournalEvidence();
+        var owners = new List<Owner>();
+        var handles = new List<Handle>();
+        var borrowed = new List<IDisposable>();
+        await OwnedLifetime.RunAsync(async () =>
+            {
+                if (mode.StartsWith("nondi-", StringComparison.Ordinal)) await DirectAsync();
+                else if (mode is "two-independent-providers" or "two-roots-same-service-collection" or "provider-dispose-other-root" or "factory-failure-after-success") await PairAsync();
+                else await SingleAsync();
+                Assert.Same(ambient, Activity.Current); Assert.False(ambient.IsStopped);
+            }, () => OwnedLifetime.RunAsync(() => Task.CompletedTask,
+                handles.Select<Handle, Func<Task>>(handle => () => { handle.Disconnect(); return Task.CompletedTask; })
+                    .Concat(owners.AsEnumerable().Reverse().Select<Owner, Func<Task>>(owner => owner.CloseAsync(timeout)))
+                    .Concat(borrowed.Select<IDisposable, Func<Task>>(owner => () => { owner.Dispose(); return Task.CompletedTask; })).ToArray()),
+                () => { LogContext.Current = previousLog; return Task.CompletedTask; });
+
+        Owner Create(ServiceCollection services)
+        {
+            var owner = new Owner(services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true }));
+            owners.Add(owner);
+            return owner;
+        }
+
+        async Task PairAsync()
+        {
+            var storeA = new BoundedStore(); var storeB = new BoundedStore();
+            var servicesA = Services(storeA, new JournalPolicy());
+            Owner a = Create(servicesA);
+            Owner b = Create(mode == "two-roots-same-service-collection" ? servicesA : Services(storeB, new JournalPolicy()));
+            OwnedMeterFactory? failed = null;
+            if (mode == "factory-failure-after-success")
+            {
+                await b.CloseAsync(timeout);
+                var failedServices = Services(storeB, new JournalPolicy());
+                failedServices.RemoveAll<IMeterFactory>();
+                failedServices.AddSingleton<IMeterFactory>(_ => failed = new OwnedMeterFactory { ThrowCreate = true });
+                b = Create(failedServices);
+            }
+            await a.StartAsync(timeout, caller); await b.StartAsync(timeout, caller);
+            var factoryA = a.Provider!.GetRequiredService<IMeterFactory>(); var factoryB = b.Provider!.GetRequiredService<IMeterFactory>();
+            Assert.NotSame(factoryA, factoryB);
+            await a.Bus!.PublishAsync(new Probe("A"), caller).WaitAsync(timeout, caller);
+            AssertEntry(Assert.Single(storeA.Entries));
+            var meterA = evidence.AssertOperation(factoryA).Instrument.Meter;
+            evidence.AssertActivity(); evidence.Clear();
+            if (mode == "provider-dispose-other-root")
+            {
+                await a.CloseAsync(timeout);
+                Assert.Contains(evidence.Completed, instrument => ReferenceEquals(instrument.Meter, meterA));
+            }
+            await b.Bus!.PublishAsync(new Probe("B"), caller).WaitAsync(timeout, caller);
+            if (mode == "two-roots-same-service-collection") Assert.Equal(2, storeA.Entries.Length);
+            else AssertEntry(Assert.Single(storeB.Entries));
+            if (mode == "factory-failure-after-success")
+            {
+                Assert.NotNull(failed); Assert.True(failed.FailedCreateCalls > 0);
+                Assert.Empty(evidence.Measurements); Assert.Empty(evidence.Started);
+            }
+            else
+            {
+                var meterB = evidence.AssertOperation(factoryB).Instrument.Meter;
+                Assert.NotSame(meterA, meterB); evidence.AssertActivity();
+                Assert.DoesNotContain(evidence.Completed, instrument => ReferenceEquals(instrument.Meter, meterB));
+            }
+        }
+
+        async Task SingleAsync()
+        {
+            var store = new BoundedStore { ThrowAppend = mode == "store-fault" };
+            using var canceled = new CancellationTokenSource();
+            var policy = new JournalPolicy { Mode = mode switch { "policy-filtered" => "filtered", "policy-fault" => "fault", "policy-cancel" => "cancel", _ => "stored" }, CancelOperation = canceled };
+            var services = Services(store, policy, journal: mode != "default-off");
+            OwnedMeterFactory? custom = null;
+            if (mode is "custom-factory-scope" or "borrowed-factory-not-disposed")
+            {
+                services.RemoveAll<IMeterFactory>();
+                if (mode == "borrowed-factory-not-disposed") { custom = new OwnedMeterFactory(); borrowed.Add(custom); services.AddSingleton<IMeterFactory>(custom); }
+                else services.AddSingleton<IMeterFactory>(_ => custom = new OwnedMeterFactory());
+            }
+            Owner owner = Create(services);
+            await owner.StartAsync(timeout, caller);
+            var factory = owner.Provider!.GetRequiredService<IMeterFactory>();
+            evidence.ThrowMeasurements = mode == "hostile-measurement-listener";
+            await owner.Bus!.PublishAsync(new Probe(mode), mode == "policy-cancel" ? canceled.Token : caller).WaitAsync(timeout, caller);
+            if (mode == "default-off")
+            {
+                await owner.CloseAsync(timeout);
+                Assert.Equal(0, policy.Calls); Assert.Empty(store.Entries);
+                Assert.Empty(evidence.Measurements); Assert.Empty(evidence.Started);
+                return;
+            }
+            Assert.Equal(1, policy.Calls);
+            string result = policy.Mode == "filtered" ? "filtered" : policy.Mode is "fault" or "cancel" || store.ThrowAppend ? "failed" : "stored";
+            string? reason = policy.Mode == "fault" ? "policy" : policy.Mode == "cancel" ? "cancelled" : store.ThrowAppend ? "store" : null;
+            if (result == "stored") AssertEntry(Assert.Single(store.Entries)); else Assert.Empty(store.Entries);
+            Assert.Equal(result == "stored" || mode == "store-fault" ? 1 : 0, store.Attempts);
+            if (mode == "policy-cancel") Assert.True(policy.SawCancellation);
+            var counter = evidence.AssertOperation(factory, result: result, reason: reason);
+            var activity = evidence.AssertActivity();
+            Assert.Equal(counter.Instrument.Meter.Version, activity.Source.Version);
+            if (mode == "hostile-measurement-listener") Assert.Equal(1, evidence.CallbackFaults);
+            if (custom is not null) Assert.Contains(custom.Requests, request => request.Name == ServiceBusTelemetry.MeterName);
+            if (mode == "activity-source-disposal")
+            {
+                using Activity? before = activity.Source.StartActivity("owned-before-disposal"); Assert.NotNull(before);
+                await owner.CloseAsync(timeout);
+                using Activity? after = activity.Source.StartActivity("owned-after-disposal"); Assert.Null(after);
+            }
+            else if (mode == "borrowed-factory-not-disposed")
+            {
+                Assert.NotNull(custom);
+                await owner.CloseAsync(timeout); Assert.Equal(0, custom.DisposeCalls);
+                Meter sentinelMeter = custom.Create(new MeterOptions(ServiceBusTelemetry.MeterName) { Version = counter.Instrument.Meter.Version });
+                Assert.Same(counter.Instrument.Meter, sentinelMeter);
+                var sentinel = sentinelMeter.CreateCounter<long>("review.caller.sentinel");
+                int witnessed = 0;
+                using var listener = new MeterListener { InstrumentPublished = (instrument, active) => { if (ReferenceEquals(instrument, sentinel)) active.EnableMeasurementEvents(instrument); } };
+                listener.SetMeasurementEventCallback<long>((_, value, _, _) => { if (value == 7) Interlocked.Increment(ref witnessed); });
+                listener.Start(); sentinel.Add(7); Assert.Equal(1, witnessed);
+                custom.Dispose(); Assert.Equal(1, custom.DisposeCalls);
+                Assert.Contains(evidence.Completed, instrument => ReferenceEquals(instrument.Meter, sentinelMeter));
+            }
+        }
+
+        async Task DirectAsync()
+        {
+            var store = new BoundedStore(); var policy = new JournalPolicy();
+            string queue = "journal-" + Guid.NewGuid().ToString("N");
+            var received = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var secondReceived = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+            int receiveCount = 0;
+            IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
+                configuration.ReceiveEndpoint(queue, endpoint => endpoint.Handler<Probe>(context =>
+                {
+                    Interlocked.Increment(ref receiveCount);
+                    if (context.Message.Value == "one") received.TrySetResult(context.Message.Value);
+                    if (context.Message.Value == "two") secondReceived.TrySetResult(context.Message.Value);
+                    return Task.CompletedTask;
+                }));
+            });
+            var owner = new Owner(bus); owners.Add(owner);
+            var options = MessageJournalOptions.ContinueMessageFlow(TimeSpan.FromSeconds(1), TimeProvider.System);
+            ConnectHandle connected = mode switch
+            {
+                "nondi-consume" => bus.ConnectConsumeMessageJournal(store, policy, options),
+                "nondi-outgoing" => bus.ConnectOutgoingMessageJournal(store, policy, options),
+                _ => bus.ConnectMessageJournal(store, policy, options),
+            };
+            var handle = new Handle(connected); handles.Add(handle);
+            await owner.StartAsync(timeout, caller);
+            string operation;
+            if (mode == "nondi-consume")
+            {
+                var endpoint = await bus.GetSendEndpoint(new Uri("loopback://localhost/" + queue)).WaitAsync(timeout, caller);
+                await endpoint.SendAsync(new Probe("one"), caller).WaitAsync(timeout, caller);
+                Assert.Equal("one", await received.Task.WaitAsync(timeout, caller));
+                await store.Appended.Task.WaitAsync(timeout, caller);
+                operation = "consume";
+            }
+            else
+            {
+                await bus.PublishAsync(new Probe("one"), caller).WaitAsync(timeout, caller);
+                Assert.Equal("one", await received.Task.WaitAsync(timeout, caller));
+                operation = "publish";
+            }
+            if (mode is "nondi-all" or "nondi-consume")
+                await evidence.WaitOperationAsync("consume", timeout, caller);
+            Assert.Equal(1, Volatile.Read(ref receiveCount));
+            evidence.AssertOperation(null, operation); evidence.AssertActivity(operation);
+            Assert.Contains(store.Entries, entry => entry.Operation.ToString().Equals(operation, StringComparison.OrdinalIgnoreCase));
+            int retained = store.Entries.Length;
+            handle.Disconnect(); evidence.Clear();
+            await bus.PublishAsync(new Probe("two"), caller).WaitAsync(timeout, caller);
+            Assert.Equal("two", await secondReceived.Task.WaitAsync(timeout, caller));
+            await owner.StopAsync(timeout);
+            Assert.Equal(2, Volatile.Read(ref receiveCount));
+            Assert.Equal(retained, store.Entries.Length); Assert.Empty(evidence.Measurements); Assert.Empty(evidence.Started);
+        }
+    }
+
+    static ServiceCollection Services(BoundedStore store, JournalPolicy policy, bool journal = true)
+    {
+        var services = new ServiceCollection(); services.AddLogging();
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            if (journal) configuration.UseMessageJournal(component => component.UseStore(store).Policy(policy)
+                .Options(MessageJournalOptions.ContinueMessageFlow(TimeSpan.FromSeconds(1), TimeProvider.System)));
+            configuration.UsingInMemory((_, _) => { });
+        });
+        return services;
+    }
+
+    static void AssertEntry(MessageJournalEntry entry)
+    {
+        Assert.Equal(MessageJournalOperation.Publish, entry.Operation); Assert.Equal(MessageJournalOutcome.Succeeded, entry.Outcome);
+        Assert.NotEqual(Guid.Empty, entry.EntryId); Assert.Equal(TimeSpan.Zero, entry.ObservedAt.Offset);
+        Assert.Equal("sanitized", entry.Metadata["review"]); Assert.Equal("journal-proof"u8.ToArray(), entry.Body.ToArray());
+        Assert.Equal(MessageJournalDataClassification.Internal, entry.DataClassification); Assert.InRange(entry.ContentSizeInBytes, 1, 65536);
+    }
+
+    public sealed record Probe(string Value);
+
+    sealed class Handle(ConnectHandle inner)
+    {
+        int _disconnected;
+        public void Disconnect() { if (Interlocked.Exchange(ref _disconnected, 1) == 0) inner.Disconnect(); }
+    }
+
+    sealed class Owner
+    {
+        public ServiceProvider? Provider { get; }
+        public IBusControl? Bus { get; private set; }
+        bool _started, _disposed;
+        public Owner(ServiceProvider provider) => Provider = provider;
+        public Owner(IBusControl bus) => Bus = bus;
+        public async Task StartAsync(TimeSpan timeout, CancellationToken caller)
+        {
+            Bus ??= Provider!.GetRequiredService<IBusControl>();
+            _started = true;
+            await Bus.StartAsync(caller).WaitAsync(timeout, caller);
+        }
+        public async Task StopAsync(TimeSpan timeout)
+        {
+            if (Bus is not null && _started) { await Bus.StopAsync(CancellationToken.None).WaitAsync(timeout); _started = false; }
+        }
+        public Task CloseAsync(TimeSpan timeout) => OwnedLifetime.RunAsync(() => Task.CompletedTask,
+            () => StopAsync(timeout), async () =>
+            {
+                if (Provider is not null && !_disposed) { await Provider.DisposeAsync().AsTask().WaitAsync(timeout); _disposed = true; }
+            });
+    }
+}

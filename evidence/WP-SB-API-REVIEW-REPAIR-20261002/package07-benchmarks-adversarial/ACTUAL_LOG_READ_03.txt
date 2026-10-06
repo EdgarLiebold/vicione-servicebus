@@ -1,0 +1,101 @@
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-oracle-build.log
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277: Es wurden Konflikte zwischen verschiedenen Versionen von "Microsoft.Extensions.DependencyInjection" gefunden, die nicht aufgelöst werden konnten. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277: Konflikt zwischen Microsoft.Extensions.DependencyInjection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 und Microsoft.Extensions.DependencyInjection, Version=10.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:     Microsoft.Extensions.DependencyInjection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 wurde aufgrund der primären Eigenschaft Microsoft.Extensions.DependencyInjection, Version=10.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 vorgezogen. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:     Verweise, die von "Microsoft.Extensions.DependencyInjection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" abhängig sind [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/microsoft.extensions.dependencyinjection/6.0.0/lib/net6.0/Microsoft.Extensions.DependencyInjection.dll]. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:         /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/microsoft.extensions.dependencyinjection/6.0.0/lib/net6.0/Microsoft.Extensions.DependencyInjection.dll [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:           Elementincludes einer Projektdatei, die den Verweis "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/microsoft.extensions.dependencyinjection/6.0.0/lib/net6.0/Microsoft.Extensions.DependencyInjection.dll" verursacht haben. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:             /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/microsoft.extensions.dependencyinjection/6.0.0/lib/net6.0/Microsoft.Extensions.DependencyInjection.dll [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:     Verweise, die von „Microsoft.Extensions.DependencyInjection, Version=10.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60“ [] abhängen oder damit vereint wurden. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:         /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/compiled-tools/vicione-servicebus-benchmark.dll [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:           Elementincludes einer Projektdatei, die den Verweis "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/compiled-tools/vicione-servicebus-benchmark.dll" verursacht haben. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:             vicione-servicebus-benchmark [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+  CompiledBenchmarkContracts -> /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/CompiledBenchmarkContracts.dll
+
+Fehler beim Buildvorgang.
+
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277: Es wurden Konflikte zwischen verschiedenen Versionen von "Microsoft.Extensions.DependencyInjection" gefunden, die nicht aufgelöst werden konnten. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277: Konflikt zwischen Microsoft.Extensions.DependencyInjection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 und Microsoft.Extensions.DependencyInjection, Version=10.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:     Microsoft.Extensions.DependencyInjection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 wurde aufgrund der primären Eigenschaft Microsoft.Extensions.DependencyInjection, Version=10.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 vorgezogen. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:     Verweise, die von "Microsoft.Extensions.DependencyInjection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" abhängig sind [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/microsoft.extensions.dependencyinjection/6.0.0/lib/net6.0/Microsoft.Extensions.DependencyInjection.dll]. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:         /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/microsoft.extensions.dependencyinjection/6.0.0/lib/net6.0/Microsoft.Extensions.DependencyInjection.dll [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:           Elementincludes einer Projektdatei, die den Verweis "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/microsoft.extensions.dependencyinjection/6.0.0/lib/net6.0/Microsoft.Extensions.DependencyInjection.dll" verursacht haben. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:             /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/restored-packages/microsoft.extensions.dependencyinjection/6.0.0/lib/net6.0/Microsoft.Extensions.DependencyInjection.dll [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:     Verweise, die von „Microsoft.Extensions.DependencyInjection, Version=10.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60“ [] abhängen oder damit vereint wurden. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:         /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/compiled-tools/vicione-servicebus-benchmark.dll [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:           Elementincludes einer Projektdatei, die den Verweis "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/compiled-tools/vicione-servicebus-benchmark.dll" verursacht haben. [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Common.CurrentVersion.targets(2453,5): error MSB3277:             vicione-servicebus-benchmark [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj]
+    0 Warnung(en)
+    1 Fehler
+
+Verstrichene Zeit 00:00:03.47
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-console-restore.log
+  Wiederherzustellende Projekte werden ermittelt...
+  Alle Projekte sind für die Wiederherstellung auf dem neuesten Stand.
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-corrected-concurrent-duplicate.log
+{"mode":"concurrent-duplicate","passed":true,"checks":2,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-corrected-concurrent-unique.log
+{"mode":"concurrent-unique","passed":true,"checks":32,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-corrected-console-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.MessagePack -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack/release/ViciOne.ServiceBus.MessagePack.dll
+  ViciOne.ServiceBus.BenchmarkConsole -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.BenchmarkConsole/release/ViciOne.ServiceBus.BenchmarkConsole.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:01.78
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-corrected-deserialization.log
+{"mode":"deserialization","passed":true,"checks":6,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-corrected-duplicate-send-observer.log
+{"mode":"duplicate-send-observer","passed":true,"checks":2,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-corrected-duplicate.log
+{"mode":"duplicate","passed":true,"checks":2,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-corrected-latency-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.AmazonSqs -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll
+  ViciOne.ServiceBus.ActiveMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq/release/ViciOne.ServiceBus.ActiveMq.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.RabbitMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll
+  ViciOne.ServiceBus.Courier -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll
+  ViciOne.ServiceBus.SqlTransport -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll
+  ViciOne.ServiceBus.Futures -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll
+  ViciOne.ServiceBus.AzureServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.EntityFrameworkCore -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll
+  ViciOne.ServiceBus.Testing -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll
+  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:03.00
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-corrected-mediator-batches.log
+{"mode":"mediator-batches","passed":true,"checks":6,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-corrected-unique.log
+{"mode":"unique","passed":true,"checks":2,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-latency-restore.log
+  Wiederherzustellende Projekte werden ermittelt...
+  Alle Projekte sind für die Wiederherstellung auf dem neuesten Stand.

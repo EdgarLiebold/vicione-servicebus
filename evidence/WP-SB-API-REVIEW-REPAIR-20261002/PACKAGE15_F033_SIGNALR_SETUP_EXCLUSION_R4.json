@@ -1,0 +1,21 @@
+{
+  "receipt": {
+    "phase": "package15-f033-signalr-public-previous-build",
+    "command": [
+      "dotnet",
+      "build",
+      "SignalRLifetime.PublicConsumer.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T05:14:53.478804+00:00",
+    "completed_utc": "2026-10-03T05:14:56.657865+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-previous-build.log",
+    "log_sha256": "ad047824155e78fe3afe8e6b66d11691a56e7fc0303b35f3ded9a30c7b10e0ac"
+  },
+  "reason": "14 compiler errors from missing advanced namespaces; no consumer case executed; not a causal finding or mutant kill"
+}

@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-05T02:57:11.740878+00:00",
+  "actor": "/root",
+  "status": "APPEND_ONLY_READ_RECEIPT_PRECISION_NO_PRODUCT_CHANGE",
+  "source_application": "PACKAGE165_PARENT_FANOUT_PRODUCT1_CONTROLS2_AMBIENT_ORIGINAL4_REQ2_ROOT_APPLICATION_R1.json",
+  "actual_root_whole_source_read_receipt": "420647",
+  "incorrect_line_count": 200,
+  "actual_verified_physical_line_count": 198,
+  "source_sha256": "4e611e3e78760b328bc8d508521150c42321080ee280ac77424d513da2e2df1d",
+  "scope": "The entire proposed source was personally read, with all198 actual lines.200 was an inherited author-line-count label, not extra source or missing read. Product/application/Nativecounts unchanged."
+}

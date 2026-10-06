@@ -53,7 +53,7 @@ public static class CourierRegistrationExtensions
 
     /// <summary>Adds all activities (including execute-only activities) in the specified assemblies.</summary>
     /// <param name="configurator">The configurator to update.</param>
-    /// <param name="assemblies">The assemblies to scan for consumers.</param>
+    /// <param name="assemblies">The assemblies to scan for activities.</param>
     public static void AddActivities(this IRegistrationConfigurator configurator, params Assembly[] assemblies)
     {
         ArgumentNullException.ThrowIfNull(configurator);

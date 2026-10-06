@@ -1,0 +1,45 @@
+{
+  "status": "ROOT_SOURCE_PENDING_INDEPENDENT_PREFLIGHT_NATIVE",
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusReceiveEndpointBuilder.cs",
+      "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusReceiveEndpointBuilder.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f038-source-r1/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusReceiveEndpointBuilder.cs",
+      "bytes": 3483,
+      "sha256": "0b154fcc9277a332f256f7e804aa884a0b5c6ab36de0b33e54ab622cbd1d5d37"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusPublishTopology.cs",
+      "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusPublishTopology.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f038-source-r1/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusPublishTopology.cs",
+      "bytes": 6035,
+      "sha256": "03fe2d3bb505808b0aa1d6587fd91bbe6a653fa9a72a6cfd03cf40abb9ea37ff"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Topology/IServiceBusPublishTopology.cs",
+      "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Topology/IServiceBusPublishTopology.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f038-source-r1/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Topology/IServiceBusPublishTopology.cs",
+      "bytes": 1836,
+      "sha256": "62352fd93a281a5ad44c82a2aeb2683330eb4b9cb1e46acfaa72b3ed7d1d3dff"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/migrations/azure-automatic-subscriptions.md",
+      "relative": "docs/migrations/azure-automatic-subscriptions.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f038-source-r1/docs/migrations/azure-automatic-subscriptions.md",
+      "bytes": 2285,
+      "sha256": "608946cda2782b26a38cc91d0c7e58ffbf81ef58568bade3d79f70990e9bfc74"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/migrations/README.md",
+      "relative": "docs/migrations/README.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f038-source-r1/docs/migrations/README.md",
+      "bytes": 1510,
+      "sha256": "5bbebae6efe40359430ae7cb9bb8231bf904352cebe2fe318b14ef41bd291076"
+    }
+  ],
+  "utc": "2026-10-03T17:58:08.831543+00:00",
+  "decision": "ROOT_AUTONOMOUS_COMPATIBILITY_DECISIONS_R1.json",
+  "product_files": 3,
+  "explicit_names_unchanged": true,
+  "broker_cutover_pending_operator_not_executed": true
+}

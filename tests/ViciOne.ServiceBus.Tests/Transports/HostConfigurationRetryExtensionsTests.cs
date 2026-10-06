@@ -1,8 +1,11 @@
+using System.Reflection;
 using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.InMemoryTransport.Configuration;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
 using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Transports;
@@ -157,6 +160,236 @@ public sealed class HostConfigurationRetryExtensionsTests
         Assert.Equal("timeProvider", missingTimeProvider.ParamName);
         Assert.Equal("The host configuration returned a null send transport retry policy.", missingPolicy.Message);
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONFIGURATION-OBSERVER-LIFECYCLE", "failed-host-connection-releases-admitted-observers")]
+    public void ConnectObservers_FailedSecondRegistrationDisconnectsTheFirstAndPreservesThePrimary()
+    {
+        IHostConfiguration host = CreateActualHostConfiguration();
+        var expected = new ExpectedTransportException("second observer connector failed");
+        var fixture = new ObserverRegistrationFixture(expected);
+
+        try
+        {
+            ExpectedTransportException actual = Assert.Throws<ExpectedTransportException>(() =>
+            {
+                host.ConnectReceiveEndpointContext(fixture.Context);
+            });
+
+            Assert.Same(expected, actual);
+            Assert.Equal(new[] { "consume", "receive" }, fixture.Calls);
+            CountingConnectHandle first = Assert.Single(fixture.Handles);
+            Assert.Equal(0, fixture.Consume.Count);
+            Assert.Equal(1, first.DisconnectCount);
+            Assert.Equal(new[] { 0, 0, 0, 0 }, fixture.Counts);
+        }
+        finally
+        {
+            fixture.DisconnectAll();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONFIGURATION-OBSERVER-LIFECYCLE", "successful-host-connection-owns-all-four-observers")]
+    public void ConnectObservers_SuccessReturnsOneHandleThatDisconnectsAllFourRegistrations()
+    {
+        IHostConfiguration host = CreateActualHostConfiguration();
+        var fixture = new ObserverRegistrationFixture(null);
+        ConnectHandle? joined = null;
+
+        try
+        {
+            joined = host.ConnectReceiveEndpointContext(fixture.Context);
+
+            Assert.IsType<MultipleConnectHandle>(joined);
+            Assert.Equal(new[] { "consume", "receive", "publish", "send" }, fixture.Calls);
+            Assert.Equal(new[] { 1, 1, 1, 1 }, fixture.Counts);
+            Assert.Equal(4, fixture.Handles.Count);
+            Assert.Same(host.SendObservers, Assert.Single(fixture.Send.Connected));
+            Assert.All(fixture.Handles, handle => Assert.Equal(0, handle.DisconnectCount));
+
+            joined.Dispose();
+
+            Assert.Equal(new[] { 0, 0, 0, 0 }, fixture.Counts);
+            Assert.All(fixture.Handles, handle => Assert.Equal(1, handle.DisconnectCount));
+
+            joined.Disconnect();
+            Assert.All(fixture.Handles, handle => Assert.Equal(1, handle.DisconnectCount));
+        }
+        finally
+        {
+            joined?.Dispose();
+            fixture.DisconnectAll();
+        }
+    }
+
+    [Theory]
+    [InlineData(2, false)]
+    [InlineData(3, false)]
+    [InlineData(4, false)]
+    [InlineData(2, true)]
+    [InlineData(3, true)]
+    [InlineData(4, true)]
+    [RequirementCoverage("REQ-VSB-CONFIGURATION-OBSERVER-LIFECYCLE", "failed-host-connection-attempts-all-cleanup-and-retains-causes")]
+    public void ConnectObservers_FailedRegistrationDisconnectsEveryAdmittedHandleAndRetainsCleanupFailures(
+        int failurePosition, bool cleanupFails)
+    {
+        string[] stages = ["consume", "receive", "publish", "send"];
+        IHostConfiguration host = CreateActualHostConfiguration();
+        var expected = new ExpectedTransportException(stages[failurePosition - 1] + " connector failed");
+        var fixture = new ObserverRegistrationFixture(expected, stages[failurePosition - 1], cleanupFails);
+
+        try
+        {
+            if (cleanupFails)
+            {
+                AggregateException actual = Assert.Throws<AggregateException>(() =>
+                {
+                    host.ConnectReceiveEndpointContext(fixture.Context);
+                });
+                IReadOnlyCollection<Exception> causes = actual.Flatten().InnerExceptions;
+                Assert.Equal(failurePosition, causes.Count);
+                Assert.Single(causes, cause => ReferenceEquals(expected, cause));
+                Assert.Equal(failurePosition - 1, fixture.CleanupFailures.Count);
+                Assert.All(fixture.CleanupFailures, cleanup =>
+                    Assert.Single(causes, cause => ReferenceEquals(cleanup, cause)));
+            }
+            else
+            {
+                ExpectedTransportException actual = Assert.Throws<ExpectedTransportException>(() =>
+                {
+                    host.ConnectReceiveEndpointContext(fixture.Context);
+                });
+                Assert.Same(expected, actual);
+                Assert.Empty(fixture.CleanupFailures);
+            }
+
+            Assert.Equal(stages[..failurePosition], fixture.Calls);
+            Assert.Equal(failurePosition - 1, fixture.Handles.Count);
+            Assert.Equal(new[] { 0, 0, 0, 0 }, fixture.Counts);
+            Assert.All(fixture.Handles, handle => Assert.Equal(1, handle.DisconnectCount));
+        }
+        finally
+        {
+            // The body proves injected cleanup failures; final fixture release must not mask an original RED.
+            fixture.DisconnectAll();
+        }
+    }
+
+    private static IHostConfiguration CreateActualHostConfiguration()
+    {
+        var topology = new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology());
+        var bus = new InMemoryBusConfiguration(topology, new Uri("loopback://observer-ownership/"));
+        IHostConfiguration host = ((IBusConfiguration)bus).HostConfiguration;
+        Assert.IsType<InMemoryHostConfiguration>(host);
+        return host;
+    }
+
+    private sealed class ObserverRegistrationFixture
+    {
+        private readonly bool _cleanupFailures;
+
+        public ObserverRegistrationFixture(Exception? receiveFailure, string failureStage = "receive", bool cleanupFailures = false)
+        {
+            _cleanupFailures = cleanupFailures;
+            IReceivePipe pipe = DispatchProxy.Create<IReceivePipe, ObserverRegistrationProxy>();
+            ((ObserverRegistrationProxy)pipe).Dispatch = (method, args) =>
+            {
+                if (method.Name != nameof(IReceivePipe.ConnectConsumeObserver))
+                    throw new NotSupportedException(method.Name);
+
+                Calls.Add("consume");
+                return Record(Consume.Connect((IConsumeObserver)args![0]!));
+            };
+
+            Context = DispatchProxy.Create<ReceiveEndpointContext, ObserverRegistrationProxy>();
+            ((ObserverRegistrationProxy)Context).Dispatch = (method, args) =>
+            {
+                switch (method.Name)
+                {
+                    case "get_ReceivePipe":
+                        return pipe;
+                    case nameof(ReceiveEndpointContext.ConnectReceiveObserver):
+                        Calls.Add("receive");
+                        if (receiveFailure is not null && failureStage == "receive")
+                            throw receiveFailure;
+                        return Record(Receive.Connect((IReceiveObserver)args![0]!));
+                    case nameof(ReceiveEndpointContext.ConnectPublishObserver):
+                        Calls.Add("publish");
+                        if (receiveFailure is not null && failureStage == "publish")
+                            throw receiveFailure;
+                        return Record(Publish.Connect((IPublishObserver)args![0]!));
+                    case nameof(ReceiveEndpointContext.ConnectSendObserver):
+                        Calls.Add("send");
+                        if (receiveFailure is not null && failureStage == "send")
+                            throw receiveFailure;
+                        return Record(Send.Connect((ISendObserver)args![0]!));
+                    default:
+                        throw new NotSupportedException(method.Name);
+                }
+            };
+        }
+
+        public ReceiveEndpointContext Context { get; }
+        public Connectable<IConsumeObserver> Consume { get; } = new();
+        public Connectable<IReceiveObserver> Receive { get; } = new();
+        public Connectable<IPublishObserver> Publish { get; } = new();
+        public Connectable<ISendObserver> Send { get; } = new();
+        public List<string> Calls { get; } = [];
+        public List<CountingConnectHandle> Handles { get; } = [];
+        public List<Exception> CleanupFailures { get; } = [];
+        public int[] Counts => [Consume.Count, Receive.Count, Publish.Count, Send.Count];
+
+        private CountingConnectHandle Record(ConnectHandle actual)
+        {
+            Exception? cleanupFailure = _cleanupFailures
+                ? new ExpectedDisconnectException("disconnect failure " + Handles.Count)
+                : null;
+            if (cleanupFailure is not null)
+                CleanupFailures.Add(cleanupFailure);
+            var counted = new CountingConnectHandle(actual, cleanupFailure);
+            Handles.Add(counted);
+            return counted;
+        }
+
+        public void DisconnectAll()
+        {
+            foreach (CountingConnectHandle handle in Handles)
+                handle.DisconnectWithoutInjectedFailure();
+        }
+    }
+
+    public class ObserverRegistrationProxy : DispatchProxy
+    {
+        internal Func<MethodInfo, object?[]?, object?> Dispatch { get; set; } = null!;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            Dispatch(targetMethod ?? throw new ArgumentNullException(nameof(targetMethod)), args);
+    }
+
+    private sealed class CountingConnectHandle(ConnectHandle actual, Exception? cleanupFailure = null) : ConnectHandle
+    {
+        private int _disconnected;
+        public int DisconnectCount => Volatile.Read(ref _disconnected);
+
+        public void Disconnect() => Disconnect(injectFailure: true);
+
+        public void DisconnectWithoutInjectedFailure() => Disconnect(injectFailure: false);
+
+        private void Disconnect(bool injectFailure)
+        {
+            if (Interlocked.Exchange(ref _disconnected, 1) != 0)
+                return;
+
+            actual.Disconnect();
+            if (injectFailure && cleanupFailure is not null)
+                throw cleanupFailure;
+        }
+
+        public void Dispose() => Disconnect();
+    }
+
+    private sealed class ExpectedDisconnectException(string message) : Exception(message);
 
     private sealed class ExpectedTransportException(string message) : Exception(message);
 

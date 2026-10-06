@@ -1,0 +1,223 @@
+{
+  "status": "ROOT_SEVENTEEN_ORIGINAL_FINITE_REDS_WITH_SAME_CORE_AND_FORTYONE_CORRECTED_PASSES_FINAL_MUTANTS_PENDING",
+  "generations": [
+    {
+      "variant": "previous",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f034-r6-public-previous-fortyone.log",
+      "sha256": "544fb1b4f141deca202b5f14b04c50b185a112c53a08a2665a887a3fb0c333fd",
+      "actual": {
+        "pass_count": 24,
+        "finite_failure_count": 17,
+        "finite_equal_count": 8,
+        "finite_null_count": 9,
+        "guards": 0
+      },
+      "finite_failures": [
+        {
+          "mode": "execute-shared",
+          "type": "FINITE_NAME_MULTISET",
+          "lines": [
+            15,
+            25
+          ],
+          "block_sha256": "b32ecbdb67e9bbec3e48a3e0d09a69f9297f58d459656a7b30496936c85a6355",
+          "duplicate_key": []
+        },
+        {
+          "mode": "full-shared",
+          "type": "FINITE_DUPLICATE_ENDPOINT_MATERIALIZATION",
+          "lines": [
+            69,
+            113
+          ],
+          "block_sha256": "9de358cba06ec47de81f9df3adce6afb7759ac59b60c70de9fe6fcad291b640e",
+          "duplicate_key": [
+            "owner-b-compensate"
+          ]
+        },
+        {
+          "mode": "full-args",
+          "type": "FINITE_NAME_MULTISET",
+          "lines": [
+            128,
+            138
+          ],
+          "block_sha256": "68c1c89e7f9090fd3308d7f1e12589af697662896572fc366c30ada30335a931",
+          "duplicate_key": []
+        },
+        {
+          "mode": "full-log",
+          "type": "FINITE_DUPLICATE_ENDPOINT_MATERIALIZATION",
+          "lines": [
+            152,
+            196
+          ],
+          "block_sha256": "e5ea9c772509f7e9cb99ab60863ab45cc1ab5452b54ac84f9aa409c303d89489",
+          "duplicate_key": [
+            "owner-b-compensate"
+          ]
+        },
+        {
+          "mode": "default-mixed-execute-first",
+          "type": "FINITE_NAME_MULTISET",
+          "lines": [
+            226,
+            236
+          ],
+          "block_sha256": "b67a80c6618373b0aa8101a22fa7c2dae8076fe1aaabad180de97a8e5eb0c9fd",
+          "duplicate_key": []
+        },
+        {
+          "mode": "default-mixed-execute-last",
+          "type": "FINITE_NAME_MULTISET",
+          "lines": [
+            251,
+            261
+          ],
+          "block_sha256": "313caef836738a475d1fe7d715bea9d34841b35e97b010ea835c950d0c520c4b",
+          "duplicate_key": []
+        },
+        {
+          "mode": "default-mixed-full-first",
+          "type": "FINITE_DUPLICATE_ENDPOINT_MATERIALIZATION",
+          "lines": [
+            275,
+            319
+          ],
+          "block_sha256": "40fad15f20ab301e495a82ffaf3a418c23c30e997caba05da5e930c5f4482f39",
+          "duplicate_key": [
+            "owner-a-compensate"
+          ]
+        },
+        {
+          "mode": "default-mixed-full-last",
+          "type": "FINITE_DUPLICATE_ENDPOINT_MATERIALIZATION",
+          "lines": [
+            333,
+            377
+          ],
+          "block_sha256": "057ab3de7250d781d66f5db1bb4022ad5b5c857e28f2d4e97fa3a440869e5956",
+          "duplicate_key": [
+            "owner-a-compensate"
+          ]
+        },
+        {
+          "mode": "typed-mixed-execute-first",
+          "type": "FINITE_NAME_MULTISET",
+          "lines": [
+            392,
+            402
+          ],
+          "block_sha256": "e0ac10d2856bc6bbedb5046d7fa06e16ab54b8d77d02622bb0335819abfcbccd",
+          "duplicate_key": []
+        },
+        {
+          "mode": "typed-mixed-execute-last",
+          "type": "FINITE_NAME_MULTISET",
+          "lines": [
+            417,
+            427
+          ],
+          "block_sha256": "4cd6f1d47d1d626f1dc12fa87b8fd11e2c88723c2d7b24f816dd62b69a4f5b34",
+          "duplicate_key": []
+        },
+        {
+          "mode": "typed-mixed-full-first",
+          "type": "FINITE_DUPLICATE_ENDPOINT_MATERIALIZATION",
+          "lines": [
+            441,
+            473
+          ],
+          "block_sha256": "e07dd5f47bf2d919b19c12dec8767d6f147636814428ef4d9242958d28c13546",
+          "duplicate_key": [
+            "bus-a-a-compensate"
+          ]
+        },
+        {
+          "mode": "typed-mixed-full-last",
+          "type": "FINITE_DUPLICATE_ENDPOINT_MATERIALIZATION",
+          "lines": [
+            487,
+            519
+          ],
+          "block_sha256": "72cb3e2ec0433fed0fb8480c38789322e59efdccbf01e6ceb8cf86967e0eece7",
+          "duplicate_key": [
+            "bus-a-a-compensate"
+          ]
+        },
+        {
+          "mode": "two-buses-execute",
+          "type": "FINITE_NAME_MULTISET",
+          "lines": [
+            686,
+            696
+          ],
+          "block_sha256": "19a9790aa65ab718b163dca71a78f9462c7e2d74830d7e64f9c197d6590767c8",
+          "duplicate_key": []
+        },
+        {
+          "mode": "two-buses-full",
+          "type": "FINITE_DUPLICATE_ENDPOINT_MATERIALIZATION",
+          "lines": [
+            710,
+            742
+          ],
+          "block_sha256": "96dca08f3049a6aaf4b39ece2b2e0c8b80f7a4a024f861fe3dfea2f382be7429",
+          "duplicate_key": [
+            "bus-a-b-compensate"
+          ]
+        },
+        {
+          "mode": "compensation-default",
+          "type": "FINITE_DUPLICATE_ENDPOINT_MATERIALIZATION",
+          "lines": [
+            756,
+            800
+          ],
+          "block_sha256": "95509bbab338afc7ecc423b18b38e88f325370e142053d28c4ce2917a5c69672",
+          "duplicate_key": [
+            "owner-b-compensate"
+          ]
+        },
+        {
+          "mode": "compensation-typed",
+          "type": "FINITE_DUPLICATE_ENDPOINT_MATERIALIZATION",
+          "lines": [
+            814,
+            846
+          ],
+          "block_sha256": "5ed3a894247a0cb7773be0623a7fff0fc817162ceb2ee2ddf40a980cf6ca5ea0",
+          "duplicate_key": [
+            "bus-a-b-compensate"
+          ]
+        },
+        {
+          "mode": "caller-fallback-compensate",
+          "type": "FINITE_NAME_MULTISET",
+          "lines": [
+            891,
+            902
+          ],
+          "block_sha256": "f46e9fae12e71821dd9fcd9571af8c38f36a0bd7330deff6fe61c66cd052516c",
+          "duplicate_key": []
+        }
+      ],
+      "root_personal_primary_failure_full_read": true
+    },
+    {
+      "variant": "corrected",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f034-r6-public-corrected-fortyone.log",
+      "sha256": "a0c3036f6509678f9459a4245d97b1cdaaad0c75ccac13f23d964a9a9145a418",
+      "actual": {
+        "pass_count": 41,
+        "finite_failure_count": 0,
+        "finite_equal_count": 0,
+        "finite_null_count": 0,
+        "guards": 0
+      },
+      "finite_failures": [],
+      "root_personal_primary_failure_full_read": null
+    }
+  ],
+  "limits": "ONLY F034 old/newCourier comparison SAMECoreF040F041. No extra F041originalproof claim; own correctedfixture all41 sourceWHOLE read, not whole lograw claim."
+}

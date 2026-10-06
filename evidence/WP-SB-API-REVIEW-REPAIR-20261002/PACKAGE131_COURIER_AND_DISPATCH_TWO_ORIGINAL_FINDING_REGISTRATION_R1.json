@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-04T19:56:08.821495+00:00",
+  "decision": "REGISTER_TWO_FINITE_ORIGINAL_PRODUCT_FINDINGS_AFTER_INDEPENDENT_SOURCE_PDB_NATIVE_QUALIFICATION",
+  "findings": [
+    {
+      "id": "F-SB-API-115",
+      "severity": "High",
+      "title": "Courier activity fault observer masks primary execute/compensate failure and secondary cancellation switches to transport fault",
+      "source_owner": "ExecuteActivityFilter.cs;CompensateActivityFilter.cs",
+      "status": "CONFIRMED_ORIGINAL_NATIVE_SOURCE_BOUND_REPAIR_PENDING",
+      "causal_boundary": "Actual public routing slip: two healthy callback controls pass; secondary IOException twice removes primary from actual serialized domain outcome, secondary OCE twice changes domain outcome to transport fault. Ordered primary-plus-observer cause preservation required.",
+      "original_native": {
+        "total": 6,
+        "passed": 2,
+        "failed": 4,
+        "skipped": 0
+      },
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package129-courier6-logger2-original-independent-r1/REPORT.json",
+        "sha256": "cea7531f57c1529d0c91ef240272ca6fd692ed8c28fe4ab30d6c70f72650b940"
+      },
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-116",
+      "severity": "Medium",
+      "title": "ZeroActivity diagnostic logger replaces dispatch outcome and prevents later subscriber invocation",
+      "source_owner": "src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs",
+      "status": "CONFIRMED_ORIGINAL_NATIVE_SOURCE_BOUND_REPAIR_PENDING",
+      "causal_boundary": "Actual class11: nine existing controls pass, hostile diagnostic logger replaces original pipeline exception or successful task with unique logger exception. Later subscriber suppression is source-proven early exit; RED first outcome assertions did not execute later subscriber/count checks.",
+      "original_native": {
+        "total": 11,
+        "passed": 9,
+        "failed": 2,
+        "skipped": 0
+      },
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package129-courier6-logger2-original-independent-r1/REPORT.json",
+        "sha256": "cea7531f57c1529d0c91ef240272ca6fd692ed8c28fe4ab30d6c70f72650b940"
+      },
+      "whole_API_member_review_closed": false
+    }
+  ],
+  "root_review": "Entire original qualification a5659f; all actual originalCourier6 efd07a and Dispatcher11 d0bb0e personally read. Entire current twofilter26ce1e, twohost378fb1, tworesultd58e93; prior actualDispatcher Source sections and callback helper reads.",
+  "limits": [
+    "Methodfilter0 exit8 command failure earns no product finding credit.",
+    "Original native proof only, no repair acceptance or blanket A+."
+  ],
+  "whole_api_status": "PARTIAL"
+}

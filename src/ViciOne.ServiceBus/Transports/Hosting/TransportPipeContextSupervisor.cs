@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Advanced.Middleware;
@@ -55,10 +57,33 @@ public abstract class TransportPipeContextSupervisor<T> :
     /// <returns>A task that completes when every owned lifecycle has stopped.</returns>
     protected override async Task StopSupervisorAsync(StopSupervisorContext context)
     {
-        await _consumeSupervisor.StopAsync(context).ConfigureAwait(false);
+        List<Exception>? failures = null;
 
-        await _sendSupervisor.StopAsync(context).ConfigureAwait(false);
+        async Task StopPhaseAsync(Func<Task> stop)
+        {
+            Task? stopTask = null;
+            try
+            {
+                stopTask = stop();
+                await stopTask.ConfigureAwait(false);
+            }
+            catch (Exception failure)
+            {
+                failures ??= new List<Exception>();
+                if (stopTask?.Exception is AggregateException aggregate)
+                    failures.AddRange(aggregate.InnerExceptions);
+                else
+                    failures.Add(failure);
+            }
+        }
 
-        await base.StopSupervisorAsync(context).ConfigureAwait(false);
+        await StopPhaseAsync(() => _consumeSupervisor.StopAsync(context)).ConfigureAwait(false);
+        await StopPhaseAsync(() => _sendSupervisor.StopAsync(context)).ConfigureAwait(false);
+        await StopPhaseAsync(() => base.StopSupervisorAsync(context)).ConfigureAwait(false);
+
+        if (failures is { Count: 1 })
+            ExceptionDispatchInfo.Capture(failures[0]).Throw();
+        if (failures is { Count: > 1 })
+            throw new AggregateException(failures);
     }
 }

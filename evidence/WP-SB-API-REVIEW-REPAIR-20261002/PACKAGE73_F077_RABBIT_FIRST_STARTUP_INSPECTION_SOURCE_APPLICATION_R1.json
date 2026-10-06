@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-04T15:09:22.474126+00:00",
+  "decision": "ROOT_INDEPENDENT_ADVERSARIAL_SOURCE_NO_BLOCK_F077_CONFIRMED_ORIGINAL2_RED_AND_FIX_APPLIED",
+  "source": {
+    "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Middleware/PurgeOnStartupFilter.cs",
+    "before": "55d7743e0525571c9a8c17daccaa5ff16f82e0c468c2f1ffbb095a2376574add",
+    "after": "3e2a7e9d1eb83d7325000bdc9c9f23fc04b3ef5bbc6ffe4f2ae3719f183d38c6"
+  },
+  "root_reviews": [
+    "4003ab completeOriginal6qualifiedReport, whole69lineproposedFilter, entireexactdiff",
+    "e435b1 Report andsourcehashcontext",
+    "prior b38d3c actualpublicreceiveSettingsfirststart/noChannelReconnectpurge XMLcontract"
+  ],
+  "original_native_log_sha256": "1516362eb578cd9e1cd3f8eda55ccdc0f710d40e5561a6a808ced12e21067c32",
+  "original_frozen_frame": "04f977b8767fc5fcc3b8c1ae6da87e0bc69fc233a3dc8ea25d17f9b6d1876b94",
+  "semantics": "Recordsuccessful initialinspection evenwhenempty/activeConsumers; preservelaterpassivequery, alltaskawaits/serialgate/cancellation/retryafterfailedqueryorpurge andpipelineforwarding. Diagnosticstates completeddecision ratherthan falsely claimingpurge.",
+  "independent_author": "/root/qualification_review_r2 authored; Root independently source approved, notauthorselfapproval",
+  "limits": "ControlledpublicSPI confirmedunexpectedpurgecall, no livebroker businessmessage deletion claim; correctednative/packagepending."
+}

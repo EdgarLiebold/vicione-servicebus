@@ -1,0 +1,39 @@
+{
+  "utc": "2026-10-04T12:39:47.794201+00:00",
+  "test_files": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+      "before_sha256": "85d9699d6cc69bc56f632edefde6372ce67ca7654700fa4cd2fb8d0558f8c18e",
+      "after_sha256": "e9ba04dcc129ceb3266d20a5a97ad1d996fa1ec13cde44ae0d20af32365440fb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveLockContextTests.cs",
+      "before_sha256": "8ba8475907fb3f2df0afadd77c1924310d0db7f48d3bc59f88ef64eaa6d25c12",
+      "after_sha256": "1aaba45ebae05bdff42bdfb030961b4a19581bed590de61a6cf164edfb34b0ee"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "4a198164ee02baab22e5566e6d397f1a599073b5c6694a1358a53cbc1a86ae77",
+      "after_sha256": "1e7c1a45951c46a3d0833fae244ca428388bd2719d35d0ed20d778a43b2f2a91"
+    }
+  ],
+  "source_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package56-consumer-regressions-adversarial-r1/REPORT.json",
+  "source_review_sha256": "4dc9f6a1cae40260d6205647d7a33ba705fbdd2f5bed2712b7938f8d5b81d462",
+  "root_human_reads": [
+    "e301e6 wholeConsumer1..430",
+    "f5a0ba wholeConsumer431..815",
+    "edbd93 completePending224 unchangedR3",
+    "239b6c new10minus1mappings plusd6b59d updatedStopBudgetprojection",
+    "20f2df wholepeerREPORT",
+    "4c5403 countErratum"
+  ],
+  "requirements": "Exact current original rowset minus1plus10; no unrelated rows changed",
+  "original_product_pins": {
+    "src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs": "970affb1ece8396d1ace98a194e88c8f13205abe692db61867ca106a8917e2fb",
+    "src/ViciOne.ServiceBus/Transports/Receiving/PendingReceiveLockContext.cs": "f2ee7c866fb0f3f671fdc67fd5f1b38ff3298b71cfc2fe4f5b6071a0bd7b3ea4",
+    "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+  },
+  "native_allowlist_cases": 8,
+  "corrected_only_original_exclusions": 2,
+  "not_claimed": "No compilation/native for this epoch yet"
+}

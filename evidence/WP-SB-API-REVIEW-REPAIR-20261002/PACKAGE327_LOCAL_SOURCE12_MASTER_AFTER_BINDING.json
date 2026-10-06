@@ -1,0 +1,8 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE327_CORE_CONSTRUCTOR6_FACTORY4_AZURE_BLOB2_LOCAL_SOURCE_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "668178d3d9a531759f7256cf88bc9c10ab2661c229d8f0a6ac4f1d5b9334fcfe"
+  },
+  "master_after_sha256": "f6bacb5837cf9858730e456649780ebfdc107eb40f2627a20682070bfe91b777",
+  "row_count": 18995
+}

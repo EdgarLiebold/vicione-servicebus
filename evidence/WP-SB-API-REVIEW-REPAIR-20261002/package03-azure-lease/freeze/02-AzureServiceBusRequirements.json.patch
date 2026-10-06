@@ -1,0 +1,36 @@
+--- /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/03-AzureServiceBusRequirements.json
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json
+@@ -1342,5 +1342,33 @@
+     "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+     "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusFamilyRegressionTests",
+     "testMethod": "NestedQueueDestinations_HaveDistinctAutomaticSubscriptionsAsync"
++  },
++  {
++    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
++    "variantKey": "shared-administration-lease-keeps-both-cancellation-links-until-completion",
++    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
++    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
++    "testMethod": "PendingAdministration_ForwardsCallerAndLeaseCancellationAsync"
++  },
++  {
++    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
++    "variantKey": "shared-administration-success-retains-options-result-and-detaches-completed-link",
++    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
++    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
++    "testMethod": "SuccessfulAdministration_PreservesInputsResultsAndDisposesTheCompletedLinkAsync"
++  },
++  {
++    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
++    "variantKey": "shared-administration-original-fault-survives-and-detaches-completed-link",
++    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
++    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
++    "testMethod": "FaultedAdministration_PreservesOriginalFaultAndDisposesTheCompletedLinkAsync"
++  },
++  {
++    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
++    "variantKey": "shared-send-control-retains-the-same-pending-lease-cancellation-contract",
++    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
++    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
++    "testMethod": "PendingSend_ControlRetainsCallerAndLeaseCancellationAsync"
+   }
+ ]

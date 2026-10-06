@@ -1,0 +1,98 @@
+{
+  "utc": "2026-10-03T13:20:33.033688+00:00",
+  "status": "ROOT_WHOLE_BOUNDED_PUBLIC_OWNER_SOURCE_PREFLIGHT_NATIVE_PENDING",
+  "candidate": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/.testagent/source-candidate-r4.json",
+  "candidate_sha256": "5b47856c21c94cf6e64647a837470df186a97ebb1824c610a9bcfda315978df4",
+  "root_personally_full_owner_inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/.testagent/plan.md",
+      "relative": ".testagent/plan.md",
+      "sha256": "f9311a998a92ed467da06af7a357139b9eab86fa6aa093a67c68351e442632bf",
+      "bytes": 1909
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/.testagent/research.md",
+      "relative": ".testagent/research.md",
+      "sha256": "cc194733b6792ed42f83a35eab9f9db75651545877c45fcc0c4e6edc149275a9",
+      "bytes": 2294
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/.testagent/source-pairing.json",
+      "relative": ".testagent/source-pairing.json",
+      "sha256": "f35b04d57efb6d41a9bdc2ac381e36b4df4120df27fefa51826ad489c294ffb5",
+      "bytes": 16569
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/.testagent/status.md",
+      "relative": ".testagent/status.md",
+      "sha256": "fb1cbd7a77f08f4f260b275d990de69f87f5e5e126db633f219681ac67fe7d25",
+      "bytes": 388
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/Cases.cs",
+      "relative": "Cases.cs",
+      "sha256": "bb81c24d2d6c748c2b7fc9af724fc7135eb0fe8dd7abbcc110d1b6816337f5c1",
+      "bytes": 20826
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/FilterOwnership.PublicConsumer.csproj",
+      "relative": "FilterOwnership.PublicConsumer.csproj",
+      "sha256": "fb97ccbc707d1da27c9d8746fcd734b965d03bb7e89621fd0dc600ace65fe7b4",
+      "bytes": 993
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/Models.cs",
+      "relative": "Models.cs",
+      "sha256": "83d3975a646ce8c6eb15ad5c3bcd607a698ed7e4597a0e8239da8e08cfc59ccd",
+      "bytes": 9609
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/NuGet.Config",
+      "relative": "NuGet.Config",
+      "sha256": "9914ca79a0dff853b211e254e32e9675d58877af8bc09ab1a7f5f0f6e68c1d17",
+      "bytes": 576
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/OwnedDisposal.cs",
+      "relative": "OwnedDisposal.cs",
+      "sha256": "d3341a506f5687f179d0da7ebe3532f595de11144ae193e8792663fe4f4816f0",
+      "bytes": 1008
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/OwnedLifetime.cs",
+      "relative": "OwnedLifetime.cs",
+      "sha256": "a5b663bfbbb613393f0c001f4db6d57ac1d75a95dfe3e8cd2ab4d43e0b3eeb62",
+      "bytes": 1916
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/Program.cs",
+      "relative": "Program.cs",
+      "sha256": "85266ef793a78358387362782b2510243846165b8a76920b5516f73dfdf483c0",
+      "bytes": 2495
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/RuntimeOwner.cs",
+      "relative": "RuntimeOwner.cs",
+      "sha256": "36515a4f2595b687a71a4c58e623049484621833deae54d1b626b659c424d371",
+      "bytes": 4829
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/global.json",
+      "relative": "global.json",
+      "sha256": "fcafdeab1b2af8c88b0aac365be7ec1f4fb8e8b2a2b700a01d2a3619687ce760",
+      "bytes": 135
+    }
+  ],
+  "owner_scope": "new public package21-f032 only, no canonical Core766 ownership transfer",
+  "actual_sdk_contexts_required": true,
+  "independent_r4_source_no_immediate_blocker_message_received": true,
+  "lockfile_and_actual_restore_graph_pending": true,
+  "proposal_cases": 119,
+  "actual_native_cases": 0,
+  "mandatory_test_pipeline": "Root inline Research\u2192Plan\u2192Implement; assertion-quality and test-gap-analysis guidelines FULL plus dotnet extension. No survivors reported without execution. Actual compiled countercases still pending.",
+  "remaining_coverage_qualifications": [
+    "Detailed actual requirement projection and compiled mutants pending; proposal counts are not PASS counts.",
+    "Saga control and operation aggregate/cancel-with-cleanup contrasts from broad plan not yet established by this candidate."
+  ],
+  "no_finding_acceptance": true
+}

@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-04T18:01:25.531977+00:00",
+  "decision": "72_INDIVIDUAL_BOUNDED_SOURCE_CONTRACTS_ACCEPTED",
+  "previous_accepted_count": 1762,
+  "new_accepted_count": 1834,
+  "per_id_detail": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE109_FSQ72_MEMBER_SOURCE_ACCEPTANCE_R1.json",
+    "sha256": "a6119b6077ed492842e84e1495f433d55c4bd1aa55498e834af0178ffe685e71"
+  },
+  "independent_author_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package85-fsq-executable187-dispositions-r1/REPORT.json",
+    "sha256": "a549a04a3303c4b1ff601a9180e7a5ed737f79c7a92f654f83e4f8843f898648"
+  },
+  "root_review_evidence": [
+    "68c031 all72 individual contracts/reasons",
+    "a3cf6c complete27 declared signatures/base/interfaces/constraints (earlier7f9750 truncated, no wholecredit)",
+    "36ec70 full options3+FutureDefinition+Exception",
+    "b0369b full Location+Subscription",
+    "retained88cdf6 wholeFutureState and6ae66e/67383d+54753c currentFuture source"
+  ],
+  "source_checks": "All25 current physical owner SHA equal individual snapshot; immutable full manifest verified before acceptance",
+  "scope_limits": [
+    "No native execution credit; Source27types never promotes contained executable operations.",
+    "124passed/2failed currentFuture126 remains independently under investigation; runtime method rows never promoted by this Source72 receipt.",
+    "No transferred peer whole-reader credit; Root own exact bound contract review, independent author whole source evidence explicitly separately referenced."
+  ],
+  "before_metadata_sha256": {
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json": "ffac19ad39375b10887b8eee4c2f7b57e5c31c5ee28e0a1eed85d5ce130442e1",
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json": "8c7f7ebead81c86c69a7a8835144c1c2fa6b06937207831cd7c2dfaf80e20b8b"
+  },
+  "whole_API_member_review_closed": false
+}

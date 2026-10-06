@@ -1,0 +1,69 @@
+{
+  "utc": "2026-10-06T19:42:49.234866+00:00",
+  "status": "EXACT133_CURRENT_PRIMARY_IDENTITIES_APPLIED_ALL19431_SOURCE_IDENTITY_DRIFT0_CURRENT_API2_SUPPLEMENT_PENDING",
+  "actor": "/root",
+  "before_master": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "bytes": 85164317,
+    "sha256": "ff287ea10dec6f5503615d806ca3cf28bb3f0c76e180a3a61fa0edd748303cec"
+  },
+  "before_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package549-133-mixed-schema-root-application-before-r1/MANIFEST.json",
+    "bytes": 273,
+    "sha256": "50dacfa546913c0c0df9bdb6e4cf21380ef68dd5562bbc6e6b362ddbebcd5c95"
+  },
+  "author_and_different_peer": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-additional133-mixed-schema-current546-identity-migration-proposed-r1/REPORT.json",
+      "bytes": 8568,
+      "sha256": "c4da025842fe9d805232e76fcb7c6ac12057dc0825c23bfc6dd151416db29c56"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-additional133-mixed-schema-current546-identity-migration-proposed-r1/MANIFEST.json",
+      "bytes": 2305,
+      "sha256": "284c6b497cdf2f1a996b6ff1c2938f4c8fde1b7bfcbc6e7292eb85c6df1d6f48"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-additional133-mixed-schema-current546-identity-migration-proposed-r1/EXACT133_CURRENT546_PROPOSED_IDENTITY_ROWS.json",
+      "bytes": 1820743,
+      "sha256": "9ed4f1ecbf92d5d55959859b013ef9eb8395c102ac1d26f70ac0c7fd641178bf"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-additional133-mixed-schema-current546-identity-migration-proposed-r1/ALL19431_AFTER_ROOT548_PLUS133_EXACT_PRIMARY_SOURCE_CENSUS.json",
+      "bytes": 19635423,
+      "sha256": "00d6be127972290b159f028bf7b9415f7ae99a0d941e301caaaa6daf6d9d4602"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-additional133-independent-runtime-source-context-peer-r3/REPORT.json",
+      "bytes": 5774,
+      "sha256": "b462006cc7a81c281634e8978ea985435385c36c72f85697192703e446d03257"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-additional133-independent-runtime-source-context-peer-r3/MANIFEST.json",
+      "bytes": 1364,
+      "sha256": "e887874618b1d7d2f2b2e991f4a9f7c1e731c7933bb3979e073af12bab098feb"
+    }
+  ],
+  "root_reads": [
+    "69d218 wholeauthorReport",
+    "49dacc whole21 currentSource-norm-contextdispositions",
+    "whole currentdifferentRuntimepeer report in this operation"
+  ],
+  "existing_rows": 133,
+  "direct_original_rows": 133,
+  "owners": 21,
+  "top_SHA_replaced": 91,
+  "top_SHA_added": 42,
+  "XML_present": 130,
+  "XML_distinct_nodes": 130,
+  "XML_bounded_implicit_constructor_absences": 3,
+  "current_all_primary_source_rows": 19431,
+  "unique_current_primary_source_paths": 2943,
+  "remaining_primary_SHA_drift": 0,
+  "old_entire_rows_and_nonprimary_metadata_norms_status_grade_native_preserved": true,
+  "prior703_overlap": 0,
+  "Source_Test_Requirement_Product_changes": 0,
+  "new_native_credit": 0,
+  "SDK_actions": 0,
+  "current_API_missing2_public_property_reviews_pending": true
+}

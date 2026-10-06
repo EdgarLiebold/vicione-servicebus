@@ -127,8 +127,15 @@ public static class CourierHostConfiguratorExtensions
         ArgumentNullException.ThrowIfNull(compensateAddress);
         ArgumentNullException.ThrowIfNull(factory);
 
-        LogContext.Debug?.Log("Configuring Execute Activity: {ActivityType}, {ArgumentType}", TypeCache<TActivity>.ShortName,
-            TypeCache<TArguments>.ShortName);
+        try
+        {
+            LogContext.Debug?.Log("Configuring Execute Activity: {ActivityType}, {ArgumentType}", TypeCache<TActivity>.ShortName,
+                TypeCache<TArguments>.ShortName);
+        }
+        catch
+        {
+            // Optional diagnostics cannot prevent valid activity specification admission.
+        }
 
         var specification = new ExecuteActivityHostConfigurator<TActivity, TArguments>(factory, compensateAddress, configurator);
 
@@ -151,8 +158,15 @@ public static class CourierHostConfiguratorExtensions
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(factory);
 
-        LogContext.Debug?.Log("Configuring Execute Activity: {ActivityType}, {ArgumentType}", TypeCache<TActivity>.ShortName,
-            TypeCache<TArguments>.ShortName);
+        try
+        {
+            LogContext.Debug?.Log("Configuring Execute Activity: {ActivityType}, {ArgumentType}", TypeCache<TActivity>.ShortName,
+                TypeCache<TArguments>.ShortName);
+        }
+        catch
+        {
+            // Optional diagnostics cannot prevent valid activity specification admission.
+        }
 
         var specification = new ExecuteActivityHostConfigurator<TActivity, TArguments>(factory, configurator);
 
@@ -224,8 +238,15 @@ public static class CourierHostConfiguratorExtensions
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(factory);
 
-        LogContext.Debug?.Log("Configuring Compensate Activity: {ActivityType}, {LogType}", TypeCache<TActivity>.ShortName,
-            TypeCache<TLog>.ShortName);
+        try
+        {
+            LogContext.Debug?.Log("Configuring Compensate Activity: {ActivityType}, {LogType}", TypeCache<TActivity>.ShortName,
+                TypeCache<TLog>.ShortName);
+        }
+        catch
+        {
+            // Optional diagnostics cannot prevent valid activity specification admission.
+        }
 
         var specification = new CompensateActivityHostConfigurator<TActivity, TLog>(factory, configurator);
 

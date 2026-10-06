@@ -1,0 +1,108 @@
+[
+  {
+    "stage": "M-corrected",
+    "dll_sha256": "aa0ea902076c9de1c1c460ca6df720d19aa89911d2bd69107f39606f58e54210",
+    "changed_product_document_checksums_vs_corrected": []
+  },
+  {
+    "stage": "M-rollback",
+    "dll_sha256": "aa0ea902076c9de1c1c460ca6df720d19aa89911d2bd69107f39606f58e54210",
+    "changed_product_document_checksums_vs_corrected": []
+  },
+  {
+    "stage": "M-DropKnownDefinitionOwner",
+    "dll_sha256": "74f74f2ed68bc2fec14316a3ca5671444c8e17167396653abae7972ee8238d2a",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "M-ReuseKnownOwnerSingleton",
+    "dll_sha256": "fd5562c75764430f71dbf4bfbb35f67451607be4e9848024803d23472a2b0c30",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "M-PreferSyncForDual",
+    "dll_sha256": "a0b88165d4eca4d4b396f833b55fa17a2dc0975e723d9d3bda5d70da1198bc95",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "M-DropAsyncOnlyCleanup",
+    "dll_sha256": "a9a97379ecd10c71c392e176e86c882a57d7e861762b9c19814195d071fb5c1e",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "M-AsyncOnlyAdvertisesSync",
+    "dll_sha256": "957b0a2e947537b6ca843ae48ce49f28c5d46949363ee49368e8a0b42f231b2a",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "M-CollapseKnownAliases",
+    "dll_sha256": "b561c1ac8728f9e38961032891e673a6375cb4b0c3b43ba6b4bb831dcb15a4a8",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "M-DropNullEndpointOwner",
+    "dll_sha256": "5fb3ace70c6f93e4780da10d28ecdf49030c1875a5be5f8ca79ad3bd56d82d3f",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "M-DropExplicitEndpointOwner",
+    "dll_sha256": "0b195360c4345a6731093cd7dc28814fb919b4fa256b530441ce1c02ad260ea4",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "M-ShareEndpointKey",
+    "dll_sha256": "908002365544e47137cd9a402e7a57038e700dfeb906e820c258c7d8ba9383d6",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "M-IgnoreExplicitSettings",
+    "dll_sha256": "4728becb075db970c35364ba7409692cb9d2a7d572c7f1d829689727caa37e61",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "M-CollapseEndpointAliases",
+    "dll_sha256": "350a5e5d6dcbd23b489ccea582acc5340f4cb00abc72ee6c4464a55c44100ba8",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "M-CaptureOwnerBeforeDependencies",
+    "dll_sha256": "c826b0e3b27f9c3ab161a9dbeed432d19cfc25c659a21b159061ece70772a112",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "previous-ViciOne.ServiceBus",
+    "dll_sha256": "1a152ac238f1e1d5dbcfcd98b736bd39125aec89f7ba35824ba8654ed117e148",
+    "changed_product_document_checksums_vs_corrected": [
+      "ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs"
+    ]
+  },
+  {
+    "stage": "corrected-ViciOne.ServiceBus",
+    "dll_sha256": "29a0a2fb6462eb68d4fe781682db0750f689d0280f106b4c5097fe8bd34a3c90",
+    "changed_product_document_checksums_vs_corrected": []
+  }
+]

@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Logging;
 using System.Linq.Expressions;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Saga;
@@ -11,6 +13,180 @@ namespace ViciOne.ServiceBus.Tests.Sagas;
 
 public sealed class LegacySagaIntegrationTests
 {
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-SAGA-CONNECTION-EXTENSIONS", "debug-preserves-public-subscription-and-direct-connection")]
+    public async Task SagaRegistration_DebugFailureDoesNotPreventPublicMessageDeliveryAsync(bool directConnection, bool loggerThrows)
+    {
+        TimeSpan timeout = OperationTimeout();
+        using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        var repository = new InMemorySagaRepository<FilteredSaga>();
+        using var harness = CreateHarness("registration-debug", timeout);
+        string template = directConnection ? "Connecting Saga: {SagaType}" : "Subscribing Saga: {SagaType}";
+        var diagnosticFailure = new IOException("Saga registration diagnostic failure");
+        var logger = new RegistrationDiagnosticLogger(template, loggerThrows ? diagnosticFailure : null);
+        Exception? registrationFailure = null;
+        ISagaConfigurator<FilteredSaga>? subscriptionConfigurator = null;
+        int callbackCalls = 0;
+        ConnectHandle? directHandle = null;
+        Task? start = null;
+        Task? send = null;
+        Task<Guid?>? persisted = null;
+        if (!directConnection)
+        {
+            harness.InMemoryReceiveEndpointConfiguring += endpoint =>
+            {
+                ILogContext? previous = LogContext.Current;
+                try
+                {
+                    LogContext.ConfigureCurrentLogContext(logger);
+                    registrationFailure = Record.Exception(() => endpoint.Saga(repository, configurator =>
+                    {
+                        callbackCalls++;
+                        subscriptionConfigurator = configurator;
+                    }));
+                }
+                finally
+                {
+                    LogContext.Current = previous;
+                }
+            };
+        }
+        try
+        {
+            start = harness.StartAsync(lifetime.Token);
+            await start.WaitAsync(timeout, lifetime.Token);
+            if (directConnection)
+            {
+                ILogContext? previous = LogContext.Current;
+                try
+                {
+                    LogContext.ConfigureCurrentLogContext(logger);
+                    registrationFailure = Record.Exception(() =>
+                    {
+                        directHandle = harness.Bus.ConnectSaga(repository);
+                    });
+                }
+                finally
+                {
+                    LogContext.Current = previous;
+                }
+            }
+            RegistrationDiagnosticLogger.Entry selected = Assert.Single(logger.Entries, entry => entry.Template == template);
+            Assert.Equal(LogLevel.Debug, selected.Level);
+            Assert.Equal(typeof(FilteredSaga).FullName, selected.SagaType);
+            Assert.Equal(loggerThrows ? 1 : 0, logger.ThrowCount);
+            if (loggerThrows)
+            {
+                Assert.Same(diagnosticFailure, logger.ThrownFailure);
+                if (registrationFailure is not null)
+                    Assert.Same(diagnosticFailure, registrationFailure);
+            }
+            else
+                Assert.Null(logger.ThrownFailure);
+
+            Assert.Null(registrationFailure);
+            if (directConnection)
+            {
+                Assert.NotNull(directHandle);
+                Assert.Equal(0, callbackCalls);
+                Assert.Null(subscriptionConfigurator);
+            }
+            else
+            {
+                Assert.Equal(1, callbackCalls);
+                Assert.IsType<SagaConfigurator<FilteredSaga>>(subscriptionConfigurator);
+                Assert.Null(directHandle);
+            }
+            Guid correlationId = Guid.Parse("bdc03cd6-527d-46df-bba5-d2c4c0f0b707");
+            send = directConnection
+                ? harness.BusSendEndpoint.SendAsync(new FilteredStart(correlationId), lifetime.Token)
+                : harness.InputQueueSendEndpoint.SendAsync(new FilteredStart(correlationId), lifetime.Token);
+            await send.WaitAsync(timeout, lifetime.Token);
+            persisted = ((ISagaRepository<FilteredSaga>)repository).WaitForSagaAsync(correlationId, timeout,
+                cancellationToken: lifetime.Token);
+            Assert.Equal(correlationId, await persisted.WaitAsync(timeout, lifetime.Token));
+        }
+        finally
+        {
+            try
+            {
+                lifetime.Cancel();
+                if (send is not null)
+                    await ObserveSagaRegistrationDiagnosticTaskAsync(send);
+            }
+            finally
+            {
+                try
+                {
+                    if (persisted is not null)
+                        await ObserveSagaRegistrationDiagnosticTaskAsync(persisted);
+                }
+                finally
+                {
+                    try
+                    {
+                        if (start is not null)
+                            await ObserveSagaRegistrationDiagnosticTaskAsync(start);
+                    }
+                    finally
+                    {
+                        try
+                        {
+                            directHandle?.Dispose();
+                        }
+                        finally
+                        {
+                            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                        }
+                    }
+                }
+            }
+        }
+        IConsumedMessage<FilteredStart> delivery = Assert.Single(harness.Consumed.Snapshot<FilteredStart>());
+        Assert.Equal(Guid.Parse("bdc03cd6-527d-46df-bba5-d2c4c0f0b707"), delivery.Context.Message.CorrelationId);
+        Assert.Null(delivery.Exception);
+    }
+
+    private static async Task ObserveSagaRegistrationDiagnosticTaskAsync(Task task)
+    {
+        try
+        {
+            await task.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+        }
+        catch (Exception failure) when (failure is not TimeoutException && (task.IsFaulted || task.IsCanceled))
+        {
+        }
+    }
+
+    private sealed class RegistrationDiagnosticLogger(string templateToThrow, Exception? failure) : ILogger
+    {
+        public sealed record Entry(LogLevel Level, string? Template, string? SagaType);
+        public List<Entry> Entries { get; } = [];
+        public int ThrowCount { get; private set; }
+        public Exception? ThrownFailure { get; private set; }
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel level) => level == LogLevel.Debug;
+        public void Log<TState>(LogLevel level, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            IEnumerable<KeyValuePair<string, object?>> fields = state as IEnumerable<KeyValuePair<string, object?>>
+                ?? Array.Empty<KeyValuePair<string, object?>>();
+            string? template = fields.FirstOrDefault(field => field.Key == "{OriginalFormat}").Value as string;
+            string? sagaType = fields.FirstOrDefault(field => field.Key == "SagaType").Value as string;
+            Entries.Add(new Entry(level, template, sagaType));
+            if (template == templateToThrow && failure is not null)
+            {
+                ThrowCount++;
+                ThrownFailure = failure;
+                throw failure;
+            }
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-PIPE-LAYERS", "saga-message-and-combined-filters-share-one-delivery")]
     public async Task SagaConfiguration_InvokesAllThreePipeLayersWithTheSameSagaAndMessageAsync()

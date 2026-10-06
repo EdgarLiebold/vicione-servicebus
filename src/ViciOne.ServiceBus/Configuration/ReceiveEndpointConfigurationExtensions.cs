@@ -13,7 +13,7 @@ public static class ReceiveEndpointConfigurationExtensions
         configurator.ReceiveEndpoint(new TemporaryEndpointDefinition(), DefaultEndpointNameFormatter.Instance, configure);
     }
 
-    /// <summary>Creates a management endpoint which can be used by controllable filters on a bus instance.</summary>
+    /// <summary>Configures a receive endpoint from the supplied definition and optional callback using the default name formatter.</summary>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="definition">The definition.</param>
     /// <param name="configure">The callback used to configure the component.</param>

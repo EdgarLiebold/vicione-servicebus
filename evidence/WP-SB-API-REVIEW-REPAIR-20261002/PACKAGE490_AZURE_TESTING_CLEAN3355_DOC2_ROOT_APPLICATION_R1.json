@@ -1,0 +1,17 @@
+{
+  "utc": "2026-10-06T14:59:14.058574+00:00",
+  "status": "ROOT_APPLIED_DIFFERENT_REVIEWED_DOC2_EMITTED_XML_PENDING",
+  "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/AzureServiceBusTestHarness.cs",
+  "before": "9650c4cb1623980252d2874a06dece22cceb723e7f6884bf7cbb689660d3965e",
+  "after": "62d6778def5e182528f9fcf342ec4e1022d47db7757398bcfbb11f007eae4e32",
+  "before_MAN": "17aa47b1981fb2fcd7f4fa3d5d97a4733325cf15bfd2619df6d93675668ad9e3",
+  "author_REPORT": "ba80718e9f38231de02dad4e5907a3f4abaa9a8ed64102c861bc493768a5cded",
+  "different_REPORT": "6ac1c1545a5e6bd9a0b2caa18f0b85dfdc217d04be705d82d32515e84147caa3",
+  "Root_whole_peer": "e49a8b",
+  "change": "Two XML comment clauses only, entire code/public declarations invariant via exact literal inverse.",
+  "original3355_still_held": true,
+  "native_credit": 0,
+  "grade": null,
+  "affected_owner_rebase_gate": "Fresh actual changedownerSourcePDB/XML before3355 acceptance and current sibling members metadata refresh. Prior accepted Sourceepoch320 original bytes retained; no current SourceSHA relabel. Public PLAN18 extraHarness guard must explicitly rebase this doc-onlydelta to current62d6778.",
+  "test_changes": false
+}

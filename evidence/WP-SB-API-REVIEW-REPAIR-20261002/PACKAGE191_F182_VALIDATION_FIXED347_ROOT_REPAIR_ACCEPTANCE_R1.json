@@ -1,0 +1,56 @@
+{
+  "utc": "2026-10-05T15:51:55.336869+00:00",
+  "status": "F182_REPAIRED_ADVERSARIALLY_REVIEWED_TARGETED_PROOF_ROOT_ACCEPTED_CLOSED",
+  "findings": [
+    "F-SB-API-182"
+  ],
+  "counts": {
+    "known": 185,
+    "accepted_before": 181,
+    "accepted_after": 182
+  },
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE190_SQS_F182_VALIDATION_ORIGINAL2_ROOT_REGISTRATION_R1.json",
+    "sha256": "8341ffcfb1d22bec10787f14db5535e0ac43938787ebdb265340c3ae2bf64b4b"
+  },
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE191_SQS_F182_VALIDATION_PRODUCT1_ROOT_APPLICATION_R1.json",
+    "sha256": "c5bf468658a7b37792b1c95d9e148922ee5098dbdacb9cd6791524171f15f0b7"
+  },
+  "fixed_qualified_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package191-sqs-fixed347-independent-r1/REPORT.json",
+    "sha256": "63493d7d61a16a95bc34a9553c6e32d8fcbd89045d93640526309ad1ac2b74df"
+  },
+  "fixed_qualified_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package191-sqs-fixed347-independent-r1/MANIFEST.json",
+    "sha256": "dd1e5ef51e9efba47619d766f018ba585718adffd8f693686dfb1b1c0f3b1173"
+  },
+  "independent_final_result_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package191-fixed347-final-independent-runtime-result-peer-r1/REPORT.json",
+    "sha256": "1f14045da342449a572d3eb3d99d6ac72abff3011a4c0a148b332f0454d42d51"
+  },
+  "independent_actual19_assertion_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package191-sqs-selected19-fixed-independent-runtime-result-peer-r1/REPORT.json",
+    "sha256": "07bf76abd5603072a8be6de3a485fe83d70bcf9fe77419bfd712dc01ef7a1751"
+  },
+  "actual_native": {
+    "total": 347,
+    "passed": 347,
+    "failed": 0,
+    "skipped": 0,
+    "log_sha256": "59428a9b3c3039362519fb800aa79664ec023f954f5ba6baf1be3a3b31ad9994"
+  },
+  "root_review": {
+    "entire_fixed_report": "b66b2a",
+    "entire_final_peer": "0ed867",
+    "actual19_outcomes": "0a7ae0",
+    "approved_capture190_to191_delta": "e4d143",
+    "whole_pure_qualifier54": "95f69f",
+    "tool_and_actual19_reports": "aa7d10"
+  },
+  "bounded_contract": "Both supported configured validators are now enumerated once and original marker failures preserve disposition/value/message/key suffix while Apply stays uncalled. Exact parent-prefix behavior separately source-reviewed. Old345 exact case IDs retained.",
+  "frozen_epoch": "191: requirements184 and test sources captured before193 test-only requirements186 extension",
+  "fresh_SQS_NuGet_claim": false,
+  "whole_API_member_review_closed": false,
+  "global_Aplus": false
+}

@@ -1,0 +1,138 @@
+{
+  "utc": "2026-10-06T03:53:55.950288+00:00",
+  "status": "ROOT_ACCEPTED_ACTUAL_CURRENT325_ALL23_GLOBAL_UNIT_CHECK",
+  "strict_build": {
+    "phase": "package325-all23-unit-after-naming3-strict-build-r1",
+    "command": [
+      "dotnet",
+      "build",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-06T03:21:04.965086+00:00",
+    "completed_utc": "2026-10-06T03:21:23.362603+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package325-all23-unit-after-naming3-strict-build-r1.log",
+    "log_sha256": "b8365a4ca656bc2aa7d1c9a2cc6d005c7e7aea0b16aa56ebe67a32565c983091"
+  },
+  "native_receipt": {
+    "phase": "package325-all23-unit-after-naming3-native-r1",
+    "command": [
+      "dotnet",
+      "test",
+      "--solution",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "--configuration",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "--results-directory",
+      "artifacts/results-package325-all23-unit-after-naming3-r1",
+      "--max-parallel-test-modules",
+      "1"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-06T03:23:28.616597+00:00",
+    "completed_utc": "2026-10-06T03:29:45.885775+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package325-all23-unit-after-naming3-native-r1.log",
+    "log_sha256": "1b119275df4b3534275ef1bcef6c61e9e7a2a4a95e31887905a5e464353b3793"
+  },
+  "capture": {
+    "BEFORE.json": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/BEFORE.json",
+      "sha256": "1c4492f7694c8229f4c19fe37de9bc72319a505522a1a7cac2ae35b9bed7ba93"
+    },
+    "AFTER.json": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/AFTER.json",
+      "sha256": "020621878e34a205595f60f7ffafc910962deaeb2c4c00c75d246ce616a740f6"
+    },
+    "SYMBOL_SOURCE_BINDING.json": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/SYMBOL_SOURCE_BINDING.json",
+      "sha256": "fa4cf8615cd7b0010f2aa284111e8321125a0291c0955e0dae66ddf557f202b1"
+    }
+  },
+  "independent_peer_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-independent-qualification-r1/REPORT.json",
+    "sha256": "6add3f59c4a91d076a9a907f4b76fc7e892317b2c5fb88d6f96eacbfc08bc90f"
+  },
+  "independent_peer_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-independent-qualification-r1/MANIFEST.json",
+    "sha256": "febfdec4ca5ef48aa3616365b319868da76ad298753935e006e76cc72ff3edd9"
+  },
+  "actual_counts": {
+    "total": 13230,
+    "passed": 13230,
+    "failed": 0,
+    "skipped": 0,
+    "modules": 23,
+    "exit_code": 0,
+    "no_filter": true,
+    "log_sha256": "1b119275df4b3534275ef1bcef6c61e9e7a2a4a95e31887905a5e464353b3793",
+    "strict0W0E": true
+  },
+  "actual_compiler_and_requirement_binding": {
+    "all_frozen_inputs": 6668,
+    "current_nonartifact_inputs": 6005,
+    "current_generated_input_differences": 18,
+    "frozen_canonical_payloads": 80,
+    "frozen_NuGet_source_helpers": 3,
+    "frames": 57,
+    "testframes": 23,
+    "productframes": 30,
+    "supportframes": 4,
+    "PDBtypes": {
+      "external-portable": 23,
+      "embedded-portable": 34
+    },
+    "documents": 5799,
+    "physical_documents": 5752,
+    "virtual_generated_documents": 47,
+    "embeddedSources": 311,
+    "runtime_canonical_selected57": 219,
+    "runtime_outside57_hashonly": 3,
+    "runtime_current_equal_at_read": 222,
+    "all_full_normalized_metadata_equal": true,
+    "all_docs_and_embeddedSource_checksums": true,
+    "external_PDB_pairing": true
+  },
+  "requirement_projection": {
+    "catalogs": 23,
+    "rows": 7560,
+    "each_physical_payload_exactly_once": true,
+    "row_testAssembly_matches_compiled_frame": true,
+    "limit": "Physical bytes and declared catalog mapping only. AST helper does not decode resource names; module aggregate does not expose per-variant assertion outcomes."
+  },
+  "naming3_current": "Root324 path-only byte-identical corrections; actual325 architecture module successful, new PDB document paths independently source-bound; failed318 retained.",
+  "previous_failed_attempt": {
+    "status": "ACTUAL318_FAILED_13229P1F0S_NAMING3_CORRECTED_FRESH325_PENDING",
+    "evidence": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package318-all23-unit-source-bound-capture-r1/FAILED_AFTER.json",
+      "sha256": "626d464825ee41f295fa6ea2f5fd8f49f8133c9dee356d83f6e6c79588d20e86"
+    },
+    "passed": 13229,
+    "failed": 1,
+    "skipped": 0,
+    "final_pass_credit": false
+  },
+  "root_own_authority": "Entire actual23 aggregate log231633; entire independent bounded325 report4b0a6a, all manifest67 payload hashes verified. Root own selected325 P36 Source joins in Root327/329, no inherited human review of whole13230 bodies.",
+  "temporal_bounds": "All6668 frozen snapshots validated. Current6005 non-artifact inputs exact.18 later320-generated sample JSON changes expressly recorded; no325 freeze drift implied.219 selected runtime canonical matches plus3 outside57 hash-only; live222 equality observed at supplemental read, no later-phase DLL identity substitution.",
+  "limits": [
+    "No individual13230 case IDs or per-module counts emitted in aggregate stdout.",
+    "No human whole-testbody reading of13230 cases.",
+    "No WholeAPI/ABI/Native grade or acceptance.",
+    "No SDK/Repository/Master/STATE mutations.",
+    "Recent cleanup16 focused data is not relabelled as an unverified named17 set; full5752 physical binding covers all captured emitted sources.",
+    "Aggregate passed suite is a regression check, not closure of all canonical API or deferred runtime obligations. Subsequent new code requires renewed applicable checks."
+  ],
+  "grade": null,
+  "whole_API_closed": false,
+  "Master_unchanged": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "889537ff7074b9528cf47b2083348c4770e0d1dbb41316847af3c8f5f6bb7aeb"
+  }
+}

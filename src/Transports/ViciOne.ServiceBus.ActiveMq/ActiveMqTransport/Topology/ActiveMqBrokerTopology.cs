@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
-/// <summary>Provides an immutable snapshot of ActiveMQ topics, queues, and consumer bindings.</summary>
+/// <summary>Stores array snapshots of ActiveMQ topics, queues, and consumer bindings with retained entity references.</summary>
 public class ActiveMqBrokerTopology :
     BrokerTopology
 {

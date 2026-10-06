@@ -1,0 +1,1543 @@
+{
+  "role": "Internal independent readonly adversarial reviewer /root/adversarial_package_01; no external product role",
+  "freeze_sha256": "b0096b5364b2a84f949bc51fce12bb4881502e2fa73911d6c347f881bc739d23",
+  "owned_inputs_personal_FULL": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/00-ConfigurationException.cs.txt",
+      "bytes": 2662,
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "personal_read": "FULL",
+      "basis": "New personal complete bounded tool-body reads of frozen source 00..07 during this final review; no canonical test owner transfer",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/01-ValidateViciOneServiceBusHostOptions.cs.txt",
+      "bytes": 2641,
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "personal_read": "FULL",
+      "basis": "New personal complete bounded tool-body reads of frozen source 00..07 during this final review; no canonical test owner transfer",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/02-ViciOneServiceBusHostOptions.cs.txt",
+      "bytes": 1550,
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "personal_read": "FULL",
+      "basis": "New personal complete bounded tool-body reads of frozen source 00..07 during this final review; no canonical test owner transfer",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/03-BatchCollector.cs.txt",
+      "bytes": 13959,
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "personal_read": "FULL",
+      "basis": "New personal complete bounded tool-body reads of frozen source 00..07 during this final review; no canonical test owner transfer",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/04-BatchOptions.cs.txt",
+      "bytes": 7243,
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "personal_read": "FULL",
+      "basis": "New personal complete bounded tool-body reads of frozen source 00..07 during this final review; no canonical test owner transfer",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/05-ConsumerRegistration.cs.txt",
+      "bytes": 4762,
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "personal_read": "FULL",
+      "basis": "New personal complete bounded tool-body reads of frozen source 00..07 during this final review; no canonical test owner transfer",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/06-BatchConsumerMessageConnector.cs.txt",
+      "bytes": 5099,
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "personal_read": "FULL",
+      "basis": "New personal complete bounded tool-body reads of frozen source 00..07 during this final review; no canonical test owner transfer",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/07-ConsumerBusIdentityOptions.cs.txt",
+      "bytes": 281,
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "personal_read": "FULL",
+      "basis": "New personal complete bounded tool-body reads of frozen source 00..07 during this final review; no canonical test owner transfer",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/08-ServiceBusInstrumentation.cs.txt",
+      "bytes": 22480,
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "personal_read": "FULL",
+      "basis": "Exact own Package10 full instrumentation body reused, hash checked against Package10 personal READ_CLOSURE",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/09-MessageJournalTelemetry.cs.txt",
+      "bytes": 6793,
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+        "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+        "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+        "bytes": 6793,
+        "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+        "read_time": "Pre-freeze review, no accepted patch/binary proof",
+        "basis": "Personal untruncated complete body tool read current pre-freeze turn"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/10-MessageJournalWriter.cs.txt",
+      "bytes": 4896,
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+        "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+        "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+        "bytes": 4896,
+        "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+        "read_time": "Pre-freeze review, no accepted patch/binary proof",
+        "basis": "Personal untruncated complete body tool read current pre-freeze turn"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/11-MessageJournalConfigurationExtensions.cs.txt",
+      "bytes": 11009,
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+        "relative": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+        "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+        "bytes": 11009,
+        "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+        "read_time": "Pre-freeze review, no accepted patch/binary proof",
+        "basis": "Personal untruncated complete body tool read current pre-freeze turn"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/12-TransportRegistrationBusFactory.cs.txt",
+      "bytes": 14561,
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+        "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+        "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+        "bytes": 14561,
+        "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+        "read_time": "Pre-freeze review, no accepted patch/binary proof",
+        "basis": "Personal untruncated complete body tool read current pre-freeze turn"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/13-InMemoryRegistrationBusFactory.cs.txt",
+      "bytes": 3639,
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+        "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+        "bytes": 3639,
+        "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+        "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+        "original_sha256": "f236623fdb28e5745365501bee6c15c2bfd42855e640877747ab159b13c13bf6"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalApplication.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/14-JournalApplication.cs.txt",
+      "bytes": 3706,
+      "sha256": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalApplication.cs",
+        "bytes": 3706,
+        "sha256": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalCases.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/15-JournalCases.cs.txt",
+      "bytes": 15197,
+      "sha256": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalCases.cs",
+        "bytes": 15197,
+        "sha256": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalEvidence.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/16-JournalEvidence.cs.txt",
+      "bytes": 6112,
+      "sha256": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalEvidence.cs",
+        "bytes": 6112,
+        "sha256": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalOwnership.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/17-JournalOwnership.PublicConsumer.csproj.txt",
+      "bytes": 879,
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalOwnership.PublicConsumer.csproj",
+        "bytes": 879,
+        "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/18-NuGet.Config.txt",
+      "bytes": 573,
+      "sha256": "cf0156fde59a1df2f8a3cf20cbaa7dabebd97c05e9132f397a37767f7bcc2b6c",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/NuGet.Config",
+        "bytes": 573,
+        "sha256": "cf0156fde59a1df2f8a3cf20cbaa7dabebd97c05e9132f397a37767f7bcc2b6c",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/19-OwnedLifetime.cs.txt",
+      "bytes": 802,
+      "sha256": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/OwnedLifetime.cs",
+        "bytes": 802,
+        "sha256": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/20-Program.cs.txt",
+      "bytes": 3418,
+      "sha256": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/Program.cs",
+        "bytes": 3418,
+        "sha256": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/21-packages.lock.json.txt",
+      "bytes": 8006,
+      "sha256": "b783c9752438cbb0dc18cece099e4a1c2d41ebcce9e6bcd8e8c5570dcedf3ff4",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/packages.lock.json",
+        "bytes": 8006,
+        "sha256": "b783c9752438cbb0dc18cece099e4a1c2d41ebcce9e6bcd8e8c5570dcedf3ff4",
+        "personal_read": "FULL current corrected lock untruncated tool output; previous identical own prior package10 FULL hash rechecked"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalApplication.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/22-JournalApplication.cs.txt",
+      "bytes": 3706,
+      "sha256": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalApplication.cs",
+        "bytes": 3706,
+        "sha256": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalCases.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/23-JournalCases.cs.txt",
+      "bytes": 15197,
+      "sha256": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalCases.cs",
+        "bytes": 15197,
+        "sha256": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalEvidence.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/24-JournalEvidence.cs.txt",
+      "bytes": 6112,
+      "sha256": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalEvidence.cs",
+        "bytes": 6112,
+        "sha256": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalOwnership.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/25-JournalOwnership.PublicConsumer.csproj.txt",
+      "bytes": 879,
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalOwnership.PublicConsumer.csproj",
+        "bytes": 879,
+        "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/26-NuGet.Config.txt",
+      "bytes": 573,
+      "sha256": "40fd0fd2e3cd796175ec2b984d6b144bbc6c4b5cbd275cc825389d53e92f7421",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/NuGet.Config",
+        "bytes": 573,
+        "sha256": "40fd0fd2e3cd796175ec2b984d6b144bbc6c4b5cbd275cc825389d53e92f7421",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/27-OwnedLifetime.cs.txt",
+      "bytes": 802,
+      "sha256": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/OwnedLifetime.cs",
+        "bytes": 802,
+        "sha256": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/28-Program.cs.txt",
+      "bytes": 3418,
+      "sha256": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/Program.cs",
+        "bytes": 3418,
+        "sha256": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92",
+        "personal_read": "FULL sources/config/project; previous lock exact own prior package10 FULL reused if unchanged, corrected lock pending separate FULL"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/29-packages.lock.json.txt",
+      "bytes": 8006,
+      "sha256": "f4a3f658d73a3e9c083c0dd52aff4e1416c547830c0c59b75004002b115c33bb",
+      "personal_read": "FULL",
+      "basis": "Own personally FULL body from Package11/12 preflight reused by exact SHA; current snapshot independently matched",
+      "prior_personal_row": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/packages.lock.json",
+        "bytes": 8006,
+        "sha256": "f4a3f658d73a3e9c083c0dd52aff4e1416c547830c0c59b75004002b115c33bb",
+        "personal_read": "FULL current corrected lock untruncated tool output; previous identical own prior package10 FULL hash rechecked"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalApplication.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/30-JournalApplication.cs.txt",
+      "bytes": 3706,
+      "sha256": "c90408aa568c58e6dc3cd0d5e3bc2dc0915bc0750172e6a2c458c05335020a47",
+      "personal_read": "FULL",
+      "basis": "Own final r2 complete source body exactly identical to personally FULL previous/corrected body; JournalCases also completely reread",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalCases.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/31-JournalCases.cs.txt",
+      "bytes": 15197,
+      "sha256": "9fd96b6efa2b40f37cb682ca2dc03ebcd5cfc87cdb5188f6ab18cb21335ee09d",
+      "personal_read": "FULL",
+      "basis": "Own final r2 complete source body exactly identical to personally FULL previous/corrected body; JournalCases also completely reread",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalEvidence.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/32-JournalEvidence.cs.txt",
+      "bytes": 6112,
+      "sha256": "2ba0b31edd2211e9c41dc4b80b64eeeceb805bd292a42fbf38890b09c7b4c4b0",
+      "personal_read": "FULL",
+      "basis": "Own final r2 complete source body exactly identical to personally FULL previous/corrected body; JournalCases also completely reread",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/JournalOwnership.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/33-JournalOwnership.PublicConsumer.csproj.txt",
+      "bytes": 879,
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+      "personal_read": "FULL",
+      "basis": "Own final r2 complete source body exactly identical to personally FULL previous/corrected body; JournalCases also completely reread",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/34-NuGet.Config.txt",
+      "bytes": 581,
+      "sha256": "d181fa362b64a8f92e113eb19e914828d8e3371ddf2532d3deaaded6705bb3c9",
+      "personal_read": "FULL",
+      "basis": "New personal complete final r2 Config/Lock/runner body read during final review",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/35-OwnedLifetime.cs.txt",
+      "bytes": 802,
+      "sha256": "22ee2bf00caf81468c70eab99bac34aa84dbe7379fe688f9f1b8969b6273b671",
+      "personal_read": "FULL",
+      "basis": "Own final r2 complete source body exactly identical to personally FULL previous/corrected body; JournalCases also completely reread",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/36-Program.cs.txt",
+      "bytes": 3418,
+      "sha256": "cfb700c886d23ae1343f94aa7f21cfacb3931259978dc14898ae0754a9f0ed92",
+      "personal_read": "FULL",
+      "basis": "Own final r2 complete source body exactly identical to personally FULL previous/corrected body; JournalCases also completely reread",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/37-packages.lock.json.txt",
+      "bytes": 8006,
+      "sha256": "4db37ce93421924eda50a0d828e85be064b22f0e777f6a672b75caa173293bad",
+      "personal_read": "FULL",
+      "basis": "New personal complete final r2 Config/Lock/runner body read during final review",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package11_f004_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/38-package11_f004_mutations.py.txt",
+      "bytes": 10608,
+      "sha256": "e70d91ec167f8dc236b1bab4417053aea3604ec0d5f571a745c882eeef64c806",
+      "personal_read": "FULL",
+      "basis": "New personal complete final r2 Config/Lock/runner body read during final review",
+      "prior_personal_row": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/run_operation.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-freeze/39-run_operation.py.txt",
+      "bytes": 1644,
+      "sha256": "e77b44c2d7c0aa92d0b00addcb182d479cfdf7302161b841a479a9c8f5e1b2ea",
+      "personal_read": "FULL",
+      "basis": "Own prior FULL operation helper body hash matched and complete body reread final review",
+      "prior_personal_row": null
+    }
+  ],
+  "owned_FULL_count": 40,
+  "original_F004_personal_FULL_reuse": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "bytes": 5197,
+      "sha256": "60e923caa37a2bc1c2b575f2b07df0decdb13580d07f3d0695cc784a285a91c1",
+      "original_manifest_match": true,
+      "current_product_sha256": "60e923caa37a2bc1c2b575f2b07df0decdb13580d07f3d0695cc784a285a91c1",
+      "current_matches_original": true,
+      "read_status": "FULL",
+      "basis": "Own personal D3 FULL original body; exact hash rechecked; full original\u2192frozen Package11 diff personally read"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "bytes": 4563,
+      "sha256": "672d5f6461fbe03e13ab7b25113cd88d24a2cc3b4bf446a3e395e7bcca97cd54",
+      "original_manifest_match": true,
+      "current_product_sha256": "672d5f6461fbe03e13ab7b25113cd88d24a2cc3b4bf446a3e395e7bcca97cd54",
+      "current_matches_original": true,
+      "read_status": "FULL",
+      "basis": "Own personal D3 FULL original body; exact hash rechecked; full original\u2192frozen Package11 diff personally read"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "bytes": 10276,
+      "sha256": "f95f5d127c948345ea85bd6506415e8f97024b9ee5ae7f3c6def384dda27268b",
+      "original_manifest_match": true,
+      "current_product_sha256": "f95f5d127c948345ea85bd6506415e8f97024b9ee5ae7f3c6def384dda27268b",
+      "current_matches_original": true,
+      "read_status": "FULL",
+      "basis": "Own personal D3 FULL original body; exact hash rechecked; full original\u2192frozen Package11 diff personally read"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "bytes": 14552,
+      "sha256": "001a5f302aea41f3ff95804997c93644310ec45a41f571a508c15e529f5dc94f",
+      "original_manifest_match": true,
+      "current_product_sha256": "001a5f302aea41f3ff95804997c93644310ec45a41f571a508c15e529f5dc94f",
+      "current_matches_original": true,
+      "read_status": "FULL",
+      "basis": "Own personal D3 FULL original body; exact hash rechecked; full original\u2192frozen Package11 diff personally read"
+    }
+  ],
+  "route_dependencies_own_prior_personal_FULL": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "bytes": 10520,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "relative": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "bytes": 5633,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/IMessageJournalStore.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/IMessageJournalStore.cs",
+      "sha256": "7ab76173607e94a3baedc57eac3742df5638ca6b3b154a641f8985f7ecf116c8",
+      "bytes": 1137,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "7ab76173607e94a3baedc57eac3742df5638ca6b3b154a641f8985f7ecf116c8",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/IMessageJournalPolicy.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/IMessageJournalPolicy.cs",
+      "sha256": "3c914063f808dede6291e54bb47d8780a63765e73e5cb80c17019d418053c07e",
+      "bytes": 831,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "3c914063f808dede6291e54bb47d8780a63765e73e5cb80c17019d418053c07e",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalProjection.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalProjection.cs",
+      "sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5",
+      "bytes": 2989,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalEntry.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalEntry.cs",
+      "sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953",
+      "bytes": 4232,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalCapture.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalCapture.cs",
+      "sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9",
+      "bytes": 2594,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalOptions.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalOptions.cs",
+      "sha256": "3d61886579bf4f1f9f870178d245e67dbe4ceaf73c69be3cd8fd58c98e579f5a",
+      "bytes": 1943,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "3d61886579bf4f1f9f870178d245e67dbe4ceaf73c69be3cd8fd58c98e579f5a",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalStoreLimits.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalStoreLimits.cs",
+      "sha256": "16ad8b5c2a5a39ab428ab72202783a70c78263d293dead69df8c82c8293b1047",
+      "bytes": 1975,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "16ad8b5c2a5a39ab428ab72202783a70c78263d293dead69df8c82c8293b1047",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalOutcome.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalOutcome.cs",
+      "sha256": "e8662df413357ec3c537dbd65840e6940531519584567609356da1898c0300bc",
+      "bytes": 348,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "e8662df413357ec3c537dbd65840e6940531519584567609356da1898c0300bc",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalOperation.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalOperation.cs",
+      "sha256": "3be217af5a48766f5d47aba9bbc55a89839154a4ccb556dada66997e9b6f2e80",
+      "bytes": 437,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "3be217af5a48766f5d47aba9bbc55a89839154a4ccb556dada66997e9b6f2e80",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalDataClassification.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalDataClassification.cs",
+      "sha256": "79232f64d8538c9057994937659ad94dd8c8aaeb73cc596435683f26cbdecce4",
+      "bytes": 611,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "79232f64d8538c9057994937659ad94dd8c8aaeb73cc596435683f26cbdecce4",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalPublishObserver.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalPublishObserver.cs",
+      "sha256": "0cef34e39107678c56ceabe2d0e9ee74671078d89de8e2a9f9e2586378c191a0",
+      "bytes": 1376,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "0cef34e39107678c56ceabe2d0e9ee74671078d89de8e2a9f9e2586378c191a0",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalConsumeObserver.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalConsumeObserver.cs",
+      "sha256": "d947ec724146941e4b4f0361ef92ccb6e228d901a430b6cba45a01374a8c78c7",
+      "bytes": 1284,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "d947ec724146941e4b4f0361ef92ccb6e228d901a430b6cba45a01374a8c78c7",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "sha256": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0",
+      "bytes": 5015,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Bus.cs",
+      "relative": "src/ViciOne.ServiceBus/Advanced/Bus.cs",
+      "sha256": "764579cf15bacc44071a8bb7a75b091e7522edc45ec1aab025ce105215ad62d3",
+      "bytes": 347,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "764579cf15bacc44071a8bb7a75b091e7522edc45ec1aab025ce105215ad62d3",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d",
+      "bytes": 7359,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationConfigurator.cs",
+      "sha256": "fc8f3860fa1062e0166ce6e511cc9f5db37d22407fcbac2b010d344c43bc5c28",
+      "bytes": 4116,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "fc8f3860fa1062e0166ce6e511cc9f5db37d22407fcbac2b010d344c43bc5c28",
+      "at_finish_source_sha256": "fc8f3860fa1062e0166ce6e511cc9f5db37d22407fcbac2b010d344c43bc5c28",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationConfiguratorServices.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationConfiguratorServices.cs",
+      "sha256": "88958d8c4bbf2d62d94f93c28586951eb6acd447e6d51c7e65480d8b617ec957",
+      "bytes": 593,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "88958d8c4bbf2d62d94f93c28586951eb6acd447e6d51c7e65480d8b617ec957",
+      "at_finish_source_sha256": "88958d8c4bbf2d62d94f93c28586951eb6acd447e6d51c7e65480d8b617ec957",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Registration/IAdvancedBusRegistrationConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Advanced/Registration/IAdvancedBusRegistrationConfigurator.cs",
+      "sha256": "a36c718bf934eed327b0e5284fbefb00afd553a477dd54c0be27ce2f3933e23a",
+      "bytes": 2475,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "a36c718bf934eed327b0e5284fbefb00afd553a477dd54c0be27ce2f3933e23a",
+      "at_finish_source_sha256": "a36c718bf934eed327b0e5284fbefb00afd553a477dd54c0be27ce2f3933e23a",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/Registration/RegistrationBusFactory.cs",
+      "relative": "src/ViciOne.ServiceBus/DependencyInjection/Registration/RegistrationBusFactory.cs",
+      "sha256": "91983dbe323721d79d1f5280993dd3f2ce2fa0a21cf579ba7287785c0932b7e6",
+      "bytes": 4471,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "91983dbe323721d79d1f5280993dd3f2ce2fa0a21cf579ba7287785c0932b7e6",
+      "at_finish_source_sha256": "91983dbe323721d79d1f5280993dd3f2ce2fa0a21cf579ba7287785c0932b7e6",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+      "bytes": 12780,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+      "at_finish_source_sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "f236623fdb28e5745365501bee6c15c2bfd42855e640877747ab159b13c13bf6",
+      "bytes": 3036,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "f236623fdb28e5745365501bee6c15c2bfd42855e640877747ab159b13c13bf6",
+      "at_finish_source_sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "at_finish_equals_personal_full_hash": false,
+      "read_claim_boundary": "Prior exact body only; current changed bytes not automatically FULL"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+      "sha256": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2",
+      "bytes": 529,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2",
+      "at_finish_source_sha256": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationBusFactory.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationBusFactory.cs",
+      "sha256": "a48cf56a209a2d0539925e99df4afc840ba2636a3c7f581cf2680d53e82b74be",
+      "bytes": 794,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "a48cf56a209a2d0539925e99df4afc840ba2636a3c7f581cf2680d53e82b74be",
+      "at_finish_source_sha256": "a48cf56a209a2d0539925e99df4afc840ba2636a3c7f581cf2680d53e82b74be",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+      "sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad",
+      "bytes": 11978,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad",
+      "at_finish_source_sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "bytes": 16239,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "at_finish_source_sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "bytes": 10520,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "relative": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "bytes": 5633,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/IMessageJournalStore.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/IMessageJournalStore.cs",
+      "sha256": "7ab76173607e94a3baedc57eac3742df5638ca6b3b154a641f8985f7ecf116c8",
+      "bytes": 1137,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "7ab76173607e94a3baedc57eac3742df5638ca6b3b154a641f8985f7ecf116c8",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/IMessageJournalPolicy.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/IMessageJournalPolicy.cs",
+      "sha256": "3c914063f808dede6291e54bb47d8780a63765e73e5cb80c17019d418053c07e",
+      "bytes": 831,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "3c914063f808dede6291e54bb47d8780a63765e73e5cb80c17019d418053c07e",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalProjection.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalProjection.cs",
+      "sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5",
+      "bytes": 2989,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalEntry.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalEntry.cs",
+      "sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953",
+      "bytes": 4232,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalCapture.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalCapture.cs",
+      "sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9",
+      "bytes": 2594,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalOptions.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalOptions.cs",
+      "sha256": "3d61886579bf4f1f9f870178d245e67dbe4ceaf73c69be3cd8fd58c98e579f5a",
+      "bytes": 1943,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "3d61886579bf4f1f9f870178d245e67dbe4ceaf73c69be3cd8fd58c98e579f5a",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalStoreLimits.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalStoreLimits.cs",
+      "sha256": "16ad8b5c2a5a39ab428ab72202783a70c78263d293dead69df8c82c8293b1047",
+      "bytes": 1975,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "16ad8b5c2a5a39ab428ab72202783a70c78263d293dead69df8c82c8293b1047",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalOutcome.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalOutcome.cs",
+      "sha256": "e8662df413357ec3c537dbd65840e6940531519584567609356da1898c0300bc",
+      "bytes": 348,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "e8662df413357ec3c537dbd65840e6940531519584567609356da1898c0300bc",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalOperation.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalOperation.cs",
+      "sha256": "3be217af5a48766f5d47aba9bbc55a89839154a4ccb556dada66997e9b6f2e80",
+      "bytes": 437,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "3be217af5a48766f5d47aba9bbc55a89839154a4ccb556dada66997e9b6f2e80",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalDataClassification.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalDataClassification.cs",
+      "sha256": "79232f64d8538c9057994937659ad94dd8c8aaeb73cc596435683f26cbdecce4",
+      "bytes": 611,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "79232f64d8538c9057994937659ad94dd8c8aaeb73cc596435683f26cbdecce4",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalPublishObserver.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalPublishObserver.cs",
+      "sha256": "0cef34e39107678c56ceabe2d0e9ee74671078d89de8e2a9f9e2586378c191a0",
+      "bytes": 1376,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "0cef34e39107678c56ceabe2d0e9ee74671078d89de8e2a9f9e2586378c191a0",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalConsumeObserver.cs",
+      "relative": "src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalConsumeObserver.cs",
+      "sha256": "d947ec724146941e4b4f0361ef92ccb6e228d901a430b6cba45a01374a8c78c7",
+      "bytes": 1284,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "d947ec724146941e4b4f0361ef92ccb6e228d901a430b6cba45a01374a8c78c7",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "sha256": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0",
+      "bytes": 5015,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Bus.cs",
+      "relative": "src/ViciOne.ServiceBus/Advanced/Bus.cs",
+      "sha256": "764579cf15bacc44071a8bb7a75b091e7522edc45ec1aab025ce105215ad62d3",
+      "bytes": 347,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Personal untruncated complete body tool read current pre-freeze turn",
+      "at_finish_source_sha256": "764579cf15bacc44071a8bb7a75b091e7522edc45ec1aab025ce105215ad62d3",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d",
+      "bytes": 7359,
+      "personal_read": "FULL new current product body or own exact original dependency body reused hash checked",
+      "read_time": "Pre-freeze review, no accepted patch/binary proof",
+      "basis": "Own prior FULL SHA matched /private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "at_finish_source_sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationConfigurator.cs",
+      "sha256": "fc8f3860fa1062e0166ce6e511cc9f5db37d22407fcbac2b010d344c43bc5c28",
+      "bytes": 4116,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "fc8f3860fa1062e0166ce6e511cc9f5db37d22407fcbac2b010d344c43bc5c28",
+      "at_finish_source_sha256": "fc8f3860fa1062e0166ce6e511cc9f5db37d22407fcbac2b010d344c43bc5c28",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationConfiguratorServices.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationConfiguratorServices.cs",
+      "sha256": "88958d8c4bbf2d62d94f93c28586951eb6acd447e6d51c7e65480d8b617ec957",
+      "bytes": 593,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "88958d8c4bbf2d62d94f93c28586951eb6acd447e6d51c7e65480d8b617ec957",
+      "at_finish_source_sha256": "88958d8c4bbf2d62d94f93c28586951eb6acd447e6d51c7e65480d8b617ec957",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Registration/IAdvancedBusRegistrationConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Advanced/Registration/IAdvancedBusRegistrationConfigurator.cs",
+      "sha256": "a36c718bf934eed327b0e5284fbefb00afd553a477dd54c0be27ce2f3933e23a",
+      "bytes": 2475,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "a36c718bf934eed327b0e5284fbefb00afd553a477dd54c0be27ce2f3933e23a",
+      "at_finish_source_sha256": "a36c718bf934eed327b0e5284fbefb00afd553a477dd54c0be27ce2f3933e23a",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/Registration/RegistrationBusFactory.cs",
+      "relative": "src/ViciOne.ServiceBus/DependencyInjection/Registration/RegistrationBusFactory.cs",
+      "sha256": "91983dbe323721d79d1f5280993dd3f2ce2fa0a21cf579ba7287785c0932b7e6",
+      "bytes": 4471,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "91983dbe323721d79d1f5280993dd3f2ce2fa0a21cf579ba7287785c0932b7e6",
+      "at_finish_source_sha256": "91983dbe323721d79d1f5280993dd3f2ce2fa0a21cf579ba7287785c0932b7e6",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+      "bytes": 12780,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+      "at_finish_source_sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+      "sha256": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2",
+      "bytes": 529,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2",
+      "at_finish_source_sha256": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationBusFactory.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationBusFactory.cs",
+      "sha256": "a48cf56a209a2d0539925e99df4afc840ba2636a3c7f581cf2680d53e82b74be",
+      "bytes": 794,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "a48cf56a209a2d0539925e99df4afc840ba2636a3c7f581cf2680d53e82b74be",
+      "at_finish_source_sha256": "a48cf56a209a2d0539925e99df4afc840ba2636a3c7f581cf2680d53e82b74be",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+      "sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad",
+      "bytes": 11978,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad",
+      "at_finish_source_sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "bytes": 16239,
+      "personal_read": "FULL personal untruncated current body tool read; original hash equality personally checked",
+      "original_sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "at_finish_source_sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "bytes": 3639,
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "f236623fdb28e5745365501bee6c15c2bfd42855e640877747ab159b13c13bf6",
+      "at_finish_source_sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusConfiguration.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusConfiguration.cs",
+      "bytes": 2870,
+      "sha256": "f434862f967b22837e2d3988dcdde507eb9ae9897938b64ae5a4a605df3b6612",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "f434862f967b22837e2d3988dcdde507eb9ae9897938b64ae5a4a605df3b6612",
+      "at_finish_source_sha256": "f434862f967b22837e2d3988dcdde507eb9ae9897938b64ae5a4a605df3b6612",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryHostConfiguration.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryHostConfiguration.cs",
+      "bytes": 9052,
+      "sha256": "414c32cae0345b670e5a9799eb5e2105c8569adb38b0b219f6660d77b08c6f9c",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "414c32cae0345b670e5a9799eb5e2105c8569adb38b0b219f6660d77b08c6f9c",
+      "at_finish_source_sha256": "414c32cae0345b670e5a9799eb5e2105c8569adb38b0b219f6660d77b08c6f9c",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusFactoryConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusFactoryConfigurator.cs",
+      "bytes": 7333,
+      "sha256": "667c1f8c0b1d1bdd293ae3dc1b45c54f44dabf7388f2ccf925c56513c52a7e5a",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "667c1f8c0b1d1bdd293ae3dc1b45c54f44dabf7388f2ccf925c56513c52a7e5a",
+      "at_finish_source_sha256": "667c1f8c0b1d1bdd293ae3dc1b45c54f44dabf7388f2ccf925c56513c52a7e5a",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryBusInstance.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryBusInstance.cs",
+      "bytes": 2740,
+      "sha256": "f4251cbd910265dce9d7eb23f8c4ba5f199171736b4b717c056e841b5af58044",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "f4251cbd910265dce9d7eb23f8c4ba5f199171736b4b717c056e841b5af58044",
+      "at_finish_source_sha256": "f4251cbd910265dce9d7eb23f8c4ba5f199171736b4b717c056e841b5af58044",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Transports/InMemory/InMemoryBus.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Transports/InMemory/InMemoryBus.cs",
+      "bytes": 2424,
+      "sha256": "a9be3e6a7850c969954347ca7fdf69a60f4ace25026befd7ac90ba5a9be74182",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "a9be3e6a7850c969954347ca7fdf69a60f4ace25026befd7ac90ba5a9be74182",
+      "at_finish_source_sha256": "a9be3e6a7850c969954347ca7fdf69a60f4ace25026befd7ac90ba5a9be74182",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryTopologyConfiguration.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryTopologyConfiguration.cs",
+      "bytes": 3321,
+      "sha256": "afe7d630bbc272b69287a67a68bd7b9b1e04cb8240163092f97751547bf087ed",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "afe7d630bbc272b69287a67a68bd7b9b1e04cb8240163092f97751547bf087ed",
+      "at_finish_source_sha256": "afe7d630bbc272b69287a67a68bd7b9b1e04cb8240163092f97751547bf087ed",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryDelayProvider.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryDelayProvider.cs",
+      "bytes": 10483,
+      "sha256": "3a48b29ec8165d8af994138dcc9222f2fa19120278db72fa91f136a4c39b449c",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "3a48b29ec8165d8af994138dcc9222f2fa19120278db72fa91f136a4c39b449c",
+      "at_finish_source_sha256": "3a48b29ec8165d8af994138dcc9222f2fa19120278db72fa91f136a4c39b449c",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryDelayProvider.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryDelayProvider.cs",
+      "bytes": 1433,
+      "sha256": "ef3acc185d000b01f23b0ff1cfa4dd2531ff6a255f974eef599010f55c5810ee",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "ef3acc185d000b01f23b0ff1cfa4dd2531ff6a255f974eef599010f55c5810ee",
+      "at_finish_source_sha256": "ef3acc185d000b01f23b0ff1cfa4dd2531ff6a255f974eef599010f55c5810ee",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Addressing/InMemoryHostAddress.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Addressing/InMemoryHostAddress.cs",
+      "bytes": 3042,
+      "sha256": "16367e7a179234e310ed5a39aac0c922e1614f97811db116c00718d3ef0ec265",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "16367e7a179234e310ed5a39aac0c922e1614f97811db116c00718d3ef0ec265",
+      "at_finish_source_sha256": "16367e7a179234e310ed5a39aac0c922e1614f97811db116c00718d3ef0ec265",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryHost.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryHost.cs",
+      "bytes": 6157,
+      "sha256": "97c3abed508531b9c686458adbb5cf32f7382c34309d1b8c0ffa2cfde4329753",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "97c3abed508531b9c686458adbb5cf32f7382c34309d1b8c0ffa2cfde4329753",
+      "at_finish_source_sha256": "97c3abed508531b9c686458adbb5cf32f7382c34309d1b8c0ffa2cfde4329753",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/TransportBusInstance.cs",
+      "relative": "src/ViciOne.ServiceBus/Transports/Hosting/TransportBusInstance.cs",
+      "bytes": 7618,
+      "sha256": "022411e69a6977706272c9fe1b0c98bd67aac209b03665fc42572b48416f453b",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "022411e69a6977706272c9fe1b0c98bd67aac209b03665fc42572b48416f453b",
+      "at_finish_source_sha256": "022411e69a6977706272c9fe1b0c98bd67aac209b03665fc42572b48416f453b",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/DurableSend/InMemoryDurableSendDispatcher.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/DurableSend/InMemoryDurableSendDispatcher.cs",
+      "bytes": 5068,
+      "sha256": "bd806c8273112f200fb82cd2a1d39e8263f95c78b1e58beda22facbd93a0fc77",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "bd806c8273112f200fb82cd2a1d39e8263f95c78b1e58beda22facbd93a0fc77",
+      "at_finish_source_sha256": "bd806c8273112f200fb82cd2a1d39e8263f95c78b1e58beda22facbd93a0fc77",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Serialization/Admission/IPayloadAdmissionRuntimeRegistration.cs",
+      "relative": "src/ViciOne.ServiceBus/Serialization/Admission/IPayloadAdmissionRuntimeRegistration.cs",
+      "bytes": 284,
+      "sha256": "3260ff40daccbf91eeefa91a98fdbb5573f292f9d2b97b06adbfffd5536aabbe",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "3260ff40daccbf91eeefa91a98fdbb5573f292f9d2b97b06adbfffd5536aabbe",
+      "at_finish_source_sha256": "3260ff40daccbf91eeefa91a98fdbb5573f292f9d2b97b06adbfffd5536aabbe",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Fabric/MessageFabric.cs",
+      "relative": "src/ViciOne.ServiceBus/Transports/Fabric/MessageFabric.cs",
+      "bytes": 9924,
+      "sha256": "1cc1f0cac47eca3c57d6dd1aeab07777f352c585b542b1545ebbbc3c4ae25d0c",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "1cc1f0cac47eca3c57d6dd1aeab07777f352c585b542b1545ebbbc3c4ae25d0c",
+      "at_finish_source_sha256": "1cc1f0cac47eca3c57d6dd1aeab07777f352c585b542b1545ebbbc3c4ae25d0c",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryTransportProvider.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryTransportProvider.cs",
+      "bytes": 5973,
+      "sha256": "b6b41198f318dcd3172349a3b0f9cbd2572715113562671c4ffdb99d58c3d1b6",
+      "personal_read": "FULL personal untruncated current tool body read; no foreign owner-read claim",
+      "original_sha256": "b6b41198f318dcd3172349a3b0f9cbd2572715113562671c4ffdb99d58c3d1b6",
+      "at_finish_source_sha256": "b6b41198f318dcd3172349a3b0f9cbd2572715113562671c4ffdb99d58c3d1b6",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_SHARED_GRAPH_SOURCE_PLAN.json",
+      "bytes": 4113,
+      "sha256": "f707da0bd405498c05d443c54c754e9fcf762038abec79c367c27e44d85825ca",
+      "personal_read": "FULL metadata; root narrative not accepted as this reviewers native evidence",
+      "at_finish_source_sha256": "f707da0bd405498c05d443c54c754e9fcf762038abec79c367c27e44d85825ca",
+      "at_finish_equals_personal_full_hash": true,
+      "read_claim_boundary": "Personal prior FULL body exact current hash"
+    }
+  ],
+  "route_dependency_boundary": "Only own prior closures and matching hashes. No foreign owner FULL claims. No semantic FULL claim for all 6209 files/PDB documents. Current unrelated F033 is excluded.",
+  "own_prior_closures": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json",
+      "sha256": "d3cb78e2260cc13046d8f49d5c53ff79a407e402d90254643a8ee332409b9f59"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package11-f004-preflight/READ_CLOSURE.json",
+      "sha256": "fb1b35614ebdad3353aed477c4c037c1cbb6077262e6c6b27e7753a73f1ecc20"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-preflight/READ_CLOSURE.json",
+      "sha256": "874069a4fbe71196c286d331fd942611b076da17afe8480af37c99df8d56a718"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-adversarial/READ_CLOSURE.json",
+      "sha256": "a957cc08e234e94b1331248887e4328cdc97b4c1b183df2d63a4357393d6453e"
+    }
+  ],
+  "sourceframe_read_basis": "126 complete frame files independently byte-compared with 14 personally FULL frozen bases plus every full independently reconstructed mutant diff; equivalent unchanged body reads reused by byte identity",
+  "receipt_read_basis": "All 40 actual receipts and logs personally read. First 25 runner logs fully read; truncated middle indices9..17 repaired with bounded full reread. Remaining15 logs fully read; original-sixteen lossless JSON header plus cases0..5,5..10,10..end read to avoid tool truncation. Source setup failures explicitly excluded.",
+  "proof_outputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/CONSUMER_PDB_BINDING.json",
+      "sha256": "0b62967dbe9554f0959aefab82c653ac3f74e94b265bbf3c13d91555c058936c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/COUNTERPROOF_BINDING.json",
+      "sha256": "6a44f32acc07de1efa5ba0a1408c0655d36b058cb92e46b9f1e277a08c8e1c48"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/FREEZE_HASH_CHECK.json",
+      "sha256": "b0096b5364b2a84f949bc51fce12bb4881502e2fa73911d6c347f881bc739d23"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/GUIDANCE_BINDING.json",
+      "sha256": "acedd1066599ad10f933a74c793ceb0e864f9a67cd8e4d0f8b307b9036cb9f21"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/PACKAGE_BINDING.json",
+      "sha256": "d3dac42d2c9c1789c4aee2363062f5a4e69a9908a5d6e035dcd7670ea2737424"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/PDB_DOCUMENTS.json",
+      "sha256": "f88bcdf6d8f4dc18abd27d8e7b282b7a3bbfe1e0bf15299fcad2dbfd7aa55a31"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/PDB_SOURCE_BINDING.json",
+      "sha256": "533197b25e2a70ef7e2fdef940eefce270830b0edfa1830b2fdd051534d2768b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/RECEIPT_BINDING.json",
+      "sha256": "d598c992e1899994c5f1c42df28a7d7f3a13227a41ca5e1f3b65609fde7118cb"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/RESTORE_CHECK.json",
+      "sha256": "a4711d30c3601dc8f9d8d0d62dc8bec237c4f70f0fb02edb8e70cc63d6122ce2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/SELECTED_SUPPORT_SOURCES.json",
+      "sha256": "ed00339ec062f20ac039f37a5146da42891dbe2f77f8d8d7f97f41257c9c89b2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/SOURCE_EFFECT_CHECK.json",
+      "sha256": "9bc4c088a9beaea83b226aedf7b28318a5e3f107965f9c077651966514ea8c58"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/XML_MEMBER_DIFF.json",
+      "sha256": "9abe34789bd8554902df3987d88d3ce9ac515cfe59e16c7c3e5e8cfe8c2a0401"
+    }
+  ],
+  "product_writes": 0,
+  "test_writes": 0,
+  "native_operations": 0,
+  "canonical_core_owner_FULL": false,
+  "symbols_CLOSED": 0,
+  "whole_API_grade": null,
+  "selected_package_support_document_bodies_personal_FULL": [
+    {
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/selected-source-support/src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+      "sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93",
+      "original_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+      "bytes": 2163,
+      "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+      "personal_read": "FULL new complete body read during final independent review; non-F004 unchanged package provenance only"
+    },
+    {
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/selected-source-support/src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+      "sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf",
+      "original_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+      "bytes": 1320,
+      "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+      "personal_read": "FULL new complete body read during final independent review; non-F004 unchanged package provenance only"
+    },
+    {
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/selected-source-support/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+      "original_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "bytes": 5363,
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "personal_read": "FULL new complete body read during final independent review; non-F004 unchanged package provenance only"
+    },
+    {
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/selected-source-support/src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+      "sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca",
+      "original_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+      "bytes": 727,
+      "relative": "src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+      "personal_read": "FULL new complete body read during final independent review; non-F004 unchanged package provenance only"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-04T18:02:12.415184+00:00",
+  "status": "SOURCE_NO_BLOCK_ACTUAL_NATIVE_PENDING",
+  "source": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusContextFactoryOwnershipTests.cs",
+  "source_sha256": "8b282886afa9ed64791b75952f0a421f1bdb2f0e405030e686418bdaa37a458d",
+  "independent_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package90-azure-factory15-oracles-independent-r1/REPORT.json",
+  "independent_report_sha256": "05a5cad04a7d9773bbf4e9cbd879185efe2e1af9ec9a811c26c5f481f016e5b9",
+  "root_whole_reads": [
+    "e02de9 source1..235",
+    "cf837f source236..EOF",
+    "0013cd complete independent report"
+  ],
+  "requirement_add_only": [
+    {
+      "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+      "variantKey": "owned-context-readiness-joins-namespace-topology-and-processor-close",
+      "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusContextFactoryOwnershipTests",
+      "testMethod": "CreateContext_PublishesTheActualCreationOutcomeAndOwnsTheClientUntilStoppedAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+      "variantKey": "shared-acquisition-outcomes-and-borrowed-use-stop-preserve-source-ownership",
+      "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusContextFactoryOwnershipTests",
+      "testMethod": "CreateActiveContext_ObservesAcquisitionAndStopsTheBorrowWithoutDisposingTheOwnerAsync"
+    }
+  ],
+  "registry_before_sha256": "26aa2a9353209c0a49ad73ca7e8e480e17672164602a4b647afdaa884794a5e3",
+  "registry_before_rows": 213,
+  "registry_after_rows": 215,
+  "cloud_or_native_credit": false,
+  "registry_after_sha256": "48bbb693900c78f3fe1910e99f886e494e94fa6e1b5f27882f496ea465389d4c"
+}

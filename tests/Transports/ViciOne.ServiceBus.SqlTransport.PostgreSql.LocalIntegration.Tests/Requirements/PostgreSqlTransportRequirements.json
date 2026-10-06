@@ -1,65 +1,485 @@
 [
-  { "requirementId": "OBL-R0-SQL-0025", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBasicTransportTests", "testMethod": "CallerSuppliedDataSource_CarriesTheRunScopedEndpointAndDeliversAsync" },
-  { "requirementId": "OBL-R0-SQL-0033", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBasicTransportTests", "testMethod": "DirectSend_WithConsumeTopologyDisabled_PopulatesTransportAddressesAndIdsAsync" },
-  { "requirementId": "OBL-R0-SQL-0034", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBasicTransportTests", "testMethod": "PublishDerivedMessage_AutomaticTopologyDeliversToBaseContractAsync" },
-  { "requirementId": "OBL-R0-SQL-0035", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBasicTransportTests", "testMethod": "HostOnlyBus_SendCreatesOneDeliveryInTheNamedQueueAsync" },
-  { "requirementId": "OBL-R0-SQL-0036", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBasicTransportTests", "testMethod": "HostOnlyBus_ThreeSendsCreateOneDeliveryInEachNamedQueueAsync" },
-  { "requirementId": "OBL-R0-SQL-0037", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests", "testMethod": "Provisioning_CreatesEveryRequiredTableAndFetchIndexAsync" },
-  { "requirementId": "OBL-R0-SQL-0038", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests", "testMethod": "Disposal_DropsTheRunScopedDatabaseEvenWithAnAttachedSessionAsync" },
-  { "requirementId": "OBL-R0-SQL-0055", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRoutingAndFailureTests", "testMethod": "RoutingKeySubscription_DeliversOnlyTheExactKeyAsync" },
-  { "requirementId": "OBL-R0-SQL-0056", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRoutingAndFailureTests", "testMethod": "PatternSubscription_UsesPostgreSqlAnchoredRegularExpressionsAsync" },
-  { "requirementId": "OBL-R0-SQL-0057", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRoutingAndFailureTests", "testMethod": "UnhandledMessage_IsAcknowledgedIntoTheEndpointDeadLetterQueueAsync" },
-  { "requirementId": "OBL-R0-SQL-0058", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRoutingAndFailureTests", "testMethod": "ThrowingHandler_PublishesFaultAndMovesDeliveryToTheEndpointErrorQueueAsync" },
-  { "requirementId": "OBL-R0-SQL-0059", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBuiltInRedeliveryTests", "testMethod": "BuiltInRedelivery_PersistsThreeOneSecondSchedulesBeforeTheFinalFaultAsync" },
-  { "requirementId": "OBL-R0-SQL-0060", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBusOutboxTests", "testMethod": "SerializableTransaction_DefersTheExactEnvelopeUntilCommitAsync" },
-  { "requirementId": "OBL-R0-SQL-0061", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRoutingSlipTests", "testMethod": "CompletedSubscription_DeliversAllRoutingSlipContentAndItsCustomValueAsync" },
-  { "requirementId": "OBL-R0-SQL-0062", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlScheduleCancellationTests", "testMethod": "ConsumeContextCancellation_DeletesThePersistedFutureDeliveryAsync" },
-  { "requirementId": "OBL-R0-SQL-0064", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlScheduleCancellationTests", "testMethod": "CallerCancellation_DeletesThePersistedFutureDeliveryAsync" },
-  { "requirementId": "OBL-R0-SQL-0066", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlPublishAndPurgeTests", "testMethod": "UnsubscribedPublish_LeavesNeitherMessageNorDeliveryWhileSubscribedControlArrivesAsync" },
-  { "requirementId": "OBL-R0-SQL-0068", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlPublishAndPurgeTests", "testMethod": "PurgeOnStartup_RemovesExistingDeliveryAndThenConsumesOnlyTheNewMessageAsync" },
-  { "requirementId": "OBL-R0-SQL-0070", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests", "testMethod": "CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync" },
-  { "requirementId": "OBL-R0-SQL-0072", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests", "testMethod": "CancelJob_UpdatesStartedStatusToCanceledWithReasonAsync" },
-  { "requirementId": "OBL-R0-SQL-0074", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests", "testMethod": "RetryJob_AfterCancellationUsesANewAttemptAndCompletesAsync" },
-  { "requirementId": "OBL-R0-SQL-0076", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests", "testMethod": "CancelJob_WhileWaitingPublishesTheWaitAndCanceledTransitionsAsync" },
-  { "requirementId": "OBL-R0-SQL-0078", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests", "testMethod": "SubmitJob_CompletesTheAcceptedLifecycleAsync" },
-  { "requirementId": "OBL-R0-SQL-0080", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests", "testMethod": "PublishJob_GeneratesOneNonEmptyIdentityAcrossTheLifecycleAsync" },
-  { "requirementId": "OBL-R0-SQL-0082", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests", "testMethod": "GetJobState_ForUnknownIdentityReturnsNotFoundAsync" },
-  { "requirementId": "OBL-R0-SQL-0084", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlLockRenewalTests", "testMethod": "SlowConsumer_RenewsItsProviderLockThreeTimesAndCompletesExactlyOnceAsync" },
-  { "requirementId": "OBL-R0-SQL-0086", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSchedulingTests", "testMethod": "DelayedSend_PersistsFutureEnqueueTimeAndDeliversExactlyOnceAsync" },
-  { "requirementId": "OBL-R0-SQL-0088", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSchedulingTests", "testMethod": "DelayedPublish_PersistsFutureEnqueueTimeAndDeliversExactlyOnceAsync" },
-  { "requirementId": "OBL-R0-SQL-0090", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSerializationAndRequestTests", "testMethod": "JsonExtensionData_RoundTripsStringAndNumberForElementAndObjectDictionariesAsync" },
-  { "requirementId": "OBL-R0-SQL-0092", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryLimitTests", "testMethod": "ConfiguredMaxDeliveryCount_IsPersistedInsteadOfTheDatabaseDefaultAsync" },
-  { "requirementId": "OBL-R0-SQL-0094", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryLimitTests", "testMethod": "ExhaustedDelivery_IsExcludedFromFetchAndMovedByDeadLetterMaintenanceAsync" },
-  { "requirementId": "OBL-R0-SQL-0096", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlConcurrencyAndPriorityTests", "testMethod": "PartitionedReceive_ThirtyMessagesPreserveOrderWithinBothKeysAtConcurrencyTenAsync" },
-  { "requirementId": "OBL-R0-SQL-0098", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlConcurrencyAndPriorityTests", "testMethod": "ParallelPublish_OneThousandMessagesFromTenPublishersArriveExactlyOnceAsync" },
-  { "requirementId": "OBL-R0-SQL-0100", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSerializationAndRequestTests", "testMethod": "RequestClient_FiveSequentialRequestsReturnTheirExactResponsesAsync" },
-  { "requirementId": "OBL-R0-SQL-0102", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRedeliveryTests", "testMethod": "RedeliveryHeader_IsConsumedInternallyAndDoesNotLeakToPublishedMessageAsync" },
-  { "requirementId": "OBL-R0-SQL-0104", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlNotificationTests", "testMethod": "WaitingReceiver_IsReleasedByNotificationOrItsConfiguredPollingIntervalAsync" },
-  { "requirementId": "OBL-R0-SQL-0106", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlReceiveConfigurationTests", "testMethod": "SchemaNamesOnBothSidesOfTheNotificationBoundary_DeliverExactlyOnceAsync" },
-  { "requirementId": "OBL-R0-SQL-0107", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlReceiveConfigurationTests", "testMethod": "EveryReceiveMode_DeliversTheExactSetAndItsPartitionConcurrencyAsync" },
-  { "requirementId": "OBL-R0-SQL-0108", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlIsolationTests", "testMethod": "MessageInsert_UsesTheDefaultOrExplicitHostIsolationAsync" },
-  { "requirementId": "OBL-R0-SQL-0110", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryStateTests", "testMethod": "ExpiredDelivery_IsDeletedOrDeadLetteredWithoutEnteringTheConsumerAsync" },
-  { "requirementId": "OBL-R0-SQL-0111", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlUnlockTests", "testMethod": "FaultUnlock_UsesConfiguredOrZeroDelayAndPersistsAllFaultHeadersAsync" },
-  { "requirementId": "OBL-R0-SQL-0112", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlLockRenewalTests", "testMethod": "RenewalBoundary_StopsFurtherRenewalOrMarksOwnershipLostAsync" },
-  { "requirementId": "OBL-R0-SQL-0114", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryStateTests", "testMethod": "PurgeQueue_RemovesOnlyPrimaryDeliveriesAndPreservesErrorAndDeadLetterRowsAsync" },
-  { "requirementId": "OBL-R0-SQL-0115", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlAutoDeleteTests", "testMethod": "EndpointDefinition_PersistsTheTemporaryDefaultOrNoAutoDeleteAsync" },
-  { "requirementId": "OBL-R0-SQL-0116", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryLimitTests", "testMethod": "RedeclaringQueueWithoutALimit_ResetsPriorConfiguredLimitToTenAsync" },
-  { "requirementId": "OBL-R0-SQL-0120", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlUnlockTests", "testMethod": "UnlockProcedure_ClearsBothLockOwnersWithAndWithoutDelayAsync" },
-  { "requirementId": "OBL-R0-SQL-0124", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlMaintenanceTests", "testMethod": "RequeueProcedures_MoveOneAndManyUnlockedDeliveriesWithRequestedDelayAndBudgetAsync" },
-  { "requirementId": "OBL-R0-SQL-0125", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlMaintenanceTests", "testMethod": "ProcessMetrics_RollsMinutesIntoHoursAndHoursIntoDaysThenExpiresNinetyDayRowsAsync" },
-  { "requirementId": "OBL-R0-SQL-0130", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests", "testMethod": "MigrationStartup_InvokesOnlyTheIndependentlyEnabledStagesInStableOrderAsync" },
-  { "requirementId": "OBL-R0-SQL-0131", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests", "testMethod": "InfrastructureProvisioning_ASecondRunPreservesTheCompleteObjectSetAsync" },
-  { "requirementId": "OBL-R0-SQL-0132", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlConcurrencyAndPriorityTests", "testMethod": "PrioritySend_PersistsBelowDefaultAndAboveValuesAndDeliversInAscendingOrderAsync" },
-  { "requirementId": "OBL-R0-SQL-0133", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryStateTests", "testMethod": "ErrorQueueMove_ResetsExistingExpirationToFourteenDaysAndKeepsMissingExpirationNullAsync" },
-  { "requirementId": "OBL-R0-SQL-0134", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlConcurrencyAndPriorityTests", "testMethod": "TwoReceivers_ConsumeOneSharedQueueWithoutLossOrDuplicatesAsync" },
-  { "requirementId": "OBL-R0-SQL-0135", "variantKey": "postgresql-native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryStateTests", "testMethod": "DeleteScheduledMessage_DeletesOnlyWhenEveryDeliveryIsUndeliveredAndUnlockedAsync" },
-  { "requirementId": "REQ-VSB-SQL-POSTGRES-REQUIREMENT-PROJECTION", "variantKey": "compiled-metadata-matches-projection", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Requirements.RequirementCoverageProjectionTests", "testMethod": "PostgreSqlRequirementsMatchCompiledRequirementMetadata" },
-  { "requirementId": "REQ-VSB-POSTGRES-SEND-FAILURE", "variantKey": "typed-chain-and-permanent-precedence", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSendFailureClassifierTests", "testMethod": "TypedFailures_UseNpgsqlStateAndTheCompleteChainWithPermanentPrecedence" },
-  { "requirementId": "REQ-VSB-POSTGRES-SEND-FAILURE", "variantKey": "registration-is-singleton-across-overloads", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSendFailureClassifierTests", "testMethod": "BusRegistration_AddsExactlyOneClassifierAcrossConfigurationOverloads" },
-  { "requirementId": "REQ-VSB-POSTGRES-ROUTINE-NAMES", "variantKey": "provisioning-removes-versioned-and-overloaded-routines", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests", "testMethod": "Provisioning_ExposesOneUnversionedRoutineForEachClientEntryPointAsync" },
-  { "requirementId": "REQ-VSB-POSTGRES-NOTIFICATION-TRIGGER", "variantKey": "every-transport-schema-owns-its-trigger", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests", "testMethod": "InfrastructureProvisioning_CreatesANotificationTriggerInEveryTransportSchemaAsync" },
-  { "requirementId": "REQ-VSB-POSTGRES-TOPIC-CYCLE", "variantKey": "cyclic-topic-graph-terminates-and-delivers-once", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlTopologyCycleTests", "testMethod": "PublishAcrossACyclicTopicGraph_TerminatesAndDeliversExactlyOnceAsync" },
-  { "requirementId": "OBL-R0-SQL-0129", "variantKey": "postgresql-native-security-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningCredentialTests", "testMethod": "ProvisionedAccountAcceptsQuotedPasswordWithoutPublishingItInStatementTextAsync" },
-  { "requirementId": "REQ-VSB-POSTGRESQL-MESSAGEPACK", "variantKey": "send-and-publish-use-binary-storage-roundtrip", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlMessagePackRoundTripTests", "testMethod": "SendAndPublish_RoundTripTypedMessagesThroughBinaryStorageAsync" },
-  { "requirementId": "REQ-VSB-POSTGRES-MAINTENANCE", "variantKey": "scheduled-orphan-cleanup-preserves-delivered-message", "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlMaintenanceTests", "testMethod": "ScheduledMaintenance_RemovesOrphansAndPreservesADeliveredMessageAsync" }
+  {
+    "requirementId": "OBL-R0-SQL-0025",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBasicTransportTests",
+    "testMethod": "CallerSuppliedDataSource_CarriesTheRunScopedEndpointAndDeliversAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0033",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBasicTransportTests",
+    "testMethod": "DirectSend_WithConsumeTopologyDisabled_PopulatesTransportAddressesAndIdsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0034",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBasicTransportTests",
+    "testMethod": "PublishDerivedMessage_AutomaticTopologyDeliversToBaseContractAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0035",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBasicTransportTests",
+    "testMethod": "HostOnlyBus_SendCreatesOneDeliveryInTheNamedQueueAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0036",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBasicTransportTests",
+    "testMethod": "HostOnlyBus_ThreeSendsCreateOneDeliveryInEachNamedQueueAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0037",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests",
+    "testMethod": "Provisioning_CreatesEveryRequiredTableAndFetchIndexAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0038",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests",
+    "testMethod": "Disposal_DropsTheRunScopedDatabaseEvenWithAnAttachedSessionAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0055",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRoutingAndFailureTests",
+    "testMethod": "RoutingKeySubscription_DeliversOnlyTheExactKeyAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0056",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRoutingAndFailureTests",
+    "testMethod": "PatternSubscription_UsesPostgreSqlAnchoredRegularExpressionsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0057",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRoutingAndFailureTests",
+    "testMethod": "UnhandledMessage_IsAcknowledgedIntoTheEndpointDeadLetterQueueAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0058",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRoutingAndFailureTests",
+    "testMethod": "ThrowingHandler_PublishesFaultAndMovesDeliveryToTheEndpointErrorQueueAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0059",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBuiltInRedeliveryTests",
+    "testMethod": "BuiltInRedelivery_PersistsThreeOneSecondSchedulesBeforeTheFinalFaultAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0060",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlBusOutboxTests",
+    "testMethod": "SerializableTransaction_DefersTheExactEnvelopeUntilCommitAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0061",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRoutingSlipTests",
+    "testMethod": "CompletedSubscription_DeliversAllRoutingSlipContentAndItsCustomValueAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0062",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlScheduleCancellationTests",
+    "testMethod": "ConsumeContextCancellation_DeletesThePersistedFutureDeliveryAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0064",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlScheduleCancellationTests",
+    "testMethod": "CallerCancellation_DeletesThePersistedFutureDeliveryAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0066",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlPublishAndPurgeTests",
+    "testMethod": "UnsubscribedPublish_LeavesNeitherMessageNorDeliveryWhileSubscribedControlArrivesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0068",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlPublishAndPurgeTests",
+    "testMethod": "PurgeOnStartup_RemovesExistingDeliveryAndThenConsumesOnlyTheNewMessageAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0070",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests",
+    "testMethod": "CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0072",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests",
+    "testMethod": "CancelJob_UpdatesStartedStatusToCanceledWithReasonAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0074",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests",
+    "testMethod": "RetryJob_AfterCancellationUsesANewAttemptAndCompletesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0076",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests",
+    "testMethod": "CancelJob_WhileWaitingPublishesTheWaitAndCanceledTransitionsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0078",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests",
+    "testMethod": "SubmitJob_CompletesTheAcceptedLifecycleAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0080",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests",
+    "testMethod": "PublishJob_GeneratesOneNonEmptyIdentityAcrossTheLifecycleAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0082",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlJobServiceTests",
+    "testMethod": "GetJobState_ForUnknownIdentityReturnsNotFoundAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0084",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlLockRenewalTests",
+    "testMethod": "SlowConsumer_RenewsItsProviderLockThreeTimesAndCompletesExactlyOnceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0086",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSchedulingTests",
+    "testMethod": "DelayedSend_PersistsFutureEnqueueTimeAndDeliversExactlyOnceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0088",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSchedulingTests",
+    "testMethod": "DelayedPublish_PersistsFutureEnqueueTimeAndDeliversExactlyOnceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0090",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSerializationAndRequestTests",
+    "testMethod": "JsonExtensionData_RoundTripsStringAndNumberForElementAndObjectDictionariesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0092",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryLimitTests",
+    "testMethod": "ConfiguredMaxDeliveryCount_IsPersistedInsteadOfTheDatabaseDefaultAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0094",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryLimitTests",
+    "testMethod": "ExhaustedDelivery_IsExcludedFromFetchAndMovedByDeadLetterMaintenanceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0096",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlConcurrencyAndPriorityTests",
+    "testMethod": "PartitionedReceive_ThirtyMessagesPreserveOrderWithinBothKeysAtConcurrencyTenAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0098",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlConcurrencyAndPriorityTests",
+    "testMethod": "ParallelPublish_OneThousandMessagesFromTenPublishersArriveExactlyOnceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0100",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSerializationAndRequestTests",
+    "testMethod": "RequestClient_FiveSequentialRequestsReturnTheirExactResponsesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0102",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlRedeliveryTests",
+    "testMethod": "RedeliveryHeader_IsConsumedInternallyAndDoesNotLeakToPublishedMessageAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0104",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlNotificationTests",
+    "testMethod": "WaitingReceiver_IsReleasedByNotificationOrItsConfiguredPollingIntervalAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0106",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlReceiveConfigurationTests",
+    "testMethod": "SchemaNamesOnBothSidesOfTheNotificationBoundary_DeliverExactlyOnceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0107",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlReceiveConfigurationTests",
+    "testMethod": "EveryReceiveMode_DeliversTheExactSetAndItsPartitionConcurrencyAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0108",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlIsolationTests",
+    "testMethod": "MessageInsert_UsesTheDefaultOrExplicitHostIsolationAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0110",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryStateTests",
+    "testMethod": "ExpiredDelivery_IsDeletedOrDeadLetteredWithoutEnteringTheConsumerAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0111",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlUnlockTests",
+    "testMethod": "FaultUnlock_UsesConfiguredOrZeroDelayAndPersistsAllFaultHeadersAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0112",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlLockRenewalTests",
+    "testMethod": "RenewalBoundary_StopsFurtherRenewalOrMarksOwnershipLostAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0114",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryStateTests",
+    "testMethod": "PurgeQueue_RemovesOnlyPrimaryDeliveriesAndPreservesErrorAndDeadLetterRowsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0115",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlAutoDeleteTests",
+    "testMethod": "EndpointDefinition_PersistsTheTemporaryDefaultOrNoAutoDeleteAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0116",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryLimitTests",
+    "testMethod": "RedeclaringQueueWithoutALimit_ResetsPriorConfiguredLimitToTenAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0120",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlUnlockTests",
+    "testMethod": "UnlockProcedure_ClearsBothLockOwnersWithAndWithoutDelayAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0124",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlMaintenanceTests",
+    "testMethod": "RequeueProcedures_MoveOneAndManyUnlockedDeliveriesWithRequestedDelayAndBudgetAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0125",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlMaintenanceTests",
+    "testMethod": "ProcessMetrics_RollsMinutesIntoHoursAndHoursIntoDaysThenExpiresNinetyDayRowsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0129",
+    "variantKey": "postgresql-native-security-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningCredentialTests",
+    "testMethod": "ProvisionedAccountAcceptsQuotedPasswordWithoutPublishingItInStatementTextAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0130",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests",
+    "testMethod": "MigrationStartup_InvokesOnlyTheIndependentlyEnabledStagesInStableOrderAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0131",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests",
+    "testMethod": "InfrastructureProvisioning_ASecondRunPreservesTheCompleteObjectSetAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0132",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlConcurrencyAndPriorityTests",
+    "testMethod": "PrioritySend_PersistsBelowDefaultAndAboveValuesAndDeliversInAscendingOrderAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0133",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryStateTests",
+    "testMethod": "ErrorQueueMove_ResetsExistingExpirationToFourteenDaysAndKeepsMissingExpirationNullAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0134",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlConcurrencyAndPriorityTests",
+    "testMethod": "TwoReceivers_ConsumeOneSharedQueueWithoutLossOrDuplicatesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0135",
+    "variantKey": "postgresql-native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDeliveryStateTests",
+    "testMethod": "DeleteScheduledMessage_DeletesOnlyWhenEveryDeliveryIsUndeliveredAndUnlockedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-BIGINT-TOPOLOGY",
+    "variantKey": "create-and-touch-complete-for-bigint-topology-identities",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDatabaseBoundaryContractTests",
+    "testMethod": "BigintTopology_CreateAndTouchReturnOrPersistTheRealIdentityAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-MAINTENANCE",
+    "variantKey": "scheduled-orphan-cleanup-preserves-delivered-message",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlMaintenanceTests",
+    "testMethod": "ScheduledMaintenance_RemovesOrphansAndPreservesADeliveredMessageAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-NOTIFICATION-TRIGGER",
+    "variantKey": "every-transport-schema-owns-its-trigger",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests",
+    "testMethod": "InfrastructureProvisioning_CreatesANotificationTriggerInEveryTransportSchemaAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-QUEUE-METRICS",
+    "variantKey": "backlog-does-not-multiply-consume-error-and-deadletter-counts",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDatabaseBoundaryContractTests",
+    "testMethod": "QueueMetrics_RemainExactWhenPendingDeliveryCountChangesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-ROUTINE-NAMES",
+    "variantKey": "provisioning-removes-versioned-and-overloaded-routines",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlProvisioningTests",
+    "testMethod": "Provisioning_ExposesOneUnversionedRoutineForEachClientEntryPointAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-SEND-FAILURE",
+    "variantKey": "registration-is-singleton-across-overloads",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSendFailureClassifierTests",
+    "testMethod": "BusRegistration_AddsExactlyOneClassifierAcrossConfigurationOverloads"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-SEND-FAILURE",
+    "variantKey": "typed-chain-and-permanent-precedence",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlSendFailureClassifierTests",
+    "testMethod": "TypedFailures_UseNpgsqlStateAndTheCompleteChainWithPermanentPrecedence"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-TOPIC-CYCLE",
+    "variantKey": "cyclic-topic-graph-terminates-and-delivers-once",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlTopologyCycleTests",
+    "testMethod": "PublishAcrossACyclicTopicGraph_TerminatesAndDeliversExactlyOnceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-UTC-INSTANTS",
+    "variantKey": "session-timezone-does-not-change-topology-send-or-lock-instants",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDatabaseBoundaryContractTests",
+    "testMethod": "Timezone_PreservesRealInstantsForTopologySendFetchAndRenewAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRESQL-MESSAGEPACK",
+    "variantKey": "send-and-publish-use-binary-storage-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlMessagePackRoundTripTests",
+    "testMethod": "SendAndPublish_RoundTripTypedMessagesThroughBinaryStorageAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-POSTGRES-REQUIREMENT-PROJECTION",
+    "variantKey": "compiled-metadata-matches-projection",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Requirements.RequirementCoverageProjectionTests",
+    "testMethod": "PostgreSqlRequirementsMatchCompiledRequirementMetadata"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-BIGINT-TOPOLOGY",
+    "variantKey": "legacy-upgrade-preserves-data-owner-and-execute-grant-chain",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDatabaseBoundaryContractTests",
+    "testMethod": "LegacyIntegerFunctions_UpgradeAndReapplyPreserveDataAndExecutePrivilegesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-BIGINT-TOPOLOGY",
+    "variantKey": "legacy-dependency-aborts-upgrade-atomically-without-cascade",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDatabaseBoundaryContractTests",
+    "testMethod": "LegacyFunctionDependency_FailsWithoutPartialUpgradeOrDataLossAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-UTC-INSTANTS",
+    "variantKey": "legacy-table-defaults-survive-reapply-and-preserve-nonutc-instant",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDatabaseBoundaryContractTests",
+    "testMethod": "LegacyTimestampDefaults_UseActualInstantsAfterRepeatedMigrationAsync"
+  }
 ]

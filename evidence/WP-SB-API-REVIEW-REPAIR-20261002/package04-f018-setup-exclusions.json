@@ -1,0 +1,11 @@
+{
+  "status": "RESTORE_AND_COMPILER_SETUP_FAILURES_EXCLUDED",
+  "phases": [
+    "package04-f018-ownership-original-restore",
+    "package04-f018-ownership-original-restore-r2",
+    "package04-f018-identity-original-build",
+    "package04-f018-identity-original-build-r2"
+  ],
+  "reason": "Before causal tests, incomplete local dependencies required recursive graph closure/force-evaluate; draft omitted public middleware/operations usings and Root first fix mistyped Operations namespace. Final strict build-r3 green. Body assertions unchanged; metadata/import delta only.",
+  "modified_original_gate_sha256": "fff81707b8646971e90ddcea5ad768ead70a214044d6f37dc2a71250da98e57e"
+}

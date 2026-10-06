@@ -1,0 +1,67 @@
+{
+  "status": "SOURCE_CANDIDATE_ADDITIONAL_BOUNDARIES_REVIEW_AND_NATIVE_PENDING",
+  "finding": "F-SB-API-042",
+  "basis_root_bounded5_receipt": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE30_F042_BOUNDED5_ROOT_ACCEPTANCE_R1.json",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "bytes": 6923,
+      "sha256": "c3d84e077590acec52e6e13323c6d356560f0d7ed035a8ae12db906fbeff4efc"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/ConsumeSendEndpoint.cs",
+      "bytes": 2938,
+      "sha256": "d7b8526ebbaae7c6244d337dac6db5e48eab6f82586c01b2b3db0589499ba49b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package31-outbox-boundaries/Composition.PublicConsumer.csproj",
+      "bytes": 1080,
+      "sha256": "65e944038765659fbd99a29043fe6692b2e3fad4e1df7e3542d523236e27205e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package31-outbox-boundaries/MetadataContexts.cs",
+      "bytes": 2060,
+      "sha256": "690e051a9b91880017ae9fb292cece431d7e27bf4618df4804bb45f868559b9c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package31-outbox-boundaries/NuGet.Config",
+      "bytes": 576,
+      "sha256": "cb5b91dbe139cb56c8d3fd4bc586bb46cc37896aa60c195b279dc0cd7acbef28"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package31-outbox-boundaries/OwnedDisposal.cs",
+      "bytes": 1013,
+      "sha256": "7b5638775cbc3dd898eccac52dc0f6b9a1dae5cb1300b54ccf31084de5598c95"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package31-outbox-boundaries/OwnedLifetime.cs",
+      "bytes": 1921,
+      "sha256": "e01c009117ec2393a503eda5d2cad44d72e55ce9ef00309d51180fbd6ea5bad0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package31-outbox-boundaries/Program.cs",
+      "bytes": 23424,
+      "sha256": "281c2d8285f208bef76ab9a7d11b1d17aca7d74770fa853337eb9c2634ec1efc"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package31-outbox-boundaries/global.json",
+      "bytes": 135,
+      "sha256": "fcafdeab1b2af8c88b0aac365be7ec1f4fb8e8b2a2b700a01d2a3619687ce760"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package31-outbox-boundaries/packages.lock.json",
+      "bytes": 14388,
+      "sha256": "3ab12f88947840acebbdb86f89ba483581047708d488ea76c2504d4705cd2a16"
+    }
+  ],
+  "cases": 8,
+  "finite_receives_expected": 16,
+  "new_cases": [
+    "default-volatile-fault",
+    "nested-volatile-timeout",
+    "metadata-volatile-positive"
+  ],
+  "canonical_core766_full": false,
+  "compiled_mutations_executed": false,
+  "extra_ordinary_volatile_and_classic_process_local_cases_pending": true
+}

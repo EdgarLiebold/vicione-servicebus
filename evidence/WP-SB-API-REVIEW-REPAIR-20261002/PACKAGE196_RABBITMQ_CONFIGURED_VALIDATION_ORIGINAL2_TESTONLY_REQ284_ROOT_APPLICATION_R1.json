@@ -1,0 +1,54 @@
+{
+  "utc": "2026-10-05T16:44:28.792480+00:00",
+  "status": "REVIEWED_TESTONLY_ADD2CASES_REQ1_APPLIED_ORIGINAL_NATIVE_PENDING",
+  "test": {
+    "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredPipeValidationTests.cs",
+    "sha256": "8d25dc7a28eaefc92d18f7ba9c3f08346cd1212cebb8138573ec6d649ebab175",
+    "lines": 77,
+    "cases": 2
+  },
+  "requirements": {
+    "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+    "before_sha256": "fa2e17a213b3722272cc3eaf5470f203aa0d2c1a9b8f8a3146909ac611383abb",
+    "after_sha256": "d1e2e569c3a132a012346d45cbd4b39caf1fabdacf8ab1ce775de8c34ba6c57e",
+    "unchanged_prefix_rows": 283,
+    "rows": 284,
+    "add_only_rows": 1
+  },
+  "product_sources_before": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs",
+      "sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/PipeConfigurator.cs",
+      "sha256": "3ceb5da4b84704720359cc99774160b5ead449a673fed41cd7ad4e88fab7eca3"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResultExtensions.cs",
+      "sha256": "54edcef773f15092f88e140bbdf9e27357943d9c74458302a095fa42fbecc357"
+    }
+  ],
+  "product_code_changed": false,
+  "proposal_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package196-rabbit-configured-pipe-validation2-original-oracles-proposed-r1/REPORT.json",
+    "sha256": "7eb7f9e48e8a280d27691a008b70827a66476dfaee2b886b03df5868315793a4"
+  },
+  "proposal_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package196-rabbit-configured-pipe-validation2-original-oracles-proposed-r1/MANIFEST.json",
+    "sha256": "5d982f5baf77ffe3cec6f44d03bb25d67a510330a24f0312a24a0e316f3af2a2"
+  },
+  "independent_oracle_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package196-rabbit-validation2-independent-runtime-oracle-peer-r1/REPORT.json",
+    "sha256": "237bd80b3f487fecd701ccd64772bce510a4c1dced6aba282ef3fcba2ff81c78"
+  },
+  "root_reads": [
+    "ef3b10 whole77 authoredtest",
+    "eaf71a whole actualendpoint",
+    "97d5c5 wholePipeConfigurator",
+    "926e9c wholeValidationResultExtensions",
+    "f99b88 wholeindependentSourcepeer"
+  ],
+  "new_product_finding_registered": false,
+  "global_Aplus": false
+}

@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-04T16:25:09.072642+00:00",
+  "files": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgreSqlTransportConfigurationExtensions.cs",
+      "before": "13117fa7ad64665bba03e1cf17af73e3c76010a7e01547363038a50ba732f2aa",
+      "after": "029e31cb545128dc02105cd12ebf62491c818367c506aa303849c50037673806"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContext.cs",
+      "before": "dc2506bd468627b00586ca6817f41718138680ff1ba1b96d8e89f82884b14b1f",
+      "after": "c94ab3e6da1c86754c76910fd37aea6141759b709c670906edeb0a33c934b3c1"
+    }
+  ],
+  "independent_root_review": "ExacttwoXMLnodes63bb5d; actualwholeClientContext2fd908/775b59, wholehostLifecycle34c626 provesStopdelete; actualbothproviderPurge q.Type1 34c626/06277c; wholePGextension06277c linksboolDeleteDatabase. Peer author independentlyreviewedbyRoot; executable lines/signatures/defaults unchanged. Existing meaningful host/purge runtime tests plus strictbuild and generatedXML/freshpacks planned; no mirror tests added.",
+  "finding_ids": [
+    "F-SB-API-093",
+    "F-SB-API-094"
+  ],
+  "native_package_pending": true
+}

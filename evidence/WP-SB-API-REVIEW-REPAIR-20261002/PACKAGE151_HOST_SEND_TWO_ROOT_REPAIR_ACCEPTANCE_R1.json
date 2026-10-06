@@ -1,0 +1,91 @@
+{
+  "utc": "2026-10-04T22:17:49.936755+00:00",
+  "decision": "ACCEPT_BOUNDED_F124_F125_AFTER_ORIGINAL_FIXED_ADVERSARIAL_NATIVE_FRESH_PACK_REVIEW",
+  "confirmed_unchanged": 125,
+  "known_accepted_before": 123,
+  "known_accepted_after": 125,
+  "finding_ids": [
+    "F-SB-API-124",
+    "F-SB-API-125"
+  ],
+  "source_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE150_HOST_SEND_TWO_PRODUCT_HOST6_TEST_ROOT_APPLICATION_R1.json",
+    "sha256": "312436e59f31d3a342805dadb35c9c80dc0f07bfeac7c5f199c867051ec1c32f"
+  },
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-host-send-fixed394-fresh2-independent-r1/REPORT.json",
+    "sha256": "2c83743c49437ff14e07a2a48a39db20c4b41e52b1509e9d05c2b4332dd3ff18"
+  },
+  "qualification_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-host-send-fixed394-fresh2-independent-r1/MANIFEST.json",
+    "sha256": "f85c65379008675b8c3516b6936172461c9cc97383b96f93a946c618e23fbd4e"
+  },
+  "verified_manifest_files": 3341,
+  "pdb_prose_precision": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-host-send-fixed394-fresh2-independent-r1/PACKAGE_PDB_PROSE_PRECISION_ERRATUM_R1.json",
+    "sha256": "6990b7acd3b77e9cd2ea4e6374518cea34c88ea493a00901db6da3f629f551d6"
+  },
+  "native": {
+    "total": 394,
+    "passed": 394,
+    "failed": 0,
+    "skipped": 0,
+    "disjoint_calls": [
+      29,
+      203,
+      162
+    ],
+    "direct_host14_send15": true
+  },
+  "fresh_packages": [
+    {
+      "package": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "5796e12e526ebee42ffbd5e06a2ce744b489e252cbac38462b84883a0479b183",
+      "all_entry_CRC_passed": true,
+      "entry_names": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.dll",
+        "lib/net10.0/ViciOne.ServiceBus.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/ea7e114bdeeb4b6da10f21efdfcf5659.psmdcp"
+      ],
+      "actual_DLL_equals_qualified_frame": true,
+      "DLL_sha256": "2fa5f55a4e69f69d213a22f63c0f88dbb3152a3877cdf4823f92a41514d31ba5",
+      "XML_sha256": "71c3c0018d2bf293019160badd639b0aa5ddbbef61ccaebb07af3536bb087df6",
+      "actual_XML_equals_qualified_frame": true,
+      "PDB_kind": "embedded-portable",
+      "PDB_sha256": "f029c8c90194147ca1d2ee86ff74258495f6186024310cfae34cfa1173c13057",
+      "PDB_package_limit": "Core PDB embedded in identical DLL; other portable PDB qualified externally from canonical frame, no nonexistent package PDB entry claimed."
+    },
+    {
+      "package": "ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "554ba53518e144a20676c8256c75e8a148d1863d99bf5002de6af3cdb839ee76",
+      "all_entry_CRC_passed": true,
+      "entry_names": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.Sagas.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/d5481af3bc7e4cfd8207f9d87ca0a56a.psmdcp"
+      ],
+      "actual_DLL_equals_qualified_frame": true,
+      "DLL_sha256": "0d3b3a3dbb0063be1c4fd6a5f9be7212f8782d62bdc93e066a6ae7f51f214dd5",
+      "XML_sha256": "bfd9c88a7129a8747e531c5f727eed99235fa92d9dbefac334b17f009cf7f7a8",
+      "actual_XML_equals_qualified_frame": true,
+      "PDB_kind": "embedded-portable",
+      "PDB_sha256": "5c5a1078052771c998bc9d1c545447bb37ba780c98299fb21fd252e1d97634f7",
+      "PDB_package_limit": "Core PDB embedded in identical DLL; other portable PDB qualified externally from canonical frame, no nonexistent package PDB entry claimed."
+    }
+  ],
+  "root_personal_review": "All29 actual named outcomesfa86c3; Original15raw d9db9e/Hostfinitef20525. Complete qualifiednorms6d4a9a, exact bothSource+HostTest6 deltasfac015/3cc028, author/peer normseddd538/999449/5bdf73. Current8source/sole4603 and actualfresh2CRC/DLL/XML guarded. Root does not borrow reviewerwhole438/283/168 reading or whole394 testbody credit.",
+  "limits": [
+    "Host returned registrations synchronous ownership only; arbitrary throwing cleanup preserves allcauses/attemptall, cannot force success. AdditionalHost6 onlyFixednativecredit.",
+    "Send acquisition/admission context token only; admitted uncooperative work still awaited, destinationcallback beforeacquisition retained.",
+    "Targeted394P does not prove fullUnit/fullAPI/release grade."
+  ],
+  "whole_api_status": "PARTIAL"
+}

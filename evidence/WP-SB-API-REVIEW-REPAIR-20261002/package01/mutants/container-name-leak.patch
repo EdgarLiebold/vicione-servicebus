@@ -1,0 +1,11 @@
+--- a/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs
++++ b/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs
+@@ -52,7 +52,7 @@
+             Password = string.Empty
+         };
+         scope.Add("Uri", endpoint.Uri);
+-        scope.Add("Name", new BlobUriBuilder(endpoint.Uri).BlobContainerName);
++        scope.Add("Name", _blobContainerClient.Name);
+     }
+ 
+     /// <summary>Creates the checkpoint container when it does not already exist.</summary>

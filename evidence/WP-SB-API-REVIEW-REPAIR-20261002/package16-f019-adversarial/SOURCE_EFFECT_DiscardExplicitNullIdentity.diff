@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/Advanced/LogContext.cs
++++ DiscardExplicitNullIdentity
+@@ -88,7 +88,7 @@
+             var loggerFactory = provider.GetService<ILoggerFactory>();
+             var effectiveFactory = loggerFactory ?? NullLoggerFactory.Instance;
+             if (current == null
+-                || (loggerFactory != null && current.Logger is NullLogger)
++                || current.Logger is NullLogger
+                 || (current is BusLogContext { IsAutomaticallyConfigured: true } automatic
+                     && !automatic.HasSameLoggerFactory(effectiveFactory)))
+             {

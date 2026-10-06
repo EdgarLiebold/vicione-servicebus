@@ -1,0 +1,25 @@
+{
+  "status": "RESEARCH_PLAN_BEFORE_CANONICAL_FIXTURE_EDIT",
+  "finding": "F018",
+  "author": "/root",
+  "Root_personally_FULL_owner_files": 36,
+  "Root_personally_FULL_shared_imports_CI_files": 57,
+  "closure": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_ROOT_CANONICAL_OWNER_READ_CLOSURE.json",
+  "closure_sha256": "7d4b3ddbff54fc94318e39d6870a96462c00143bf0c543feda334e849b3bec93",
+  "original_owner_native_profile": "UnitArchitecture",
+  "original_owner_cases": {
+    "total": 410,
+    "passed": 409,
+    "failed": 1,
+    "skipped": 0
+  },
+  "fixture_problem": "Outer transaction test supplies only fake GUID and creates an independent owned context. No actual CurrentTransaction exists; repaired ownership correctly creates repository transaction; executionCount3 contradicts old expected1.",
+  "change": "Only fixture SendQuery_WithAnOuterTransaction: create actual owned await-using DbContext + SQLite Serializable outer transaction; borrow same actual context with ContainerSagaDbContextFactory and publish actual transaction ID. Retain repository ReadCommitted setting and both original delivery/executionCount1 assertions. Add no nested transaction and actual outer transaction reference assertions.",
+  "preserved": "No product change, no expected1 weakening, no requirement/method rename, no borrowed-context disposal by repository. Caller await-using disposes tx/context before connection.",
+  "validation": "Strict native build then valid complete410 owner rerun; original uncorrected fixture red already recorded. Independently review exact fixture delta/owner closure and receipt before final finding acceptance. Public16cases/sixproductmutants already independent reviewed.",
+  "skills": "Previously personally FULL code-testing-agent Research\u2192Plan\u2192Implement, run-tests/filter-syntax, assertion-quality/test-gap/extensions; exact MTP native owner existing platform imports retained.",
+  "limitations": [
+    "No A+ whole-API or provider/ARM closure from this fixture",
+    "Canonical fixture intentionally public repository SPI + exact existing proxy/SQLite helpers, supplements fresh NuGet-only public consumers"
+  ]
+}

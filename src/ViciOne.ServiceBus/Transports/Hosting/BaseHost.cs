@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Configuration;
@@ -107,8 +108,15 @@ public abstract class BaseHost :
         {
             if (_handle != null)
             {
-                LogContext.Warning?.Log("Start called, but the host was already started: {Address} ({Reason})", _hostConfiguration.HostAddress,
-                    "Already Started");
+                try
+                {
+                    LogContext.Warning?.Log("Start called, but the host was already started: {Address} ({Reason})", _hostConfiguration.HostAddress,
+                        "Already Started");
+                }
+                catch
+                {
+                    // Optional diagnostics cannot prevent returning the active host generation.
+                }
 
                 return _handle;
             }
@@ -120,7 +128,14 @@ public abstract class BaseHost :
 
             LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
-            LogContext.Debug?.Log("Starting bus: {HostAddress}", _hostConfiguration.HostAddress);
+            try
+            {
+                LogContext.Debug?.Log("Starting bus: {HostAddress}", _hostConfiguration.HostAddress);
+            }
+            catch
+            {
+                // Optional diagnostics cannot prevent admission of the host generation.
+            }
 
             try
             {
@@ -258,19 +273,53 @@ public abstract class BaseHost :
 
     async Task StopResourcesAsync(CancellationToken cancellationToken)
     {
-        LogContext.Debug?.Log("Stopping bus: {HostAddress}", Address);
+        try
+        {
+            LogContext.Debug?.Log("Stopping bus: {HostAddress}", Address);
+        }
+        catch (Exception)
+        {
+        }
 
-        await StopStartedEndpointsAndRidersAsync(cancellationToken).ConfigureAwait(false);
+        var failures = new List<Exception>();
+        try
+        {
+            await StopStartedEndpointsAndRidersAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            failures.Add(exception);
+        }
 
-        IAgent[] agents = GetAgentHandles()
-            ?? throw new InvalidOperationException("The transport host returned no agent collection.");
+        IAgent[] agents;
+        try
+        {
+            agents = GetAgentHandles()
+                ?? throw new InvalidOperationException("The transport host returned no agent collection.");
+        }
+        catch (Exception exception)
+        {
+            failures.Add(exception);
+            ThrowStopFailures(failures, cancellationToken);
+            return;
+        }
+
         foreach (IAgent agent in agents)
         {
-            if (agent is null)
-                throw new InvalidOperationException("The transport host returned an agent collection containing null.");
+            try
+            {
+                if (agent is null)
+                    throw new InvalidOperationException("The transport host returned an agent collection containing null.");
 
-            await agent.StopAsync("Bus stopped", cancellationToken).ConfigureAwait(false);
+                await agent.StopAsync("Bus stopped", cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                failures.Add(exception);
+            }
         }
+
+        ThrowStopFailures(failures, cancellationToken);
     }
 
     Task RollbackStartAsync()
@@ -280,9 +329,48 @@ public abstract class BaseHost :
 
     async Task StopStartedEndpointsAndRidersAsync(CancellationToken cancellationToken)
     {
-        await Riders.StopRidersAsync(cancellationToken).ConfigureAwait(false);
+        var failures = new List<Exception>();
+        try
+        {
+            await Riders.StopRidersAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            failures.Add(exception);
+        }
 
-        await ReceiveEndpoints.StopEndpointsAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            await ReceiveEndpoints.StopEndpointsAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            failures.Add(exception);
+        }
+
+        ThrowStopFailures(failures, cancellationToken);
+    }
+
+    static void ThrowStopFailures(List<Exception> failures, CancellationToken cancellationToken)
+    {
+        if (failures.Count == 1)
+            ExceptionDispatchInfo.Capture(failures[0]).Throw();
+        if (failures.Count > 1)
+        {
+            var aggregate = new AggregateException("Host shutdown failed.", failures);
+            if (cancellationToken.IsCancellationRequested
+                && aggregate.InnerExceptions.All(IsCancellationFailure))
+                throw new OperationCanceledException("Host shutdown was canceled.", aggregate, cancellationToken);
+
+            throw aggregate;
+        }
+    }
+
+    static bool IsCancellationFailure(Exception exception)
+    {
+        return exception is OperationCanceledException
+            || exception is AggregateException aggregate && aggregate.InnerExceptions.Count > 0
+            && aggregate.InnerExceptions.All(IsCancellationFailure);
     }
 
     /// <summary>Adds transport-specific diagnostic information to a probe.</summary>

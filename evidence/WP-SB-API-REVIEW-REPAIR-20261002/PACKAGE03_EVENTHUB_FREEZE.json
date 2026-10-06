@@ -1,0 +1,128 @@
+{
+  "status": "CODE_REGRESSIONS_AND_NATIVE_MUTANTS_FROZEN",
+  "findings": [
+    "F-SB-API-013",
+    "F-SB-API-014",
+    "F-SB-API-016",
+    "F-SB-API-017"
+  ],
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProcessorContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/00-EventHubProcessorContext.cs",
+      "sha256": "998db6d69265b24ff6cd2a83a0f67d75f22726b4cc678a194700729e22172946",
+      "bytes": 4664,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProcessorContext.cs",
+      "baseline_sha256": "3374984bb7f32b1b08707e61c7ae7283c8edc50e2f92d0eaec9b5d4b08c67d44"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointConfigurator.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/01-EventHubReceiveEndpointConfigurator.cs",
+      "sha256": "89b5f06d34c451480434561d2e8c37ab7ab5a289216b1c6d2f16ada586438bd1",
+      "bytes": 12566,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointConfigurator.cs",
+      "baseline_sha256": "a821edb1836c23c194f863548b5710a71b6dc48b9b6c7cea3d3b521bef07142e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointBuilder.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/02-EventHubReceiveEndpointBuilder.cs",
+      "sha256": "8a99b99e9145ca25e9f34eb7ed88cbfb0426f34452a8ed6e0c17b087d24c29a5",
+      "bytes": 4261,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointBuilder.cs",
+      "baseline_sha256": "26fb65d4cd16008a5cd69c5afd3449780a68345c4c3abda8ce365e5771ccbffb"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ConsumeContextEventHubProducerProvider.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/03-ConsumeContextEventHubProducerProvider.cs",
+      "sha256": "5e4a0c734e0debfe43a2b80e062217cbc59fe26c918fb2fd41162a7a449ae1c1",
+      "bytes": 7835,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ConsumeContextEventHubProducerProvider.cs",
+      "baseline_sha256": "d0fed0b5ae3aa7f29b2ee394abb7f93c422d81b2275a555dc98c2845c0f3427a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/04-EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "bytes": 7803,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/05-EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "bytes": 15659,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/06-EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "bytes": 16117,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBuiltContextCapture.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/07-EventHubBuiltContextCapture.cs",
+      "sha256": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081",
+      "bytes": 5052,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/08-EventHubLocalIntegrationRequirements.json",
+      "sha256": "1a9816d52a3a58fb211f024997bdf6beeb13774d68d14c5ccf84ebad96267364",
+      "bytes": 39528,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/freeze/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "baseline_sha256": "b861de7665883089a93ad927cf01c8c0f50858d834389424e330c36f2999bc5c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package03_eventhub_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/09-package03_eventhub_mutations.py",
+      "sha256": "b5acd4462157e46deb5ed4cd794ba8dd3d739f83984211b2f0638ddd094efcfc",
+      "bytes": 11750,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package03_eventhub_settings_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/10-package03_eventhub_settings_mutations.py",
+      "sha256": "40dd77a759c4983b35b5520b03d0c396df2e0fc2a48033b0c66d545c5962e6e2",
+      "bytes": 7786,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/11-product-fixes.md",
+      "sha256": "0f853802bb9dea09fe1e3e65c115e53f39f7009b033736b96e514a61495b4f84",
+      "bytes": 29649,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs/freeze/08-product-fixes.md",
+      "baseline_sha256": "8dd2447fa408919ddd2a0698e0de4ed52abdf14207dc3789bc15432ce86df76f"
+    }
+  ],
+  "lead_test_owner_read_closure": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE03_EVENTHUB_LEAD_READ_CLOSURE.json",
+  "native_corrected_cases": 70,
+  "actual_mutants": 30,
+  "mutant_evidence": [
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE03_EVENTHUB_MUTATIONS.json",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE03_EVENTHUB_SETTINGS_MUTATIONS.json"
+  ],
+  "whole_native_owner": {
+    "total": 182,
+    "passed": 182,
+    "failed": 0,
+    "skipped": 0,
+    "phase": "package03-eventhub-complete-native-owner",
+    "canonical_fixture_run": "vicione-0b237e0402c9"
+  },
+  "proof_limits": [
+    "No cloud or ARM/RAM proof.",
+    "Completed normal Build generation and caller waiting boundaries only; standalone lazy Blob generation outside scope.",
+    "Two receipt classifier interruptions resumed with unchanged root-owned fixture bytes; original native receipts immutable.",
+    "Initial missing SDK namespace, double receive-pipe generation and first teardown-masked mutant attempt excluded."
+  ]
+}

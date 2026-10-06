@@ -1,0 +1,54 @@
+{
+  "utc": "2026-10-06T15:27:23.568399+00:00",
+  "status": "ROOT_ACCEPTED_INDIVIDUAL_SOURCE6_CURRENT_COMPILED_IDENTITY_ONLY_GLOBAL_OPEN",
+  "before_MAN": "c350aad8e1ece5ca7066872c5c8994fe447b2aa7c1cafed0650c7c785e685243",
+  "Root_current_SQS_whole5": "fca2eb",
+  "Root_all7_primary_contracts_without_historical_objects": "5779e9",
+  "Root_different_Source5": "9415b5",
+  "Root_doc_emitted_peer_whole": "6b37b2",
+  "Root_doc_before_proposed_whole": "a34cc2",
+  "accepted_original_indices": [
+    3355,
+    1325,
+    1475,
+    1478,
+    1528,
+    1532
+  ],
+  "before": {
+    "Master": 19404,
+    "Original": 18542,
+    "remaining": 27
+  },
+  "after": {
+    "Master": 19410,
+    "Original": 18548,
+    "remaining": 21
+  },
+  "Doc13_identity_rebases": [
+    "E:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.AzureServiceBusConfiguring",
+    "E:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.AzureServiceBusReceiveEndpointConfiguring",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.#ctor(System.Uri,Azure.AzureNamedKeyCredential,System.String)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.ConfigureAzureServiceBus(ViciOne.ServiceBus.AzureServiceBus.IServiceBusBusFactoryConfigurator)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.ConfigureAzureServiceBusReceiveEndpoint(ViciOne.ServiceBus.AzureServiceBus.IServiceBusReceiveEndpointConfigurator)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.CreateAdministrationClient",
+    "M:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.CreateBusAsync(System.Threading.CancellationToken)",
+    "P:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.HostAddress",
+    "P:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.InputQueueAddress",
+    "P:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.InputQueueName",
+    "P:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.NamedKeyCredential",
+    "P:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness.UseMessageScheduler",
+    "T:ViciOne.ServiceBus.AzureServiceBus.Testing.AzureServiceBusTestHarness"
+  ],
+  "SQS2_explicit_holds": [
+    1355,
+    1356
+  ],
+  "no_new_native_credit": true,
+  "grade": null,
+  "global_closed": false,
+  "separate_actual_SQS_fixed36_module407": {
+    "REPORT": "a9563e9d1ea986e9f9474516a2526e87508a5df1c976159765644c9657522e65"
+  },
+  "publication_and_strict_global_pending": true
+}

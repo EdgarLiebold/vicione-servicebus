@@ -1,0 +1,109 @@
+{
+  "utc": "2026-10-06T15:57:41.651762+00:00",
+  "status": "ROOT_REGISTERED_F231_AND_F152_AZURE_EVENT_SCOPE_APPLIED_DIFFERENT_WHOLE_PRODUCT4_FIXED_NATIVE_PENDING",
+  "different_original18": {
+    "REPORT": "4d890c02bee80c033a8516d8d8e6565dc45f7f490229651c845b3d165ffc2159",
+    "MAN": "f7f35bf295f70d1a33fd0776e21685725a8f1990864b17e940f8ec522f50f805",
+    "counts": {
+      "total": 18,
+      "passed": 9,
+      "failed": 9,
+      "skipped": 0
+    }
+  },
+  "author_REPORT": "665701926ce735fd3bc2fd30b476084f4ba7f157986e8037bd9343805b1aef5b",
+  "different_Product_REPORT": "caeaf7d71bc0da413c753b540783a0a3991e94200cac45be7225958e00350f69",
+  "Root_whole_before4_807": "3abc8c",
+  "Root_whole_actual18_peer": "27936e",
+  "Root_whole_Product_peer": "6bc716",
+  "changes": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/QueueClientContext.cs",
+      "before": "849d9c52be13ba1957d07d1d989c10bae5a0ca89c877a7bf61adcb7f1c190b4e",
+      "after": "bd3f859aa691d6d5866cb1f6a58db84b06e1ab5cca5d5baacfceb8c5851978a7",
+      "before_lines": 175,
+      "after_lines": 187,
+      "literal_replacements": [
+        {
+          "before": "            LogContext.Warning?.Log(exception, \"Stop processing client faulted: {InputAddress}\", InputAddress);",
+          "after": "            try\n            {\n                LogContext.Warning?.Log(exception, \"Stop processing client faulted: {InputAddress}\", InputAddress);\n            }\n            catch (Exception)\n            {\n            }"
+        },
+        {
+          "before": "            LogContext.Warning?.Log(exception, \"Close client faulted: {InputAddress}\", InputAddress);",
+          "after": "            try\n            {\n                LogContext.Warning?.Log(exception, \"Close client faulted: {InputAddress}\", InputAddress);\n            }\n            catch (Exception)\n            {\n            }"
+        }
+      ],
+      "full_inverse_exact": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/PartitionCheckpointData.cs",
+      "before": "79731c9dfc871b4cc250ff254d20b3fb10f7b501e923d1a5f552bd01bfb508e6",
+      "after": "86a4814e69d78eb6171b8d12426f66b0f7dcf3bb21d436bb74e101625e407eba",
+      "before_lines": 53,
+      "after_lines": 59,
+      "literal_replacements": [
+        {
+          "before": "        LogContext.Info?.Log(\"Partition: {PartitionId} was closed, reason: {Reason}\", args.PartitionId, args.Reason);",
+          "after": "        try\n        {\n            LogContext.Info?.Log(\"Partition: {PartitionId} was closed, reason: {Reason}\", args.PartitionId, args.Reason);\n        }\n        catch (global::System.Exception)\n        {\n        }"
+        }
+      ],
+      "full_inverse_exact": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+      "before": "635dde7e5fdeb5a4c14e66c4af18596f52c18ce4f2eb24894603bebd4673099e",
+      "after": "4b5403a4932b0c885aa83497b62c706c3f36bdddcbb49cbcef6b517d13ae43c6",
+      "before_lines": 130,
+      "after_lines": 138,
+      "literal_replacements": [
+        {
+          "before": "        if (_data.TryAdd(eventArgs.PartitionId, _ => new PartitionCheckpointData(_receiveSettings, _pending)))\n            LogContext.Info?.Log(\"Partition: {PartitionId} was initialized\", eventArgs.PartitionId);",
+          "after": "        if (_data.TryAdd(eventArgs.PartitionId, _ => new PartitionCheckpointData(_receiveSettings, _pending)))\n        {\n            try\n            {\n                LogContext.Info?.Log(\"Partition: {PartitionId} was initialized\", eventArgs.PartitionId);\n            }\n            catch (Exception)\n            {\n            }\n        }"
+        }
+      ],
+      "full_inverse_exact": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+      "before": "6594d34ab9eb784b530a984ae09f93215e2b59572e9ebf98e17cedf809e1add4",
+      "after": "168bc3f45a8e4f69fd89fe4749bdb5106e94a23c4a7b8ddf69e40af85a240174",
+      "before_lines": 449,
+      "after_lines": 468,
+      "literal_replacements": [
+        {
+          "before": "        _connectHandle?.Disconnect();\n        await this.StopAsync(\"Disposing Agent\").ConfigureAwait(false);",
+          "after": "        Exception? observerFailure = null;\n        try\n        {\n            _connectHandle?.Disconnect();\n        }\n        catch (Exception exception)\n        {\n            observerFailure = exception;\n        }\n\n        try\n        {\n            await this.StopAsync(\"Disposing Agent\").ConfigureAwait(false);\n        }\n        catch (Exception stopFailure) when (observerFailure is not null)\n        {\n            throw new AggregateException(\"Producer observer disconnection and shutdown both failed.\", observerFailure, stopFailure);\n        }\n\n        if (observerFailure is not null)\n            global::System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(observerFailure).Throw();"
+        }
+      ],
+      "full_inverse_exact": true
+    }
+  ],
+  "before_MAN": "193fb80de071af23131bbe9658cfab51e258fc2fd09d2f7166213d086aef7256",
+  "mandatory_Azure_catalog_guard_rebase": {
+    "review_current222": "03e517eacb370444e4360ec552f784935d9e7d8f4eb5ca38292b32e982f9092a",
+    "apply_current223": "9a9cd47b50186d496f32b4de5ce052ffd73ca85e702f0d204bb3789c11f6b7dc",
+    "entire222_literal_inverse_exact": true,
+    "only_approved_ScheduleADD1": {
+      "requirementId": "REQ-VSB-ASB-SCHEDULER-OUTCOME",
+      "variantKey": "accepted-sdk-schedule-or-cancel-is-not-replaced-or-duplicated-by-owning-diagnostic",
+      "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ScheduledOwningDiagnosticsTests",
+      "testMethod": "SendScheduleOrCancel_OptionalOwningDiagnosticDoesNotReplaceAcceptedSdkOutcomeAsync"
+    },
+    "different_test_req_peer": "9e1b3a28e3c38f3a747a39c85fa5098f6ecf9a80223438a85adc4618873fac5a",
+    "no_Source4_or_Test3_body_change": true
+  },
+  "finding_decisions": {
+    "F-SB-API-231": {
+      "severity": "High",
+      "title": "Event Hubs producer disposal skips adopted agent shutdown after observer disconnection fails",
+      "owner": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+      "original_index": 3524,
+      "causal_boundary": "Actual original hostile Producer first59 expectedStopCalls1 actual0 after actual observerregistration release/count0/unique handleIO while adopted actual childCompleted gate held. Healthy childStop/rawStop/Completed/publicDispose drains pass; later main hostile drain assertions unreached."
+    },
+    "F-SB-API-152": "Existing diagnostic-family extension Queue Shutdown/Close/Dispose owningWarning2 and Partition Init/Close owningInfo2. Original6queue+2partition hostile fail first96/74/144 sameuniqueownIO, genuine SDK/checkpoint successes and state retention reached; all8healthy controls pass. Dispose queue uses existing Close guard; private scheduled fault-stop Error untouched."
+  },
+  "native_credit_added": 0,
+  "grade": null,
+  "global_closed": false
+}

@@ -1,0 +1,115 @@
+{
+  "source_changes": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "compiled_source_count": 1289,
+      "changed_sources": [
+        "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs"
+      ]
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "compiled_source_count": 697,
+      "changed_sources": [
+        "src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs"
+      ]
+    },
+    {
+      "stage": "corrected",
+      "compiled_source_count": 1289,
+      "changed_sources": []
+    },
+    {
+      "stage": "rollback",
+      "compiled_source_count": 1289,
+      "changed_sources": []
+    },
+    {
+      "stage": "RestoreUtcChronologyGuard",
+      "compiled_source_count": 1289,
+      "changed_sources": [
+        "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs"
+      ]
+    },
+    {
+      "stage": "ClampRawLastUtc",
+      "compiled_source_count": 1289,
+      "changed_sources": [
+        "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs"
+      ]
+    },
+    {
+      "stage": "OverwriteRawFirstUtc",
+      "compiled_source_count": 1289,
+      "changed_sources": [
+        "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs"
+      ]
+    }
+  ],
+  "public_xml": [
+    {
+      "consumer": "previous",
+      "package_xml_sha256": "d1dc5ee4ccc8a81d9eed7871460710e17760ae22fc1378d72c2d1a7de4c407c9",
+      "members": {
+        "P:ViciOne.ServiceBus.Advanced.IMessageBatch`1.FirstMessageReceived": "<member name=\"P:ViciOne.ServiceBus.Advanced.IMessageBatch`1.FirstMessageReceived\">\n            <summary>Gets when the first message entered the batch.</summary>\n        </member>\n        ",
+        "P:ViciOne.ServiceBus.Advanced.IMessageBatch`1.LastMessageReceived": "<member name=\"P:ViciOne.ServiceBus.Advanced.IMessageBatch`1.LastMessageReceived\">\n            <summary>Gets when the last message entered the batch.</summary>\n        </member>\n        "
+      }
+    },
+    {
+      "consumer": "corrected",
+      "package_xml_sha256": "5f1c7937dedb83b7dd5c2dc6458f243624ba0799a378e51003f4c7e678e350e4",
+      "members": {
+        "P:ViciOne.ServiceBus.Advanced.IMessageBatch`1.FirstMessageReceived": "<member name=\"P:ViciOne.ServiceBus.Advanced.IMessageBatch`1.FirstMessageReceived\">\n            <summary>Gets the raw UTC timestamp recorded when the first message entered the batch.</summary>\n            <remarks>Wall-clock corrections can make the last timestamp precede this value; collection time limits use relative timers.</remarks>\n        </member>\n        ",
+        "P:ViciOne.ServiceBus.Advanced.IMessageBatch`1.LastMessageReceived": "<member name=\"P:ViciOne.ServiceBus.Advanced.IMessageBatch`1.LastMessageReceived\">\n            <summary>Gets the raw UTC timestamp recorded when the last message entered the batch.</summary>\n            <remarks>This value can precede the first timestamp after a wall-clock correction and does not measure elapsed collection time.</remarks>\n        </member>\n        "
+      }
+    }
+  ],
+  "oracle_hashes": {
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/packages.lock.json": "50eaf67fedf39dd38cf44f053bca25ff971497e96a26799389ac88933b66d325",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Clock.cs": "f55322447d24846c5f0a445cb00d04be2c7997aa7bb039207b8915103db3aafb",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/NuGet.Config": "f9c0fc2a5c7a0b52e9d2f5b774277674877fd2c3ded01e3f6bc5353d66a33163",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Cases.cs": "358acd9650aeca1bd4aeb4c00068267070775d6cec934bf733cdf7d360bf61e7",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/RuntimeOwner.cs": "d00b5eb15dfe49162cccbce86b0b2a22a19bcbe10a72437c72414cb26b85f411",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Probes.cs": "94ac46a178edee917489c08408c5f6500823762f4790810b2d57f2b889e239e5",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/OwnedLifetime.cs": "b2ef34b3e91c9c39a3aec8a7adb070ccca7679344e06e91b01b4ff16c015b9cf",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/BatchClock.PublicConsumer.csproj": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Program.cs": "a3ee91bdb446fe76f8b56ac0cce664b06a232bb319f5fbcf9ef6e7a87a464bed",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/BatchClock.PublicConsumer.dll": "f55460ccdb4bf78ae28c827256e36482cd712336254f96e5de7e3393c1ec36eb"
+  },
+  "constant_dependencies": {
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/xunit.v3.assert.dll": "d14ea33253a7e289af5254617203b02f0643ba7ff618670de837d642ef22af11",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.dll": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.EventSource.dll": "0672b48143f7c93dc38a5734800b651c246304d65b49cbd3b766e406b04407cd",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Abstractions.dll": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Configuration.dll": "10465e68c4431d3fd790911b56fcd3cfca89dfb4b0ba75d1affd970892824b2f",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.UserSecrets.dll": "c235c7a18dcd91cb045bdb98ff26d78afb06f7ed935b0f2cf1a1ada07ec20a55",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.FileExtensions.dll": "bcbdc341e7134c620e6427ab136cd80d8686f63152e17276aa80c63afa6357ce",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.dll": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.EventLog.dll": "bb731e3abd585d6903609629b763b8837e652c2dd95492a59f85bbe76c7bc6a1",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.FileSystemGlobbing.dll": "56756b08cdffe4f47f4cba71c839375023930df5a16227cf7523085d9137d08e",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Primitives.dll": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.dll": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.CommandLine.dll": "f1b5099d9105ae82076e53f8bc90f537a99004d27479bc9cf47712e6fc645711",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.EnvironmentVariables.dll": "f9d770c991b8ccd6402aa072949843132c00566b026efaa95b63b117fa08517a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Hosting.dll": "a78489eb8dbc8a906865a9fe54dbdc51a270ffd1d1f7c70569b20f3d6e51d029",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Options.dll": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll": "ef5817cda765fc00c65671440d18884fda8d7636b0dd5bed8135470507c9d6b2",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Binder.dll": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Json.dll": "91238276267ea5ad2986a9ba6aefbb6dc4643ccfd48167745ef963509407cf84",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/FastExpressionCompiler.dll": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Console.dll": "8564374e3dd121fedd5443a7755c8fe642d1408b45f73fc980b9d3fa99a47e79",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Physical.dll": "d57f6e1bcf47468a053696ea34b08e7d04edcc2681a5df586145835bd3f0db66",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.dll": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/System.Diagnostics.EventLog.dll": "77aae5ac102caa9c8bdd8473bc55ed7de246b3e06171c6393bad7f959c1a7bf5",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Debug.dll": "6f8570299320cb4b7d732180e73fd4782e73d076b9031eded7c15c94f6609c33",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/BatchClock.PublicConsumer.dll": "f55460ccdb4bf78ae28c827256e36482cd712336254f96e5de7e3393c1ec36eb"
+  }
+}

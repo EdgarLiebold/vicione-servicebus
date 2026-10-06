@@ -1,0 +1,444 @@
+{
+  "utc": "2026-10-05T00:52:34.699093+00:00",
+  "actor": "/root",
+  "status": "NINE_CURRENT_REPAIRED_SOURCE_CONTRACTS_BOUNDED_ACCEPTED",
+  "accepted_before": 5942,
+  "accepted_after": 5951,
+  "overlays": [
+    {
+      "id": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_DestinationAddress",
+      "assembly": "ViciOne.ServiceBus",
+      "source_path": "src/ViciOne.ServiceBus/Serialization/Contexts/BodyConsumeContext.cs",
+      "source_sha256": "e248ad1fc8042b7c8e3e9c9d58649009837d17ca873930553168824fc7287a00",
+      "member_contract": "Direct nullable Uri? projection of SerializerContext.DestinationAddress; absent envelope field returns null, present URI identity preserved. No destination fallback, cloning or materialization; underlying serializer metadata access/conversion errors propagate. Context and URI borrowed, getter owns no tasks/token/resource. Property and getter share one actual property XML node; currentnullable reflected/compiled by qualified F132fourcases.",
+      "current_source_declaration": "public override Uri? DestinationAddress => SerializerContext.DestinationAddress;",
+      "current_source_projected_signature": "public override global::System.Uri? global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.DestinationAddress.get",
+      "current_source_and_qualified_nullability_detail": {
+        "kind": "PropertyGet",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Uri?",
+        "returnNullable": "Annotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": []
+      },
+      "detail_authority": "Root explicit Source projection + independently qualified actual NullabilityInfo reflection for Body; original typed detail retained as historical, no claimed rerunRoslyn scanner.",
+      "historical_typed_signature": "public override global::System.Uri global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.DestinationAddress.get",
+      "historical_typed_detail": {
+        "kind": "PropertyGet",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Uri",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": []
+      },
+      "current_XML_authority": "<member name=\"P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.DestinationAddress\">\n            <summary>Gets the destination endpoint address, or null when none was supplied.</summary>\n        </member>\n        ",
+      "associated_XML_node_id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.DestinationAddress",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-context-serialization467-current-contracts-r1/PER_ID467_CURRENT_SOURCE_CONTRACT_RECOMMENDATIONS.json",
+        "sha256": "fdb9732d5d2962fba6bcf12359fd839ac1a33ed06b0756de77026328e76f6ebe"
+      },
+      "semantic_ordinal": 213,
+      "native_assertion_credit": 0,
+      "CLOSED": false,
+      "whole_implementation_runtime_closed": false
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_FaultAddress",
+      "assembly": "ViciOne.ServiceBus",
+      "source_path": "src/ViciOne.ServiceBus/Serialization/Contexts/BodyConsumeContext.cs",
+      "source_sha256": "e248ad1fc8042b7c8e3e9c9d58649009837d17ca873930553168824fc7287a00",
+      "member_contract": "Direct nullable Uri? projection of SerializerContext.FaultAddress; absent envelope field returns null, present URI identity preserved. No destination fallback, cloning or materialization; underlying serializer metadata access/conversion errors propagate. Context and URI borrowed, getter owns no tasks/token/resource. Property and getter share one actual property XML node; currentnullable reflected/compiled by qualified F132fourcases.",
+      "current_source_declaration": "public override Uri? FaultAddress => SerializerContext.FaultAddress;",
+      "current_source_projected_signature": "public override global::System.Uri? global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.FaultAddress.get",
+      "current_source_and_qualified_nullability_detail": {
+        "kind": "PropertyGet",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Uri?",
+        "returnNullable": "Annotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": []
+      },
+      "detail_authority": "Root explicit Source projection + independently qualified actual NullabilityInfo reflection for Body; original typed detail retained as historical, no claimed rerunRoslyn scanner.",
+      "historical_typed_signature": "public override global::System.Uri global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.FaultAddress.get",
+      "historical_typed_detail": {
+        "kind": "PropertyGet",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Uri",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": []
+      },
+      "current_XML_authority": "<member name=\"P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.FaultAddress\">\n            <summary>Gets the fault endpoint address, or null when none was supplied.</summary>\n        </member>\n        ",
+      "associated_XML_node_id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.FaultAddress",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-context-serialization467-current-contracts-r1/PER_ID467_CURRENT_SOURCE_CONTRACT_RECOMMENDATIONS.json",
+        "sha256": "fdb9732d5d2962fba6bcf12359fd839ac1a33ed06b0756de77026328e76f6ebe"
+      },
+      "semantic_ordinal": 215,
+      "native_assertion_credit": 0,
+      "CLOSED": false,
+      "whole_implementation_runtime_closed": false
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_ResponseAddress",
+      "assembly": "ViciOne.ServiceBus",
+      "source_path": "src/ViciOne.ServiceBus/Serialization/Contexts/BodyConsumeContext.cs",
+      "source_sha256": "e248ad1fc8042b7c8e3e9c9d58649009837d17ca873930553168824fc7287a00",
+      "member_contract": "Direct nullable Uri? projection of SerializerContext.ResponseAddress; absent envelope field returns null, present URI identity preserved. No destination fallback, cloning or materialization; underlying serializer metadata access/conversion errors propagate. Context and URI borrowed, getter owns no tasks/token/resource. Property and getter share one actual property XML node; currentnullable reflected/compiled by qualified F132fourcases.",
+      "current_source_declaration": "public override Uri? ResponseAddress => SerializerContext.ResponseAddress;",
+      "current_source_projected_signature": "public override global::System.Uri? global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.ResponseAddress.get",
+      "current_source_and_qualified_nullability_detail": {
+        "kind": "PropertyGet",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Uri?",
+        "returnNullable": "Annotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": []
+      },
+      "detail_authority": "Root explicit Source projection + independently qualified actual NullabilityInfo reflection for Body; original typed detail retained as historical, no claimed rerunRoslyn scanner.",
+      "historical_typed_signature": "public override global::System.Uri global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.ResponseAddress.get",
+      "historical_typed_detail": {
+        "kind": "PropertyGet",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Uri",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": []
+      },
+      "current_XML_authority": "<member name=\"P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.ResponseAddress\">\n            <summary>Gets the response endpoint address, or null when none was supplied.</summary>\n        </member>\n        ",
+      "associated_XML_node_id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.ResponseAddress",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-context-serialization467-current-contracts-r1/PER_ID467_CURRENT_SOURCE_CONTRACT_RECOMMENDATIONS.json",
+        "sha256": "fdb9732d5d2962fba6bcf12359fd839ac1a33ed06b0756de77026328e76f6ebe"
+      },
+      "semantic_ordinal": 221,
+      "native_assertion_credit": 0,
+      "CLOSED": false,
+      "whole_implementation_runtime_closed": false
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Serialization.BodyConsumeContext.get_SourceAddress",
+      "assembly": "ViciOne.ServiceBus",
+      "source_path": "src/ViciOne.ServiceBus/Serialization/Contexts/BodyConsumeContext.cs",
+      "source_sha256": "e248ad1fc8042b7c8e3e9c9d58649009837d17ca873930553168824fc7287a00",
+      "member_contract": "Direct nullable Uri? projection of SerializerContext.SourceAddress; absent envelope field returns null, present URI identity preserved. No destination fallback, cloning or materialization; underlying serializer metadata access/conversion errors propagate. Context and URI borrowed, getter owns no tasks/token/resource. Property and getter share one actual property XML node; currentnullable reflected/compiled by qualified F132fourcases.",
+      "current_source_declaration": "public override Uri? SourceAddress => SerializerContext.SourceAddress;",
+      "current_source_projected_signature": "public override global::System.Uri? global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.SourceAddress.get",
+      "current_source_and_qualified_nullability_detail": {
+        "kind": "PropertyGet",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Uri?",
+        "returnNullable": "Annotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": []
+      },
+      "detail_authority": "Root explicit Source projection + independently qualified actual NullabilityInfo reflection for Body; original typed detail retained as historical, no claimed rerunRoslyn scanner.",
+      "historical_typed_signature": "public override global::System.Uri global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.SourceAddress.get",
+      "historical_typed_detail": {
+        "kind": "PropertyGet",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "global::System.Uri",
+        "returnNullable": "NotAnnotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": []
+      },
+      "current_XML_authority": "<member name=\"P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.SourceAddress\">\n            <summary>Gets the logical source endpoint address, or null when none was supplied.</summary>\n        </member>\n        ",
+      "associated_XML_node_id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.SourceAddress",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-context-serialization467-current-contracts-r1/PER_ID467_CURRENT_SOURCE_CONTRACT_RECOMMENDATIONS.json",
+        "sha256": "fdb9732d5d2962fba6bcf12359fd839ac1a33ed06b0756de77026328e76f6ebe"
+      },
+      "semantic_ordinal": 223,
+      "native_assertion_credit": 0,
+      "CLOSED": false,
+      "whole_implementation_runtime_closed": false
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.DestinationAddress",
+      "assembly": "ViciOne.ServiceBus",
+      "source_path": "src/ViciOne.ServiceBus/Serialization/Contexts/BodyConsumeContext.cs",
+      "source_sha256": "e248ad1fc8042b7c8e3e9c9d58649009837d17ca873930553168824fc7287a00",
+      "member_contract": "Direct nullable Uri? projection of SerializerContext.DestinationAddress; absent envelope field returns null, present URI identity preserved. No destination fallback, cloning or materialization; underlying serializer metadata access/conversion errors propagate. Context and URI borrowed, getter owns no tasks/token/resource. Property and getter share one actual property XML node; currentnullable reflected/compiled by qualified F132fourcases.",
+      "current_source_declaration": "public override Uri? DestinationAddress => SerializerContext.DestinationAddress;",
+      "current_source_projected_signature": "public override global::System.Uri? global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.DestinationAddress",
+      "current_source_and_qualified_nullability_detail": {
+        "type": "global::System.Uri?",
+        "nullable": "Annotated",
+        "IsReadOnly": true,
+        "IsWriteOnly": false,
+        "getterAccessibility": "Public",
+        "setterAccessibility": null,
+        "initOnly": null
+      },
+      "detail_authority": "Root explicit Source projection + independently qualified actual NullabilityInfo reflection for Body; original typed detail retained as historical, no claimed rerunRoslyn scanner.",
+      "historical_typed_signature": "public override global::System.Uri global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.DestinationAddress",
+      "historical_typed_detail": {
+        "type": "global::System.Uri",
+        "nullable": "NotAnnotated",
+        "IsReadOnly": true,
+        "IsWriteOnly": false,
+        "getterAccessibility": "Public",
+        "setterAccessibility": null,
+        "initOnly": null
+      },
+      "current_XML_authority": "<member name=\"P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.DestinationAddress\">\n            <summary>Gets the destination endpoint address, or null when none was supplied.</summary>\n        </member>\n        ",
+      "associated_XML_node_id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.DestinationAddress",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-context-serialization467-current-contracts-r1/PER_ID467_CURRENT_SOURCE_CONTRACT_RECOMMENDATIONS.json",
+        "sha256": "fdb9732d5d2962fba6bcf12359fd839ac1a33ed06b0756de77026328e76f6ebe"
+      },
+      "semantic_ordinal": 229,
+      "native_assertion_credit": 0,
+      "CLOSED": false,
+      "whole_implementation_runtime_closed": false
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.FaultAddress",
+      "assembly": "ViciOne.ServiceBus",
+      "source_path": "src/ViciOne.ServiceBus/Serialization/Contexts/BodyConsumeContext.cs",
+      "source_sha256": "e248ad1fc8042b7c8e3e9c9d58649009837d17ca873930553168824fc7287a00",
+      "member_contract": "Direct nullable Uri? projection of SerializerContext.FaultAddress; absent envelope field returns null, present URI identity preserved. No destination fallback, cloning or materialization; underlying serializer metadata access/conversion errors propagate. Context and URI borrowed, getter owns no tasks/token/resource. Property and getter share one actual property XML node; currentnullable reflected/compiled by qualified F132fourcases.",
+      "current_source_declaration": "public override Uri? FaultAddress => SerializerContext.FaultAddress;",
+      "current_source_projected_signature": "public override global::System.Uri? global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.FaultAddress",
+      "current_source_and_qualified_nullability_detail": {
+        "type": "global::System.Uri?",
+        "nullable": "Annotated",
+        "IsReadOnly": true,
+        "IsWriteOnly": false,
+        "getterAccessibility": "Public",
+        "setterAccessibility": null,
+        "initOnly": null
+      },
+      "detail_authority": "Root explicit Source projection + independently qualified actual NullabilityInfo reflection for Body; original typed detail retained as historical, no claimed rerunRoslyn scanner.",
+      "historical_typed_signature": "public override global::System.Uri global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.FaultAddress",
+      "historical_typed_detail": {
+        "type": "global::System.Uri",
+        "nullable": "NotAnnotated",
+        "IsReadOnly": true,
+        "IsWriteOnly": false,
+        "getterAccessibility": "Public",
+        "setterAccessibility": null,
+        "initOnly": null
+      },
+      "current_XML_authority": "<member name=\"P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.FaultAddress\">\n            <summary>Gets the fault endpoint address, or null when none was supplied.</summary>\n        </member>\n        ",
+      "associated_XML_node_id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.FaultAddress",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-context-serialization467-current-contracts-r1/PER_ID467_CURRENT_SOURCE_CONTRACT_RECOMMENDATIONS.json",
+        "sha256": "fdb9732d5d2962fba6bcf12359fd839ac1a33ed06b0756de77026328e76f6ebe"
+      },
+      "semantic_ordinal": 231,
+      "native_assertion_credit": 0,
+      "CLOSED": false,
+      "whole_implementation_runtime_closed": false
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.ResponseAddress",
+      "assembly": "ViciOne.ServiceBus",
+      "source_path": "src/ViciOne.ServiceBus/Serialization/Contexts/BodyConsumeContext.cs",
+      "source_sha256": "e248ad1fc8042b7c8e3e9c9d58649009837d17ca873930553168824fc7287a00",
+      "member_contract": "Direct nullable Uri? projection of SerializerContext.ResponseAddress; absent envelope field returns null, present URI identity preserved. No destination fallback, cloning or materialization; underlying serializer metadata access/conversion errors propagate. Context and URI borrowed, getter owns no tasks/token/resource. Property and getter share one actual property XML node; currentnullable reflected/compiled by qualified F132fourcases.",
+      "current_source_declaration": "public override Uri? ResponseAddress => SerializerContext.ResponseAddress;",
+      "current_source_projected_signature": "public override global::System.Uri? global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.ResponseAddress",
+      "current_source_and_qualified_nullability_detail": {
+        "type": "global::System.Uri?",
+        "nullable": "Annotated",
+        "IsReadOnly": true,
+        "IsWriteOnly": false,
+        "getterAccessibility": "Public",
+        "setterAccessibility": null,
+        "initOnly": null
+      },
+      "detail_authority": "Root explicit Source projection + independently qualified actual NullabilityInfo reflection for Body; original typed detail retained as historical, no claimed rerunRoslyn scanner.",
+      "historical_typed_signature": "public override global::System.Uri global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.ResponseAddress",
+      "historical_typed_detail": {
+        "type": "global::System.Uri",
+        "nullable": "NotAnnotated",
+        "IsReadOnly": true,
+        "IsWriteOnly": false,
+        "getterAccessibility": "Public",
+        "setterAccessibility": null,
+        "initOnly": null
+      },
+      "current_XML_authority": "<member name=\"P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.ResponseAddress\">\n            <summary>Gets the response endpoint address, or null when none was supplied.</summary>\n        </member>\n        ",
+      "associated_XML_node_id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.ResponseAddress",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-context-serialization467-current-contracts-r1/PER_ID467_CURRENT_SOURCE_CONTRACT_RECOMMENDATIONS.json",
+        "sha256": "fdb9732d5d2962fba6bcf12359fd839ac1a33ed06b0756de77026328e76f6ebe"
+      },
+      "semantic_ordinal": 237,
+      "native_assertion_credit": 0,
+      "CLOSED": false,
+      "whole_implementation_runtime_closed": false
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.SourceAddress",
+      "assembly": "ViciOne.ServiceBus",
+      "source_path": "src/ViciOne.ServiceBus/Serialization/Contexts/BodyConsumeContext.cs",
+      "source_sha256": "e248ad1fc8042b7c8e3e9c9d58649009837d17ca873930553168824fc7287a00",
+      "member_contract": "Direct nullable Uri? projection of SerializerContext.SourceAddress; absent envelope field returns null, present URI identity preserved. No destination fallback, cloning or materialization; underlying serializer metadata access/conversion errors propagate. Context and URI borrowed, getter owns no tasks/token/resource. Property and getter share one actual property XML node; currentnullable reflected/compiled by qualified F132fourcases.",
+      "current_source_declaration": "public override Uri? SourceAddress => SerializerContext.SourceAddress;",
+      "current_source_projected_signature": "public override global::System.Uri? global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.SourceAddress",
+      "current_source_and_qualified_nullability_detail": {
+        "type": "global::System.Uri?",
+        "nullable": "Annotated",
+        "IsReadOnly": true,
+        "IsWriteOnly": false,
+        "getterAccessibility": "Public",
+        "setterAccessibility": null,
+        "initOnly": null
+      },
+      "detail_authority": "Root explicit Source projection + independently qualified actual NullabilityInfo reflection for Body; original typed detail retained as historical, no claimed rerunRoslyn scanner.",
+      "historical_typed_signature": "public override global::System.Uri global::ViciOne.ServiceBus.Serialization.BodyConsumeContext.SourceAddress",
+      "historical_typed_detail": {
+        "type": "global::System.Uri",
+        "nullable": "NotAnnotated",
+        "IsReadOnly": true,
+        "IsWriteOnly": false,
+        "getterAccessibility": "Public",
+        "setterAccessibility": null,
+        "initOnly": null
+      },
+      "current_XML_authority": "<member name=\"P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.SourceAddress\">\n            <summary>Gets the logical source endpoint address, or null when none was supplied.</summary>\n        </member>\n        ",
+      "associated_XML_node_id": "P:ViciOne.ServiceBus.Serialization.BodyConsumeContext.SourceAddress",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-context-serialization467-current-contracts-r1/PER_ID467_CURRENT_SOURCE_CONTRACT_RECOMMENDATIONS.json",
+        "sha256": "fdb9732d5d2962fba6bcf12359fd839ac1a33ed06b0756de77026328e76f6ebe"
+      },
+      "semantic_ordinal": 239,
+      "native_assertion_credit": 0,
+      "CLOSED": false,
+      "whole_implementation_runtime_closed": false
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Serialization.MessageIdHeaders.Get``1(System.String,System.Nullable{``0})",
+      "assembly": "ViciOne.ServiceBus",
+      "source_path": "src/ViciOne.ServiceBus/Serialization/Headers/MessageIdHeaders.cs",
+      "source_sha256": "471b1d31fa152067539be7ec457c9569df43ca8f1c51340c711f66d38ea5ceb6",
+      "member_contract": "Blank/null key rejected before lookup. MessageId key compared OrdinalIgnoreCase; compatible Guid value returned exactly, different key or incompatible requested value type returns exact caller defaultValue (including omitted null). Default Tstruct/nullable syntax and optional default unchanged. No conversion/owned task/cancellation/lifetime side effect. Qualified F131 valuecase proves caller fallback42 instead of previousdefault(T)0; explicitreference SPI separately accepted existing original IDs, no extraID here.",
+      "current_source_declaration": "public T? Get<T>(string key, T? defaultValue = null)",
+      "current_source_projected_signature": "public T? global::ViciOne.ServiceBus.Serialization.MessageIdHeaders.Get<T>(string key, [T? defaultValue = null]) where T : struct",
+      "current_source_and_qualified_nullability_detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "T?",
+        "returnNullable": "Annotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "key",
+            "type": "string",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          },
+          {
+            "Name": "defaultValue",
+            "type": "T?",
+            "nullable": "Annotated",
+            "IsOptional": true,
+            "HasExplicitDefaultValue": true,
+            "defaultValue": "",
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "detail_authority": "Root explicit Source projection + independently qualified actual NullabilityInfo reflection for Body; original typed detail retained as historical, no claimed rerunRoslyn scanner.",
+      "historical_typed_signature": "public T? global::ViciOne.ServiceBus.Serialization.MessageIdHeaders.Get<T>(string key, [T? defaultValue = null]) where T : struct",
+      "historical_typed_detail": {
+        "kind": "Ordinary",
+        "IsExtensionMethod": false,
+        "IsAsync": false,
+        "IsReadOnly": false,
+        "returnType": "T?",
+        "returnNullable": "Annotated",
+        "returnsByRef": false,
+        "returnsByRefReadonly": false,
+        "returnAttributes": [],
+        "parameters": [
+          {
+            "Name": "key",
+            "type": "string",
+            "nullable": "NotAnnotated",
+            "IsOptional": false,
+            "HasExplicitDefaultValue": false,
+            "defaultValue": null,
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          },
+          {
+            "Name": "defaultValue",
+            "type": "T?",
+            "nullable": "Annotated",
+            "IsOptional": true,
+            "HasExplicitDefaultValue": true,
+            "defaultValue": "",
+            "refKind": "None",
+            "IsParams": false,
+            "attributes": []
+          }
+        ]
+      },
+      "current_XML_authority": "<member name=\"M:ViciOne.ServiceBus.Serialization.MessageIdHeaders.Get``1(System.String,System.Nullable{``0})\">\n            <summary>Gets the message identifier as the requested value type.</summary>\n            <typeparam name=\"T\">The requested value type.</typeparam>\n            <param name=\"key\">The non-empty header name.</param>\n            <param name=\"defaultValue\">The fallback for a different header name or incompatible value type.</param>\n            <returns>The message identifier as <typeparamref name=\"T\" />, or the fallback.</returns>\n        </member>\n        ",
+      "associated_XML_node_id": "M:ViciOne.ServiceBus.Serialization.MessageIdHeaders.Get``1(System.String,System.Nullable{``0})",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-context-serialization467-current-contracts-r1/PER_ID467_CURRENT_SOURCE_CONTRACT_RECOMMENDATIONS.json",
+        "sha256": "fdb9732d5d2962fba6bcf12359fd839ac1a33ed06b0756de77026328e76f6ebe"
+      },
+      "semantic_ordinal": 340,
+      "native_assertion_credit": 0,
+      "CLOSED": false,
+      "whole_implementation_runtime_closed": false
+    }
+  ],
+  "current_source_whole_root_read": "50b35a108Body+88Headerwhole, prior49af459...current qualified16cases",
+  "repair_acceptance": "PACKAGE157_F131_F132_CURRENT353_FRESH2_BOUNDED_ROOT_REPAIR_ACCEPTANCE_R1.json",
+  "native_new_credit": 0,
+  "limits": [
+    "No fake new compilerparsedtyped metadata; explicitcurrentSourceprojection/reflection authority.",
+    "Fourproperties+fourgetters sharefour actualXML nodes, not8distinct.",
+    "Two DictionaryGet IDs remain held F134; no whole467native or APIA+ claim."
+  ]
+}

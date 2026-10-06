@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-04T23:38:23.696653+00:00",
+  "decision": "ACCEPT35_PUBLISH_RESPOND_CONFIGURATION_SOURCE_CONTRACTS",
+  "api_before": 4260,
+  "api_after": 4295,
+  "semantic_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package154-publish-respond35-current-contracts-r1/REPORT.json",
+    "sha256": "b08fd4177c13853e6bb2ef85a5d3c2c21cd54388f4433add8e68b2b8aca1cc9d"
+  },
+  "per_member": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package154-publish-respond35-current-contracts-r1/PER_MEMBER_CONTRACT_MATRIX.json",
+    "sha256": "5441f2f55f2d1fd51a077f7aee83c5f6db810b1c850b35854235a2a951d0bb69"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package154-publish-respond35-current-contracts-r1/MANIFEST.json",
+    "sha256": "d882531ddd59bc5f8861fafbdc511dd58808a4f6d22f551ed5aa46bdf984fc0f"
+  },
+  "root_own_source_reads": [
+    "55d4de",
+    "8a2451",
+    "92ea47"
+  ],
+  "root_norm_profiles_and_exact_route_assignment": [
+    "47418c",
+    "454cb5"
+  ],
+  "root_metadata_and_XML": [
+    "18ac57",
+    "b86607"
+  ],
+  "all_current35_source_declarations_bodies_XML_equal": true,
+  "typed_metadata_difference": "Only actual emitted parameter NullableAttribute on callback and selected initialized message factory delegate; exact other Detail fields independently equal. Optional literal null from physical source; raw empty default representation retained.",
+  "limits": [
+    "33 stateless configuration adapters and2 static types only. No underlying activity cancellation, broker delivery or resource lifetime closure.",
+    "Binder.Add result identity is arbitrary return, callback deferred; provided Tasks are already created. Null source/input guards and selected concrete factory/activity shape remain per ID.",
+    "Existing13 assertion catalogs retained as source references; no native case credit in this decision. Independent epoch156 neighbors qualification pending.",
+    "Underlying normal Respond Execute cancellation candidate held separately."
+  ],
+  "CLOSED": false
+}

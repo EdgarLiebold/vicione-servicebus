@@ -1,0 +1,61 @@
+{
+  "status": "ROOT_FINAL_IMMUTABLE_MANIFEST_AND_EVERY_PRIMARY_CHILD_HEADERS_VERIFIED",
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F040_ROOT_ACCEPTANCE.json",
+    "sha256": "ae89f8483f17ce151857c1d6759fda1f330bda968b25e3e4498a59be64c7b7d3"
+  },
+  "final_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/FINAL_MANIFEST.json",
+    "sha256": "6f65c17f77d5941f77b5508ac5cdb7095d78d8228beb7e01ccbf11ed0f775aba"
+  },
+  "artifacts": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/BINDING_PROOF.json",
+      "sha256": "bbbf390aa59b7179f97a3a2cb48cff7d7686d35288c131e22a718924212d97d3",
+      "bytes": 159237
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/FINAL_PER_CHILD_BINDING_SUPPLEMENT.json",
+      "sha256": "b12385347d6049387c8e458ce8cd604480dc8ea878650a1fc3d4badd7a7efef2",
+      "bytes": 2812
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/LOG_FULL_READ_SEGMENTS.json",
+      "sha256": "f44d1bd1fd4f024e0572623d5d5c583843661025e0b8c89c69199050ea3ee16e",
+      "bytes": 768662
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/MANIFEST.json",
+      "sha256": "7b14a2943883da9a4e33e5a9ca77170502e586d890077d85fdd00860b42e38be",
+      "bytes": 2318
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/READ_CLOSURE.json",
+      "sha256": "a7156fda97460c8bf3240869cbadd2a6f6235320ee16362711aee4647a52835f",
+      "bytes": 107490
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/REVIEW.json",
+      "sha256": "594e20d0edb69ad0330ce46eebfcc705f87510ace9ca728418fb88388e01a5aa",
+      "bytes": 6719
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/REVIEW.txt",
+      "sha256": "a6aabd5f1657815e817a9d107d76dc8f080c2cb41baaeda861d574355fa703dc",
+      "bytes": 3212
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/complete_review.py",
+      "sha256": "1bd742124d7cadc6dbf2bff1f992eeca95e577908e329b9c0a13d9b968ca5c8d",
+      "bytes": 17569
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/verify_readonly.py",
+      "sha256": "878709ee63e1a197d7d4d716ecf3d143707e499b8797d684d0820019d0e9f826",
+      "bytes": 10874
+    }
+  ],
+  "verified_primary_children": 62,
+  "verified_Core_and_Abstractions_headers": 124,
+  "limits": "Same frozen scopedF040acceptance. No overall API/canonical/loadedframework proof transferred."
+}

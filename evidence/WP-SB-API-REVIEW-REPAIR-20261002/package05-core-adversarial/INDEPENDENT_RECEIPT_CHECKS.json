@@ -1,0 +1,695 @@
+{
+  "package05_actual_receipts": [
+    {
+      "phase": "package05-original-restore",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-restore.log",
+      "log_sha256": "0fe051d36c68a516bf37c3601180d09167b5e1ffe73aee6df07e19878a2fd4c1"
+    },
+    {
+      "phase": "package05-original-build",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-build.log",
+      "log_sha256": "e09a998c65130c151fc404bf7445dbc24fd4ff833b77198a5145e6e03041ab9c"
+    },
+    {
+      "phase": "package05-original-restore-r2",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-restore-r2.log",
+      "log_sha256": "ec9910f86e4ab6bdc07d2cf30b3f3dd08dfe2cef704f4d0298720e5b66c04064"
+    },
+    {
+      "phase": "package05-original-build-r2",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-build-r2.log",
+      "log_sha256": "61d6826c3b00aee15c901fce860873291f8c340a0d8944c430bb2e2b93f92bac"
+    },
+    {
+      "phase": "package05-original-run42",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-run42.log",
+      "log_sha256": "b7ba2df1e492dac2016cd91d56a41b70cc167cb23b27f849440cc18a84471061"
+    },
+    {
+      "phase": "package05-corrected-product-core-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-product-core-build.log",
+      "log_sha256": "be0032630725a179a9bc3c867d602d834507e5dc1941733ec1695dc1d01bca6c"
+    },
+    {
+      "phase": "package05-corrected-pack-abstractions",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-pack-abstractions.log",
+      "log_sha256": "12c3145f544e400cdbcb871468a3cdf4d998044923867bb67bac209fa7c838f1"
+    },
+    {
+      "phase": "package05-corrected-pack-core",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-pack-core.log",
+      "log_sha256": "060b812fbe22935829d70469a73b75f5946803c59c4a81bcfe9055cd9a9dc06d"
+    },
+    {
+      "phase": "package05-corrected-restore",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-restore.log",
+      "log_sha256": "0dde507e22e1f73b37a6d4a66b58f4de72ebef455eaf99fc6f1d2271efdc57ea"
+    },
+    {
+      "phase": "package05-corrected-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-build.log",
+      "log_sha256": "ca5b11efd7f7cab80812267d25119a83fe4da6c8d3dbd5e2ede35d330cfb2ed0"
+    },
+    {
+      "phase": "package05-corrected-run42",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-run42.log",
+      "log_sha256": "b43e93fe5c18564bc18676f3e211a25debdb73806402037168104118f27d954e"
+    },
+    {
+      "phase": "package05-original-final-metadata-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-final-metadata-build.log",
+      "log_sha256": "3af2e0922b84ca6feef52bf203784aa65a1a2a6d9814b88187db5d3007a1aaf4"
+    },
+    {
+      "phase": "package05-original-final-metadata-run42",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-final-metadata-run42.log",
+      "log_sha256": "c9a79a50bd65f18dd4dceef3c7939e651d1eeee5dba11dc66d146e58c86e5ddc"
+    },
+    {
+      "phase": "package05-corrected-final-metadata-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-final-metadata-build.log",
+      "log_sha256": "b9808a35f51ae1a4dff192bf267aa85b009ab0128b542a8e2b0efaaa3e42063f"
+    },
+    {
+      "phase": "package05-corrected-final-metadata-run42",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-final-metadata-run42.log",
+      "log_sha256": "64ef0ee0c3381532c65e64e4faef86d0da8e47dd2a6ad7c6715014a671221d1a"
+    },
+    {
+      "phase": "package05-mut-corrected-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-corrected-build.log",
+      "log_sha256": "411d04a70df8d1714ec59166c660d8ca11a718248ab9832f7e17ef04cf908f56"
+    },
+    {
+      "phase": "package05-mut-corrected-all",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-corrected-all.log",
+      "log_sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1"
+    },
+    {
+      "phase": "package05-mut-results-return-array-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-return-array-build.log",
+      "log_sha256": "2249d796857d4d8c1f7eb034e083c5e435a073fbc8ea267d4c55ca8ace88c56d"
+    },
+    {
+      "phase": "package05-mut-results-return-array-results-membership-plain",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-return-array-results-membership-plain.log",
+      "log_sha256": "d031b93cb0672b40f96b6e106ec9b2e708cdf4fc6982653efda6b65a5c1488b7"
+    },
+    {
+      "phase": "package05-mut-results-return-array-results-null-inner",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-return-array-results-null-inner.log",
+      "log_sha256": "193823e531f8c298b3ef9ee295dabb306f20eb3f6825b5c680734add876c72ea"
+    },
+    {
+      "phase": "package05-mut-results-live-input-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-live-input-build.log",
+      "log_sha256": "4885bcca6ac1c4a111460c459d90cdae64ee77bf0a61d3e3714d4b822b1b23f5"
+    },
+    {
+      "phase": "package05-mut-results-live-input-results-membership-inner",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-live-input-results-membership-inner.log",
+      "log_sha256": "d0aa040d8e873c9d4e91cd32ef1ce1a62e0a0064a8b34c341abab5a912a2bdfc"
+    },
+    {
+      "phase": "package05-mut-results-live-input-results-empty",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-live-input-results-empty.log",
+      "log_sha256": "2e8ea56fa0605d6bc7fac114f4746b6e2f3668c1cfb63a54d04330f5def92cca"
+    },
+    {
+      "phase": "package05-mut-results-null-guard-lost-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-null-guard-lost-build.log",
+      "log_sha256": "7ad1fa41f82ca8057d0f01e14df4996357900f30c78bbe39a91a7263459baed9"
+    },
+    {
+      "phase": "package05-mut-results-null-guard-lost-results-null-plain",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-null-guard-lost-results-null-plain.log",
+      "log_sha256": "99c0442f662afef03f6434befbe47d38516d85f6724bcd31081a897c2a6f87f5"
+    },
+    {
+      "phase": "package05-mut-results-null-guard-lost-results-membership-inner",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-null-guard-lost-results-membership-inner.log",
+      "log_sha256": "7b2d4dac1d4d496d2432c10e7296bff27beccbff218698de56d44c8ce3e33646"
+    },
+    {
+      "phase": "package05-mut-host-omit-StartTimeout-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StartTimeout-build.log",
+      "log_sha256": "9be7e931b54a406e557686b561c4f490c76b3a07d8c29565fc93c399248f0384"
+    },
+    {
+      "phase": "package05-mut-host-omit-StartTimeout-host-StartTimeout-too-large",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StartTimeout-host-StartTimeout-too-large.log",
+      "log_sha256": "141db072ed6fcb616f8d209a661969923bd95299e9bcbc3a2322101410075065"
+    },
+    {
+      "phase": "package05-mut-host-omit-StartTimeout-host-relation-equal",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StartTimeout-host-relation-equal.log",
+      "log_sha256": "9cad27b56d7b08955b63570444e6505f425ac050da392ddc50c3fbf5843a450b"
+    },
+    {
+      "phase": "package05-mut-host-omit-StopTimeout-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StopTimeout-build.log",
+      "log_sha256": "7cf13c79dd72868f8ceb2893f712fd4de048c04e6dbabcdbbf1caabc492003c5"
+    },
+    {
+      "phase": "package05-mut-host-omit-StopTimeout-host-StopTimeout-too-large",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StopTimeout-host-StopTimeout-too-large.log",
+      "log_sha256": "637f4e1b96fc5db4148a35062fa9f0963f876de19400dbcc5af9fb4f29b99742"
+    },
+    {
+      "phase": "package05-mut-host-omit-StopTimeout-host-relation-equal",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StopTimeout-host-relation-equal.log",
+      "log_sha256": "4e07b4c01eb427749559db509a7f3259c12e093e7aeba9f2412421a6e6d0f4a3"
+    },
+    {
+      "phase": "package05-mut-host-omit-ConsumerStopTimeout-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-ConsumerStopTimeout-build.log",
+      "log_sha256": "becd4cd71c27eaf8491bad6cd3d1e25e2cd3e484c2b657e9496f80bbfd6a0d72"
+    },
+    {
+      "phase": "package05-mut-host-omit-ConsumerStopTimeout-host-ConsumerStopTimeout-too-large",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-ConsumerStopTimeout-host-ConsumerStopTimeout-too-large.log",
+      "log_sha256": "e20f26a9a66ce9b75d04318851c365aa06d0cd373d0572c8779103c38904e37b"
+    },
+    {
+      "phase": "package05-mut-host-omit-ConsumerStopTimeout-host-relation-equal",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-ConsumerStopTimeout-host-relation-equal.log",
+      "log_sha256": "d523ff5cdc4b6e98232d734acf6b30c0b47795a01d14f45a8ac61b17e80a0629"
+    },
+    {
+      "phase": "package05-mut-host-inclusive-upper-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-inclusive-upper-build.log",
+      "log_sha256": "44faae635342f74df6526a2b208e80645346ca4afd16104d1027475739f79677"
+    },
+    {
+      "phase": "package05-mut-host-inclusive-upper-host-StartTimeout-maximum",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-inclusive-upper-host-StartTimeout-maximum.log",
+      "log_sha256": "139441f390da6b7471f01602de8d897e5167402c5fc6cf9478acb7f42dc9f3c4"
+    },
+    {
+      "phase": "package05-mut-r2-corrected-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-corrected-build.log",
+      "log_sha256": "52d3839178111c85ae08d859e4e23dafa7728909ce4006074a2b8fa1ed012b6b"
+    },
+    {
+      "phase": "package05-mut-r2-corrected-all",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-corrected-all.log",
+      "log_sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1"
+    },
+    {
+      "phase": "package05-mut-r2-results-return-array-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-return-array-build.log",
+      "log_sha256": "9c597f8942db136f92747525e34bc9b555fcf683dd51aa143636d4d16876802c"
+    },
+    {
+      "phase": "package05-mut-r2-results-return-array-results-membership-plain",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-return-array-results-membership-plain.log",
+      "log_sha256": "d031b93cb0672b40f96b6e106ec9b2e708cdf4fc6982653efda6b65a5c1488b7"
+    },
+    {
+      "phase": "package05-mut-r2-results-return-array-results-null-inner",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-return-array-results-null-inner.log",
+      "log_sha256": "193823e531f8c298b3ef9ee295dabb306f20eb3f6825b5c680734add876c72ea"
+    },
+    {
+      "phase": "package05-mut-r2-results-live-input-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-live-input-build.log",
+      "log_sha256": "4950f4577d4dfb5f09d6dffdd2d3e20452f03a024b9d46c0a6ee4b9d08a374a1"
+    },
+    {
+      "phase": "package05-mut-r2-results-live-input-results-membership-inner",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-live-input-results-membership-inner.log",
+      "log_sha256": "d0aa040d8e873c9d4e91cd32ef1ce1a62e0a0064a8b34c341abab5a912a2bdfc"
+    },
+    {
+      "phase": "package05-mut-r2-results-live-input-results-empty",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-live-input-results-empty.log",
+      "log_sha256": "2e8ea56fa0605d6bc7fac114f4746b6e2f3668c1cfb63a54d04330f5def92cca"
+    },
+    {
+      "phase": "package05-mut-r2-results-null-guard-lost-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-null-guard-lost-build.log",
+      "log_sha256": "823c3f01b2e0fab68afb05c29608ea80023beeaca4ed694e22f5a314e0d14f8b"
+    },
+    {
+      "phase": "package05-mut-r2-results-null-guard-lost-results-null-plain",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-null-guard-lost-results-null-plain.log",
+      "log_sha256": "99c0442f662afef03f6434befbe47d38516d85f6724bcd31081a897c2a6f87f5"
+    },
+    {
+      "phase": "package05-mut-r2-results-null-guard-lost-results-membership-inner",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-null-guard-lost-results-membership-inner.log",
+      "log_sha256": "7b2d4dac1d4d496d2432c10e7296bff27beccbff218698de56d44c8ce3e33646"
+    },
+    {
+      "phase": "package05-mut-r2-host-omit-StartTimeout-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StartTimeout-build.log",
+      "log_sha256": "5f155d9289ba1a90432eae1a21b832034863cca4dea612221673815fba615bf1"
+    },
+    {
+      "phase": "package05-mut-r2-host-omit-StartTimeout-host-StartTimeout-too-large",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StartTimeout-host-StartTimeout-too-large.log",
+      "log_sha256": "141db072ed6fcb616f8d209a661969923bd95299e9bcbc3a2322101410075065"
+    },
+    {
+      "phase": "package05-mut-r2-host-omit-StartTimeout-host-relation-equal",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StartTimeout-host-relation-equal.log",
+      "log_sha256": "9cad27b56d7b08955b63570444e6505f425ac050da392ddc50c3fbf5843a450b"
+    },
+    {
+      "phase": "package05-mut-r2-host-omit-StopTimeout-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StopTimeout-build.log",
+      "log_sha256": "617b4419821245304238f4df0832bbc6797186eca30b3ba21c89789b4330a1a9"
+    },
+    {
+      "phase": "package05-mut-r2-host-omit-StopTimeout-host-StopTimeout-too-large",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StopTimeout-host-StopTimeout-too-large.log",
+      "log_sha256": "637f4e1b96fc5db4148a35062fa9f0963f876de19400dbcc5af9fb4f29b99742"
+    },
+    {
+      "phase": "package05-mut-r2-host-omit-StopTimeout-host-relation-equal",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StopTimeout-host-relation-equal.log",
+      "log_sha256": "4e07b4c01eb427749559db509a7f3259c12e093e7aeba9f2412421a6e6d0f4a3"
+    },
+    {
+      "phase": "package05-mut-r2-host-omit-ConsumerStopTimeout-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-ConsumerStopTimeout-build.log",
+      "log_sha256": "ed5c3ef6403080cc41116c30e3109307172d3930a67b8c47eab444ad279a7ea0"
+    },
+    {
+      "phase": "package05-mut-r2-host-omit-ConsumerStopTimeout-host-ConsumerStopTimeout-too-large",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-ConsumerStopTimeout-host-ConsumerStopTimeout-too-large.log",
+      "log_sha256": "e20f26a9a66ce9b75d04318851c365aa06d0cd373d0572c8779103c38904e37b"
+    },
+    {
+      "phase": "package05-mut-r2-host-omit-ConsumerStopTimeout-host-relation-equal",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-ConsumerStopTimeout-host-relation-equal.log",
+      "log_sha256": "d523ff5cdc4b6e98232d734acf6b30c0b47795a01d14f45a8ac61b17e80a0629"
+    },
+    {
+      "phase": "package05-mut-r2-host-inclusive-upper-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-inclusive-upper-build.log",
+      "log_sha256": "e4d49ba15513ca116df623fe6941b6e8b0267ecc3b920fe4c32f1da6dfb55af3"
+    },
+    {
+      "phase": "package05-mut-r2-host-inclusive-upper-host-StartTimeout-maximum",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-inclusive-upper-host-StartTimeout-maximum.log",
+      "log_sha256": "139441f390da6b7471f01602de8d897e5167402c5fc6cf9478acb7f42dc9f3c4"
+    },
+    {
+      "phase": "package05-mut-r2-host-inclusive-upper-host-StopTimeout-null",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-inclusive-upper-host-StopTimeout-null.log",
+      "log_sha256": "154747145ddccb385f3599f51b5bb6fd8c3a0aa5940d68537f2b03fb9965917d"
+    },
+    {
+      "phase": "package05-mut-r2-host-fractional-compare-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-fractional-compare-build.log",
+      "log_sha256": "a51369690bc6890358f5208d2d6223c2654e29f21bdf32d613e348b3ccf82b77"
+    },
+    {
+      "phase": "package05-mut-r2-host-fractional-compare-host-StopTimeout-fraction",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-fractional-compare-host-StopTimeout-fraction.log",
+      "log_sha256": "b0b524b7bebb9021854fec77dee5268b90a8a0d80c13496b2b8346d7f80a39f6"
+    },
+    {
+      "phase": "package05-mut-r2-host-fractional-compare-host-StartTimeout-null",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-fractional-compare-host-StartTimeout-null.log",
+      "log_sha256": "3b8fae5a094c71de1902f4631f99a7a1049b298750e91dbfd9cbf49a1d8965f9"
+    },
+    {
+      "phase": "package05-mut-r2-host-relation-lost-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-relation-lost-build.log",
+      "log_sha256": "7a2ab0d4b026ce5425605b1362b54e15fc1cfe21915490afd577801a683dc268"
+    },
+    {
+      "phase": "package05-mut-r2-host-relation-lost-host-relation-greater",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-relation-lost-host-relation-greater.log",
+      "log_sha256": "ca9e57062b7fc295398740891d4c9fb1f5a49ed2679fec103ddf2a5b6cb02ada"
+    },
+    {
+      "phase": "package05-mut-r3-corrected-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-corrected-build.log",
+      "log_sha256": "fc9126ebdd0c9844f7d321fae7bc6e709d29221ccafd8c824bb99fb42c53a9a0"
+    },
+    {
+      "phase": "package05-mut-r3-corrected-all",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-corrected-all.log",
+      "log_sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1"
+    },
+    {
+      "phase": "package05-mut-r3-host-relation-lost-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-relation-lost-build.log",
+      "log_sha256": "f2c64c37ef440e5120f5fbc04fbcadd02446c33d1ee606fe88985b2112c169bf"
+    },
+    {
+      "phase": "package05-mut-r3-host-relation-lost-host-relation-greater",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-relation-lost-host-relation-greater.log",
+      "log_sha256": "ca9e57062b7fc295398740891d4c9fb1f5a49ed2679fec103ddf2a5b6cb02ada"
+    },
+    {
+      "phase": "package05-mut-r3-host-relation-lost-host-relation-equal",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-relation-lost-host-relation-equal.log",
+      "log_sha256": "1d37535be7f6401826601083691d2d3798b648378697c9f0b803a54897e6126a"
+    },
+    {
+      "phase": "package05-mut-r3-host-positive-lost-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-positive-lost-build.log",
+      "log_sha256": "ced69ccd1cdc92923afd8957e256b76654d411f160d753be23ffa9bfa49240bf"
+    },
+    {
+      "phase": "package05-mut-r3-host-positive-lost-host-StartTimeout-zero",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-positive-lost-host-StartTimeout-zero.log",
+      "log_sha256": "7457d0c2ad220fe0037cb5469b81f35c14c28b469344fcfbb3bee9246b47e4e3"
+    },
+    {
+      "phase": "package05-mut-r3-host-positive-lost-host-StartTimeout-maximum",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-positive-lost-host-StartTimeout-maximum.log",
+      "log_sha256": "8f1321e804b3e2ffc438aed286ad6d7103e6ee886142106320209cd2f0cbc520"
+    },
+    {
+      "phase": "package05-mut-r3-batch-provider-guard-lost-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-provider-guard-lost-build.log",
+      "log_sha256": "417d24832c675f712e1e5f5f5515f6c13607b86ff0680885432121338efa33b7"
+    },
+    {
+      "phase": "package05-mut-r3-batch-provider-guard-lost-batch-default-too-large",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-provider-guard-lost-batch-default-too-large.log",
+      "log_sha256": "6b98555c0663d6bb3c9e742794984630383fdae078be5c32243c838cfb31dd50"
+    },
+    {
+      "phase": "package05-mut-r3-batch-provider-guard-lost-batch-custom-long-size",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-provider-guard-lost-batch-custom-long-size.log",
+      "log_sha256": "3f1463bc1a3e4500cab82c14d39db792de347c2832c42792572c41b8fa001ae9"
+    },
+    {
+      "phase": "package05-mut-r3-batch-global-options-cap-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-global-options-cap-build.log",
+      "log_sha256": "7faf54d4d66c89f5cacff0a237b49708d62d09fcb76cda497e2effacee3f05c4"
+    },
+    {
+      "phase": "package05-mut-r3-batch-global-options-cap-batch-custom-long-expire",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-global-options-cap-batch-custom-long-expire.log",
+      "log_sha256": "a09319e71ffcd9c0d883001a7babd34224a589b32e601beece4cb03e6f2ccef4"
+    },
+    {
+      "phase": "package05-mut-r3-batch-global-options-cap-batch-system-ordinary",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-global-options-cap-batch-system-ordinary.log",
+      "log_sha256": "27368328d3fe5cd0f1ae6c820b98d027b44005900daccaa5e159da504d4262b1"
+    },
+    {
+      "phase": "package05-mut-r3-batch-all-providers-cap-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-all-providers-cap-build.log",
+      "log_sha256": "098206d0f0fc5eedb2fb78ebc9540d5fbb85ad136c81391ee6777890cdf2e2f7"
+    },
+    {
+      "phase": "package05-mut-r3-batch-all-providers-cap-batch-custom-long-size",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-all-providers-cap-batch-custom-long-size.log",
+      "log_sha256": "ac841acc7f9efec65b2ca3452ca57e22e7dc7ceee2843c24d4f41ad756b162a1"
+    },
+    {
+      "phase": "package05-mut-r3-batch-all-providers-cap-batch-system-ordinary",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-all-providers-cap-batch-system-ordinary.log",
+      "log_sha256": "0f670b75a6eaaaa44586487d11e62fa6b1833320824b14ca16f89e086782ddb2"
+    },
+    {
+      "phase": "package05-mut-r3-batch-inclusive-upper-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-inclusive-upper-build.log",
+      "log_sha256": "08363e05907a6ee23fa732e986593d55094197db3d7d584afc5609d82703544d"
+    },
+    {
+      "phase": "package05-mut-r3-batch-inclusive-upper-batch-system-maximum",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-inclusive-upper-batch-system-maximum.log",
+      "log_sha256": "0404525c2ef956378d929362cbbf30cac76c7886e61adea89c1126d9580ea38f"
+    },
+    {
+      "phase": "package05-mut-r3-batch-inclusive-upper-batch-system-ordinary",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-inclusive-upper-batch-system-ordinary.log",
+      "log_sha256": "4b0f9621e49280dc2d7cb2d560b3d8898a99cb07849cf5e90a33fc0b33aa9d50"
+    },
+    {
+      "phase": "package05-mut-r3-batch-fractional-compare-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-fractional-compare-build.log",
+      "log_sha256": "6f8808ce500bb2e78d76b0b6ab5540d2e9ce7e7dde069e248155edadcd21adef"
+    },
+    {
+      "phase": "package05-mut-r3-batch-fractional-compare-batch-system-fraction",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-fractional-compare-batch-system-fraction.log",
+      "log_sha256": "3c826cfa1a040b1629b84cfb01a887823c052c8f49eb88c083ba9ad74ef448aa"
+    },
+    {
+      "phase": "package05-mut-r3-batch-fractional-compare-batch-system-maximum",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-fractional-compare-batch-system-maximum.log",
+      "log_sha256": "48637d17092494c057bf57c94a2d7aa738d31638ce6f4e57e156ee886293f26d"
+    },
+    {
+      "phase": "package05-mut-r3-batch-late-guard-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-late-guard-build.log",
+      "log_sha256": "3b285a79f846a1f61e19e74d9be0634a65e1fd236879542e7a69ee5bbdd25577"
+    },
+    {
+      "phase": "package05-mut-r3-batch-late-guard-batch-default-too-large",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-late-guard-batch-default-too-large.log",
+      "log_sha256": "b2455d1513e4f9afac7a83808c0c1c3079f224c06bdce1f07d6bfb0c1a740ef2"
+    },
+    {
+      "phase": "package05-mut-r3-batch-late-guard-batch-custom-long-size",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-late-guard-batch-custom-long-size.log",
+      "log_sha256": "686f05f14320208fa474e3739a565f5fd6a31419d785959afe6651880db29835"
+    },
+    {
+      "phase": "package05-mut-r3-batch-wrong-diagnostic-key-build",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-wrong-diagnostic-key-build.log",
+      "log_sha256": "62485ae6e21bd25c4d1b59bc7727c7c929870138d0745cdc6572a8fa9624f679"
+    },
+    {
+      "phase": "package05-mut-r4-corrected-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-corrected-build.log",
+      "log_sha256": "b2722399972a6559cd043832e66bf8e27811436e4dc2f5f05797be63126eece8"
+    },
+    {
+      "phase": "package05-mut-r4-corrected-all",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-corrected-all.log",
+      "log_sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1"
+    },
+    {
+      "phase": "package05-mut-r4-batch-wrong-diagnostic-key-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-batch-wrong-diagnostic-key-build.log",
+      "log_sha256": "1daeea2dedd6ab8b98931db5cd77c53ccab2065aef97dab6527e7801cfbac2cf"
+    },
+    {
+      "phase": "package05-mut-r4-batch-wrong-diagnostic-key-batch-default-too-large",
+      "exit_code": 1,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-batch-wrong-diagnostic-key-batch-default-too-large.log",
+      "log_sha256": "3ceb152b2ede7d9aea7a8380214b9677a66df39c7ff9bd6fc259e55eb2374df8"
+    },
+    {
+      "phase": "package05-mut-r4-batch-wrong-diagnostic-key-batch-custom-long-size",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-batch-wrong-diagnostic-key-batch-custom-long-size.log",
+      "log_sha256": "f034e79cc70950ea42c9b13c35f4e7800f29812635a77d714cd355597c603592"
+    },
+    {
+      "phase": "package05-mut-r4-rollback-build",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-rollback-build.log",
+      "log_sha256": "96b27d192ae023bce0596daab250387e5b1743a2a95f41f55507371ccae0e88e"
+    },
+    {
+      "phase": "package05-mut-r4-rollback-all",
+      "exit_code": 0,
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-rollback-all.log",
+      "log_sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1"
+    }
+  ],
+  "original42_exact10_causal_red": [
+    {
+      "case": "results-membership-plain",
+      "assertions_passed": false,
+      "exception_type": "Xunit.Sdk.SameException",
+      "Message": "Assert.Same() Failure: Values are not the same instance\nExpected: [Failure] Endpoint.Address The address is invalid\nActual:   [Success] Endpoint.Address The address is valid",
+      "StackTrace": "   at Xunit.Assert.Same(Object expected, Object actual) in /_/src/xunit.v3.assert/Asserts/IdentityAsserts.cs:line 48\n   at ViciOneReview.CorePackage05.ResultsAssertions.MembershipAsync(Boolean withInner) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/ResultsAssertions.cs:line 34\n   at Program.<>c__DisplayClass0_1.<<Main>$>b__9(TimeSpan _, CancellationToken _) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 12\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 38",
+      "bounded_guard_failure": false
+    },
+    {
+      "case": "results-membership-inner",
+      "assertions_passed": false,
+      "exception_type": "Xunit.Sdk.SameException",
+      "Message": "Assert.Same() Failure: Values are not the same instance\nExpected: [Failure] Endpoint.Address The address is invalid\nActual:   [Success] Endpoint.Address The address is valid",
+      "StackTrace": "   at Xunit.Assert.Same(Object expected, Object actual) in /_/src/xunit.v3.assert/Asserts/IdentityAsserts.cs:line 48\n   at ViciOneReview.CorePackage05.ResultsAssertions.MembershipAsync(Boolean withInner) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/ResultsAssertions.cs:line 34\n   at Program.<>c__DisplayClass0_1.<<Main>$>b__9(TimeSpan _, CancellationToken _) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 12\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 38",
+      "bounded_guard_failure": false
+    },
+    {
+      "case": "host-StartTimeout-too-large",
+      "assertions_passed": false,
+      "exception_type": "Xunit.Sdk.ThrowsException",
+      "Message": "Assert.Throws() Failure: No exception was thrown\nExpected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+      "StackTrace": "   at Xunit.Assert.ThrowsImpl(Type exceptionType, Exception exception, Func`2 inspector) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 506\n   at Xunit.Assert.Throws[T](Action testCode) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 120\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 42\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 61\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 38",
+      "bounded_guard_failure": false
+    },
+    {
+      "case": "host-StartTimeout-maxvalue",
+      "assertions_passed": false,
+      "exception_type": "Xunit.Sdk.ThrowsException",
+      "Message": "Assert.Throws() Failure: No exception was thrown\nExpected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+      "StackTrace": "   at Xunit.Assert.ThrowsImpl(Type exceptionType, Exception exception, Func`2 inspector) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 506\n   at Xunit.Assert.Throws[T](Action testCode) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 120\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 42\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 61\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 38",
+      "bounded_guard_failure": false
+    },
+    {
+      "case": "host-StopTimeout-too-large",
+      "assertions_passed": false,
+      "exception_type": "Xunit.Sdk.ThrowsException",
+      "Message": "Assert.Throws() Failure: No exception was thrown\nExpected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+      "StackTrace": "   at Xunit.Assert.ThrowsImpl(Type exceptionType, Exception exception, Func`2 inspector) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 506\n   at Xunit.Assert.Throws[T](Action testCode) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 120\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 42\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 61\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 38",
+      "bounded_guard_failure": false
+    },
+    {
+      "case": "host-StopTimeout-maxvalue",
+      "assertions_passed": false,
+      "exception_type": "Xunit.Sdk.ThrowsException",
+      "Message": "Assert.Throws() Failure: No exception was thrown\nExpected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+      "StackTrace": "   at Xunit.Assert.ThrowsImpl(Type exceptionType, Exception exception, Func`2 inspector) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 506\n   at Xunit.Assert.Throws[T](Action testCode) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 120\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 42\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 61\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 38",
+      "bounded_guard_failure": false
+    },
+    {
+      "case": "host-ConsumerStopTimeout-too-large",
+      "assertions_passed": false,
+      "exception_type": "Xunit.Sdk.ThrowsException",
+      "Message": "Assert.Throws() Failure: No exception was thrown\nExpected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+      "StackTrace": "   at Xunit.Assert.ThrowsImpl(Type exceptionType, Exception exception, Func`2 inspector) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 506\n   at Xunit.Assert.Throws[T](Action testCode) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 120\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 42\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 61\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 38",
+      "bounded_guard_failure": false
+    },
+    {
+      "case": "host-ConsumerStopTimeout-maxvalue",
+      "assertions_passed": false,
+      "exception_type": "Xunit.Sdk.ThrowsException",
+      "Message": "Assert.Throws() Failure: No exception was thrown\nExpected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+      "StackTrace": "   at Xunit.Assert.ThrowsImpl(Type exceptionType, Exception exception, Func`2 inspector) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 506\n   at Xunit.Assert.Throws[T](Action testCode) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 120\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 42\n   at ViciOneReview.CorePackage05.HostTimeoutAssertions.BoundsAsync(String property, String boundary) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs:line 61\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 38",
+      "bounded_guard_failure": false
+    },
+    {
+      "case": "batch-default-too-large",
+      "assertions_passed": false,
+      "exception_type": "Xunit.Sdk.SingleException",
+      "Message": "Assert.Single() Failure: The collection was empty",
+      "StackTrace": "   at Xunit.Assert.GetSingleResult[T](IEnumerable`1 collection, Predicate`1 predicate, String expected) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 787\n   at Xunit.Assert.Single[T](IEnumerable`1 collection) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 729\n   at ViciOneReview.CorePackage05.BatchTimerAssertions.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/BatchTimerAssertions.cs:line 77\n--- End of stack trace from previous location ---\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/OwnedLifetime.cs:line 11\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/OwnedLifetime.cs:line 18\n   at ViciOneReview.CorePackage05.BatchTimerAssertions.RunAsync(String variant, TimeSpan operationTimeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/BatchTimerAssertions.cs:line 59\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 38",
+      "bounded_guard_failure": false
+    },
+    {
+      "case": "batch-default-maxvalue",
+      "assertions_passed": false,
+      "exception_type": "Xunit.Sdk.SingleException",
+      "Message": "Assert.Single() Failure: The collection was empty",
+      "StackTrace": "   at Xunit.Assert.GetSingleResult[T](IEnumerable`1 collection, Predicate`1 predicate, String expected) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 787\n   at Xunit.Assert.Single[T](IEnumerable`1 collection) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 729\n   at ViciOneReview.CorePackage05.BatchTimerAssertions.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/BatchTimerAssertions.cs:line 77\n--- End of stack trace from previous location ---\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/OwnedLifetime.cs:line 11\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/OwnedLifetime.cs:line 18\n   at ViciOneReview.CorePackage05.BatchTimerAssertions.RunAsync(String variant, TimeSpan operationTimeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/BatchTimerAssertions.cs:line 59\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/Program.cs:line 38",
+      "bounded_guard_failure": false
+    }
+  ],
+  "original32_controls": 32,
+  "corrected_packed42": {
+    "failures": 0,
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-final-metadata-run42.log"
+  },
+  "final_M_baseline42_and_rollback42": true,
+  "17_mutants_build0_negative1_positive0": true,
+  "retained16_exact_immutable_attempt3": true,
+  "excluded": [
+    "initial consumer missing DI/Logging references compile failure",
+    "initial expected host inclusive-boundary category mismatch",
+    "r2 relation EqualException category mismatch",
+    "r3 wrong-key CS8625 compile failure"
+  ],
+  "reviewer_native_invocations": 0
+}

@@ -1,0 +1,126 @@
+{
+  "own_complete_prior_closure": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/READ_CLOSURE.json",
+  "current15source_snapshots_bytes_unchanged": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/AGENTS.md",
+      "relative": "AGENTS.md",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/00-AGENTS.md.txt",
+      "sha256": "12b6cf76e745490c1fb5e40e3375bd5c4a627b21c166954697cf6426353dcec2",
+      "bytes": 1201,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.github/workflows/native-tests.yml",
+      "relative": ".github/workflows/native-tests.yml",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/01-native-tests.yml.txt",
+      "sha256": "2cd77f10f95e87fea7c5bbefcae9908adadb5dd27f7add3e289898100a10406d",
+      "bytes": 9790,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/build.md",
+      "relative": "docs/build.md",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/02-build.md.txt",
+      "sha256": "9be928a7d2fd835d614be489f7d3ba2f88d5a1689bfb31a4608dd5ce73b2c658",
+      "bytes": 8150,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/global.json",
+      "relative": "global.json",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/03-global.json.txt",
+      "sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93",
+      "bytes": 63,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Packages.props",
+      "relative": "Directory.Packages.props",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/04-Directory.Packages.props.txt",
+      "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e",
+      "bytes": 5677,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.props",
+      "relative": "Directory.Build.props",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/05-Directory.Build.props.txt",
+      "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf",
+      "bytes": 2886,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.targets",
+      "relative": "Directory.Build.targets",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/06-Directory.Build.targets.txt",
+      "sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1",
+      "bytes": 10658,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
+      "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/07-ViciOne.ServiceBus.Architecture.Tests.csproj.txt",
+      "sha256": "917a1cfeb7a7ec52dc0f317b5f7068b26441f7f30855f06b9d73d6654f24da0c",
+      "bytes": 4033,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs",
+      "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/08-MsBuildEvaluation.cs.txt",
+      "sha256": "a66a17c405cd379e1e24a4d2164b88e0dfbf4002bfe8434affce761c36c7afe7",
+      "bytes": 9879,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
+      "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/09-EvaluatedBuildGraphTests.cs.txt",
+      "sha256": "90e8902627b6b2b78a16c65eba73031ba5ea93d59d0db163755f91fcdaa67132",
+      "bytes": 16222,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs",
+      "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/10-RepositoryLayout.cs.txt",
+      "sha256": "326e412c06597e85b1c47f7557a6dcfc88a3546d736725504b3b2f6cbd726603",
+      "bytes": 7031,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.props",
+      "relative": "tests/Directory.Build.props",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/11-Directory.Build.props.txt",
+      "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+      "bytes": 3303,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.targets",
+      "relative": "tests/Directory.Build.targets",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/12-Directory.Build.targets.txt",
+      "sha256": "3a866a9a26434dcca1aaf6d61a8d2afc84960f21ceee810b5b825f1ecdd7fdb1",
+      "bytes": 12496,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.Engineering.slnx",
+      "relative": "ViciOne.ServiceBus.Engineering.slnx",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/13-ViciOne.ServiceBus.Engineering.slnx.txt",
+      "sha256": "bc11986b349179fc182a6cf8ef222f269d09d8f3361b27a72c2db675ec3fee72",
+      "bytes": 9581,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.Tests.Unit.slnx",
+      "relative": "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/14-ViciOne.ServiceBus.Tests.Unit.slnx.txt",
+      "sha256": "ac102688f92ab8ee214af159e05703a6d0bc43dde268efe78c4ca41e82f45091",
+      "bytes": 7678,
+      "personal_read": "FRESH_COMPLETE_PERSONAL_FULL_CURRENT_BODY; truncated initial batch reread entirely where needed"
+    }
+  ],
+  "limits": "Exact own prior FULL reuse only;6209/4648 frame checks are byte/hash checks, no semantic source-owner FULL claim."
+}

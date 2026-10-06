@@ -1,0 +1,111 @@
+import ast
+import base64
+import csv
+import hashlib
+import json
+import zipfile
+from pathlib import Path
+
+W = Path('/Users/edgar.liebold/Downloads/ViciOne Suite 2.0')
+O = W / 'repositories/vicione-servicebus'
+R = Path('/private/tmp/vicione-servicebus-api-review-20261001')
+E = O / 'evidence/WP-SB-API-REVIEW-REPAIR-20261002'
+D = W / 'SERVICEBUS_API_REVIEW_AND_REPAIR'
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+mutpath = E / 'PACKAGE19_F040_MUTATIONS.json'
+mut = json.loads(mutpath.read_text())
+assert mut['status'] == 'THREE_STRICT_COMPILED_SINGLE_EFFECT_MUTANTS_KILLED_WITH_GREEN_CONTROLS'
+assert len(mut['mutants']) == 3 and len(mut['controls']) == 2
+base = {row['key']: Path(row['path']).read_text() for row in mut['controls'][0]['source_snapshots']}
+# This matrix captured the Core frame before the separate F041 source authoring.
+assert hashlib.sha256(base['endpoint_context'].encode()).hexdigest() == 'b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0'
+assert hashlib.sha256(base['inmemory_receive_context'].encode()).hexdigest() == 'ad835878411a286f7463fe79d30d774fee603305293a66902e4ae764de9f3b94'
+tree = ast.parse((D / 'package19_f040_mutations.py').read_text())
+body = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in ['replace_once', 'mutation']]
+env = dict(corrected=base)
+exec(compile(ast.Module(body=body, type_ignores=[]), '<independent-effect-verification>', 'exec'), env)
+effects = []
+for stage in mut['controls'] + mut['mutants']:
+    expected = base if stage['name'] in ['corrected', 'rollback'] else env['mutation'](stage['name'])
+    assert sha(stage['binary']['path']) == stage['binary']['sha256']
+    for row in stage['source_snapshots']:
+        digest = hashlib.sha256(expected[row['key']].encode()).hexdigest()
+        assert sha(row['path']) == digest == row['sha256'] == row['current_source_sha256']
+        effects.append(dict(stage=stage['name'], key=row['key'], sha256=digest, changed=expected[row['key']] != base[row['key']]))
+assert len(effects) == 140 and sum(row['changed'] for row in effects) == 3
+for path, digest in {**mut['oracle_hashes'], **mut['constant_dependencies']}.items():
+    assert sha(path) == digest
+C = R / 'repair-consumers/package19-transport/corrected'
+assert sha(C / 'bin/Release/net10.0/ViciOne.ServiceBus.dll') == mut['selected_runtime_sha256'] == '43fbefc4df727cd1c108d80f32a635eeb279abc70143da59c0ac3cd03f7ce70a'
+rows = list(csv.DictReader((R / 'FILE_COVERAGE.csv').open()))
+assert len(rows) == 6209 and all(sha(R / 'mutations/source-main' / row['path']) == row['sha256'] for row in rows)
+for rel in mut['frame'].values():
+    if not (R / 'frozen-repository' / rel).exists():
+        assert not (R / 'mutations/source-main' / rel).exists()
+receipts = [json.loads(line) for line in (E / 'VERIFICATION_LOG.jsonl').read_text().splitlines()
+            if json.loads(line)['phase'].startswith(('package19-transport-', 'package19-f040-'))]
+for receipt in receipts:
+    assert sha(receipt['log']) == receipt['log_sha256']
+    if receipt['exit_code'] == 0 and 'build' in receipt['command']:
+        text = Path(receipt['log']).read_text()
+        assert '0 Warnung(en)' in text and '0 Fehler' in text
+previous = next(row for row in receipts if row['phase'] == 'package19-transport-public-previous-fourteen')
+corrected = next(row for row in receipts if row['phase'] == 'package19-transport-public-corrected-fourteen')
+prevtext, corrtext = Path(previous['log']).read_text(), Path(corrected['log']).read_text()
+assert previous['exit_code'] == 1 and corrected['exit_code'] == 0
+assert prevtext.count('\nFAIL ') == 12 and 'TOTAL 2 PASS 12 FAIL' in prevtext
+assert corrtext.count('\nPASS ') == 14 and 'TOTAL 14 PASS 0 FAIL' in corrtext and '\nFAIL ' not in corrtext
+assert not any(word in prevtext + corrtext for word in ['TimeoutException', 'Case and cleanup failed'])
+chains = []
+runtime = []
+for mode, logtext in [('previous', prevtext), ('corrected', corrtext)]:
+    consumer = R / 'repair-consumers/package19-transport' / mode
+    locked = json.loads((consumer / 'packages.lock.json').read_text())['dependencies']['net10.0']
+    loaded = {}
+    for line in logtext.splitlines():
+        if line.startswith('LOADED '):
+            name, version, path, digest = line[7:].split(' ', 3)
+            assert sha(path) == digest
+            loaded[name] = dict(name=name, version=version, path=path, sha256=digest)
+    for name in ['ViciOne.ServiceBus', 'ViciOne.ServiceBus.Abstractions']:
+        pkg = R / 'repair-packages/package19-transport' / mode / (name + '.1.0.0.nupkg')
+        assert base64.b64encode(hashlib.sha512(pkg.read_bytes()).digest()).decode() == locked[name]['contentHash']
+        with zipfile.ZipFile(pkg) as z:
+            digest = hashlib.sha256(z.read('lib/net10.0/' + name + '.dll')).hexdigest()
+        cache = consumer / 'restored-packages' / name.lower() / '1.0.0/lib/net10.0' / (name + '.dll')
+        assert sha(cache) == digest == loaded[name]['sha256']
+        chains.append(dict(package=str(pkg), package_sha256=sha(pkg), locked_sha512=locked[name]['contentHash'], cache=str(cache), loaded=loaded[name]))
+    for name, item in loaded.items():
+        if name.startswith('Microsoft.Extensions.'):
+            assert locked[name]['resolved'] == '10.0.12'
+            candidates = list((consumer / 'restored-packages' / name.lower() / '10.0.12/lib').glob('*/' + name + '.dll'))
+            matching = [p for p in candidates if sha(p) == item['sha256']]
+            assert matching
+            runtime.append(dict(package_version='10.0.12', cache=str(matching[0]), **item))
+binding = dict(status='ROOT_INDEPENDENT_EFFECTS_RECEIPTS_PACKAGE_RUNTIME_RESTORATION_VERIFIED', effects=effects,
+    receipts=receipts, selected_package_chains=chains, actual_Microsoft_runtime=runtime,
+    original_cases=dict(finite_topology_reds=12, positive=2, guards=0), corrected_cases=14,
+    all6209_original_files_restored=True, oracle_and_selected_runtime_restored=True,
+    limits='F040 historical Core frame before separate F041. PE/PDB binding and independent final adversarial review pending; no whole API, canonical owner, ARM/cloud or A+ claim.')
+bp = E / 'PACKAGE19_F040_ROOT_BINDING.json'
+assert not bp.exists()
+bp.write_text(json.dumps(binding, indent=2) + '\n')
+directory = E / 'package19-f040-freeze'
+directory.mkdir(exist_ok=False)
+inputs = [O / mut['frame']['inmemory_receive_context']]
+inputs += [p for mode in ['previous', 'corrected'] for p in sorted((R / 'repair-consumers/package19-transport' / mode).iterdir()) if p.is_file()]
+inputs += [D / 'run_operation.py', D / 'package19_f040_mutations.py', D / 'package19_f040_bind.py']
+owned = []
+for index, path in enumerate(inputs):
+    snapshot = directory / (str(index).zfill(2) + '-' + path.name + '.txt')
+    snapshot.write_bytes(path.read_bytes())
+    owned.append(dict(path=str(path), snapshot=str(snapshot), sha256=sha(path), bytes=path.stat().st_size))
+plans = [dict(path=str(p), sha256=sha(p)) for p in sorted(E.glob('PACKAGE19*TRANSPORT*.json'))]
+plans += [dict(path=str(p), sha256=sha(p)) for p in sorted(E.glob('PACKAGE19_F040*.json')) if p not in [bp, mutpath]]
+freeze = dict(status='FROZEN_SCOPED_F040_FINAL_ADVERSARIAL_PENDING', finding='F-SB-API-040', owned_inputs=owned,
+    root_binding=dict(path=str(bp), sha256=sha(bp)), mutations=dict(path=str(mutpath), sha256=sha(mutpath)),
+    plans_and_exclusions=plans, limits=binding['limits'])
+fp = E / 'PACKAGE19_F040_FREEZE.json'
+assert not fp.exists()
+fp.write_text(json.dumps(freeze, indent=2) + '\n')
+print(json.dumps(dict(freeze=str(fp), sha256=sha(fp), owned=len(owned), effects=len(effects), receipts=len(receipts), selected_chains=len(chains))))

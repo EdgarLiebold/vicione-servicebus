@@ -1,3 +1,4 @@
+using System.Reflection;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Operations;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -224,6 +225,339 @@ public sealed class DynamicRoutingTests
         Assert.Contains("success with a null", invalid.Message, StringComparison.Ordinal);
         Assert.Equal("The key accessor returned null.", invalidKey.Message);
         Assert.Contains("must implement", incompatible.Message, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-KEYED-DYNAMIC-ROUTING", "request-id-stale-disposal-preserves-replacement-registration")]
+    public async Task RequestIdRoute_StaleDisposalCannotDisconnectItsReplacementAsync(bool disconnectFirst)
+    {
+        var requestId = Guid.Parse("8592b655-b274-4c5e-a161-2aab13093561");
+        ConsumeContext<RouteA> context = DispatchProxy.Create<ConsumeContext<RouteA>, RequestIdConsumeContextProxy>();
+        ((RequestIdConsumeContextProxy)(object)context).RequestId = requestId;
+        var filter = new RequestIdFilter<RouteA>();
+        var firstCalls = 0;
+        var replacementCalls = 0;
+        var nextCalls = 0;
+        ConsumeContext<RouteA>? received = null;
+        IPipe<ConsumeContext<RouteA>> next = Pipe.ExecuteAwaited<ConsumeContext<RouteA>>(_ =>
+        {
+            nextCalls++;
+            return Task.CompletedTask;
+        });
+        ConnectHandle first = filter.ConnectPipe(requestId, Pipe.ExecuteAwaited<ConsumeContext<RouteA>>(actual =>
+        {
+            firstCalls++;
+            received = actual;
+            return Task.CompletedTask;
+        }));
+        ConnectHandle? replacement = null;
+        try
+        {
+            await filter.SendAsync(context, next);
+            Assert.Equal(1, firstCalls);
+            Assert.Same(context, received);
+            Assert.Equal(1, nextCalls);
+            if (disconnectFirst)
+                first.Disconnect();
+            else
+                first.Dispose();
+            await filter.SendAsync(context, next);
+            Assert.Equal(1, firstCalls);
+            Assert.Equal(2, nextCalls);
+            replacement = filter.ConnectPipe(requestId, Pipe.ExecuteAwaited<ConsumeContext<RouteA>>(actual =>
+            {
+                replacementCalls++;
+                received = actual;
+                return Task.CompletedTask;
+            }));
+            await filter.SendAsync(context, next);
+            Assert.Equal(1, replacementCalls);
+            Assert.Same(context, received);
+            Assert.Equal(3, nextCalls);
+            first.Dispose();
+            await filter.SendAsync(context, next);
+            Assert.Equal(2, replacementCalls);
+            Assert.Equal(1, firstCalls);
+            Assert.Equal(4, nextCalls);
+            replacement.Disconnect();
+            await filter.SendAsync(context, next);
+            Assert.Equal(2, replacementCalls);
+            Assert.Equal(5, nextCalls);
+        }
+        finally
+        {
+            replacement?.Dispose();
+            first.Dispose();
+        }
+    }
+
+    public class RequestIdConsumeContextProxy : DispatchProxy
+    {
+        public Guid? RequestId { get; set; }
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            targetMethod?.Name == "get_RequestId"
+                ? RequestId
+                : throw new NotSupportedException($"Unexpected request-routing context member: {targetMethod?.Name}");
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-DYNAMIC-ROUTING", "fork-secondary-failure-joins-started-primary-pipe-task")]
+    public async Task Fork_SecondaryFailureKeepsTheStartedSiblingOwnedAsync(bool synchronousFailure)
+    {
+        var context = new RoutedContext<RouteA>("fork-owned");
+        var gate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var primary = new IOException("unique-fork-secondary-provider-failure");
+        var firstCalls = 0;
+        var secondCalls = 0;
+        IRouteContext? firstContext = null;
+        IRouteContext? secondContext = null;
+        Task? secondTask = null;
+        IPipe<IRouteContext> first = new TaskOutcomeRoutePipe(actual =>
+        {
+            firstCalls++;
+            firstContext = actual;
+            return gate.Task;
+        });
+        IPipe<IRouteContext> next = new TaskOutcomeRoutePipe(actual =>
+        {
+            secondCalls++;
+            secondContext = actual;
+            if (synchronousFailure)
+                throw primary;
+            secondTask = Task.FromException(primary);
+            return secondTask;
+        });
+        IFilter<IRouteContext> filter = new ForkFilter<IRouteContext>(first);
+        Task? operation = null;
+        try
+        {
+            Exception? admissionFailure = Record.Exception(() => { operation = filter.SendAsync(context, next); });
+            Assert.Equal(1, firstCalls);
+            Assert.Equal(1, secondCalls);
+            Assert.Same(context, firstContext);
+            Assert.Same(context, secondContext);
+            Assert.False(gate.Task.IsCompleted);
+            Assert.Null(admissionFailure);
+            Assert.NotNull(operation);
+            Assert.False(operation.IsCompleted);
+            gate.SetResult();
+            Exception? observed = await Record.ExceptionAsync(() =>
+                operation.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+            Assert.Same(primary, observed);
+            Assert.True(operation.IsFaulted);
+            Assert.True(gate.Task.IsCompletedSuccessfully);
+        }
+        finally
+        {
+            gate.TrySetResult();
+            await JoinForkTaskAsync(gate.Task);
+            if (secondTask is not null)
+                await JoinForkTaskAsync(secondTask);
+            if (operation is not null)
+                await JoinForkTaskAsync(operation);
+        }
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [RequirementCoverage("REQ-VSB-DYNAMIC-ROUTING", "fork-null-task-joins-started-sibling")]
+    public async Task Fork_NullTaskJoinsTheActualStartedSiblingBeforeFaultingAsync(bool firstIsNull)
+    {
+        var context = new RoutedContext<RouteA>("fork-null-owned");
+        var gate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var calls = new List<IRouteContext>();
+        IPipe<IRouteContext> first = new TaskOutcomeRoutePipe(actual =>
+        {
+            calls.Add(actual);
+            return firstIsNull ? null! : gate.Task;
+        });
+        IPipe<IRouteContext> next = new TaskOutcomeRoutePipe(actual =>
+        {
+            calls.Add(actual);
+            return firstIsNull ? gate.Task : null!;
+        });
+        IFilter<IRouteContext> filter = new ForkFilter<IRouteContext>(first);
+        Task? operation = null;
+        try
+        {
+            Exception? admissionFailure = Record.Exception(() => { operation = filter.SendAsync(context, next); });
+            Assert.Equal(2, calls.Count);
+            Assert.All(calls, actual => Assert.Same(context, actual));
+            Assert.False(gate.Task.IsCompleted);
+            Assert.Null(admissionFailure);
+            Assert.NotNull(operation);
+            Assert.False(operation.IsCompleted);
+            gate.SetResult();
+            Exception? observed = await Record.ExceptionAsync(() =>
+                operation.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+            Assert.IsType<ArgumentException>(observed);
+            Assert.True(operation.IsFaulted);
+            Assert.True(gate.Task.IsCompletedSuccessfully);
+            Assert.Same(observed, Assert.Single(operation.Exception!.InnerExceptions));
+        }
+        finally
+        {
+            gate.TrySetResult();
+            await JoinForkTaskAsync(gate.Task);
+            if (operation is not null)
+                await JoinForkTaskAsync(operation);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DYNAMIC-ROUTING", "fork-first-synchronous-failure-stops-sibling-admission")]
+    public void Fork_FirstSynchronousFailurePreservesAdmissionAndStopsTheSibling()
+    {
+        var context = new RoutedContext<RouteA>("fork-first-failure");
+        var primary = new IOException("unique-fork-first-synchronous-failure");
+        var firstCalls = 0;
+        var secondCalls = 0;
+        IRouteContext? firstContext = null;
+        IPipe<IRouteContext> first = new TaskOutcomeRoutePipe(actual =>
+        {
+            firstCalls++;
+            firstContext = actual;
+            throw primary;
+        });
+        IPipe<IRouteContext> next = new TaskOutcomeRoutePipe(_ =>
+        {
+            secondCalls++;
+            return Task.CompletedTask;
+        });
+        IFilter<IRouteContext> filter = new ForkFilter<IRouteContext>(first);
+        Task? operation = null;
+        Exception? observed = Record.Exception(() => { operation = filter.SendAsync(context, next); });
+        Assert.Same(primary, observed);
+        Assert.Equal(1, firstCalls);
+        Assert.Same(context, firstContext);
+        Assert.Equal(0, secondCalls);
+        Assert.Null(operation);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DYNAMIC-ROUTING", "fork-canceled-sibling-waits-owned-pipe")]
+    public async Task Fork_CanceledSiblingWaitsForTheStartedPipeAndRetainsCancellationAsync()
+    {
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        var context = new RoutedContext<RouteA>("fork-canceled-owned");
+        var gate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var calls = new List<IRouteContext>();
+        Task? canceledTask = null;
+        IPipe<IRouteContext> first = new TaskOutcomeRoutePipe(actual =>
+        {
+            calls.Add(actual);
+            return gate.Task;
+        });
+        IPipe<IRouteContext> next = new TaskOutcomeRoutePipe(actual =>
+        {
+            calls.Add(actual);
+            cancellation.Cancel();
+            canceledTask = Task.FromCanceled(cancellation.Token);
+            return canceledTask;
+        });
+        IFilter<IRouteContext> filter = new ForkFilter<IRouteContext>(first);
+        Task? operation = null;
+        try
+        {
+            Exception? admissionFailure = Record.Exception(() => { operation = filter.SendAsync(context, next); });
+            Assert.Equal(2, calls.Count);
+            Assert.All(calls, actual => Assert.Same(context, actual));
+            Assert.False(gate.Task.IsCompleted);
+            Assert.NotNull(canceledTask);
+            Assert.True(canceledTask.IsCanceled);
+            Assert.Null(admissionFailure);
+            Assert.NotNull(operation);
+            Assert.False(operation.IsCompleted);
+            gate.SetResult();
+            Exception? observed = await Record.ExceptionAsync(() =>
+                operation.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+            var canceled = Assert.IsAssignableFrom<OperationCanceledException>(observed);
+            Assert.Equal(cancellation.Token, canceled.CancellationToken);
+            Assert.True(operation.IsCanceled);
+            Assert.False(operation.IsFaulted);
+            Assert.True(gate.Task.IsCompletedSuccessfully);
+        }
+        finally
+        {
+            gate.TrySetResult();
+            await JoinForkTaskAsync(gate.Task);
+            if (canceledTask is not null)
+                await JoinForkTaskAsync(canceledTask);
+            if (operation is not null)
+                await JoinForkTaskAsync(operation);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DYNAMIC-ROUTING", "fork-combined-failures-preserve-actual-causes")]
+    public async Task Fork_FaultedPipeAndSynchronousSiblingFailureRetainBothActualCausesAsync()
+    {
+        var context = new RoutedContext<RouteA>("fork-dual-failure");
+        var primary = new IOException("unique-fork-first-task-failure");
+        var secondary = new ApplicationException("unique-fork-second-synchronous-failure");
+        Task? firstTask = null;
+        var calls = new List<IRouteContext>();
+        IPipe<IRouteContext> first = new TaskOutcomeRoutePipe(actual =>
+        {
+            calls.Add(actual);
+            firstTask = Task.FromException(primary);
+            return firstTask;
+        });
+        IPipe<IRouteContext> next = new TaskOutcomeRoutePipe(actual =>
+        {
+            calls.Add(actual);
+            throw secondary;
+        });
+        IFilter<IRouteContext> filter = new ForkFilter<IRouteContext>(first);
+        Task? operation = null;
+        try
+        {
+            Exception? admissionFailure = Record.Exception(() => { operation = filter.SendAsync(context, next); });
+            Assert.Equal(2, calls.Count);
+            Assert.All(calls, actual => Assert.Same(context, actual));
+            Assert.NotNull(firstTask);
+            Assert.True(firstTask.IsFaulted);
+            Assert.Null(admissionFailure);
+            Assert.NotNull(operation);
+            Exception? observed = await Record.ExceptionAsync(() =>
+                operation.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+            Assert.True(operation.IsFaulted);
+            var causes = operation.Exception!.Flatten().InnerExceptions;
+            Assert.Equal(2, causes.Count);
+            Assert.Single(causes, cause => ReferenceEquals(primary, cause));
+            Assert.Single(causes, cause => ReferenceEquals(secondary, cause));
+            Assert.Contains(causes, cause => ReferenceEquals(observed, cause));
+        }
+        finally
+        {
+            if (firstTask is not null)
+                await JoinForkTaskAsync(firstTask);
+            if (operation is not null)
+                await JoinForkTaskAsync(operation);
+        }
+    }
+
+    private static async Task JoinForkTaskAsync(Task task)
+    {
+        try
+        {
+            await task.WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None);
+        }
+        catch (Exception failure) when (failure is not TimeoutException && (task.IsFaulted || task.IsCanceled))
+        {
+            // Observe each actual started provider/public task even after a finite assertion failure.
+        }
+    }
+
+    private sealed class TaskOutcomeRoutePipe(Func<IRouteContext, Task> send) : IPipe<IRouteContext>
+    {
+        public Task SendAsync(IRouteContext context) => send(context);
+        public void Probe(ProbeContext context) => context.CreateScope("fork-outcome-control");
     }
 
     private interface IRouteContext : PipeContext

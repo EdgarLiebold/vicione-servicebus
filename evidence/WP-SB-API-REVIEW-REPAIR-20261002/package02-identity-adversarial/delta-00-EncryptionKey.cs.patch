@@ -1,0 +1,32 @@
+--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs
+@@ -10,15 +10,26 @@
+     readonly byte[] _keyMaterial;
+ 
+     /// <summary>Initializes a named encryption key and takes a defensive copy of its key material.</summary>
+-    /// <param name="keyId">The stable identifier written to encrypted envelopes.</param>
++    /// <param name="keyId">The stable, well-formed Unicode identifier written to encrypted envelopes, limited to 65535 UTF-8 bytes.</param>
+     /// <param name="keyMaterial">A 128-, 192-, or 256-bit AES key.</param>
+     /// <exception cref="ArgumentException">
+-    /// The key identifier is empty or the key material is not a supported AES key size.
++    /// The key identifier is empty, contains malformed UTF-16, exceeds 65535 UTF-8 bytes,
++    /// or the key material is not a supported AES key size.
+     /// </exception>
+     public EncryptionKey(string keyId, ReadOnlySpan<byte> keyMaterial)
+     {
+         ArgumentException.ThrowIfNullOrWhiteSpace(keyId);
+-        if (Encoding.UTF8.GetByteCount(keyId) > ushort.MaxValue)
++        int keyIdByteCount;
++        try
++        {
++            keyIdByteCount = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true).GetByteCount(keyId);
++        }
++        catch (EncoderFallbackException exception)
++        {
++            throw new ArgumentException("The key identifier must contain well-formed UTF-16.", nameof(keyId), exception);
++        }
++
++        if (keyIdByteCount > ushort.MaxValue)
+             throw new ArgumentException("The key identifier cannot exceed 65535 UTF-8 bytes.", nameof(keyId));
+ 
+         if (keyMaterial.Length is not (16 or 24 or 32))

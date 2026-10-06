@@ -22,7 +22,7 @@ public class PublishSendPipeAdapter<T> :
         _pipe.Probe(context);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Resolves the typed publish-context payload and forwards it to the retained publish pipeline.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(SendContext<T> context)

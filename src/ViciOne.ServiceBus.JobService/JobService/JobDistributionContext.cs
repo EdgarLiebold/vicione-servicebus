@@ -6,7 +6,8 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.JobService;
 
-/// <summary>Provides an immutable view of the live capacity and metadata used to distribute one job type.</summary>
+/// <summary>Provides a snapshot of job-distribution capacity and metadata through read-only collections.</summary>
+/// <remarks>Metadata values are copied by reference and may remain mutable.</remarks>
 public sealed class JobDistributionContext
 {
     internal JobDistributionContext(JobTypeSaga source)

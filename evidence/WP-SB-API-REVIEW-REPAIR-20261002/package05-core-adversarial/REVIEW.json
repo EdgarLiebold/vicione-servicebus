@@ -1,0 +1,87 @@
+{
+  "role": "independent internal adversarial readonly assistant",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_FREEZE.json",
+    "sha256": "2911be2c1fec39766f3c964d3aab3f8c157042a6e813088e8cdbba7b7ec78af2"
+  },
+  "status": "SCOPED_F027_F028_ACCEPTED_F030_STARTUP_CLOSURE_HELD",
+  "implementation_blockers_in_documented_creation_admission_scope": [],
+  "findings": [
+    {
+      "id": "F-SB-API-027",
+      "decision": "SCOPED_ACCEPT",
+      "contract": "Fixed readonly membership, referenced entry ownership preserved; no deep copy."
+    },
+    {
+      "id": "F-SB-API-028",
+      "decision": "SCOPED_ACCEPT",
+      "contract": "Null or positive timeout and truncated whole-ms upper CTS bound on all three properties; existing ordering relation retained."
+    },
+    {
+      "id": "F-SB-API-030",
+      "decision": "PRE_BATCH_CREATION_ADMISSION_EVIDENCE_ACCEPTED_ORIGINAL_STARTUP_TARGET_OPEN",
+      "classification_gap": "StartupValidation originally expected before receiver startup; patch evaluates effective provider on first new batch after startup.",
+      "startup_contract_decision_required": true,
+      "general_early_validation_inference": "Not safe from default/DI alone: valid public middleware may select a long-capable custom timer provider later.",
+      "native_scope": "Ungrouped actual pipeline; common grouped base statically read.",
+      "original_classification": "CONFIRMED_BATCH_STARTUP_VALIDATION_DEFECT",
+      "diagnostic_identity_limit": "Endpoint InputAddress is proved; original recommendation to carry final bus identity is not implemented/proved by these cases."
+    }
+  ],
+  "evidence_counts": {
+    "owned_inputs_personal_full": 14,
+    "original_changed_sources_personal_full": 5,
+    "relevant_original_dependencies_personal_full": 10,
+    "supplemental_startup_provider_sources_personal_full": 9,
+    "actual_receipts_hash_verified": 99,
+    "actual_logs_personal_full_unique": 81,
+    "own_full_content_hash_reuse": 18,
+    "original_cases": 42,
+    "original_causal_red": 10,
+    "original_green_controls": 32,
+    "actual_packed_corrected_green": 42,
+    "valid_mutants": 17,
+    "mutant_positive_controls": 17,
+    "final_M_baseline_green": 42,
+    "final_M_rollback_green": 42,
+    "M_original_manifest_files_hash_verified_restored": 6209,
+    "M_src_subset": 4219,
+    "whole_owner_full": false,
+    "reviewer_native_runs": 0
+  },
+  "proofs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/INDEPENDENT_SOURCE_EFFECTS.json",
+      "sha256": "8088f4891c2eac9f42c4d296f76ae70cf9c07579013e2d4e4858660397c89647"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/INDEPENDENT_PACKAGE_BINDINGS.json",
+      "sha256": "fb6f4c7390f7f3e161036cbb1684aec5d7f927ef64602b101654dc956ed80ff7"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/INDEPENDENT_RECEIPT_CHECKS.json",
+      "sha256": "c3b136c51b554b4495cd973a6bf57aeecdb990893cb316bd8a228c2f8b8630ab"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/GUIDANCE_REUSE.json",
+      "sha256": "97bda25f0102e9614fdec36b78d8bac8f7d1a50b9d992f09151b1a0d172aae9b"
+    }
+  ],
+  "excluded_attempts": [
+    "initial consumer compile missing DI/Logging references",
+    "inclusive-host expected-category mismatch",
+    "r2 relation expected-category mismatch",
+    "r3 wrong-key compiler CS8625"
+  ],
+  "limits": [
+    "original F030 startup objective open",
+    "grouped source only",
+    "host quiescent-stop only",
+    "no caller-entry deep copy",
+    "no full Core owner",
+    "no whole-product/API grade or A+",
+    "no native reviewer rerun",
+    "no cloud/DB/ARM",
+    "no CLOSED claims"
+  ]
+}

@@ -41,6 +41,12 @@ dotnet format --verify-no-changes ViciOne.ServiceBus.Tests.Unit.slnx
 
 ## Hermetic unit profile
 
+On a fresh checkout, restore `ViciOne.ServiceBus.Engineering.slnx` in locked mode before
+restoring and building the unit solution. Architecture tests evaluate every native test project,
+including projects outside the unit solution, and require their restored package imports to
+classify the Microsoft Testing Platform applications. Restore prepares this graph without
+starting provider services; the unit command below still runs only the unit profile.
+
 The process exit code is the verdict. The checked-in MTP configuration makes warnings and skipped
 tests fail. `--minimum-expected-tests` is a lower discovery guard, not the exact expected test
 count or a coverage target.

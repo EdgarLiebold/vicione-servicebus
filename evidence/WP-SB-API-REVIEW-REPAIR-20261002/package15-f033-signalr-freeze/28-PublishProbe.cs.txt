@@ -1,0 +1,29 @@
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Observers;
+
+namespace ViciOneReview.SignalRLifetime;
+
+public sealed class PublishProbe(IPublishEndpoint actual, Probe probe) : IPublishEndpoint
+{
+    public ConnectHandle ConnectPublishObserver(IPublishObserver observer) => actual.ConnectPublishObserver(observer);
+    public Task PublishAsync<T>(T message, PublishOptions options, CancellationToken cancellationToken = default) where T : class => throw probe.Unexpected();
+    public Task PublishAsync<T>(T message, CancellationToken cancellationToken = default) where T : class
+    {
+        var publication = new Publication(); probe.Publications.Add(publication);
+        publication.Task = PublishObservedAsync(message, publication, cancellationToken);
+        return publication.Task;
+    }
+    async Task PublishObservedAsync<T>(T message, Publication publication, CancellationToken cancellationToken) where T : class
+    {
+        Interlocked.Increment(ref probe.PublishCalls); probe.PublishToken = cancellationToken;
+        probe.OperationEntered.TrySetResult();
+        if (probe.Cancel)
+        {
+            try { await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken); }
+            catch (OperationCanceledException failure) { publication.CancellationFailure = failure; throw; }
+        }
+        if (probe.PrimaryFault) { probe.ActualPrimary = probe.Primary; probe.FailPrimary(); }
+        if (probe.ForwardPublish) await actual.PublishAsync(message, cancellationToken);
+    }
+}

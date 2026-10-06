@@ -1,0 +1,122 @@
+READ {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json", "start_line": 2161, "end_line": 2280, "kind": "proof"}
+        }
+      },
+      "rejection": {
+        "receipt": {
+          "phase": "package05-mut-r3-batch-global-options-cap-batch-custom-long-expire",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/CorePackage05.PublicConsumer.dll",
+            "batch-custom-long-expire",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T01:29:55.044353+00:00",
+          "completed_utc": "2026-10-03T01:29:55.538034+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-global-options-cap-batch-custom-long-expire.log",
+          "log_sha256": "a09319e71ffcd9c0d883001a7babd34224a589b32e601beece4cb03e6f2ccef4"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "batch-custom-long-expire",
+              "assertions_passed": false,
+              "exception_type": "ViciOne.ServiceBus.ConfigurationException",
+              "Message": "Vici One Service Bus Exception Extensions for bus 'unknown': The bus configuration is invalid: [Failure] TimeLimit System timer interval is unsupported. Correct the named configuration before starting the host.",
+              "StackTrace": "   at ViciOne.ServiceBus.Advanced.ViciOneServiceBusExceptionExtensions.ThrowIfContainsFailure(IEnumerable`1 results, String prefix) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus.Abstractions/Exceptions/ViciOneServiceBusExceptionExtensions.cs:line 28\n   at ViciOne.ServiceBus.Configuration.TransportRegistrationBusFactory`1.CreateBus[T,TConfigurator](T configurator, IBusRegistrationContext context, Action`2 configure, IEnumerable`1 specifications) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs:line 95\n   at ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryRegistrationBusFactory.CreateBus(IBusRegistrationContext context, IEnumerable`1 specifications, String busName) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs:line 44\n   at ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.CreateBus[T](T busFactory, IServiceProvider provider) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs:line 148\n   at ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.<>c__DisplayClass6_0`1.<SetBusFactory>b__0(IServiceProvider provider) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs:line 91\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitFactory(FactoryCallSite factoryCallSite, RuntimeResolverContext context)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)\n   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)\n   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)\n   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)\n   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)\n   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)\n   at ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.<>c__6`1.<SetBusFactory>b__6_3(IServiceProvider provider) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs:line 95\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitFactory(FactoryCallSite factoryCallSite, RuntimeResolverContext context)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)\n   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)\n   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)\n   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)\n   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)\n   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)\n   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)\n   at ViciOneReview.CorePackage05.BatchTimerAssertions.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/BatchTimerAssertions.cs:line 63\n--- End of stack trace from previous location ---\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.CorePackage05.BatchTimerAssertions.RunAsync(String variant, TimeSpan operationTimeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/BatchTimerAssertions.cs:line 59\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/Program.cs:line 38",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "7a5b00b5ecfa130ddf7143831d2a7c10004a4b1e7d9a987788260387c3fc6480"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "1f9391d6a842bb22b7aaa135185d4873e8ab7cca9fdb90c6c668893207595954"
+              }
+            ]
+          }
+        }
+      },
+      "positive_control": {
+        "receipt": {
+          "phase": "package05-mut-r3-batch-global-options-cap-batch-system-ordinary",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/CorePackage05.PublicConsumer.dll",
+            "batch-system-ordinary",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T01:29:55.643973+00:00",
+          "completed_utc": "2026-10-03T01:29:56.453168+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-global-options-cap-batch-system-ordinary.log",
+          "log_sha256": "27368328d3fe5cd0f1ae6c820b98d027b44005900daccaa5e159da504d4262b1"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "batch-system-ordinary",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "7a5b00b5ecfa130ddf7143831d2a7c10004a4b1e7d9a987788260387c3fc6480"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "1f9391d6a842bb22b7aaa135185d4873e8ab7cca9fdb90c6c668893207595954"
+              }
+            ]
+          }
+        }
+      },
+      "status": "KILLED_BY_CAUSAL_ASSERTION"
+    },
+    {
+      "name": "batch-all-providers-cap",
+      "binary": {
+        "receipt": {
+          "phase": "package05-mut-r3-batch-all-providers-cap-build",
+          "command": [
+            "dotnet",
+            "build",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T01:29:56.548151+00:00",
+          "completed_utc": "2026-10-03T01:30:02.936612+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-all-providers-cap-build.log",
+          "log_sha256": "098206d0f0fc5eedb2fb78ebc9540d5fbb85ad136c81391ee6777890cdf2e2f7"
+

@@ -166,12 +166,31 @@ internal sealed class PendingReceiveLockContext :
     /// <summary>Cancels every delivery retained by the settlement sequence.</summary>
     public void Cancel()
     {
+        List<BaseReceiveContext> contexts;
         lock (_stateLock)
         {
-            _lockContext?.ReceiveContext.Cancel();
+            contexts = new List<BaseReceiveContext>(_pending.Count + 1);
+            if (_lockContext.HasValue)
+                contexts.Add(_lockContext.Value.ReceiveContext);
             foreach (Lock pendingLock in _pending)
-                pendingLock.ReceiveContext.Cancel();
+                contexts.Add(pendingLock.ReceiveContext);
         }
+
+        List<Exception>? failures = null;
+        foreach (BaseReceiveContext context in contexts)
+        {
+            try
+            {
+                context.Cancel();
+            }
+            catch (Exception exception)
+            {
+                (failures ??= new List<Exception>()).Add(exception);
+            }
+        }
+
+        if (failures != null)
+            throw new AggregateException("One or more delivery cancellation callbacks failed.", failures);
     }
 
 

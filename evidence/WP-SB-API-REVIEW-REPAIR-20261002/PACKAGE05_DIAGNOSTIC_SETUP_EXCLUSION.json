@@ -1,0 +1,11 @@
+{
+  "excluded_phase": "package05-diagnostic-previous-eight",
+  "initial_consumer_source_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-initial-consumer.cs.txt",
+  "cause": "Helper erased typed registration static interface; Limits and UsingInMemory extension selected default owner. Four typed scenarios stopped before bus creation. These are consumer setup failures, not product defect/mutant kills.",
+  "observed": {
+    "default_valid": 2,
+    "default_invalid_diagnostic_red": 2,
+    "typed_setup_failure": 4
+  },
+  "correction": "Call owner-qualified public Limits and UsingInMemory within each typed registration lambda; assertions unchanged; rerun all eight scenarios."
+}

@@ -103,7 +103,9 @@ public sealed class ConsumeScopeLifecycleTests
 
         Assert.Equal(["restore", "scope-async"], events);
         Assert.Equal([restoreFailure, scopeFailure], failure.InnerExceptions);
-        await context.DisposeAsync();
+        AggregateException repeatedFailure = await Assert.ThrowsAsync<AggregateException>(
+            () => context.DisposeAsync().AsTask());
+        Assert.Same(failure, repeatedFailure);
         Assert.Equal(1, restore.DisposeCount);
         Assert.Equal(1, scope.DisposeCount);
     }
@@ -359,6 +361,422 @@ public sealed class ConsumeScopeLifecycleTests
         await AssertCanceledAsync(provider.GetScopeAsync(Proxy<ConsumeContext>(), token), token);
         await AssertCanceledAsync(provider.GetScopeAsync(Proxy<ConsumeContext<Message>>(), token), token);
         await AssertCanceledAsync(provider.GetScopeAsync<Consumer, Message>(Proxy<ConsumeContext<Message>>(), token), token);
+    }
+
+    [Theory]
+    [InlineData(false, false, false)]
+    [InlineData(false, true, false)]
+    [InlineData(false, false, true)]
+    [InlineData(false, true, true)]
+    [InlineData(true, false, false)]
+    [InlineData(true, true, false)]
+    [InlineData(true, false, true)]
+    [InlineData(true, true, true)]
+    [RequirementCoverage("REQ-VSB-CONTAINER-CONSUME-SCOPE", "scope-only-consume-filters-retain-pipeline-and-owned-cleanup-outcomes")]
+    public async Task ScopeOnlyConsumeFilters_ReleaseOwnedScopeAndPreserveBothFailureOutcomesAsync(
+        bool typedRoute, bool pipelineFails, bool cleanupFails)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        TimeSpan timeout = TimeSpan.FromSeconds(10);
+        var events = new List<string>();
+        var primary = new IOException("unique-scope-only-consume-pipeline-failure");
+        var cleanup = new ApplicationException("unique-scope-only-consume-release-failure");
+        var ownedScope = new RecordingAsyncScope(events, cleanupFails ? cleanup : null);
+        var scopeFactory = new RecordingScopeFactory(() => ownedScope);
+        var services = new RecordingServiceProvider();
+        services.Add<IServiceScopeFactory>(scopeFactory);
+        var setter = new RecordingSetter(events);
+        var provider = new ConsumeScopeProvider(services, setter);
+        ConsumeContext? delivered = null;
+        ConsumeContext? source = null;
+        Task? downstream = null;
+        Task? operation = null;
+        var nextCalls = 0;
+
+        Task RunNextAsync(ConsumeContext context)
+        {
+            nextCalls++;
+            delivered = context;
+            events.Add("next");
+            downstream = pipelineFails ? Task.FromException(primary) : Task.CompletedTask;
+            return downstream;
+        }
+
+        try
+        {
+            if (typedRoute)
+            {
+                ConsumeContext<Message> input = PayloadContext<TestConsumeContext>();
+                source = input.Advanced();
+                var filter = new ViciOne.ServiceBus.Middleware.ScopeMessageFilter<Message>(provider);
+                operation = filter.SendAsync(input, Pipe.ExecuteAwaited<ConsumeContext<Message>>(context => RunNextAsync(context.Advanced())));
+            }
+            else
+            {
+                source = PayloadContext<ConsumeContext>();
+                var filter = new ViciOne.ServiceBus.Middleware.ScopeConsumeFilter(provider);
+                operation = filter.SendAsync(source, Pipe.ExecuteAwaited<ConsumeContext>(RunNextAsync));
+            }
+
+            Exception? observed = await Record.ExceptionAsync(() => operation.WaitAsync(timeout, token));
+
+            Assert.Equal(1, nextCalls);
+            Assert.Equal(1, scopeFactory.CreateCount);
+            Assert.Equal(1, setter.PushCount);
+            Assert.NotNull(delivered);
+            Assert.NotSame(source, delivered);
+            if (typedRoute)
+                Assert.IsType<ConsumeContextScope<Message>>(delivered);
+            else
+                Assert.IsType<ConsumeContextScope>(delivered);
+            Assert.Equal(["next", "restore", "scope-async"], events);
+            Assert.Equal(1, ownedScope.DisposeCount);
+            Assert.NotNull(downstream);
+            Assert.True(downstream.IsCompleted);
+            if (pipelineFails || cleanupFails)
+                Assert.True(operation.IsFaulted);
+            else
+                Assert.True(operation.IsCompletedSuccessfully);
+
+            if (pipelineFails && cleanupFails)
+            {
+                AggregateException aggregate = Assert.IsType<AggregateException>(observed);
+                Assert.Collection(aggregate.InnerExceptions,
+                    failure => Assert.Same(primary, failure),
+                    failure => Assert.Same(cleanup, failure));
+            }
+            else if (pipelineFails)
+                Assert.Same(primary, observed);
+            else if (cleanupFails)
+                Assert.Same(cleanup, observed);
+            else
+                Assert.Null(observed);
+        }
+        finally
+        {
+            try
+            {
+                if (downstream is not null)
+                {
+                    try
+                    {
+                        await downstream.WaitAsync(timeout, CancellationToken.None);
+                    }
+                    catch (Exception failure) when (failure is not TimeoutException && (downstream.IsFaulted || downstream.IsCanceled))
+                    {
+                        // The actual downstream failure was recorded; cleanup observes its terminal task again.
+                    }
+                }
+                if (operation is not null)
+                {
+                    try
+                    {
+                        await operation.WaitAsync(timeout, CancellationToken.None);
+                    }
+                    catch (Exception failure) when (failure is not TimeoutException && (operation.IsFaulted || operation.IsCanceled))
+                    {
+                        // Observe the genuine original/fixed target outcome even after a finite assertion failure.
+                    }
+                }
+            }
+            finally
+            {
+                if (ownedScope.DisposeCount == 0)
+                {
+                    try
+                    {
+                        await ownedScope.DisposeAsync();
+                    }
+                    catch (Exception failure) when (ReferenceEquals(failure, cleanup))
+                    {
+                        // This fallback releases only a scope the target failed to release; it cannot satisfy the earlier count oracle.
+                    }
+                }
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-CONTAINER-CONSUME-SCOPE", "outbox-provider-and-owned-scope-cleanup-outcomes")]
+    public async Task OutboxConsumeFilter_PreservesProviderAndOwnedScopeCleanupOutcomesAsync(bool providerFails, bool cleanupFails)
+    {
+        var events = new List<string>();
+        var primary = new IOException("unique-real-outbox-provider-failure");
+        var cleanup = new ApplicationException("unique-real-outbox-owned-scope-cleanup-failure");
+        Task providerTask = providerFails ? Task.FromException(primary) : Task.CompletedTask;
+        var factory = new RecordingOutboxFactory(providerTask, events);
+        var scopedServices = new RecordingServiceProvider();
+        scopedServices.Add<ViciOne.ServiceBus.Middleware.IOutboxContextFactory<Service>>(factory);
+        var ownedScope = new RecordingAsyncScope(events, cleanupFails ? cleanup : null, scopedServices);
+        var scopeFactory = new RecordingScopeFactory(() => ownedScope);
+        var rootServices = new RecordingServiceProvider();
+        rootServices.Add<IServiceScopeFactory>(scopeFactory);
+        var setter = new RecordingSetter(events);
+        var scopeProvider = new ConsumeScopeProvider(rootServices, setter);
+        var options = new ViciOne.ServiceBus.Middleware.OutboxConsumeOptions
+        {
+            ConsumerId = Guid.Parse("45a9db54-3bd9-473d-8a3f-bdb5c1ea1f11"),
+            ConsumerType = "scoped-outbox-outcome-control",
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromSeconds(5),
+        };
+        ConsumeContext<Message> source = PayloadContext<TestConsumeContext>();
+        var filter = new ViciOne.ServiceBus.Middleware.OutboxConsumeFilter<Service, Message>(scopeProvider, options);
+        var nextCalls = 0;
+        IPipe<ConsumeContext<Message>> next = Pipe.ExecuteAwaited<ConsumeContext<Message>>(_ =>
+        {
+            nextCalls++;
+            return Task.CompletedTask;
+        });
+        Task? operation = null;
+        try
+        {
+            operation = filter.SendAsync(source, next);
+            Exception? observed = await Record.ExceptionAsync(() => operation);
+            Assert.Equal(1, factory.Calls);
+            Assert.IsType<ConsumeContextScope<Message>>(factory.Context);
+            Assert.NotSame(source, factory.Context);
+            Assert.Same(options, factory.Options);
+            Assert.IsType<ViciOne.ServiceBus.Middleware.OutboxMessagePipe<Message>>(factory.Next);
+            Assert.Equal(0, nextCalls);
+            Assert.Equal(1, scopeFactory.CreateCount);
+            Assert.Equal(1, setter.PushCount);
+            Assert.Equal(["provider", "restore", "scope-async"], events);
+            Assert.Equal(1, ownedScope.DisposeCount);
+            Assert.True(providerTask.IsCompleted);
+            if (providerFails && cleanupFails)
+            {
+                AggregateException aggregate = Assert.IsType<AggregateException>(observed);
+                Assert.Collection(aggregate.InnerExceptions,
+                    failure => Assert.Same(primary, failure),
+                    failure => Assert.Same(cleanup, failure));
+            }
+            else if (providerFails)
+                Assert.Same(primary, observed);
+            else if (cleanupFails)
+                Assert.Same(cleanup, observed);
+            else
+                Assert.Null(observed);
+            Assert.Equal(providerFails || cleanupFails, operation.IsFaulted);
+        }
+        finally
+        {
+            try
+            {
+                _ = await Record.ExceptionAsync(() => providerTask);
+                if (operation is not null)
+                    _ = await Record.ExceptionAsync(() => operation);
+            }
+            finally
+            {
+                if (ownedScope.DisposeCount == 0)
+                    _ = await Record.ExceptionAsync(() => ownedScope.DisposeAsync().AsTask());
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-CONTAINER-CONSUME-SCOPE", "inner-outbox-pipeline-and-ambient-restore-outcomes")]
+    public async Task OutboxMessagePipe_PreservesPipelineAndAmbientRestoreOutcomesAsync(bool pipelineFails, bool restoreFails)
+    {
+        var primary = new IOException("unique-inner-outbox-pipeline-failure");
+        var cleanup = new ApplicationException("unique-inner-outbox-ambient-restore-failure");
+        var events = new List<string>();
+        var outerEvents = new List<string>();
+        var outerScope = new RecordingAsyncScope(outerEvents);
+        var outerRestore = new RecordingDisposable(outerEvents);
+        var ambient = new ScopedConsumeContextProvider();
+        ConsumeContext<Message> source = PayloadContext<TestConsumeContext>();
+        ConsumeContext originalAmbient = source.Advanced();
+        using IDisposable initialAmbient = ambient.PushContext(originalAmbient);
+        var setter = new AmbientRestoringSetter(ambient, events, restoreFails ? cleanup : null);
+        var scopeContext = new CreatedConsumeScopeContext<Message>(outerScope, source, outerRestore, setter);
+        var input = DispatchProxy.Create<ViciOne.ServiceBus.Middleware.OutboxConsumeContext<Message>, InnerOutboxContextProxy>();
+        var recorder = (InnerOutboxContextProxy)(object)input;
+        recorder.Add([TimeProvider.System]);
+        recorder.Events = events;
+        var options = new ViciOne.ServiceBus.Middleware.OutboxConsumeOptions
+        {
+            ConsumerId = Guid.Parse("0c73e0e3-6c67-470a-8533-5ae2b3cf6172"),
+            ConsumerType = "inner-outbox-ambient-restore-control",
+            MessageDeliveryLimit = 2,
+            MessageDeliveryTimeout = TimeSpan.FromSeconds(5),
+        };
+        var nextGate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task downstream = nextGate.Task;
+        var nextCalls = 0;
+        ConsumeContext<Message>? delivered = null;
+        ConsumeContext? ambientDuringNext = null;
+        IPipe<ConsumeContext<Message>> next = Pipe.ExecuteAwaited<ConsumeContext<Message>>(context =>
+        {
+            nextCalls++;
+            delivered = context;
+            ambientDuringNext = ambient.GetContext();
+            events.Add("next");
+            return downstream;
+        });
+        var pipe = new ViciOne.ServiceBus.Middleware.OutboxMessagePipe<Message>(options, scopeContext, next);
+        TimeSpan timeout = TimeSpan.FromSeconds(10);
+        CancellationToken testToken = TestContext.Current.CancellationToken;
+        Task? operation = null;
+        try
+        {
+            operation = pipe.SendAsync(input);
+            Assert.Equal(1, nextCalls);
+            Assert.Equal(1, setter.PushCount);
+            Assert.Same(outerScope, setter.Scope);
+            Assert.Same(input, setter.Context);
+            Assert.Same(input, delivered);
+            Assert.Same(input, ambientDuringNext);
+            Assert.False(downstream.IsCompleted);
+            Assert.False(operation.IsCompleted);
+            Assert.Equal(0, setter.RestoreCount);
+            Assert.Equal(0, recorder.SetConsumedCalls);
+
+            if (pipelineFails)
+                nextGate.TrySetException(primary);
+            else
+                nextGate.TrySetResult();
+            Exception? observed = await Record.ExceptionAsync(() => operation.WaitAsync(timeout, testToken));
+
+            Assert.True(downstream.IsCompleted);
+            Assert.Equal(pipelineFails, downstream.IsFaulted);
+            Assert.Equal(1, setter.RestoreCount);
+            Assert.Same(originalAmbient, ambient.GetContext());
+            Assert.Equal(pipelineFails ? 0 : 1, recorder.SetConsumedCalls);
+            string[] expectedEvents = pipelineFails ? ["next", "ambient-restore"] : ["next", "consumed", "ambient-restore"];
+            Assert.Equal(expectedEvents, events);
+            Assert.Equal(0, outerRestore.DisposeCount);
+            Assert.Equal(0, outerScope.DisposeCount);
+            Assert.Equal(pipelineFails || restoreFails, operation.IsFaulted);
+            if (pipelineFails && restoreFails)
+            {
+                AggregateException aggregate = Assert.IsType<AggregateException>(observed);
+                Assert.Collection(aggregate.InnerExceptions,
+                    failure => Assert.Same(primary, failure),
+                    failure => Assert.Same(cleanup, failure));
+            }
+            else if (pipelineFails)
+                Assert.Same(primary, observed);
+            else if (restoreFails)
+                Assert.Same(cleanup, observed);
+            else
+                Assert.Null(observed);
+        }
+        finally
+        {
+            nextGate.TrySetResult();
+            try
+            {
+                try
+                {
+                    await ObserveTerminalAsync(downstream);
+                }
+                finally
+                {
+                    if (operation is not null)
+                        await ObserveTerminalAsync(operation);
+                }
+            }
+            finally
+            {
+                await scopeContext.DisposeAsync();
+                Assert.Equal(1, outerRestore.DisposeCount);
+                Assert.Equal(1, outerScope.DisposeCount);
+            }
+        }
+
+        async Task ObserveTerminalAsync(Task task)
+        {
+            try
+            {
+                await task.WaitAsync(timeout, CancellationToken.None);
+            }
+            catch (Exception failure) when (failure is not TimeoutException && (task.IsFaulted || task.IsCanceled))
+            {
+                // Observe only a genuine terminal provider/target failure; a cleanup watchdog failure still propagates.
+            }
+        }
+    }
+
+    private sealed class AmbientRestoringSetter(ScopedConsumeContextProvider ambient, List<string> events, Exception? failure) : ISetScopedConsumeContext
+    {
+        public int PushCount { get; private set; }
+        public int RestoreCount { get; private set; }
+        public IServiceScope? Scope { get; private set; }
+        public ConsumeContext? Context { get; private set; }
+
+        public IDisposable PushContext(IServiceScope serviceProvider, ConsumeContext context)
+        {
+            PushCount++;
+            Scope = serviceProvider;
+            Context = context;
+            return new RestoreHandle(this, ambient.PushContext(context));
+        }
+
+        private void Restore(IDisposable actualRestore)
+        {
+            RestoreCount++;
+            actualRestore.Dispose();
+            events.Add("ambient-restore");
+            if (failure is not null)
+                throw failure;
+        }
+
+        private sealed class RestoreHandle(AmbientRestoringSetter owner, IDisposable actualRestore) : IDisposable
+        {
+            public void Dispose() => owner.Restore(actualRestore);
+        }
+    }
+
+    private class InnerOutboxContextProxy : PayloadProxy
+    {
+        public List<string> Events { get; set; } = [];
+        public int SetConsumedCalls { get; private set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name == "get_ConsumeCompleted")
+                return Task.CompletedTask;
+            if (targetMethod?.Name == nameof(ViciOne.ServiceBus.Middleware.OutboxConsumeContext.SetConsumedAsync))
+            {
+                SetConsumedCalls++;
+                Events.Add("consumed");
+                return Task.CompletedTask;
+            }
+            if (targetMethod?.Name is "LoadOutboxMessagesAsync" or "SetDeliveredAsync" or "NotifyOutboxMessageDeliveredAsync" or "RemoveOutboxMessagesAsync")
+                throw new InvalidOperationException("This first-consumption fixture must not enter delivery or completed-outbox cleanup.");
+            return base.Invoke(targetMethod, args);
+        }
+    }
+
+    private sealed class RecordingOutboxFactory(Task outcome, List<string> events) :
+        ViciOne.ServiceBus.Middleware.IOutboxContextFactory<Service>
+    {
+        public int Calls { get; private set; }
+        public object? Context { get; private set; }
+        public object? Options { get; private set; }
+        public object? Next { get; private set; }
+        public Task SendAsync<T>(ConsumeContext<T> context, ViciOne.ServiceBus.Middleware.OutboxConsumeOptions options,
+            IPipe<ViciOne.ServiceBus.Middleware.OutboxConsumeContext<T>> next, CancellationToken cancellationToken = default)
+            where T : class
+        {
+            Calls++;
+            Context = context;
+            Options = options;
+            Next = next;
+            events.Add("provider");
+            return outcome;
+        }
+        public void Probe(ProbeContext context) => context.CreateScope("recording-outbox-provider");
     }
 
     private static T Proxy<T>() where T : class => DispatchProxy.Create<T, PassiveProxy>();

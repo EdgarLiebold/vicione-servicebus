@@ -1,0 +1,112 @@
+{
+  "utc": "2026-10-06T08:23:49.994831+00:00",
+  "status": "ROOT_ACCEPTED_EXACT4_COURIER_FACTORY_FINITE_CURRENT_SOURCE_AND_REUSED_QUALIFIED377_NATIVE_ROUTES",
+  "author_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package380-courier-factory4-root-existing-tests-research-before-r1/MANIFEST.json",
+    "sha256": "2a5a0019558cf813a3b62a58f9c4bfd181e9d257315cd4b5ccf9e345838eea94"
+  },
+  "independent_peer_REPORT": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package380-courier-factory4-independent-source-native-peer-r1/REPORT.json",
+    "sha256": "fd3a98158fb1938eefa3511f34cc8739b35a140d40f9e4ad4bd2d480ec4b1f10"
+  },
+  "independent_peer_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package380-courier-factory4-independent-source-native-peer-r1/MANIFEST.json",
+    "sha256": "b6155c86e91bb0cc1dd58888c48a52274a75b91d8108050c7565bcf7489beda6"
+  },
+  "Root_whole_peer_Report_read": "50d06b",
+  "Root_whole_Source3": {
+    "read": "d52a08",
+    "lines": [
+      59,
+      102,
+      58
+    ]
+  },
+  "Root_whole_Test2_reads": [
+    "d083c2",
+    "274552",
+    "4511d6",
+    "efc617",
+    "ed6ace"
+  ],
+  "Source5_current_checksums_unchanged": [
+    {
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/FactoryMethodActivityFactory.cs",
+      "sha256": "538d5ead5c64873bfaa9fcf07e61cd23130cdf202af922d5a2120666d9a4ddc4",
+      "lines": 59,
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/FactoryMethodActivityFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "538d5ead5c64873bfaa9fcf07e61cd23130cdf202af922d5a2120666d9a4ddc4",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/FactoryMethodExecuteActivityFactory.cs",
+      "sha256": "473a6c93c5e608c97bf5a399fdd2e9f76a1c148c9cd5b3c8642ad2eb340c9831",
+      "lines": 102,
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/FactoryMethodExecuteActivityFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "473a6c93c5e608c97bf5a399fdd2e9f76a1c148c9cd5b3c8642ad2eb340c9831",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/FactoryMethodCompensateActivityFactory.cs",
+      "sha256": "0dee2258b0cb5c18832d4cd59675f2e17c994999889e8bb526917ef4780b857f",
+      "lines": 58,
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/FactoryMethodCompensateActivityFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "0dee2258b0cb5c18832d4cd59675f2e17c994999889e8bb526917ef4780b857f",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityFactoryContractTests.cs",
+      "sha256": "d9b0ef4f6b7cef937a0c85dd020bd4f3504b2fa9a34aba58052d26057f0480f1",
+      "lines": 700,
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityFactoryContractTests.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "d9b0ef4f6b7cef937a0c85dd020bd4f3504b2fa9a34aba58052d26057f0480f1",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityFactoryRegistrationDeepContractTests.cs",
+      "sha256": "e47b33cb23dc6af7b648189c388d1b65734ceccbba063c578402f42abf234a9e",
+      "lines": 649,
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityFactoryRegistrationDeepContractTests.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "e47b33cb23dc6af7b648189c388d1b65734ceccbba063c578402f42abf234a9e",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    }
+  ],
+  "correct_zero_based_originals": [
+    14368,
+    14369,
+    14372,
+    14375
+  ],
+  "mandatory_ordinal_path_precision": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package380-courier-factory4-root-existing-tests-research-before-r1/ORDINAL_AND_PATH_PRECISION.json",
+    "sha256": "6ad9517721443a71e9d42922cac43e336829ac5a2bee0573dba1d56e4eba6b44"
+  },
+  "Native_epoch": "actual377 Core module7902 independently qualified; no fresh execution or relabel to382/384",
+  "existing_factory_class_actual28PASS": "Only12 DISTINCT relevant methods form20 member mappings3/3/6/8; other16 classrecords not fourmember credit",
+  "native_cases_added": 0,
+  "Product_Test_Req_changes": 0,
+  "master_rows_before": 19237,
+  "master_rows_after": 19241,
+  "original_accepted_before": 18375,
+  "original_accepted_after": 18379,
+  "original_remaining_before": 194,
+  "original_remaining_after": 190,
+  "grade": null,
+  "whole_API_closed": false,
+  "remaining_limits": "Source-bounded hostilecontext/heldasyncdisposal/pairedcancel-dual/brokerTransport unknown, no universal grade."
+}

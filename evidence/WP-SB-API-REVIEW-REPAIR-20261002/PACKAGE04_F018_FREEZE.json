@@ -1,0 +1,326 @@
+{
+  "status": "BOUNDED_TRANSACTION_OWNERSHIP_CODE_AND_PUBLIC_PROOF_FROZEN",
+  "finding": "F018",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/00-Saga-EntityFrameworkSagaRepositoryContextFactory.cs",
+      "sha256": "53473b843b6a9d28ed03fcc5c9de7848bd15c2772efb9018e39b1d7054ce43cd",
+      "bytes": 13175,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs",
+      "baseline_sha256": "befc6519928c8c7db1b6eb3bfb46938bbd4f902099f544da20d265c6cd30571a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/F018.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/01-ownership-corrected-F018.PublicConsumer.csproj",
+      "sha256": "769b70d0fabeb7f431a8880a5db33da8a35d0b41a3e80c4e8a4d3d2e68afc01a",
+      "bytes": 979,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/02-ownership-corrected-NuGet.Config",
+      "sha256": "7d8c2eecb4d465c44c1c1c2bf7042019b54676f55d7aa05e54b927e97ae7f9cf",
+      "bytes": 524,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/OwnershipAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/03-ownership-corrected-OwnershipAssertions.cs",
+      "sha256": "2c86c35df3eea44d49908e82c8325ba8c9921947397f45b61c3ee04d86e4c988",
+      "bytes": 17595,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/04-ownership-corrected-Program.cs",
+      "sha256": "7fa84ce937741215dc387fbbf6037e3b5568072c0eb2bccc02d39cc856492e08",
+      "bytes": 2911,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/05-ownership-corrected-packages.lock.json",
+      "sha256": "d1ae1b628391b20621dcdc896d41f1ac13f99927d07fae8cbf2687d32494f1e8",
+      "bytes": 18534,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/F018.IdentityGateConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/06-identity-corrected-F018.IdentityGateConsumer.csproj",
+      "sha256": "769b70d0fabeb7f431a8880a5db33da8a35d0b41a3e80c4e8a4d3d2e68afc01a",
+      "bytes": 979,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/07-identity-corrected-IdentityGateAssertions.cs",
+      "sha256": "fff81707b8646971e90ddcea5ad768ead70a214044d6f37dc2a71250da98e57e",
+      "bytes": 20258,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/08-identity-corrected-NuGet.Config",
+      "sha256": "7d8c2eecb4d465c44c1c1c2bf7042019b54676f55d7aa05e54b927e97ae7f9cf",
+      "bytes": 524,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/09-identity-corrected-Program.cs",
+      "sha256": "b98bbf5094705aa844ea77f4622c48b0d61ef752be31b0c804f533f056823ced",
+      "bytes": 2256,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/10-identity-corrected-packages.lock.json",
+      "sha256": "d1ae1b628391b20621dcdc896d41f1ac13f99927d07fae8cbf2687d32494f1e8",
+      "bytes": 18534,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package04_f018_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/11-SERVICEBUS_API_REVIEW_AND_REPAIR-package04_f018_mutations.py",
+      "sha256": "9d54a2d34e95a15d7bae2c7da8c8e01d16faa8f1dcb39d6b5047e35bbad61da9",
+      "bytes": 7358,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/freeze/12-changelog-product-fixes.md",
+      "sha256": "8ae00f5b4d58734f6b265aaec8183829e2999e39253e58e93e3722c75e4743e2",
+      "bytes": 30637,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/freeze/08-product-fixes.md",
+      "baseline_sha256": "d5f673cb05db52cd4711a62279c1d099e1e71c73fa0bd4e896f019616d3840ad"
+    }
+  ],
+  "proofs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_PLAN.json",
+      "sha256": "b26e88c1bcdf5d3b751b6dd89c1aead36110a2836ee9a8c25e72f2347ba531bb"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_ROOT_PUBLIC_READ_CLOSURE.json",
+      "sha256": "064eb181614094da459dea8177332310e53b084db1bb3238c19cc25694902af6"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_ORIGINAL_CAUSES.json",
+      "sha256": "fcac884dffbca49221136ef98d56c9327defca5ebe18596138ecd9e0704940e3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_MUTATIONS.json",
+      "sha256": "bffbc8a1b52aab3de619a11ae30e7d9087a4cc4cd9d39be997313511386d00fc"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_PUBLIC_BINDING.json",
+      "sha256": "9f2fac083beeed11a6710f816825bcf40aeee63fa4ea7b228be91864725bb4a6"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-product-delta.patch",
+      "sha256": "a9d0659b4b6a6e28e561f10e2211f655f03fef64987951c635aa6372caea5c13"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-setup-exclusions.json",
+      "sha256": "4cc2b76671150e80c8186d231172bf27e7ba38f4b5b729a3705e36311b0bfa6f"
+    }
+  ],
+  "native_receipts": [
+    {
+      "phase": "package04-f018-corrected-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:49:42.072697+00:00",
+      "completed_utc": "2026-10-03T00:49:50.150656+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-corrected-build.log",
+      "log_sha256": "4f8600215e58e73dc2b9305ec89d8d4fdee5885c6a41274cce35f71cb38d8eda"
+    },
+    {
+      "phase": "package04-f018-corrected-fresh-pack",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-o",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected",
+        "-p:PackageVersion=1.0.0",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:49:50.252532+00:00",
+      "completed_utc": "2026-10-03T00:49:52.317147+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-corrected-fresh-pack.log",
+      "log_sha256": "cd24beb1afd80f8ad7b67de707eb2f75dc7c016165826e0cb5cf64632bb0b19c"
+    },
+    {
+      "phase": "package04-f018-ownership-corrected-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "F018.PublicConsumer.csproj",
+        "--force-evaluate",
+        "--no-http-cache"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:49:52.448419+00:00",
+      "completed_utc": "2026-10-03T00:49:54.753939+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-restore.log",
+      "log_sha256": "ed3801359cc9f8c12af7b94eb83da9d3bbbf3d1dc565d1765f8810e0e434f869"
+    },
+    {
+      "phase": "package04-f018-ownership-corrected-build",
+      "command": [
+        "dotnet",
+        "build",
+        "F018.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:49:54.844341+00:00",
+      "completed_utc": "2026-10-03T00:49:56.771968+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-build.log",
+      "log_sha256": "c094303a211c9a0591fa6ffad525d94742ea73ac4b41aa84ed774d1115301c16"
+    },
+    {
+      "phase": "package04-f018-ownership-corrected-run",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/F018.PublicConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:49:56.898185+00:00",
+      "completed_utc": "2026-10-03T00:50:01.134195+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-run.log",
+      "log_sha256": "fd10344da7c6affaec8899cadd7b5cea4834fa7c06f92cff4b6cd9499db852ce"
+    },
+    {
+      "phase": "package04-f018-identity-corrected-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "F018.IdentityGateConsumer.csproj",
+        "--force-evaluate",
+        "--no-http-cache"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:50:01.237620+00:00",
+      "completed_utc": "2026-10-03T00:50:03.491425+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-restore.log",
+      "log_sha256": "e8cbb94419fa35f580ea7ac42e6596f8bde28e63f536917a83075d697da6ff4d"
+    },
+    {
+      "phase": "package04-f018-identity-corrected-build",
+      "command": [
+        "dotnet",
+        "build",
+        "F018.IdentityGateConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:50:03.594867+00:00",
+      "completed_utc": "2026-10-03T00:50:05.485808+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-build.log",
+      "log_sha256": "262eebfea558d5323c231601ae289252d75871fb7b868211756b0df9ba48954a"
+    },
+    {
+      "phase": "package04-f018-identity-corrected-run",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:50:05.587769+00:00",
+      "completed_utc": "2026-10-03T00:50:08.910396+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-run.log",
+      "log_sha256": "2521c2da24290ba2d2093e4f9733cb97f7486c05a896d485a9372ef66b70d711"
+    },
+    {
+      "phase": "package04-f018-ownership-corrected-locked",
+      "command": [
+        "dotnet",
+        "restore",
+        "F018.PublicConsumer.csproj",
+        "--locked-mode"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:56:21.344220+00:00",
+      "completed_utc": "2026-10-03T00:56:23.097929+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-ownership-corrected-locked.log",
+      "log_sha256": "ce511d72a9f22194a5211941b61765caaee979810b2e19817a14286f17c4cee1"
+    },
+    {
+      "phase": "package04-f018-identity-corrected-locked",
+      "command": [
+        "dotnet",
+        "restore",
+        "F018.IdentityGateConsumer.csproj",
+        "--locked-mode"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:56:23.185396+00:00",
+      "completed_utc": "2026-10-03T00:56:24.816183+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-identity-corrected-locked.log",
+      "log_sha256": "8bdd1ac7b43c226b52cc7660753a294a28e14d067061e754ac59b2425281c6a7"
+    }
+  ],
+  "original": {
+    "actual_cases": 16,
+    "causal_failures": 6,
+    "positive_controls": 10
+  },
+  "corrected": {
+    "actual_cases": 16,
+    "passed": 16,
+    "failed": 0
+  },
+  "actual_mutants_killed": 6,
+  "rollback_cases": 16,
+  "open_canonical_owner": "Old SendQuery_WithAnOuterTransaction_UsesOnlyTheProviderQueryExecutionAsync only installs a fake marker and no actual transaction. Root must complete36-file owner and57shared/CI personal reads before correcting its setup. Full owner acceptance remains pending; first broad run also had two wrong Profile=Unit setup failures, excluded. Correct UnitArchitecture rerun ongoing.",
+  "limits": "Bounded same/separate SQLite actual physical context/transaction/ID/persistence and explicit opt-out, plus explicit public middleware foreign-ID fail-closed evidence. No cross-store distributed atomicity, provider retry/commit-fault matrix or wholeA+ claim."
+}

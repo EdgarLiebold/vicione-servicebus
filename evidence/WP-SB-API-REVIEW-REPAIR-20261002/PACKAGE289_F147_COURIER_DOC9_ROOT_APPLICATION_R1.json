@@ -1,0 +1,56 @@
+{
+  "utc": "2026-10-06T01:07:49.118070+00:00",
+  "status": "INDEPENDENT_SOURCE_PEER_APPROVED_DOC9_APPLIED_ACTUAL_PUBLICATION_PENDING",
+  "finding_family": "F147 extension",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package285-courier-doc9-root-proposed-r1/REPORT.json",
+    "sha256": "f9937dbe514fe96aaae087355f576989779fac414aa3bbc855f8d464c3b26420"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package285-courier-doc9-independent-scanner-source-peer-r1/REPORT.json",
+    "sha256": "1ecfadcf63027273174267f6e518e467970a0160c78806fa029d5f53908babd2"
+  },
+  "changes": [
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Configuration/CourierRegistrationExtensions.cs",
+      "before_sha256": "3f69644777a3d773d6cdd89003b9a6e24635c2d2c6ad9cea027b2f7191d32ac4",
+      "after_sha256": "ed2ac53f5cb2bf3b7582d7cbeddd95b9a993ad56fe528e47eb5302979c2d5083",
+      "lines": 263
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Configuration/ICompensateActivityConfigurator.cs",
+      "before_sha256": "570a22e02a21ada1ce1ff227e57eb37326c6231afdcf2b7901f5d8725d4d2b43",
+      "after_sha256": "104b210f2a65483de695817412a9bca5f3e7829d03bfe6ba294d5303b9ddca3d",
+      "lines": 29
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Configuration/IExecuteActivityConfigurator.cs",
+      "before_sha256": "813f6e48275560f5ff55e6ce3a5ea31738229dd97a21f799216debec6acfeb3e",
+      "after_sha256": "392932c924d11bf2a4c139cb3d8f2dbab91a0c6b05ba4767341704f96d878ab3",
+      "lines": 29
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/IRoutingSlipBuilder.cs",
+      "before_sha256": "c5c1650bef836830344dad20a9388537732bfd6409650e4d57ea7cc1af5f3d13",
+      "after_sha256": "6fa9b9ddb3794282c7a6af5a98f32a54b6218fc8ce6ecec87bb3410316663def",
+      "lines": 12
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/RoutingSlipBuilder.cs",
+      "before_sha256": "3ea0dcf4417fc4ac044cf6a5d8417819f0666d664c2fd5afe002cd7cdd32a00b",
+      "after_sha256": "56a86b2824cb596f4b0a3001cf9eee6142f7b2c373ba68f03f527ac19525a50d",
+      "lines": 493
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/RoutingSlipEventExtensions.cs",
+      "before_sha256": "abdb2467c609475df7ad1069f5ab77911e356b5b2504986debb9aec7ce561cfa",
+      "after_sha256": "a3b218481f3a8fbda37c1a650a3b4d635722bacbc42c44d1f657bd4e5e8bca1f",
+      "lines": 417
+    }
+  ],
+  "exact9_inverse_whole6": true,
+  "all_code_declarations_tests_Req_unchanged": true,
+  "limits": "Null-entry wording is dictionary precedence before customdeserializer conversion, no guaranteed typedresult. Bodyless Build no copying promise for arbitrary SPI. Native0/XMLactual pending.",
+  "native_credit": 0,
+  "grade": null
+}

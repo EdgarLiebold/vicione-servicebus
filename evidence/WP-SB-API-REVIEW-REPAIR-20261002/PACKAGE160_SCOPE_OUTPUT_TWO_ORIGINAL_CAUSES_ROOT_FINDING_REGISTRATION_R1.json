@@ -1,0 +1,72 @@
+{
+  "utc": "2026-10-05T00:59:44.094820+00:00",
+  "actor": "/root",
+  "status": "TWO_ORIGINAL_NATIVE_CAUSES_CONFIRMED",
+  "confirmed_before": 137,
+  "confirmed_after": 139,
+  "accepted_current": 136,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-outbox-fixed84-scope-original19-output-original14-neighbors377-fresh2-independent-r1/REPORT.json",
+    "sha256": "bcca1ba1f949f1ee5ef74ac060c7e934070a8014e550c6c320f333f47e648533"
+  },
+  "actual_finite_causes": [
+    {
+      "scope": "scope2",
+      "cases": [
+        "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests.ScopeOnlyConsumeFilters_ReleaseOwnedScopeAndPreserveBothFailureOutcomesAsync(typedRoute: False, pipelineFails: True, cleanupFails: True)",
+        "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests.ScopeOnlyConsumeFilters_ReleaseOwnedScopeAndPreserveBothFailureOutcomesAsync(typedRoute: True, pipelineFails: True, cleanupFails: True)"
+      ],
+      "first_failure": "Assert.IsType<AggregateException>(observed), L443. Expected AggregateException, actual cleanup ApplicationException.",
+      "reached": [
+        "real ConsumeScopeProvider allocates owned scope and typed/untyped rebinding",
+        "nextCalls1/create1/push1; exact scoped context type and distinct original context",
+        "events next,restore,scope-async and DisposeCount1; downstream terminal; public operation faulted"
+      ],
+      "unreached": [
+        "two original cause references and pipeline-then-cleanup order in AggregateException"
+      ],
+      "actual_source_cause": "ScopeConsumeFilter and ScopeMessageFilter await using release throws after failing next.SendAsync. Dispose exception replaces pipeline IOException. ConsumeScopeLifetime itself attempts restoration then async owned scope and rethrows exact sole scope failure.",
+      "controls": "old11 + new6 single-failure/healthy controls passed; 2 both-failure cases fail finitely",
+      "cleanup": "finally independently observes downstream and public terminal tasks; fallback releases only scope not already disposed, cannot satisfy prior count oracle"
+    },
+    {
+      "scope": "output3",
+      "cases": [
+        "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ConvertedContinuation_RemainsOwnedThroughCompletionFaultAndCancellationAsync(outcome: 1)",
+        "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ConvertedContinuation_RemainsOwnedThroughCompletionFaultAndCancellationAsync(outcome: 2)",
+        "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ConvertedContinuation_RemainsOwnedThroughCompletionFaultAndCancellationAsync(outcome: 3)"
+      ],
+      "first_failures": {
+        "outcome1": "Assert.False(operation.IsCompleted), L235 actualTrue while rawNext held",
+        "outcome2": "Assert.Same(primary, observed), L245 actualnull after joined public operation",
+        "outcome3": "Assert.True(operation.IsCanceled), L240 actualfalse; subsequent await/OCE assertions unreached"
+      },
+      "reached": [
+        "actual MessageConsumeContext converted from separate originalcontext",
+        "actual filter bodyCalls1/nextCalls1 and body/next exact typed context identity",
+        "held outcome verifies genuine rawNext pending before failure; fault outcome joined public operation"
+      ],
+      "unreached": [
+        "held-release before post observer ordering",
+        "fault public/task/typed/outer observer exact primary identity",
+        "canceled public OCE token and typed/outer observer identity",
+        "final outcome-specific event trace and observer exact contexts"
+      ],
+      "actual_source_cause": "SendToOutputAsync creates typedNext via Pipe.Execute(Action). Expression invocation next.SendAsync(messageContext.Advanced()) produces a Task discarded by Action delegate. Returned raw continuation pending/fault/cancel is not owned, though synchronous invocation exceptions still propagate.",
+      "controls": "10 previous observer controls + new immediate successful continuation case passed",
+      "cleanup": "finally releases held gate, joins/observes genuine raw continuation even if detached and true public operation; timeout not swallowed"
+    }
+  ],
+  "causal_root_read": "8f57ca Scope19whole and3ffcb8 Output14whole; genuinecurrentSource2scope/output67a373 whole andsharedLifetime191dcb.",
+  "root_MAN_verified": 3345,
+  "limits": [
+    "Pure frozen Python qualification, no SDK/native/repo mutations.",
+    "Selected494 contains5realfinite ORIGINAL failures; no cleanCore/wholeAPI grade.",
+    "Only first original assertion and earlier reached assertions credited; later expectations explicitly unreached.",
+    "DictionaryF134 not160 retested or repaired by this proof.",
+    "Selected7 runtime DLLs equal canonicalframes; not all loaded dependencies.",
+    "Physical/generated checksum binding grants no humanwhole-source/APIgrade transfer.",
+    "Exactone physical CoreRequirements resource payload, resource names not decoded.",
+    "Two fresh ZIPs equal this current frozenepoch; no all-package-release claim."
+  ]
+}

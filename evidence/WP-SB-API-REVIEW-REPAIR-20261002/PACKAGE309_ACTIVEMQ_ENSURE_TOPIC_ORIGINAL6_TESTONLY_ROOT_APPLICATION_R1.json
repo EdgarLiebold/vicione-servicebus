@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-06T02:26:23.005304+00:00",
+  "status": "ADVERSARIAL_SOURCE_REVIEWED_TESTONLY_APPLIED_ACTUAL_ORIGINAL_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package305-activemq-ensure-topic-original6-testonly-proposed-r1",
+    "manifest_sha256": "87ac3ed3ee4282aed2d553263c1213cac6f181ab1824ea6f0e3ada5fe4f6f5da"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package305-ensure-topic6-independent-runtime-source-peer-r1",
+    "manifest_sha256": "a0b4cad8abfabcdeb87ebc473408c09cc55143d29443a04ad40ff01ee3f7318d"
+  },
+  "mandatory_count_erratum": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package305-ensure-topic6-independent-runtime-topic-count-erratum-r1",
+    "manifest_sha256": "1840030c8b53ca16d9e308bc2ff4b375c929078eccf94f0737c569db5665c71b"
+  },
+  "test": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqEnsureTopicProducerOutcomeTests.cs",
+    "sha256": "c24bd25a6207a3157fc1efc7d71afa6d443b4037d0b5aad8201e4f16a0473f0e",
+    "root_whole_read": "4ee9de"
+  },
+  "requirement": {
+    "before_rows": 133,
+    "after_rows": 134,
+    "before_sha256": "31bf0285b751cbad8d292650d36cfafbd1727ce4ee4f372d6e60189627dbf144",
+    "after_sha256": "5d2c8f734fe15634656c43b4d5409d252ac8439e003d54f99582325d300fcd11",
+    "add": {
+      "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+      "variantKey": "ensure-topic-preserves-producer-close-dispose-outcomes",
+      "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+      "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqEnsureTopicProducerOutcomeTests",
+      "testMethod": "EnsureTopic_PreservesProducerCleanupOutcomesAndCancellationAsync"
+    },
+    "prefix_objects_equal": true,
+    "cancellation_metadata": "supplementary real controls under sole lifecycle mapping; no separate cancellation requirement credit"
+  },
+  "product_unchanged_guard": {
+    "relative": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqSessionContext.cs",
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package305-activemq-ensure-topic-finite6-plan-r1/current-source0.cs",
+    "sha256": "ac1cbba6f7b5945099b36491d2b7df3b5f5ac954a51d762f0f336bc3aa1d8274",
+    "lines": 326,
+    "research_before_sha256": "ca6e8a09470f80131db9f8127b33778908eb71feddaaa59497eed5725e440d11"
+  },
+  "native": 0,
+  "grade": null,
+  "finding_registered": false
+}

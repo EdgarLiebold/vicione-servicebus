@@ -1,0 +1,114 @@
+{
+  "files": [
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/BatchClock.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/previous/BatchClock.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/Cases.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/previous/Cases.cs",
+      "sha256": "37ce6a3e75bca3bbe60533e9c7b2ed45b80e2ca01bbb2470ea12133d1ddf34df"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/Clock.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/previous/Clock.cs",
+      "sha256": "f55322447d24846c5f0a445cb00d04be2c7997aa7bb039207b8915103db3aafb"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/previous/NuGet.Config",
+      "sha256": "bbbd561be1bb5dba3fb2541334b8e79f8e858fea58a2481e66ad54d5a7f7280e"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/previous/OwnedLifetime.cs",
+      "sha256": "55083a58e962ed522a68d845d42eaf2809439462b28c06115d2e9d0b8d60a624"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/Probes.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/previous/Probes.cs",
+      "sha256": "b51e103062426595e5a36974a9baa7e1c8cc37b1a2da28494d0398128eed525b"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/previous/Program.cs",
+      "sha256": "a3ee91bdb446fe76f8b56ac0cce664b06a232bb319f5fbcf9ef6e7a87a464bed"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/RuntimeOwner.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/previous/RuntimeOwner.cs",
+      "sha256": "d00b5eb15dfe49162cccbce86b0b2a22a19bcbe10a72437c72414cb26b85f411"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/previous/packages.lock.json",
+      "sha256": "dda3c57e7dda5c7b5548ae96604e8db87ae02b0fadec94d3cd1c6eef5980386a"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/BatchClock.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/corrected/BatchClock.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Cases.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/corrected/Cases.cs",
+      "sha256": "37ce6a3e75bca3bbe60533e9c7b2ed45b80e2ca01bbb2470ea12133d1ddf34df"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Clock.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/corrected/Clock.cs",
+      "sha256": "f55322447d24846c5f0a445cb00d04be2c7997aa7bb039207b8915103db3aafb"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/corrected/NuGet.Config",
+      "sha256": "f9c0fc2a5c7a0b52e9d2f5b774277674877fd2c3ded01e3f6bc5353d66a33163"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/corrected/OwnedLifetime.cs",
+      "sha256": "55083a58e962ed522a68d845d42eaf2809439462b28c06115d2e9d0b8d60a624"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Probes.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/corrected/Probes.cs",
+      "sha256": "b51e103062426595e5a36974a9baa7e1c8cc37b1a2da28494d0398128eed525b"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/corrected/Program.cs",
+      "sha256": "a3ee91bdb446fe76f8b56ac0cce664b06a232bb319f5fbcf9ef6e7a87a464bed"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/RuntimeOwner.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/corrected/RuntimeOwner.cs",
+      "sha256": "d00b5eb15dfe49162cccbce86b0b2a22a19bcbe10a72437c72414cb26b85f411"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/corrected/packages.lock.json",
+      "sha256": "50eaf67fedf39dd38cf44f053bca25ff971497e96a26799389ac88933b66d325"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/bin/Release/net10.0/BatchClock.PublicConsumer.dll",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/previous/BatchClock.PublicConsumer.dll",
+      "sha256": "2c9833e269fc2f05e468fa5edcf87e44079b8732c81975cc863ac3ac19c038fd"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/previous/bin/Release/net10.0/BatchClock.PublicConsumer.pdb",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/previous/BatchClock.PublicConsumer.pdb",
+      "sha256": "c4ad3ca10e3dcf191d8f87f3512542d04af0d88603370fbed8c7abbaeb817264"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/BatchClock.PublicConsumer.dll",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/corrected/BatchClock.PublicConsumer.dll",
+      "sha256": "de29b2a7bd21605b97afc691d8b1539e3109b97f5d1b69570065da70643df9d2"
+    },
+    {
+      "source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/bin/Release/net10.0/BatchClock.PublicConsumer.pdb",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/corrected/BatchClock.PublicConsumer.pdb",
+      "sha256": "cea2a96f0de6fd593224e5e4f998f54207a547adf30068a0319e4a6d3a45e1ab"
+    }
+  ]
+}

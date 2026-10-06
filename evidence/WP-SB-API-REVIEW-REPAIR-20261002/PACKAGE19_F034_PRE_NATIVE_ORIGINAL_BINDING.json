@@ -1,0 +1,35 @@
+{
+  "status": "ROOT_CURRENT_WHOLE_PUBLIC_READ15_INPUTS_AND_SELECTED_THREE_PACKAGE_CHAINS_BEFORE_ORIGINAL34",
+  "root_read_sha256": "4e1fdde51b084bd5ff516b38d842791d93b8710e6333e7fefb77860f8181dc33",
+  "peer": "azure_test_scope fresh wholeR3 no blockers, immutable dossier pending",
+  "cases": 34,
+  "original_predicate": "Strict public buildR3 exit0/0warnings; prior2compilererrors excluded; all samepairedsource assertion bytes; no outcome yet",
+  "chains": [
+    {
+      "name": "ViciOne.ServiceBus",
+      "package_sha256": "7287d3b8e4d9febdc35bd153fff0e9d6871814b2ed0b5e7d028f3bd28667efbd",
+      "zip_sha512": "Xx3FBEVgJ5+uRtHTxdWdAjefKv8i67fVw+eaIDZN8jVntvlcwe1a9Ip2InLBZ6qD9wFSKjTqJJFzexSFLLQAVg==",
+      "dll_sha256": "29a0a2fb6462eb68d4fe781682db0750f689d0280f106b4c5097fe8bd34a3c90",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/restored-packages/vicione.servicebus/1.0.0/lib/net10.0/ViciOne.ServiceBus.dll",
+      "app": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/bin/Release/net10.0/ViciOne.ServiceBus.dll"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Abstractions",
+      "package_sha256": "440bd764b8dff36e641061930227b2065fe8a88f776d78b1f3b85a537277ca16",
+      "zip_sha512": "3yROMBbMy+5DTi1xzWO4onJNKLhIP3QJSQH4RAPnAL5taeCUp2OIGrY+ETHgkdKVvwv9eGjSDKhnMXnB/rrOXA==",
+      "dll_sha256": "ef5817cda765fc00c65671440d18884fda8d7636b0dd5bed8135470507c9d6b2",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/restored-packages/vicione.servicebus.abstractions/1.0.0/lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "app": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Courier",
+      "package_sha256": "14d4879c783d2a5b49fde638aabaf3889a9f92cbea5c9a8b8dd835156699786d",
+      "zip_sha512": "HndiZH+A4ssHkmtgHRpUpdg+UH1fg6XbPMF17XKD5A9PuLjQYdT/jx07ZTxxVZvzYMzJfmo9urRPYf6o1oyw4A==",
+      "dll_sha256": "97e2ca02adea2be16e591bdeeb04ddebc01e3a35772b4cf5cbb1dbe2f85f1a62",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/restored-packages/vicione.servicebus.courier/1.0.0/lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+      "app": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll"
+    }
+  ],
+  "app_sha256": "b60a429b1472fbf8b47267309efa14ce429036b9bd761d085435f431fdbe03ac",
+  "case_scope": "definition-full companion precedence separately qualified, not automatic F034 causal count"
+}

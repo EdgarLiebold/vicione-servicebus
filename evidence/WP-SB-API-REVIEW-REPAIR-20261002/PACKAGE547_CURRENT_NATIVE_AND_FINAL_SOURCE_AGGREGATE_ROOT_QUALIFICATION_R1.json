@@ -1,0 +1,72 @@
+{
+  "status": "CURRENT_LOCAL_NATIVE_AND_FINAL_SOURCE_AGGREGATE_QUALIFIED_BOUNDED_FINAL703_BINDING_AND_DISPOSITIONS_PENDING",
+  "actor": "/root",
+  "whole_reports_read_receipts": [
+    "ce7fbf",
+    "initial aggregate3 fullread"
+  ],
+  "author_conflicts_preserved": true,
+  "qualification": {
+    "strict_global_build_warnings": 0,
+    "strict_global_build_errors": 0,
+    "unfiltered_unit_modules": 23,
+    "unfiltered_unit_tests": 13460,
+    "unit_failures": 0,
+    "unit_skips": 0,
+    "event_selected_classes": 22,
+    "event_selected_tests": 166,
+    "event_failures": 0,
+    "event_skips": 0,
+    "event_focused6_subset_not_added_to166": true,
+    "event_excluded_emulator_classes": 7,
+    "fresh_packages": 31,
+    "runtime_APIs": 30,
+    "API_baseline_lines": 20118,
+    "API_baseline_sha256": "493c48624b80c801824bf6caee9b7e6b960b6608335bebaee97da97208e44252",
+    "compiled_journeys": 18,
+    "executed_journey": "Journey13 configuration only",
+    "isolated_consumer_programs_executed": 4,
+    "consumer_scope": "DI/assembly/extension/HubLifetimeManager smoke; no full broker/hub/cloud workflow"
+  },
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package546-fresh31-sdk-gate-independent-current-qualification-r1/REPORT.json",
+      "bytes": 6068,
+      "sha256": "1053f87dea990adabc51bc13b102187555ddfdb071dc05ab005789a0327685d4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package546-fresh31-sdk-gate-independent-current-qualification-r1/MANIFEST.json",
+      "bytes": 3128,
+      "sha256": "4f2f2900cfd328eb7a5c2955d58ed647f4821536ed39c9173479be939f99e156"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package529-final-runtime-adversarial-aggregate-source-review-r1/REPORT.json",
+      "bytes": 13545,
+      "sha256": "bd545a130d719c265959f6683e6415218c46529c984b2c6b09d7fea778b6c75c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package529-final-runtime-adversarial-aggregate-source-review-r1/MANIFEST.json",
+      "bytes": 88,
+      "sha256": "7c0584d83eb46119f141e011479e2890f9ce762759c58f20b3903b967f16810c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package537-all23-independent-native-qualification-r1/REPORT.json",
+      "bytes": 6598,
+      "sha256": "a4a99659890c0dd4ab30bf2c54e9da0a8e711ce84f52b9e34b2c9380986fc69e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package539-event6-independent-native-qualification-r1/REPORT.json",
+      "bytes": 5705,
+      "sha256": "da39922234b0549e54125f6c9c0eed319267c7d29816d95c55be730274f4d296"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package540-event166-independent-scoped-summary-qualification-r1/REPORT.json",
+      "bytes": 3769,
+      "sha256": "e1e69343af55d455d17aa372aaee7946a3921bf072c3aa1ff1e68d00d1bf821d"
+    }
+  ],
+  "failed532_and534_retained": true,
+  "whole_API_or_findings_closed": false,
+  "Source_Test_Requirement_API_code_changes": 0,
+  "additional_SDK_actions": 0
+}

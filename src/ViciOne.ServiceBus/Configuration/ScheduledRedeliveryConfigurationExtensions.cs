@@ -85,7 +85,7 @@ public static class ScheduledRedeliveryConfigurationExtensions
         configurator.ConnectConsumerConfigurationObserver(observer);
     }
 
-    /// <summary>Configures the message retry for the handler, regardless of message type.</summary>
+    /// <summary>Configures scheduled redelivery for the message type handled by this handler.</summary>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="configure">The callback used to configure the component.</param>

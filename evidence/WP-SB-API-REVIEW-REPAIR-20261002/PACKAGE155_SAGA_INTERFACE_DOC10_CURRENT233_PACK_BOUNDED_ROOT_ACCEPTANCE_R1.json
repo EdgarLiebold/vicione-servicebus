@@ -1,0 +1,63 @@
+{
+  "utc": "2026-10-04T23:16:15.838869+00:00",
+  "decision": "ACCEPT10_REPAIRED_SAGA_INTERFACE_SOURCE_CONTRACTS",
+  "api_before": 4223,
+  "api_after": 4233,
+  "source_norm_review": "3bd3ba plus prior451signature/parameter/constraints/XML review retained",
+  "corrected_norms": [
+    {
+      "id": "M:ViciOne.ServiceBus.Configuration.ISagaDefinition.GetEndpointName(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter)",
+      "norm": "Returns saga endpoint name through the configured saga formatter fallback."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Configuration.ISagaDefinition`1.Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.ISagaConfigurator{`0},ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "norm": "Configures the supplied saga on the borrowed endpoint with sagaConfigurator and registration context."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Saga.ISagaRepositoryContext`2.UndoAsync(ViciOne.ServiceBus.Advanced.SagaConsumeContext{`0},System.Threading.CancellationToken)",
+      "norm": "Performs provider-specific undo; in-memory leaves referenced saga state unchanged."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator`2.SelectId(System.Func{ViciOne.ServiceBus.ConsumeContext{`1},System.Guid})",
+      "norm": "Installs correlation ID selector and returns the same configurator for further configuration."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator`2.SetSagaFactory(ViciOne.ServiceBus.Sagas.SagaFactoryMethod{`0,`1})",
+      "norm": "Registers saga factory; pre-insertion conflict and failure policy is provider-specific."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Sagas.ISagaPolicy`2.PreInsertInstance(ViciOne.ServiceBus.ConsumeContext{`1},`0@)",
+      "norm": "Supplies pre-insertion instance when policy supports it; true establishes nonnull out-instance, not unconditional storage success or suppression of failures."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Sagas.IStateMachineActivitySelector`1.OfType``1",
+      "norm": "Selects an instance activity without requiring an event-data contract; no OfInstanceType member in this untyped selector."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Sagas.IStateMachineEventActivitiesBuilder`1.CommitActivities",
+      "norm": "Commits state-machine event activities and returns modifier; no routing-slip operation."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Sagas.IStateMachineFaultedActivitySelector`2.OfType``1",
+      "norm": "Selects an instance activity in an exception binder without requiring an event-data contract."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Sagas.IStateMachineModifier`1.Finally(System.Func{ViciOne.ServiceBus.Sagas.IEventActivityBinder{`0},ViciOne.ServiceBus.Sagas.IEventActivityBinder{`0}})",
+      "norm": "Binds final-state Enter using machine any-state rules; no universal post-activity finally promise."
+    }
+  ],
+  "current_compiled_XML_and_fresh_package_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package153-request-fixed233-doc22-fresh2-independent-r1/REPORT.json",
+    "sha256": "da78437a711a734db35d7286110943b062263dc2d9a460167dbb78494bc7b780"
+  },
+  "source_evidence": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-saga-state-event-behavior451-scanner-r1/PER_ID451_CURRENT_DECLARATION_CONTRACT_REVIEW.json",
+    "sha256": "1f46c0f5baf38579c352562f7567ef3989b9db9dd49772c3851387be248d8322"
+  },
+  "limits": [
+    "Original historical recommendations/heldXML preserved. Correct current XML and explicit Root norms recorded here.",
+    "Bodyless Source declaration contracts only; concrete provider/execution/disposal/storage/observers remain distinct.",
+    "F127 sibling2 still pending current repaired XML and package qualification; this does not close expanded15node finding."
+  ],
+  "CLOSED": false
+}

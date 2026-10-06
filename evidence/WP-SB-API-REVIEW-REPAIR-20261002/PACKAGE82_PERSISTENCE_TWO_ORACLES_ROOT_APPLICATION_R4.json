@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-04T15:46:48.398816+00:00",
+  "decision": "ROOT_INDEPENDENT_ADVERSARIAL_PREFLIGHT_NO_BLOCK_PERSISTENCE10_ORACLES_APPLIED_ORIGINAL_NATIVE_PENDING",
+  "sources": [
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/AzureTableSagaRepositoryBoundaryTests.cs",
+      "before": "8c90af07eee986c528cd6d921fce0eaba6a4400325b9c5008da5b7f3ff6f824c",
+      "after": "6321fcd38286af069c65fb6629486617ff23d65eba5c2be6f179d5a32fc77a35"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbSagaFailureBoundaryTests.cs",
+      "before": "6447f425252e98e808477abd6020ab0672e48c382d7b7aa3dfafe2db67609e27",
+      "after": "f7fad8385b8dbae9855766a35787a0d694f5e2d2a133de6065c54951239fb619"
+    }
+  ],
+  "requirement_merges": [
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/AzureTableRequirements.json",
+      "before": "396cf820fe679811c00c6570d8d243261117631f8f48e9eaff35f0da30d966c6",
+      "after": "5f763d9c768916463f8a8fb76e09a2df2a82b6d2ba18290dff5943f637586326",
+      "rows_before": 42,
+      "rows_after": 43
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Requirements/DynamoDbRequirements.json",
+      "before": "c08c103f1b15814e89b6ca75fb547a7e7f06923841ecab349e3a60e7da264d22",
+      "after": "26b805927951e61da120e48acb4229510fed3f8d6995f229be9b665879714441",
+      "rows_before": 24,
+      "rows_after": 26
+    }
+  ],
+  "root_reads": [
+    "dbcf87+819c44 entireR4newtestdelta",
+    "4a982b exactR2toR4delta",
+    "b503c6 entireAzureRepositoryContext293L/DynamoFactory85L andR4independentreview",
+    "819c44 independentR2Reportallsubstantivecontracts/issue sections"
+  ],
+  "independent_report_sha256": "a6ea8ac40c409ea6ba87fb11dfb6bc7c15abcd66233e7eb3e1ffcb124b9d376b",
+  "limits": "Three actualmethods10cases; not native pass, no cloud. Callback assertion mask removed, actualoperatorowned taskterminal joined, orderexactprimarycleanupasF033norm. No new finding until actualRED."
+}

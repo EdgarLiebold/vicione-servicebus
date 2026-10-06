@@ -8,7 +8,7 @@ public class AmazonSqsEntityNameValidator :
     IEntityNameValidator
 {
     const string FifoSuffix = ".fifo";
-    static readonly Regex _baseNameRegex = new(@"^[A-Za-z0-9\-_]+$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+    static readonly Regex _baseNameRegex = new(@"\A[A-Za-z0-9\-_]+\z", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     /// <summary>Gets the shared Amazon SQS queue-name validator.</summary>
     public static IEntityNameValidator Validator => Cached.EntityNameValidator;

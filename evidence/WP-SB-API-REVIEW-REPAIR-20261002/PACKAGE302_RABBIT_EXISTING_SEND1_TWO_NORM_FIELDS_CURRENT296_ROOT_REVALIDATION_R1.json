@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-06T01:53:07.561272+00:00",
+  "status": "ROOT_EXISTING_UID_SEND1_EXACT_TWO_NORM_FIELDS_REVALIDATED",
+  "master_before_sha256": "341afccfe53b4be100b228a2d068b9901fab145d6d937501852fa5ac7e5db8ca",
+  "author_MAN": "77bd551a80c80846d841e517d6e7deb2af791e8cc9d0e4028643a745bafd6457",
+  "independent_MAN": "a136bdb64bda32fb5a54a0401727a59f22b26a1512cd1235acd187a9959cc4a1",
+  "exact_delta": {
+    "assembly": "ViciOne.ServiceBus.RabbitMq",
+    "id": "M:ViciOne.ServiceBus.RabbitMq.Middleware.PurgeOnStartupFilter.SendAsync(ViciOne.ServiceBus.RabbitMq.ChannelContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.RabbitMq.ChannelContext})",
+    "existing_status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+    "member_contract": {
+      "before": "Awaits private PurgeIfRequestedAsync before exact next.SendAsync. Private gate acquisition uses context token before try; after acquisition every path releases gate in finally. Passive inspect always runs, active consumers/empty queue mark decision completed then return. For nonempty/no-consumers already-completed decision logs skip then returns; first purge awaits provider, marks completed before completion Debug. Uncontained optional Debug may fail current Send/skip next despite stored decision; mark-before-log prevents repeated destructive purge.",
+      "after": "Awaits private PurgeIfRequestedAsync before exact next.SendAsync. Private gate acquisition uses context token before try; after acquisition every path releases gate in finally. Passive inspect always runs, active consumers/empty queue mark decision completed then return. For nonempty/no-consumers already-completed decision logs skip then returns; first purge awaits provider, marks completed before completion Debug. Current79 contains optional Purged and Skipped owning Debug exceptions in their local catch(Exception) blocks so these diagnostics cannot fail Send or skip next; mark-before-log prevents repeated destructive purge."
+    },
+    "runtime_obligations_not_native_proven.cancellation_task_ownership": {
+      "before": "Provider and next tasks joined sequentially; gate ownership covers successful acquisition only. Actual token reaches passive/purge SDK; no global cancellation containment or semaphore disposal. F077 first-inspection repair retained, diagnostic candidate requires separate prior-policy/native proof.",
+      "after": "Provider and next tasks joined sequentially; gate ownership covers successful acquisition only. Actual token reaches passive/purge SDK; no global cancellation containment or semaphore disposal. F077 first-inspection repair retained, owning diagnostic boundary is repaired and bounded-qualified by actual296 unchanged two public controls; other provider/next/cancellation/concurrent/lifecycle obligations remain separately unproved."
+    },
+    "preservation": "Exactly two selected norm strings proposed; all status/native/grade/closed/canonical Original identities/history/other contract fields unchanged. Root299 source4 binding rebase remains separate; compare these fields after any identity-only rebase, never replace whole accepted row/whole Master. Historical full before row retained below.",
+    "new_UID_count": 0,
+    "native_credit": 0
+  },
+  "root_read_authority": "Entire author/peer/delta073828; retainedownSourcewhole79 5d47ce/Test2764a3299/fixed2bc8a23+separateRoot299publication. No new read/native/wholepipeline/ABI credit.",
+  "preservation": "Allother18921rows unchanged; selectedrow onlymember_contract and runtime_obligations.cancellation_task_ownership changed. Status/native/XML/currentRoot299PDB/history all preserved. Original18060/rem509 unchanged; no newUID.",
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

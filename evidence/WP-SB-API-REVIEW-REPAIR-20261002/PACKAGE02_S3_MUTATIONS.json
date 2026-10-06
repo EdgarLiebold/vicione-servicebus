@@ -1,0 +1,186 @@
+{
+  "status": "EXECUTED_ALL_MUTANTS_KILLED_CORRECTED_ROLLBACK_GREEN",
+  "source_sha256": "626fcf9425596e2a6cd1b124169e546c492dfa4b20677869a34e8f28a5517cce",
+  "regression_sha256": "409df3f58f3db3540b979239fbf2b6c8f601fdfd70704505bb92db6977ba47f9",
+  "checks": [
+    {
+      "phase": "package02-s3-isolated-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "--locked-mode",
+        "--disable-parallel"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:54:05.876679+00:00",
+      "completed_utc": "2026-10-02T21:54:08.253634+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-isolated-restore.log",
+      "log_sha256": "65d50de034d8e12f7c651b9ced626235329e7b02ede57b89eafdacdfdc8f975a"
+    },
+    {
+      "phase": "package02-s3-isolated-corrected",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+        "--filter-method",
+        "*.Options_EnforceBucketAndRetentionBoundaries",
+        "--minimum-expected-tests",
+        "1",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:54:08.337469+00:00",
+      "completed_utc": "2026-10-02T21:54:15.355450+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-isolated-corrected.log",
+      "log_sha256": "5440061ad918c98b8b0643b35dd59bb665da05dc767fd2588e123bb7ca53ee57"
+    },
+    {
+      "phase": "package02-s3-isolated-rollback-green",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+        "--filter-method",
+        "*.Options_EnforceBucketAndRetentionBoundaries",
+        "--minimum-expected-tests",
+        "1",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:54:27.918864+00:00",
+      "completed_utc": "2026-10-02T21:54:30.874183+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-isolated-rollback-green.log",
+      "log_sha256": "5fa70c89037e4359bc5af12e17fe7ad6f0fe51daa64513aabbe4444368bf953f"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "wrong-reserved-prefix",
+      "status": "KILLED_BY_CONTRACT_ASSERTION",
+      "source_sha256": "23768697a5539c0f11296f2f51d450babb6eb653db523cde0e2257977cafb57c",
+      "test_sha256": "409df3f58f3db3540b979239fbf2b6c8f601fdfd70704505bb92db6977ba47f9",
+      "replacement": {
+        "before": "\"amzn-s3-demo-\"",
+        "after": "\"amzn_s3_demo_\""
+      },
+      "native_receipt": {
+        "phase": "package02-s3-mutant-wrong-reserved-prefix",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-class",
+          "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+          "--filter-method",
+          "*.Options_EnforceBucketAndRetentionBoundaries",
+          "--minimum-expected-tests",
+          "1",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T21:54:15.453188+00:00",
+        "completed_utc": "2026-10-02T21:54:18.730568+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-mutant-wrong-reserved-prefix.log",
+        "log_sha256": "80a03a4433bdb118c5a32fe6dc9f6f21422861166bd46d2fc33ffc4e0a7410e4"
+      }
+    },
+    {
+      "name": "substring-overrejection",
+      "status": "KILLED_BY_CONTRACT_ASSERTION",
+      "source_sha256": "ce2cb02e346044c43e3e3a5c4c350501990d765df064ebf4b7437e412a39f254",
+      "test_sha256": "409df3f58f3db3540b979239fbf2b6c8f601fdfd70704505bb92db6977ba47f9",
+      "replacement": {
+        "before": "bucketName.StartsWith(\"amzn-s3-demo-\", StringComparison.Ordinal)",
+        "after": "bucketName.Contains(\"amzn-s3-demo-\", StringComparison.Ordinal)"
+      },
+      "native_receipt": {
+        "phase": "package02-s3-mutant-substring-overrejection",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-class",
+          "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+          "--filter-method",
+          "*.Options_EnforceBucketAndRetentionBoundaries",
+          "--minimum-expected-tests",
+          "1",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T21:54:18.862132+00:00",
+        "completed_utc": "2026-10-02T21:54:23.719967+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-mutant-substring-overrejection.log",
+        "log_sha256": "82c52ad67cc0c32b14dd0f9bc3fd41b63b0974b7a491620f866b746b094f74c9"
+      }
+    },
+    {
+      "name": "prefix-boundary-overrejection",
+      "status": "KILLED_BY_CONTRACT_ASSERTION",
+      "source_sha256": "b43ccdc5236bc5db39fc220b6c6ca25d95d5abdea378586bcaa698e794344e8e",
+      "test_sha256": "409df3f58f3db3540b979239fbf2b6c8f601fdfd70704505bb92db6977ba47f9",
+      "replacement": {
+        "before": "\"amzn-s3-demo-\"",
+        "after": "\"amzn-s3-demo\""
+      },
+      "native_receipt": {
+        "phase": "package02-s3-mutant-prefix-boundary-overrejection",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-class",
+          "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+          "--filter-method",
+          "*.Options_EnforceBucketAndRetentionBoundaries",
+          "--minimum-expected-tests",
+          "1",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T21:54:23.880482+00:00",
+        "completed_utc": "2026-10-02T21:54:27.784383+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-mutant-prefix-boundary-overrejection.log",
+        "log_sha256": "fea56b6147fcc69adedf4365cc3d62aae19bedf19593e9dd46f4158523ed91fa"
+      }
+    }
+  ],
+  "original_source_and_test_restored": true
+}

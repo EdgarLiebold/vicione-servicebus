@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-06T03:08:34.133974+00:00",
+  "status": "ROOT_BOUNDED_F212_REPAIR_ACCEPTED_WITH_INDEPENDENT_SOURCE_NATIVE_PUBLICATION_PROOFS",
+  "finding": "F-SB-API-212",
+  "master_before_sha256": "a1dd25137e772e28d0c40fdba907b31a5ee2898b56dd2e61b815e37d31a4dc55",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package315-rabbit-fixed-root-native-publication-capture-r1",
+      "manifest_sha256": "0d230c5cbfe1ba32c42a3bb1743a64da01d79c25fe31348d903f24674b168383"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package315-rabbit-fixed6-publication-independent-qualification-r1",
+      "manifest_sha256": "b204f380e23a644107787f0b74531e7ebf42301f3edfec888b78d2655072af48"
+    }
+  ],
+  "native": {
+    "true_fixed_focused": 6,
+    "whole": 571,
+    "failed": 0,
+    "skipped": 0,
+    "focused_subset_not_additive": true
+  },
+  "root_authority": "Actual fixed6 whole a2643f; independent full peer565ec9; actual embedded P36 reparsed full normalized200 and live/frozen14 exact. Original Test250/Req290 unchanged, entire XML unchanged, canonical/runtime/current ZIP checked independently. Whole571 mechanical unique outcomes only. Sourcepeer035c81/eb099 retained.",
+  "identity_rebase": "Exactly11 existing owning-source identities and actual current PDB/rebase fields only. All old norms/status/native/XML/history retained.",
+  "known_findings": 213,
+  "bounded_dispositions_before": 212,
+  "bounded_dispositions_after": 213,
+  "master_count_preserved": 18971,
+  "Original_remaining_preserved": 460,
+  "grade": null,
+  "whole_API_closed": false
+}

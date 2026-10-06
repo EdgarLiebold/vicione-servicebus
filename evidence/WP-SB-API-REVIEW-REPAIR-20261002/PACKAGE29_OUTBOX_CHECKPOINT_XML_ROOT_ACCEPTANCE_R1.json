@@ -1,0 +1,65 @@
+{
+  "status": "ROOT_ACCEPTED_ADVERSARIAL_XML14_FRESH_PACKAGE_SHARED_FINAL_PENDING",
+  "utc": "2026-10-03T22:16:01.249541+00:00",
+  "finding_scope": "F001 additional14 XML members; separate from historical475 and Saga additional2",
+  "runtime_and_signature_changed": false,
+  "root_full_causal_source_count": 8,
+  "root_full_actual_emitted_member_count": 14,
+  "root_rechecked_current_PDB_targets": 5,
+  "root_whole_PDB_document_semantic_read_claimed": false,
+  "fresh_package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package29-outbox-xml-r1/ViciOne.ServiceBus.1.0.0.nupkg",
+  "fresh_package_sha256": "b56552afbe148f81c0c538b8d27d4648f0f804793ad8951e0d6e720920535d46",
+  "packed_dll_sha256": "ad47cf151a27a917db3f931a51216cd9968c307853674417c543b5817b5428b8",
+  "packed_xml_sha256": "a0036bf5c37d56760ba4a9ee63de635f793f4aa160a87bdb062979e80f222071",
+  "candidate": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE29_OUTBOX_CHECKPOINT_XML_CANDIDATE_R4.json",
+  "candidate_sha256": "9f913eb164631fedcba7e36ef5ad1bfc940dded9cc55495b17b29ef99feaaf1a",
+  "source_peer_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package29-outbox-checkpoint-xml-peer-r3/MANIFEST.json",
+  "source_peer_manifest_sha256": "9d5005dbf6e429a2562ae5f8517f958cc208ed44895b3232fc0a44832519523d",
+  "actual_peer_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package29-outbox-checkpoint-xml-native-qualification/MANIFEST.json",
+  "actual_peer_manifest_sha256": "9d8fb496183542c968ac0660f257c8969fa0fc21d59e27661b864fd3104570d3",
+  "actual_XML_root": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE29_OUTBOX_CHECKPOINT_ACTUAL_XML14_R1.json",
+  "actual_XML_root_sha256": "03b4bfff51552f0475058751228cd93fc05eade2c21f0bdacd0b0c9ae1c12f28",
+  "verification_operations": [
+    {
+      "phase": "package29-core-xml-build-r1",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T22:02:57.164464+00:00",
+      "completed_utc": "2026-10-03T22:03:08.572262+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package29-core-xml-build-r1.log",
+      "log_sha256": "944004a12bac1c09a802ef2cf278684be4f5e9ee97fc1221cf830024ce0a0f4b"
+    },
+    {
+      "phase": "package29-core-xml-pack-r1",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--output",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package29-outbox-xml-r1",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T22:06:43.257822+00:00",
+      "completed_utc": "2026-10-03T22:06:45.030311+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package29-core-xml-pack-r1.log",
+      "log_sha256": "430e3393be5da79bafa7764f2e2ba41f01edaa8f3b0806ce8a69dc8e320df7cd"
+    }
+  ],
+  "tests_added_or_native_cases_credited": 0,
+  "all_repository_API_or_Aplus_claimed": false
+}

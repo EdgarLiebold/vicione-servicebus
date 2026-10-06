@@ -1,0 +1,23 @@
+{
+  "authorization": "behebe alle Fehler A+ autonom",
+  "utc": "2026-10-03T17:53:55.298042+00:00",
+  "decisions": [
+    {
+      "finding": "F021",
+      "choice": "Classic EF stable persistence namespace; explicit complete retained-ID mapping, offline atomic fail-closed migration; no startup migration",
+      "reason": "CLR renames preserve owner; independent namespaces remain independent; irreversible retained hashes cannot infer ownership. Shared routing and other outbox paths preserve existing identity."
+    },
+    {
+      "finding": "F038",
+      "choice": "45-character automatic name: auto- plus160SHA256bits over versioned length-framed canonical full physical queue path and host authority; explicit names unchanged",
+      "reason": "Leaf-only identity merges different destinations. Full identity avoids structural ambiguity and respects Azure case semantics. Document explicit broker resource cutover."
+    },
+    {
+      "finding": "F030",
+      "choice": "Keep provider-aware timer validation at batch creation before first admission, document this exact boundary",
+      "reason": "Custom TimeProvider supports intervals beyond system timer capabilities. Unconditional startup rejection would break supported providers. Existing provider-specific finite8public cases and6diagnostic mutations qualify current repair; shared final remains pending."
+    }
+  ],
+  "production_migration_or_resource_changes_authorized": false,
+  "implementation_and_adversarial_native_acceptance_pending": true
+}

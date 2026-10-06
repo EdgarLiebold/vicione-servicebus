@@ -1,0 +1,522 @@
+{
+  "status": "EXACT_MECHANICAL_PROJECTION_AND_70_CASE_BIJECTION",
+  "projections": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubClosingRegressionTests.cs",
+      "canonical_sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "consumer_sha256": "4dafff623c158ac522e5dbd503b384ad127328eef10fc36372d5550b62315643",
+      "exact_mechanical_projection": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubReceivePolicyRegressionTests.cs",
+      "canonical_sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "consumer_sha256": "0f8809be0d7a4a06fea86bf609744dbb6457a2de424d60eaac23b323e16fe33c",
+      "exact_mechanical_projection": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "canonical_sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "consumer_sha256": "a3bbc162f53c8a096e98727ce535b36d67e98174e7565e69d6e90134a72192f0",
+      "exact_mechanical_projection": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubBuiltContextCapture.cs",
+      "canonical_sha256": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081",
+      "consumer_sha256": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081",
+      "exact_mechanical_projection": true
+    }
+  ],
+  "normalization": "Only two infrastructure usings, complete Theory/InlineData/RequirementCoverage attribute lines, exact Timeout accessor and TestContext cancellation token replaced; all other bytes identical. Not a new full parser.",
+  "cases": [
+    {
+      "class": "EventHubClosingRegressionTests",
+      "method": "Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+      "arguments": "\"no-app\"",
+      "log_name": "EventHubClosingRegressionTests.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync(\"no-app\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubClosingRegressionTests",
+      "method": "Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+      "arguments": "\"success\"",
+      "log_name": "EventHubClosingRegressionTests.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync(\"success\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubClosingRegressionTests",
+      "method": "Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+      "arguments": "\"app-sync\"",
+      "log_name": "EventHubClosingRegressionTests.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync(\"app-sync\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubClosingRegressionTests",
+      "method": "Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+      "arguments": "\"app-async\"",
+      "log_name": "EventHubClosingRegressionTests.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync(\"app-async\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubClosingRegressionTests",
+      "method": "Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+      "arguments": "\"app-cancel\"",
+      "log_name": "EventHubClosingRegressionTests.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync(\"app-cancel\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubClosingRegressionTests",
+      "method": "Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+      "arguments": "\"app-task-cancel\"",
+      "log_name": "EventHubClosingRegressionTests.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync(\"app-task-cancel\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubClosingRegressionTests",
+      "method": "Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+      "arguments": "\"cleanup-sync\"",
+      "log_name": "EventHubClosingRegressionTests.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync(\"cleanup-sync\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubClosingRegressionTests",
+      "method": "Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+      "arguments": "\"cleanup-async\"",
+      "log_name": "EventHubClosingRegressionTests.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync(\"cleanup-async\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubClosingRegressionTests",
+      "method": "Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+      "arguments": "\"dual-fault\"",
+      "log_name": "EventHubClosingRegressionTests.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync(\"dual-fault\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubClosingRegressionTests",
+      "method": "Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+      "arguments": "\"cancel-and-cleanup-fault\"",
+      "log_name": "EventHubClosingRegressionTests.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync(\"cancel-and-cleanup-fault\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync",
+      "arguments": "\"count-zero\", \"CheckpointMessageCount\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync(\"count-zero\", \"CheckpointMessageCount\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync",
+      "arguments": "\"limit-zero\", \"CheckpointMessageLimit\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync(\"limit-zero\", \"CheckpointMessageLimit\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync",
+      "arguments": "\"interval-zero\", \"CheckpointInterval\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync(\"interval-zero\", \"CheckpointInterval\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync",
+      "arguments": "\"interval-negative\", \"CheckpointInterval\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync(\"interval-negative\", \"CheckpointInterval\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync",
+      "arguments": "\"interval-infinite\", \"CheckpointInterval\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync(\"interval-infinite\", \"CheckpointInterval\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync",
+      "arguments": "\"interval-overflow\", \"CheckpointInterval\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync(\"interval-overflow\", \"CheckpointInterval\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync",
+      "arguments": "\"delivery-zero\", \"ConcurrentDeliveryLimit\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync(\"delivery-zero\", \"ConcurrentDeliveryLimit\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync",
+      "arguments": "\"delivery-negative\", \"ConcurrentDeliveryLimit\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync(\"delivery-negative\", \"ConcurrentDeliveryLimit\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync",
+      "arguments": "\"prefetch-zero\", \"PrefetchCount\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync(\"prefetch-zero\", \"PrefetchCount\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InheritedTransportGuards_StillRejectTheirInvalidLimitsAsync",
+      "arguments": "\"prefetch-negative\", \"PrefetchCount\", \"Must be >= 0\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InheritedTransportGuards_StillRejectTheirInvalidLimitsAsync(\"prefetch-negative\", \"PrefetchCount\", \"Must be >= 0\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InheritedTransportGuards_StillRejectTheirInvalidLimitsAsync",
+      "arguments": "\"concurrent-zero\", \"ConcurrentMessageLimit\", \"Must be > 0\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InheritedTransportGuards_StillRejectTheirInvalidLimitsAsync(\"concurrent-zero\", \"ConcurrentMessageLimit\", \"Must be > 0\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "InheritedTransportGuards_StillRejectTheirInvalidLimitsAsync",
+      "arguments": "\"concurrent-negative\", \"ConcurrentMessageLimit\", \"Must be > 0\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.InheritedTransportGuards_StillRejectTheirInvalidLimitsAsync(\"concurrent-negative\", \"ConcurrentMessageLimit\", \"Must be > 0\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync",
+      "arguments": "1L",
+      "log_name": "EventHubReceivePolicyRegressionTests.ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync(1L)",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync",
+      "arguments": "10000L",
+      "log_name": "EventHubReceivePolicyRegressionTests.ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync(10000L)",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync",
+      "arguments": "42949672940000L",
+      "log_name": "EventHubReceivePolicyRegressionTests.ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync(42949672940000L)",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync",
+      "arguments": "42949672940001L",
+      "log_name": "EventHubReceivePolicyRegressionTests.ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync(42949672940001L)",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync",
+      "arguments": "42949672949999L",
+      "log_name": "EventHubReceivePolicyRegressionTests.ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync(42949672949999L)",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "ValidConfiguration_BuildsWithOrWithoutOptionalEventHubSelectionAsync",
+      "arguments": "false",
+      "log_name": "EventHubReceivePolicyRegressionTests.ValidConfiguration_BuildsWithOrWithoutOptionalEventHubSelectionAsync(false)",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "ValidConfiguration_BuildsWithOrWithoutOptionalEventHubSelectionAsync",
+      "arguments": "true",
+      "log_name": "EventHubReceivePolicyRegressionTests.ValidConfiguration_BuildsWithOrWithoutOptionalEventHubSelectionAsync(true)",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync",
+      "arguments": "\"container\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync(\"container\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync",
+      "arguments": "\"count\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync(\"count\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync",
+      "arguments": "\"limit\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync(\"limit\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync",
+      "arguments": "\"prefetch\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync(\"prefetch\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync",
+      "arguments": "\"interval\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync(\"interval\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync",
+      "arguments": "\"concurrent\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync(\"concurrent\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync",
+      "arguments": "\"delivery\"",
+      "log_name": "EventHubReceivePolicyRegressionTests.BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync(\"delivery\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "BuiltClientFactory_UsesOriginalOptionsForCompletedGenerationAsync",
+      "arguments": "false",
+      "log_name": "EventHubReceivePolicyRegressionTests.BuiltClientFactory_UsesOriginalOptionsForCompletedGenerationAsync(false)",
+      "passed": true
+    },
+    {
+      "class": "EventHubReceivePolicyRegressionTests",
+      "method": "BuiltClientFactory_UsesOriginalOptionsForCompletedGenerationAsync",
+      "arguments": "true",
+      "log_name": "EventHubReceivePolicyRegressionTests.BuiltClientFactory_UsesOriginalOptionsForCompletedGenerationAsync(true)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"single\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"single\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"batch\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"batch\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"values\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"values\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"batch-values\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"batch-values\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"single-pipe\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"single-pipe\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"batch-pipe\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"batch-pipe\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"values-pipe\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"values-pipe\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"batch-values-pipe\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"batch-values-pipe\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"single\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"single\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"batch\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"batch\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"values\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"values\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"batch-values\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"batch-values\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"single-pipe\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"single-pipe\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"batch-pipe\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"batch-pipe\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"values-pipe\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"values-pipe\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+      "arguments": "\"batch-values-pipe\"",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(\"batch-values-pipe\")",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"single\", false",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"single\", false)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"batch\", false",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"batch\", false)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"values\", false",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"values\", false)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"batch-values\", false",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"batch-values\", false)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"single-pipe\", false",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"single-pipe\", false)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"batch-pipe\", false",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"batch-pipe\", false)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"values-pipe\", false",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"values-pipe\", false)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"batch-values-pipe\", false",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"batch-values-pipe\", false)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"single\", true",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"single\", true)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"batch\", true",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"batch\", true)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"values\", true",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"values\", true)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"batch-values\", true",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"batch-values\", true)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"single-pipe\", true",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"single-pipe\", true)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"batch-pipe\", true",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"batch-pipe\", true)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"values-pipe\", true",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"values-pipe\", true)",
+      "passed": true
+    },
+    {
+      "class": "EventHubDeferredCallerCancellationRegressionTests",
+      "method": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+      "arguments": "\"batch-values-pipe\", true",
+      "log_name": "EventHubDeferredCallerCancellationRegressionTests.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(\"batch-values-pipe\", true)",
+      "passed": true
+    }
+  ]
+}

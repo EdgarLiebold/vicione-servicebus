@@ -1,0 +1,26 @@
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmark-complete-native-owner.log
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll (net10.0|x64) erfolgreich (811ms)
+
+Testlaufzusammenfassung: Bestanden!
+  gesamt: 96
+  fehlgeschlagen: 0
+  erfolgreich: 96
+  übersprungen: 0
+  Dauer: 2s 041ms
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-console-corrected-build.log
+  ViciOne.ServiceBus.Abstractions -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Mediator -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.MessagePack -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack/release/ViciOne.ServiceBus.MessagePack.dll
+  ViciOne.ServiceBus.Sagas -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.JobService -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.BenchmarkConsole -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.BenchmarkConsole/release/ViciOne.ServiceBus.BenchmarkConsole.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:25.60

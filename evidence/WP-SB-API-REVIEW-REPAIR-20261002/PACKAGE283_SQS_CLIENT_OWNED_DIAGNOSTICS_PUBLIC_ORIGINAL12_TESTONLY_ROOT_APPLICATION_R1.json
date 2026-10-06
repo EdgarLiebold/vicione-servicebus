@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-06T00:41:21.422621+00:00",
+  "status": "TEST_ONLY_PUBLIC_SQS_DIAGNOSTICS_ORIGINAL12_APPLIED_ROOT_SDK_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package277-sqs-client-diagnostics3-original12-testonly-proposed-r1/REPORT.json",
+    "sha256": "1a56519b6c3845edf13cd592bad1cec0bc7afdbd4bfd1ed2cac2617c61500f5c"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package277-sqs-diagnostic12-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "caf3e11e9fd267b656e500c8897168e90a25072a5b3c3977c23f97bcd29e01b0"
+  },
+  "new_test": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsClientOwnedDiagnosticsTests.cs",
+    "sha256": "9ddb508f35992a199d3693df7ee7ea1155df68eba1215b4e4265deb4dccc6a04",
+    "lines": 409,
+    "cases_planned": 12
+  },
+  "requirements": {
+    "before": 187,
+    "after": 188,
+    "prefix187_exact": true,
+    "sha256": "d0feb0ad7d145f960a3cfc5199e442a7c095c9f96c71cb8d398e22592d4e5586"
+  },
+  "Root_whole_test_receipts": [
+    "a4a9c2",
+    "9518e7"
+  ],
+  "product_and_existing_tests_unchanged": true,
+  "native_credit": 0,
+  "findings_registered": 0,
+  "grade": null,
+  "closed": false
+}

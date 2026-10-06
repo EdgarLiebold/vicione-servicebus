@@ -1,0 +1,19 @@
+{
+  "receipt": {
+    "phase": "package15-f033-signalr-public-previous-fortyone",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+      "all",
+      "00:00:12",
+      "00:00:45"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T05:17:41.317962+00:00",
+    "completed_utc": "2026-10-03T05:17:42.158208+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-previous-fortyone.log",
+    "log_sha256": "e6fc363d0b0b92bcd9beda8da046de76d841d5acdb1f722840146a397846f7a8"
+  },
+  "reason": "41 DI ValidateOnBuild setup failures before bus/scopes; HttpConnectionManager lacks IHostApplicationLifetime; bounded consumer only uses SignalRCore public backplane, select AddSignalRCore; 0 causal F033 reds"
+}

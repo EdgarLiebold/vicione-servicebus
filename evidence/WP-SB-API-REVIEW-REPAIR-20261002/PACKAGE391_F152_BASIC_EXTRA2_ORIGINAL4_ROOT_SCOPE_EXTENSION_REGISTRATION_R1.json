@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-06T08:53:52.495361+00:00",
+  "status": "ROOT_F152_OWNING_DIAGNOSTIC_FAMILY_EXTRA2_SCOPE_REGISTERED_NO_NEW_FINDING",
+  "scope": [
+    "EndOfStream owningError reached via real publicBasicDeliver actualReceivePipeline",
+    "ObserveChannelShutdownAsync owningDebug reached through actual IChannel registeredeventdelegate"
+  ],
+  "source": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqBasicConsumer.cs",
+    "sha256": "8f09c94e0eed7441260730d039a407bbb277846a8f2c4a85a0052f30d99eb4ba",
+    "lines": 251
+  },
+  "actual_original_qualified": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package390-basic-extra4-original-independent-qualification-r1/REPORT.json",
+    "sha256": "1b55458d86b94b1e772f24fd04eca47a86e330cece94854637a7531ae5a1735d",
+    "MAN": "0536dccc0de456685b4c6ca0c513ad6ba00cd067cf694d8b5e6990b5cd5ad132",
+    "Root_whole_read": "fb1be8"
+  },
+  "actual_counts": {
+    "pass": 2,
+    "fail": 2,
+    "skip": 0
+  },
+  "first_norm_failure": "Both hostile firstNull86 unique logger IOException. mode0 actual publicdelivery task admitted andterminal;mode1 nativeactualhandler sync throw before returnedTask admission. Trace146 is propagation. Latermain87+unreached.",
+  "repair_policy": "Guard only twooptionaldiagnosticexpressions including writer/diagnosticargs; original businessfault/state/contextdisposal/nativeevent semantics stay outside. Previouslyreviewed6guards retained exact.",
+  "historical_F152_acceptances_preserved": true,
+  "current_F152_scope": "historical24sites plus currentBasic6 plus extra2 observed separately",
+  "known_findings": 220,
+  "bounded_accepted": 217,
+  "new_Finding_ID_count": 0,
+  "new_API_UID_count": 0,
+  "whole_API_closed": false,
+  "grade": null,
+  "fixed_native_pending": true
+}

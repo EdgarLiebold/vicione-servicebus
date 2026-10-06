@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs
++++ OverwriteRawFirstUtc
+@@ -31,7 +31,7 @@
+                 throw new ArgumentException("A delivered batch must not contain null message contexts.", nameof(messages));
+         }
+ 
+-        FirstMessageReceived = firstMessageReceived;
++        FirstMessageReceived = lastMessageReceived;
+         LastMessageReceived = lastMessageReceived;
+         Mode = mode;
+         _messages = [.. messages];

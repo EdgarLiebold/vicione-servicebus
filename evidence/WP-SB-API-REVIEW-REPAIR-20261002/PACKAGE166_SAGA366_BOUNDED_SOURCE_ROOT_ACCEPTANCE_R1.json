@@ -1,0 +1,89 @@
+{
+  "utc": "2026-10-05T05:20:10.684982+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED366_BOUNDED_SOURCE_CONTRACTS_WITH_EXPLICIT_EXECUTION_LIMITS",
+  "accepted_before": 6766,
+  "accepted_after": 7132,
+  "members": 366,
+  "owners": 41,
+  "dossier": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/REPORT.md",
+    "sha256": "c124fd5e4359905761aa2d438137287816ca4cee5452a2f50dddd7f7305fefdf"
+  },
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+    "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/MANIFEST.json",
+    "sha256": "e1be1ae93fe46ba3fb31153e02c9deb83feda06a828104ec51c0fc141bcc6755"
+  },
+  "mapping": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-root-saga366-lossless-inspection-r1/PER_ORIGINAL366_EXACT_TEXT_MAPPING.json",
+    "sha256": "76801ed2aeb7cd06e9c76e198009cb96edf7ea309ebb6761470cc7373bf3bf26"
+  },
+  "qualified_source": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-parent-fixed18-ambient-original-selected100-neighbors2290-fresh2-independent-r1/REPORT.json",
+    "sha256": "b39086ac2f32a65e52834c8a51206f1d12c444f369fe7dd5806f5b2ea34121fb"
+  },
+  "XML_counts": {
+    "DIRECT": 334,
+    "ASSOCIATED_PROPERTY": 19,
+    "NA_IMPLICIT_CONSTRUCTOR": 13
+  },
+  "current_and_frozen165_equal_sources": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ActionActivity.cs": "6220ef71347f71133759f559edb604d12b2b66548d2db15e3240e33899f145c4",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/AsyncActivity.cs": "c858c4a1d57835cd72808afa1aed264e99fd91396205d4e0ebfa51b3de3afcda",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/AsyncFactoryActivity.cs": "ca1a20b40487e72f229c62a1737cd187a1d3e450fd90839c55607989575cfbbe",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/AsyncFaultedActionActivity.cs": "08e59af54e8a2cd2a6d845d7d5093cebfc35f05fbec7aea438c57cb467cd5675",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/CancelRequestTimeoutActivity.cs": "b13417f7f8644340ffcd8d9993627b8a0db344fc92cdb2f46839102de79127f0",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Binders/CatchActivityBinder.cs": "fcbf5bdde5068be1779c89e2a9ee575e1672bb65ebfffdb0760d8f4872518c65",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Behaviors/CatchBehaviorBuilder.cs": "24b7c58b6e47c983da657b2eb521a6bc4802d8bf2a39b5148c07194192686159",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Binders/CatchExceptionActivityBinder.cs": "4422ca3269ceeaf9ea6fd455d33c0da6e166958f863483b4e38e6d88c7da5494",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/CatchFaultActivity.cs": "6c2e59e188ac1e7e6de98bf825fa4c37c82696da1cd4bd96aa7fd6107ec235ba",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/CompleteRequestActivity.cs": "b471c9daf8b7db27e6260aa0a4c356bec8bbb47e80d1d9824903fc0d815a404f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/CompositeEventActivity.cs": "d76578e5a5f1569846ef34f38cdd75fc36d3dd0212f65b75275538dcb0b88cd4",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ConditionActivity.cs": "87c3c41bff3a0f22419c00dda7ccc3eead9cedacd793fb6959bc01a99042240e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Binders/ConditionalActivityBinder.cs": "aee9fb2623c58cea8a67547c33bb5621273daef2da5c7a13e468b6b098e087b9",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Binders/ConditionalExceptionActivityBinder.cs": "21f42fbf5b05befbbdecb9cec643e1898dea8afff6cf0a671740f1f0af2db8fe",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ConditionExceptionActivity.cs": "4254d2af0752ffe67b6e77a2556ff34a6f039d49221f2f34766755d7eafba34e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Behaviors/DataBehavior.cs": "afa7b58af7a000ed74a7e3af8504f59ab8c8ad5f880775bac504410c90776859",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/DataConverterActivity.cs": "79a9016e1383977207ed157b085c4931433c10ef634b93d1f5b5686cd8f3e2c0",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Binders/DataEventActivityBinder.cs": "e5704f1af486dba10691a35c63c2f720436f7431bd18fbff644f6aff1a1377b8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Behaviors/EmptyBehavior.cs": "09df9281dc8e191fc5ed49dbcd8716a35e3948376b0ee5bf8ac56a8593a0a4e0",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Binders/ExecuteActivityBinder.cs": "3815c585fdaa47006ef86dab6ef4a942fe2a48e880f9d30f56cc03b6dacf45b2",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ExecuteOnFaultedActivity.cs": "a69eff4c5252b9bef93494d36451870def49a5709ee49893ef88bce28b535489",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Behaviors/ExecuteOnFaultedBehavior.cs": "a9cfbd7ca0b1f6b545a349cb5a972cdb9fda479d21654ebdb82d7d67e2104865",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/FactoryActivity.cs": "5a17bf1764a14afe570c1236b109668fa755d046bc30aadf225c08190064da7b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/FaultedActionActivity.cs": "45960791d2db5597909ae1ceddb787c8b67a7dd9576cad99a93628b04c3a7a62",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Behaviors/FaultedBehavior.cs": "188f6869fb967be9c21bc55eea4981c7909d81dd045d7a7cbcfaa5f861b6af1f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/FaultedContainerFactoryActivity.cs": "113ca074860d22d6025508f6292190335f3dd46c3f1c6d7a6880d8261af85d2b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/FaultRequestActivity.cs": "8fcc9717c9580872abe1ea8c33e4e4403a628ab41a70007e0cd4bbce321c0d78",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Binders/IActivityBinder.cs": "18f089a5b7aefa369b2819e82714a3fa2c86f4675ce232dd73db88fd3176328c",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Binders/IgnoreEventActivityBinder.cs": "899fb136ca0f5953c08f0e8756e29ebe6d3b3f6020e5e5079c80439dc4820997",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Behaviors/LastBehavior.cs": "8eb82c46569c2099bdc5479392a4ff8a375bf02a43831a88ab5f0ae96bf401ee",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Behaviors/LastCatchBehavior.cs": "a0dfc5fa46bcc8b0abcc66c162e556aa3f9636cf064b375a2b768c04b3c80853",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestCompletedActivity.cs": "0bb3766581ce5209355d0994c8adf420c54df5567a877d7ac06e0ae24719e49e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestFaultedActivity.cs": "5a9de72300236907918fc5840f25a12887a3542b21c0333371fdda73d539de64",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestStartedActivity.cs": "23303d43c763e1e15b54af66fb7fa63504977e89212685b384e62a70eedda6aa",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RetryActivity.cs": "d9ec7eaab4bffe0f564b1bb90726229c934a09ad0bcfa076ef1997d44fe5af7b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Binders/RetryActivityBinder.cs": "752f1befbe78ea4909cb991106d73dc55847caef13cc4a605568e1afb9cc1f13",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/SlimActivity.cs": "67d58faba97a0a7ebf36e95f55df59d68690ae9f408466c788981184e216a96b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/StateMachineActivitySelector.cs": "4d05fb897add10b3ad8bd4c20b2b3bcec643690336e4a3b15e80352977a8a664",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/StateMachineFaultedActivitySelector.cs": "4f5501f2e6a4f82931c9d223283efd03fe8b9ba8dbe3f3fb74da1989d24e0efb",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Binders/TriggerEventActivityBinder.cs": "43afbc7103b30e7af02a8f6c4db0a8cc569a4aa6127af116dfb1e909c819653d"
+  },
+  "root_read_authority": "Genuine all41 exact owner-context paragraphs prior9de78a/bb9a8b; all109 exact localnorms priora587ae0..39/currentda9b4e40..74/9b45ca75..108. Lossless all366 mappings reconstructed; typed original exactfields/literalSlices/currentSource and individualXML checked. Genuine5653 wholeSource reading belongs to named independent child; not impersonated Root.",
+  "execution_obligations": {
+    "NO_ADDITIONAL_MIRROR_ORACLE_PROPOSED": 252,
+    "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY": 114
+  },
+  "native_credit": 0,
+  "CLOSED": false,
+  "limits": [
+    "114 named collaborator execution boundaries retained.",
+    "No inferred native credit or global A+ closure.",
+    "Accessor-associated XML explicitly distinguished from emitted standalone nodes."
+  ]
+}

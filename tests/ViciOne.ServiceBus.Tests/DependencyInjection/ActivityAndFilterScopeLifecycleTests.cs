@@ -4,6 +4,7 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using Xunit;
@@ -222,6 +223,168 @@ public sealed class ActivityAndFilterScopeLifecycleTests
         ProbeContext probe = Proxy<ProbeContext>();
         compensateProvider.Probe(probe);
         executeProvider.Probe(probe);
+    }
+
+    [Theory]
+    [InlineData(false, 0)]
+    [InlineData(true, 0)]
+    [InlineData(false, 1)]
+    [InlineData(true, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 2)]
+    [InlineData(false, 3)]
+    [InlineData(true, 3)]
+    [InlineData(false, 4)]
+    [InlineData(true, 4)]
+    [InlineData(false, 5)]
+    [InlineData(true, 5)]
+    [RequirementCoverage("REQ-VSB-CONTAINER-ACTIVITY-FILTER-SCOPE", "scope-only-filters-drain-release-and-retain-original-outcomes")]
+    public async Task ScopeOnlyFilters_DrainReleaseAndRetainOriginalOutcomesAsync(bool compensate, int outcome)
+    {
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        Exception? operationFailure = outcome switch
+        {
+            1 or 3 => new InvalidOperationException("unique pipeline failure"),
+            4 or 5 => new OperationCanceledException("unique pipeline cancellation", cancellation.Token),
+            _ => null
+        };
+        Exception? releaseFailure = outcome is 2 or 3 or 5
+            ? new InvalidOperationException("unique scope release failure")
+            : null;
+        var events = new List<string>();
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var scope = new HeldReleaseScope(events, release.Task, releaseFailure);
+        var factory = new RecordingScopeFactory(() => scope);
+        var services = new RecordingServiceProvider();
+        services.Add<IServiceScopeFactory>(factory);
+        var setter = new RecordingSetter(events);
+        int nextCalls = 0;
+        Task operation;
+        if (compensate)
+        {
+            CompensateContext<Log> original = CreateCompensateContext(null);
+            var filter = new ScopeCompensateFilter<Log>(new CompensateScopeProvider<Log>(services, setter));
+            operation = filter.SendAsync(original, new CallbackPipe<CompensateContext<Log>>(context =>
+            {
+                Assert.NotSame(original, context);
+                Assert.Same(scope, context.GetPayload<IServiceScope>());
+                nextCalls++;
+                return operationFailure is null ? Task.CompletedTask : Task.FromException(operationFailure);
+            }));
+        }
+        else
+        {
+            ExecuteContext<Arguments> original = CreateExecuteContext(null);
+            var filter = new ScopeExecuteFilter<Arguments>(new ExecuteScopeProvider<Arguments>(services, setter));
+            operation = filter.SendAsync(original, new CallbackPipe<ExecuteContext<Arguments>>(context =>
+            {
+                Assert.NotSame(original, context);
+                Assert.Same(scope, context.GetPayload<IServiceScope>());
+                nextCalls++;
+                return operationFailure is null ? Task.CompletedTask : Task.FromException(operationFailure);
+            }));
+        }
+
+        try
+        {
+            await scope.Started.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+            Assert.False(operation.IsCompleted);
+            Assert.Equal(1, nextCalls);
+            Assert.Equal(1, factory.CreateCount);
+            Assert.Equal(1, scope.DisposeCount);
+            Assert.Equal(["restore", "scope-release-started"], events);
+            release.SetResult();
+            Exception? actual = await Record.ExceptionAsync(() => operation.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+            if (operationFailure is not null && releaseFailure is not null)
+            {
+                AggregateException aggregate = Assert.IsType<AggregateException>(actual);
+                Assert.Collection(aggregate.InnerExceptions,
+                    first => Assert.Same(operationFailure, first),
+                    second => Assert.Same(releaseFailure, second));
+            }
+            else
+                Assert.Same(operationFailure ?? releaseFailure, actual);
+
+            if (operationFailure is OperationCanceledException canceled)
+                Assert.Equal(cancellation.Token, canceled.CancellationToken);
+            Assert.Equal(["restore", "scope-release-started", "scope-release-completed"], events);
+            Assert.Equal(1, scope.DisposeCount);
+        }
+        finally
+        {
+            release.TrySetResult();
+            _ = await Record.ExceptionAsync(() => operation.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-CONTAINER-ACTIVITY-FILTER-SCOPE", "scope-only-filters-restore-without-releasing-borrowed-scope")]
+    public async Task ScopeOnlyFilters_DoNotReleaseBorrowedScopeAsync(bool compensate)
+    {
+        var events = new List<string>();
+        var scope = new RecordingAsyncScope(events);
+        var setter = new RecordingSetter(events);
+        var primary = new InvalidOperationException("unique borrowed pipeline failure");
+        int calls = 0;
+        Task operation;
+        if (compensate)
+        {
+            CompensateContext<Log> original = CreateCompensateContext(scope);
+            var filter = new ScopeCompensateFilter<Log>(new CompensateScopeProvider<Log>(new NullServiceProvider(), setter));
+            operation = filter.SendAsync(original, new CallbackPipe<CompensateContext<Log>>(context =>
+            {
+                Assert.Same(original, context);
+                calls++;
+                return Task.FromException(primary);
+            }));
+        }
+        else
+        {
+            ExecuteContext<Arguments> original = CreateExecuteContext(scope);
+            var filter = new ScopeExecuteFilter<Arguments>(new ExecuteScopeProvider<Arguments>(new NullServiceProvider(), setter));
+            operation = filter.SendAsync(original, new CallbackPipe<ExecuteContext<Arguments>>(context =>
+            {
+                Assert.Same(original, context);
+                calls++;
+                return Task.FromException(primary);
+            }));
+        }
+
+        Assert.Same(primary, await Record.ExceptionAsync(() => operation.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken)));
+        Assert.Equal(1, calls);
+        Assert.Equal(["restore"], events);
+        Assert.Equal(0, scope.DisposeCount);
+    }
+
+    private sealed class CallbackPipe<TContext>(Func<TContext, Task> send) : IPipe<TContext>
+        where TContext : class, PipeContext
+    {
+        public Task SendAsync(TContext context) => send(context);
+        public void Probe(ProbeContext context) => throw new NotSupportedException("Probe is outside this oracle.");
+    }
+
+    private sealed class HeldReleaseScope(List<string> events, Task release, Exception? failure) : IServiceScope, IAsyncDisposable
+    {
+        readonly TaskCompletionSource _started = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task Started => _started.Task;
+        public int DisposeCount { get; private set; }
+        public IServiceProvider ServiceProvider { get; } = new NullServiceProvider();
+        public void Dispose() => throw new InvalidOperationException("Only asynchronous owned release is supported.");
+
+        public async ValueTask DisposeAsync()
+        {
+            DisposeCount++;
+            events.Add("scope-release-started");
+            _started.TrySetResult();
+            await release.ConfigureAwait(false);
+            events.Add("scope-release-completed");
+            if (failure is not null)
+                throw failure;
+        }
     }
 
     private static async Task AssertProviderOwnershipAsync<TContext, TScopeContext>(

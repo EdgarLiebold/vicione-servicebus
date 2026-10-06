@@ -1,0 +1,7 @@
+{
+  "reason": "Root selected wrong positive for tenth variant: standard control also wraps dual-interface request; adversary identified before acceptance, actual control failed exactly synchronous-dispose count",
+  "not_accepted": "r3 tenth pair lacks positive; no ten-kill claim",
+  "retained_nine": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-setup-excluded/mutation-result-nine-pairs-before-control-correction.json",
+  "retained_nine_sha256": "fe543fde1bf657cebbdbd625c045e70f0f1de11ddf088919a9a287dec4a6b65c",
+  "corrected_positive": "publish-success unaffected no request; repeat tenth strict build +negative+positive+41baseline+rollback; same exact oracle"
+}

@@ -1,0 +1,120 @@
+{
+  "status": "EXECUTED_ACTUAL_BDN_DRY12_ALL_WORKLOADS_GREEN",
+  "cases": [
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.DeserializationBenchmark.MessagePack_Deserialize(MessageBufferSize: 0)",
+      "parameters": "MessageBufferSize=0",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    },
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.DeserializationBenchmark.SystemTextJson_Deserialize(MessageBufferSize: 0)",
+      "parameters": "MessageBufferSize=0",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    },
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.DeserializationBenchmark.MessagePack_Deserialize(MessageBufferSize: 4096)",
+      "parameters": "MessageBufferSize=4096",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    },
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.DeserializationBenchmark.SystemTextJson_Deserialize(MessageBufferSize: 4096)",
+      "parameters": "MessageBufferSize=4096",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    },
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.DeserializationBenchmark.MessagePack_Deserialize(MessageBufferSize: 16384)",
+      "parameters": "MessageBufferSize=16384",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    },
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.DeserializationBenchmark.SystemTextJson_Deserialize(MessageBufferSize: 16384)",
+      "parameters": "MessageBufferSize=16384",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    },
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.MediatorBatchBenchmark.SendBatchAsync(BatchSize: 1)",
+      "parameters": "BatchSize=1",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    },
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.MediatorBatchBenchmark.RequestBatchAsync(BatchSize: 1)",
+      "parameters": "BatchSize=1",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    },
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.MediatorBatchBenchmark.SendBatchAsync(BatchSize: 20)",
+      "parameters": "BatchSize=20",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    },
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.MediatorBatchBenchmark.RequestBatchAsync(BatchSize: 20)",
+      "parameters": "BatchSize=20",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    },
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.MediatorBenchmark.CallingHandlerDirectlyAsync",
+      "parameters": "",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    },
+    {
+      "full_name": "ViciOne.ServiceBus.BenchmarkConsole.MediatorBenchmark.CallingHandlerWithViciOneServiceBusMediatorAsync",
+      "parameters": "",
+      "actual_workload_statistics_present": true,
+      "n": 1
+    }
+  ],
+  "reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-benchmarks/package07/corrected/20261003-021639/ViciOne.ServiceBus.BenchmarkConsole.DeserializationBenchmark-report-full-compressed.json",
+      "sha256": "da9d918872fdcd809330f775eb7b1d7004a2d8f330dde991f432a81390d7c502"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-benchmarks/package07/corrected/20261003-021639/ViciOne.ServiceBus.BenchmarkConsole.MediatorBatchBenchmark-report-full-compressed.json",
+      "sha256": "2a030f96a453968d055356ffae6c1610896dffd6f659d28bdfb578262d5ca3e2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-benchmarks/package07/corrected/20261003-021639/ViciOne.ServiceBus.BenchmarkConsole.MediatorBenchmark-report-full-compressed.json",
+      "sha256": "1995f62a4618a79ba2a266dcd42ed95ae3dc8047fc1290453635fa017496df90"
+    }
+  ],
+  "native_receipt": {
+    "phase": "package07-corrected-bdn-dry12",
+    "command": [
+      "dotnet",
+      "artifacts/sdk/bin/ViciOne.ServiceBus.BenchmarkConsole/release/ViciOne.ServiceBus.BenchmarkConsole.dll",
+      "--filter",
+      "*MediatorBatchBenchmark.*",
+      "*MediatorBenchmark.*",
+      "*DeserializationBenchmark.*",
+      "--job",
+      "Dry",
+      "--noOverwrite",
+      "--keepFiles",
+      "--exporters",
+      "json",
+      "--cli",
+      "/usr/local/share/dotnet/dotnet",
+      "--artifacts",
+      "/private/tmp/vicione-servicebus-api-review-20261001/repair-benchmarks/package07/corrected"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T00:16:39.461408+00:00",
+    "completed_utc": "2026-10-03T00:17:32.109617+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-corrected-bdn-dry12.log",
+    "log_sha256": "666c0389d7066beeb02ede4e356085b33320307f6e76be7bf10a559d50b3f9ad"
+  },
+  "tool_dll_sha256": "b13e61e40f81c445b2a279c0df5febcab153390dde954b36d8236d81ca3f407b",
+  "limits": "One cold-start workload observation per tuple verifies execution only. No performance, throughput, allocation budget or hardware approval."
+}

@@ -1,0 +1,16 @@
+--- frozen-corrected-Registrar
++++ AsyncOnlyAdvertisesSync
+@@ -442,10 +442,12 @@
+     }
+ 
+     sealed class AsynchronousDefinitionOwner<TDefinition> :
+-        DefinitionOwner<TDefinition>, IAsyncDisposable
++        DefinitionOwner<TDefinition>, IAsyncDisposable, IDisposable
+         where TDefinition : class
+     {
+         int _disposed;
++
++        public void Dispose() => throw new InvalidOperationException("Use DisposeAsync");
+ 
+         public ValueTask DisposeAsync() => Interlocked.Exchange(ref _disposed, 1) == 0
+             ? ((IAsyncDisposable)Value).DisposeAsync()

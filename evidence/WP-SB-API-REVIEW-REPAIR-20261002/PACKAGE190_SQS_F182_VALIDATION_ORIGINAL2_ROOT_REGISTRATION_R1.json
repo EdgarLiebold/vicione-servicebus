@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-05T15:35:06.184126+00:00",
+  "status": "FINITE_ORIGINAL2_CAUSE_ROOT_REGISTERED_REPAIR_PENDING",
+  "counts": {
+    "known_before": 181,
+    "known_after": 182,
+    "accepted_before": 181,
+    "accepted_after": 181
+  },
+  "findings": [
+    {
+      "id": "F-SB-API-182",
+      "severity": "Medium",
+      "title": "Amazon SQS endpoint validation omits configured client and connection pipe specification failures",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsReceiveEndpointConfiguration.cs",
+      "cause": "Validate enumerates settings and base results but neither configured client nor connection specification validator. Supported public ConfigureClient/ConfigureConnection failures are silently omitted before endpoint build.",
+      "actual_original_counts": {
+        "total": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0
+      },
+      "first_failure": "selected ValidateCalls expected1 actual0; raw trace44, physical enumeration44/assert45",
+      "later_original_assertions_reached": false
+    }
+  ],
+  "original_qualified_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package190-sqs-original-validation2-independent-r1/REPORT.json",
+    "sha256": "9a693b3ec354e22bf71daa251f01597419729390cb4705e965207cc28607d561"
+  },
+  "independent_actual_result_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package190-original-validation2-final-independent-runtime-result-peer-r1/REPORT.json",
+    "sha256": "2b24cfcef397773eb2efc7608a3494013f56400aafbb3a82f0793107eae9f1d0"
+  },
+  "root_review": {
+    "qualified_report_whole": "7ba022",
+    "independent_result_report_whole": "a25fa8",
+    "original_raw_whole": "a03323",
+    "test_whole": "9c2c5e"
+  },
+  "whole_api_closed": false,
+  "grade": null
+}

@@ -1,0 +1,185 @@
+{
+  "status": "ROOT_REVIEWED_ENTIRE_DELTA_ADVERSARIAL_PREFLIGHT_PENDING",
+  "finding": "F-SB-API-003",
+  "utc": "2026-10-03T20:44:14.974701+00:00",
+  "baseline_original_sha256": "875cfc65a4f93bf34d8f34d9487d9f789582abe8ce8b8ac48d6be94b3bb78728",
+  "candidate_sha256": "e6f246add57089d65de9f78c2b8d38fd6a3f5f73117792e7eea1dff9fbe02719",
+  "original_lines": 20071,
+  "candidate_lines": 20116,
+  "delta": [
+    {
+      "kind": "insert",
+      "original": [],
+      "candidate": [
+        "TYPE interface public ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability\n",
+        "  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=abstract];  }\n"
+      ]
+    },
+    {
+      "kind": "insert",
+      "original": [],
+      "candidate": [
+        "TYPE enum public ViciOne.ServiceBus.Advanced.ScheduleCancellationMode\n",
+        "  FIELD public System.Int32 value__\n",
+        "  FIELD public const ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CallerSpecifiedToken = 2\n",
+        "  FIELD public const ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CallerSpecifiedTokenWithoutCancellation = 4\n",
+        "  FIELD public const ViciOne.ServiceBus.Advanced.ScheduleCancellationMode ProviderAssignedToken = 3\n",
+        "  FIELD public const ViciOne.ServiceBus.Advanced.ScheduleCancellationMode Unknown = 0\n",
+        "  FIELD public const ViciOne.ServiceBus.Advanced.ScheduleCancellationMode Unsupported = 1\n"
+      ]
+    },
+    {
+      "kind": "replace",
+      "original": [
+        "TYPE class public ViciOne.ServiceBus.Scheduling.ServiceBusScheduleMessageProvider [interfaces=ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]\n"
+      ],
+      "candidate": [
+        "TYPE class public ViciOne.ServiceBus.Scheduling.ServiceBusScheduleMessageProvider [interfaces=ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability&ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]\n"
+      ]
+    },
+    {
+      "kind": "insert",
+      "original": [],
+      "candidate": [
+        "  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=virtual final];  }\n"
+      ]
+    },
+    {
+      "kind": "insert",
+      "original": [],
+      "candidate": [
+        "TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkInboxIdentityMigration [static]\n",
+        "  METHOD public static System.Guid CreateConsumerId<TConsumer,TMessage>(System.String persistenceIdentity, System.Uri inputAddress) [generic=TConsumer{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false},TMessage{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]\n",
+        "  METHOD public static System.Guid CreateLegacyConsumerId<TConsumer,TMessage>(System.String legacyRuntimeBusKey, System.Uri inputAddress) [generic=TConsumer{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false},TMessage{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]\n",
+        "  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult> MigrateAsync(Microsoft.EntityFrameworkCore.DbContext context, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration> mappings, System.Collections.Generic.IEnumerable<System.Guid> explicitlyUnchangedConsumerIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))\n"
+      ]
+    },
+    {
+      "kind": "insert",
+      "original": [],
+      "candidate": [
+        "TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration [sealed,interfaces=System.IEquatable<ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration>]\n",
+        "  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration(System.Guid LegacyConsumerId, System.Guid StableConsumerId)\n",
+        "  METHOD public System.Void Deconstruct(out System.Guid LegacyConsumerId, out System.Guid StableConsumerId)\n",
+        "  METHOD public ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration <Clone>$()\n",
+        "  METHOD public override System.Boolean Equals(System.Object obj [nullability={read=Nullable;write=Nullable}])\n",
+        "  METHOD public override System.Int32 GetHashCode()\n",
+        "  METHOD public override System.String ToString()\n",
+        "  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration left [nullability={read=Nullable;write=Nullable}], ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration right [nullability={read=Nullable;write=Nullable}])\n",
+        "  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration left [nullability={read=Nullable;write=Nullable}], ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration right [nullability={read=Nullable;write=Nullable}])\n",
+        "  METHOD public virtual final System.Boolean Equals(ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration other [nullability={read=Nullable;write=Nullable}])\n",
+        "  PROPERTY System.Guid LegacyConsumerId { public-get; public-init[return-modreq=[System.Runtime.CompilerServices.IsExternalInit];return-modopt=[]]; }\n",
+        "  PROPERTY System.Guid StableConsumerId { public-get; public-init[return-modreq=[System.Runtime.CompilerServices.IsExternalInit];return-modopt=[]]; }\n",
+        "TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult [sealed,interfaces=System.IEquatable<ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult>]\n",
+        "  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult(System.Int64 InboxRowsMigrated, System.Int64 OutboxMessagesReparented)\n",
+        "  METHOD public System.Void Deconstruct(out System.Int64 InboxRowsMigrated, out System.Int64 OutboxMessagesReparented)\n",
+        "  METHOD public ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult <Clone>$()\n",
+        "  METHOD public override System.Boolean Equals(System.Object obj [nullability={read=Nullable;write=Nullable}])\n",
+        "  METHOD public override System.Int32 GetHashCode()\n",
+        "  METHOD public override System.String ToString()\n",
+        "  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult left [nullability={read=Nullable;write=Nullable}], ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult right [nullability={read=Nullable;write=Nullable}])\n",
+        "  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult left [nullability={read=Nullable;write=Nullable}], ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult right [nullability={read=Nullable;write=Nullable}])\n",
+        "  METHOD public virtual final System.Boolean Equals(ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult other [nullability={read=Nullable;write=Nullable}])\n",
+        "  PROPERTY System.Int64 InboxRowsMigrated { public-get; public-init[return-modreq=[System.Runtime.CompilerServices.IsExternalInit];return-modopt=[]]; }\n",
+        "  PROPERTY System.Int64 OutboxMessagesReparented { public-get; public-init[return-modreq=[System.Runtime.CompilerServices.IsExternalInit];return-modopt=[]]; }\n"
+      ]
+    },
+    {
+      "kind": "insert",
+      "original": [],
+      "candidate": [
+        "  METHOD public override System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()\n"
+      ]
+    },
+    {
+      "kind": "replace",
+      "original": [
+        "TYPE class public ViciOne.ServiceBus.Scheduling.SqlScheduleMessageProvider [interfaces=ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]\n"
+      ],
+      "candidate": [
+        "TYPE class public ViciOne.ServiceBus.Scheduling.SqlScheduleMessageProvider [interfaces=ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability&ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]\n"
+      ]
+    },
+    {
+      "kind": "insert",
+      "original": [],
+      "candidate": [
+        "  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=virtual final];  }\n"
+      ]
+    },
+    {
+      "kind": "replace",
+      "original": [
+        "TYPE class public ViciOne.ServiceBus.Scheduling.BaseScheduleMessageProvider [abstract,interfaces=ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]\n"
+      ],
+      "candidate": [
+        "TYPE class public ViciOne.ServiceBus.Scheduling.BaseScheduleMessageProvider [abstract,interfaces=ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability&ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]\n"
+      ]
+    },
+    {
+      "kind": "insert",
+      "original": [],
+      "candidate": [
+        "  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=virtual];  }\n"
+      ]
+    },
+    {
+      "kind": "replace",
+      "original": [
+        "TYPE class public ViciOne.ServiceBus.Scheduling.DelayedScheduleMessageProvider [sealed,interfaces=ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]\n"
+      ],
+      "candidate": [
+        "TYPE class public ViciOne.ServiceBus.Scheduling.DelayedScheduleMessageProvider [sealed,interfaces=ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability&ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]\n"
+      ]
+    },
+    {
+      "kind": "insert",
+      "original": [],
+      "candidate": [
+        "  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=virtual final];  }\n"
+      ]
+    },
+    {
+      "kind": "replace",
+      "original": [
+        "TYPE class public ViciOne.ServiceBus.Scheduling.MessageScheduler [sealed,interfaces=ViciOne.ServiceBus.Advanced.IAdvancedMessageScheduler]\n"
+      ],
+      "candidate": [
+        "  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=override];  }\n",
+        "TYPE class public ViciOne.ServiceBus.Scheduling.MessageScheduler [sealed,interfaces=ViciOne.ServiceBus.Advanced.IAdvancedMessageScheduler&ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability]\n"
+      ]
+    },
+    {
+      "kind": "insert",
+      "original": [],
+      "candidate": [
+        "  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=virtual final];  }\n"
+      ]
+    },
+    {
+      "kind": "insert",
+      "original": [],
+      "candidate": [
+        "  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=override];  }\n"
+      ]
+    }
+  ],
+  "root_personally_full_original_baseline": false,
+  "root_personally_full_complete_changed_rows_and_context": true,
+  "tool_or_gate_source_changed": false,
+  "locks_changed": false,
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package24-f003-baseline-candidate-r1/ORIGINAL.txt",
+      "sha256": "875cfc65a4f93bf34d8f34d9487d9f789582abe8ce8b8ac48d6be94b3bb78728"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package24-f003-baseline-candidate-r1/DELTA.diff",
+      "sha256": "a4d251dac8b852a1543956c836d3444267ae3bcd7a27abc2038aa6f3652e7db4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package24-f003-baseline-candidate-r1/CANDIDATE.txt",
+      "sha256": "e6f246add57089d65de9f78c2b8d38fd6a3f5f73117792e7eea1dff9fbe02719"
+    }
+  ]
+}

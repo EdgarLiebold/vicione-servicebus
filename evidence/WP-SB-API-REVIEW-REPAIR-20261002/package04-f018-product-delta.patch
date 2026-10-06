@@ -1,0 +1,24 @@
+--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs
+@@ -101,7 +101,9 @@
+                 await next.SendAsync(repositoryContext).ConfigureAwait(false);
+             }
+ 
+-            if (context.TryGetPayload(out IDbTransactionContext? _))
++            if (context.TryGetPayload(out IDbTransactionContext? transactionContext)
++                && dbContext.Database.CurrentTransaction is { } currentTransaction
++                && currentTransaction.TransactionId == transactionContext.TransactionId)
+                 await SendCallbackAsync().ConfigureAwait(false);
+             else
+             {
+@@ -146,7 +148,9 @@
+                 await next.SendAsync(queryContext).ConfigureAwait(false);
+             }
+ 
+-            var hasOuterTransaction = context.TryGetPayload(out IDbTransactionContext? _);
++            var hasOuterTransaction = context.TryGetPayload(out IDbTransactionContext? transactionContext)
++                && dbContext.Database.CurrentTransaction is { } currentTransaction
++                && currentTransaction.TransactionId == transactionContext.TransactionId;
+ 
+             async Task SendQueryAsync()
+             {

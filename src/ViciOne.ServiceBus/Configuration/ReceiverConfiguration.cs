@@ -30,13 +30,13 @@ public class ReceiverConfiguration :
     /// <summary>Gets the input address.</summary>
     public Uri InputAddress => _configuration.InputAddress;
 
-    /// <summary>Gets or sets the configure consume topology.</summary>
+    /// <summary>Sets whether consume topology is configured for this receive endpoint.</summary>
     public bool ConfigureConsumeTopology
     {
         set => _configuration.ConfigureConsumeTopology = value;
     }
 
-    /// <summary>Gets or sets the publish faults.</summary>
+    /// <summary>Sets whether fault messages are published by this receive endpoint.</summary>
     public bool PublishFaults
     {
         set => _configuration.PublishFaults = value;

@@ -1,0 +1,145 @@
+{
+  "status": "SEVENTEEN_SOURCE_EFFECTS_RECEIPTS_LOGS_BINARIES_AND_ORACLES_INDEPENDENTLY_BOUND",
+  "checks": [
+    {
+      "name": "results-return-array",
+      "strict_build": "package05-mut-r2-results-return-array-build",
+      "negative": "results-membership-plain",
+      "exact_type": "Xunit.Sdk.SameException",
+      "positive": "results-null-inner",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "results-live-input",
+      "strict_build": "package05-mut-r2-results-live-input-build",
+      "negative": "results-membership-inner",
+      "exact_type": "Xunit.Sdk.SingleException",
+      "positive": "results-empty",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "results-null-guard-lost",
+      "strict_build": "package05-mut-r2-results-null-guard-lost-build",
+      "negative": "results-null-plain",
+      "exact_type": "Xunit.Sdk.EqualException",
+      "positive": "results-membership-inner",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-omit-StartTimeout",
+      "strict_build": "package05-mut-r2-host-omit-StartTimeout-build",
+      "negative": "host-StartTimeout-too-large",
+      "exact_type": "Xunit.Sdk.ThrowsException",
+      "positive": "host-relation-equal",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-omit-StopTimeout",
+      "strict_build": "package05-mut-r2-host-omit-StopTimeout-build",
+      "negative": "host-StopTimeout-too-large",
+      "exact_type": "Xunit.Sdk.ThrowsException",
+      "positive": "host-relation-equal",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-omit-ConsumerStopTimeout",
+      "strict_build": "package05-mut-r2-host-omit-ConsumerStopTimeout-build",
+      "negative": "host-ConsumerStopTimeout-too-large",
+      "exact_type": "Xunit.Sdk.ThrowsException",
+      "positive": "host-relation-equal",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-inclusive-upper",
+      "strict_build": "package05-mut-r2-host-inclusive-upper-build",
+      "negative": "host-StartTimeout-maximum",
+      "exact_type": "Microsoft.Extensions.Options.OptionsValidationException",
+      "positive": "host-StopTimeout-null",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-fractional-compare",
+      "strict_build": "package05-mut-r2-host-fractional-compare-build",
+      "negative": "host-StopTimeout-fraction",
+      "exact_type": "Microsoft.Extensions.Options.OptionsValidationException",
+      "positive": "host-StartTimeout-null",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-relation-lost",
+      "strict_build": "package05-mut-r3-host-relation-lost-build",
+      "negative": "host-relation-greater",
+      "exact_type": "Xunit.Sdk.EqualException",
+      "positive": "host-relation-equal",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "host-positive-lost",
+      "strict_build": "package05-mut-r3-host-positive-lost-build",
+      "negative": "host-StartTimeout-zero",
+      "exact_type": "Xunit.Sdk.ThrowsException",
+      "positive": "host-StartTimeout-maximum",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-provider-guard-lost",
+      "strict_build": "package05-mut-r3-batch-provider-guard-lost-build",
+      "negative": "batch-default-too-large",
+      "exact_type": "Xunit.Sdk.SingleException",
+      "positive": "batch-custom-long-size",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-global-options-cap",
+      "strict_build": "package05-mut-r3-batch-global-options-cap-build",
+      "negative": "batch-custom-long-expire",
+      "exact_type": "ViciOne.ServiceBus.ConfigurationException",
+      "positive": "batch-system-ordinary",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-all-providers-cap",
+      "strict_build": "package05-mut-r3-batch-all-providers-cap-build",
+      "negative": "batch-custom-long-size",
+      "exact_type": "Xunit.Sdk.NullException",
+      "positive": "batch-system-ordinary",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-inclusive-upper",
+      "strict_build": "package05-mut-r3-batch-inclusive-upper-build",
+      "negative": "batch-system-maximum",
+      "exact_type": "Xunit.Sdk.NullException",
+      "positive": "batch-system-ordinary",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-fractional-compare",
+      "strict_build": "package05-mut-r3-batch-fractional-compare-build",
+      "negative": "batch-system-fraction",
+      "exact_type": "Xunit.Sdk.NullException",
+      "positive": "batch-system-maximum",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-late-guard",
+      "strict_build": "package05-mut-r3-batch-late-guard-build",
+      "negative": "batch-default-too-large",
+      "exact_type": "Xunit.Sdk.SingleException",
+      "positive": "batch-custom-long-size",
+      "source_effects_reconstructed": true
+    },
+    {
+      "name": "batch-wrong-diagnostic-key",
+      "strict_build": "package05-mut-r4-batch-wrong-diagnostic-key-build",
+      "negative": "batch-default-too-large",
+      "exact_type": "Xunit.Sdk.SingleException",
+      "positive": "batch-custom-long-size",
+      "source_effects_reconstructed": true
+    }
+  ],
+  "m6209_restored": true,
+  "same_consumer_oracles_preserved": true,
+  "phases": "first8 validatedr2; next8 validatedr3; final1validatedr4; finalfull42r4baseline+rollback",
+  "compiler_category_setup_exclusions": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core"
+}

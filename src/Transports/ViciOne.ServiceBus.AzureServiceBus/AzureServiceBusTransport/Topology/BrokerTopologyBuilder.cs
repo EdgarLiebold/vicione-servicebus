@@ -142,7 +142,7 @@ public class BrokerTopologyBuilder :
         return handle;
     }
 
-    /// <summary>Builds an immutable view over the collected entity relationships.</summary>
+    /// <summary>Materializes the collected entity declarations and relationships into a topology with mutable arrays.</summary>
     /// <returns>The complete Azure Service Bus broker topology.</returns>
     public BrokerTopology BuildBrokerTopology()
     {

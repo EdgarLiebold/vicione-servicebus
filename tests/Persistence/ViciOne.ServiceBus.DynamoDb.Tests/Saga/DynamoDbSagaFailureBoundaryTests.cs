@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Logging;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -18,6 +21,348 @@ namespace ViciOne.ServiceBus.DynamoDb.Tests.Saga;
 
 public sealed class DynamoDbSagaFailureBoundaryTests
 {
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(0, true)]
+    [InlineData(1, false)]
+    [InlineData(1, true)]
+    [InlineData(2, false)]
+    [InlineData(2, true)]
+    [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-FAILURE", "insert-debug-preserves-sdk-context-concurrency-and-primary")]
+    public async Task Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(int outcome, bool loggerThrows)
+    {
+        Exception? providerFailure = outcome switch
+        {
+            0 => null,
+            1 => new ConditionalCheckFailedException("test-owned duplicate insert"),
+            2 => new IOException("test-owned conditional put failure"),
+            _ => throw new ArgumentOutOfRangeException(nameof(outcome))
+        };
+        string template = outcome == 0
+            ? "SAGA:{SagaType}:{CorrelationId} Used {MessageType}"
+            : "SAGA:{SagaType}:{CorrelationId} Dupe {MessageType}";
+        var diagnosticFailure = new IOException("DynamoDB insert diagnostic failure");
+        var logger = new InsertDiagnosticLogger(template, loggerThrows ? diagnosticFailure : null);
+        var sdk = InsertSdkContextProbe.Create(providerFailure);
+        using var lifetime = new CancellationTokenSource();
+        var source = ConsumeContextProxy.Create(new TestMessage(), lifetime.Token);
+        var store = new DynamoDbSagaStore<TestSaga>(sdk.Context, new DynamoDbSagaRepositoryOptions<TestSaga>("valid-table"));
+        var repository = new DynamoDbSagaRepositoryContext<TestSaga, TestMessage>(store, source,
+            new SagaConsumeContextFactory<IDynamoDbSagaStore<TestSaga>, TestSaga>());
+        var state = new TestSaga { CorrelationId = Guid.Parse("018cc251-f400-7000-8000-000000000407"), Version = 7 };
+        ILogContext? previous = LogContext.Current;
+        Task<SagaConsumeContext<TestSaga, TestMessage>?>? operation = null;
+        SagaConsumeContext<TestSaga, TestMessage>? inserted = null;
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            operation = ((ISagaRepositoryContext<TestSaga, TestMessage>)repository).InsertAsync(state,
+                TestContext.Current.CancellationToken);
+            Exception? failure = await Record.ExceptionAsync(async () =>
+            {
+                inserted = await operation.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+            });
+            Assert.IsNotType<TimeoutException>(failure);
+            Assert.True(operation.IsCompleted);
+            Assert.Equal(1, sdk.PutCount);
+            Assert.Equal(lifetime.Token, sdk.Token);
+            PutItemRequest request = Assert.IsType<PutItemRequest>(sdk.Request);
+            Assert.Equal("valid-table", request.TableName);
+            Assert.Equal(state.CorrelationId.ToString("D"), request.Item["PK"].S);
+            Assert.Equal(DynamoDbSagaDocument.EntityTypeValue, request.Item["SK"].S);
+            Assert.Equal("7", request.Item[nameof(DynamoDbSagaDocument.VersionNumber)].N);
+            TestSaga written = Assert.IsType<TestSaga>(JsonSerializer.Deserialize<TestSaga>(
+                request.Item[nameof(DynamoDbSagaDocument.Properties)].S, ServiceBusMetadataJson.Options));
+            Assert.Equal(state.CorrelationId, written.CorrelationId);
+            Assert.Equal(state.Version, written.Version);
+            Assert.Equal(0, sdk.DisposeCount);
+            InsertDiagnosticLogger.Entry selected = Assert.Single(logger.Entries, entry => entry.Template == template);
+            Assert.Equal(LogLevel.Debug, selected.Level);
+            Assert.Equal(state.CorrelationId, selected.CorrelationId);
+            Exception? expectedFailure = providerFailure;
+            if (outcome == 1)
+            {
+                DynamoDbSagaConcurrencyException concurrency = Assert.IsType<DynamoDbSagaConcurrencyException>(selected.Error);
+                Assert.Same(providerFailure, concurrency.InnerException);
+                Assert.Equal(state.CorrelationId, concurrency.CorrelationId);
+                Assert.Equal(typeof(TestSaga), concurrency.SagaType);
+                expectedFailure = concurrency;
+            }
+            else if (outcome == 2)
+                Assert.Same(providerFailure, selected.Error);
+            else
+                Assert.Null(selected.Error);
+            Assert.Equal(loggerThrows ? 1 : 0, logger.ThrowCount);
+            if (loggerThrows)
+            {
+                Assert.Same(diagnosticFailure, logger.ThrownFailure);
+                if (failure is not null && !ReferenceEquals(failure, expectedFailure))
+                    Assert.Same(diagnosticFailure, failure);
+            }
+            else
+                Assert.Null(logger.ThrownFailure);
+
+            if (outcome == 0)
+            {
+                Assert.Null(failure);
+                SagaConsumeContext<TestSaga, TestMessage> actual =
+                    Assert.IsAssignableFrom<SagaConsumeContext<TestSaga, TestMessage>>(inserted);
+                Assert.Same(state, actual.Saga);
+                Assert.Same(source.Message, actual.Message);
+                Assert.Equal(lifetime.Token, actual.CancellationToken);
+                Assert.True(operation.IsCompletedSuccessfully);
+            }
+            else
+            {
+                Assert.Same(expectedFailure, failure);
+                Assert.Null(inserted);
+                Assert.True(operation.IsFaulted);
+            }
+        }
+        finally
+        {
+            try
+            {
+                if (operation is not null)
+                    await ObserveInsertDiagnosticOperationAsync(operation);
+            }
+            finally
+            {
+                try
+                {
+                    repository.Dispose();
+                }
+                finally
+                {
+                    LogContext.Current = previous;
+                }
+            }
+        }
+        Assert.Equal(1, sdk.DisposeCount);
+    }
+
+    private class InsertSdkContextProbe : DispatchProxy
+    {
+        private Exception? _failure;
+        private Table _table = null!;
+        public IDynamoDBContext Context { get; private set; } = null!;
+        public int PutCount { get; private set; }
+        public int DisposeCount { get; private set; }
+        public CancellationToken Token { get; private set; }
+        public PutItemRequest? Request { get; private set; }
+        public static InsertSdkContextProbe Create(Exception? failure)
+        {
+            IDynamoDBContext context = DispatchProxy.Create<IDynamoDBContext, InsertSdkContextProbe>();
+            var probe = (InsertSdkContextProbe)(object)context;
+            probe.Context = context;
+            probe._failure = failure;
+            IAmazonDynamoDB client = DispatchProxy.Create<IAmazonDynamoDB, InsertSdkClientProbe>();
+            ((InsertSdkClientProbe)(object)client).Owner = probe;
+            probe._table = new TableBuilder(client, "valid-table")
+                .AddHashKey("PK", DynamoDBEntryType.String)
+                .AddRangeKey("SK", DynamoDBEntryType.String)
+                .Build();
+            return probe;
+        }
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+            if (targetMethod.Name == "GetTargetTable")
+                return _table;
+            if (targetMethod.Name == "Dispose")
+            {
+                DisposeCount++;
+                return null;
+            }
+            throw new NotSupportedException(targetMethod.Name);
+        }
+        private class InsertSdkClientProbe : DispatchProxy
+        {
+            public InsertSdkContextProbe Owner { get; set; } = null!;
+            protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+            {
+                ArgumentNullException.ThrowIfNull(targetMethod);
+                if (targetMethod.Name == "get_Config")
+                    return new AmazonDynamoDBConfig();
+                if (targetMethod.Name == "PutItemAsync")
+                {
+                    Owner.PutCount++;
+                    Owner.Request = Assert.IsType<PutItemRequest>(args![0]);
+                    Owner.Token = Assert.Single(args.OfType<CancellationToken>());
+                    return Owner._failure is { } failure
+                        ? Task.FromException<PutItemResponse>(failure)
+                        : Task.FromResult(new PutItemResponse
+                        {
+                            HttpStatusCode = System.Net.HttpStatusCode.OK,
+                            Attributes = []
+                        });
+                }
+                if (targetMethod.Name == "Dispose")
+                    return null;
+                throw new NotSupportedException(targetMethod.Name);
+            }
+        }
+    }
+
+    private static async Task ObserveInsertDiagnosticOperationAsync(Task task)
+    {
+        try
+        {
+            await task.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+        }
+        catch (Exception failure) when (failure is not TimeoutException && (task.IsFaulted || task.IsCanceled))
+        {
+        }
+    }
+
+    private sealed class InsertDiagnosticLogger(string selectedTemplate, Exception? failure) : ILogger
+    {
+        public sealed record Entry(LogLevel Level, string? Template, Guid? CorrelationId, Exception? Error);
+        public List<Entry> Entries { get; } = [];
+        public int ThrowCount { get; private set; }
+        public Exception? ThrownFailure { get; private set; }
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel level) => level == LogLevel.Debug;
+        public void Log<TState>(LogLevel level, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            IEnumerable<KeyValuePair<string, object?>> fields = state as IEnumerable<KeyValuePair<string, object?>>
+                ?? Array.Empty<KeyValuePair<string, object?>>();
+            string? template = fields.FirstOrDefault(field => field.Key == "{OriginalFormat}").Value as string;
+            object? correlation = fields.FirstOrDefault(field => field.Key == "CorrelationId").Value;
+            Entries.Add(new Entry(level, template, correlation is Guid id ? id : null, exception));
+            if (template == selectedTemplate && failure is not null)
+            {
+                ThrowCount++;
+                ThrownFailure = failure;
+                throw failure;
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(0, true)]
+    [InlineData(1, false)]
+    [InlineData(1, true)]
+    [InlineData(2, false)]
+    [InlineData(2, true)]
+    [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-FAILURE", "public-load-preserves-operation-and-owned-release-causes")]
+    public async Task PublicLoad_PreservesOperationAndOwnedReleaseCausesAsync(int operationMode, bool releaseFails)
+    {
+        using var caller = new CancellationTokenSource();
+        Exception? primary = operationMode switch
+        {
+            0 => null,
+            1 => new InvalidOperationException("exact provider load cause"),
+            2 => new OperationCanceledException("exact provider cancellation", null, caller.Token),
+            _ => throw new ArgumentOutOfRangeException(nameof(operationMode))
+        };
+        Exception? cleanup = releaseFails ? new IOException("exact owned cleanup cause") : null;
+        var provider = OwnedFailureContextProbe.Create(primary, cleanup);
+        var repository = DynamoDbSagaRepository.Create(() => provider.Context,
+            new DynamoDbSagaRepositoryOptions<TestSaga>("valid-table"));
+        Guid id = Guid.Parse("018cc251-f400-7000-8000-000000000406");
+
+        Task<TestSaga?> operation = repository.LoadAsync(id, caller.Token);
+        Exception? actual = await Record.ExceptionAsync(async () =>
+        {
+            Assert.Null(await operation);
+        });
+
+        Assert.Equal(1, provider.LoadCount);
+        Assert.Equal(id.ToString("D"), provider.Key);
+        Assert.Equal(DynamoDbSagaDocument.EntityTypeValue, provider.EntityType);
+        Assert.Equal(caller.Token, provider.Token);
+        Assert.Equal(1, provider.DisposeCount);
+        AssertOwnedFailures(actual, primary, cleanup);
+        if (primary is OperationCanceledException canceled)
+        {
+            Assert.Equal(caller.Token, canceled.CancellationToken);
+            if (cleanup is null)
+                Assert.True(operation.IsCanceled);
+        }
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-FAILURE", "send-factory-preserves-pipeline-and-owned-release-causes")]
+    public async Task SendFactory_PreservesPipelineAndOwnedReleaseCausesAsync(int operationMode)
+    {
+        using var caller = new CancellationTokenSource();
+        Exception? primary = operationMode switch
+        {
+            0 => null,
+            1 => new InvalidOperationException("exact pipeline cause"),
+            2 => new OperationCanceledException("exact pipeline cancellation", null, caller.Token),
+            _ => throw new ArgumentOutOfRangeException(nameof(operationMode))
+        };
+        var cleanup = new IOException("exact send owned cleanup cause");
+        var provider = OwnedFailureContextProbe.Create(null, cleanup);
+        var factory = new DynamoDbSagaRepositoryContextFactory<TestSaga>(
+            new DynamoDbSagaContextFactory<TestSaga>(() => provider.Context),
+            new SagaConsumeContextFactory<IDynamoDbSagaStore<TestSaga>, TestSaga>(),
+            new DynamoDbSagaRepositoryOptions<TestSaga>("valid-table"));
+        int calls = 0;
+        CancellationToken observedToken = default;
+        Exception? actual = await Record.ExceptionAsync(() => factory.SendAsync(
+            ConsumeContextProxy.Create(new TestMessage(), caller.Token),
+            new RecordingPipe<ISagaRepositoryContext<TestSaga, TestMessage>>(context =>
+            {
+                calls++;
+                observedToken = context.CancellationToken;
+                if (primary is not null)
+                    throw primary;
+            })));
+
+        Assert.Equal(1, calls);
+        Assert.Equal(0, provider.LoadCount);
+        Assert.Equal(1, provider.DisposeCount);
+        Assert.Equal(caller.Token, observedToken);
+        AssertOwnedFailures(actual, primary, cleanup);
+    }
+
+    private static void AssertOwnedFailures(Exception? actual, Exception? primary, Exception? cleanup)
+    {
+        if (primary is null && cleanup is null)
+        {
+            Assert.Null(actual);
+            return;
+        }
+        if (primary is null || cleanup is null)
+        {
+            Assert.Same(primary ?? cleanup, actual);
+            return;
+        }
+        var aggregate = Assert.IsType<AggregateException>(actual);
+        Assert.Collection(aggregate.InnerExceptions,
+            first => Assert.Same(primary, first),
+            second => Assert.Same(cleanup, second));
+        Exception[] causes = GetCauses(aggregate).ToArray();
+        Assert.Contains(causes, cause => ReferenceEquals(primary, cause));
+        Assert.Contains(causes, cause => ReferenceEquals(cleanup, cause));
+        Assert.Single(causes, cause => ReferenceEquals(primary, cause));
+        Assert.Single(causes, cause => ReferenceEquals(cleanup, cause));
+    }
+
+    private static IEnumerable<Exception> GetCauses(Exception exception)
+    {
+        yield return exception;
+        if (exception is AggregateException aggregate)
+        {
+            foreach (Exception inner in aggregate.InnerExceptions)
+                foreach (Exception cause in GetCauses(inner))
+                    yield return cause;
+        }
+        else if (exception.InnerException is { } inner)
+        {
+            foreach (Exception cause in GetCauses(inner))
+                yield return cause;
+        }
+    }
+
     [Theory]
     [InlineData("null-payload")]
     [InlineData("missing-payload")]
@@ -570,6 +915,48 @@ public sealed class DynamoDbSagaFailureBoundaryTests
         public void Set(IEnumerable<KeyValuePair<string, object?>> values) => throw new NotSupportedException();
 
         public ProbeContext CreateScope(string key) => this;
+    }
+
+    private class OwnedFailureContextProbe : DispatchProxy
+    {
+        private Exception? _primary;
+        private Exception? _cleanup;
+        public IDynamoDBContext Context { get; private set; } = null!;
+        public int DisposeCount { get; private set; }
+        public int LoadCount { get; private set; }
+        public string? Key { get; private set; }
+        public string? EntityType { get; private set; }
+        public CancellationToken Token { get; private set; }
+        public static OwnedFailureContextProbe Create(Exception? primary, Exception? cleanup)
+        {
+            var context = DispatchProxy.Create<IDynamoDBContext, OwnedFailureContextProbe>();
+            var probe = (OwnedFailureContextProbe)(object)context;
+            probe.Context = context;
+            probe._primary = primary;
+            probe._cleanup = cleanup;
+            return probe;
+        }
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+            if (targetMethod.Name == "Dispose")
+            {
+                DisposeCount++;
+                if (_cleanup is not null)
+                    throw _cleanup;
+                return null;
+            }
+            if (targetMethod.Name == "LoadAsync")
+            {
+                LoadCount++;
+                Key = Assert.IsType<string>(args![0]);
+                EntityType = Assert.IsType<string>(args[1]);
+                Token = Assert.Single(args.OfType<CancellationToken>());
+                return _primary is null ? Task.FromResult<DynamoDbSagaDocument?>(null)
+                    : Task.FromException<DynamoDbSagaDocument?>(_primary);
+            }
+            throw new NotSupportedException(targetMethod.Name);
+        }
     }
 
     private class DisposableDynamoDbContextProbe : DispatchProxy

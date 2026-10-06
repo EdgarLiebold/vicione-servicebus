@@ -59,7 +59,7 @@ public class ServiceBusSessionMessageLockContext :
     }
 
     /// <summary>Dead-letters the message with the transport's generic dead-letter reason.</summary>
-    /// <param name="cancellationToken">The token that cancels the settlement request.</param>
+    /// <param name="cancellationToken">The token checked before settlement begins.</param>
     /// <returns>The dead-letter operation whose success is recorded by this settlement context.</returns>
     public async Task DeadLetterAsync(CancellationToken cancellationToken = default)
     {

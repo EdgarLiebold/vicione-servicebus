@@ -14,7 +14,7 @@ public class TypeQuery
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="classification">The classification.</param>
-    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="filter">The optional predicate that selects discovered types.</param>
     public TypeQuery(TypeClassification classification, Func<Type, bool>? filter = null)
     {
         Filter = filter ?? (t => true);

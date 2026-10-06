@@ -11,7 +11,7 @@ public static class PostgreSqlTransportConfigurationExtensions
     /// <summary>Registers the PostgreSQL migration hosted service with create and delete switches.</summary>
     /// <param name="services">The dependency-injection service collection.</param>
     /// <param name="create">Whether to create the database, schema, and transport infrastructure.</param>
-    /// <param name="delete">Whether to delete the transport database before creation.</param>
+    /// <param name="delete">Whether to delete the transport database during host shutdown.</param>
     /// <returns>The same service collection.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="services" /> is <see langword="null" />.</exception>
     public static IServiceCollection AddPostgreSqlMigrationHostedService(this IServiceCollection services, bool create = true, bool delete = false)

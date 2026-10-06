@@ -23,7 +23,7 @@ public class InlineFilter<TContext> :
         context.CreateFilterScope("inline");
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Delegates context handling and continuation policy to the supplied filter callback.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

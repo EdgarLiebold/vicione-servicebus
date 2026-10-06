@@ -1,23 +1,240 @@
 [
-  { "requirementId": "REQ-VSB-AWS-S3-CONFIGURATION", "variantKey": "validated-client-owned-repository-boundary", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests", "testMethod": "PublicApi_UsesCallerOwnedClientsAndRejectsInvalidArguments" },
-  { "requirementId": "REQ-VSB-AWS-S3-CONFIGURATION", "variantKey": "direct-constructor-rejects-null-dependencies", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests", "testMethod": "RepositoryConstructor_RejectsNullClientAndOptions" },
-  { "requirementId": "REQ-VSB-AWS-S3-CONFIGURATION", "variantKey": "factories-preserve-caller-client-and-settings", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests", "testMethod": "Factories_UseTheSuppliedClientAndBucketLifecycleSettingsAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-OPTIONS", "variantKey": "bucket-and-retention-boundaries", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests", "testMethod": "Options_EnforceBucketAndRetentionBoundaries" },
-  { "requirementId": "REQ-VSB-AWS-S3-DATA-BOUNDARY", "variantKey": "stream-retention-and-s3-address-validation", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests", "testMethod": "Repository_RejectsUnreadableStreamsAndUnsafeAddressesBeforeClientUseAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-DATA-BOUNDARY", "variantKey": "port-fragment-and-relative-uri-rejected-before-client-use", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests", "testMethod": "GetAsync_RejectsPortFragmentAndRelativeAddressBeforeClientUseAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-DATA-BOUNDARY", "variantKey": "safe-hyphen-underscore-key-reaches-s3-client", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests", "testMethod": "GetAsync_AcceptsSafeHyphenAndUnderscoreKeyAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-OBSERVER", "variantKey": "lifecycle-no-op-and-prestart-fail-fast-boundary", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "BusObserverLifecycle_IsNoOpExceptFailFastPreStartAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE", "variantKey": "owned-rule-is-canonical-and-foreign-rule-is-preserved", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "EnsureReady_CanonicalizesOnlyTheProductOwnedLifecycleRuleAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE", "variantKey": "missing-bucket-and-lifecycle-are-created", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "EnsureReady_CreatesMissingBucketAndLifecycleRuleAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE", "variantKey": "unmanaged-retention-requires-lifecycle-inspection", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "EnsureReady_RequiresLifecycleInspectionWhenRetentionIsUnmanagedAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE", "variantKey": "legacy-untagged-owned-rule-requires-explicit-migration", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "EnsureReady_RejectsLegacyOwnedRuleWithoutOverwritingItAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE", "variantKey": "unmanaged-retention-preserves-existing-tagged-rule", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "EnsureReady_PreservesTaggedRuleWhenRetentionIsUnmanagedAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE", "variantKey": "versioned-bucket-rejected-for-expiration", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "EnsureReady_RejectsVersionedBucketWhenExpirationIsConfiguredAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-STARTUP", "variantKey": "concurrent-readiness-is-reconciled-once", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "EnsureReady_CoalescesConcurrentFirstCallsAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-STARTUP", "variantKey": "bus-restart-revalidates-owned-lifecycle-rule", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "PreStart_RevalidatesOwnedRuleAfterAnEarlierSuccessfulStartAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-STARTUP", "variantKey": "inaccessible-or-misdirected-bucket-fails-closed", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "EnsureReady_PropagatesInaccessibleOrMisdirectedBucketFailuresAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-STARTUP", "variantKey": "concurrent-idempotent-bucket-creation-is-accepted", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "EnsureReady_AcceptsConcurrentCreationOfTheConfiguredBucketAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-STARTUP", "variantKey": "bucket-creation-requires-client-region", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "EnsureReady_RequiresAClientRegionBeforeCreatingABucketAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-STARTUP", "variantKey": "bucket-creation-accepts-region-endpoint-without-authentication-region", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests", "testMethod": "EnsureReady_CreatesBucketWithRegionEndpointOnlyAsync" },
-  { "requirementId": "REQ-VSB-AWS-S3-REQUIREMENT-PROJECTION", "variantKey": "compiled-metadata-matches-projection", "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests", "testType": "ViciOne.ServiceBus.AmazonS3.Tests.Requirements.RequirementCoverageProjectionTests", "testMethod": "AmazonS3Requirements_MatchCompiledRequirementMetadata" }
+  {
+    "requirementId": "REQ-VSB-AWS-S3-CONFIGURATION",
+    "variantKey": "validated-client-owned-repository-boundary",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+    "testMethod": "PublicApi_UsesCallerOwnedClientsAndRejectsInvalidArguments"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-CONFIGURATION",
+    "variantKey": "direct-constructor-rejects-null-dependencies",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+    "testMethod": "RepositoryConstructor_RejectsNullClientAndOptions"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-CONFIGURATION",
+    "variantKey": "factories-preserve-caller-client-and-settings",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+    "testMethod": "Factories_UseTheSuppliedClientAndBucketLifecycleSettingsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-OPTIONS",
+    "variantKey": "bucket-and-retention-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+    "testMethod": "Options_EnforceBucketAndRetentionBoundaries"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-DATA-BOUNDARY",
+    "variantKey": "stream-retention-and-s3-address-validation",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+    "testMethod": "Repository_RejectsUnreadableStreamsAndUnsafeAddressesBeforeClientUseAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-DATA-BOUNDARY",
+    "variantKey": "port-fragment-and-relative-uri-rejected-before-client-use",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+    "testMethod": "GetAsync_RejectsPortFragmentAndRelativeAddressBeforeClientUseAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-DATA-BOUNDARY",
+    "variantKey": "safe-hyphen-underscore-key-reaches-s3-client",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+    "testMethod": "GetAsync_AcceptsSafeHyphenAndUnderscoreKeyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-OBSERVER",
+    "variantKey": "lifecycle-no-op-and-prestart-fail-fast-boundary",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "BusObserverLifecycle_IsNoOpExceptFailFastPreStartAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE",
+    "variantKey": "owned-rule-is-canonical-and-foreign-rule-is-preserved",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "EnsureReady_CanonicalizesOnlyTheProductOwnedLifecycleRuleAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE",
+    "variantKey": "missing-bucket-and-lifecycle-are-created",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "EnsureReady_CreatesMissingBucketAndLifecycleRuleAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE",
+    "variantKey": "unmanaged-retention-requires-lifecycle-inspection",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "EnsureReady_RequiresLifecycleInspectionWhenRetentionIsUnmanagedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE",
+    "variantKey": "legacy-untagged-owned-rule-requires-explicit-migration",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "EnsureReady_RejectsLegacyOwnedRuleWithoutOverwritingItAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE",
+    "variantKey": "unmanaged-retention-preserves-existing-tagged-rule",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "EnsureReady_PreservesTaggedRuleWhenRetentionIsUnmanagedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE",
+    "variantKey": "versioned-bucket-rejected-for-expiration",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "EnsureReady_RejectsVersionedBucketWhenExpirationIsConfiguredAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-STARTUP",
+    "variantKey": "concurrent-readiness-is-reconciled-once",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "EnsureReady_CoalescesConcurrentFirstCallsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-STARTUP",
+    "variantKey": "bus-restart-revalidates-owned-lifecycle-rule",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "PreStart_RevalidatesOwnedRuleAfterAnEarlierSuccessfulStartAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-STARTUP",
+    "variantKey": "inaccessible-or-misdirected-bucket-fails-closed",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "EnsureReady_PropagatesInaccessibleOrMisdirectedBucketFailuresAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-STARTUP",
+    "variantKey": "concurrent-idempotent-bucket-creation-is-accepted",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "EnsureReady_AcceptsConcurrentCreationOfTheConfiguredBucketAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-STARTUP",
+    "variantKey": "bucket-creation-requires-client-region",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "EnsureReady_RequiresAClientRegionBeforeCreatingABucketAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-STARTUP",
+    "variantKey": "bucket-creation-accepts-region-endpoint-without-authentication-region",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataObserverTests",
+    "testMethod": "EnsureReady_CreatesBucketWithRegionEndpointOnlyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-REQUIREMENT-PROJECTION",
+    "variantKey": "compiled-metadata-matches-projection",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.Requirements.RequirementCoverageProjectionTests",
+    "testMethod": "AmazonS3Requirements_MatchCompiledRequirementMetadata"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-PERSISTENCE",
+    "variantKey": "sdk-upload-preserves-position-and-caller-ownership",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "Put_UploadsRemainingBytesWithoutClosingOrResettingCallerStreamAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE",
+    "variantKey": "sdk-ttl-tag-and-ready-versioning-recheck",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "Put_TagsOnlyExplicitRetentionAndRejectsLaterVersioningBeforeUploadAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-PERSISTENCE",
+    "variantKey": "sdk-download-stream-lives-until-caller-disposes",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "Get_ReturnsReadableResponseStreamWithoutDisposingItOrClientAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-CANCELLATION",
+    "variantKey": "sdk-upload-download-preserve-failure-and-token",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "DataOperations_PropagateSdkFailureAndCancellationWithoutTakingOwnershipAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-CANCELLATION",
+    "variantKey": "canceled-cold-readiness-allows-healthy-retry",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "Put_CanceledColdReadinessLeavesStreamAndGateUsableForRetryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-STARTUP",
+    "variantKey": "selected-repository-gates-public-bus-start-and-preserves-failure",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "SelectedRepository_GatesPublicBusStartupOnReadinessAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-LIFECYCLE",
+    "variantKey": "public-prestart-removes-duplicate-owned-rules-and-is-idempotent",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "PreStart_CanonicalizesDuplicateOwnedRulesAndPreservesForeignOrderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-OBSERVER",
+    "variantKey": "poststart-does-not-await-or-own-readiness-task",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "PostStart_CompletesWhileBusReadinessIsPendingOrFaultedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-CANCELLATION",
+    "variantKey": "cancel-readiness-waiter-preserves-active-initialization",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "Put_CancelsReadinessWaiterWithoutCancelingInitializerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-CANCELLATION",
+    "variantKey": "in-flight-sdk-cancellation-preserves-caller-token-and-ownership",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "DataOperations_CancelWhileSdkOperationIsPendingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-STARTUP",
+    "variantKey": "public-prestart-failure-allows-retry-and-restart",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "PreStart_ReleasesFailedReadinessAndRevalidatesEveryRestartAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-CONFIGURATION",
+    "variantKey": "package-public-factory-defaults-and-observer-contract",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "ClientFactory_UsesDefaultOptionsAndPreservesNoOpObserverContractAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-S3-CANCELLATION",
+    "variantKey": "cancel-active-readiness-releases-gate-for-retry",
+    "testAssembly": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataRuntimeTests",
+    "testMethod": "Put_CancelsActiveReadinessAndAllowsHealthyRetryAsync"
+  }
 ]

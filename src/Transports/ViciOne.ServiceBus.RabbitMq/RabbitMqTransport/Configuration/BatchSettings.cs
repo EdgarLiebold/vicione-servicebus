@@ -2,7 +2,7 @@ using System;
 
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
-/// <summary>Defines immutable RabbitMQ client-side publish-batch settings.</summary>
+/// <summary>Defines read-only access to RabbitMQ client-side publish-batch settings.</summary>
 public interface BatchSettings
 {
     /// <summary>Indicates whether client-side publish batching is enabled.</summary>

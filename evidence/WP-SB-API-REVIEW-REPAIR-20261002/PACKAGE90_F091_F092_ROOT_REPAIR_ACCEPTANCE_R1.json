@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-04T16:37:38.826495+00:00",
+  "decision": "TWO_PERSISTENCE_BOUNDED_REPAIRS_ACCEPTED",
+  "finding_ids": [
+    "F-SB-API-091",
+    "F-SB-API-092"
+  ],
+  "original10": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package82-persistence-original10-independent-r1/REPORT.json",
+    "sha256": "b9527c11659a515289a20c62550b496b2ad6e29e3ab3609795e8a39ffd3ad647"
+  },
+  "fixed61_and_fresh2packs": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package87-persistence-fixed61-independent-r1/REPORT.json",
+    "sha256": "83eccfdb8e3d21fcfc44d9eb708efb41612ce4526cad5f24986574f787a92126"
+  },
+  "root_independent_source_review": "Rootdelta4fc901 fullFactoryaca3f6 AzureInsert107309 originalwholeb503c6 SDK51378c/4fa28a; Qauthoredbyseparatepeer, Rootindependentreview. Application3130d1. FixedAzure32/Dynamo29 actualcounts andstrict0W/E, independentfrozenSource/PE/PDB/runtime/publishedZIPDLL/XML qualified; fullreportRootc9e3ad.",
+  "limits": [
+    "Controlled SDK adapters; nocloud execution",
+    "OnlyF091F092 boundedrepairacceptance, wholeAPIpending",
+    "FullcurrentintegratedUnit/packageconsumer gate remaining"
+  ]
+}

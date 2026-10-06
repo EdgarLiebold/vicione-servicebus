@@ -1,0 +1,971 @@
+{
+  "utc": "2026-10-06T10:25:46.505423+00:00",
+  "status": "ROOT_ACCEPTED_EXACT14_CURRENT_LOCAL_SOURCE_CONTRACTS_NO_NATIVE_PROMOTION",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-current320-individual-local-contracts-proposed-r1/REPORT.json",
+    "sha256": "e424fa08a3634d083ddda6373dda9db288fb45a032d80ce7f8da216b562a946e"
+  },
+  "mandatory_four_norm_overlay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-four-norm-precision-overlay-r2/REPORT.json",
+    "sha256": "918d702d0551b2e69769038997e2b266dfd8c6647798def4efebea015264d6e7"
+  },
+  "different_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-sqs25-independent-source-norm-peer-r1/REPORT.json",
+    "sha256": "948ae4412e9668c198bdf0939003d8cfbf3a22864ae3d8ba93ae9f5dfea3b6e1"
+  },
+  "root_whole_owner_reads": [
+    "954030 first4/527L",
+    "9faea4 next3/655L",
+    "096305 next3/671L",
+    "360646 final2/286L"
+  ],
+  "root_whole_norm_and_peer_reads": [
+    "195bd8 slim25 complete",
+    "4acede exact5 corrections",
+    "893233 whole finalSourcepeer"
+  ],
+  "root_actual_P36": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package415-sqs14-source-root-acceptance-before-r1/OWN_ROOT_REPARSED_SQS_P36.json",
+    "sha256": "a5989fedf183788c6929f7730e845a69846311eab946f10caa16d7a4ff24a4a5"
+  },
+  "selected_original14": [
+    1306,
+    1308,
+    1354,
+    1391,
+    1392,
+    1393,
+    1411,
+    1429,
+    1431,
+    1477,
+    1536,
+    1542,
+    1608,
+    1610
+  ],
+  "operative_held11": [
+    {
+      "original_csv_zero_based_index": 1325,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsHost.ConnectReceiveEndpoint(System.String,System.Action{ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConfigurator})",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsHost.cs",
+        "source_line": "76",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsHost.ConnectReceiveEndpoint(System.String,System.Action{ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConfigurator})",
+      "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsHost.cs",
+      "current_source_sha256": "e1ac742f0dbec316cd64ad1d788412e5f257a9fa00f8d802ef4c84f65201b5d3",
+      "own_whole_source_read": {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsHost.cs",
+        "sha256": "e1ac742f0dbec316cd64ad1d788412e5f257a9fa00f8d802ef4c84f65201b5d3",
+        "lines": 110,
+        "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+        "own_whole_read_tool_receipts": [
+          "3b077e"
+        ]
+      },
+      "member_contract": "If ambient LogContext is null installs the host log context (_hostConfiguration.LogContext); creates typed endpoint configuration including its callback/observer/list admission, enumerates validation and throws on failures, invokes owning ConnectReceiveEndpoint diagnostic, builds that configuration into this host and returns ReceiveEndpoints.Start(queueName). Each synchronous failure stops later stages and earlier registration effects remain; no local rollback.",
+      "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+      "runtime_obligation": "Owning optional diagnostic precedes real Build/Start and can block them. A public healthy/hostile control must establish required continuation without importing other F152 cases.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsHost.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "e1ac742f0dbec316cd64ad1d788412e5f257a9fa00f8d802ef4c84f65201b5d3",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsHost.ConnectReceiveEndpoint(System.String,System.Action{ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConfigurator})\">\n            <summary>Connects and starts an Amazon SQS receive endpoint for a queue.</summary>\n            <param name=\"queueName\">The Amazon SQS queue name.</param>\n            <param name=\"configure\">An optional callback that configures the Amazon SQS endpoint.</param>\n            <returns>A handle for the connected receive endpoint.</returns>\n        </member>\n        ",
+      "historical_prior_473_held_record_unchanged": {
+        "ordinal": 52,
+        "original_ordinal": 1326,
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsHost.ConnectReceiveEndpoint(System.String,System.Action{ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConfigurator})",
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsHost.ConnectReceiveEndpoint(System.String,System.Action{ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConfigurator})",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsHost.cs",
+          "source_line": "76",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsHost.cs",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsHost.cs",
+        "current_source_sha256": "e1ac742f0dbec316cd64ad1d788412e5f257a9fa00f8d802ef4c84f65201b5d3",
+        "member_contract": "Sets receive logger context, creates typed endpoint configuration, compiles validation, emits own connection diagnostic, builds endpoint and starts by queue name. Diagnostic/build/start failures retain prior registration effects; no rollback; held public owning-workflow boundary.",
+        "actual_current_PDB_document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsHost.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "e1ac742f0dbec316cd64ad1d788412e5f257a9fa00f8d802ef4c84f65201b5d3",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsHost.ConnectReceiveEndpoint(System.String,System.Action{ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConfigurator})\">\n            <summary>Connects and starts an Amazon SQS receive endpoint for a queue.</summary>\n            <param name=\"queueName\">The Amazon SQS queue name.</param>\n            <param name=\"configure\">An optional callback that configures the Amazon SQS endpoint.</param>\n            <returns>A handle for the connected receive endpoint.</returns>\n        </member>\n        ",
+        "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+        "recommendation": "HELD_OPERATIVE_CONTRACT",
+        "hold_reason": "Endpoint configuration/registration precedes optional connection diagnostic and actual Build/Start; unqualified owning diagnostic/startup boundary.",
+        "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false
+      },
+      "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+      "runtime_grade": false
+    },
+    {
+      "original_csv_zero_based_index": 1355,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.CompleteAsync(System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+        "source_line": "87",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.CompleteAsync(System.Threading.CancellationToken)",
+      "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+      "current_source_sha256": "9aed84f4b739cb3d08a4173a8399da74ae28b91c1e309642b328064c000d95d7",
+      "own_whole_source_read": {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+        "sha256": "9aed84f4b739cb3d08a4173a8399da74ae28b91c1e309642b328064c000d95d7",
+        "lines": 246,
+        "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+        "own_whole_read_tool_receipts": [
+          "6b16ad"
+        ]
+      },
+      "member_contract": "Checks caller cancellation before creating a linked parent/caller token. Inside try awaits StopRenewal: active-source CancelAsync then stored renewal Task; checks caller again and awaits DeleteMessage for entity name/current message ReceiptHandle with linked token. Finally sets locked=0 and disposes renewal sources even after an earlier error; linked scope then disposes. No settlement CAS or multiple-caller serialization.",
+      "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+      "runtime_obligation": "A supported throwing cancellation callback can make CancelAsync fail before renewal Task is joined. Public held real visibility Task/callback controls are needed to bind the documented renewal-stop completion boundary; callback signaling alone is insufficient.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "9aed84f4b739cb3d08a4173a8399da74ae28b91c1e309642b328064c000d95d7",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.CompleteAsync(System.Threading.CancellationToken)\">\n            <summary>Stops visibility renewal and deletes the message from Amazon SQS.</summary>\n            <param name=\"cancellationToken\">The caller token used to cancel provider deletion after renewal has stopped.</param>\n            <returns>A task that completes when renewal has stopped and the message has been deleted.</returns>\n        </member>\n        ",
+      "historical_prior_473_held_record_unchanged": {
+        "ordinal": 77,
+        "original_ordinal": 1356,
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.CompleteAsync(System.Threading.CancellationToken)",
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.CompleteAsync(System.Threading.CancellationToken)",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+          "source_line": "87",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+        "current_source_sha256": "9aed84f4b739cb3d08a4173a8399da74ae28b91c1e309642b328064c000d95d7",
+        "member_contract": "Prechecks caller token, links settlement budget, cancels/awaits renewal then deletes actual receipt; finally marks inactive and disposes CTSs. Throwing registered cancellation callback can skip renewal join; actual drain/error policy held, no runtime finding.",
+        "actual_current_PDB_document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "9aed84f4b739cb3d08a4173a8399da74ae28b91c1e309642b328064c000d95d7",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.CompleteAsync(System.Threading.CancellationToken)\">\n            <summary>Stops visibility renewal and deletes the message from Amazon SQS.</summary>\n            <param name=\"cancellationToken\">The caller token used to cancel provider deletion after renewal has stopped.</param>\n            <returns>A task that completes when renewal has stopped and the message has been deleted.</returns>\n        </member>\n        ",
+        "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+        "recommendation": "HELD_OPERATIVE_CONTRACT",
+        "hold_reason": "CancelAsync callback error can skip actual renewal task join before CTS disposal; owned-task drain/cause policy requires public Original.",
+        "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false
+      },
+      "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+      "runtime_grade": false
+    },
+    {
+      "original_csv_zero_based_index": 1356,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.FaultedAsync(System.Exception,System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+        "source_line": "110",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.FaultedAsync(System.Exception,System.Threading.CancellationToken)",
+      "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+      "current_source_sha256": "9aed84f4b739cb3d08a4173a8399da74ae28b91c1e309642b328064c000d95d7",
+      "own_whole_source_read": {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+        "sha256": "9aed84f4b739cb3d08a4173a8399da74ae28b91c1e309642b328064c000d95d7",
+        "lines": 246,
+        "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+        "own_whole_read_tool_receipts": [
+          "6b16ad"
+        ]
+      },
+      "member_contract": "Checks caller cancellation, guards exception, links parent/caller token, awaits StopRenewal and caller check, then changes visibility with current ReceiptHandle/redelivery seconds only if deferred client-cancellation reader returns false and queue URL is nonnull. Within the inner redelivery try, caller-triggered OCE rethrows first; OCE is swallowed only when _cancellationToken.IsCancellationRequested || _connectionCancellationRequested(); MessageNotInflight/ReceiptHandleIsInvalid are swallowed in their separate unconditional catches. Unrelated OCE and other redelivery failures enter the Error diagnostic with the original consumer exception in arguments; StopRenewal failure is outside these inner catches and propagates through outer finally. Finally locked=0 and renewal-source disposal.",
+      "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+      "runtime_obligation": "Renewal join has the same CancelAsync boundary; optional Error may turn a deliberately contained settlement failure into a logger failure. Native redelivery/cancellation controls must distinguish these exact paths.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "9aed84f4b739cb3d08a4173a8399da74ae28b91c1e309642b328064c000d95d7",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.FaultedAsync(System.Exception,System.Threading.CancellationToken)\">\n            <summary>Stops visibility renewal and makes the message eligible for redelivery after the configured delay.</summary>\n            <param name=\"exception\">The consumer exception retained for diagnostic logging if redelivery preparation also fails.</param>\n            <param name=\"cancellationToken\">The caller token used to cancel provider settlement after renewal has stopped.</param>\n            <returns>A task that completes after renewal and redelivery preparation have stopped.</returns>\n        </member>\n        ",
+      "historical_prior_473_held_record_unchanged": {
+        "ordinal": 78,
+        "original_ordinal": 1357,
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.FaultedAsync(System.Exception,System.Threading.CancellationToken)",
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.FaultedAsync(System.Exception,System.Threading.CancellationToken)",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+          "source_line": "110",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+        "current_source_sha256": "9aed84f4b739cb3d08a4173a8399da74ae28b91c1e309642b328064c000d95d7",
+        "member_contract": "Prechecks token then guards exception; cancels/awaits renewal before requeue visibility update while connection live. Caller cancellation rethrows; own cancellation/stale receipt classes suppressed, other failures Error-log. Finally disposes state; callback/log failure ownership held.",
+        "actual_current_PDB_document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "9aed84f4b739cb3d08a4173a8399da74ae28b91c1e309642b328064c000d95d7",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsReceiveLockContext.FaultedAsync(System.Exception,System.Threading.CancellationToken)\">\n            <summary>Stops visibility renewal and makes the message eligible for redelivery after the configured delay.</summary>\n            <param name=\"exception\">The consumer exception retained for diagnostic logging if redelivery preparation also fails.</param>\n            <param name=\"cancellationToken\">The caller token used to cancel provider settlement after renewal has stopped.</param>\n            <returns>A task that completes after renewal and redelivery preparation have stopped.</returns>\n        </member>\n        ",
+        "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+        "recommendation": "HELD_OPERATIVE_CONTRACT",
+        "hold_reason": "Fault settlement cancellation/renewal join/Warning or Error diagnostic and cleanup failure boundaries unqualified.",
+        "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false
+      },
+      "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+      "runtime_grade": false
+    },
+    {
+      "original_csv_zero_based_index": 1475,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextFactory.CreateContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor)",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+        "source_line": "28",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextFactory.CreateContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor)",
+      "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+      "current_source_sha256": "39406858463d4d3775eacc41d80ebff3315e9c89305d07076a79311832093da8",
+      "own_whole_source_read": {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+        "sha256": "39406858463d4d3775eacc41d80ebff3315e9c89305d07076a79311832093da8",
+        "lines": 81,
+        "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+        "own_whole_read_tool_receipts": [
+          "6b16ad",
+          "f8cf79"
+        ]
+      },
+      "member_contract": "Reads supervisor.Stopped as Task.Run cancellation token, starts Task.Run(CreateConnectionAsync(supervisor),token), then returns supervisor.AddContext(contextTask). Creation uses host retry policy with supervisor.Stopping, rejects already stopping, emits ConnectHost, obtains settings.CreateConnection and constructs AmazonSqsConnectionContext with supervisor.Stopped. OCE rethrows; other errors emit Warning then wrap in AmazonSqsConnectionException. Local body does not join creation if custom AddContext rejects, or release acquired native connection if wrapper construction fails.",
+      "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+      "runtime_obligation": "Owning ConnectHost/Warning diagnostics may block real construction or replace intended wrapped primary. Public factory/actual returned agent Task with real host/settings guards and healthy/hostile controls required; custom admission failure remains a distinct ordinary SPI limit, not an assumed universal rollback defect.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "39406858463d4d3775eacc41d80ebff3315e9c89305d07076a79311832093da8",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextFactory.CreateContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor)\">\n            <summary>Starts asynchronous connection creation under a supervisor.</summary>\n            <param name=\"supervisor\">The supervisor that owns the connection context.</param>\n            <returns>The new connection-context agent.</returns>\n        </member>\n        ",
+      "historical_prior_473_held_record_unchanged": {
+        "ordinal": 132,
+        "original_ordinal": 1476,
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextFactory.CreateContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor)",
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextFactory.CreateContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor)",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+          "source_line": "28",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+        "current_source_sha256": "39406858463d4d3775eacc41d80ebff3315e9c89305d07076a79311832093da8",
+        "member_contract": "Starts Task.Run connection acquisition using supervisor.Stopped before AddContext(task). Admission failure may detach actual started acquisition task/resource; held for bounded public ownership proof.",
+        "actual_current_PDB_document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "39406858463d4d3775eacc41d80ebff3315e9c89305d07076a79311832093da8",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextFactory.CreateContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor)\">\n            <summary>Starts asynchronous connection creation under a supervisor.</summary>\n            <param name=\"supervisor\">The supervisor that owns the connection context.</param>\n            <returns>The new connection-context agent.</returns>\n        </member>\n        ",
+        "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+        "recommendation": "HELD_OPERATIVE_CONTRACT",
+        "hold_reason": "Actual Task.Run connection creation starts before AddContext registration; later synchronous admission failure may detach started task.",
+        "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false
+      },
+      "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+      "runtime_grade": false
+    },
+    {
+      "original_csv_zero_based_index": 1478,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextSupervisor.CreateSendTransportAsync(ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext,ViciOne.ServiceBus.AmazonSqs.IClientContextSupervisor,System.Uri,System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextSupervisor.cs",
+        "source_line": "42",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextSupervisor.CreateSendTransportAsync(ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext,ViciOne.ServiceBus.AmazonSqs.IClientContextSupervisor,System.Uri,System.Threading.CancellationToken)",
+      "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextSupervisor.cs",
+      "current_source_sha256": "48b277ed04c65d4b4f4e6325ca4fae00f53dab57505fdaca2c47ec5200e587f8",
+      "own_whole_source_read": {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextSupervisor.cs",
+        "sha256": "48b277ed04c65d4b4f4e6325ca4fae00f53dab57505fdaca2c47ec5200e587f8",
+        "lines": 117,
+        "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+        "own_whole_read_tool_receipts": [
+          "6b16ad"
+        ]
+      },
+      "member_contract": "Pre-canceled token returns canceled task; otherwise installs send ambient context, normalizes address and invokes CreateSendTransport diagnostic. Queue branch gets send settings and topology; topic branch also constructs publish topology layout. Both create filter pipe, adopted child ClientContextSupervisor, concrete send context and SendTransport, then adopt transport on original caller parent and return completed result Task. Does not send a message or await cloud creation.",
+      "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+      "runtime_obligation": "Owning CreateSendTransport diagnostic precedes concrete child/transport construction and admission. Public actual parent-registration counters with healthy/hostile logger control must bind continuation; ordinary custom parent failure is a separate bounded limit.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "48b277ed04c65d4b4f4e6325ca4fae00f53dab57505fdaca2c47ec5200e587f8",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextSupervisor.CreateSendTransportAsync(ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext,ViciOne.ServiceBus.AmazonSqs.IClientContextSupervisor,System.Uri,System.Threading.CancellationToken)\">\n            <summary>Creates an Amazon SQS queue transport or Amazon SNS topic transport for an endpoint address.</summary>\n            <param name=\"receiveEndpointContext\">The receive endpoint requesting the transport.</param>\n            <param name=\"clientContextSupervisor\">The client supervisor that owns the transport.</param>\n            <param name=\"address\">The queue or topic endpoint address.</param>\n            <param name=\"cancellationToken\">The token checked before transport creation.</param>\n            <returns>The created send transport.</returns>\n        </member>\n        ",
+      "historical_prior_473_held_record_unchanged": {
+        "ordinal": 135,
+        "original_ordinal": 1479,
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextSupervisor.CreateSendTransportAsync(ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext,ViciOne.ServiceBus.AmazonSqs.IClientContextSupervisor,System.Uri,System.Threading.CancellationToken)",
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextSupervisor.CreateSendTransportAsync(ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext,ViciOne.ServiceBus.AmazonSqs.IClientContextSupervisor,System.Uri,System.Threading.CancellationToken)",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextSupervisor.cs",
+          "source_line": "42",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextSupervisor.cs",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextSupervisor.cs",
+        "current_source_sha256": "48b277ed04c65d4b4f4e6325ca4fae00f53dab57505fdaca2c47ec5200e587f8",
+        "member_contract": "Pre-canceled token returns canceled Task; parses address and selects queue/topic settings/pipeline, constructs child supervisor/context/transport before parent AddSendAgent. Actual registration/acquisition failure rollback remains held.",
+        "actual_current_PDB_document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextSupervisor.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "48b277ed04c65d4b4f4e6325ca4fae00f53dab57505fdaca2c47ec5200e587f8",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.ConnectionContextSupervisor.CreateSendTransportAsync(ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext,ViciOne.ServiceBus.AmazonSqs.IClientContextSupervisor,System.Uri,System.Threading.CancellationToken)\">\n            <summary>Creates an Amazon SQS queue transport or Amazon SNS topic transport for an endpoint address.</summary>\n            <param name=\"receiveEndpointContext\">The receive endpoint requesting the transport.</param>\n            <param name=\"clientContextSupervisor\">The client supervisor that owns the transport.</param>\n            <param name=\"address\">The queue or topic endpoint address.</param>\n            <param name=\"cancellationToken\">The token checked before transport creation.</param>\n            <returns>The created send transport.</returns>\n        </member>\n        ",
+        "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+        "recommendation": "HELD_OPERATIVE_CONTRACT",
+        "hold_reason": "Send route creates child supervisor/context/transport before AddSendAgent; later supported failure ownership unqualified.",
+        "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false
+      },
+      "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+      "runtime_grade": false
+    },
+    {
+      "original_csv_zero_based_index": 1528,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.Middleware.AmazonSqsMessageReceiver.#ctor(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext)",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
+        "source_line": "32",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Middleware.AmazonSqsMessageReceiver.#ctor(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext)",
+      "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
+      "current_source_sha256": "5e40ea9577abc141e94c4a3ac5c8c1ebc35d4369b055ced9f18e91111d9b18e1",
+      "own_whole_source_read": {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
+        "sha256": "5e40ea9577abc141e94c4a3ac5c8c1ebc35d4369b055ced9f18e91111d9b18e1",
+        "lines": 223,
+        "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+        "own_whole_read_tool_receipts": [
+          "6d6cae"
+        ]
+      },
+      "member_contract": "Calls ConsumerAgent base(context,Ordinal comparer), retains client/context, gets ReceiveSettings payload, creates FifoPartitionedTaskExecutor from settings and immediately calls TrySetConsumeTask(ConsumeAsync()). Consume first obtains queue metadata and assigns QueueUrl, then optionally logs provider visibility before assigning VisibilityTimeout; creates RequestRateAlgorithm, sets Ready, polls and dispatches through ordered/grouped or ordinary result callbacks. Lock contexts precede ordered admission; receiver stop awaits base then executor disposal.",
+      "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+      "runtime_obligation": "Real asynchronous receiver work begins during construction. Owning visibility diagnostic after QueueUrl assignment but before VisibilityTimeout assignment/Ready, receive fault diagnostic and dispatched lock/executor lifetime need concrete public controls; ctor completion is not readiness/drain proof.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "5e40ea9577abc141e94c4a3ac5c8c1ebc35d4369b055ced9f18e91111d9b18e1",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.Middleware.AmazonSqsMessageReceiver.#ctor(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext)\">\n            <summary>Polls Amazon SQS for messages and dispatches them to the receive pipeline.</summary>\n            <param name=\"client\">The client context used for queue and settlement operations.</param>\n            <param name=\"context\">The receive endpoint that dispatches messages.</param>\n        </member>\n        ",
+      "historical_prior_473_held_record_unchanged": {
+        "ordinal": 159,
+        "original_ordinal": 1529,
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.Middleware.AmazonSqsMessageReceiver.#ctor(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext)",
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.Middleware.AmazonSqsMessageReceiver.#ctor(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext)",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
+          "source_line": "32",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
+        "current_source_sha256": "5e40ea9577abc141e94c4a3ac5c8c1ebc35d4369b055ced9f18e91111d9b18e1",
+        "member_contract": "Calls ConsumerAgent base, gets receive settings and FIFO execution strategy, starts ConsumeAsync as consume task. Later acquisition/queue initialization failure ownership depends on actual agent/executor path; constructor held.",
+        "actual_current_PDB_document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "5e40ea9577abc141e94c4a3ac5c8c1ebc35d4369b055ced9f18e91111d9b18e1",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.Middleware.AmazonSqsMessageReceiver.#ctor(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.AmazonSqs.SqsReceiveEndpointContext)\">\n            <summary>Polls Amazon SQS for messages and dispatches them to the receive pipeline.</summary>\n            <param name=\"client\">The client context used for queue and settlement operations.</param>\n            <param name=\"context\">The receive endpoint that dispatches messages.</param>\n        </member>\n        ",
+        "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+        "recommendation": "HELD_OPERATIVE_CONTRACT",
+        "hold_reason": "Receiver construction creates FIFO executor and starts real consume task before readiness; supported later failure ownership unqualified.",
+        "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false
+      },
+      "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+      "runtime_grade": false
+    },
+    {
+      "original_csv_zero_based_index": 1532,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.Middleware.ConfigureAmazonSqsTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AmazonSqs.ClientContext})",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/ConfigureAmazonSqsTopologyFilter.cs",
+        "source_line": "38",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Middleware.ConfigureAmazonSqsTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AmazonSqs.ClientContext})",
+      "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/ConfigureAmazonSqsTopologyFilter.cs",
+      "current_source_sha256": "5eea9d0977146874725cc825a14f0425ff9bb33d79a3ae58e3e4939d2706450e",
+      "own_whole_source_read": {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/ConfigureAmazonSqsTopologyFilter.cs",
+        "sha256": "5eea9d0977146874725cc825a14f0425ff9bb33d79a3ae58e3e4939d2706450e",
+        "lines": 156,
+        "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+        "own_whole_read_tool_receipts": [
+          "6d6cae"
+        ]
+      },
+      "member_contract": "Awaits ConfigureAsync(context,context.CancellationToken) before the downstream try, then awaits next.SendAsync(context). A downstream exception causes oneTimeContext.Evict and a bare rethrow only if eviction succeeds. Configure adds settings payload, possibly adopts/rebinds removal agent, awaits topic declarations then queue declarations then subscriptions; declaration diagnostics remain unguarded. The returned async Task observes continuation completion; no exact Task object identity claim.",
+      "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+      "runtime_obligation": "Owning successful-declaration Debug can fault setup before next. Downstream eviction concurrency/failure is a separate primitive policy, not automatic arbitrary-implementation defect; public setup/next/real topology controls required.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/ConfigureAmazonSqsTopologyFilter.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "5eea9d0977146874725cc825a14f0425ff9bb33d79a3ae58e3e4939d2706450e",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.Middleware.ConfigureAmazonSqsTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AmazonSqs.ClientContext})\">\n            <summary>Declares topology once, invokes the next client-context stage, and evicts failed setup state for retry.</summary>\n            <param name=\"context\">The Amazon client context.</param>\n            <param name=\"next\">The next pipeline stage.</param>\n            <returns>The continuation task returned by <paramref name=\"next\" /> after topology is ready.</returns>\n        </member>\n        ",
+      "historical_prior_473_held_record_unchanged": {
+        "ordinal": 163,
+        "original_ordinal": 1533,
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.Middleware.ConfigureAmazonSqsTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AmazonSqs.ClientContext})",
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.Middleware.ConfigureAmazonSqsTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AmazonSqs.ClientContext})",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/ConfigureAmazonSqsTopologyFilter.cs",
+          "source_line": "38",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/ConfigureAmazonSqsTopologyFilter.cs",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/ConfigureAmazonSqsTopologyFilter.cs",
+        "current_source_sha256": "5eea9d0977146874725cc825a14f0425ff9bb33d79a3ae58e3e4939d2706450e",
+        "member_contract": "Awaits OneTimeSetupAsync then next.SendAsync(actual context); downstream error calls OneTimeContext.Evict then bare throw. Evict failure can replace primary; setup failure lies outside catch, held exact failure boundary.",
+        "actual_current_PDB_document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/ConfigureAmazonSqsTopologyFilter.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "5eea9d0977146874725cc825a14f0425ff9bb33d79a3ae58e3e4939d2706450e",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.Middleware.ConfigureAmazonSqsTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AmazonSqs.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AmazonSqs.ClientContext})\">\n            <summary>Declares topology once, invokes the next client-context stage, and evicts failed setup state for retry.</summary>\n            <param name=\"context\">The Amazon client context.</param>\n            <param name=\"next\">The next pipeline stage.</param>\n            <returns>The continuation task returned by <paramref name=\"next\" /> after topology is ready.</returns>\n        </member>\n        ",
+        "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+        "recommendation": "HELD_OPERATIVE_CONTRACT",
+        "hold_reason": "Actual one-time context Evict may throw during original downstream failure and replace its cause; no local secondary-failure preservation.",
+        "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false
+      },
+      "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+      "runtime_grade": false
+    },
+    {
+      "original_csv_zero_based_index": 1611,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetAsync(ViciOne.ServiceBus.AmazonSqs.Topology.Topic,System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+        "source_line": "53",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetAsync(ViciOne.ServiceBus.AmazonSqs.Topology.Topic,System.Threading.CancellationToken)",
+      "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+      "current_source_sha256": "2b203290313f1394ab32f4890917c4b16f8893783842e4a46eceaa52bf06963b",
+      "own_whole_source_read": {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+        "sha256": "2b203290313f1394ab32f4890917c4b16f8893783842e4a46eceaa52bf06963b",
+        "lines": 182,
+        "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+        "own_whole_read_tool_receipts": [
+          "be2983"
+        ]
+      },
+      "member_contract": "Guards topic then awaits shared discovery. Returns committed durable topic first; durable/non-autodelete transition removes ephemeral entry with caller token then durable GetOrAdd using owner-token provider factory and caller wait token; otherwise ephemeral GetOrAdd. Loader is Lazy<Task> with lifetime token; discovery enumerates SNS pages into durable metadata and sets loaded flag only after all pages. Faulted/canceled loader is replaced under lock and retried in an unbounded loop, checking caller cancellation after replacement.",
+      "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+      "runtime_obligation": "Permanent provider faults or canceled owner lifetime with a still-live caller can cause repeated discovery rather than terminal failure. Deterministic real SDK task/request gates and bounded cancellation policy are required; no standard-cloud defect prediction.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2b203290313f1394ab32f4890917c4b16f8893783842e4a46eceaa52bf06963b",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetAsync(ViciOne.ServiceBus.AmazonSqs.Topology.Topic,System.Threading.CancellationToken)\">\n            <summary>Gets or creates topic metadata using the topology entity's attributes, tags, and lifetime.</summary>\n            <param name=\"topic\">The topic topology entity.</param>\n            <param name=\"cancellationToken\">The token used to cancel topic discovery or this caller's wait.</param>\n            <returns>The resolved topic metadata.</returns>\n        </member>\n        ",
+      "historical_prior_473_held_record_unchanged": {
+        "ordinal": 240,
+        "original_ordinal": 1612,
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetAsync(ViciOne.ServiceBus.AmazonSqs.Topology.Topic,System.Threading.CancellationToken)",
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetAsync(ViciOne.ServiceBus.AmazonSqs.Topology.Topic,System.Threading.CancellationToken)",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+          "source_line": "53",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+        "current_source_sha256": "2b203290313f1394ab32f4890917c4b16f8893783842e4a46eceaa52bf06963b",
+        "member_contract": "Guards topic, awaits shared existing-topic discovery then reuses durable entry; durable transition removes ephemeral and creates with owner token, otherwise ephemeral factory. Discovery failure resets/retries loader; repeated permanent failure/lifetime cancellation behavior held.",
+        "actual_current_PDB_document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "2b203290313f1394ab32f4890917c4b16f8893783842e4a46eceaa52bf06963b",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetAsync(ViciOne.ServiceBus.AmazonSqs.Topology.Topic,System.Threading.CancellationToken)\">\n            <summary>Gets or creates topic metadata using the topology entity's attributes, tags, and lifetime.</summary>\n            <param name=\"topic\">The topic topology entity.</param>\n            <param name=\"cancellationToken\">The token used to cancel topic discovery or this caller's wait.</param>\n            <returns>The resolved topic metadata.</returns>\n        </member>\n        ",
+        "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+        "recommendation": "HELD_OPERATIVE_CONTRACT",
+        "hold_reason": "Failed/canceled shared topic loader is reset/retried in unbounded loop using lifetime budget; permanent failure/lifetime-cancel cooperation requires genuine public control.",
+        "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false
+      },
+      "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+      "runtime_grade": false
+    },
+    {
+      "original_csv_zero_based_index": 1612,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetByNameAsync(System.String,System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+        "source_line": "77",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetByNameAsync(System.String,System.Threading.CancellationToken)",
+      "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+      "current_source_sha256": "2b203290313f1394ab32f4890917c4b16f8893783842e4a46eceaa52bf06963b",
+      "own_whole_source_read": {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+        "sha256": "2b203290313f1394ab32f4890917c4b16f8893783842e4a46eceaa52bf06963b",
+        "lines": 182,
+        "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+        "own_whole_read_tool_receipts": [
+          "be2983"
+        ]
+      },
+      "member_contract": "Guards blank entity name, awaits the same lifetime-owned shared topic discovery, returns durable metadata if present, otherwise awaits ephemeral GetAsync with caller token. It does not create a missing topic. Caller cancellation affects discovery wait; failed/canceled loader reset/retry behavior is shared with GetAsync.",
+      "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+      "runtime_obligation": "Same owner-lifetime/permanent-discovery termination question needs a public name-lookup control; no independent native credit from other cache tests.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2b203290313f1394ab32f4890917c4b16f8893783842e4a46eceaa52bf06963b",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetByNameAsync(System.String,System.Threading.CancellationToken)\">\n            <summary>Gets metadata for an existing Amazon SNS topic by logical name.</summary>\n            <param name=\"entityName\">The logical topic name.</param>\n            <param name=\"cancellationToken\">The token used to cancel topic discovery or this caller's wait.</param>\n            <returns>The resolved topic metadata.</returns>\n        </member>\n        ",
+      "historical_prior_473_held_record_unchanged": {
+        "ordinal": 241,
+        "original_ordinal": 1613,
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetByNameAsync(System.String,System.Threading.CancellationToken)",
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetByNameAsync(System.String,System.Threading.CancellationToken)",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+          "source_line": "77",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+        "current_source_sha256": "2b203290313f1394ab32f4890917c4b16f8893783842e4a46eceaa52bf06963b",
+        "member_contract": "Rejects blank name, awaits same shared discovery then resolves durable/ephemeral metadata. Discovery owns lifetime token while caller cancels wait; repeated failed-loader retry policy held, not native finding.",
+        "actual_current_PDB_document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "2b203290313f1394ab32f4890917c4b16f8893783842e4a46eceaa52bf06963b",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicCache.GetByNameAsync(System.String,System.Threading.CancellationToken)\">\n            <summary>Gets metadata for an existing Amazon SNS topic by logical name.</summary>\n            <param name=\"entityName\">The logical topic name.</param>\n            <param name=\"cancellationToken\">The token used to cancel topic discovery or this caller's wait.</param>\n            <returns>The resolved topic metadata.</returns>\n        </member>\n        ",
+        "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+        "recommendation": "HELD_OPERATIVE_CONTRACT",
+        "hold_reason": "GetByName uses same shared loader retry loop; caller wait versus owner-discovery failure termination contract unqualified.",
+        "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false
+      },
+      "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+      "runtime_grade": false
+    },
+    {
+      "original_csv_zero_based_index": 1615,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.DisposeAsync",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "source_line": "44",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.DisposeAsync",
+      "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+      "current_source_sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+      "own_whole_source_read": {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+        "lines": 64,
+        "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+        "own_whole_read_tool_receipts": [
+          "be2983"
+        ]
+      },
+      "member_contract": "If disposed flag is already true returns from async method immediately; otherwise marks flag true and, only if lazy publisher initialized, awaits that batcher DisposeAsync. Does not cache/share the first disposal Task, lock concurrent calls or activate unused batcher. A later call can return before first actual batcher drain completes and cannot retry a prior fault.",
+      "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+      "runtime_obligation": "Public held real publish/drain then concurrent second Dispose can measure documented completion boundary. Post-disposal lazy activation is separately linked to Publish; no universal CLR disposal rule or private task probe.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.DisposeAsync\">\n            <summary>Disposes the publish batcher when it has been initialized.</summary>\n            <returns>A task that completes when the initialized batcher has drained and stopped.</returns>\n        </member>\n        ",
+      "historical_prior_473_held_record_unchanged": {
+        "ordinal": 244,
+        "original_ordinal": 1616,
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.DisposeAsync",
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.DisposeAsync",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+          "source_line": "44",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "current_source_sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+        "member_contract": "If already disposed returns; otherwise marks disposed before awaiting existing lazy batcher Dispose. No initialization if unused; concurrency/retry-after-disposal-failure guarantees not added.",
+        "actual_current_PDB_document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.DisposeAsync\">\n            <summary>Disposes the publish batcher when it has been initialized.</summary>\n            <returns>A task that completes when the initialized batcher has drained and stopped.</returns>\n        </member>\n        ",
+        "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+        "recommendation": "HELD_OPERATIVE_CONTRACT",
+        "hold_reason": "Disposed flag set before awaited batcher cleanup; subsequent Dispose call returns immediately rather than observing first actual cleanup outcome. Concurrent/lifetime ownership unqualified.",
+        "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false
+      },
+      "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+      "runtime_grade": false
+    },
+    {
+      "original_csv_zero_based_index": 1616,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "source_line": "59",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)",
+      "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+      "current_source_sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+      "own_whole_source_read": {
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+        "lines": 64,
+        "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+        "own_whole_read_tool_receipts": [
+          "be2983"
+        ]
+      },
+      "member_contract": "Invokes public Used subscribers first, then obtains lazy PublishBatcher and returns its exact ExecuteAsync(entry,callerToken) Task. No disposed check, local null-entry guard or token linking; batcher checks caller cancellation before admission and observes each actual batch result. Used exception prevents batcher access. Lazy first access may occur even after TopicInfo.Dispose returned without initialization.",
+      "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+      "runtime_obligation": "Public Dispose-before-first-Publish may reactivate owner-owned batch worker; healthy/terminated-owner real SDK controls must settle intended lifetime policy. Used callbacks/native SNS behavior remain separate; no current native/finding claim.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)\">\n            <summary>Queues an Amazon SNS publish entry and waits for its batch result.</summary>\n            <param name=\"entry\">The publish batch entry.</param>\n            <param name=\"cancellationToken\">The token used to cancel admission to the batch queue.</param>\n            <returns>A task that completes when Amazon SNS reports the entry result.</returns>\n        </member>\n        ",
+      "historical_prior_473_held_record_unchanged": {
+        "ordinal": 245,
+        "original_ordinal": 1617,
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)",
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+          "source_line": "59",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "current_source_sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+        "member_contract": "Invokes Used then resolves lazy batcher and returns exact ExecuteAsync(entry,caller token). Does not check disposed flag here; late lazy activation/lifetime admission policy held.",
+        "actual_current_PDB_document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)\">\n            <summary>Queues an Amazon SNS publish entry and waits for its batch result.</summary>\n            <param name=\"entry\">The publish batch entry.</param>\n            <param name=\"cancellationToken\">The token used to cancel admission to the batch queue.</param>\n            <returns>A task that completes when Amazon SNS reports the entry result.</returns>\n        </member>\n        ",
+        "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+        "recommendation": "HELD_OPERATIVE_CONTRACT",
+        "hold_reason": "Publish invokes lazy batcher after public Dispose without checking disposed flag; previously unused batcher can initialize after owner terminated, held for genuine public Original.",
+        "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false
+      },
+      "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+      "runtime_grade": false
+    }
+  ],
+  "manifest_and_reference_pins_verified": true,
+  "before": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package415-sqs14-source-root-acceptance-before-r1/API_MEMBER_ACCEPTANCE_CURRENT.json",
+      "sha256": "0fe521ad423c2397e8def03a5f9f1b67da90143fc72b42687f908e9f5e36f2a3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package415-sqs14-source-root-acceptance-before-r1/STATE.json",
+      "sha256": "7c4cf401bcf06166755dc9c85e030996e1d0fcccc5a3e145b22e55f052cb7ea6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package415-sqs14-source-root-acceptance-before-r1/PO_BERICHT.txt",
+      "sha256": "e92c8e76f6997a026b8f58e3b939bbe3f8b429a88cf90540a4775eaea2f59de9"
+    }
+  ],
+  "accounting": {
+    "master_before": 19308,
+    "master_after": 19322,
+    "original_before": 18446,
+    "original_after": 18460,
+    "remaining": 109
+  },
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": [
+    "Exact14 hand-reviewed local contracts; arbitrary runtime lifetime/cleanup/cloud effects remain bounded as written.",
+    "Actual frozen320 unchanged SQS Source document/XML proof, no fresh SDK claim and no current mutated Core/Testing dependency binding.",
+    "Eleven concrete diagnostic/drain/discovery/lifetime questions remain open."
+  ]
+}

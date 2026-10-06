@@ -3,6 +3,6 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>Configures outbox.</summary>
 public interface IOutboxConfigurator
 {
-    /// <summary>Gets or sets the concurrent message delivery.</summary>
+    /// <summary>Sets whether independent buffered operations may be delivered concurrently.</summary>
     bool ConcurrentMessageDelivery { set; }
 }

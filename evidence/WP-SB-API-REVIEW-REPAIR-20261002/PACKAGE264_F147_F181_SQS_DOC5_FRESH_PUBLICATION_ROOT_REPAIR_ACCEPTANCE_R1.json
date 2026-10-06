@@ -1,0 +1,161 @@
+{
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE262_SQS_DOC5_XML_ONLY_PRODUCT5_ROOT_APPLICATION_R1.json",
+    "sha256": "fbaa944f7fbe48b9f67b555acad6163fa82f838833d4a06849f0875e384a2f2c"
+  },
+  "actual_DLL": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll",
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package262-sqs-doc5-fresh-root-publication-proof-r1/ViciOne.ServiceBus.AmazonSqs.dll",
+    "sha256": "c617c5dc01e47a953d8bdfc4466d3acea1d0517a83f40008efacbb1a7de72025"
+  },
+  "actual_XML": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.xml",
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package262-sqs-doc5-fresh-root-publication-proof-r1/ViciOne.ServiceBus.AmazonSqs.xml",
+    "sha256": "beb98653d9165265a303ef502ce7b7796aa103c4879fdb45f1369f4bfd94d9b0"
+  },
+  "nupkg": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/packages-package262-sqs-doc5-r1/ViciOne.ServiceBus.AmazonSqs.1.0.0.nupkg",
+    "sha256": "399c952e28dba75882d4f4f2193d6805db046528ea1716d37c9b527f6b3b48f2",
+    "bytes": 210687,
+    "CRC_unique_names_NuSpec_net10_DLL_XML_current_frozen_exact": true
+  },
+  "strict_build": {
+    "phase": "package262-sqs-doc5-strict-build-r1",
+    "command": [
+      "dotnet",
+      "build",
+      "src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T23:13:12.111150+00:00",
+    "completed_utc": "2026-10-05T23:13:17.804411+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package262-sqs-doc5-strict-build-r1.log",
+    "log_sha256": "82ab10d9d0fc9b0d9a936b1aec1b28ebbba9dd70592ed47a1c0aff695f9e2636"
+  },
+  "fresh_pack": {
+    "phase": "package262-sqs-doc5-fresh-pack-r1",
+    "command": [
+      "dotnet",
+      "pack",
+      "src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "-o",
+      "artifacts/packages-package262-sqs-doc5-r1"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T23:14:44.133857+00:00",
+    "completed_utc": "2026-10-05T23:14:46.535711+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package262-sqs-doc5-fresh-pack-r1.log",
+    "log_sha256": "59c4ab0e6635faf4acb48c2130854bf6811f709ac24d7c129f677c6b12e0e9d9"
+  },
+  "changed5_nodes": [
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsPublishTransportProvider.GetPublishTransportAsync``1(System.Uri,System.Threading.CancellationToken)",
+      "before_clause": "<param name=\"publishAddress\">An optional address override supplied by the publish operation.</param>",
+      "after_clause": "<param name=\"publishAddress\">An optional publish address; ignored by this provider.</param>",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsPublishTransportProvider.cs",
+      "source_sha256": "f2db137eeb37260fce51059f1b7dd2c138dd06a49ab778ecee14a9af716e003d",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsPublishTransportProvider.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f2db137eeb37260fce51059f1b7dd2c138dd06a49ab778ecee14a9af716e003d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Topology.AmazonSqsBrokerTopology.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.AmazonSqs.Topology.Topic},System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.AmazonSqs.Topology.Queue},System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.AmazonSqs.Topology.QueueSubscription})",
+      "before_clause": "<summary>Initializes an immutable snapshot of broker topology.</summary>",
+      "after_clause": "<summary>Copies the supplied topology sequences into arrays.</summary>",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/AmazonSqsBrokerTopology.cs",
+      "source_sha256": "e1de515bfeefa7344ffc95de26baa9771709669c0f5b8e146a400e083e4be887",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/AmazonSqsBrokerTopology.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "e1de515bfeefa7344ffc95de26baa9771709669c0f5b8e146a400e083e4be887",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Topology.PublishEndpointBrokerTopologyBuilder.BuildBrokerTopology",
+      "before_clause": "<summary>Creates an immutable snapshot of the accumulated publish topology.</summary>",
+      "after_clause": "<summary>Creates an array snapshot of the accumulated publish topology.</summary>",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/PublishEndpointBrokerTopologyBuilder.cs",
+      "source_sha256": "3cea325763ff20893470be6383143e460af1715dc4e04879b2d5420ed900e4ad",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/PublishEndpointBrokerTopologyBuilder.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "3cea325763ff20893470be6383143e460af1715dc4e04879b2d5420ed900e4ad",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Topology.ReceiveEndpointBrokerTopologyBuilder.BuildTopologyLayout",
+      "before_clause": "<summary>Creates an immutable snapshot of the accumulated receive topology.</summary>",
+      "after_clause": "<summary>Creates an array snapshot of the accumulated receive topology.</summary>",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/ReceiveEndpointBrokerTopologyBuilder.cs",
+      "source_sha256": "02cb2a5132678fe18dcf0d74ff311f9f96fbab3123227f7545552c657910b062",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/ReceiveEndpointBrokerTopologyBuilder.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "02cb2a5132678fe18dcf0d74ff311f9f96fbab3123227f7545552c657910b062",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Topology.SendEndpointBrokerTopologyBuilder.BuildBrokerTopology",
+      "before_clause": "<summary>Creates an immutable snapshot of the accumulated send topology.</summary>",
+      "after_clause": "<summary>Creates an array snapshot of the accumulated send topology.</summary>",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/SendEndpointBrokerTopologyBuilder.cs",
+      "source_sha256": "723efcd9239a5b3a475797f46fce67f0628d8b09761a945f498396cd1095cd6f",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/SendEndpointBrokerTopologyBuilder.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "723efcd9239a5b3a475797f46fce67f0628d8b09761a945f498396cd1095cd6f",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    }
+  ],
+  "utc": "2026-10-05T23:23:14.404962+00:00",
+  "status": "F147_F181_SQS_DOC5_ROOT_REPAIR_ACCEPTED_BOUNDED_WHOLE_API_OPEN",
+  "existing_family": "F147 argument-purpose and F181 immutable-description sibling extension; no new numbered Finding or behavior change",
+  "root_basis": "Ownwholebefore5/1494c2c7b +fiveproposedclausesSourceReportc5a02f; Sourcepeer514eeed wholebefore/proposed149; RootactualP36/168 selectedSource5+wholeXML5inverse/ZIP; QualifierindactualpubownWhole89/473 retained plus5clauses/PDB/ZIP. Rootwholepubpeer8a9aa2. No borrowed whole89 semantic authority.",
+  "source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-sqs-doc5-independent-source-peer-r1/REPORT.json",
+    "sha256": "514eeed8510cd6773c0b743a8cf10eaaf91c4feeefc66581dbf69e93da6cc2c0",
+    "manifest_sha256": "4c8d0650fe94ed19d25d40970567b7b3817bedbf6322283ec4c6474bc116ee9c"
+  },
+  "mandatory_reference_supplement": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-sqs-doc5-original-master-reference-precision-supplement-r1/SUPPLEMENT.json",
+    "sha256": "066e33459692e57f9ff94409535f094c97dab52c2b0ba1785b7293139e601493"
+  },
+  "publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package262-sqs-doc5-independent-publication-peer-r1/REPORT.json",
+    "sha256": "3b646bb8632a12619c846f9f3c8b1e4796f9efa3a9ed0737c0f83e8a830150ad",
+    "manifest_sha256": "75ff031476ac82e0a0b1ea885ae941ea00f73a5a6308694ea5745c205ff244e7"
+  },
+  "root_publication": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package262-sqs-doc5-fresh-root-publication-proof-r1/REPORT.json",
+    "sha256": "ae0e4005bca0971451d4e4445799678a70dbbe3e1d6382bda12970c46fbb0a7c"
+  },
+  "entire_XML_inverse5_exact": true,
+  "nonXML_publicdecl_bytes_equal": true,
+  "API_count_change": 0,
+  "master_rows": 17275,
+  "master_sha256_unchanged": "7a73dc9e66565e1c91af8171fd0b3c3a8735ccc22efb5672946b9d707c671742",
+  "original_API_remaining": 2156,
+  "SQS473_reserved_five_doc_IDs_still_unaccepted": true,
+  "existing_source5_master_rows": 0,
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package264-sqs-doc5-root-before-r1"
+}

@@ -1,0 +1,104 @@
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using ViciOne.ServiceBus.Monitoring;
+using Xunit;
+
+namespace ViciOneReview.JournalOwnership;
+
+internal sealed class JournalEvidence : IDisposable
+{
+    internal sealed record Measurement(Instrument Instrument, double Value, Dictionary<string, object?> Tags);
+    readonly MeterListener _meter = new();
+    readonly ActivityListener _activity;
+    readonly ConcurrentDictionary<string, TaskCompletionSource<Activity>> _completedOperations = new(StringComparer.Ordinal);
+    public ConcurrentQueue<Measurement> Measurements { get; } = new();
+    public ConcurrentQueue<Activity> Started { get; } = new();
+    public ConcurrentQueue<Activity> Stopped { get; } = new();
+    public ConcurrentQueue<Instrument> Completed { get; } = new();
+    public bool ThrowMeasurements { get; set; }
+    public int CallbackFaults;
+
+    public JournalEvidence()
+    {
+        _meter.InstrumentPublished = (instrument, listener) =>
+        {
+            if (instrument.Meter.Name == ServiceBusTelemetry.MeterName &&
+                instrument.Name is ServiceBusTelemetry.Metrics.MessageJournalOperations or ServiceBusTelemetry.Metrics.MessageJournalDuration)
+                listener.EnableMeasurementEvents(instrument);
+        };
+        _meter.MeasurementsCompleted = (instrument, _) => Completed.Enqueue(instrument);
+        _meter.SetMeasurementEventCallback<long>((instrument, value, tags, _) => Observe(instrument, value, tags));
+        _meter.SetMeasurementEventCallback<double>((instrument, value, tags, _) => Observe(instrument, value, tags));
+        _meter.Start();
+        _activity = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = (ref ActivityCreationOptions<System.Diagnostics.ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            SampleUsingParentId = (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStarted = activity => { if (activity.OperationName == ServiceBusTelemetry.Activities.MessageJournalObserve) Started.Enqueue(activity); },
+            ActivityStopped = activity =>
+            {
+                if (activity.OperationName != ServiceBusTelemetry.Activities.MessageJournalObserve) return;
+                Stopped.Enqueue(activity);
+                if (activity.GetTagItem(ServiceBusTelemetry.Attributes.MessageJournalOperation) is string operation)
+                    _completedOperations.GetOrAdd(operation, static _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).TrySetResult(activity);
+            },
+        };
+        ActivitySource.AddActivityListener(_activity);
+    }
+
+    void Observe(Instrument instrument, double value, ReadOnlySpan<KeyValuePair<string, object?>> tags)
+    {
+        var copy = new Dictionary<string, object?>(StringComparer.Ordinal);
+        foreach (var tag in tags) copy.Add(tag.Key, tag.Value);
+        Measurements.Enqueue(new(instrument, value, copy));
+        if (ThrowMeasurements) { Interlocked.Increment(ref CallbackFaults); throw new InvalidOperationException("owned-journal-measurement-fault"); }
+    }
+
+    public Measurement AssertOperation(object? scope, string operation = "publish", string result = "stored", string? reason = null)
+    {
+        Measurement counter = Assert.Single(Measurements.Where(x => x.Instrument.Name == ServiceBusTelemetry.Metrics.MessageJournalOperations &&
+            Equals(x.Tags.GetValueOrDefault(ServiceBusTelemetry.Attributes.MessageJournalOperation), operation)));
+        Assert.Same(scope, counter.Instrument.Meter.Scope);
+        Assert.Equal(ServiceBusTelemetry.MeterName, counter.Instrument.Meter.Name);
+        Assert.IsType<Counter<long>>(counter.Instrument);
+        Assert.Equal("{operation}", counter.Instrument.Unit);
+        Assert.Equal("Completed message-journal observations.", counter.Instrument.Description);
+        Assert.Equal(1, counter.Value);
+        Assert.Equal(result, counter.Tags[ServiceBusTelemetry.Attributes.MessageJournalResult]);
+        Assert.Equal("succeeded", counter.Tags[ServiceBusTelemetry.Attributes.MessageJournalOutcome]);
+        Assert.Equal(reason is null ? 3 : 4, counter.Tags.Count);
+        if (reason is not null) Assert.Equal(reason, counter.Tags[ServiceBusTelemetry.Attributes.MessageJournalFailureReason]);
+        if (!ThrowMeasurements)
+        {
+            Measurement duration = Assert.Single(Measurements.Where(x => x.Instrument.Name == ServiceBusTelemetry.Metrics.MessageJournalDuration &&
+                Equals(x.Tags.GetValueOrDefault(ServiceBusTelemetry.Attributes.MessageJournalOperation), operation)));
+            Assert.Same(counter.Instrument.Meter, duration.Instrument.Meter);
+            Assert.IsType<Histogram<double>>(duration.Instrument);
+            Assert.Equal("s", duration.Instrument.Unit);
+            Assert.Equal("Duration of processing one message-journal observation.", duration.Instrument.Description);
+            Assert.True(double.IsFinite(duration.Value) && duration.Value >= 0);
+            Assert.Equal(counter.Tags.OrderBy(x => x.Key), duration.Tags.OrderBy(x => x.Key));
+        }
+        return counter;
+    }
+
+    public Activity AssertActivity(string operation = "publish")
+    {
+        Activity activity = Assert.Single(Started.Where(x => Equals(x.GetTagItem(ServiceBusTelemetry.Attributes.MessageJournalOperation), operation)));
+        Assert.True(activity.IsStopped);
+        Assert.Same(activity, Assert.Single(Stopped.Where(x => ReferenceEquals(x, activity))));
+        return activity;
+    }
+
+    public void Clear()
+    {
+        Measurements.Clear(); Started.Clear(); Stopped.Clear();
+    }
+
+    public Task<Activity> WaitOperationAsync(string operation, TimeSpan timeout, CancellationToken caller) =>
+        _completedOperations.GetOrAdd(operation, static _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).Task.WaitAsync(timeout, caller);
+
+    public void Dispose() { _activity.Dispose(); _meter.Dispose(); }
+}

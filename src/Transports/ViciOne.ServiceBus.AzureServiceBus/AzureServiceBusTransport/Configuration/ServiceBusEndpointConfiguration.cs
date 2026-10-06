@@ -2,7 +2,7 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
-/// <summary>Adds an isolated Azure Service Bus topology configuration to endpoint configuration.</summary>
+/// <summary>Adds Azure Service Bus topology configuration to endpoint configuration.</summary>
 public class ServiceBusEndpointConfiguration :
     EndpointConfiguration,
     IServiceBusEndpointConfiguration
@@ -25,7 +25,7 @@ public class ServiceBusEndpointConfiguration :
     /// <summary>Gets the endpoint's Azure Service Bus topology configuration.</summary>
     public new IServiceBusTopologyConfiguration Topology { get; }
 
-    /// <summary>Creates a child endpoint configuration and copies the current topology conventions into it.</summary>
+    /// <summary>Creates a child endpoint configuration with separate consume topology and shared message, send, and publish topology.</summary>
     /// <param name="isBusEndpoint">Whether the child configures the bus endpoint.</param>
     /// <returns>The child endpoint configuration.</returns>
     public IServiceBusEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)

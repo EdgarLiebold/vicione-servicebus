@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/Advanced/LogContext.cs
++++ FailRetireToNoFactory
+@@ -89,7 +89,7 @@
+             var effectiveFactory = loggerFactory ?? NullLoggerFactory.Instance;
+             if (current == null
+                 || (loggerFactory != null && current.Logger is NullLogger)
+-                || (current is BusLogContext { IsAutomaticallyConfigured: true } automatic
++                || (loggerFactory != null && current is BusLogContext { IsAutomaticallyConfigured: true } automatic
+                     && !automatic.HasSameLoggerFactory(effectiveFactory)))
+             {
+                 Current = new BusLogContext(effectiveFactory, automaticallyConfigured: true);

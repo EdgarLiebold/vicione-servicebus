@@ -86,7 +86,7 @@ public abstract class SqlClientContext :
     public abstract Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(string queueName, SqlReceiveMode mode, int messageLimit, int concurrentLimit,
         TimeSpan lockDuration, CancellationToken cancellationToken = default);
 
-    /// <summary>Updates a queue's last-used timestamp.</summary>
+    /// <summary>Records usage of the specified primary queue through the provider.</summary>
     /// <param name="queueName">The queue name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

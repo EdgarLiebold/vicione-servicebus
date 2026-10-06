@@ -1,0 +1,36 @@
+{
+  "status": "ROOT_PERSONALLY_READ_FULL_LAYOUT_PACKS_0015_THROUGH_0018",
+  "previous": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE35_ROOT_LAYOUT_PARTIAL_003_R1.json",
+    "bytes": 1632,
+    "sha256": "57e84a995d9f034c1568e34d1d159e83dcbb9fc7e28d288da95ed7b5b713006c"
+  },
+  "packs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0015.txt",
+      "bytes": 12991,
+      "sha256": "0aef69269b9afb78479539c2f95f1c5d29014c9b1dd08487bf1ff817f14d1023"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0016.txt",
+      "bytes": 13259,
+      "sha256": "7d799eaf09fda67c170a5c5a7cc66da0aafab449339b6785efb98b1179489dd8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0017.txt",
+      "bytes": 13990,
+      "sha256": "f2332d90e5d3a22485b087b356e592e8f8dbfd84375c116a4d0af1f3baf4cde0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0018.txt",
+      "bytes": 13774,
+      "sha256": "5cca6012db90c31029518256525f3fb599c2d4db542572205084234b9e75da13"
+    }
+  ],
+  "complete_file_ordinals_combined": "0..170",
+  "file171": "HEADER_ONLY_AT_MAP_PENDING_NEXT_PACK",
+  "next_pack": "LAYOUT-0019.txt",
+  "whole766_owner_full": false,
+  "ordinary_RAW_increment": 0,
+  "read_outputs": "All four complete packs, two paired outputs, untruncated."
+}

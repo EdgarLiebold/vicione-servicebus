@@ -1,0 +1,39 @@
+{
+  "utc": "2026-10-04T14:50:28.450061+00:00",
+  "decision": "F073_F074_F075_BOUNDED_REPAIRS_ROOT_ACCEPTED_CLOSED",
+  "findings": [
+    "F-SB-API-073",
+    "F-SB-API-074",
+    "F-SB-API-075"
+  ],
+  "root_receipts": [
+    "cd558c completeOriginal6qualification",
+    "993551 completeFixed41qualification",
+    "0cedfd completeactualNative41log",
+    "b12fff precise6+16+19caseevents",
+    "a6cb7f Source5adversarial"
+  ],
+  "independent_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package71-abstractions-fixed-native41-independent-r1/REPORT.json",
+    "sha256": "6ff7817e43a21a13357a64f1fa3953959a282c4d3b9ca2f5f96048b2800a061f"
+  },
+  "native": {
+    "passed": 41,
+    "failed": 0,
+    "skipped": 0,
+    "log_sha256": "402a3dfcb1c8a44bb59e41ad5884c2791ba70c690d7f417a78ee58efff3d659d"
+  },
+  "strict": "0warnings0errors",
+  "fresh_package": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package71-abstractions-fixed-fresh-pack-r1/packages/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+    "sha256": "49d1e984f02d6eca6ff18f4fa39675e1c593bcb5960c52c05c88317d8cc717d4",
+    "CRC_and_DLL_XML_native_frame_match": true
+  },
+  "resources": "Actual2 CLI resources, Requirements663 and NewIdReferenceCorpus exactbytes. No sole-resource claim and no nativeNewIdCorpus claim.",
+  "semantics": [
+    "Default uninitialized three resultflags false; alllegalCtor/outcome combinations unchanged.",
+    "Null reflexivity and realHashSet deduplication nowpassed; one-null no delegatecall, non-null delegates unchanged.",
+    "FirstvalidationReason forcesexistinglazy; freshgeneric/runtimeinvalidtypes exactreason, validreasonnull and19existingmetadata controls passed."
+  ],
+  "scope_limit": "No database/providercommit or globalAPI A+ assertion; bounded repair acceptance plus35existingcontrols."
+}

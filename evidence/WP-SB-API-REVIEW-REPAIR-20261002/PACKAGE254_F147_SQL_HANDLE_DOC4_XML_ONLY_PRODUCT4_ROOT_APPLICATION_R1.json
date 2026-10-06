@@ -1,0 +1,79 @@
+{
+  "utc": "2026-10-05T22:29:41.546875+00:00",
+  "status": "INDEPENDENT_SOURCE_REVIEWED_PRODUCT4_XML_ONLY_APPLIED_STRICT_FRESH_PUBLICATION_PENDING",
+  "family": "F-SB-API-147",
+  "proposal": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-topology-handle-doc4-xml-only-proposed-r1/REPORT.json",
+    "sha256": "ffa126ca952586d8b9899dcdcc0779eafb85014dc09699399971df0cfdddc660"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-doc4-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "ca0427bcacae92fba25f0a4c2643e754098f6905edff0cc157ca286f6d2c3372",
+    "manifest_sha256": "c203e8d5fe87de343952c33a15c5a65aebeeb154eee11ea4cf1b09e1cc3900fc"
+  },
+  "root_own_source_authority": "Whole85/5317 SQL sources plus9/493 helpers, wholeDoc4 peerReport306b3d. Exact4 summary-only literal inverse checked; before/proposed44 lines and actual independent source policy semantic noBlock. No executable/public-declaration bytes changed.",
+  "changes": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/QueueHandle.cs",
+      "live_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/QueueHandle.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package252-sqltransport369-root-research-before-r1/before/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/QueueHandle.cs",
+      "before_sha256": "0bb495548cbc21f5a33d2147ed48a5f34e70969778b6e7d92b22b7d0a3bc6806",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-topology-handle-doc4-xml-only-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/QueueHandle.cs",
+      "proposed_sha256": "616949479708b6e2acdf9f0392c8cfdc4f8149903febda27779b8cb188c5baff",
+      "member_id": "T:ViciOne.ServiceBus.SqlTransport.Topology.QueueHandle",
+      "before": "Controls the lifetime of queue.",
+      "after": "Identifies a queue within its owning SQL topology builder.",
+      "literal_inverse_full_bytes_equal": true,
+      "non_XML_and_public_declaration_byte_equal": true,
+      "whole_source_receipt": "1c1028"
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/QueueSubscriptionHandle.cs",
+      "live_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/QueueSubscriptionHandle.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package252-sqltransport369-root-research-before-r1/before/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/QueueSubscriptionHandle.cs",
+      "before_sha256": "5c80c89dff05bd4d6824d061d4197725ee883c7866926ec8f75f73603fb6936a",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-topology-handle-doc4-xml-only-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/QueueSubscriptionHandle.cs",
+      "proposed_sha256": "9e1cdff37710978e65b938841972a9c648ba3b1410cfb6f40f48051c9f6b5d8e",
+      "member_id": "T:ViciOne.ServiceBus.SqlTransport.Topology.QueueSubscriptionHandle",
+      "before": "Controls the lifetime of queue subscription.",
+      "after": "Identifies a topic-to-queue subscription within its owning SQL topology builder.",
+      "literal_inverse_full_bytes_equal": true,
+      "non_XML_and_public_declaration_byte_equal": true,
+      "whole_source_receipt": "1c1028"
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/TopicHandle.cs",
+      "live_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/TopicHandle.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package252-sqltransport369-root-research-before-r1/before/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/TopicHandle.cs",
+      "before_sha256": "93528e15cca8eb762f002406afcead2d25d68cfb7e68add4b138e37f430a6422",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-topology-handle-doc4-xml-only-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/TopicHandle.cs",
+      "proposed_sha256": "9cc69c6d08fc265c373d9f1cdd35ba906a1ddaafd77dda3b8fa5522aa3c17097",
+      "member_id": "T:ViciOne.ServiceBus.SqlTransport.Topology.TopicHandle",
+      "before": "Controls the lifetime of topic.",
+      "after": "Identifies a topic within its owning SQL topology builder.",
+      "literal_inverse_full_bytes_equal": true,
+      "non_XML_and_public_declaration_byte_equal": true,
+      "whole_source_receipt": "964f95"
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/TopicSubscriptionHandle.cs",
+      "live_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/TopicSubscriptionHandle.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package252-sqltransport369-root-research-before-r1/before/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/TopicSubscriptionHandle.cs",
+      "before_sha256": "9c78f78d85ab4f1e0056a9a9a49cd473188ede0ca7a54e22ae719234b35c82f7",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-topology-handle-doc4-xml-only-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Topology/Entities/TopicSubscriptionHandle.cs",
+      "proposed_sha256": "b70ced60d82674f34cf714204c9c7d6785ad21d9d70f69ea73873b02a07d29f1",
+      "member_id": "T:ViciOne.ServiceBus.SqlTransport.Topology.TopicSubscriptionHandle",
+      "before": "Controls the lifetime of topic subscription.",
+      "after": "Identifies a topic-to-topic subscription within its owning SQL topology builder.",
+      "literal_inverse_full_bytes_equal": true,
+      "non_XML_and_public_declaration_byte_equal": true,
+      "whole_source_receipt": "964f95"
+    }
+  ],
+  "before_DLL_sha256": "a8f4431299a105c532f5fa1c0c59ec301541157358e9be9216cbf9d4b1292ca1",
+  "before_XML_sha256": "6ee162400668e89c4848238de4bc62ea829c865392ac6170133f1983a044078a",
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package254-sql-doc4-root-before-r1",
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

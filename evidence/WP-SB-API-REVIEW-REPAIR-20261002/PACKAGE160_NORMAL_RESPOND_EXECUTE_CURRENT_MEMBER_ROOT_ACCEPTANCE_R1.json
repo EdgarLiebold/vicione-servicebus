@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-05T00:48:15.831659+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_CONTRACT",
+  "accepted_before": 5937,
+  "accepted_after": 5938,
+  "original_member_id": "M:ViciOne.ServiceBus.SagaStateMachine.RespondActivity`3.ExecuteAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,`1},ViciOne.ServiceBus.Sagas.IBehavior{`0,`1})",
+  "norm": "Required context guard precedes token access. Supplies exact context.CancellationToken to ContextMessageFactory.UseAsync; pre-canceled context produces exact cancellation before invoking factory. Valid factory result sends exact message and pipe via context RespondAsync (no explicit response-token parameter); awaits response completion before next.ExecuteAsync(original context). Factory or response failure blocks next with exact original cause. Context factory/later pipeline borrowed, no CTS/disposal transfer. No new explicit next guard or universal forced cancellation of noncooperative factories.",
+  "current_source_sha256": "5517604400a302db5d0c37ab033efb1ab3747db4508312c103aac30df7846b51",
+  "unchanged_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.RespondActivity<TSaga, TMessage, T>.ExecuteAsync(global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga, TMessage> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, TMessage> next)",
+  "unchanged_XML": true,
+  "root_whole_source_read": "a7ce2b current62 (alsoprior62adcd46) and ContextFactory whole3067a0; actual6currentcase source cc9fbd; F133qualification alreadyaccepted e9db470d",
+  "repair_receipt": "PACKAGE158_F133_CURRENT_RESPOND21_NEIGHBORS921_FRESH2_BOUNDED_ROOT_REPAIR_ACCEPTANCE_R1.json",
+  "native_new_credit": 0,
+  "limits": [
+    "Genuine healthy/precancel/factory/transport/null current cases independently qualified epoch158; no new test run in this metadata receipt.",
+    "No wholeAPI closure."
+  ]
+}

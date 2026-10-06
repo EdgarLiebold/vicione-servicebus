@@ -1,0 +1,49 @@
+{
+  "matrix": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core399-current-acceptance-preparation-r2/PER_ID399_CURRENT_DECISIONS.json",
+  "matrix_sha256": "02af4c3ad4ba16b541bdeba834ae1833e1dcf876fc2075e62e2431415cce2397",
+  "root_reviewed_contract_projection_ranges": [
+    [
+      0,
+      398
+    ]
+  ],
+  "held_semantic_correction_indices": [
+    334,
+    335,
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344
+  ],
+  "actual_acceptance": false,
+  "root_personal_read_limits": "Actual compact per-ID member obligations, decision/NA reason and specific assertion traces reviewed. No new Root whole51 product/test-file or full typed-signature-model reading credit. Truncated tool outputs re-read affected indices separately; advanced wrappers whole source separately read and semantic report defect sent to reviewer before any acceptance.",
+  "root_tool_reads": [
+    "d92f58 0..11",
+    "0eeb6b12..45 corrected24/25 via11408e",
+    "ff4146 46..67",
+    "9c9934 68..90",
+    "624b18 91..111",
+    "dd0caf112..144",
+    "9418c2 145..163",
+    "7e4781 164..181",
+    "a61f60 182..203 corrected192 via d083a5",
+    "d083a5 204..218",
+    "98ba03 219..249 corrected233..240 via f5bd63",
+    "f5bd63 250..264",
+    "9c61f7 265..286 corrected273 via ac8768",
+    "c01830 287..309",
+    "ac8768 310..329",
+    "f0d64b330..350 wrappers334..344 HELD awaitingR3",
+    "e24a73 351..367 corrected356..361 via5125cb",
+    "5125cb 368..369",
+    "b6414d370..384",
+    "65d24f385..398",
+    "522e82 R2REPORTwhole;6f723c R2overlays exceptions355complete e24a73"
+  ],
+  "remaining": "R3 exact advanced forwarder semantic corrections; seven meaningful focused test groups; three runtime-Type native contract probes; Root actual selected acceptance + final wholeUnit/pack epoch"
+}

@@ -1,0 +1,81 @@
+{
+  "status": "ROOT_ACTUAL_PACKAGE_XML14_VERIFIED_PDB_PEER_PENDING",
+  "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package29-outbox-xml-r1/ViciOne.ServiceBus.1.0.0.nupkg",
+  "package_sha256": "b56552afbe148f81c0c538b8d27d4648f0f804793ad8951e0d6e720920535d46",
+  "dll_sha256": "ad47cf151a27a917db3f931a51216cd9968c307853674417c543b5817b5428b8",
+  "xml_sha256": "a0036bf5c37d56760ba4a9ee63de635f793f4aa160a87bdb062979e80f222071",
+  "zip_crc": true,
+  "actual_payload_equal_current_build_outputs": true,
+  "members": [
+    {
+      "identity": "T:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1",
+      "whole_member_xml": "<member name=\"T:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1\">\n            <summary>Decorates a consume context so outgoing messages are captured by its owning outbox implementation.</summary>\n            <typeparam name=\"TMessage\">The consumed message contract.</typeparam>\n        </member>\n        ",
+      "sha256": "3c3ea4216c43b965f177e1a1c1f8ec6b327657d455870268736d3de13520f3c6"
+    },
+    {
+      "identity": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.IsMessageConsumed",
+      "whole_member_xml": "<member name=\"P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.IsMessageConsumed\">\n            <summary>Gets whether the owning implementation considers the inline consumption phase complete.</summary>\n        </member>\n        ",
+      "sha256": "2b2844b7afe394b0da52e1e75407619cfe18fd27eb103eefeb0e0e8b6c3d34e8"
+    },
+    {
+      "identity": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.IsOutboxDelivered",
+      "whole_member_xml": "<member name=\"P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.IsOutboxDelivered\">\n            <summary>Gets whether the owning implementation requires no further inline outbox delivery.</summary>\n            <remarks>Reliable providers may delegate actual delivery to a separate owner; true is not proof of destination receipt.</remarks>\n        </member>\n        ",
+      "sha256": "a63f5119ecaec1e8c8a94cba7ae9571d1f6e685c208e8666a6165b6a01fec905"
+    },
+    {
+      "identity": "P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.LastSequenceNumber",
+      "whole_member_xml": "<member name=\"P:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.LastSequenceNumber\">\n            <summary>Gets the recorded inline delivery position, or null when no position is recorded or used.</summary>\n        </member>\n        ",
+      "sha256": "098fbb2a712f00aca0ee0ee210e693761aaa8d3484e5fffc89194b1a4a270d2a"
+    },
+    {
+      "identity": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.SetConsumedAsync(System.Threading.CancellationToken)",
+      "whole_member_xml": "<member name=\"M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.SetConsumedAsync(System.Threading.CancellationToken)\">\n            <summary>Reports completion of consumption to the owning implementation.</summary>\n            <remarks>The implementation controls storage; completion does not guarantee that an enclosing transaction has committed.</remarks>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that completes when the implementation has processed the consumption notification.</returns>\n        </member>\n        ",
+      "sha256": "7d01ad5481441843fc3559721a72f443f9f3a19f8023a69cf8c66789b7d41a93"
+    },
+    {
+      "identity": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.SetDeliveredAsync(System.Threading.CancellationToken)",
+      "whole_member_xml": "<member name=\"M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.SetDeliveredAsync(System.Threading.CancellationToken)\">\n            <summary>Reports completion of inline outbox delivery to the owning implementation.</summary>\n            <remarks>The implementation controls storage and may delegate delivery to another owner; completion is not a durable commit guarantee.</remarks>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that completes when the implementation has processed the delivery-completion notification.</returns>\n        </member>\n        ",
+      "sha256": "2cefe4a65f1cfe49e107e265d6ffa48fdead434c9aea640132c4a88ebbbb6cdb"
+    },
+    {
+      "identity": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.NotifyOutboxMessageDeliveredAsync(ViciOne.ServiceBus.Middleware.OutboxMessageContext,System.Threading.CancellationToken)",
+      "whole_member_xml": "<member name=\"M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.NotifyOutboxMessageDeliveredAsync(ViciOne.ServiceBus.Middleware.OutboxMessageContext,System.Threading.CancellationToken)\">\n            <summary>Reports delivery progress to the owning outbox implementation.</summary>\n            <remarks>\n            Completion does not guarantee a durable checkpoint. An implementation may update tracked state\n            for a later save and transaction commit, update process-local state, or require no delivery checkpoint.\n            </remarks>\n            <param name=\"message\">The delivered outbox message.</param>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that completes when the implementation has processed the delivery notification.</returns>\n        </member>\n        ",
+      "sha256": "43348aa0167399e538dc92610ff33a51fa0462be268dc4863e2afe8f0ae05bc5"
+    },
+    {
+      "identity": "M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.RemoveOutboxMessagesAsync(System.Threading.CancellationToken)",
+      "whole_member_xml": "<member name=\"M:ViciOne.ServiceBus.Middleware.Outbox.OutboxConsumeContextProxy`1.RemoveOutboxMessagesAsync(System.Threading.CancellationToken)\">\n            <summary>Requests cleanup of the outgoing messages owned by this inline outbox.</summary>\n            <remarks>Cleanup is implementation-specific and may require a later transaction commit or be handled by a separate delivery owner.</remarks>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that completes when the implementation has processed the cleanup request.</returns>\n        </member>\n        ",
+      "sha256": "7f8c475ceab0b59c8baa8810779accd0383cea5fe8ab6e1ddefe02616e44b5a6"
+    },
+    {
+      "identity": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.IsOutboxDelivered",
+      "whole_member_xml": "<member name=\"P:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.IsOutboxDelivered\">\n            <summary>Gets whether the owning implementation requires no further inline outbox delivery.</summary>\n            <remarks>Reliable providers may delegate actual delivery to a separate owner; true is not proof of destination receipt.</remarks>\n        </member>\n        ",
+      "sha256": "65707f332252b4b0d7186c579c0e8d5c27b1c056cc50cb9967878b2710b53235"
+    },
+    {
+      "identity": "P:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.LastSequenceNumber",
+      "whole_member_xml": "<member name=\"P:ViciOne.ServiceBus.Middleware.OutboxConsumeContext.LastSequenceNumber\">\n            <summary>Gets the recorded inline delivery position, or null when no position is recorded or used.</summary>\n        </member>\n        ",
+      "sha256": "def7f358b90ac640800c9e8fb62d31f85e8ac26529fc788d92ddd30a23ab7fb0"
+    },
+    {
+      "identity": "P:ViciOne.ServiceBus.Middleware.Outbox.InMemory.InMemoryOutboxConsumeContext`1.IsMessageConsumed",
+      "whole_member_xml": "<member name=\"P:ViciOne.ServiceBus.Middleware.Outbox.InMemory.InMemoryOutboxConsumeContext`1.IsMessageConsumed\">\n            <summary>Gets whether consumption has been recorded in the process-local inbox entry.</summary>\n        </member>\n        ",
+      "sha256": "a74c094ac1ffa46792db529a70ecabf4b1b109842e67aa0bad972d79e5a2716e"
+    },
+    {
+      "identity": "M:ViciOne.ServiceBus.Middleware.Outbox.InMemory.InMemoryOutboxConsumeContext`1.SetConsumedAsync(System.Threading.CancellationToken)",
+      "whole_member_xml": "<member name=\"M:ViciOne.ServiceBus.Middleware.Outbox.InMemory.InMemoryOutboxConsumeContext`1.SetConsumedAsync(System.Threading.CancellationToken)\">\n            <summary>Records consumption in the process-local inbox entry at the current bus time.</summary>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A completed task after the timestamp has been stored.</returns>\n        </member>\n        ",
+      "sha256": "cc16d88b593813f0148866d7fe06d1d27895a2a65a8c0a719c481f5db6b068ac"
+    },
+    {
+      "identity": "M:ViciOne.ServiceBus.Middleware.Outbox.InMemory.InMemoryOutboxConsumeContext`1.NotifyOutboxMessageDeliveredAsync(ViciOne.ServiceBus.Middleware.OutboxMessageContext,System.Threading.CancellationToken)",
+      "whole_member_xml": "<member name=\"M:ViciOne.ServiceBus.Middleware.Outbox.InMemory.InMemoryOutboxConsumeContext`1.NotifyOutboxMessageDeliveredAsync(ViciOne.ServiceBus.Middleware.OutboxMessageContext,System.Threading.CancellationToken)\">\n            <summary>Advances the process-local delivery position to a delivered message.</summary>\n            <param name=\"message\">The delivered outbox message.</param>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A completed task after the delivery position has been advanced.</returns>\n        </member>\n        ",
+      "sha256": "ffa4918640808b0465cda5bfa0d1227a4fd543a1ebfc1dfe14906b4548d887ea"
+    },
+    {
+      "identity": "M:ViciOne.ServiceBus.Middleware.Outbox.InMemory.InMemoryOutboxConsumeContext`1.RemoveOutboxMessagesAsync(System.Threading.CancellationToken)",
+      "whole_member_xml": "<member name=\"M:ViciOne.ServiceBus.Middleware.Outbox.InMemory.InMemoryOutboxConsumeContext`1.RemoveOutboxMessagesAsync(System.Threading.CancellationToken)\">\n            <summary>Removes every outgoing message from the process-local inbox entry.</summary>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A completed task after the messages have been removed.</returns>\n        </member>\n        ",
+      "sha256": "2a00f584d26d2e1d3564cf5bdbd26731bee16ae36c890576eca56f56a2ae0969"
+    }
+  ]
+}

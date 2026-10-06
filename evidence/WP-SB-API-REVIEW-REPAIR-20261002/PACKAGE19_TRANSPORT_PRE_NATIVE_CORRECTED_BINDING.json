@@ -1,0 +1,92 @@
+{
+  "status": "ROOT_WHOLE_OWNER_READ_AND_SELECTED_PACKAGE_CACHE_APP_CHAIN_BOUND",
+  "source": {
+    "path": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs",
+    "sha256": "ad835878411a286f7463fe79d30d774fee603305293a66902e4ae764de9f3b94"
+  },
+  "inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/ActivityOwnership.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/Cases.cs",
+      "sha256": "8a6b4f65ab1e5575f90789628bb5381e4cb2965179d772695893ff8f3d98e06d",
+      "bytes": 8458
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/NuGet.Config",
+      "sha256": "4fd0f3d6b8d94071a21d43c063b008969f34c5311eab2f4586f5685e98e94a91",
+      "bytes": 577
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/OwnedLifetime.cs",
+      "sha256": "57121c85d071a911ebe455a3eee60e5efb2132e7dade5b6ca07d9b2b9a79f53a",
+      "bytes": 1918
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/Program.cs",
+      "sha256": "45327fe8582dcc0ce8068a62a7e8941cc61777503737d75896ec65f93a9ecee9",
+      "bytes": 2329
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/packages.lock.json",
+      "sha256": "07881084828c017cc5b61cb33263452337e76c5227731a10c2fbb2b2106d978f",
+      "bytes": 16204
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/ActivityOwnership.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/Cases.cs",
+      "sha256": "8a6b4f65ab1e5575f90789628bb5381e4cb2965179d772695893ff8f3d98e06d",
+      "bytes": 8458
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/NuGet.Config",
+      "sha256": "96a8e21aa8ee53d96138f82c5e05e97cd2fe92e7e622e2d9b58256eefebe9a6a",
+      "bytes": 578
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/OwnedLifetime.cs",
+      "sha256": "57121c85d071a911ebe455a3eee60e5efb2132e7dade5b6ca07d9b2b9a79f53a",
+      "bytes": 1918
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/Program.cs",
+      "sha256": "45327fe8582dcc0ce8068a62a7e8941cc61777503737d75896ec65f93a9ecee9",
+      "bytes": 2329
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/packages.lock.json",
+      "sha256": "6ed1b2f99e8befa4d371f0fd5992ca381c2f3edeb193447f776c24bd2d69c8ae",
+      "bytes": 16204
+    }
+  ],
+  "chains": [
+    {
+      "name": "ViciOne.ServiceBus",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package19-transport/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "package_sha256": "87a50eb31595a3465c302dceed3381a7df2197ec4fa297f9cae541f900d06a2a",
+      "locked_sha512": "0USHumXaUidZTYLEK9Za9LEC07cviaqo2mXtsrRRCd0y0/IT2UkaFzc/e0EwE1TM29NbrWH7Rg4Kl3izwlX1WA==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/restored-packages/vicione.servicebus/1.0.0/lib/net10.0/ViciOne.ServiceBus.dll",
+      "app": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "dll_sha256": "43fbefc4df727cd1c108d80f32a635eeb279abc70143da59c0ac3cd03f7ce70a"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Abstractions",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package19-transport/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "package_sha256": "440bd764b8dff36e641061930227b2065fe8a88f776d78b1f3b85a537277ca16",
+      "locked_sha512": "3yROMBbMy+5DTi1xzWO4onJNKLhIP3QJSQH4RAPnAL5taeCUp2OIGrY+ETHgkdKVvwv9eGjSDKhnMXnB/rrOXA==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/restored-packages/vicione.servicebus.abstractions/1.0.0/lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "app": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "dll_sha256": "ef5817cda765fc00c65671440d18884fda8d7636b0dd5bed8135470507c9d6b2"
+    }
+  ],
+  "corrected_lock_personally_read_full": true,
+  "cases": 14,
+  "limits": "Pre-native only. No mutation/final acceptance/whole API claim."
+}

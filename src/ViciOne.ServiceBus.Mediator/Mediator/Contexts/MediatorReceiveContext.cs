@@ -120,7 +120,14 @@ internal sealed class MediatorReceiveContext<TMessage> :
 
         IsDelivered = true;
 
-        context.LogConsumed(duration, consumerType);
+        try
+        {
+            context.LogConsumed(duration, consumerType);
+        }
+        catch
+        {
+            // A diagnostic logger cannot suppress delivery state or observer notification.
+        }
 
         return _observers.PostConsumeAsync(context, duration, consumerType)
             ?? throw new InvalidOperationException("The receive observer returned no post-consume task.");
@@ -139,7 +146,14 @@ internal sealed class MediatorReceiveContext<TMessage> :
 
         IsFaulted = true;
 
-        context.LogFaulted(duration, consumerType, exception);
+        try
+        {
+            context.LogFaulted(duration, consumerType, exception);
+        }
+        catch
+        {
+            // A diagnostic logger cannot suppress fault metadata or observer notification.
+        }
 
         GetOrAddPayload<ConsumerFaultContext>(() => new FaultContext(TypeCache<T>.ShortName, consumerType));
 
@@ -157,7 +171,14 @@ internal sealed class MediatorReceiveContext<TMessage> :
 
         IsFaulted = true;
 
-        this.LogFaulted(exception);
+        try
+        {
+            this.LogFaulted(exception);
+        }
+        catch
+        {
+            // A diagnostic logger cannot suppress the receive-fault observer.
+        }
 
         return _observers.ReceiveFaultAsync(this, exception)
             ?? throw new InvalidOperationException("The receive observer returned no receive-fault task.");

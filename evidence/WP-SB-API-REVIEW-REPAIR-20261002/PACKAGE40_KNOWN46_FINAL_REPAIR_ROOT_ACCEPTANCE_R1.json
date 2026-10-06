@@ -1,0 +1,71 @@
+{
+  "status": "ROOT_ACCEPTED_KNOWN46_REPAIR_PACKAGE_NO_CONFIRMED_REGRESSION_BLOCK",
+  "utc": "2026-10-04T08:55:05.300024+00:00",
+  "scope": "45 known repairs plus F030 explicit contract disposition; whole API semantic review continues separately.",
+  "grade": "A+",
+  "grade_scope": "KNOWN46_REPAIR_PACKAGE_ONLY",
+  "confirmed": 46,
+  "code_and_document_repairs": 45,
+  "explicit_contract_dispositions": 1,
+  "open_confirmed_findings_in_this_package": 0,
+  "original_f030_startup_requirement_implemented": false,
+  "unit": {
+    "total": 12453,
+    "passed": 12453,
+    "failed": 0,
+    "skipped": 0,
+    "test_modules": 23,
+    "strict_build_warnings": 0,
+    "strict_build_errors": 0,
+    "source_frames": 57,
+    "emitted_documents": 5746,
+    "independent_review": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package40-final-unit-independent-review-r1/REPORT.md",
+      "bytes": 3701,
+      "sha256": "129cc2939b176da52074f3a790d8d86b2821c8c63587fd723933d97ed24fd940"
+    }
+  },
+  "gate": {
+    "packages": 31,
+    "runtime_assemblies": 30,
+    "analyzer_assemblies": 2,
+    "compiled_journeys": 18,
+    "executed_isolated_consumers": 4,
+    "public_api_lines": 20116,
+    "api_sha256": "e6f246add57089d65de9f78c2b8d38fd6a3f5f73117792e7eea1dff9fbe02719",
+    "independent_review": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package40-final-gate-independent-review-r1/REPORT.md",
+      "bytes": 4149,
+      "sha256": "2ba89abb97a14845f560164192d57a09d168a2f2a3d81512038c577b8c81d915"
+    }
+  },
+  "integrated_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package40-final-integrated46-repair-acceptance-r1/REPORT.md",
+    "bytes": 8375,
+    "sha256": "d3445f6eb77641a5e1e08f91ecc25b107d60603d3130c9df9b74b81ffb7d847e"
+  },
+  "finding_ledger": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package40-final-integrated46-repair-acceptance-r1/FINDING46_LEDGER.json",
+    "bytes": 114750,
+    "sha256": "98ac35be6ab33bcb3b19d03dc7c1a6a1e06fe226984a823a6f003e6d87fa4ffd"
+  },
+  "integrated_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package40-final-integrated46-repair-acceptance-r1/MANIFEST.json",
+    "bytes": 167492,
+    "sha256": "77431ece2de148dc9a220771acc3cdccfd3cc94a3fdcb7edc38748cdc360136b"
+  },
+  "root_whole_read_receipts": [
+    "e1505e unit peer report",
+    "d7e935 gate peer report",
+    "565523 integrated46 report",
+    "e3fdbd complete unit raw log",
+    "5cd9d9 complete strict-build raw log",
+    "e4e19f complete gate raw log"
+  ],
+  "reference_assignments": 104,
+  "source_and_history_provenance": "Prior per-package Root/adversarial source and targeted native acceptance preserved. No replay of all historical mutants or attribution of foreign FULL to Root.",
+  "whole_API_semantic_closed": false,
+  "global_API_Aplus": false,
+  "entire_original_user_goal_complete": false,
+  "remaining_work": "Current errorfree source/packed inventory and member-specific semantic/XML/test/consumer closure of entire API."
+}

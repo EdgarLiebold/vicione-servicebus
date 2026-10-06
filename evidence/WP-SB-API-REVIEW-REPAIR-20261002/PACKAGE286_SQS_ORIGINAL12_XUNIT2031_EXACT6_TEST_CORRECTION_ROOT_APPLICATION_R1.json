@@ -1,0 +1,24 @@
+{
+  "utc": "2026-10-06T00:45:51.484080+00:00",
+  "status": "EXACT6_INSTRUMENT_CORRECTION_APPLIED_RETRY_ROOT_SDK_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package277-sqs-client-diagnostics3-original12-testonly-assert-single-r2/REPORT.json",
+    "sha256": "3ed50ac7b14910badcfe18c4da0093c65db5907f75e48e7670d530f5608fbf6f"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package277-sqs-single6-independent-runtime-delta-peer-r2/REPORT.json",
+    "sha256": "adc7bcac49cda8adfdaf93e6b9cbb9cb9599ab3d04cf83aab43e20eb01d2fe9c"
+  },
+  "exact6_inverse_recovers_entire409_before": true,
+  "root_full409_retained_with_delta": "a4a9c2/9518e7 + exact6diff e79c34",
+  "test_after_sha256": "bbb048f6c30f600a4e0d8551c88d5ffb331121d6f63257a32680309a14d2489b",
+  "Req188_unchanged_sha256": "d0feb0ad7d145f960a3cfc5199e442a7c095c9f96c71cb8d398e22592d4e5586",
+  "Product_unchanged": true,
+  "failed_first_attempt": {
+    "exit": 1,
+    "test_cases_executed": 0,
+    "cause": "sixxUnit2031 analyzer compile diagnostics"
+  },
+  "native_credit": 0,
+  "grade": null
+}

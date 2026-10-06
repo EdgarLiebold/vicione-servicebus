@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-06T02:08:53.441041+00:00",
+  "status": "MINIMAL_TWO_OWNING_DEBUG_GUARDS_ROOT_APPLIED_FIXED_NATIVE_PENDING",
+  "finding": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE306_F211_ACTIVEMQ_SESSION_DELETE_DEBUG2_ORIGINAL10_ROOT_FINDING_REGISTRATION_R1.json",
+    "sha256": "f81e34a7e5879f1ebd9bbbcade0baee2b6dc412e4175b20d1bab6c723e0ac5ad"
+  },
+  "author_MAN": "7b3553a8552f97d5c0bf02fa73ae79bb2cb7ebc9f704e1b924c15ba51ae954a0",
+  "independent_Source_MAN": "a647c3231a4363b19f955671d0cd8e726c4d342953c1d4d272599c09e57a514e",
+  "source": {
+    "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqSessionContext.cs",
+    "before_sha256": "ca6e8a09470f80131db9f8127b33778908eb71feddaaa59497eed5725e440d11",
+    "after_sha256": "ac1cbba6f7b5945099b36491d2b7df3b5f5ac954a51d762f0f336bc3aa1d8274",
+    "before_lines": 312,
+    "after_lines": 326
+  },
+  "literal_inverse": {
+    "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqSessionContext.cs",
+    "before_sha256": "ca6e8a09470f80131db9f8127b33778908eb71feddaaa59497eed5725e440d11",
+    "after_sha256": "ac1cbba6f7b5945099b36491d2b7df3b5f5ac954a51d762f0f336bc3aa1d8274",
+    "before_lines": 312,
+    "after_lines": 326,
+    "changes": [
+      {
+        "before": "        TransportLogMessages.DeleteTopic(topicName);",
+        "after": "        try\n        {\n            TransportLogMessages.DeleteTopic(topicName);\n        }\n        catch (Exception)\n        {\n            // Optional diagnostics do not prevent native deletion.\n        }"
+      },
+      {
+        "before": "        TransportLogMessages.DeleteQueue(queueName);",
+        "after": "        try\n        {\n            TransportLogMessages.DeleteQueue(queueName);\n        }\n        catch (Exception)\n        {\n            // Optional diagnostics do not prevent native deletion.\n        }"
+      }
+    ],
+    "inverse_exact": true
+  },
+  "root_authority": "Wholecurrent3127463ef+entiretwo expansions/inverses32b48f; wholeSourcepeer04c303. Full inverse matchesentire312, allproduct declarations/XML/SDK/executor/cancellation/temporary-removal/lifetime business bytes preserved.",
+  "unchanged_test_sha256": "1d3b5a0e23ba394cf1404e474fd0ee0fbcc843eb6e8862f602f95ca4167196f3",
+  "unchanged_requirement133_sha256": "31bf0285b751cbad8d292650d36cfafbd1727ce4ee4f372d6e60189627dbf144",
+  "native_fixed_cases": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

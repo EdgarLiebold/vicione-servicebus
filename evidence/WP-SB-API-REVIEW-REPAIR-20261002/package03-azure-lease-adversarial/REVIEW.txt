@@ -1,0 +1,13 @@
+F012 bounded independent adversarial review: complete, no blocking finding.
+
+Frozen package a9233b0349bc27172a8e36adc4310bfa133c659a91d72073a151eaa3ebdf8d58 remains bound to the five current/snapshot files. Await now retains each linked CTS through the provider operation and releases it after completion. Both cancellation parents, exact options/rule/filter, the original async exception and all three SDK result objects have genuine contract assertions. Each of 47 assertion-bearing statement lines was personally reviewed; delete has a void public result and its bool gate is only a fake completion control.
+
+Root native evidence, personally read and hash-checked: original 18 cases / 8 fail / 10 pass; corrected 18 pass; eight independent mutants fail 2/2/2/2/4/4/8/1 cases at the expected assertions; isolated rollback 18 pass. There are no timeout/build/F038 substitute failures in those mutants. Independent read-only rollback comparison checks all 6209 tracked manifest files and absence of the new fixture.
+
+Fresh personal Azure closure: 42 owner files (38 tracked and four new fixtures), 35 shared inputs, 76 FULL text reads in 54 numbered batches plus one signing binary hash-only. This does not replace Root/test-author personal obligations. No product writes, native builds/tests/restores, fresh NuGet profile or broker proof by this reviewer.
+
+Current unfiltered owner is 448 total / 447 pass / 1 known F038 fail / 0 skip, native exit 2. It is not whole-owner PASS. Four new requirement rows are in the current fully read manifest; rebuilt unfiltered evidence has no projection failure.
+
+Residual compatibility limit: a custom SPI throwing before it returns a Task now becomes a faulted returned Task rather than an immediate synchronous throw; Task identity also changes. The public Task signatures remain stable, no synchronous throw promise is documented, and the existing send wrapper already awaits. Supplied 18 cases prove asynchronous fault preservation, not this synchronous-throw route. No automatic signature change or extra runtime coverage claim.
+
+Machine evidence: REVIEW.json, READ_CLOSURE.json, ASSERTIONS.json, MUTANT_REVIEW.json, NATIVE_RECEIPTS_READ.json, ROLLBACK_INDEPENDENT.json. Core family remains PARTIAL; next batch92.

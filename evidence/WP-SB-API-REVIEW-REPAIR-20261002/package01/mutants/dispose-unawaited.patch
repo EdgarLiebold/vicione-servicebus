@@ -1,0 +1,11 @@
+--- a/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs
++++ b/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs
+@@ -346,7 +346,7 @@
+         TransportLogMessages.DisconnectHost(address);
+ 
+         if (_ownsClient)
+-            await _client.DisposeAsync().ConfigureAwait(false);
++            _ = _client.DisposeAsync();
+ 
+         TransportLogMessages.DisconnectedHost(address);
+     }

@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-05T21:03:32.311905+00:00",
+  "status": "ROOT_APPLIED_TESTONLY_ORIGINAL7_NO_PRODUCT_OR_FINDING_CLAIM",
+  "author_report_sha256": "301c10055c061024536d95147206786b9902367b2638f87d183696da02c93ad7",
+  "author_manifest_sha256": "01fb7ef181aaeb839b3d0a93de6e792880ac3c75f1417c09324a52b5207d59bc",
+  "independent_sourcepeer_report_sha256": "16e06bb64fbefa254606e7bbbc046c24762a6f085e1eda1546107b293f0e0347",
+  "independent_sourcepeer_manifest_sha256": "15f39a5dccbe0d6f16eb5d2ac94c4f8f3417742f57128169ea2610010d12856d",
+  "own_whole_read": [
+    "Test586 in 5f46bf+d03350",
+    "Supervisor156 and Agent281 in 876023",
+    "Author+independent reports/manifests15cfac"
+  ],
+  "retained_testing_skill_entry": "58f0b4",
+  "retained_full_generation_prompt": "235056",
+  "literal_inverse_existing252_exact": true,
+  "new_theories": 3,
+  "new_cases": 7,
+  "requirements_addonly": 3,
+  "requirements_before_count": 669,
+  "requirements_after_count": 672,
+  "changes": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/Advanced/Middleware/SupervisorLifecycleTests.cs",
+      "before_sha256": "8f9225b42111c5287cb772280864a24b440d41d6b231f5439e9c05ed0e66171c",
+      "after_sha256": "bf76c31d16f265801b3a29000474acbb5127913fcdc55545722fe75b64bda2f9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/Requirements/AbstractionsRequirements.json",
+      "before_sha256": "c28038b7f50ffa16c37d5ea83f44019710188157861b817b5d009010ebe60df0",
+      "after_sha256": "92210e342641659211440a78b482d1b980003c641be7468ee66204a4392fd25d"
+    }
+  ],
+  "grade": null,
+  "finding": null,
+  "runtime_count": 0,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package241-supervisor-original7-testonly2-root-before-r1"
+}

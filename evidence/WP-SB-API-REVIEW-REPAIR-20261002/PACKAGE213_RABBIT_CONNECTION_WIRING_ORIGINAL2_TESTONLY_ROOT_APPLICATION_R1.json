@@ -1,0 +1,259 @@
+{
+  "status": "ROOT_APPLIED_REVIEWED_TEST_ONLY_ORIGINAL2_AND_REQUIREMENT_ADD1_NO_PRODUCT_CHANGE",
+  "utc": "2026-10-05T19:03:08.251169+00:00",
+  "author_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package226-rabbit-connection-wiring-original2-testonly-proposed-r2/REPORT.json",
+  "author_REPORT_sha256": "7ae09438f5134c13c0bd9d18fd060a89757bc5d3816ade037a03ba716f6b042e",
+  "author_MANIFEST_sha256": "fa591ade66740c8a45e73afbe459ef8de8e6b154a4561cd85787aa7e1e6d0501",
+  "independent_source_peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package226-rabbit-connection-wiring-original2-independent-runtime-source-peer-r2/REPORT.json",
+  "independent_source_peer_sha256": "89ece71d3325729d6175aa5444ad4942aefe7558815ac3989d05904bc85dce66",
+  "Root_source_review": "55a214 whole410R1 + c31d08 exactR2delta; support83e3a8/c9dd92/caaa8d/3dfaed/ba53b0/46c2cc; no borrowed ownwhole42 credit.",
+  "test": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionWiringTests.cs",
+    "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionWiringTests.cs",
+    "sha256": "93abcb1c34acdd6668a1eb5c9506a9899f852318e719a2cf60055bcbedf01e48",
+    "physical_lines": 427,
+    "cases": 2
+  },
+  "requirements": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+    "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+    "before_sha256": "d1e2e569c3a132a012346d45cbd4b39caf1fabdacf8ab1ce775de8c34ba6c57e",
+    "sha256": "083fd26503729e50484bc40dbace70b0d544c8446f354099073852d30bcba073",
+    "before_count": 284,
+    "after_count": 285,
+    "literal_ADD1_inverse_exact": true
+  },
+  "source_guards": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs",
+      "sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqHostConfiguration.cs",
+      "sha256": "60b9a099cdd77fe781e626ec65348a9378f7a11fb81ac1cc062341e4d3dfeca3",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointBuilder.cs",
+      "sha256": "19c44f00d2db1824840a3f789be0f6f14e1314d14e4b92d2d30135b76442d921",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/IRabbitMqHostConfiguration.cs",
+      "sha256": "3c255e5743246cdccf46b21a6c29502d4485c82f04814e7d83f9ca03b2ead699",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/IRabbitMqReceiveEndpointConfigurator.cs",
+      "sha256": "0e7bff2c5f1427cc4199dd6b4e3850d94a9e1aa9e1e9997332d7123ad1197eeb",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqEndpointConfiguration.cs",
+      "sha256": "fb1ca49c194584cabe5b10f9270b188e0a4a44cfc6d7410e43f938471cd3fd54",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqBusConfiguration.cs",
+      "sha256": "4ff4b5e0f85a9c127c699f7e46933038ad52b6fa97f9c05f471f5292a101c4e1",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveSettings.cs",
+      "sha256": "13ca5147b1be5e791c9aaf1349fe59c3ee82a035b966813a218e4dc2ced746f7",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqQueueReceiveEndpointContext.cs",
+      "sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveEndpointContext.cs",
+      "sha256": "aec9bde8dfa23d49d81f6786c83ca081f0073d073942343eb2385efe7a447e17",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ChannelContextSupervisor.cs",
+      "sha256": "5913415e5a5167dd9b2d703d1092a00d4a05519b19892666c231aa57fb20a25b",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ChannelContextFactory.cs",
+      "sha256": "3b15f6f39891727601f434aaf69dc657e150a2bee54137ce173bd8fae9cb02a2",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ConnectionContextSupervisor.cs",
+      "sha256": "ae6ffd4edb19bf76ba412e488ce01ef47b7e66676773eed12c35f153dd3424c3",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ConnectionContextFactory.cs",
+      "sha256": "c07949af33a5df8c97d36878f2d28a6ca237c1a382c973bdd3dd5baffaa9ce3c",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ConnectionContext.cs",
+      "sha256": "2480890f4a93e144f2dbe99ea647062756bc03fbec3be9d25a99ed16e5497a4d",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/IConnectionContextSupervisor.cs",
+      "sha256": "faf7e17366d98484f8614c49eb4fcce9e4ff691c1f28aea4b71ee15f17b14105",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/SharedConnectionContext.cs",
+      "sha256": "5588ce5475e2b20ac2e6449e625ae55eaaf097574e40cc1315b5f80892b82100",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ScopeChannelContext.cs",
+      "sha256": "76df6616a20d9c0d9a3b0d88f6a13c4c325bbd88007c418b9cb192622242c8e7",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ChannelContext.cs",
+      "sha256": "66c9335668931728684c0b02c77070c086d72555863db3d1fdc69ecd2c87da3a",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Hosting/TransportPipeContextSupervisor.cs",
+      "sha256": "177ca94caa46399cc8f210138ecc24dfabf9635730dccca726e2b276590787cb",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Hosting/IHost.cs",
+      "sha256": "9aa4588c3b06afe6b128a65b91dcc17004f47c18f7a51a1876b2672f807f72ea",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Hosting/TransportStartExtensions.cs",
+      "sha256": "8aa8d0d620f27b73ee4e9eeed646fe45060640640599f17f45ddbc62f3f8c34e",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveTransport.cs",
+      "sha256": "cfff71cb09bc6efb814ff4f28194fb70fa51642571d56546b11a8cf3e42b9bb2",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpoint.cs",
+      "sha256": "d78d7cb4eb85b16b428ec50e31912611dd28a76cead5b9d92316ca7dd9167587",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+      "sha256": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/Middleware/SupervisorExtensions.cs",
+      "sha256": "330ee2e900ab2b6872aaf77fd5ac023a89bd3f2d186b6b0a2143b30d7a27699f",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/Middleware/AsyncPipeContextAgent.cs",
+      "sha256": "c57c4facd5e2011d1ef5f94f0f3f553323b3b0d6a045198c9edd340db30c2000",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextAgent.cs",
+      "sha256": "5c27427277bbc080d1729d9200843ea6cfd816caa1c26ceed5dff5136fcf0daf",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextDisposer.cs",
+      "sha256": "22d17d0020d88d3e209defb8fe3fda604de3f03934aa6408af5b043e3a857620",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/IHostConfiguration.cs",
+      "sha256": "e3da1c2b4b1f364398503cef07fbf5cc7569d08c6f64ae52c41ceefd4ccf9fee",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+      "sha256": "47b89079d2c6ebe94bdb2a7dfebfd4333bdc80725f23d080572fd2dba5b14396",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/ISupervisor.cs",
+      "sha256": "dcffb36474b726ad06aab4f6fa9805785665ff35dc6e14adc8945592f2081e9d",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSupervisor.cs",
+      "sha256": "dc597dadc11cfa8f13fd8b4363a897dfafe0bf2cfca9d77b0ba07985cf01999f",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IReceiveEndpoint.cs",
+      "sha256": "96ef46182c02a70486d572712dcf49bb054f83cd30a1ec4c2a17b0514a294540",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IReceiveEndpointHandle.cs",
+      "sha256": "ebd9ebd158efcc2c1370afe4fce8ce5b7b7f4bb73756e99ff0fe5ae2cb132799",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Contracts/ReceiveEndpointReady.cs",
+      "sha256": "f82a6e89c07c6d2a45bc1dd25206968e54081da4f4016196af1b6c0ca5d20f76",
+      "matches_research_before": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Middleware/BasePipeContext.cs",
+      "sha256": "2303156020d82484c5e11820816eeea2ba27d0699ce51ba56a38fdf93cbfc586",
+      "matches_research_before": true
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/ChannelContextFactoryTests.cs",
+      "sha256": "751dba52157686d0473330231f354b4f65acd0a201183da0c94b1cfa0dab7fd5",
+      "matches_research_before": true
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/ConnectionContextFactoryTests.cs",
+      "sha256": "a361e5d1ff960fa54ed620d144b4e69419f710be0627a45c22cc686265792066",
+      "matches_research_before": true
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredPipeValidationTests.cs",
+      "sha256": "8d25dc7a28eaefc92d18f7ba9c3f08346cd1212cebb8138573ec6d649ebab175",
+      "matches_research_before": true
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqHostConfigurationExtensionsTests.cs",
+      "sha256": "c59e7a5e2014e3ff3ca18fcda1dc6cb267a9eb2cf109d9f13d7459d060d74109",
+      "matches_research_before": true
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+      "sha256": "53ac44c04cf794e6ffc05f2b5a8ec47fb6948e1bac181b37155279b0296d3e68",
+      "matches_research_before": true
+    }
+  ],
+  "public_API_changed": false,
+  "product_code_changed": false,
+  "existing_test_bytes_changed": false,
+  "native_count": 0,
+  "finding_registered": false,
+  "native_commands_expected": [
+    "dotnet",
+    "test",
+    "--project",
+    "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+    "--configuration",
+    "Release",
+    "--no-build",
+    "--no-restore",
+    "--filter-class",
+    "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.Configuration.RabbitMqConfiguredConnectionWiringTests",
+    "--results-directory",
+    "artifacts/results-package213-rabbit-connection-wiring-original2-r1",
+    "--output",
+    "Detailed"
+  ]
+}

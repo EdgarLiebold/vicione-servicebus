@@ -1,0 +1,95 @@
+{
+  "utc": "2026-10-05T21:47:48.727242+00:00",
+  "status": "SOURCE_REBASE_PRIOR51_NORMS4_CONTEXT4_ROOT_ACCEPTED_COUNTS_UNCHANGED",
+  "root_personal_read": "Whole author/independent reports and exact4 before/after individual contract replacements, retained Root earlier whole4currentSource review; all51 exactcurrentoriginalObjects and allMANpayloads guarded. Author and independent each own all51norms/current4whole/helper authority, not attributed to Root.",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-master51-current-source-revalidation-proposed-r1/REPORT.json",
+    "sha256": "a627432c275cfaff8fd597607511f3359c4c1fb42450df0b85cad991c30db2fd",
+    "manifest_sha256": "bb8bedbda74646d1dc59aabba4f2a25d0638281ade6ec1e087abe941e2d7dec3"
+  },
+  "independent_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package246-rabbit-master51-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "6b7ad652ce0632dc006e5de6e6d6e5976d706362d1d9f43226bb782e10ef605a",
+    "manifest_sha256": "10bc49754b2da3a2296f539a75005a61504799febb8e0a34ca3da04eb587c554"
+  },
+  "exact_replacements": [
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "T:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration",
+      "field": "member_contract",
+      "before": "Actual declared Class shape: public class RabbitMqReceiveEndpointConfiguration : ReceiveEndpointConfiguration, IRabbitMqReceiveEndpointConfiguration, IRabbitMqReceiveEndpointConfigurator. Personally read owner contract: Stores supplied mutable settings, endpoint and host refs; Settings getter same underlying mutable object despite getter-only receive SPI. HostAddress dynamically delegates host. InputAddress first returns built cache if present, otherwise formats from settings/host then sets address-read flag; address-format failure leaves flag untouched. Durable/Exclusive/AutoDelete setters write first then Changed (no invented rollback); other setters forward exact settings/queue argument behavior. ConfigureConnection invokes callback on dedicated _connectionConfigurator but no Build/CreateContext consumer of that configurator is present here; hypothesis held with downstream methods omitted, not a native finding. Concrete Build/lifecycle omitted434 remains separate. This selected type row does not accept its omitted concrete methods or imply successful construction/default-value operations.",
+      "after": "Actual declared Class shape: public class RabbitMqReceiveEndpointConfiguration : ReceiveEndpointConfiguration, IRabbitMqReceiveEndpointConfiguration, IRabbitMqReceiveEndpointConfigurator. Personally read owner contract: Stores supplied mutable settings, endpoint and host refs; Settings getter same underlying mutable object despite getter-only receive SPI. HostAddress dynamically delegates host. InputAddress first returns built cache if present, otherwise formats from settings/host then sets address-read flag; address-format failure leaves flag untouched. Durable/Exclusive/AutoDelete setters write first then Changed (no invented rollback); other setters forward exact settings/queue argument behavior. ConfigureConnection invokes the callback on its dedicated concrete PipeConfigurator. Current private CreateRabbitMqReceiveEndpointContext applies endpoint specifications, then calls connection BuildWithContinuation once for that context construction and passes the resulting continuation composer through the internal builder/context overloads. The public callback itself performs no connection dispatch. Actual supervisor dispatch uses an endpoint-local facade over the borrowed current host supervisor; lifecycle/native closure remains separate. This selected type row does not accept its omitted concrete methods or imply successful construction/default-value operations."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+      "field": "member_contract",
+      "before": "Creates endpoint context via builder after ApplySpecifications; appends transport topology/redelivery filters and either topology-ready or purge/prefetch/dependency/consumer stages in actual branch order. Builds channel pipe, constructs receive transport/context supervisor accessor, optionally configures bus publish prestart, registers host endpoint using configured QueueName or generated NewId, then stores ReceiveEndpoint and built InputAddress. No local cleanup/rollback catch on a later failure; owning lifecycle remains held. This body does not Build/Send its configured connection pipeline; actual downstream route reconciliation and public Original are required before a defect or repair.",
+      "after": "Creates endpoint context via builder after ApplySpecifications; appends transport topology/redelivery filters and either topology-ready or purge/prefetch/dependency/consumer stages in actual branch order. Builds channel pipe, constructs receive transport/context supervisor accessor, optionally configures bus publish prestart, registers host endpoint using configured QueueName or generated NewId, then stores ReceiveEndpoint and built InputAddress. No local cleanup/rollback catch on a later failure; owning lifecycle remains held. Its private context-construction helper now calls connection BuildWithContinuation after ApplySpecifications and before internal builder context creation. Connection specification Apply failures propagate before topology/context creation and host registration. BuildWithContinuation applies specifications once per context construction and retains a mutable specification builder delegate; facade dispatch builds around one per-call terminal and drains its actually admitted continuation. This is current source composition, not native proof or rollback of a previously published channel."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.ConfigureConnection(System.Action{ViciOne.ServiceBus.Configuration.IPipeConfigurator{ViciOne.ServiceBus.RabbitMq.ConnectionContext}})",
+      "field": "member_contract",
+      "before": "Invokes configure?.Invoke with retained connection configurator synchronously. Current Validate198 enumerates its validation results; actual connection pipeline execution/next ordering/short circuit remains held, with no runtime wiring claim from this storage operation.",
+      "after": "Invokes configure?.Invoke with its retained concrete connection PipeConfigurator synchronously, including accepting null despite the nonnullable source parameter. Callback changes and exceptions remain visible; this method itself neither validates nor compiles nor dispatches the pipeline. Validate still lazily enumerates its specification results. Later private endpoint context construction compiles these specifications via BuildWithContinuation; an endpoint-local borrowed-supervisor facade composes them around actual channel-creation continuation per call. Specification lifetime, concurrent dispatch, cancellation and publication guarantees require separate actual evidence."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.CreateReceiveEndpointContext",
+      "field": "member_contract",
+      "before": "Returns CreateRabbitMqReceiveEndpointContext result; helper constructs RabbitMqReceiveEndpointBuilder(host,this), applies existing specifications, then returns its context. No local null/cleanup catch or broker start action implied.",
+      "after": "Returns the private CreateRabbitMqReceiveEndpointContext result. That helper constructs RabbitMqReceiveEndpointBuilder(host,this), applies existing endpoint specifications, evaluates _connectionConfigurator.BuildWithContinuation, then passes its composer into the internal builder overload. Connection specs are applied once per helper invocation before broker topology/context materialization; Apply errors propagate without local cleanup/rollback. The public builder CreateReceiveEndpointContext() called directly still delegates with null and does not adopt endpoint-private connection middleware. No broker start or later channel publication/rollback is implied."
+    }
+  ],
+  "all51_current_source_context_rows": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-master51-current-source-revalidation-proposed-r1/PER_ID51_SOURCE_REVALIDATION.json",
+  "generation_context_ordinals": [
+    16,
+    21,
+    45,
+    46
+  ],
+  "all_other16025_entries_exact": true,
+  "all51_status_grade_native_historical_provenance_retained": true,
+  "master_before_sha256": "4c8538486d405943e37ac9ef83cc4da62e02893be2ecc1cfe227c1b42b8a81d7",
+  "master_after_sha256": "92ab6f0ac51a8dfcde6dd35722972d4699374a1cfe8d5058f1960e097f316f1a",
+  "counts_unchanged": {
+    "original_canonical_denominator": 18569,
+    "historical_current_r2_basic_denominator": 18598,
+    "original_canonical_accepted": 15214,
+    "historical_current_r2_new_canonical_accepted": 29,
+    "current_canonical_accepted": 15243,
+    "accessor_sidecar_accepted": 833,
+    "master_unique_rows": 16076,
+    "master_declared_accepted_count_field": 16076,
+    "master_declared_denominator_field": 18598,
+    "original_canonical_remaining": 3355,
+    "historical_current_r2_canonical_remaining": 3355,
+    "sidecar_get": 690,
+    "sidecar_set": 137,
+    "sidecar_original_parent_unique": 714,
+    "sidecar_unmapped": 0,
+    "original_duplicate_keys": 0,
+    "master_duplicate_keys": 0,
+    "evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE168_MASTER_CANONICAL_ACCESSOR_ROOT_COUNT_PRECISION_R1.json",
+      "sha256": "8be3bc5b82aa65ef6139de4002fd86789583c9a4fbf28a3d88f73496afc12b57"
+    },
+    "historical_current_r2_inventory_is_not_fresh168_metadata": true,
+    "latest_source_append_evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE247_ABSTRACTIONS766_SOURCE683_EXACT83_HELD_COLLECTIVE_ROOT_ACCEPTANCE_R1.json"
+    },
+    "latest_subtotal_precision": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE170_MASTER548_ACCESSOR_AND_SPEC_LINECOUNT_ROOT_PRECISION_R1.json",
+      "sha256": "b41b9e72fbcf91d8314f882fd469a082ce1582994f521ffcb04718adf615fdd2"
+    },
+    "sidecar_event_add": 3,
+    "sidecar_event_remove": 3
+  },
+  "source_or_test_mutations": 0,
+  "native_credit_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "F202_repair_actual563_freshpack_independent_result": "pending separately",
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package248-rabbit51-root-before-r1"
+}

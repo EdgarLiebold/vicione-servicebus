@@ -1,0 +1,8 @@
+{
+  "excluded_phase": "package17-f029-public-corrected-build-r2",
+  "compiler_errors": 1,
+  "cause": "patternvariable shadowing",
+  "fix": "rename stopFailure",
+  "root_delta_FULL": true,
+  "product_finding_or_mutant_kill": false
+}

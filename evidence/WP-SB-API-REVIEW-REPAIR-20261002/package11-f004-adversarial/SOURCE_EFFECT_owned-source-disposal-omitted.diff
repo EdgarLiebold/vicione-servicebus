@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs
++++ owned-source-disposal-omitted/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs
+@@ -191,7 +191,7 @@
+         if (Interlocked.Exchange(ref _disposed, 1) != 0)
+             return;
+ 
+-        try { _activitySource?.Dispose(); } catch { }
++
+         try { _processMeter?.Dispose(); } catch { }
+     }
+ }

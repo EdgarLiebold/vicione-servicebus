@@ -1,0 +1,72 @@
+{
+  "utc": "2026-10-04T22:02:17.989193+00:00",
+  "status": "TWO_SOURCE_REPAIRS_ADVERSARIAL_NO_BLOCK_APPLIED_FIXED_NATIVE_PENDING",
+  "findings": [
+    "F-SB-API-124",
+    "F-SB-API-125"
+  ],
+  "freeze149": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package149-normal-send-original15-independent-r1/FREEZE.json",
+    "sha256": "2512f027a638c5441a0aac2e1056daee0013b887a973cc626dfd9ef0ee04ab31"
+  },
+  "author_and_peer_checks": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-host-observer-rollback-product-proposed-r1",
+      "manifest_sha256": "360ac6e0a70ad7e364cf8877a58989f30d7fccbaa1de3901e79b693148611ee8",
+      "report_sha256": "308138144a04dcb82bac5f43b186948a9e36a35dd62625236e3d2c33090ca069",
+      "verified_rows": 13
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-host-observer-cleanup6-oracles-proposed-r1",
+      "manifest_sha256": "804f32b5bc3480aa6a2a2389deaff4820b594cb3e31f3c664305d15e6b357ed1",
+      "report_sha256": "e16311490003e25635f99ac869bfb5fc565a3a90b7b0b182421531202b48c379",
+      "verified_rows": 15
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-host-rollback-product-cleanup6-independent-runtime-source-r1",
+      "manifest_sha256": "9bafa25065d6a1c364f90d9e58f64ea5862f42859ba12a5a0e950df31b60b4d7",
+      "report_sha256": "6750b30920b9e9491b21f478bca55b3e14965522f96e72642e357afa0cbcc637",
+      "verified_rows": 2
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-normal-send-token-admission-product-proposed-r1",
+      "manifest_sha256": "d5b419a72fd715535ac6488f6fb03b67866598a4386c2a4f67a1426f5df11467",
+      "report_sha256": "7f3cf1ca8876d4b984d1eebb4cbbd00199d1e9507abe826e7b9b32210c73ecc2",
+      "verified_rows": 16
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-normal-send-token-admission-independent-runtime-source-r1",
+      "manifest_sha256": "025aa3e52dd557034603b6b13d5c7dbe7816c50928440edd6751a13ab318a77f",
+      "report_sha256": "546597951f2941a9513ac5dbf344fe3ce769f64ff87e4f0806d1d9e3f4236bff",
+      "verified_rows": 1
+    }
+  ],
+  "root_personal_reports": "Host author2+peeredd538; normalauthor999449 +wholepeer5bdf73",
+  "root_personal_complete_deltas": "Host product+Theory6/helpersfac015; normaltwoBlocks3cc028; Hostoriginalmethod+compositec7d037; originalSend/Factory/SPIwhole464eff",
+  "changes": [
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+      "before_sha256": "5089ec8676c11b05db3f64ff3355ae2728925f73711888121efa7cb80a33a328",
+      "after_sha256": "47b89079d2c6ebe94bdb2a7dfebfd4333bdc80725f23d080572fd2dba5b14396"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/HostConfigurationRetryExtensionsTests.cs",
+      "before_sha256": "30754935c3ccfce9463af8133eaaab9ea5f5fbc98f2e8708cd094d4760cf23d9",
+      "after_sha256": "9ede074c2a37ec3329614e59212df0a52854a930f0b619c512e4b0d019ac9b7c"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/SendActivity.cs",
+      "before_sha256": "5211ee156a418b60edf48cf8a4eb660bc37b26ba9b121f5cd90c1e0d7ef0f5f0",
+      "after_sha256": "28cfb3f1f5839ae76da6b686d2c722516f8501cbe1b8fe85271f94d271ada918"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "927e16684f037e06f14178424ca31345d44a9435aeea0ecf98f300bb86633512",
+      "after_sha256": "942dca7ffd4ab7096560d44725b9570da2cd66d255920f52435ac08989661f84"
+    }
+  ],
+  "requirement_rows_before": 4602,
+  "requirement_rows_after": 4603,
+  "proof_limit": "Hostoriginal1finiteRED+healthy1 source-bound148, normaloriginal6finiteRED+healthy9 source-bound149. Hostnew6 noOriginalnativeclaim. Strictbuild/currentHost14/Send15/broaderSaga,actualPDB/resource/freshpacks pending.",
+  "whole_api_status": "PARTIAL"
+}

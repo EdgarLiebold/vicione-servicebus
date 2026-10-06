@@ -1,0 +1,207 @@
+{
+  "status": "SOURCE_XML_ONLY_GUARD_PASSED_NATIVE_XML_AND_BEHAVIOR_PENDING",
+  "utc": "2026-10-03T12:10:15.152051+00:00",
+  "inputs": [
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedPublishEndpointExtensions.cs",
+      "before_sha256": "4ae5ba4510743a6289d7d471deb9ab560c97f1de457be005c7876efc4415748f",
+      "after_sha256": "13dfb22a39d2a5523e2669717faa63deecec152c55eff37d52bb1deaeb75d6e7",
+      "changed_xml_only": true,
+      "targeted_locations": 5
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedSendEndpointExtensions.cs",
+      "before_sha256": "fba4221d20e91ced300d5602edf8b3270167ced115ffc231e07901bc017f598f",
+      "after_sha256": "c02d3bbdc1bdf8b50852405b8cecece5c906d0a551cb44d04379e1af54935b0b",
+      "changed_xml_only": true,
+      "targeted_locations": 5
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/BatchEndpointExtensions.cs",
+      "before_sha256": "0841653d0dce1370dbe1f3e5089139e81848b6c2e851e95da113afd66e387005",
+      "after_sha256": "85505dee0176ba1ba13d8b9ab9e429d9274287c74d60e9374c5962aad892ac25",
+      "changed_xml_only": true,
+      "targeted_locations": 24
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Contexts/SendConsumeContextExtensions.cs",
+      "before_sha256": "bf2411eb355d1a0d8f06c9f13b6a9fe4a10eaf16c730dc1528d746367598441d",
+      "after_sha256": "20c881381f272c973f4ff0a1919e8de041f85af554942469e1668eeb63dec348",
+      "changed_xml_only": true,
+      "targeted_locations": 10
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedPublishEndpoint.cs",
+      "before_sha256": "28c6023a0efbd8842ecafd6bcc263f18bc4fe9c75938b5d7098219d9e5a52c40",
+      "after_sha256": "1234b51065e98627429449fee30bdf3333488e8bff53f7b7b6a2cee7e8f58b6a",
+      "changed_xml_only": true,
+      "targeted_locations": 10
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedSendEndpoint.cs",
+      "before_sha256": "ad7d20b45ae5d37265a5d22930757be6887dfcbeeb57a052318ffd1d70b15cb7",
+      "after_sha256": "3db4417eeb53437b99a8c366646e80e028f493e4bd23a16e8dd5708014d2cccc",
+      "changed_xml_only": true,
+      "targeted_locations": 10
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/IRequestSendEndpoint.cs",
+      "before_sha256": "d317b0e8c9b1049fc784ed3f0f10e59e22afa5eb81afb1e83de891fec7c1f22a",
+      "after_sha256": "d58b2941821a0ea8c02591cf0e02787c03cd0cd87588758061e1cb33f7f6fdfe",
+      "changed_xml_only": true,
+      "targeted_locations": 1
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PublishExecuteExtensions.cs",
+      "before_sha256": "204f5e872585d2dbd457ca40857bae9e5739a21d02710306aed075586b7328ca",
+      "after_sha256": "979de2e286b6585a6d6cf4842b8b02cb8febb5bb28fb7fdd0f8a59962a214df9",
+      "changed_xml_only": true,
+      "targeted_locations": 8
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/RespondAsyncExecuteExtensions.cs",
+      "before_sha256": "9d79721cf3c178d966912c3ab2bec4e18ab22114087028d2555d67d7ce89209c",
+      "after_sha256": "81ead008a156a8fe8d1d9b7506d51c2e2794277c9aa2e65e66ced00d1c75a9a2",
+      "changed_xml_only": true,
+      "targeted_locations": 8
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/SendConsumeContextExecuteExtensions.cs",
+      "before_sha256": "ac0931130b59aea7de2a7d820db387fbba54a064ee35d1f610ccae3b918f7a41",
+      "after_sha256": "5c91112f897765a7f7b5d7b62276a3e36df0fcd4bb1b9d2e295144eb8d1d208a",
+      "changed_xml_only": true,
+      "targeted_locations": 8
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/SendExecuteExtensions.cs",
+      "before_sha256": "14cc563a67fc8a9caccec69cbab92d10744579d78c4a57c78877a369e809c5aa",
+      "after_sha256": "b76bfa3e0ca3fe0755e8e6b5d7e2d047172e706d507a48e6b62ba20e06fbb55d",
+      "changed_xml_only": true,
+      "targeted_locations": 8
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/IOutgoingMessages.cs",
+      "before_sha256": "e2da8e68033d840320a33414b5404b497b4cd1339abb2be62a3ddb66107fcaac",
+      "after_sha256": "ad559c5aa816948831159d49d32183fa5f42227f0cdebc652670e582146bf9db",
+      "changed_xml_only": true,
+      "targeted_locations": 4
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+      "before_sha256": "3ed008f758a53f10d2dedc956c67629226340597ff1a8cad05073cec70e447b3",
+      "after_sha256": "b0042ca8ae7c178a0907e96947283bc7a87fe4c015a5d839d49182f47af870f8",
+      "changed_xml_only": true,
+      "targeted_locations": 2
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/ISendEndpoint.cs",
+      "before_sha256": "10442899590f5b39e878b5d029b7ea61fc8faf4795c9bb8090169751ab1e7aa8",
+      "after_sha256": "911eff0fa4485ee7f93bb21efec5568cb76846958328f00c3609b5d76a3bc0ac",
+      "changed_xml_only": true,
+      "targeted_locations": 2
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Internals/Dispatching/ResponseEndpointDispatcher.cs",
+      "before_sha256": "0cf6a98e6cbe04b606fc2e1dc52990ad6b0962b009cb87b062ced0bf927f710b",
+      "after_sha256": "bfdb44982ec6c134093e2a78017664b652682a5e313d5f873057905215c51962",
+      "changed_xml_only": true,
+      "targeted_locations": 2
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Scheduling/ConsumeContextSchedulerExtensions.cs",
+      "before_sha256": "ceeb30195ea131ecedbd86d9104b993796dd18c375a8fb858688e5b0c59762ca",
+      "after_sha256": "426f4561b8413ed6b5755cf7b5457ed44803fd6f2905489b2b3c6c9da5b77083",
+      "changed_xml_only": true,
+      "targeted_locations": 20
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Scheduling/ConsumeContextSelfSchedulerExtensions.cs",
+      "before_sha256": "deb7d00385718ad7ee506323271416f56465ac5d83ba190896d878866ec9a217",
+      "after_sha256": "d4d7b96511e5c3aaf14c86a7cb5e16827abe7ef63d46c91f21e36bef430147f0",
+      "changed_xml_only": true,
+      "targeted_locations": 20
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Scheduling/IRecurringMessageScheduler.cs",
+      "before_sha256": "0d64596843c024595cffdfaaecedbf8c95afdc7211f8da2b613c7eb9755da7bc",
+      "after_sha256": "f2570379407fd2e34ddacd9583a7b8a561b51ff164fd066c6e29f9ebb5ccca3a",
+      "changed_xml_only": true,
+      "targeted_locations": 20
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Scheduling/MessageSchedulerContext.cs",
+      "before_sha256": "7e479bd1347e85e0d747c815ff55145922a5f550b6b1471d243643a26b33db71",
+      "after_sha256": "bdc1dc6e6d56d9cec6989416ddb8245b4b226de1fefd0fd132b25c22aa8adc3a",
+      "changed_xml_only": true,
+      "targeted_locations": 10
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Transports/PublishEndpoint.cs",
+      "before_sha256": "b52b5b1d71f3310f5bae2e900cbe3d87eb13c678cb6cf5cd3179bcd56afcf63b",
+      "after_sha256": "d82cd1856628e44a089a1d41f2b7ca5f1d300f1581fc1a8ef6b9ebdfa3d3d14c",
+      "changed_xml_only": true,
+      "targeted_locations": 10
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Advanced/EndpointConventionExtensions.cs",
+      "before_sha256": "696e2df8734d06eb235f5a1cb69d060a23d7180d91217c7fcbe2ae905bbcc439",
+      "after_sha256": "8448bd9442950d3a1544a88377013d44235d2dbd81b75bbed1ba7e686a83f84e",
+      "changed_xml_only": true,
+      "targeted_locations": 10
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Advanced/ForwardExtensions.cs",
+      "before_sha256": "d76b862c2e0fa3788707d22bdf4c06bea5f3f05e0c6540ea2684aef367bcc66f",
+      "after_sha256": "f0d62a53840b53f33338adc9bab53c8d2874641bf592aa9f20eda56f4ea1c388",
+      "changed_xml_only": true,
+      "targeted_locations": 6
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Clients/Endpoints/RequestSendEndpoint.cs",
+      "before_sha256": "ad9e247c6c7b0cc106ba5a45f5513e826d9b0c1905ba14531bb68c74f198557a",
+      "after_sha256": "7597fcddf2b085501b9b417209954c0e320adad2930d44dd0b19a748e296081e",
+      "changed_xml_only": true,
+      "targeted_locations": 1
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Context/Consumption/BaseConsumeContext.cs",
+      "before_sha256": "137cf601244d214fbeaba92596740b569f933644f2c0ee0719e21ffaf084f72a",
+      "after_sha256": "79a84a1ca1225442e5bc5486ba1f8ee9293ee28234d84501cc3db490ef0294d0",
+      "changed_xml_only": true,
+      "targeted_locations": 11
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedMessageInitializerExtensions.cs",
+      "before_sha256": "434b348e2ba2a08dc457557e4cd113c943046ba4b842e1690dae1bfe352521ab",
+      "after_sha256": "40437d47bd2195dd55d018a2ce6d5cf3a6ba5105550199220e8026625ae402d4",
+      "changed_xml_only": true,
+      "targeted_locations": 6
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/RoutingSlipExecutor.cs",
+      "before_sha256": "06d7fe65d86a0afd8e95b6a56750d53024b48be8045a2b0be8be59628bd48db7",
+      "after_sha256": "ca1398b807c4b5c349b633e1fbd9a62c8b7a9104a913ebe793f7d8732339682b",
+      "changed_xml_only": true,
+      "targeted_locations": 1
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Scheduling/ServiceBusScheduleMessageProvider.cs",
+      "before_sha256": "22ab0141f4dc7f59c49b44895dff1b65dcc48746802bdc97486d520053748b87",
+      "after_sha256": "3cb42f3e357533211483a778a4be3cdd22ef247ccf78e16115597195ca13ec1d",
+      "changed_xml_only": true,
+      "targeted_locations": 2
+    }
+  ],
+  "changed_product_files": 27,
+  "runtime_signatures_and_bodies_without_XML_comments_identical": true,
+  "partial_authoring_retry": "Two attempts stopped at interface IRequestSendEndpoint because suffix selection incorrectly included the concrete initialized-return check. Exact basenames now distinguish both. Every prior XML write was reconstructed from hash-matching baseline and checked against current runtime bodies. No Native run intervened.",
+  "reconstructed_prior_xml_only": [
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedPublishEndpointExtensions.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedSendEndpointExtensions.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/BatchEndpointExtensions.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/Contexts/SendConsumeContextExtensions.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedPublishEndpoint.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedSendEndpoint.cs"
+  ],
+  "not_api_or_runtime_acceptance": true
+}

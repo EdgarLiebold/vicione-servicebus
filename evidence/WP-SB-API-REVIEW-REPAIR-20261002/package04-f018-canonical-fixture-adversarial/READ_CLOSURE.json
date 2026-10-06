@@ -1,0 +1,194 @@
+{
+  "status": "BOUNDED_CURRENT_ORIGINAL_FIXTURE_AND_QUERY_CONTRACTS_FULL",
+  "read_by": "azure_test_scope independent internal reviewer",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture/EntityFrameworkSagaRepositoryFactoryTests.cs.txt",
+      "sha256": "e2ba79021011bd50a55f492d74d56e5bb9200b3bdbc2a9ca7f01378d85b66e3f",
+      "bytes": 25522,
+      "read_status": "READ_FULL",
+      "kind": "CURRENT_FIXTURE",
+      "semantic_notes": "All586 numbered lines personally read in two untruncated sections; every test/helper/proxy/counter/disposal path included; actual equals freeze."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/EntityFrameworkSagaRepositoryFactoryTests.before-canonical-repair.cs.txt",
+      "sha256": "c50837c059b52f9538d19c286a9a0719909e872b344968529d89bd74e6ea1d8e",
+      "bytes": 25088,
+      "read_status": "READ_FULL_EXACT_SHARED_CURRENT_TEXT_AND_COMPLETE_ORIGINAL_REPLACEMENTS",
+      "kind": "ORIGINAL_FIXTURE",
+      "semantic_notes": "All580 lines assessed through own FULL unchanged current text plus two original changed lines FULL read in delta; exact reconstruction equals Frozen/Git; no false second plain-text read."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_CANONICAL_FIXTURE_FREEZE.json",
+      "sha256": "5b0150f1788987dc6dfc2b0d87bd32e9372e73413148559fc10084e0b5d2d9c8",
+      "bytes": 5651,
+      "read_status": "READ_FULL",
+      "kind": "PROOF",
+      "semantic_notes": "Every field personally FULL read."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_CANONICAL_FIXTURE_PLAN.json",
+      "sha256": "23b5b530b030ac8d13e004eeca0fc0bd8310e2106e058418b277a1ab466a529e",
+      "bytes": 2237,
+      "read_status": "READ_FULL",
+      "kind": "PROOF",
+      "semantic_notes": "Every field personally FULL read."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-build.log",
+      "sha256": "57cb0bb9fe2e09f3049ad573e1835727b7903d1ccb9c177e90795d6f6f31bd7c",
+      "bytes": 3100,
+      "read_status": "READ_FULL",
+      "kind": "ACTUAL_LOG",
+      "semantic_notes": "Complete actual log personally FULL read; strict build/native0 owner410; reviewer runs no native operations."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-owner410.log",
+      "sha256": "f3d31a3a47d11b6599099247711f9e2f6b07472166849d2d50d9e70d52e1726d",
+      "bytes": 607,
+      "read_status": "READ_FULL",
+      "kind": "ACTUAL_LOG",
+      "semantic_notes": "Complete actual log personally FULL read; strict build/native0 owner410; reviewer runs no native operations."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs",
+      "sha256": "53473b843b6a9d28ed03fcc5c9de7848bd15c2772efb9018e39b1d7054ce43cd",
+      "bytes": 13175,
+      "read_status": "READ_FULL_OWN_PREVIOUS_EXACT_SHA_REUSE",
+      "kind": "PRODUCT_CONTRACT",
+      "semantic_notes": "Own personally FULL previous source read unchanged; no foreign Root reading substituted."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/ISagaDbContextFactory.cs",
+      "sha256": "e0946958eb71dc3ae591396016fa0f5d003ffd0342a9fe56d3f9d8da4cfa73ea",
+      "bytes": 1337,
+      "read_status": "READ_FULL_OWN_PREVIOUS_EXACT_SHA_REUSE",
+      "kind": "PRODUCT_CONTRACT",
+      "semantic_notes": "Own personally FULL previous source read unchanged; no foreign Root reading substituted."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/ContainerSagaDbContextFactory.cs",
+      "sha256": "ec2172054277f3af8e68c4e198c93bb29572c7e451687d52cac44300769bcb01",
+      "bytes": 2126,
+      "read_status": "READ_FULL_OWN_PREVIOUS_EXACT_SHA_REUSE",
+      "kind": "PRODUCT_CONTRACT",
+      "semantic_notes": "Own personally FULL previous source read unchanged; no foreign Root reading substituted."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/DelegateSagaDbContextFactory.cs",
+      "sha256": "29df147f739000570feaff4f357171f5cfbfb1d5fdd28bc43bcfdcbf76a12e0b",
+      "bytes": 2222,
+      "read_status": "READ_FULL_OWN_PREVIOUS_EXACT_SHA_REUSE",
+      "kind": "PRODUCT_CONTRACT",
+      "semantic_notes": "Own personally FULL previous source read unchanged; no foreign Root reading substituted."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/OptimisticSagaLockContext.cs",
+      "sha256": "8ec8884e53988ce6791234d74958a4c8ac71077acb3d50c4e250b1624cc02288",
+      "bytes": 2450,
+      "read_status": "READ_FULL_OWN_PREVIOUS_EXACT_SHA_REUSE",
+      "kind": "PRODUCT_CONTRACT",
+      "semantic_notes": "Own personally FULL previous source read unchanged; no foreign Root reading substituted."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/OptimisticSagaRepositoryLockStrategy.cs",
+      "sha256": "dcc623bf17a387ceb46eb349963fc4cf405d88050811c560de54eb6d3727fa7d",
+      "bytes": 3929,
+      "read_status": "READ_FULL_OWN_PREVIOUS_EXACT_SHA_REUSE",
+      "kind": "PRODUCT_CONTRACT",
+      "semantic_notes": "Own personally FULL previous source read unchanged; no foreign Root reading substituted."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs",
+      "sha256": "139de8bee856a1c1d07fce15c746d5f6d3549fe6321e6aa26605e2fe071a4e1a",
+      "bytes": 6245,
+      "read_status": "READ_FULL_OWN_PREVIOUS_EXACT_SHA_REUSE",
+      "kind": "PRODUCT_CONTRACT",
+      "semantic_notes": "Own personally FULL previous source read unchanged; no foreign Root reading substituted."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/IDbTransactionContext.cs",
+      "sha256": "5cc780d553950adf1f41ed837a544ba4a1b6dc6f01b233f5b11fc863796e421e",
+      "bytes": 314,
+      "read_status": "READ_FULL_OWN_PREVIOUS_EXACT_SHA_REUSE",
+      "kind": "PRODUCT_CONTRACT",
+      "semantic_notes": "Own personally FULL previous source read unchanged; no foreign Root reading substituted."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs",
+      "sha256": "befc6519928c8c7db1b6eb3bfb46938bbd4f902099f544da20d265c6cd30571a",
+      "bytes": 12799,
+      "read_status": "READ_FULL_OWN_PREVIOUS_EXACT_SHA_REUSE",
+      "kind": "PRODUCT_CONTRACT",
+      "semantic_notes": "Own personally FULL previous source read unchanged; no foreign Root reading substituted."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/DbContextSagaRepositoryContext.cs",
+      "sha256": "e9fa214f13eb57a774d52d6972aa87759163e56be76b0cf22651c5d7cd629108",
+      "bytes": 16557,
+      "read_status": "READ_FULL",
+      "kind": "QUERY_HELPER",
+      "semantic_notes": "Entire numbered source read; real IQueryable/ToListAsync loads rows; loaded index counts actual results; context owns semaphore only, storage wrapper does not acquire/dispose borrowed context."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/OptimisticLoadQueryExecutor.cs",
+      "sha256": "782291497bd9c6756230dc6237636d857cf2d88b6a7f78497854da99d4212d14",
+      "bytes": 1746,
+      "read_status": "READ_FULL",
+      "kind": "QUERY_HELPER",
+      "semantic_notes": "Entire numbered source read; real IQueryable/ToListAsync loads rows; loaded index counts actual results; context owns semaphore only, storage wrapper does not acquire/dispose borrowed context."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Saga/LoadedSagaRepositoryQueryContext.cs",
+      "sha256": "596f42af4e1c800d12724110af4e2744bb1af4f17ee7444adfac5685964bdeac",
+      "bytes": 8796,
+      "read_status": "READ_FULL",
+      "kind": "QUERY_HELPER",
+      "semantic_notes": "Entire numbered source read; real IQueryable/ToListAsync loads rows; loaded index counts actual results; context owns semaphore only, storage wrapper does not acquire/dispose borrowed context."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Saga/SagaConsumeContextFactory.cs",
+      "sha256": "d25c48f7feb4fec798b54c5ae0468ffec21937d57981c6b951ab43492e601dcf",
+      "bytes": 1889,
+      "read_status": "READ_FULL",
+      "kind": "QUERY_HELPER",
+      "semantic_notes": "Entire numbered source read; real IQueryable/ToListAsync loads rows; loaded index counts actual results; context owns semaphore only, storage wrapper does not acquire/dispose borrowed context."
+    }
+  ],
+  "root_author_closure": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_ROOT_CANONICAL_OWNER_READ_CLOSURE.json",
+      "sha256": "7d4b3ddbff54fc94318e39d6870a96462c00143bf0c543feda334e849b3bec93",
+      "read_status": "STRUCTURAL_METADATA_AND_CURRENT_SHA_CHECK_ONLY",
+      "rows": 36,
+      "intentional_fixture_delta": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/EntityFrameworkSagaRepositoryFactoryTests.cs",
+          "original_sha256": "c50837c059b52f9538d19c286a9a0719909e872b344968529d89bd74e6ea1d8e",
+          "current_sha256": "e2ba79021011bd50a55f492d74d56e5bb9200b3bdbc2a9ca7f01378d85b66e3f"
+        }
+      ],
+      "own_personal_full_source_read_inferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_ROOT_SHARED_READ_CLOSURE.json",
+      "sha256": "9ff3918b9baf5b97d1ccf8f3a38b0dfde028f18e1f3aee95853e2fb9c7b7bd94",
+      "read_status": "STRUCTURAL_METADATA_AND_CURRENT_SHA_CHECK_ONLY",
+      "rows": 57,
+      "intentional_fixture_delta": [],
+      "own_personal_full_source_read_inferred": false
+    }
+  ],
+  "own_previous_manifest": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-adversarial/READ_CLOSURE.json",
+    "sha256": "ea64211645103d437d688edfafbfe61366640f83e3e0a719062340c60b99ccbd"
+  },
+  "foreign_read_reuse": false,
+  "native_operations": 0,
+  "product_writes": 0,
+  "limits": [
+    "Bounded reviewer scope; no personal whole36+57 Root-source transfer",
+    "Original full read by exact shared lines plus personally read original replacements",
+    "No wholeAPI grade/ARM/cloud/provider closure"
+  ]
+}

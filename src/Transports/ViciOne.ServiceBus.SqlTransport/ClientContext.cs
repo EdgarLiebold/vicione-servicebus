@@ -37,7 +37,7 @@ public interface ClientContext :
     /// <returns>A task that produces the created value.</returns>
     Task<long> CreateQueueSubscriptionAsync(TopicToQueueSubscription subscription, CancellationToken cancellationToken = default);
 
-    /// <summary>Purge the specified queue (including all queue types), returning the number of messages removed.</summary>
+    /// <summary>Purges pending deliveries from the specified primary queue, preserving its error and dead-letter queues, and returns the number removed.</summary>
     /// <param name="queueName">The queue name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the purge queue outcome.</returns>
@@ -72,7 +72,7 @@ public interface ClientContext :
     Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(string queueName, SqlReceiveMode mode, int messageLimit, int concurrentCount,
         TimeSpan lockDuration, CancellationToken cancellationToken = default);
 
-    /// <summary>Converts this value to uch queue.</summary>
+    /// <summary>Records usage of the specified primary queue through the provider.</summary>
     /// <param name="queueName">The queue name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

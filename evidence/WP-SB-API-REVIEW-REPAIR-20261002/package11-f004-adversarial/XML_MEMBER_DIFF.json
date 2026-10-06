@@ -1,0 +1,24 @@
+{
+  "ViciOne.ServiceBus:corrected": {
+    "all_member_count_before": 6872,
+    "after": 6872,
+    "delta": []
+  },
+  "ViciOne.ServiceBus:corrected-r2": {
+    "all_member_count_before": 6872,
+    "after": 6871,
+    "delta": [
+      "M:ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryRegistrationBusFactory.CreateBusInstance(ViciOne.ServiceBus.IBusControl,ViciOne.ServiceBus.Transports.IHost{ViciOne.ServiceBus.Providers.Transports.IInMemoryReceiveEndpointConfigurator},ViciOne.ServiceBus.Configuration.IHostConfiguration,ViciOne.ServiceBus.Configuration.IBusRegistrationContext)"
+    ]
+  },
+  "ViciOne.ServiceBus.Abstractions:corrected": {
+    "all_member_count_before": 3486,
+    "after": 3486,
+    "delta": []
+  },
+  "ViciOne.ServiceBus.Abstractions:corrected-r2": {
+    "all_member_count_before": 3486,
+    "after": 3486,
+    "delta": []
+  }
+}

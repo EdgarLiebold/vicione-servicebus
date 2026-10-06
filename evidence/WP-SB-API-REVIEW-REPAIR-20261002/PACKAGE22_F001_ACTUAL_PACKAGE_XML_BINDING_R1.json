@@ -1,0 +1,153 @@
+{
+  "status": "ACTUAL_PACK_EMITTED_XML_PRESENCE_AND_PHYSICAL_BYTES_BOUND_SEMANTIC_NATIVE_FINAL_PENDING",
+  "utc": "2026-10-03T14:27:27.466514+00:00",
+  "source_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE22_F001_SOURCE_FREEZE_R4.json",
+    "sha256": "5d020a2efef1a01a0d19dd2df085dba40e96fcaf6bd7f7c293a9248b2e35fcab"
+  },
+  "source_binding": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package22-f001-source-preflight/004-r4/ALL34_SOURCE_ORIGINAL_XML_BINDING.json",
+    "sha256": "d40fd7826ee1201c49e5905371e5c400e6b429b94e5b0ff5dd47d9e307fccfcd"
+  },
+  "packages": [
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package22-f001-r4/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "a0752ed9e1999d8ca2bd19eeedc82cb011b7e6df35108b1dae0c146fc3b891a8",
+      "bytes": 1500104,
+      "files": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "78d166b2d084393c32665ab27f1f82871a9e80f8febdcc80e8c5d67936a49322",
+          "bytes": 3017728,
+          "actual_emitted_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "acf39d25692784344526d37834dab00ed4b066bd02ac193e09a3c5ee31325db2",
+          "bytes": 2473471,
+          "actual_emitted_equal": true
+        }
+      ]
+    },
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package22-f001-r4/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "287d0d419c1bd1da10de4df4d894f1da9e91f80cbdb77bcaab4907044574492d",
+      "bytes": 458581,
+      "files": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "c651e3df23a4e4f9c2006a3a61617edfbb38e840eeedaba2aeac195e7acc62c4",
+          "bytes": 770560,
+          "actual_emitted_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.xml",
+          "sha256": "8b9ea899c03cb5d26ef056e80c222da26514080928eb6771d62ad9e66b181651",
+          "bytes": 1363313,
+          "actual_emitted_equal": true
+        }
+      ]
+    },
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package22-f001-r4/corrected/ViciOne.ServiceBus.AzureServiceBus.1.0.0.nupkg",
+      "sha256": "db44ab0364448faf7b270017a1458f99bed562bda338af0bb643597aa5917687",
+      "bytes": 221079,
+      "files": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.AzureServiceBus.dll",
+          "sha256": "9ca26ab9650c13e867da2626439f10287d643c4a485f83713fa0fc88b7bebb17",
+          "bytes": 348672,
+          "actual_emitted_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.AzureServiceBus.xml",
+          "sha256": "40eb4b7c03665cc751c653770b7e8568abcbedf6f168698ac036cbecf0b10711",
+          "bytes": 442305,
+          "actual_emitted_equal": true
+        }
+      ]
+    },
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package22-f001-r4/corrected/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "sha256": "842a384ad99ca4ae4efa2fb5247b18e65d522f6506e151caa866f8f9a9c2fd34",
+      "bytes": 148262,
+      "files": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "sha256": "b351ba421d19669941f20fc8f71058bbd814c65a568bf7eb7994fd921a88f0fa",
+          "bytes": 249344,
+          "actual_emitted_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Courier.xml",
+          "sha256": "364e93ba995a2a17337d926e50acbec65b88744f398a4f3f46b6abd60b2bd667",
+          "bytes": 318638,
+          "actual_emitted_equal": true
+        }
+      ]
+    },
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package22-f001-r4/corrected/ViciOne.ServiceBus.Initializers.1.0.0.nupkg",
+      "sha256": "2996c07bbc6fdb38a7c878dd98e7e009f24dc344b72717ad2e662c224982405c",
+      "bytes": 21788,
+      "files": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Initializers.dll",
+          "sha256": "c51903b1c8b289f2beac4ced37e5493c376e7b573b4a55ea154d4175796b8c6d",
+          "bytes": 23040,
+          "actual_emitted_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Initializers.xml",
+          "sha256": "9ed68c60c140944d4b0447812109e12839f62c2be6d49e87d397f89f5575d0dc",
+          "bytes": 28942,
+          "actual_emitted_equal": true
+        }
+      ]
+    },
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package22-f001-r4/corrected/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "076c11b3fb8131be4f5daefda2f76189a556a2709c5506d6fb2b514a79b34f5a",
+      "bytes": 449177,
+      "files": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "16826802dfd4308c1900087e31bce5f7bc8a6a6844c041453d46c9a52931dcbd",
+          "bytes": 936448,
+          "actual_emitted_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+          "sha256": "8a496e2bd258c9b5a133416a404ba6917b3ae02609a9e67373fd17976c55fd5c",
+          "bytes": 1244616,
+          "actual_emitted_equal": true
+        }
+      ]
+    }
+  ],
+  "packages_total": 6,
+  "primary_packages": 5,
+  "sagas_dependency_package": 1,
+  "all_original_target_api_docids": 411,
+  "all_docids_present_once": true,
+  "member_matrix": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE22_F001_ACTUAL_EMITTED_XML_MEMBER_MATRIX_R1.json",
+    "sha256": "3d4b03d4afc5cdc1bb803bb8599c9d90a7809fb4347474bd7f4c62bc46baba32",
+    "bytes": 489029
+  },
+  "all34_current_sources_equal_R4_freeze": true,
+  "runtime_behavior_preservation_qualified": false,
+  "inheritance_resolution_qualified": false,
+  "semantic_411_root_full_current_emitted_review_pending": true,
+  "documentation_countercase_pending": true,
+  "consumer_boundaries48_pending": true,
+  "source_PDB_binding_pending": true,
+  "native_setup_exclusions": [
+    {
+      "phase": "package22-f001-azure-r4-pack",
+      "exit": 1,
+      "reason": "Incorrect assumed project path; MSB1009 before pack. Corrected actual Transports project pack exit0."
+    }
+  ],
+  "no_F001_finding_acceptance": true
+}

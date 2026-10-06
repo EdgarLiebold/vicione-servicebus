@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs
++++ MarkExplicitAsAutomatic
+@@ -9,7 +9,7 @@
+     readonly ILogContext _messageLogger;
+ 
+     public BusLogContext(ILoggerFactory loggerFactory)
+-        : this(loggerFactory, false)
++        : this(loggerFactory, true)
+     {
+     }
+ 

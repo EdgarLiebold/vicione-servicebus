@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.ActiveMq.Topology;
 public class ActiveMqEntityNameValidator :
     IEntityNameValidator
 {
-    static readonly Regex _regex = new Regex(@"^[A-Za-z0-9\-_\.:]+$", RegexOptions.Compiled);
+    static readonly Regex _regex = new Regex(@"\A[A-Za-z0-9\-_\.:]+\z", RegexOptions.Compiled);
 
     /// <summary>Gets the shared ActiveMQ entity-name validator.</summary>
     public static IEntityNameValidator Validator => Cached.EntityNameValidator;

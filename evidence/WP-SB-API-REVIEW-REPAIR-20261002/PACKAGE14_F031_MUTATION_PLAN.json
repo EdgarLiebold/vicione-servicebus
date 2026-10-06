@@ -1,0 +1,60 @@
+{
+  "status": "PRE_MUTATION_PLAN_ROOT_FULL_RUNNER_READ",
+  "finding": "F-SB-API-031",
+  "runner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package14_f031_mutations.py",
+  "runner_sha256": "4eaa7863bd38017c65321b5a286bd012d3a9263633c58e9c7fd124fc717d8b19",
+  "frame": {
+    "results": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "host": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "host_xml": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "batch": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "batch_options": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "registration": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "connector": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "identity": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+    "trace": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "journal_telemetry": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "journal_writer": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "journal_registration": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "transport_registration": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "endpoint_context": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+    "combined_endpoint": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+    "scope_factory": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+    "owned_lifetime": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+    "inmemory_factory": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs"
+  },
+  "original_native": "14:9 exact causal assertion failures/5positive/0guards",
+  "corrected_native": "14:14green/0guards",
+  "mutants": [
+    {
+      "name": "first-category-restored",
+      "negative": "mixed-typed",
+      "positive": "dedicated-saga",
+      "effect": "original category-first selection restored"
+    },
+    {
+      "name": "category-order-reversed",
+      "negative": "mixed-reverse",
+      "positive": "same-kind-reverse",
+      "effect": "stable Kind.Order reversed"
+    },
+    {
+      "name": "shared-qos-ownership-weakened",
+      "negative": "mixed-saga-qos",
+      "positive": "mixed-compatible",
+      "effect": "one declarative owner incorrectly treated as shared explicit"
+    },
+    {
+      "name": "mixed-topology-check-weakened",
+      "negative": "mixed-topology-conflict",
+      "positive": "mixed-compatible",
+      "effect": "mixed topology accepts any false"
+    }
+  ],
+  "native_scope": "6 strict Core builds; compiled DLL substitution; unchanged Sagas capability dependency; not fresh NuGet per mutant",
+  "baseline": 14,
+  "rollback": 14,
+  "required_restore": "all6209 M originals; remove new Identity source; unchanged public oracle; restore selected runtime Core/Abstractions; unchanged Saga DLL",
+  "excluded": "three setup compile iterations 6+1+2 errors; no native product counts or mutant kills",
+  "limits": "No retained QoS value assertion, whole canonical Core owner, whole API grade, Saga persistence, multiple typed buses or ARM/cloud claims"
+}

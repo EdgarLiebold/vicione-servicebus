@@ -7,7 +7,7 @@ public interface IMessageJournalConfigurator
 {
     /// <summary>Selects the persistence store.</summary>
     /// <param name="store">The store.</param>
-    /// <returns>The configured store.</returns>
+    /// <returns>The journal configurator for further configuration.</returns>
     IMessageJournalConfigurator UseStore(IMessageJournalStore store);
 
     /// <summary>Selects the mandatory sanitization and inclusion policy.</summary>

@@ -1,0 +1,38 @@
+{
+  "status": "ROOT_AUTHORED_FOR_ADVERSARIAL_PREFLIGHT",
+  "root_personal_full_source_read_lines": "1..1057 before editing",
+  "root_existing_whole_38_owner_read_receipt": "PACKAGE01_AZURE_TEST_READ_CLOSURE",
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusTopologyTests.cs",
+      "sha256": "13ba9872b6979549a109a4fe7b5e83b15bec3858a039843ccadfab8a171252e1",
+      "bytes": 57636
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "sha256": "caa31c38d83ba66c57aef22db370ffa9202cab203acafd536453543fc3a6434f",
+      "bytes": 73131
+    }
+  ],
+  "scope": "One existing generated automatic subscription contract regression; standard explicit name tests unchanged",
+  "root_requirements_semantic_read": "Own prior whole180 exact rows reused; all16 additional rows personally FULL reopened; original180 still exactly equal before this one mapping change. No removals/weakening.",
+  "supersedes": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F038_CANONICAL_TEST_CANDIDATE_R1.json",
+    "sha256": "fa5de0c69478250bd3590c2ad8930b5c6c6c08b7f15194de1a7802ad284f803c"
+  },
+  "utc": "2026-10-03T20:09:42.194982+00:00",
+  "requirements_mapping_before": {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-NAME",
+    "variantKey": "entity-and-optional-scope-compose-before-shortening",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "GeneratedSubscriptionNames_ComposeTheOptionalScopeBeforeApplyingTheLimit"
+  },
+  "requirements_mapping_after": {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-NAME",
+    "variantKey": "full-destination-and-namespace-identity-is-bounded-and-case-normalized",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "GeneratedSubscriptionNames_IncludeTheFullDestinationAndNamespace"
+  }
+}

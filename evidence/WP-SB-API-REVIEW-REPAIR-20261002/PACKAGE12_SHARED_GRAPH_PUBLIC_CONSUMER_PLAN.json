@@ -1,0 +1,23 @@
+{
+  "Root_personally_FULL_public_factory_address_host_context_instance_delay_bind_limits_exception_sources": true,
+  "test_skill": "code-testing-agent previously FULL invoked, Research->Plan->Implement for bounded public consumer",
+  "new_owner": "package12-shared-graph/{previous,corrected}, no canonical tests/IVT/private reflection",
+  "previous": "immutable package11-f004/corrected (F004 fixed; original graph)",
+  "corrected": "fresh package12-shared-graph/corrected",
+  "eight_modes": [
+    "shared-default",
+    "shared-typed",
+    "independent-default",
+    "independent-typed",
+    "invalid-default",
+    "invalid-typed",
+    "callback-recovery-default",
+    "callback-recovery-typed"
+  ],
+  "controls": "two distinct actual callbacks/provider markers/configurators; real own-fabric send receipts; correct escaped address; limits reject oversized then accept small; B logical delay positive completion and receive after A stop/dispose; immediate seven InvalidURI classes; failed callback first root followed by real second delivery",
+  "explicit_F019_logging_override": true,
+  "timing": "per-operation guards only, no sleep absence passes",
+  "owner_cleanup": "primary-preserving all acquired providers, started buses, pending delay callerCancellation finally join",
+  "whole_owner_grade": false,
+  "required_adversarial": "every product and consumer change final frozen independent reviewer"
+}

@@ -1,0 +1,205 @@
+using System.Runtime.ExceptionServices;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Configuration;
+using Xunit;
+
+namespace BatchClock;
+
+public static class Cases
+{
+    public static readonly string[] Names = [
+        "default-size-backward", "default-size-forward", "typed-size-backward", "typed-size-forward",
+        "default-timefirst-backward", "default-timefirst-forward", "typed-timefirst-backward", "typed-timefirst-forward",
+        "default-timelast-backward", "default-timelast-forward", "typed-timelast-backward", "typed-timelast-forward",
+        "default-forced-backward", "default-forced-forward", "default-size-equal", "typed-size-equal",
+        "system-size", "first-provider-snapshot", "dedup-preserves-members-and-schedule", "cancel-only", "cancel-member",
+        "schedule-primary-only", "schedule-cleanup-dual", "cleanup-only", "cleanup-success", "clock-helper-control"
+    ];
+    public static async Task Run(string mode, TimeSpan timeout)
+    {
+        if (!Names.Contains(mode)) throw new ArgumentException("Unknown exact case", nameof(mode));
+        var life = new OwnedLifetime(timeout);
+        Exception? primary = null, cleanup = null;
+        try
+        {
+            if (mode.StartsWith("default-", StringComparison.Ordinal) || mode.StartsWith("typed-", StringComparison.Ordinal)) await Matrix(life, mode);
+            else switch (mode)
+            {
+                case "system-size": await SystemSize(life); break;
+                case "first-provider-snapshot": await ProviderSnapshot(life); break;
+                case "dedup-preserves-members-and-schedule": await Dedup(life); break;
+                case "cancel-only": case "cancel-member": await Cancel(life, mode); break;
+                case "schedule-primary-only": case "schedule-cleanup-dual": case "cleanup-only": case "cleanup-success": await Faults(life, mode); break;
+                case "clock-helper-control": Helper(); break;
+            }
+        }
+        catch (Exception e) { primary = e; }
+        try { await life.DisposeAsync(); } catch (Exception e) { cleanup = e; }
+        if (primary != null && cleanup != null) throw new AggregateException("Case and cleanup failed", primary, cleanup);
+        if (primary != null) ExceptionDispatchInfo.Capture(primary).Throw();
+        if (cleanup != null) ExceptionDispatchInfo.Capture(cleanup).Throw();
+    }
+    static Item New(int sequence) => new(sequence, Guid.NewGuid());
+    static async Task<Terminal> Terminal(OwnedLifetime life, RuntimeOwner owner, Item item)
+    {
+        var result = await life.Await(owner.Probe.Terminal(item.Sequence));
+        Assert.Equal(item.Identity, result.Identity); Assert.Equal(item.Identity, result.MessageId);
+        return result;
+    }
+    static async Task<IMessageBatch<Item>> Delivered(OwnedLifetime life, RuntimeOwner owner, params Item[] items)
+    {
+        // An actual original terminal fault wins over waiting for a batch which was never delivered.
+        List<Terminal> outcomes = [];
+        foreach (var item in items) outcomes.Add(await Terminal(life, owner, item));
+        foreach (var outcome in outcomes)
+        {
+            if (outcome.Failure != null) Console.WriteLine($"ACTUAL_TERMINAL_FAULT {outcome.Identity} {outcome.Failure}");
+        }
+        foreach (var outcome in outcomes) Assert.Null(outcome.Failure);
+        var batch = await life.Await(owner.Probe.Batch(owner.Probe.AllBatches.Count));
+        Assert.Equal(items.Length, batch.Count);
+        Assert.Equal(items.Select(i => i.Identity).Order().ToArray(), batch.Select(c => c.Message.Identity).Order().ToArray());
+        Assert.Equal(items.Select(i => i.Sequence).ToArray(), batch.Select(c => c.Message.Sequence).ToArray());
+        return batch;
+    }
+    static async Task Finish(OwnedLifetime life, RuntimeOwner owner, int terminals, int batches, params Clock[] clocks)
+    {
+        await life.Await(owner.Stop());
+        Assert.Equal(terminals, owner.Probe.AllTerminals.Count); Assert.Equal(batches, owner.Probe.AllBatches.Count);
+        foreach (Clock clock in clocks) Assert.Equal(clock.Creates, clock.Disposals);
+    }
+    static async Task Matrix(OwnedLifetime life, string mode)
+    {
+        bool typed = mode.StartsWith("typed-", StringComparison.Ordinal), time = mode.Contains("time", StringComparison.Ordinal), last = mode.Contains("timelast", StringComparison.Ordinal), forced = mode.Contains("forced", StringComparison.Ordinal);
+        var clock = new Clock();
+        var owner = new RuntimeOwner(life, typed, time ? 3 : 2, last ? BatchTimeLimitStart.FromLast : BatchTimeLimitStart.FromFirst, _ => clock, forced);
+        await life.Await(owner.Start());
+        var a = New(1); var b = New(2);
+        await owner.Send(life, a); await life.Await(clock.Scheduled(1));
+        Assert.Equal(Clock.Epoch, clock.GetUtcNow());
+        if (time) clock.Advance(TimeSpan.FromSeconds(10));
+        long timestamp = clock.GetTimestamp();
+        var secondUtc = mode.EndsWith("backward", StringComparison.Ordinal) ? Clock.Epoch.AddMinutes(-1) : mode.EndsWith("equal", StringComparison.Ordinal) ? Clock.Epoch : Clock.Epoch.AddMinutes(1);
+        clock.SetUtc(secondUtc); Assert.Equal(timestamp, clock.GetTimestamp());
+        await owner.Send(life, b);
+        if (time)
+        {
+            // GetUtcNow control above is the second read; actual second admission is the third.
+            await life.Await(clock.Read(3));
+            if (last) await life.Await(clock.Scheduled(2));
+            var schedules = clock.Schedules.ToArray();
+            Assert.Equal(last ? 2 : 1, schedules.Length);
+            long expectedDue = TimeSpan.FromSeconds(last ? 40 : 30).Ticks;
+            Assert.Equal(expectedDue, schedules[^1].Deadline);
+            clock.Advance(TimeSpan.FromSeconds(last ? 29 : 19));
+            Assert.Equal(0, clock.Fires); Assert.Equal(expectedDue - TimeSpan.TicksPerSecond, clock.GetTimestamp());
+            clock.Advance(TimeSpan.FromSeconds(1)); Assert.Equal(1, clock.Fires);
+        }
+        if (forced) { await life.Await(clock.Read(3)); await life.Await(owner.Flush()); }
+        var batch = await Delivered(life, owner, a, b);
+        Assert.Equal(forced ? BatchCompletionMode.Forced : time ? BatchCompletionMode.Time : BatchCompletionMode.Size, batch.Mode);
+        Assert.Equal(Clock.Epoch, batch.FirstMessageReceived); Assert.Equal(secondUtc, batch.LastMessageReceived);
+        Assert.Equal(1, clock.Creates); Assert.Equal(1, clock.Disposals);
+        Assert.All(owner.Filter.Entries, entry => Assert.Same(clock, entry.Provider));
+        await Finish(life, owner, 2, 1, clock);
+    }
+    static async Task SystemSize(OwnedLifetime life)
+    {
+        var owner = new RuntimeOwner(life, false, 2, BatchTimeLimitStart.FromFirst, _ => null);
+        await life.Await(owner.Start()); var a = New(1); var b = New(2);
+        var before = TimeProvider.System.GetUtcNow();
+        await owner.Send(life, a); await owner.Send(life, b);
+        var batch = await Delivered(life, owner, a, b);
+        var after = TimeProvider.System.GetUtcNow();
+        Assert.InRange(batch.FirstMessageReceived, before, after); Assert.InRange(batch.LastMessageReceived, before, after);
+        Assert.Equal(BatchCompletionMode.Size, batch.Mode); Assert.All(owner.Filter.Entries, e => Assert.Same(TimeProvider.System, e.Provider));
+        await Finish(life, owner, 2, 1);
+    }
+    static async Task ProviderSnapshot(OwnedLifetime life)
+    {
+        var aClock = new Clock(); var bClock = new Clock(); bClock.SetUtc(Clock.Epoch.AddDays(1));
+        var owner = new RuntimeOwner(life, true, 2, BatchTimeLimitStart.FromFirst, item => item.Sequence == 1 ? aClock : bClock);
+        await life.Await(owner.Start()); var a = New(1); var b = New(2);
+        await owner.Send(life, a); await life.Await(aClock.Scheduled(1)); aClock.SetUtc(Clock.Epoch.AddMinutes(1));
+        await owner.Send(life, b); var batch = await Delivered(life, owner, a, b);
+        Assert.Equal(Clock.Epoch, batch.FirstMessageReceived); Assert.Equal(Clock.Epoch.AddMinutes(1), batch.LastMessageReceived);
+        Assert.Equal(0, bClock.Creates);
+        var c = New(3); var d = New(4); await owner.Send(life, c); await life.Await(bClock.Scheduled(1)); await owner.Send(life, d);
+        var next = await Delivered(life, owner, c, d); Assert.Equal(Clock.Epoch.AddDays(1), next.FirstMessageReceived); Assert.Equal(next.FirstMessageReceived, next.LastMessageReceived);
+        Assert.Same(aClock, owner.Filter.Entries.Single(e => e.Identity == a.Identity).Provider); Assert.Same(bClock, owner.Filter.Entries.Single(e => e.Identity == b.Identity).Provider);
+        await Finish(life, owner, 4, 2, aClock, bClock);
+    }
+    static async Task Dedup(OwnedLifetime life)
+    {
+        var clock = new Clock(); var owner = new RuntimeOwner(life, false, 2, BatchTimeLimitStart.FromLast, _ => clock);
+        await life.Await(owner.Start()); var a = New(1); var duplicate = New(2); var b = New(3);
+        await owner.Send(life, a); await life.Await(clock.Scheduled(1));
+        clock.SetUtc(Clock.Epoch.AddMinutes(-2)); await owner.Send(life, duplicate, a.Identity);
+        clock.SetUtc(Clock.Epoch.AddMinutes(1)); await owner.Send(life, b);
+        var first = await Terminal(life, owner, a); Assert.Null(first.Failure);
+        var dup = await life.Await(owner.Probe.Terminal(2)); Assert.Equal(duplicate.Identity, dup.Identity); Assert.Equal(a.Identity, dup.MessageId); Assert.Null(dup.Failure);
+        Assert.Null((await Terminal(life, owner, b)).Failure);
+        var batch = await life.Await(owner.Probe.Batch(1)); Assert.Equal(new[] { a.Identity, b.Identity }, batch.Select(c => c.Message.Identity).ToArray());
+        Assert.Equal(Clock.Epoch, batch.FirstMessageReceived); Assert.Equal(Clock.Epoch.AddMinutes(1), batch.LastMessageReceived);
+        Assert.Equal(2, clock.Schedules.Count); await Finish(life, owner, 3, 1, clock);
+    }
+    static async Task Cancel(OwnedLifetime life, string mode)
+    {
+        using var cancellation = new CancellationTokenSource();
+        bool member = mode == "cancel-member";
+        var clock = new Clock(); var owner = new RuntimeOwner(life, false, member ? 3 : 2, BatchTimeLimitStart.FromFirst, _ => clock, token: cancellation.Token);
+        await life.Await(owner.Start()); var a = New(1); await owner.Send(life, a); await life.Await(clock.Scheduled(1));
+        var b = New(2); var c = New(3); var d = New(4);
+        if (member) { await owner.Send(life, b); await life.Await(clock.Read(2)); }
+        cancellation.Cancel(); var result = await Terminal(life, owner, a);
+        var canceled = Assert.IsAssignableFrom<OperationCanceledException>(result.Failure);
+        Assert.Equal(owner.Filter.Entries.Single(e => e.Identity == a.Identity).Token, canceled.CancellationToken);
+        if (!member)
+        {
+            await life.Await(clock.Disposed(1));
+            await owner.Send(life, b); await life.Await(clock.Scheduled(2));
+        }
+        await owner.Send(life, c); if (member) await owner.Send(life, d);
+        var next = await Delivered(life, owner, member ? [b, c, d] : [b, c]); Assert.Equal(BatchCompletionMode.Size, next.Mode);
+        Assert.DoesNotContain(next, context => context.Message.Identity == a.Identity);
+        await Finish(life, owner, member ? 4 : 3, 1, clock);
+    }
+    static async Task Faults(OwnedLifetime life, string mode)
+    {
+        var clock = new Clock(); var p = new InvalidOperationException("schedule-primary"); var c1 = new InvalidOperationException("timer-stop"); var c2 = new InvalidOperationException("timer-dispose");
+        var owner = new RuntimeOwner(life, false, 2, BatchTimeLimitStart.FromLast, _ => clock);
+        await life.Await(owner.Start()); var a = New(1); var b = New(2); await owner.Send(life, a); await life.Await(clock.Scheduled(1));
+        bool primary = mode.StartsWith("schedule-", StringComparison.Ordinal), cleanup = mode is "schedule-cleanup-dual" or "cleanup-only";
+        if (primary) { clock.FailScheduleAt = 2; clock.ScheduleFailure = p; }
+        if (cleanup) { clock.StopFailure = c1; clock.DisposeFailure = c2; }
+        await owner.Send(life, b);
+        if (mode == "cleanup-success") { await Delivered(life, owner, a, b); }
+        else
+        {
+            var first = await Terminal(life, owner, a); var second = await Terminal(life, owner, b);
+            foreach (var terminal in new[] { first, second })
+            {
+                if (mode == "schedule-primary-only") Assert.Same(p, terminal.Failure);
+                else
+                {
+                    var aggregate = Assert.IsType<AggregateException>(terminal.Failure);
+                    Exception[] expected = primary ? [p, c1, c2] : [c1, c2];
+                    Assert.Equal(expected.Length, aggregate.InnerExceptions.Count);
+                    for (int i = 0; i < expected.Length; i++) Assert.Same(expected[i], aggregate.InnerExceptions[i]);
+                }
+            }
+        }
+        Assert.Equal(1, clock.Disposals); clock.ReleaseFaults();
+        await Finish(life, owner, 2, mode == "cleanup-success" ? 1 : 0, clock);
+    }
+    static void Helper()
+    {
+        var clock = new Clock(); int callbacks = 0;
+        using var timer = clock.CreateTimer(_ => callbacks++, null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        Assert.True(timer.Change(TimeSpan.FromSeconds(30), Timeout.InfiniteTimeSpan));
+        long start = clock.GetTimestamp(); clock.SetUtc(Clock.Epoch.AddHours(-1)); Assert.Equal(start, clock.GetTimestamp());
+        clock.Advance(TimeSpan.FromSeconds(29)); Assert.Equal(0, callbacks); Assert.Equal(TimeSpan.FromSeconds(29), clock.GetElapsedTime(start));
+        clock.Advance(TimeSpan.FromSeconds(1)); Assert.Equal(1, callbacks); Assert.Equal(Clock.Epoch.AddHours(-1), clock.GetUtcNow());
+        timer.Dispose(); Assert.False(timer.Change(TimeSpan.FromSeconds(1), Timeout.InfiniteTimeSpan)); Assert.Equal(1, clock.Disposals);
+    }
+}

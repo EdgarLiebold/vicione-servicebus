@@ -46,6 +46,6 @@ public static class HostMetadataCache
 
 static class Cached
 {
-    internal static readonly HostInfo HostInfo = BusHostInfo.CaptureCurrent();
-    internal static readonly HostInfo EmptyHostInfo = new BusHostInfo();
+    internal static readonly HostInfo HostInfo = BusHostInfo.CaptureCurrent().Freeze();
+    internal static readonly HostInfo EmptyHostInfo = new BusHostInfo().Freeze();
 }

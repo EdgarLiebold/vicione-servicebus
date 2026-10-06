@@ -1,0 +1,48 @@
+--- Frozen original
++++ Package10 F022 owned current
+@@ -64,9 +64,10 @@
+         if (Volatile.Read(ref _disposed) != 0)
+             return SafeActivityScope.None;
+ 
+-        try
+-        {
+-            Activity? activity = ActivityObservation.TryStartSource(
++        Activity? activity = null;
++        try
++        {
++            activity = ActivityObservation.TryStartSource(
+                 _activitySource, "durable send admit", ActivityKind.Internal);
+             if (activity is null)
+                 return SafeActivityScope.None;
+@@ -84,6 +85,8 @@
+         }
+         catch
+         {
++            if (activity is not null)
++                ActivityObservation.TryDispose(activity);
+             return SafeActivityScope.None;
+         }
+     }
+@@ -94,9 +97,10 @@
+         if (Volatile.Read(ref _disposed) != 0)
+             return SafeActivityScope.None;
+ 
+-        try
+-        {
+-            Activity? activity = ActivityObservation.TryStartSource(
++        Activity? activity = null;
++        try
++        {
++            activity = ActivityObservation.TryStartSource(
+                 _activitySource, "durable send deliver", ActivityKind.Internal);
+             if (activity is null)
+                 return SafeActivityScope.None;
+@@ -114,6 +118,8 @@
+         }
+         catch
+         {
++            if (activity is not null)
++                ActivityObservation.TryDispose(activity);
+             return SafeActivityScope.None;
+         }
+     }

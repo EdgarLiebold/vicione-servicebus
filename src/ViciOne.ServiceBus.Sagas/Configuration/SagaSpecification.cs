@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.ConcurrencyLimiting;
+using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -27,7 +28,25 @@ public class SagaSpecification<TSaga> :
         _messageTypes = messageSpecifications.ToDictionary(x => x.MessageType);
 
         Observers = new SagaConfigurationObservable();
-        _handles = _messageTypes.Values.Select(x => x.ConnectSagaConfigurationObserver(Observers)).ToArray();
+        var handles = new List<ConnectHandle>(_messageTypes.Count);
+        try
+        {
+            foreach (ISagaMessageSpecification<TSaga> specification in _messageTypes.Values)
+                handles.Add(specification.ConnectSagaConfigurationObserver(Observers));
+            _handles = handles.ToArray();
+        }
+        catch (Exception operationFailure)
+        {
+            try
+            {
+                new MultipleConnectHandle(handles.Where(handle => handle is not null)).Disconnect();
+            }
+            catch (Exception cleanupFailure)
+            {
+                throw new AggregateException("Saga configuration observer connection and cleanup failed.", operationFailure, cleanupFailure);
+            }
+            throw;
+        }
     }
 
     /// <summary>Gets or sets the concurrent message limit.</summary>

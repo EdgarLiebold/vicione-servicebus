@@ -1,0 +1,93 @@
+{
+  "status": "ROOT_PERSONALLY_FULL_READ_LITERALS_0000_TO0011__NO_LAYOUTS_YET__ARCHITECTURE_OWNER_CLOSURE_PENDING",
+  "actor": "/root",
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/MANIFEST.json",
+    "bytes": 806403,
+    "sha256": "eb025e465e0925e81cd097f27f8b6528faed57c48f840bbf35e72c8251237bdf"
+  },
+  "codec": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/CODEC.json",
+    "bytes": 1597277,
+    "sha256": "c8679e745343e1530eeb7fb11818b8e29562d75af086c4fed3868bdd3fa61cf2"
+  },
+  "packs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0000.txt",
+      "bytes": 13965,
+      "sha256": "0c649e1bcabc3e686eb9608a5e5331bb592929c7aadead9815990772c18072b5",
+      "personal_full_read_chunk": "6ee7f9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0001.txt",
+      "bytes": 13920,
+      "sha256": "e171201eb4240370a41f233d0f5cbff51a4fd4faf0acc328554b38403b7cfad7",
+      "personal_full_read_chunk": "aea148"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0002.txt",
+      "bytes": 13961,
+      "sha256": "0952fd9aba18e09ab9d2b08471e782a7f8c4518b84ce02a3012184677258f09c",
+      "personal_full_read_chunk": "f66761"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0003.txt",
+      "bytes": 13996,
+      "sha256": "6eace3a18a2e3310c1a83b9e1c0b2801017f2605a1ebb71e9549daa84c919e2f",
+      "personal_full_read_chunk": "1780e2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0004.txt",
+      "bytes": 13932,
+      "sha256": "07c5651d6bb490d364595277b62ae869e4295c97d490be26ffb04d2986bf9a9f",
+      "personal_full_read_chunk": "3c51c1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0005.txt",
+      "bytes": 13968,
+      "sha256": "ab1b169dd12b8821f6e78946e2de448cd0f35b6ceb708aa5e12fdaf90ec2326b",
+      "personal_full_read_chunk": "c60e94"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0006.txt",
+      "bytes": 13936,
+      "sha256": "0bbbb1d51a9cb89ab6b657f0e2413c0ea2918993afbcdb520a0c3be0188b5a66",
+      "personal_full_read_chunk": "1642ba"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0007.txt",
+      "bytes": 13962,
+      "sha256": "f972f94163357c64607b41b84ccdfd09bc8e1df1641e8a89c0c310c071ff5605",
+      "personal_full_read_chunk": "e22e2b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0008.txt",
+      "bytes": 13954,
+      "sha256": "d10850a67e3ca47d389035eee0680d7bb640432af28ac17bc7f7a9f508431278",
+      "personal_full_read_chunk": "fb72bb"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0009.txt",
+      "bytes": 13980,
+      "sha256": "487f9047b85f71214fbad5cdafe7b5479c08c2f7cbd5bf645af1e341829cdeb0",
+      "personal_full_read_chunk": "190375"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0010.txt",
+      "bytes": 13956,
+      "sha256": "352fa70b18b02472d3dfd46da635903c730201358939d19c496017a992450f5f",
+      "personal_full_read_chunk": "dab8e6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0011.txt",
+      "bytes": 13990,
+      "sha256": "20f7c509b48d63b456158c1a52d3d2068a27c4789cef5466f0aa3d254c541169",
+      "personal_full_read_chunk": "25bcfc"
+    }
+  ],
+  "dictionary_ids_completed": "0..2036",
+  "layout_packs_completed": 0,
+  "entire_architecture_owner_full_read_credit": false,
+  "ordinary_new_corpus_full_credit": 0,
+  "limits": "Exact core-line references reuse previously root-personally-full-read Core766 frame only; ordered layout completion required before whole file/owner disposition."
+}

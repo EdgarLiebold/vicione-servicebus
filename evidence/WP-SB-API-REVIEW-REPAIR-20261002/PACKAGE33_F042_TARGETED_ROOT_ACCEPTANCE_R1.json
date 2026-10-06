@@ -1,0 +1,186 @@
+{
+  "status": "ROOT_TARGETED_F042_REPAIR_AND_REVIEW_ACCEPTED_SHARED_FINAL_PENDING",
+  "actor": "/root",
+  "utc": "2026-10-04T00:13:01.436384+00:00",
+  "finding": "F-SB-API-042",
+  "product_source": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "sha256": "c3d84e077590acec52e6e13323c6d356560f0d7ed035a8ae12db906fbeff4efc",
+      "bytes": 6923
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/ConsumeSendEndpoint.cs",
+      "sha256": "d7b8526ebbaae7c6244d337dac6db5e48eab6f82586c01b2b3db0589499ba49b",
+      "bytes": 2938
+    }
+  ],
+  "root_product_and_private_owner_whole_source_read": "Own full current product2, entire private parent31/32 author inputs and actual current33 deltas, all six private-generated and three actual Core-generated files; qualified same-hash own full reuse, no team borrowing.",
+  "original_and_positive_boundary_acceptances": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE28_F042_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "01ae1db907c9b6134742416d047d312cee61c54f28d00ff99d220a12fb1bfe7a",
+      "bytes": 900
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE30_F042_BOUNDED5_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "5649120a80fe801c7b39d99f811c812c20143e7559350c896f658d44545edaac",
+      "bytes": 874
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE31_F042_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "aafa3f39522a379bae3ed7dae63fed2bb37b47511033a1e05856bfd1ef5a1dfc",
+      "bytes": 899
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE32_F042_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "556e8b12035c0fe619cb0216095af8df4af708fff9e20398bbcd4bb5fc1a3548",
+      "bytes": 906
+    }
+  ],
+  "actual_compiled_result": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_MUTATIONS_R1.json",
+    "sha256": "dc1363521b30df60542a8b9b77b65ff790d68916eb1afbc6dc7d31a142def93b",
+    "bytes": 364424
+  },
+  "runner": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package33_f042_mutations.py",
+    "sha256": "a511e780ec88d1fe7eda0d0438b0caa9a2584e24728e532a187f41fc8f52741c",
+    "bytes": 16670
+  },
+  "compiled_preflight": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-f042-mutant-compiled-preflight-r2/FINAL_MANIFEST.json",
+    "sha256": "e6e1d97da443195bc892dc4a1c30c275102d4f7a6bea786142dd0818e37a78b3",
+    "bytes": 5480
+  },
+  "independent_native_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-f042-mutations-native-qualification-r2/FINAL_MANIFEST.json",
+    "sha256": "fcc4329458bdc4a57101740f53500ee466b0c370213fc63b47a3fd816ec44383",
+    "bytes": 17384
+  },
+  "independent_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-f042-mutations-native-qualification-r2/REVIEW.md",
+    "sha256": "91ae150a5d09c6d1026adccde323074934a196919186913f6cb39c6dfdd97e03",
+    "bytes": 6201
+  },
+  "exact_counterproof_causes": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-f042-mutations-native-qualification-r2/COUNTERPROOF_TABLE.md",
+    "sha256": "7c5b063cf9eac84fb4de22f95cee44d60e43e43649bd312cb00c0b6bf19f4dd2",
+    "bytes": 1281
+  },
+  "independent_53_artifact_hashes_fresh_checked": true,
+  "root_native_log_personal_read": {
+    "method": "All ten reversible projection packs personally fully read untruncated; all120 exact newline-inclusive decoded lines, all43 multiline original faults/maps, all129 JSON records/all201 nonJSON records/order and all scalar keys/values. Root independently reconstructed exact373082 original bytes from display and fresh SHA checked every bound raw log.",
+    "manifest": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-native-logs-lossless-root-projection-r1/PREPARED_ALL16_LOGS_MANIFEST_R1.json",
+      "sha256": "130599c4ac89e690e75a91ee309d920b61b600b7c25db34be4a152ac67f71600",
+      "bytes": 37265
+    },
+    "packs": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-native-logs-lossless-root-projection-r1/READ-0000.txt",
+        "sha256": "0bae0a7278adeb59ec88cd6eae752baac2d79cd83402ff7d1b5e43fb569e0833",
+        "bytes": 13941
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-native-logs-lossless-root-projection-r1/READ-0001.txt",
+        "sha256": "b579529a47d0c64a5b66ebe7bfa9a88458bfc6aae5c64326bd1756a6f7dfca66",
+        "bytes": 12237
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-native-logs-lossless-root-projection-r1/READ-0002.txt",
+        "sha256": "94d5ed3d3a74d414bb80761ef18d4bffea91a3c0e1ae102480508c999cd6de94",
+        "bytes": 13915
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-native-logs-lossless-root-projection-r1/READ-0003.txt",
+        "sha256": "fa30686aac12ae8d9c60cd6f7d8b43b328d76a9c20f7d011e969042904832f1f",
+        "bytes": 13001
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-native-logs-lossless-root-projection-r1/READ-0004.txt",
+        "sha256": "f8c608c8810a96d345d54c6f1e51cd60cd7ec640069c6d552f6dfcdd93f6738e",
+        "bytes": 13920
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-native-logs-lossless-root-projection-r1/READ-0005.txt",
+        "sha256": "f17b2b33648a89687521931dc7d9754652f54c4cdd23b36b0c606783199cdaae",
+        "bytes": 13737
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-native-logs-lossless-root-projection-r1/READ-0006.txt",
+        "sha256": "7566c8f6c417df2080067b1588ccbcb926a01c8198382dc3b43c248bb918e16f",
+        "bytes": 13023
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-native-logs-lossless-root-projection-r1/READ-0007.txt",
+        "sha256": "3474f557bcf046f4e7dd952c14ac01c327d2fbc81cdd35478d9d263a8dca8ff9",
+        "bytes": 12291
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-native-logs-lossless-root-projection-r1/READ-0008.txt",
+        "sha256": "fb6bdb735cda6a9842ea58573b9e67765aeaf97301b5b5bd553420b502f8aa7e",
+        "bytes": 13920
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-native-logs-lossless-root-projection-r1/READ-0009.txt",
+        "sha256": "b8016b96b0629a6994829e66cc9932347903159d2446097ec21847b2aa924cf1",
+        "bytes": 884
+      }
+    ],
+    "whole_raw_display_personally_read_claimed": false
+  },
+  "actual_operations": 24,
+  "actual_strict_zero_warning_error_builds": 8,
+  "actual_native_invocations": 16,
+  "distinct_compiled_mutant_variants": 5,
+  "finite_causal_counterproofs": 6,
+  "green_matched_positive_controls": 6,
+  "corrected_baseline": {
+    "unique_owner_cases": 12,
+    "EF_cases": 8,
+    "EF_actual_finite_receives": 16,
+    "neighbor_cases": 4,
+    "neighbor_actual_finite_receives": 6
+  },
+  "rollback_same_cases": 12,
+  "green_case_executions": 30,
+  "no_timeout_or_setup_or_watchdog_kill_credit": true,
+  "limits": [
+    "Remove-bypass EF/Classic are one code variant, two contract counterproofs.",
+    "Adapter counterproof fails at missing RequestId; no separate AddConsumeTask mutation credit.",
+    "Classic in-memory replay same running process/repository; no restart durability guarantee.",
+    "Physical native SQLite assets qualified, no loaded-native-image telemetry claim.",
+    "44 virtual generated PDB documents per compiled Core are metadata-only; never physical-source/full-review credit."
+  ],
+  "root_actual_24_receipt_fields_and_all8_build_logs_personally_full_read": true,
+  "strict_serial_receipt_intervals": true,
+  "root_fresh_restoration": {
+    "original_M_source_files_byte_equal": 6209,
+    "new_frame_paths_absent": 2,
+    "nonCore_private_invariant_files_exact": 137,
+    "both_private_Core_runtime_restored": {
+      "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package33-outbox-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll": "423da7672c71d2cada483bca6a1991286c8bf234f3627c0ec6a620617edc1336",
+      "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package33-neighbor-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll": "423da7672c71d2cada483bca6a1991286c8bf234f3627c0ec6a620617edc1336"
+    }
+  },
+  "changelog_candidate": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_CHANGELOG_CANDIDATE_R1.json",
+    "sha256": "c84204a99285b79502acf02a2ce2396d06c40651bc61dbe72030a25c579095a2",
+    "bytes": 391
+  },
+  "changelog": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+    "sha256": "2cf3ad9ba74558d61a1e25f2ada46e8619966245274057222ad98cf3af18f249",
+    "bytes": 31572
+  },
+  "changelog_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-f042-changelog-finalgate-peer-r1/MANIFEST.json",
+    "sha256": "82cbb08f1e2a8ada492d1c2b08c155d0d91ab0badbf0d0d1af55642ad628bc7c",
+    "bytes": 6467
+  },
+  "shared_current_gate": "Actual exit0, fresh archive physical qualification pending separately Package34",
+  "canonical_test_owner766_full": false,
+  "current_full_unit_green": false,
+  "whole_API_or_Aplus": false
+}

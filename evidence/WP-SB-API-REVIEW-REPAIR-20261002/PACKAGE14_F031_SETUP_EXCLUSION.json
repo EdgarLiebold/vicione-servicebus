@@ -1,0 +1,18 @@
+{
+  "status": "NEW_CONSUMER_COMPILER_SETUP_FAILURE_EXCLUDED",
+  "cause": "Components missing public Advanced namespace import;6compilererrors, no product behavior executed",
+  "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build.log",
+  "log_sha256": "d27a15ccc87e22523e2d8563ae160b2882b0abe87a6fc0357073ea59d36359c8",
+  "preserved_original_sources": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/previous-Components.cs.txt",
+      "sha256": "a686aa8cd8d52694544a0b92247cadec1d07b02dc9c25cacfe501ab427782ce1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/corrected-Components.cs.txt",
+      "sha256": "a686aa8cd8d52694544a0b92247cadec1d07b02dc9c25cacfe501ab427782ce1"
+    }
+  ],
+  "correction": "same added public Advanced import in both new consumers",
+  "native_red_or_mutant_count": 0
+}

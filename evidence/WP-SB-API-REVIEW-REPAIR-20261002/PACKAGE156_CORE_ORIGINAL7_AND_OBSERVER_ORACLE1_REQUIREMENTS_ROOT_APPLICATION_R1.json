@@ -1,0 +1,76 @@
+{
+  "utc": "2026-10-04T23:26:36.398773+00:00",
+  "decision": "APPLY_CORE_ORIGINAL7_COUNTERPROBES_AND_PRECISE_OLD_OBSERVER_ORACLE_CORRECTION",
+  "after155freeze": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-fixed55-old-nulltask-oracle1-independent-r1/FREEZE.json",
+    "sha256": "451c397144658facb921ee4753bb1c8526a64f67589e5b9680329e3611e405c2"
+  },
+  "source_test_requirements": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/MessageIdHeadersTests.cs",
+      "before_sha256": "ded65a7cd9902e20092837bba00e64578371cdd5fc1979d5a0cb1cb867ec0802",
+      "after_sha256": "ae22a8c877513d56e5dded4ae6f52c71433e0984d6f08e237a20b07fd5954e8a",
+      "author": "package156-core-body-nullability-and-message-header7-oracles-proposed-r1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageTypeAdmissionTests.cs",
+      "before_sha256": "8edafe73e1aaafd9c0071533b8a04d2e4fc32371715723a06a87f94dd2ad33c5",
+      "after_sha256": "e41ec3ddf94b46de25deffb9f8c31efbbfe03b3795ad76ed04400eb4aa37b0d2",
+      "author": "package156-core-body-nullability-and-message-header7-oracles-proposed-r1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorProxyObserverDeepContractTests.cs",
+      "before_sha256": "b68adc9fef530b498e51dd9154021e2fbdedd20ea33d5a9bebef145b541cd358",
+      "after_sha256": "cb087538a368c6c1b4574ce4f83b7af4d9cca26e42a5786307eb88d6b2c9a125",
+      "author": "package155-null-notification-oracle-correction-proposed-r1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "e7b8d1fd705bd0ba70bac5a95f3b55b3816480c04a3fce12e9065095641cb644",
+      "after_sha256": "794bbb1f675538de7af1eaff20c0d8b5c2cb319ee106145df3e3eaa04947e672",
+      "add_only": 4
+    }
+  ],
+  "manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-fixed55-old-nulltask-oracle1-independent-r1/MANIFEST.json",
+      "sha256": "9a0b39a4f2e78a1e4d7edc44eb73716f737f8ae184b91406391bce1043fedb4e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-body-nullability-and-message-header7-oracles-proposed-r1/MANIFEST.json",
+      "sha256": "637e7097ffbec62d21bc10fa5445803d3612df3bcbe420e1d74209d402799473"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-body-header7-independent-runtime-r1/MANIFEST.json",
+      "sha256": "1427bbdd97bb1d5d0bed68f73bdc4883b20a502044385877399fa753b882b08e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-null-notification-oracle-correction-proposed-r1/MANIFEST.json",
+      "sha256": "067f1348d5ca85fe13f35f26983819388e1cc9c1b45dd7c237bc370d9c8a5a29"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-null-notification-oracle-correction-independent-scanner-r2/MANIFEST.json",
+      "sha256": "d66c9da2effb0a217b071e234f0e55af281977dffaaf0ee94505415cac1adea1"
+    }
+  ],
+  "root_own_source_reviews": [
+    "e473b0",
+    "c53344",
+    "198170",
+    "753c8e",
+    "99c999"
+  ],
+  "original155_55pass1staleOracle_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-fixed55-old-nulltask-oracle1-independent-r1/REPORT.json",
+    "sha256": "fdef8ecc6b04970346fe79775ae8634b7a6ce5607f0b9ff1e23db1dd6c18a88a"
+  },
+  "product_Source_delta": 0,
+  "requirement_rows_before": 4610,
+  "requirement_rows_after": 4614,
+  "limits": [
+    "Observer oldFact only now checks both guard failures/count/order/identity/exactContext/noactivity; new10cases bytepreserved.",
+    "Core actualproduct BodyConsumeContext and MessageIdHeaders remain original unchanged; new7cases no assumedFinding until nativequalification.",
+    "Strictbuild/originalCore16/fixedObserver56/neighbors/freshCoreSagas pending."
+  ],
+  "CLOSED": false
+}

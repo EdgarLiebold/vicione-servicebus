@@ -58,7 +58,7 @@ public interface IEventCorrelationConfigurator<TSaga, TMessage>
 
     /// <summary>When creating a new saga instance, initialize the saga CorrelationId with the id from the event data.</summary>
     /// <param name="selector">Returns the CorrelationId from the event data.</param>
-    /// <returns>The selected id.</returns>
+    /// <returns>This configurator for further correlation configuration.</returns>
     IEventCorrelationConfigurator<TSaga, TMessage> SelectId(Func<ConsumeContext<TMessage>, Guid> selector);
 
     /// <summary>Specify the correlation expression for the event.</summary>
@@ -67,19 +67,26 @@ public interface IEventCorrelationConfigurator<TSaga, TMessage>
     IEventCorrelationConfigurator<TSaga, TMessage> CorrelateBy(Expression<Func<TSaga, ConsumeContext<TMessage>, bool>> correlationExpression);
 
     /// <summary>
-    /// Creates a new instance of the saga, and if appropriate, pre-inserts the saga instance to the database. If the saga already exists, any
-    /// exceptions from the insert are suppressed and processing continues normally.
+    /// Configures the factory used to create new saga instances. When pre-insertion is enabled,
+    /// duplicate detection and insertion failure handling follow the repository provider's policy.
     /// </summary>
     /// <param name="factoryMethod">The factory method for the saga.</param>
     /// <returns>The event correlation configurator produced by the operation.</returns>
     IEventCorrelationConfigurator<TSaga, TMessage> SetSagaFactory(SagaFactoryMethod<TSaga, TMessage> factoryMethod);
 
     /// <summary>
-    /// If an event is consumed that is not matched to an existing saga instance, discard the event without throwing an exception.
-    /// The default behavior is to throw an exception, which moves the event into the error queue for later processing.
+    /// Configures the message pipeline used when a non-initial event has no matching saga instance.
     /// </summary>
-    /// <param name="getBehavior">The configuration call to specify the behavior on missing instance.</param>
+    /// <remarks>
+    /// Without a configured missing-instance pipeline, the event completes through an empty pipeline.
+    /// Initial-state events use the configured saga factory instead. The callback may select discard, fault, or custom behavior.
+    /// An explicitly selected fault or an exception from custom behavior propagates to the surrounding receive pipeline;
+    /// its configured error policy determines subsequent fault reporting and error-transport handling.
+    /// </remarks>
+    /// <param name="getBehavior">The callback building the missing-instance pipeline from the supplied configurator.</param>
     /// <returns>The event correlation configurator produced by the operation.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="getBehavior" /> is null.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="getBehavior" /> returns null.</exception>
     IEventCorrelationConfigurator<TSaga, TMessage> OnMissingInstance(Func<IMissingInstanceConfigurator<TSaga, TMessage>,
         IPipe<ConsumeContext<TMessage>>> getBehavior);
 }

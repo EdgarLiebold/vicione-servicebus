@@ -1,0 +1,80 @@
+{
+  "utc": "2026-10-05T20:31:07.611978+00:00",
+  "status": "ROOT_APPLIED_TESTONLY_PENDING_STRICT_ORIGINAL_HEADER26_AND_FIXED_RABBIT14_NATIVE",
+  "product_code_changed": false,
+  "public_API_changed": false,
+  "author_packages": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package234-json-header-null-nested14-oracles-proposed-r1",
+      "report_sha256": "951e9eb89f792380f36535c9533d29a1c1e29d61bd8d66a990cf673eff74cd0c",
+      "manifest_sha256": "54dbf9a977055df59a37a3a628faf5ee1e98028f071fdebfada00fda08228f52"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-public-late-creation-cancellation2-testonly-proposed-r1",
+      "report_sha256": "96459e44f4056ab183b1e85623f7fca2c4d067aa6cf59b5772f42b2c87b99b3c",
+      "manifest_sha256": "37136ba00bfa073c00dfc7aca633fd1cbe7738e273ab1fbac9840aafaa7153c6"
+    }
+  ],
+  "independent_source_peers": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package234-header-null-nested14-independent-source-peer-r1",
+      "report_sha256": "1d6ed8fc8ed8ba0ef9e8a1182d507a57a0dad947f55719e79495b6bbc3edde58",
+      "manifest_sha256": "62324e6844c9fb546b44d9162609807f2cb3a391cbb2e6f047617da46d3abaa6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-late-cancellation2-independent-runtime-source-peer-r1",
+      "report_sha256": "b0258ed1ffcf0bae6167cd9ec9dc9dae67a283770f975f275b02033dab89219c",
+      "manifest_sha256": "85f27ab4136b241a78b6b071cc6f7a5f8de0fa9b54eaffbd631d64adfc22624e"
+    }
+  ],
+  "root_own_reads": {
+    "Header426": "21dcc3 whole426",
+    "Rabbit197": "d563d6 whole197",
+    "RabbitOriginal428": "retained Root4278dd0da/3c909d plus R3exactdelta cee1d1/4641af and partial-only inverse f47446; new helper3 exact inverse verified here",
+    "Header_peer": "eaafc2 whole REPORT; prior Product peer whole4c479b",
+    "Rabbit_peer": "59f30d whole REPORT; truncated combined source recovered new197 d563d6"
+  },
+  "mandatory_test_skill": "58f0b4 whole entry plus235056 whole generation prompt",
+  "changes": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Transports/JsonTransportHeaderConversionTests.cs",
+      "before_sha256": "e4bc60af55b2e696da830d32933c7b19d19f06541613ba68b428a4426d77c0dc",
+      "sha256": "e5bf534185192ed40116197108f7ac9a0014f74181ad51e2b2389833d09f6c86",
+      "lines": 426,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package235-header-extra14-rabbit-cancel2-testonly5-root-before-r1/tests/ViciOne.ServiceBus.Tests/Transports/JsonTransportHeaderConversionTests.cs"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "394ffee2c90af4032eb4ee5a7226453e42d752464e92cf1f931d22f63b65bb18",
+      "sha256": "5bce66843e0be0eb4e408bd020dc9585c276fc070e263f10a32e5fc2d2de17bd",
+      "lines": 32636,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package235-header-extra14-rabbit-cancel2-testonly5-root-before-r1/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionWiringTests.cs",
+      "before_sha256": "17b0ba0db5d620a658683ca108866c11336bfbc997a0844b569d12baf31a3b5d",
+      "sha256": "5aad7d653364a1c0930e7cf634b510239657e008ee47b9c7b81dace7368e9e09",
+      "lines": 431,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package235-header-extra14-rabbit-cancel2-testonly5-root-before-r1/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionWiringTests.cs"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionCancellationTests.cs",
+      "before_sha256": null,
+      "sha256": "976415e47c26f4af54a2b1dc05c65671a799677afe0dcaeaee1e0022b60927f3",
+      "lines": 197,
+      "backup": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+      "before_sha256": "fe17f232ae505aed92aff3adcb7497abb5682246827fe83066ff2f4815c87d20",
+      "sha256": "0cb7879fd33f832c8af5eb581d7a2d6a6a79584e0205d91f99433599027a7e09",
+      "lines": 2018,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package235-header-extra14-rabbit-cancel2-testonly5-root-before-r1/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json"
+    }
+  ],
+  "requirements_counts": {
+    "Core": 4662,
+    "Rabbit": 288
+  },
+  "limits": "No native prediction, source master append, finding closure or A+ grade. Original Header Product3 remains unapplied; public Rabbit repaired4 unchanged. Prior raw234 frozen independently physically verified before mutation."
+}

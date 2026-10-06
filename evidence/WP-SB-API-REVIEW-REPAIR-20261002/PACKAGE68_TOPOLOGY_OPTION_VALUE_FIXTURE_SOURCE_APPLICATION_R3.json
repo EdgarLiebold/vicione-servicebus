@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-04T14:15:47.682251+00:00",
+  "status": "ROOT_INDEPENDENT_ADVERSARIAL_SOURCE_NO_BLOCK_ORIGINAL_NATIVE_PENDING",
+  "root_reads": [
+    "fbffda wholeR2",
+    "aa6240 wholeR3diff semanticoptions+rule/action/params precisechecks, nondefaultsentinels",
+    "4a2c0d targetedactualoptionssnapshotgetters (truncated NOwholecombinedcredit), wholeTopic andwholeRuleSnapshot visible; parent source helper read scoped"
+  ],
+  "test": "repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusTopologyOwnershipTests.cs",
+  "before": "6e66e6379eb0e72a68afcbb3fc0dbbb25cd26a1432bdb0a6f945560ae7a980e2",
+  "after": "915d44d9e0dfe5b2ec0660f687671c704dd66d94958862ee7265e90a0b9f6ce6",
+  "requirements": "unchanged203",
+  "historicalR2": "Five finiteheldwork RED and two INVALID_OPTION_IDENTITY_FIXTURE controls; R3controls must pass beforeacceptance"
+}

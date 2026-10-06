@@ -160,7 +160,7 @@ internal sealed class SqlServerClientContext :
     /// <param name="mode">The receive ordering and partition mode.</param>
     /// <param name="messageLimit">The maximum number of messages to return.</param>
     /// <param name="concurrentLimit">The maximum number of concurrently active partitions for a partitioned receive.</param>
-    /// <param name="lockDuration">How long acquired messages remain locked.</param>
+    /// <param name="lockDuration">How long acquired messages remain locked. SQL Server rounds fractional seconds upward.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The acquired transport messages, or an empty sequence when SQL Server selects this transaction as a deadlock victim.</returns>
     public override async Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(string queueName, SqlReceiveMode mode, int messageLimit,
@@ -184,7 +184,7 @@ internal sealed class SqlServerClientContext :
                     queueName,
                     consumerId = _consumerId,
                     lockId = NewId.NextGuid(),
-                    lockDuration = (int)lockDuration.TotalSeconds,
+                    lockDuration = ToDatabaseSeconds(lockDuration, nameof(lockDuration)),
                     fetchCount = messageLimit
                 }, cancellationToken).ConfigureAwait(false);
             }
@@ -201,7 +201,7 @@ internal sealed class SqlServerClientContext :
                 queueName,
                 consumerId = _consumerId,
                 lockId = NewId.NextGuid(),
-                lockDuration = (int)lockDuration.TotalSeconds,
+                lockDuration = ToDatabaseSeconds(lockDuration, nameof(lockDuration)),
                 fetchCount = messageLimit,
                 concurrentCount = concurrentLimit,
                 ordered
@@ -213,10 +213,10 @@ internal sealed class SqlServerClientContext :
         }
     }
 
-    /// <summary>Updates a queue's last-used timestamp.</summary>
+    /// <summary>Records activity for the specified primary queue with a zero-counter metric capture.</summary>
     /// <param name="queueName">The queue to mark as used.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that completes after SQL Server updates the queue timestamp.</returns>
+    /// <returns>A task that completes after SQL Server records the queue activity.</returns>
     public override async Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
@@ -242,6 +242,7 @@ internal sealed class SqlServerClientContext :
     /// <param name="queueName">The destination queue.</param>
     /// <param name="context">The serialized message and send metadata.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <remarks>SQL Server rounds a fractional send delay upward to whole seconds.</remarks>
     /// <returns>A task that completes after SQL Server enqueues the message.</returns>
     public override async Task SendAsync<T>(string queueName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
@@ -259,6 +260,7 @@ internal sealed class SqlServerClientContext :
     /// <param name="topicName">The source topic used to resolve subscriptions.</param>
     /// <param name="context">The serialized message and publish metadata.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <remarks>SQL Server rounds a fractional publish delay upward to whole seconds.</remarks>
     /// <returns>A task that completes after SQL Server publishes the message to matching subscriptions.</returns>
     public override async Task PublishAsync<T>(string topicName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
@@ -341,7 +343,7 @@ internal sealed class SqlServerClientContext :
     /// <summary>Extends the lock on a delivery owned by the supplied lock identifier.</summary>
     /// <param name="lockId">The current delivery lock identifier.</param>
     /// <param name="messageDeliveryId">The delivery identifier.</param>
-    /// <param name="duration">The additional lock duration measured from the database clock.</param>
+    /// <param name="duration">The additional lock duration measured from the database clock. SQL Server rounds fractional seconds upward.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns><see langword="true" /> when the lock was renewed; otherwise, <see langword="false" />.</returns>
     public override async Task<bool> RenewLockAsync(Guid lockId, long messageDeliveryId, TimeSpan duration, CancellationToken cancellationToken = default)
@@ -354,7 +356,7 @@ internal sealed class SqlServerClientContext :
         {
             messageDeliveryId,
             lockId,
-            duration = (int)duration.TotalSeconds
+            duration = ToDatabaseSeconds(duration, nameof(duration))
         }, cancellationToken).ConfigureAwait(false);
 
         return result == messageDeliveryId;
@@ -363,7 +365,7 @@ internal sealed class SqlServerClientContext :
     /// <summary>Releases a delivery lock and makes the message available after an optional delay.</summary>
     /// <param name="lockId">The current delivery lock identifier.</param>
     /// <param name="messageDeliveryId">The delivery identifier.</param>
-    /// <param name="delay">The delay before the message becomes available again.</param>
+    /// <param name="delay">The delay before the message becomes available again. SQL Server rounds fractional seconds upward.</param>
     /// <param name="sendHeaders">Headers to merge into the unlocked message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns><see langword="true" /> when the delivery was unlocked; otherwise, <see langword="false" />.</returns>
@@ -378,7 +380,7 @@ internal sealed class SqlServerClientContext :
         {
             messageDeliveryId,
             lockId,
-            delay = delay > TimeSpan.Zero ? Math.Max((int)delay.TotalSeconds, 1) : 0,
+            delay = ToDatabaseSeconds(delay, nameof(delay)),
             headers = SerializeHeaders(sendHeaders)
         }, cancellationToken).ConfigureAwait(false);
 
@@ -450,9 +452,25 @@ internal sealed class SqlServerClientContext :
             host = HostInfoCache.HostInfoJson,
             partitionKey = context.PartitionKey,
             routingKey = context.RoutingKey,
-            delay = (int?)context.Delay?.TotalSeconds,
+            delay = context.Delay.HasValue ? ToDatabaseSeconds(context.Delay.Value, nameof(context.Delay)) : (int?)null,
             schedulingTokenId
         };
+    }
+
+    // SQL Server routines use whole seconds. Round upward so valid intervals never end early.
+    static int ToDatabaseSeconds(TimeSpan interval, string parameterName)
+    {
+        if (interval < TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(parameterName, interval, "The interval must not be negative.");
+
+        long seconds = interval.Ticks / TimeSpan.TicksPerSecond;
+        if (interval.Ticks % TimeSpan.TicksPerSecond != 0)
+            seconds++;
+
+        if (seconds > int.MaxValue)
+            throw new ArgumentOutOfRangeException(parameterName, interval, "The interval exceeds the SQL Server seconds limit.");
+
+        return (int)seconds;
     }
 
     static string? SerializeHeaders(Headers headers)

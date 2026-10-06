@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs
++++ RestoreUtcChronologyGuard
+@@ -25,6 +25,8 @@
+             throw new ArgumentOutOfRangeException(nameof(mode), mode, "The batch completion mode must be defined.");
+         if (messages.Count == 0)
+             throw new ArgumentException("A delivered batch must contain at least one message context.", nameof(messages));
++        if (lastMessageReceived < firstMessageReceived)
++            throw new ArgumentOutOfRangeException(nameof(lastMessageReceived), lastMessageReceived, "The last-message timestamp must not precede the first-message timestamp.");
+         for (var index = 0; index < messages.Count; index++)
+         {
+             if (messages[index] is null)

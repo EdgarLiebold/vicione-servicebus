@@ -1,0 +1,81 @@
+{
+  "utc": "2026-10-06T10:04:37.746514+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_INDIVIDUAL_SOURCE26_NO_NEW_NATIVE_GRADE",
+  "scope": {
+    "Courier": 22,
+    "RabbitMq": 3,
+    "BeginUse": 1
+  },
+  "author_norms": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package395-courier28-current320-local-contract-context-proposed-r1/EXACT22_BOUNDED_SOURCE_RECOMMENDATIONS.json",
+      "sha256": "c7a92c54b6f582fdedbc6afda167587700e52fe30bec1a899b523937dd21cf98"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package404-rabbit-builder-topology-send3-root-source-proposed-r1/INDIVIDUAL_CONTRACTS3.json",
+      "sha256": "aacb1515566a8f921c494dc71fbfa27c302ac1c2cbe05e26b082cdc1f3ba31ff"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package395-active-pipe-begin-use1-local-source-proposed-r1/PER_ID1_LOCAL_CONTRACT.json",
+      "sha256": "ac33089f27879ea41cbf09e57f7bf4ff20e038c5ba0703615d792e1903c0b183"
+    }
+  ],
+  "different_adversarial_peers": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package395-courier28-independent-scanner-source-peer-r1/REPORT.json",
+      "sha256": "75216744701ca311b71ce92e3f632c3f47d301eea4279b44488eec3cc7226545"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package404-rabbit3-independent-source-norm-peer-r1/REPORT.json",
+      "sha256": "054a13d24f3721973dc3104e4631a031949399780e30d88f69b99885d80265fe"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package395-activepipe-beginuse1-independent-runtime-source-peer-r1/REPORT.json",
+      "sha256": "3e1ac3153f4859c78eeecc65b165bed008156b5f713946d5205d9cebd13966dd"
+    }
+  ],
+  "Root_whole_sources": {
+    "Courier10": [
+      "c8db45 fullHost236/RegistrationExtensions283/DI74;centralother2 recoverycf3e2a",
+      "ffa501+99e32a Builder493/Executor104",
+      "3c6a3b last3 main plusecb93d recoveredResponse128..148"
+    ],
+    "Rabbit3": [
+      "1c3f21 two owners; centralSend recoveredb224fe+59b063"
+    ],
+    "BeginUse3": [
+      "0bc5dc+e92e06"
+    ]
+  },
+  "Root_whole_norms": {
+    "Courier22": [
+      "ecb93d",
+      "92b48c"
+    ],
+    "Rabbit3": "RetainedRoot author own whole Source404 Norm3",
+    "BeginUse1": "4449bb"
+  },
+  "Root_whole_peers": [
+    "92b48c Courier",
+    "d64e3a Rabbit",
+    "4449bb BeginUse"
+  ],
+  "actual_source_XML_rejoined": {
+    "CourierAndCore": "Root407 Original frozen frames",
+    "Rabbit": "Root394 frozen actual frames"
+  },
+  "master_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "753bf001e11e40c38ce69650aee65e675209707ef23fe30ea2ac0c3ded6955d2"
+  },
+  "new_canonical_members": 26,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "operative_holds": [
+    "Courierowning6 now actual407 causal confirmed, Product409 pending, not Source26 accepted",
+    "PipeStop6295 separate",
+    "Sagas/Harness/EF observeradmission andtransport actual hypotheses remain"
+  ],
+  "latest_master_before_count": 19282
+}

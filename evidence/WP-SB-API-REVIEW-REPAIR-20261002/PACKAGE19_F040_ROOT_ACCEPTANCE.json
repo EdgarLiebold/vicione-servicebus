@@ -1,0 +1,223 @@
+{
+  "status": "ROOT_ACCEPTED_F040_TARGETED_SHARED_FINAL_PENDING",
+  "finding": "F-SB-API-040",
+  "accepted_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F040_FREEZE.json",
+    "sha256": "0f7ab9b1851353c797e889374882ae7ab309a5f3e9f4dbcce4a89fe0b785eb7e",
+    "bytes": 10814
+  },
+  "independent_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/REVIEW.json",
+    "sha256": "594e20d0edb69ad0330ce46eebfcc705f87510ace9ca728418fb88388e01a5aa"
+  },
+  "independent_review_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/MANIFEST.json",
+    "sha256": "7b14a2943883da9a4e33e5a9ca77170502e586d890077d85fdd00860b42e38be"
+  },
+  "root_verified_artifacts": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/BINDING_PROOF.json",
+      "sha256": "bbbf390aa59b7179f97a3a2cb48cff7d7686d35288c131e22a718924212d97d3",
+      "bytes": 159237
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/LOG_FULL_READ_SEGMENTS.json",
+      "sha256": "f44d1bd1fd4f024e0572623d5d5c583843661025e0b8c89c69199050ea3ee16e",
+      "bytes": 768662
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/READ_CLOSURE.json",
+      "sha256": "a7156fda97460c8bf3240869cbadd2a6f6235320ee16362711aee4647a52835f",
+      "bytes": 107490
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/REVIEW.json",
+      "sha256": "594e20d0edb69ad0330ce46eebfcc705f87510ace9ca728418fb88388e01a5aa",
+      "bytes": 6719
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/REVIEW.txt",
+      "sha256": "a6aabd5f1657815e817a9d107d76dc8f080c2cb41baaeda861d574355fa703dc",
+      "bytes": 3212
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/complete_review.py",
+      "sha256": "1bd742124d7cadc6dbf2bff1f992eeca95e577908e329b9c0a13d9b968ca5c8d",
+      "bytes": 17569
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/verify_readonly.py",
+      "sha256": "878709ee63e1a197d7d4d716ecf3d143707e499b8797d684d0820019d0e9f826",
+      "bytes": 10874
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F040_FREEZE.json",
+      "sha256": "0f7ab9b1851353c797e889374882ae7ab309a5f3e9f4dbcce4a89fe0b785eb7e",
+      "bytes": 10814
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/00-InMemoryReceiveEndpointContext.cs.txt",
+      "sha256": "ad835878411a286f7463fe79d30d774fee603305293a66902e4ae764de9f3b94",
+      "bytes": 4921
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/ActivityOwnership.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/01-ActivityOwnership.PublicConsumer.csproj.txt",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/Cases.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/02-Cases.cs.txt",
+      "sha256": "8a6b4f65ab1e5575f90789628bb5381e4cb2965179d772695893ff8f3d98e06d",
+      "bytes": 8458
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/03-NuGet.Config.txt",
+      "sha256": "4fd0f3d6b8d94071a21d43c063b008969f34c5311eab2f4586f5685e98e94a91",
+      "bytes": 577
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/04-OwnedLifetime.cs.txt",
+      "sha256": "57121c85d071a911ebe455a3eee60e5efb2132e7dade5b6ca07d9b2b9a79f53a",
+      "bytes": 1918
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/05-Program.cs.txt",
+      "sha256": "45327fe8582dcc0ce8068a62a7e8941cc61777503737d75896ec65f93a9ecee9",
+      "bytes": 2329
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/06-packages.lock.json.txt",
+      "sha256": "07881084828c017cc5b61cb33263452337e76c5227731a10c2fbb2b2106d978f",
+      "bytes": 16204
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/ActivityOwnership.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/07-ActivityOwnership.PublicConsumer.csproj.txt",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/Cases.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/08-Cases.cs.txt",
+      "sha256": "8a6b4f65ab1e5575f90789628bb5381e4cb2965179d772695893ff8f3d98e06d",
+      "bytes": 8458
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/09-NuGet.Config.txt",
+      "sha256": "96a8e21aa8ee53d96138f82c5e05e97cd2fe92e7e622e2d9b58256eefebe9a6a",
+      "bytes": 578
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/10-OwnedLifetime.cs.txt",
+      "sha256": "57121c85d071a911ebe455a3eee60e5efb2132e7dade5b6ca07d9b2b9a79f53a",
+      "bytes": 1918
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/11-Program.cs.txt",
+      "sha256": "45327fe8582dcc0ce8068a62a7e8941cc61777503737d75896ec65f93a9ecee9",
+      "bytes": 2329
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/12-packages.lock.json.txt",
+      "sha256": "6ed1b2f99e8befa4d371f0fd5992ca381c2f3edeb193447f776c24bd2d69c8ae",
+      "bytes": 16204
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/run_operation.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/13-run_operation.py.txt",
+      "sha256": "e77b44c2d7c0aa92d0b00addcb182d479cfdf7302161b841a479a9c8f5e1b2ea",
+      "bytes": 1644
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package19_f040_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/14-package19_f040_mutations.py.txt",
+      "sha256": "65c1956b4d3c2f79fb4d679498258bce1afc8dfc52b2a07bce46e0d912f1a8d4",
+      "bytes": 7256
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package19_f040_bind.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-freeze/15-package19_f040_bind.py.txt",
+      "sha256": "c44833bde2cf83913f4eb642c68bcb579dd1a681bad10ac83c8cbd9d8be87f0b",
+      "bytes": 7692
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F040_ROOT_BINDING.json",
+      "sha256": "3f7dfbecd66f000c25e9414e2464aa60caf282c6d4fd48a22af84e6a715f3b90"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F040_MUTATIONS.json",
+      "sha256": "683d26da3e54d97bdf8a22e0a4cc0615a71b4f8b09a10decbfba29558a45465d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_TRANSPORT_PREAUTHOR_PLAN.json",
+      "sha256": "610ca28558e3d3818e6641cd70869ae134ed6b14c10a4f42c58d2ea99bd2bff6"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_TRANSPORT_PRE_NATIVE_CORRECTED_BINDING.json",
+      "sha256": "2a41ccbd522df640c127a4c8c4c9652969982c990074ea389e59c8424e6ab0c8"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_TRANSPORT_ROOT_PRE_NATIVE_BINDING_R2.json",
+      "sha256": "de5bda119f1e9b4ac0272ed8245003a0b67aec175ae5bafa242e878ad57e7446"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_TRANSPORT_ROOT_PRE_NATIVE_BINDING_R3.json",
+      "sha256": "cdf614d017221d947c96eea4b8b33895c76eea40827f439fc823ccdc6590c310"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_TRANSPORT_ROOT_PRE_NATIVE_BINDING_R4.json",
+      "sha256": "3c8dc4068081f08dca7c2aa2465f5b3a68cb3dc01118827c2ec98c44efd1fd96"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_TRANSPORT_ROOT_WHOLE_OWNER_READ_R1.json",
+      "sha256": "8b78f43cc9e7529b0c0c4cb8052b111bc71a38b088ba0003c7da26f3c7dc1a64"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_TRANSPORT_SETUP_EXCLUSION_R1.json",
+      "sha256": "277e68beb8d309e6b3a33ac0699e86ca1b6ea8260fe2dd532fea8e7be152eb7a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F040_MUTATION_PREAUTHOR_PLAN.json",
+      "sha256": "95f00ff5225ec34a27fc35a307778a5706ae9b75bd451458c7d64d3082d9a437"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F040_SOURCE_OWNER_PLAN_R2.json",
+      "sha256": "a4bc6c99ddb92a099f6e15adb983158fec4615805561fc0b3ed1b84e9cf5c14d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F040_SOURCE_PATCH_PLAN.json",
+      "sha256": "c885e3da668f7a05c0d19425aeb78d3eeae58810ec4169d7dbb7b427cdf5118d"
+    }
+  ],
+  "root_own_verification": "Actual source and pairedpublicowner whole read;12originalfinitefailureblocks read; exact3mutableeffect bodies/finitefailures read; independentRootbinder140effects+26receipts+4physicalselectedchains; finalchecks6209originalrestored+exactselectedDLL andsnapshotidentities.",
+  "original": {
+    "finite_reds": 12,
+    "positive": 2,
+    "guards": 0
+  },
+  "corrected": 14,
+  "compiled_mutants": 3,
+  "baseline": 14,
+  "rollback": 14,
+  "limits": [
+    "Only bounded F040 internal receive topology name repair and explicit14 public ConsoleCases. No Core766/canonical whole owner/whole API/ARM/cloud/concurrency claim.",
+    "Historical old b2c1 frame verified. Later F041 current O d9f source, companion route behavior and four Courier F034 deltas excluded.",
+    "Wildcard controls prove actual successful startup + finite raw topology/receiver only, no wildcard send/delivery claim. Twelve non-wildcard modes each verify actual two sends and terminal business/postconsume exact identities.",
+    "Normalized dot/dotdot or empty entity exception type can change from later fabric ArgumentException to explicit ConfigurationException; no universal invalid-input exception/ParamName equivalence. Ordinary null/whitespace configuration guards unchanged.",
+    "Microsoft.Extensions10.0.12 is physically lock/cache/app/native-LOADED bound. Framework10.0.10 is ambient context only; F040 Program does not emit loaded CoreLib or Environment.Version.",
+    "No per-mutant NuGet pack claimed; five strict compiled Core DLLs substituted in fixed NuGet public consumer with immutable oracle/dependencies; selected43fb restored.",
+    "CLI child60s deadline and case12s bounds are harness guards, excluded from kills. No pending guard tasks interpreted as SDK success.",
+    "Initial three compiler errors excluded, initial unaccepted sender-parser source R1 build operational only, historical10-case qualification kept separate from final14."
+  ]
+}

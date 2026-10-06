@@ -108,7 +108,7 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
     {
         var serviceAddress = _serviceAddressProvider(context);
 
-        return _messageFactory.UseAsync(context, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress));
+        return _messageFactory.UseAsync(context, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress), context.CancellationToken);
     }
 }
 
@@ -173,7 +173,7 @@ public class RequestActivity<TInstance, TData, TRequest, TResponse> :
 
         var serviceAddress = _serviceAddressProvider(context);
 
-        await _messageFactory.UseAsync(context, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress)).ConfigureAwait(false);
+        await _messageFactory.UseAsync(context, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress), context.CancellationToken).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }

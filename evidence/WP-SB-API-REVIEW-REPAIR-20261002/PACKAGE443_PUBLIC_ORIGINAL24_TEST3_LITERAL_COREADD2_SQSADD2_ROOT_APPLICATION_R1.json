@@ -1,0 +1,89 @@
+{
+  "utc": "2026-10-06T12:49:10.717033+00:00",
+  "status": "ROOT_APPLIED_TEST_ONLY_PUBLIC_ORIGINAL24_PENDING_COMPILER_NATIVE",
+  "pins": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package441-test24-core-sqs-literal-merge-proposed-r1/REPORT.json",
+      "sha256": "27c6bb1f4681a4bef276f804a833317d82fa30bd0de4d7aaa0c75c4c71b4d0c4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package441-test24-core-sqs-literal-merge-proposed-r1/MANIFEST.json",
+      "sha256": "8bc82918d3659c0dce594c91887cf3013896bf4ebeb219ae2dee152c7fa0aa1f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package431-sqs16-independent-scanner-test-source-peer-r1/REPORT.json",
+      "sha256": "a153c2234bdd37c9d270f21217b26cd3be45ed70422422a768ab036318e87eb5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package434-reset2-independent-runtime-test-source-peer-r1/REPORT.json",
+      "sha256": "ea2dc37eb9020804d08efc2c60d4886966abfa2ca2e9dab7b124b821c2b1e4a6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package431-host-stop6-independent-test-source-peer-r1/REPORT.json",
+      "sha256": "62988ffba9ab8ed11ab7186f2a3b6e748d52bd69c1410a951d0e7f305078cb1d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package441-test24-literal-merge-independent-peer-r1/REPORT.json",
+      "sha256": "6dc227d4e2347cb107e7795b5935aecac29b233a51f936ad3f27e0a56bb41071"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package431-host-stop6-report-guard-count-precision-r1/ERRATUM.json",
+      "sha256": "9dd024f7ae20a5143b3cf7778988c184b5c547f86f99970809bd8e5256546d3e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package434-reset-test-author-skill-read-label-erratum-r1/ERRATUM.json",
+      "sha256": "dd673388b4fde04b15fb03b12570c158a5c1cdc7b063f87ef2d59403089861f9"
+    }
+  ],
+  "files": [
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Transports/HostOwnedShutdownDrainTests.cs",
+      "sha256": "b5c1194443b4e8a1c3aa9f2f6861d15322cc2052bcd83434d2c50e336385c139",
+      "before": null,
+      "kind": "new_test"
+    },
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Transports/ReceiveEndpointProviderResetFailureTests.cs",
+      "sha256": "4e58f782d12ee99fea582fcf07582dc8a95604328a7c6bab3d1ec608310e5846",
+      "before": null,
+      "kind": "new_test"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsConnectionAndTopologyDiagnosticsTests.cs",
+      "sha256": "b1efb631b1de45d935701fc328a2be43179d0bfa69931e631fa70f99a434600b",
+      "before": null,
+      "kind": "new_test"
+    },
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before": "6fa8bfb8f5f181452afc69b7bcf44865168b5df6863bc09d1bf2bd0a807ed240",
+      "sha256": "0a9fe27f7fedfff0c09dda1b2182f8998d91c0eee1716478b4df682d7368faf6",
+      "rows_before": 4681,
+      "rows_after": 4683,
+      "kind": "literal_requirement_addition"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "before": "30825186c34dd81e03beab7a3d611c5ba74a7492930947aff01ec5ca8818c282",
+      "sha256": "d52821f54d300544ffd441617096b29d3159c366c35e6dcf2c15abff6fd426cb",
+      "rows_before": 189,
+      "rows_after": 191,
+      "kind": "literal_requirement_addition"
+    }
+  ],
+  "source_guards_verified_before": 123,
+  "current_MASTER19365": "Root442 adds four unrelated API local contracts only; allselected operativeOriginal5 still absent, author historical19361 kept.",
+  "scope": "Core Host6+Reset2/SQS connection4+topology12, actualpublic Original; Product0, existingTestoracle0, Catalog4literaladditiononly",
+  "known_findings": 227,
+  "bounded_findings": 227,
+  "master_rows": 19365,
+  "original_remaining": 66,
+  "native_credit": 0,
+  "grade": null,
+  "closed": false,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package443-original24-test3-requirements4-root-application-before-r1",
+  "limits": [
+    "No predictions; Root records actual compiler/native outcomes and different independent result review next.",
+    "AllsourcePeer and literalmergedcatalogPeer completed beforeOapplication."
+  ]
+}

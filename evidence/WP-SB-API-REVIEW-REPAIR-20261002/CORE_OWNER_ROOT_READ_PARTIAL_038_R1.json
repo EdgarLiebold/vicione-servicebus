@@ -1,0 +1,60 @@
+{
+  "status": "PARTIAL_ROOT_PERSONAL_COMPLETE_LITERAL_DICTIONARY_NO_OWNER_FULL_CREDIT",
+  "actor": "/root",
+  "utc": "2026-10-04T00:53:25.787708+00:00",
+  "source_packs_personally_full_untruncated": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0157.txt",
+      "sha256": "ee8beb2397fb32cab735419615c9d4d0aca70513d9fb794b8ef5233820d56b34",
+      "bytes": 13978
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0158.txt",
+      "sha256": "076e2ee88259c05a03c54f7bad8e1e885584e38eeea56aa90ba3c49d50e9f94c",
+      "bytes": 13905
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0159.txt",
+      "sha256": "8ba12504120aa494ec519bfea112d2d11adefe9ba6c4c845098b1249d62ece65",
+      "bytes": 13948
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0160.txt",
+      "sha256": "74602ec6b52c0e8c514c8c99a1e69886b7d4236040328fffeb5ece3f7071e2df",
+      "bytes": 13931
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0161.txt",
+      "sha256": "7d23fac7b5c83f5d778ba5d8c9659e8468dfd18213e9c0b3f6e283d2465454e2",
+      "bytes": 13925
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0162.txt",
+      "sha256": "2579d054f6d30a68531e1cdfdff041531021784f64a350cda6e37d9734049db3",
+      "bytes": 13948
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0163.txt",
+      "sha256": "174d114ca0984e6b7d8aefaf587c51cdc2184c5297a0ba38faea26c333908b97",
+      "bytes": 13993
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0164.txt",
+      "sha256": "339ea8e6932b905e6cf32653db1626e4a4c8a1811fdb74f45b66853187163231",
+      "bytes": 13989
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0165.txt",
+      "sha256": "0d03bc94a07a435a88ca2eb259de5101e4e1fdd0874dd03dec5f1c294f11c756",
+      "bytes": 13961
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0166.txt",
+      "sha256": "e8cdbdb947961393c4ef085f13e603a64a8de4e4884be4e037c73b48aea1fb3c",
+      "bytes": 13919
+    }
+  ],
+  "line_ids": "25861..27406; exact per-file ordered mappings still pending",
+  "whole_owner766": false,
+  "RAW_increment": 0
+}

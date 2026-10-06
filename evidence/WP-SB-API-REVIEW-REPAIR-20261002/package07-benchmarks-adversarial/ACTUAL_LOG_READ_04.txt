@@ -1,0 +1,144 @@
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-original-console-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.MessagePack -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack/release/ViciOne.ServiceBus.MessagePack.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.BenchmarkConsole -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.BenchmarkConsole/release/ViciOne.ServiceBus.BenchmarkConsole.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:05.46
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-original-latency-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.AmazonSqs -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.RabbitMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll
+  ViciOne.ServiceBus.ActiveMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq/release/ViciOne.ServiceBus.ActiveMq.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.Courier -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll
+  ViciOne.ServiceBus.EntityFrameworkCore -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll
+  ViciOne.ServiceBus.SqlTransport -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll
+  ViciOne.ServiceBus.AzureServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.Futures -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll
+  ViciOne.ServiceBus.Testing -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll
+  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:07.00
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-rollback-console-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.MessagePack -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack/release/ViciOne.ServiceBus.MessagePack.dll
+  ViciOne.ServiceBus.BenchmarkConsole -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.BenchmarkConsole/release/ViciOne.ServiceBus.BenchmarkConsole.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:01.57
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-isolated-rollback-latency-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.AmazonSqs -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll
+  ViciOne.ServiceBus.SqlTransport -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.RabbitMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.ActiveMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq/release/ViciOne.ServiceBus.ActiveMq.dll
+  ViciOne.ServiceBus.Courier -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.AzureServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.Futures -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll
+  ViciOne.ServiceBus.Testing -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll
+  ViciOne.ServiceBus.EntityFrameworkCore -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll
+  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:02.18
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-batch-limits-lost-0-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.MessagePack -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack/release/ViciOne.ServiceBus.MessagePack.dll
+  ViciOne.ServiceBus.BenchmarkConsole -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.BenchmarkConsole/release/ViciOne.ServiceBus.BenchmarkConsole.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:01.54
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-batch-limits-lost-0-mediator-batches.log
+{"mode":"mediator-batches","passed":false,"error":"ViciOne.ServiceBus.ConfigurationException","Message":"Message limits for bus \u0027mediator\u0027: MaxBodyBytes is not declared. Call mediator.Limits(...) with explicit byte limits.","parameter":null}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-batch-limits-lost-1-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.MessagePack -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack/release/ViciOne.ServiceBus.MessagePack.dll
+  ViciOne.ServiceBus.BenchmarkConsole -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.BenchmarkConsole/release/ViciOne.ServiceBus.BenchmarkConsole.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:01.51
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-batch-limits-lost-1-mediator-batches.log
+{"mode":"mediator-batches","passed":false,"error":"ViciOne.ServiceBus.ConfigurationException","Message":"Message limits for bus \u0027mediator\u0027: MaxBodyBytes is not declared. Call mediator.Limits(...) with explicit byte limits.","parameter":null}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-counter-lost-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.SqlTransport -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll
+  ViciOne.ServiceBus.ActiveMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq/release/ViciOne.ServiceBus.ActiveMq.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.Courier -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.RabbitMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll
+  ViciOne.ServiceBus.AmazonSqs -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.AzureServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.Futures -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll
+  ViciOne.ServiceBus.Testing -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll
+  ViciOne.ServiceBus.EntityFrameworkCore -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll
+  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:01.93
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-counter-lost-unique.log
+{"mode":"unique","passed":false,"error":"System.InvalidOperationException","Message":"Contract assertion: All unique messages did not complete the consume total","parameter":null}

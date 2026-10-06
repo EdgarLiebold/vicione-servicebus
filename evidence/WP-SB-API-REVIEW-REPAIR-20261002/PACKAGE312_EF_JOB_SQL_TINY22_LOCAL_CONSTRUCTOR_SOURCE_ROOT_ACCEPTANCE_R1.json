@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-06T02:38:21.801831+00:00",
+  "status": "ROOT_ACCEPTED22_INDIVIDUAL_LOCAL_SOURCE_CONSTRUCTOR_CONTRACTS_NATIVE0",
+  "master_before_sha256": "85c8423fa8d952947a9bd521b833345417e83af6542bc67bdadb54b74e0bf942",
+  "author_independent_evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package305-ef-job-sql-tiny22-local-constructor-contracts-proposed-r1",
+      "manifest_sha256": "928ebf6c2a721bb6efa9ad2fa1ee190767f1bff50ec2443b4395dd3043735393"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package305-constructor22-one-allocation-order-precision-overlay-r1",
+      "manifest_sha256": "d26c9bec28c65fd49918065edb51ac3672ed1396addf2069dc771c15152b3e65"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package305-ctor22-independent-source-peer-r1",
+      "manifest_sha256": "46f25ffd37701025a1c337b899860706b1fd71b13facb064086e7bcbd8cb59e5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package305-constructor22-current-source-PDB-XML-binding-r1",
+      "manifest_sha256": "d355f182bbeacba6b674629f06c0704d6f819cf8f3a56352d6f438b13faf5dc3"
+    }
+  ],
+  "root_authority": "Complete22individualnorms and perIDXMLlimits5e344f; completepeer74bcde. Author/peer personally whole21owners1430L+14helpers1258L independently, not borrowed Rootwhole sourceauthority. This Rootcall reparses actual9 P36 complete normalized metadata/35currentphysicalsourceguards and22exactOriginalfullrows/individualXMLabsence/disjointMaster. Initialnormcombined d08334 truncated, explicitly recovered all22norms5e344f.",
+  "scope": "20 class default routes (16public/4protected) and2struct language-zero-init routes across7assemblies; no enumID or executable operative callback/lifetime/storage workflows accepted.",
+  "preservation": "All18949 existing rows exact preserved; appendSource22/native0/nullgrade. No Product/Test changes or emittedConstructorInfo/ABI/runtimepromotion.",
+  "counts_after": {
+    "master": 18971,
+    "Original_accepted": 18109,
+    "Original_remaining": 460
+  },
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

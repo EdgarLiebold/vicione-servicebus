@@ -1,0 +1,94 @@
+{
+  "created_utc": "2026-10-04T13:01:54.238697+00:00",
+  "decision": "ROOT_ACCEPTED_ALL_SEVEN_SPECIFIC_REPAIRS",
+  "findings": [
+    "F-SB-API-061",
+    "F-SB-API-063",
+    "F-SB-API-064",
+    "F-SB-API-065",
+    "F-SB-API-066",
+    "F-SB-API-067",
+    "F-SB-API-068"
+  ],
+  "independent_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package56-fixed-native-independent-r1/REPORT.json",
+  "independent_report_sha256": "3641336226fd9cb928938f172945326c02dbab699e9922d8891ddef748bcf874",
+  "fresh_core_package_sha256": "719405dbea4f5e728c8baf83ada2b2598c2f80903ef2cfe2d7fa3c373d66c393",
+  "native_summaries": [
+    {
+      "total": 26,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "phase": "package56-fixed-native26-r1"
+    },
+    {
+      "total": 37,
+      "passed": 37,
+      "failed": 0,
+      "skipped": 0,
+      "phase": "package56-fixed-di-native-r1"
+    }
+  ],
+  "root_reads": [
+    "70a16e Original8qualification whole",
+    "38e826 productR2approval whole prior",
+    "e301e6+f5a0ba Consumer815 and edbd93 Pending224",
+    "356b31 actualowner26raw whole",
+    "522b3b actualwholeDI37raw",
+    "13227b freshpack whole",
+    "00ad37 independentfixed7REPORT whole"
+  ],
+  "repair_application": "PACKAGE56_PRODUCT_SOURCE_APPLICATION_R2.json",
+  "limits": [
+    "No SDK/CLR/debugger by independent reviewer; pure approved P36 parser only.",
+    "All actual document metadata identities/indexes/framing and embedded bodies checked; sequence point/custom debug semantics not reimplemented.",
+    "Only9 selected physical CS checksums bound; other metadata docs and generated body equality do not imply new human semantic reviews.",
+    "Exact Core runtime copy checked; other3 support runtime DLLs frozen/hash only, no current canonical equality claim.",
+    "No global API18598 semantic closure, coverage rate, mutation kills or broad A+.",
+    "Final broader solution/package gates and remaining API dossiers remain separate."
+  ],
+  "finding_recommendations": [
+    {
+      "id": "F061",
+      "recommendation": "Bounded current registry repair accepted",
+      "evidence": "Own historical OriginalOnly race finiteExpected2Actual3 qualified in prior Original2. Original-shape Fact removed; actual permanent same-key/independent-key32 admissions and successor duplicate/late-generation controls pass in current26. Registry lock/exact instance detach/fresh Pending generation source full-reviewed, exact approved58405/587cdc applied and current PDB-bound.",
+      "limit": "Not same-test Original race RED-to-GREEN; permanent controls and source repair are separately identified; no exhaustive interleaving proof."
+    },
+    {
+      "id": "F063",
+      "recommendation": "Bounded original exception preservation repair accepted",
+      "evidence": "Prior Original2 exact primary ConfigurationException expectation failed with diagnostic InvalidOperationException. Current unchanged716... test exact primary InnerException and observer/logger cause counts in actual public DI route passes in whole37; source factory8659... actual catch-guard preserves diagnostic failures from replacing primary.",
+      "limit": "Guard scoped to diagnostic handling in factory; no universal arbitrary logger guarantee."
+    },
+    {
+      "id": "F065",
+      "recommendation": "Bounded retained-source/manual/lifecycle failure repair accepted",
+      "evidence": "Exact3 Original finiteRED become currentGREEN. All retained context cancel attempts, manual source finally terminalized, callback failures captured. Actual corrected-only timeout52ms has held provider/consume loop joins and exact aggregate cause; explicit canceled-budget57ms observes actual owned Completed aggregate while pending consume task remains held, independently drained in cleanup.",
+      "limit": "Canceled stop budget permits cooperative exit of waits; callbacks/provider cooperation and external custom logger caveats retained."
+    },
+    {
+      "id": "F066",
+      "recommendation": "Bounded startup/cleanup retry repair accepted",
+      "evidence": "Exact4 startup Original2vs1 dispatch and combined primary-only OriginalRED become currentGREEN. Sync/null/returnedFault/returnedCancel exact outcome, detach+cancel captured, both primary/cleanup causes retained, same-key retry actually dispatched. Protected async route may represent previous synchronous collaborator throw as faulted returned Task; documented in prior source approval.",
+      "limit": "No guarantee of future-generation cancellation after a cancellation snapshot or arbitrary provider behavior."
+    },
+    {
+      "id": "F064",
+      "recommendation": "Cooperative Start/Stop timeout docs accepted as source/XML/packed contract correction",
+      "evidence": "Personally full-read current lifecycle owner; positive timeout/token CTS and direct await require bus cooperation. Type+Start+Stop XML3 actual compiled/packed nodes preserve accurate non-hard-deadline description.",
+      "limit": "Current native26/37 does not execute fresh Start/Stop timeout test methods; no fresh F064 runtime claim."
+    },
+    {
+      "id": "F067",
+      "recommendation": "Deploy topology docs accepted as source/XML/packed contract correction",
+      "evidence": "Actual full-read Deploy body calls Start(callerToken), awaits it, then Stop(None). No code disables consumption. New summary and remarks require prior topology-only configuration when consumption must be inhibited. Actual compiled/packed Deploy node truthful.",
+      "limit": "No new real broker topology-only lifecycle test or arbitrary bus inhibition proof."
+    },
+    {
+      "id": "F068",
+      "recommendation": "Journal timeout docs accepted as source/XML/packed contract correction",
+      "evidence": "Personally whole-read current Options and actual Writer146 lines. Writer creates timeout CTS, linked operation token and directly awaits policy.ProjectAsync and store.AppendAsync, so provider cooperation is required. Current WriteTimeout and ContinueMessageFlow param/remarks XML2 match actual behavior, compiled and packed.",
+      "limit": "No new physical deadline, telemetry/custom collaborator guarantee or empirical noncooperating policy/store test from these native26/37."
+    }
+  ]
+}

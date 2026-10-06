@@ -1,0 +1,10 @@
+{
+  "status": "ALL_6209_ORIGINAL_HASHES_MATCH",
+  "started_utc": "2026-10-03T04:50:45.960871+00:00",
+  "completed_utc": "2026-10-03T04:50:49.110372+00:00",
+  "coverage_sha256": "e4ea3c9b1ad3487f867a5d6963663553af238f7d2f51a927c50a01f0ab6354d5",
+  "original_files_checked": 6209,
+  "mismatches": [],
+  "new_identity_source_removed": true,
+  "limits": "Completed readonly byte checkpoint; no native build run and no correctness inference from source hash restoration alone."
+}

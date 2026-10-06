@@ -1,0 +1,100 @@
+{
+  "status": "ROOT_ACCEPTED_F036_F037_TARGETED_SOURCE_NATIVE_COMPILED_COUNTERPROOFS_SHARED_FINAL_PENDING",
+  "actor": "/root",
+  "utc": "2026-10-04T02:55:46.919845+00:00",
+  "findings": [
+    "F-SB-API-036",
+    "F-SB-API-037"
+  ],
+  "current_selected_inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdSendTopologyConvention.cs",
+      "bytes": 1487,
+      "sha256": "d91a49c54b4134418fa566944c8625375cfbdae34433402fe85ab509092d4614"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdMessageSendTopologyConvention.cs",
+      "bytes": 2811,
+      "sha256": "bf285c87021afc83d55cec924b87405570f15b435906f4bf70b85c110563f664"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SubscriptionConsumeTopologySpecification.cs",
+      "bytes": 2541,
+      "sha256": "226adc09363b07341bbaaf76a435f4a761afb3f0280e707e6996bb4f7230b092"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusFamilyRegressionTests.cs",
+      "bytes": 13429,
+      "sha256": "fc71620d49be733688a2f4854b76ba69445c03effbeba7e1cee7807775815a60"
+    }
+  ],
+  "runner": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package36_azure_retained_mutations.py",
+    "bytes": 20653,
+    "sha256": "57fe7169150146ccb5d0fbba182d72448b95f051c1cc01fe723cdb1a741a3fbf"
+  },
+  "prepared": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-azure-retained-mutants-r4/PREPARED.json",
+    "bytes": 2460325,
+    "sha256": "d5531c2ab367113883e912490892ad2b81c10c772d0b957e3d9256a302854b9d"
+  },
+  "actual_result": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-azure-retained-mutants-r4/RESULT.json",
+    "bytes": 7544,
+    "sha256": "23cb2e110be92760e11d871db29bbb6a47273118b197f75a409de743ba5da526"
+  },
+  "root_all26_full_logs_receipt": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE36_R4_ROOT_ALL26_LOGS_FULL_R1.json",
+    "bytes": 10703,
+    "sha256": "a87d576036829578aa8f4940786c1b4d4610006615b5b8972a34043da6ca5957"
+  },
+  "adversarial_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-native-qualification-r4/REVIEW.md",
+    "bytes": 8374,
+    "sha256": "30931741dd6b3c776acde0bcfbbcd5d330319654f6ae33a2bf35b86b2be75fff"
+  },
+  "adversarial_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-native-qualification-r4/MANIFEST.json",
+    "bytes": 23043,
+    "sha256": "cf74e718d5f2ed76b70123affc7717ad951dd74d5dac7768896ed9c01f229b3e"
+  },
+  "root_actual_physical_replay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-native-qualification-r4/ROOT_ACTUAL_STAGE_REPLAY_R1.json",
+    "bytes": 24984905,
+    "sha256": "abcb58be877a9af3271e2bf2ffb72990cebb08b1e8219b2aced234224eb182da"
+  },
+  "root_actual_supplementary_replay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-native-qualification-r4/ROOT_ACTUAL_SUPPLEMENTARY_REPLAY_R1.json",
+    "bytes": 3529,
+    "sha256": "5d68230815057848c782893e604c99e7ec18cb04cabce011ab6f6071aeaf0350"
+  },
+  "fresh_peer_refs_checked": 76,
+  "root_personally_full": [
+    "R4 delta authored; earlier R3 complete runner and retained source-frame method read",
+    "All26 original actual logs and all26 command/cwd/exit/time/hash receipts",
+    "Independent PDB and stage qualifiers; pure negative builder and all12 actual negative controls",
+    "Independent final review, complete manifest, compact40 bindings, exact mutation diff and all prepared7 physical references"
+  ],
+  "scope": {
+    "strict_builds": 10,
+    "native_runs": 14,
+    "distinct_positive_cases": 5,
+    "case_executions": 22,
+    "positive_executions": 16,
+    "finite_assertion_failure_executions": 6,
+    "compiled_counterproofs": 4,
+    "skipped": 0,
+    "assembly_symbol_bindings": 50,
+    "document_raw_checksum_bindings": 23120,
+    "all6209_original_sources_restored": true,
+    "fixture_removed": true
+  },
+  "limits": [
+    "Selected current Azure topology sources against original frozen dependencies; no current complete Azure/Core/Unit-suite or cloud delivery claim.",
+    "ConflictRemoved changes Azure.Testing and Test DLL/PDB as well as Azure DLL; exact test-source binding is confirmed, no all-mutants-frozen-test-DLL claim.",
+    "Root actual stage replay byte-identical to independently generated physical report; machine document/source hashing gives no personal whole-source read credit.",
+    "PortablePDB structure and source identity are covered; sequence-point/import/custom debug payload semantics remain opaque and hashed.",
+    "R3 setup failure and R1/R2 unexecuted preflights preserved without native/kill credit.",
+    "Shared integrated final review and global A+ pending."
+  ]
+}

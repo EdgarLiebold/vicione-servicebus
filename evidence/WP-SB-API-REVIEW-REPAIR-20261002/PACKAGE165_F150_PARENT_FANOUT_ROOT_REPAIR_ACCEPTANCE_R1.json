@@ -1,0 +1,316 @@
+{
+  "utc": "2026-10-05T05:14:14.370380+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED_BOUNDED_PARENT_FANOUT_REPAIR",
+  "finding_ids": [
+    "F-SB-API-150"
+  ],
+  "accepted_before": 149,
+  "accepted_after": 150,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-parent-fixed18-ambient-original-selected100-neighbors2290-fresh2-independent-r1/REPORT.json",
+    "sha256": "b39086ac2f32a65e52834c8a51206f1d12c444f369fe7dd5806f5b2ea34121fb"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-parent-fixed18-ambient-original-selected100-neighbors2290-fresh2-independent-r1/MANIFEST.json",
+    "sha256": "498b33aa7d2624da8305b6ceabc61151637887225cb1155920575a3f44691e5a"
+  },
+  "manifest_files_verified": 3344,
+  "current_frozen_files_verified": 3326,
+  "actual_sdk_receipts": [
+    {
+      "phase": "package165-parent-repair-ambient-original-strict-core-build-r1",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "-warnaserror",
+        "-bl:artifacts/log/package165-parent-repair-ambient-original-strict-core-build-r1.binlog"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T02:56:32.460286+00:00",
+      "completed_utc": "2026-10-05T02:57:28.164148+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package165-parent-repair-ambient-original-strict-core-build-r1.log",
+      "log_sha256": "b8ab6c8bec44300486f5c9be11ec2874ab58decabf2b6ff3e15781729abfdc9e"
+    },
+    {
+      "phase": "package165-parent-fanout-fixed-native18-r1",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests",
+        "--minimum-expected-tests",
+        "18",
+        "--output",
+        "Detailed",
+        "--results-directory",
+        "artifacts/results-package165-parent-fanout-fixed-native18-r1"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T02:58:42.011034+00:00",
+      "completed_utc": "2026-10-05T02:58:45.878337+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package165-parent-fanout-fixed-native18-r1.log",
+      "log_sha256": "a192ccdb874a64773f99b07ffee5c5d3fe1dbb3a3e14a1028ad5ef36d2888edb"
+    },
+    {
+      "phase": "package165-scope-routing-schedule-header-callback-ambient-original-native100-r1",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests",
+        "ViciOne.ServiceBus.Tests.Middleware.DynamicRoutingTests",
+        "ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineConfigurationContractTests",
+        "ViciOne.ServiceBus.Tests.Serialization.DictionarySendHeadersTests",
+        "ViciOne.ServiceBus.Tests.Scheduling.AdvancedSchedulerDefaultAdapterTests",
+        "ViciOne.ServiceBus.Tests.Requirements.RequirementCoverageProjectionTests",
+        "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests",
+        "--minimum-expected-tests",
+        "100",
+        "--output",
+        "Detailed",
+        "--results-directory",
+        "artifacts/results-package165-scope-routing-schedule-header-callback-ambient-original-native100-r1"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 2,
+      "started_utc": "2026-10-05T02:59:10.823179+00:00",
+      "completed_utc": "2026-10-05T02:59:14.460155+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package165-scope-routing-schedule-header-callback-ambient-original-native100-r1.log",
+      "log_sha256": "ba426038c4fd3e85c49a4b8bab6ae9922dcfae45d33be259e089783ebf350027"
+    },
+    {
+      "phase": "package165-serialization-scheduling-middleware-di-saga-neighbors2290-r1",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-namespace",
+        "ViciOne.ServiceBus.Tests.Serialization",
+        "ViciOne.ServiceBus.Tests.Scheduling",
+        "ViciOne.ServiceBus.Tests.Middleware",
+        "ViciOne.ServiceBus.Tests.DependencyInjection",
+        "ViciOne.ServiceBus.Tests.SagaStateMachine",
+        "--filter-not-class",
+        "ViciOne.ServiceBus.Tests.Serialization.DictionarySendHeadersTests",
+        "ViciOne.ServiceBus.Tests.Scheduling.AdvancedSchedulerDefaultAdapterTests",
+        "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests",
+        "ViciOne.ServiceBus.Tests.Middleware.DynamicRoutingTests",
+        "ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineConfigurationContractTests",
+        "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests",
+        "--minimum-expected-tests",
+        "2290",
+        "--output",
+        "Detailed",
+        "--results-directory",
+        "artifacts/results-package165-serialization-scheduling-middleware-di-saga-neighbors2290-r1"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T03:00:23.957577+00:00",
+      "completed_utc": "2026-10-05T03:00:32.433785+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package165-serialization-scheduling-middleware-di-saga-neighbors2290-r1.log",
+      "log_sha256": "c2731cf182cef6a135a207ac87d6dae267baf0f16c483e96071d15113eded6bf"
+    },
+    {
+      "phase": "package165-fresh-core-pack-r1",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--output",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-fresh-two/packages"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T03:01:14.000655+00:00",
+      "completed_utc": "2026-10-05T03:01:16.078536+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package165-fresh-core-pack-r1.log",
+      "log_sha256": "2ef11756cbce8ac898b4dd0483d3ab60d6960beafb147f9e42b3fb591e71a8ce"
+    },
+    {
+      "phase": "package165-fresh-sagas-pack-r1",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--output",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-fresh-two/packages"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T03:02:04.106011+00:00",
+      "completed_utc": "2026-10-05T03:02:06.187422+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package165-fresh-sagas-pack-r1.log",
+      "log_sha256": "69b3d4cccd3be658404f5821b32652b760f6984507ed69277dd7e3aeb3cebe5f"
+    }
+  ],
+  "native": {
+    "total": 2408,
+    "passed": 2407,
+    "failed": 1,
+    "skipped": 0
+  },
+  "parent_fixed_context": {
+    "current_native_cases": [
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ParentFanout_AdmissionFailureJoinsAllStartedOutcomesAsync(firstCanceled: False)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ParentFanout_AdmissionFailureJoinsAllStartedOutcomesAsync(firstCanceled: True)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.DelayedObserver_BlocksFollowingStagesAndPreservesTheDispatchOutcomeAsync(delayedStage: \"typed-post\")",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.DelayedObserver_BlocksFollowingStagesAndPreservesTheDispatchOutcomeAsync(delayedStage: \"outer-pre\")",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.DelayedObserver_BlocksFollowingStagesAndPreservesTheDispatchOutcomeAsync(delayedStage: \"typed-pre\")",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.DelayedObserver_BlocksFollowingStagesAndPreservesTheDispatchOutcomeAsync(delayedStage: \"outer-fault\")",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.DelayedObserver_BlocksFollowingStagesAndPreservesTheDispatchOutcomeAsync(delayedStage: \"outer-post\")",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.DelayedObserver_BlocksFollowingStagesAndPreservesTheDispatchOutcomeAsync(delayedStage: \"typed-fault\")",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ParentFanout_LaterConversionOrPipeFailureKeepsStartedWorkOwnedAsync(conversionThrows: True)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ParentFanout_LaterConversionOrPipeFailureKeepsStartedWorkOwnedAsync(conversionThrows: False)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.FailingFaultObserver_CannotReplaceTheDispatchFailureOrSkipTheOuterObserverAsync(failingStage: \"typed-fault\", loggerThrows: False)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.FailingFaultObserver_CannotReplaceTheDispatchFailureOrSkipTheOuterObserverAsync(failingStage: \"outer-fault\", loggerThrows: False)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.FailingFaultObserver_CannotReplaceTheDispatchFailureOrSkipTheOuterObserverAsync(failingStage: \"typed-fault\", loggerThrows: True)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.FailingFaultObserver_CannotReplaceTheDispatchFailureOrSkipTheOuterObserverAsync(failingStage: \"outer-fault\", loggerThrows: True)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ConvertedContinuation_RemainsOwnedThroughCompletionFaultAndCancellationAsync(outcome: 1)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ConvertedContinuation_RemainsOwnedThroughCompletionFaultAndCancellationAsync(outcome: 2)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ConvertedContinuation_RemainsOwnedThroughCompletionFaultAndCancellationAsync(outcome: 3)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ConvertedContinuation_RemainsOwnedThroughCompletionFaultAndCancellationAsync(outcome: 0)"
+    ],
+    "old16_preserved_and_all_passed": true,
+    "original164_failed_case_now_passed": "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ParentFanout_LaterConversionOrPipeFailureKeepsStartedWorkOwnedAsync(conversionThrows: True)",
+    "new_two_cases": [
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ParentFanout_AdmissionFailureJoinsAllStartedOutcomesAsync(firstCanceled: False)",
+      "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ParentFanout_AdmissionFailureJoinsAllStartedOutcomesAsync(firstCanceled: True)"
+    ],
+    "source_bound_path": "src/ViciOne.ServiceBus/Middleware/ConsumeContextMessageTypeFilter.cs",
+    "repair": "Multi-output admission catch owns Task.WhenAll of all previously admitted output tasks before rethrowing exact admission failure or aggregate admission-first with actual output faults/cancellation. Zero/single-output branches unchanged.",
+    "reached_original_repair": [
+      "Both query-order and exact context/message assertions",
+      "Public operation remains pending while earlier real provider task is held after later synchronous conversion fault",
+      "After gate release public exact admission cause and faulted outcome assertions",
+      "Async second-output failure control likewise joins actual first provider task"
+    ],
+    "reached_new_controls": [
+      "Three real public connected typed output routes, exact conversion-order and token/context identity",
+      "Two actual first/second provider gates held, third synchronous admission throws before third callback",
+      "No next continuation; public operation remains pending until both previously admitted outcomes are terminal",
+      "Fault/fault retains admission-first and both exact independent output causes",
+      "Canceled/success retains admission-first plus actual cancellation token; started tasks independently joined and handles disposed"
+    ],
+    "limits": "Two new controls ran only on fixed source; no fabricated original-red proof for them, no universal multi-output enumeration or custom null-task contract grade."
+  },
+  "fresh2": [
+    {
+      "filename": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "5654d761a91ff3769c7e86dec5263a129dbf11ac7a69bb196b5d25ef442527eb",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.dll",
+        "lib/net10.0/ViciOne.ServiceBus.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/12ccc7a2a8e149fcbd5bc327bf7d4ebf.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "99a46d6653b0238b91387041b90fd54ee05c8e37007092ac34c92639b16f7de2",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "13930f9225e082b6e59552bdf64f573b8b3b8a6715e32cf6c9ed5b878bc8e3d6",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "9670d10c523a44c6d7c31d989bfe971303467badf9d836064eb2a9ed372456b6"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "0afb29c8d7bbf6bd6d0243f720851f9d67ccf4caa8a3352722e9493d776d16d6",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.Sagas.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/45470eb262544e619e3864489d0b6d26.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "5b4a8b2cb5767307f9066b0dcea07ce6e1183c44581e3e8103003da7d7eec674",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+          "sha256": "84a96fc821c43b3fced4d9ead9b9bf93a083158e7a1e4114a3eb4bc3c87a3516",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "af461ff95e6ed2f5e063ebff9f0a64b5c81b9452c28775a929aa5fee63f74203"
+    }
+  ],
+  "actual_XML": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "sha256": "13930f9225e082b6e59552bdf64f573b8b3b8a6715e32cf6c9ed5b878bc8e3d6",
+      "actual_nodes": 6872,
+      "all_nodes_and_bytes_unchanged164": true,
+      "limits": "No new XML edits; prior44-node semantics remain bounded prior peer receipts, current publication byte-binding verified."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "sha256": "84a96fc821c43b3fced4d9ead9b9bf93a083158e7a1e4114a3eb4bc3c87a3516",
+      "actual_nodes": 2435,
+      "all_nodes_and_bytes_unchanged164": true,
+      "limits": "No new XML edits; prior44-node semantics remain bounded prior peer receipts, current publication byte-binding verified."
+    }
+  ],
+  "root_read_authority": "Whole Parent198 and added173/179 Source read in prior root application; qualifier causal contexts personally read771efd; all manifest/frozen/current/receipts/log/physical ZIP/DLL/XML checks now. No whole2290 testbody claim.",
+  "source_line_precision": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE165_ROOT_PRODUCT_READ_LINECOUNT_PRECISION_ERRATUM_R1.json",
+    "sha256": "08a2288ff3666ddc7a0b6ed3cb0003f054958d164a05d672c426f07a8b21498f"
+  },
+  "CLOSED": false,
+  "limits": [
+    "Pure frozen Python qualification; no SDK/repo edits by peer.",
+    "One finite original inner restoration failure means no clean Core or wholeAPI grade.",
+    "Only7 selected runtimeDLL/canonical equality; no all-loaded-dependency proof.",
+    "Req4641 exact single managed-resource payload, names not decoded.",
+    "Core/Sagas XML byte exact unchanged164; fresh2 CRC/DLL/XML/embeddedPDB equals165 frames only.",
+    "Historical typed inventory not regenerated; no complete current member/signature grade.",
+    "2290 caseIDs exhaustive mechanically; human raw/testbody semantics bounded to actual named source reads."
+  ]
+}

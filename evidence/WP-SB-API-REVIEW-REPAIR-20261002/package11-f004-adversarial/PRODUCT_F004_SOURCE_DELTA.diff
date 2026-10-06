@@ -1,0 +1,343 @@
+--- F/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs
++++ Package11/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs
+@@ -3,13 +3,14 @@
+ using System.Diagnostics;
+ using System.Diagnostics.Metrics;
+ using System.Threading;
++using Microsoft.Extensions.DependencyInjection;
+ using ViciOne.ServiceBus.Logging.Diagnostics;
+ using ViciOne.ServiceBus.Metadata;
+ using ViciOne.ServiceBus.Monitoring;
+ 
+ namespace ViciOne.ServiceBus.MessageJournal;
+ 
+-internal static class MessageJournalTelemetry
++internal sealed class MessageJournalTelemetry : IDisposable
+ {
+     internal readonly record struct Scope(Activity? Activity, Activity? Parent);
+ 
+@@ -17,20 +18,77 @@
+     private const string FilteredResult = "filtered";
+     private const string StoredResult = "stored";
+ 
+-    private static readonly Lazy<Instrumentation> Instruments = new(
+-        static () => new Instrumentation(),
++    private static readonly Lazy<MessageJournalTelemetry> ProcessTelemetry = new(
++        static () => new MessageJournalTelemetry(null, processOwned: true),
+         LazyThreadSafetyMode.ExecutionAndPublication);
+ 
+-    public static Scope StartActivity(
++    private readonly ActivitySource? _activitySource;
++    private readonly Counter<long>? _operations;
++    private readonly Histogram<double>? _duration;
++    private readonly Meter? _processMeter;
++    private int _disposed;
++
++    internal static MessageJournalTelemetry Process => ProcessTelemetry.Value;
++
++    internal static MessageJournalTelemetry Create(IServiceProvider provider)
++    {
++        try
++        {
++            return new MessageJournalTelemetry(provider.GetRequiredService<IMeterFactory>(), processOwned: false);
++        }
++        catch
++        {
++            // A failed DI activation must never select process-global instrumentation.
++            return new MessageJournalTelemetry(null, processOwned: false);
++        }
++    }
++
++    private MessageJournalTelemetry(IMeterFactory? meterFactory, bool processOwned)
++    {
++        if (meterFactory is null && !processOwned)
++            return;
++
++        ActivitySource? source = null;
++        Meter? processMeter = null;
++        try
++        {
++            string? version = HostMetadataCache.Host.ViciOneServiceBusVersion;
++            source = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);
++            Meter meter = processOwned
++                ? processMeter = new Meter(ServiceBusTelemetry.MeterName, version)
++                : meterFactory!.Create(new MeterOptions(ServiceBusTelemetry.MeterName) { Version = version });
++            _operations = meter.CreateCounter<long>(
++                ServiceBusTelemetry.Metrics.MessageJournalOperations,
++                "{operation}",
++                "Completed message-journal observations.");
++            _duration = meter.CreateHistogram<double>(
++                ServiceBusTelemetry.Metrics.MessageJournalDuration,
++                "s",
++                "Duration of processing one message-journal observation.");
++            _activitySource = source;
++            _processMeter = processMeter;
++        }
++        catch
++        {
++            _operations = null;
++            _duration = null;
++            try { source?.Dispose(); } catch { }
++            try { processMeter?.Dispose(); } catch { }
++        }
++    }
++
++    public Scope StartActivity(
+         MessageJournalOperation operation,
+         MessageJournalOutcome outcome)
+     {
+         Activity? parent = Activity.Current;
++        if (Volatile.Read(ref _disposed) != 0 || _activitySource is null)
++            return new Scope(null, parent);
+         try
+         {
+             TagList tags = CreateTags(operation, outcome, result: null);
+             System.Diagnostics.ActivityContext parentContext = parent?.Context ?? default;
+-            Activity? activity = ActivityObservation.TryStartSource(Instruments.Value.ActivitySource,
++            Activity? activity = ActivityObservation.TryStartSource(_activitySource,
+                 ServiceBusTelemetry.Activities.MessageJournalObserve,
+                 ActivityKind.Internal,
+                 parentContext,
+@@ -43,7 +101,7 @@
+         }
+     }
+ 
+-    public static void Stored(
++    public void Stored(
+         Scope scope,
+         MessageJournalOperation operation,
+         MessageJournalOutcome outcome,
+@@ -52,7 +110,7 @@
+         Complete(scope, operation, outcome, StoredResult, failureReason: null, duration);
+     }
+ 
+-    public static void Filtered(
++    public void Filtered(
+         Scope scope,
+         MessageJournalOperation operation,
+         MessageJournalOutcome outcome,
+@@ -61,7 +119,7 @@
+         Complete(scope, operation, outcome, FilteredResult, failureReason: null, duration);
+     }
+ 
+-    public static void Failed(
++    public void Failed(
+         Scope scope,
+         MessageJournalOperation operation,
+         MessageJournalOutcome outcome,
+@@ -71,7 +129,7 @@
+         Complete(scope, operation, outcome, FailedResult, reason, duration);
+     }
+ 
+-    private static void Complete(
++    private void Complete(
+         Scope scope,
+         MessageJournalOperation operation,
+         MessageJournalOutcome outcome,
+@@ -88,8 +146,11 @@
+ 
+             ApplyTags(activity, tags);
+             activity?.SetStatus(result == FailedResult ? ActivityStatusCode.Error : ActivityStatusCode.Ok, failureReason);
+-            Instruments.Value.Operations.Add(1, tags);
+-            Instruments.Value.Duration.Record(duration.TotalSeconds, tags);
++            if (Volatile.Read(ref _disposed) == 0)
++            {
++                _operations?.Add(1, tags);
++                _duration?.Record(duration.TotalSeconds, tags);
++            }
+         }
+         catch (Exception)
+         {
+@@ -125,29 +186,12 @@
+             activity.SetTag(tag.Key, tag.Value);
+     }
+ 
+-    private sealed class Instrumentation
++    public void Dispose()
+     {
+-        private readonly Meter _meter;
++        if (Interlocked.Exchange(ref _disposed, 1) != 0)
++            return;
+ 
+-        public Instrumentation()
+-        {
+-            string? version = HostMetadataCache.Host.ViciOneServiceBusVersion;
+-            _meter = new Meter(ServiceBusTelemetry.MeterName, version);
+-            ActivitySource = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);
+-            Operations = _meter.CreateCounter<long>(
+-                ServiceBusTelemetry.Metrics.MessageJournalOperations,
+-                "{operation}",
+-                "Completed message-journal observations.");
+-            Duration = _meter.CreateHistogram<double>(
+-                ServiceBusTelemetry.Metrics.MessageJournalDuration,
+-                "s",
+-                "Duration of processing one message-journal observation.");
+-        }
+-
+-        public ActivitySource ActivitySource { get; }
+-
+-        public Counter<long> Operations { get; }
+-
+-        public Histogram<double> Duration { get; }
++        try { _activitySource?.Dispose(); } catch { }
++        try { _processMeter?.Dispose(); } catch { }
+     }
+ }
+--- F/src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs
++++ Package11/src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs
+@@ -10,15 +10,26 @@
+     private readonly IMessageJournalStore _store;
+     private readonly MessageJournalStoreLimits _storeLimits;
+     private readonly MessageJournalOptions _options;
++    private readonly MessageJournalTelemetry? _telemetry;
+ 
+     public MessageJournalWriter(
+         IMessageJournalStore store,
+         IMessageJournalPolicy policy,
+         MessageJournalOptions options)
++        : this(store, policy, options, null)
++    {
++    }
++
++    internal MessageJournalWriter(
++        IMessageJournalStore store,
++        IMessageJournalPolicy policy,
++        MessageJournalOptions options,
++        MessageJournalTelemetry? telemetry)
+     {
+         _store = store ?? throw new ArgumentNullException(nameof(store));
+         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+         _options = options ?? throw new ArgumentNullException(nameof(options));
++        _telemetry = telemetry;
+         _storeLimits = store.Limits
+             ?? throw new ArgumentException("The message-journal store must declare finite limits.", nameof(store));
+     }
+@@ -31,7 +42,8 @@
+     {
+         ArgumentNullException.ThrowIfNull(captureFactory);
+ 
+-        MessageJournalTelemetry.Scope activity = MessageJournalTelemetry.StartActivity(operation, outcome);
++        MessageJournalTelemetry telemetry = _telemetry ?? MessageJournalTelemetry.Process;
++        MessageJournalTelemetry.Scope activity = telemetry.StartActivity(operation, outcome);
+         long startedAt = 0;
+         var hasStartTimestamp = false;
+         CancellationTokenSource? timeoutSource = null;
+@@ -61,7 +73,7 @@
+ 
+             if (projection is null)
+             {
+-                MessageJournalTelemetry.Filtered(activity, operation, outcome, Elapsed(startedAt, hasStartTimestamp));
++                telemetry.Filtered(activity, operation, outcome, Elapsed(startedAt, hasStartTimestamp));
+                 return;
+             }
+ 
+@@ -75,7 +87,7 @@
+ 
+             if (entry.ContentSizeInBytes > _storeLimits.MaximumEntryBytes)
+             {
+-                MessageJournalTelemetry.Failed(
++                telemetry.Failed(
+                     activity,
+                     operation,
+                     outcome,
+@@ -86,11 +98,11 @@
+ 
+             phase = "store";
+             await _store.AppendAsync(entry, operationSource.Token).ConfigureAwait(false);
+-            MessageJournalTelemetry.Stored(activity, operation, outcome, Elapsed(startedAt, hasStartTimestamp));
++            telemetry.Stored(activity, operation, outcome, Elapsed(startedAt, hasStartTimestamp));
+         }
+         catch (OperationCanceledException) when (timeoutSource?.IsCancellationRequested == true)
+         {
+-            MessageJournalTelemetry.Failed(
++            telemetry.Failed(
+                 activity,
+                 operation,
+                 outcome,
+@@ -99,7 +111,7 @@
+         }
+         catch (OperationCanceledException)
+         {
+-            MessageJournalTelemetry.Failed(
++            telemetry.Failed(
+                 activity,
+                 operation,
+                 outcome,
+@@ -108,7 +120,7 @@
+         }
+         catch (Exception)
+         {
+-            MessageJournalTelemetry.Failed(
++            telemetry.Failed(
+                 activity,
+                 operation,
+                 outcome,
+--- F/src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs
++++ Package11/src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs
+@@ -1,6 +1,7 @@
+ using System;
+ using System.Linq;
+ using Microsoft.Extensions.DependencyInjection;
++using Microsoft.Extensions.DependencyInjection.Extensions;
+ using ViciOne.ServiceBus.MessageJournal;
+ using ViciOne.ServiceBus.MessageJournal.Observers;
+ using ViciOne.ServiceBus.Providers.Configuration;
+@@ -60,6 +61,14 @@
+ 
+         var writer = new MessageJournalWriter(store, policy, options);
+ 
++        return ConnectMessageJournal(connector, writer);
++    }
++
++    internal static ConnectHandle ConnectMessageJournal<TConnector>(
++        TConnector connector,
++        MessageJournalWriter writer)
++        where TConnector : ISendObserverConnector, IPublishObserverConnector, IConsumeObserverConnector
++    {
+         return ConnectAtomically(
+             () => connector.ConnectSendObserver(new MessageJournalSendObserver(writer)),
+             () => connector.ConnectPublishObserver(new MessageJournalPublishObserver(writer)),
+@@ -160,6 +169,7 @@
+         configure(builder);
+         IMessageJournalRegistration registration = builder.Build<TBus>();
+         services.AddSingleton(registration);
++        services.TryAddSingleton(static provider => MessageJournalTelemetry.Create(provider));
+         BusCompositionRegistrations.AddFeature<TBus>(services, "Message journal");
+     }
+ }
+@@ -170,7 +180,7 @@
+ 
+     string BusKey { get; }
+ 
+-    void Connect(IBusFactoryConfigurator configurator);
++    void Connect(IBusFactoryConfigurator configurator, IServiceProvider provider);
+ }
+ 
+ internal sealed class MessageJournalRegistration<TBus>(
+@@ -183,10 +193,13 @@
+ 
+     public string BusKey { get; } = BusRegistrationIdentity.GetKey(typeof(TBus));
+ 
+-    public void Connect(IBusFactoryConfigurator configurator)
++    public void Connect(IBusFactoryConfigurator configurator, IServiceProvider provider)
+     {
+         ArgumentNullException.ThrowIfNull(configurator);
+-        _ = configurator.ConnectMessageJournal(store, policy, options);
++        ArgumentNullException.ThrowIfNull(provider);
++        var writer = new MessageJournalWriter(store, policy, options,
++            provider.GetRequiredService<MessageJournalTelemetry>());
++        _ = MessageJournalConfigurationExtensions.ConnectMessageJournal(configurator, writer);
+     }
+ }
+ 
+--- F/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs
++++ Package11/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs
+@@ -181,7 +181,7 @@
+         }
+ 
+         if (registrations.Length == 1)
+-            registrations[0].Connect(configurator);
++            registrations[0].Connect(configurator, context);
+     }
+ 
+     static MessageLimits ConfigureMessageLimits(IBusRegistrationContext context, IHostConfiguration hostConfiguration)

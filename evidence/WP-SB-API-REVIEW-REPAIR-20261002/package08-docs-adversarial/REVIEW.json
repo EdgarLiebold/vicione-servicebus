@@ -1,0 +1,55 @@
+{
+  "status": "ACCEPT_SCOPED_INTERNAL_ADVERSARIAL_REVIEW_NO_BLOCKERS",
+  "freeze_sha256": "c37f686375260823b9a24451b3105f49450dfb6088298e940736f4add8687e6e",
+  "scope": [
+    "F-SB-API-005",
+    "F-SB-API-010",
+    "F-SB-API-020"
+  ],
+  "role": "Independent internal read-only adversarial reviewer; not author/external product role/release authority",
+  "blockers": [],
+  "source_changes": "Three public XML contracts only; every non-/// C# source line identical to frozen original; no runtime/API-signature/wire/schema behavior change introduced. Changelog appends exactly these three documentation fixes versus F012 snapshot.",
+  "native_evidence_observed": {
+    "original_r2": {
+      "empty-address": 2,
+      "pre-auth": 2,
+      "ef-single": 0,
+      "ef-separate": 0,
+      "ef-same": 2
+    },
+    "corrected": {
+      "empty-address": 0,
+      "pre-auth": 0,
+      "ef-single": 0,
+      "ef-separate": 0,
+      "ef-same": 0
+    },
+    "XML_counterreversion": {
+      "empty-address": 2,
+      "pre-auth": 2,
+      "ef-same": 2
+    },
+    "rollback": {
+      "empty-address": 0,
+      "pre-auth": 0,
+      "ef-same": 0
+    },
+    "invalid_attempt_excluded": "Initial private DocumentationContracts container makes nested bus interfaces inaccessible, TypeLoadException exit134; replaced by public container and fresh r2 build. Initial two red modes are not counted in valid causal gate."
+  },
+  "assertion_quality": {
+    "fixture": "Public package consumer with bare Require throwing custom exception; 19 static Require sites, five command modes, nontrivial XML/runtime/exception/side-effect checks. No assertion-free successful mode, no sleep/timeout-absence PASS.",
+    "empty-address": "Both supported empty constructors HasValue false plus exact MessageDataException from Address; populated inline/deferred null-address and stored nonnull-address with exact Value controls; packed Address exception, HasValue cref and populated-null distinction.",
+    "pre-auth": "Real authenticated envelope plaintext success and key-A lookup; equal-length key-A→key-B tamper feeds recording provider returning same AES key; lookup key-B plus exact inner AuthenticationTagMismatchException wrapped by SerializationException; no plaintext stream succeeds. Source independently shows lookup before decrypt and selected key selector authenticated as associated data. Bounded lookup text is normative provider guidance, not a provider-performance benchmark.",
+    "EF": "Single named bus and two buses with separate DbContext types accepted; same DbContext type across distinct valid bus owners throws ConfigurationException with precise another-owner diagnostic before packed XML contract assertion. No bus/provider resolved or started and no database operation."
+  },
+  "binary_binding": "Independent SHA256 of 3 nupkgs, SHA512 lock contentHash, 6 DLL/XML package-cache entries, 3 runtime service DLLs and all 26 current runtime DLL manifest entries match. Runtime XML not copied to bin; exact Member helper reads restored package cache. project.assets selected Package reference only and isolated package root; deps selected runtime assets match.",
+  "counter_controls": "Each reconstructed XML differs in exactly one logical member and reproduces recorded mutant SHA; wrapper XML formatting changes are not extra logical mutations. Restored corrected bytes match nupkg after finally rollback; runner never writes runtime DLLs. Baseline and corrected DLL byte identity is not claimed; only code-only equality and mutant-phase binary invariance.",
+  "limits": [
+    "Internal scoped review, no external product approval or complete whole-owner/runtime/API closure.",
+    "No database/cloud/native execution by this reviewer. Existing native receipts reviewed only.",
+    "Three executed XML logical-member reversions; no runtime C# mutants or claim that runtime behavior changed.",
+    "Unknown-key/other AES sizes/other MessageData implementations/default-bus variants/repeated registration are outside this docs-only package evidence and remain broader obligations, not blockers for the three verified XML corrections."
+  ],
+  "read_closure_sha256": "0ef58adb8bc1d247ec4e7a775c9f6a8c1da94319cf8f4290ac104ed9e168c3e6",
+  "utc": "2026-10-02T23:25:47.539189+00:00"
+}

@@ -39,9 +39,27 @@ public class ProcessorLockContext :
     /// <returns>A completed value task.</returns>
     public ValueTask DisposeAsync()
     {
-        _context.ReleaseClient();
+        Exception? releaseFailure = null;
+        try
+        {
+            _context.ReleaseClient();
+        }
+        catch (Exception exception)
+        {
+            releaseFailure = exception;
+        }
 
-        _pending.Dispose();
+        try
+        {
+            _pending.Dispose();
+        }
+        catch (Exception pendingFailure) when (releaseFailure != null)
+        {
+            throw new AggregateException("Processor client release and pending-confirmation cleanup both failed.", releaseFailure, pendingFailure);
+        }
+
+        if (releaseFailure != null)
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(releaseFailure).Throw();
 
         return default;
     }
@@ -112,7 +130,15 @@ public class ProcessorLockContext :
         LogContext.SetCurrentIfNull(_context.LogContext);
 
         if (_data.TryAdd(eventArgs.PartitionId, _ => new PartitionCheckpointData(_receiveSettings, _pending)))
-            LogContext.Info?.Log("Partition: {PartitionId} was initialized", eventArgs.PartitionId);
+        {
+            try
+            {
+                LogContext.Info?.Log("Partition: {PartitionId} was initialized", eventArgs.PartitionId);
+            }
+            catch (Exception)
+            {
+            }
+        }
 
         return Task.CompletedTask;
     }

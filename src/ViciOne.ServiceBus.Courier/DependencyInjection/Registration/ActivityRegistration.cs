@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Internals;
@@ -20,7 +21,7 @@ internal sealed class ActivityRegistration<TActivity, TArguments, TLog> :
     readonly Lock _definitionLock = new();
     readonly List<Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>> _executeActions;
     readonly IContainerSelector _selector;
-    IActivityDefinition<TActivity, TArguments, TLog> _definition = null!;
+    readonly ConditionalWeakTable<IServiceProvider, IActivityDefinition<TActivity, TArguments, TLog>> _definitions = new();
 
     /// <summary>Creates registration metadata for a compensatable activity.</summary>
     /// <param name="selector">The container integration used to resolve definitions and endpoint settings.</param>
@@ -143,7 +144,6 @@ internal sealed class ActivityRegistration<TActivity, TArguments, TLog> :
 
         configurator.AddEndpointSpecification(specification);
 
-        IncludeInConfigureEndpoints = false;
     }
 
     IActivityDefinition<TActivity, TArguments, TLog> GetActivityDefinition(IServiceProvider provider)
@@ -152,24 +152,50 @@ internal sealed class ActivityRegistration<TActivity, TArguments, TLog> :
 
         lock (_definitionLock)
         {
-            if (_definition != null)
-                return _definition;
+            if (_definitions.TryGetValue(provider, out IActivityDefinition<TActivity, TArguments, TLog>? definition))
+                return definition;
 
-            IActivityDefinition<TActivity, TArguments, TLog> definition =
+            definition =
                 _selector.GetDefinition<IActivityDefinition<TActivity, TArguments, TLog>>(provider)
                 ?? new DefaultActivityDefinition<TActivity, TArguments, TLog>();
 
             IEndpointDefinition<IExecuteActivity<TArguments>>? executeEndpointDefinition =
-                _selector.GetEndpointDefinition<IExecuteActivity<TArguments>>(provider);
+                _selector.GetDefinition<ExecuteActivityEndpointDefinition<TActivity, TArguments>>(provider);
+            if (executeEndpointDefinition == null)
+            {
+                executeEndpointDefinition = _selector.GetEndpointDefinition<IExecuteActivity<TArguments>>(provider);
+                if (executeEndpointDefinition != null)
+                {
+                    Type endpointType = executeEndpointDefinition.GetType();
+                    // Shared contract aliases can point at another activity's generated settings.
+                    if (endpointType.IsConstructedGenericType
+                        && endpointType.GetGenericTypeDefinition() == typeof(ExecuteActivityEndpointDefinition<,>)
+                        && endpointType != typeof(ExecuteActivityEndpointDefinition<TActivity, TArguments>))
+                        executeEndpointDefinition = null;
+                }
+            }
             if (executeEndpointDefinition != null)
                 definition.ExecuteEndpointDefinition = executeEndpointDefinition;
 
             IEndpointDefinition<ICompensateActivity<TLog>>? compensateEndpointDefinition =
-                _selector.GetEndpointDefinition<ICompensateActivity<TLog>>(provider);
+                _selector.GetDefinition<CompensateActivityEndpointDefinition<TActivity, TLog>>(provider);
+            if (compensateEndpointDefinition == null)
+            {
+                compensateEndpointDefinition = _selector.GetEndpointDefinition<ICompensateActivity<TLog>>(provider);
+                if (compensateEndpointDefinition != null)
+                {
+                    Type endpointType = compensateEndpointDefinition.GetType();
+                    // Shared contract aliases can point at another activity's generated settings.
+                    if (endpointType.IsConstructedGenericType
+                        && endpointType.GetGenericTypeDefinition() == typeof(CompensateActivityEndpointDefinition<,>)
+                        && endpointType != typeof(CompensateActivityEndpointDefinition<TActivity, TLog>))
+                        compensateEndpointDefinition = null;
+                }
+            }
             if (compensateEndpointDefinition != null)
                 definition.CompensateEndpointDefinition = compensateEndpointDefinition;
 
-            _definition = definition;
+            _definitions.Add(provider, definition);
             return definition;
         }
     }

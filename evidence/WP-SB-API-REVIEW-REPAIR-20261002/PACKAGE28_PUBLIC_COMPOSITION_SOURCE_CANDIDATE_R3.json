@@ -1,0 +1,67 @@
+{
+  "status": "SOURCE_CANDIDATE_R3_NOT_EXECUTED",
+  "supersedes": "PACKAGE28_PUBLIC_COMPOSITION_SOURCE_CANDIDATE_R2.json",
+  "intent": "Finite observation of original-source predicted volatile/classic EF delivery-loss states; no durability-contract-pass claim. Controls: volatile healthy/duplicate; EF-only fault-retention and recovery.",
+  "existing_core766_full_read_claimed": false,
+  "owner_files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/Program.cs",
+      "bytes": 17253,
+      "sha256": "b8be76f3906d47c8733548d3c75332706ee6fefd5b51926fad1bbff9bd87f2ff"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/OwnedLifetime.cs",
+      "bytes": 1921,
+      "sha256": "e01c009117ec2393a503eda5d2cad44d72e55ce9ef00309d51180fbd6ea5bad0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/OwnedDisposal.cs",
+      "bytes": 1013,
+      "sha256": "7b5638775cbc3dd898eccac52dc0f6b9a1dae5cb1300b54ccf31084de5598c95"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/Composition.PublicConsumer.csproj",
+      "bytes": 1080,
+      "sha256": "65e944038765659fbd99a29043fe6692b2e3fad4e1df7e3542d523236e27205e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/NuGet.Config",
+      "bytes": 581,
+      "sha256": "ab5111dff32a56e89cbfbd699369d0259efbee765c365dcb124c2e9bc57b66cc"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/global.json",
+      "bytes": 135,
+      "sha256": "fcafdeab1b2af8c88b0aac365be7ec1f4fb8e8b2a2b700a01d2a3619687ce760"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/packages.lock.json",
+      "bytes": 14388,
+      "sha256": "10c8d7c4f8700cea08474c92e1ebf2a2182584b3df5bbd94a886fe812c92eeda"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/obj/Release/net10.0/Composition.PublicConsumer.GlobalUsings.g.cs",
+      "bytes": 231,
+      "sha256": "8f86a2cbf00ff3eee0bda2bc0eb5e1fc19c8544d5dc650c53d0132325956b592"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/obj/Release/net10.0/Composition.PublicConsumer.AssemblyInfo.cs",
+      "bytes": 991,
+      "sha256": "e0ada934ece682da66274a17f1517832bf600de5c4856e1a62b23ff896385fbb"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package28-outbox-composition/obj/Release/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+      "bytes": 196,
+      "sha256": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb"
+    }
+  ],
+  "corrected_R1_findings": [
+    "named message-contract namespace",
+    "typed exact loss and retained-DB snapshots",
+    "retained intentional exception sentinel after successful actual-state assertions",
+    "committed AtSend state; exact incoming/outgoing/consumer/assigned sequence IDs",
+    "exact receive-count progression, recovery, positive controls and immutable progress",
+    "Reject any foreign AggregateException sibling; all leaves must contain exact intentional sentinel"
+  ],
+  "utc": "2026-10-03T22:08:21.229774+00:00"
+}

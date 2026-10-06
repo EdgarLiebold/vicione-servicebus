@@ -45,7 +45,14 @@ public class ConnectionContextSupervisor :
 
         var endpointAddress = new ActiveMqEndpointAddress(_hostConfiguration.HostAddress, address);
 
-        TransportLogMessages.CreateSendTransport(endpointAddress);
+        try
+        {
+            TransportLogMessages.CreateSendTransport(endpointAddress);
+        }
+        catch
+        {
+            // Optional diagnostics must not interrupt transport creation or topology setup.
+        }
 
         var settings = _topologyConfiguration.Send.GetSendSettings(endpointAddress);
 

@@ -1,0 +1,62 @@
+{
+  "status": "ROOT_WHOLE_CURRENT_AUTHORED_OWNER_READ_PAIRED_BOUND_BEFORE_NATIVE",
+  "files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/ActivityOwnership.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/Cases.cs",
+      "sha256": "836579378f5041b5c3800758d2e606a3f2089cfcdcf2d4cb4e6742c423a59d38",
+      "bytes": 7655
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/NuGet.Config",
+      "sha256": "4fd0f3d6b8d94071a21d43c063b008969f34c5311eab2f4586f5685e98e94a91",
+      "bytes": 577
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/OwnedLifetime.cs",
+      "sha256": "57121c85d071a911ebe455a3eee60e5efb2132e7dade5b6ca07d9b2b9a79f53a",
+      "bytes": 1918
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/previous/Program.cs",
+      "sha256": "45327fe8582dcc0ce8068a62a7e8941cc61777503737d75896ec65f93a9ecee9",
+      "bytes": 2329
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/ActivityOwnership.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/Cases.cs",
+      "sha256": "836579378f5041b5c3800758d2e606a3f2089cfcdcf2d4cb4e6742c423a59d38",
+      "bytes": 7655
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/NuGet.Config",
+      "sha256": "96a8e21aa8ee53d96138f82c5e05e97cd2fe92e7e622e2d9b58256eefebe9a6a",
+      "bytes": 578
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/OwnedLifetime.cs",
+      "sha256": "57121c85d071a911ebe455a3eee60e5efb2132e7dade5b6ca07d9b2b9a79f53a",
+      "bytes": 1918
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/Program.cs",
+      "sha256": "45327fe8582dcc0ce8068a62a7e8941cc61777503737d75896ec65f93a9ecee9",
+      "bytes": 2329
+    }
+  ],
+  "personally_FULL": [
+    "Cases.cs full after last edit",
+    "csproj and both configs full",
+    "Program.cs and OwnedLifetime.cs full exact copied-body reuse read this turn"
+  ],
+  "cases": 10,
+  "limits": "New locks not present at checkpoint; Native pending. No canonical owner or wholeAPI claim."
+}

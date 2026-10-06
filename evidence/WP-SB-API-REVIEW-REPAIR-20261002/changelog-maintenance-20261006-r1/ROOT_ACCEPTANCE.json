@@ -1,0 +1,52 @@
+{
+  "utc": "2026-10-06T21:38:53.765653+00:00",
+  "status": "CHANGELOG_DOCUMENTATION_MAINTENANCE_COMPLETE_DIFFERENT_PEER_NO_BLOCKER",
+  "user_order": "zuerst solltest du das changelog aktualisieren",
+  "files": [
+    {
+      "relative": "CHANGELOG.md",
+      "before_sha256": "2c20193151874c23b53eac5dec72e784724acd9ed385bbdace20d795058e7a37",
+      "after_sha256": "4d2377126b992bb25b59b895b96238bd189fdf209e9387cb4bad570efd68440f",
+      "after_bytes": 2716
+    },
+    {
+      "relative": "docs/changelog/product-fixes.md",
+      "before_sha256": "77373cd27e36c2dc36a834fc646565d1cdab769ef567ba09be63beb9ae64773a",
+      "after_sha256": "63d7a6b78faf10309159e6b070beca158e989f155ccb63fe6ccb76b2bbfe3c9e",
+      "after_bytes": 49573
+    }
+  ],
+  "independent_review": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/changelog-maintenance-20261006-r1/independent-review/REPORT.json",
+    "sha256": "345f33b3c8a3a8568ad6975e6f02fe4660aeafeaed827baeeea75127f9f4f093",
+    "bytes": 11924
+  },
+  "independent_review_manifest": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/changelog-maintenance-20261006-r1/independent-review/MANIFEST.json",
+    "sha256": "39690d6f1f5a0389beddf0583225965ef9e17b9fe9bb4aa622eb6624e8bab600",
+    "bytes": 1794
+  },
+  "before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/changelog-maintenance-20261006-r1/BEFORE.json",
+    "sha256": "57dd9f276d9dab01751b7fe8d634fc1b25ce8de5c36665e872acc1a7f17c84fc",
+    "bytes": 894
+  },
+  "maintenance_diff": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/changelog-maintenance-20261006-r1/CHANGELOG_ONLY.diff",
+    "sha256": "150246970e5863779cc365a5ee2c4ac3159fb462c357da4b0e6b4fc4170a31af",
+    "bytes": 11892
+  },
+  "post_audit_snapshot_delta": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/changelog-maintenance-20261006-r1/DOC2_SNAPSHOT_DELTA.json",
+    "sha256": "bbc2ea860129c58cc83e066313180fcc5d936092de4ea10e287df390eac2f444",
+    "bytes": 737
+  },
+  "historical_product_fixes_preserved_as_exact_prefix": true,
+  "verification": "git diff --check passed on both changed documentation files; relative links and completion anchor resolve. No SDK/build/test run for documentation-only maintenance.",
+  "review_correction": "F221 Activity-observer retirement is explicitly separated from admission rollback.",
+  "frozen_review_evidence_unchanged": true,
+  "Source_Test_API_code_changes": 0,
+  "SDK_calls": 0,
+  "commits": 0,
+  "pushes": 0
+}

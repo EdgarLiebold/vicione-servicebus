@@ -1,0 +1,134 @@
+{
+  "utc": "2026-10-05T02:05:59.330719+00:00",
+  "actor": "/root",
+  "status": "SOURCE_APPLIED_AFTER_INDEPENDENT_ADVERSARIAL_NO_BLOCK_CURRENT_BUILD_PENDING",
+  "qualified_original162": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package162-header-fixed30-outbox-routing-schedule-original48-neighbors2304-fresh2-independent-r1/REPORT.json",
+    "sha256": "f7d50a7d072c499d4f5373e91a6acbbde3ab921b286198fb8194283a363af8f4"
+  },
+  "root_read_receipts": [
+    "summary-preserved genuine Product3 c1f2b3 /Scheduler0dd1de/Delay39e307b2 and peerb2b95f",
+    "2bf494 full four independent peers +callback author /1d2c7a entire additive180/154 +exactReq6"
+  ],
+  "manifest_checks": [
+    {
+      "name": "package163-outbox-request-fork3-product-proposed-r1",
+      "manifest_sha256": "81ceaa3f73b954847370908e8329990390c20059f7990bd6f113f615761df2a5",
+      "files": 11
+    },
+    {
+      "name": "package163-schedule-rejection-debug-product-proposed-r1",
+      "manifest_sha256": "06e64e425e19235d7c23148a1a7ce08f3859a5c9d4ddb1ad7dcaab4f93ccd127",
+      "files": 7
+    },
+    {
+      "name": "package163-schedule-delay-setter-xml1-product-proposed-r1",
+      "manifest_sha256": "bda0bc3c2f0c797a34f36a07a0acd5cc3039c58997ac4c220a26415fbf86c405",
+      "files": 5
+    },
+    {
+      "name": "package163-fork-five-controls-proposed-r1",
+      "manifest_sha256": "5c94fdb056690a173cc39e0b35e15d02a9ea27093c620f89c67619b39fd951e2",
+      "files": 6
+    },
+    {
+      "name": "package163-saga-optional-callback-nullability7-oracles-proposed-r1",
+      "manifest_sha256": "1341b02e5101299cc04ac0b2703530001f922cbcba2885b71ff0991f86b05e13",
+      "files": 18
+    },
+    {
+      "name": "package163-outbox-request-fork3-independent-runtime-r1",
+      "manifest_sha256": "a5c5429cf92d077a57f6c6e3620422721aaad07e71e33b64050609ec5e8a4a75",
+      "files": 1
+    },
+    {
+      "name": "package163-schedule-rejection-debug-independent-scanner-r1",
+      "manifest_sha256": "6ab336aea010ae4a2f5c78945e8d7472bf9d398ed57077a516c23d251b13e698",
+      "files": 1
+    },
+    {
+      "name": "package163-schedule-delay-setter-xml1-independent-scanner-r1",
+      "manifest_sha256": "598e61298cb61f9b3b4a61f038dcdaea3d914714366c8827e6d35ff3c993b762",
+      "files": 1
+    },
+    {
+      "name": "package163-fork-five-controls-independent-runtime-r1",
+      "manifest_sha256": "98dbffdcc275660ed49bf948071504322a3f6b92f868eb2118b0105473d6e6e8",
+      "files": 1
+    },
+    {
+      "name": "package163-saga-optional-callback7-independent-scanner-r1",
+      "manifest_sha256": "5f342d782fd04978b9719b580badfaf211f8a9d3e0ba18578347bab65b4838f2",
+      "files": 3
+    }
+  ],
+  "changes": [
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/OutboxConsumeFilter.cs",
+      "kind": "product",
+      "author": "package163-outbox-request-fork3-product-proposed-r1",
+      "before_sha256": "0fe9b95abb0c31118a869b133aaef244d28c82c36e54fc80eef0d7ccb7bd854c",
+      "after_sha256": "cd1b75984e6ca543129849b3e556f97c331d3598a404d71aaa4332ddb39d3977"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/RequestIdFilter.cs",
+      "kind": "product",
+      "author": "package163-outbox-request-fork3-product-proposed-r1",
+      "before_sha256": "40e02fd397fe89c72110aaaaa52e8b51c8979940e0f1d6ca8f99e6778d9af9e2",
+      "after_sha256": "264d6e3f248e3b5dd750906c03f3ee2fe32ad1873d6b40a7dcfda0d4c9cc5635"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ForkFilter.cs",
+      "kind": "product",
+      "author": "package163-outbox-request-fork3-product-proposed-r1",
+      "before_sha256": "c875866221c22c8e2c927fbfed4b1ea067012816ed5009becff8d2205267759b",
+      "after_sha256": "428f74fcf35e416b78a36e69c4d93b9b6906eab8184c315c771263d5c480906f"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/ViciOneServiceBusStateMachine.cs",
+      "kind": "diagnostic",
+      "author": "package163-schedule-rejection-debug-product-proposed-r1",
+      "before_sha256": "9f99e4f37211b1779bb145daf6e7ee8c8548422f83be1b4eba01f881d452f716",
+      "after_sha256": "28f11ca880ed5fb64ac227589c4995ea0f24ad1f009f06141acb9422f399c923"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Configuration/StateMachineScheduleConfigurator.cs",
+      "kind": "xml",
+      "author": "package163-schedule-delay-setter-xml1-product-proposed-r1",
+      "before_sha256": "dc64bafe80ce874a038323f8f1928e63d7cf7a38a04315073ec3e6097551f22c",
+      "after_sha256": "aa27ec8ca0aedf6cd65fba7cc5e82a3b98e0b4e116ef7aa1a6c6a0aeb362a210"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs",
+      "kind": "additive-flat",
+      "author": "package163-fork-five-controls-proposed-r1",
+      "before_sha256": "498ee2a56d3f463de3fd6cff77bd6b2c70a284b8a56e96951ac606457c2113ef",
+      "after_sha256": "e01d746ed88b5be3a3d134fa47a198ec79fad3fcde5fc3e3dd87553c17e54c5f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/StateMachineRequestScheduleTimeoutDeepContractTests.cs",
+      "kind": "additive",
+      "author": "package163-saga-optional-callback-nullability7-oracles-proposed-r1",
+      "before_sha256": "c86fa8a2100b2b519a49507d470d38f6e9d57129bf48c62f864e7ed872c134a6",
+      "after_sha256": "e40fbd10916fd60089b37a3a2bb54580c837d0202f57a7885d41a1f65cc91b48"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "kind": "add6-preserve4632-prefix",
+      "before_sha256": "5943dfcfe15fc23420f2c54cce64ce24dedf33fe298220ca2a824e58a0157871",
+      "after_sha256": "cce9529da22e8f6c7b290a310a646e698bbf27b1c54a8cb0d94f957596bccc19"
+    }
+  ],
+  "requirements_before": 4632,
+  "requirements_after": 4638,
+  "test_cases": {
+    "fork_controls": 5,
+    "optional_callback_original": 6,
+    "required_initialized_control": 1
+  },
+  "limits": [
+    "Callback6 new native originals, no product nullability repair, no finding assigned before actual original causes qualified.",
+    "Current five proposed repairs require fixed native and fresh archive qualification.",
+    "No whole API closure or commit/push/deployment."
+  ]
+}

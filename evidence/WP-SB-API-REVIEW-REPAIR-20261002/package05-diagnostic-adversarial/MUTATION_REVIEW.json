@@ -1,0 +1,1243 @@
+{
+  "utc": "2026-10-03T02:40:07.924669+00:00",
+  "status": "SIX_ACTUAL_COMPILED_MUTANTS_CAUSALLY_KILLED",
+  "mutants": [
+    {
+      "name": "registration-owner-omitted",
+      "source_effects": [
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/registration-owner-omitted/results.cs.txt",
+            "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/registration-owner-omitted/host.cs.txt",
+            "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/registration-owner-omitted/host_xml.cs.txt",
+            "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/registration-owner-omitted/batch.cs.txt",
+            "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/registration-owner-omitted/batch_options.cs.txt",
+            "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/registration-owner-omitted/registration.cs.txt",
+            "sha256": "d674136886bc706ef596fe3d2017c8608d0171e0a9a6c02f3d9d03ca74f46d5b"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/registration-owner-omitted/connector.cs.txt",
+            "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/registration-owner-omitted/identity.cs.txt",
+            "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+          },
+          "exact_expected_bytes": true
+        }
+      ],
+      "delta": {
+        "path": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+        "delta": "--- corrected\n+++ registration-owner-omitted\n@@ -55,8 +55,6 @@\n             consumerFactory = decoratorRegistration.DecorateConsumerFactory(consumerFactory);\n \n         var consumerConfigurator = new ConsumerConfigurator<TConsumer>(consumerFactory, configurator);\n-        consumerConfigurator.Options(new ConsumerBusIdentityOptions(\n-            context is IBusRegistrationIdentity identity ? identity.BusKey : \"unknown\"));\n \n         GetConsumerDefinition(context)\n             .Configure(configurator, consumerConfigurator, context);\n"
+      },
+      "compiled_binaries": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/registration-owner-omitted/ViciOne.ServiceBus.dll",
+          "sha256": "447b5d81085b306f196d182cf4fb481a7fa08ddc483a38e1ce17ff2ea4b7684e"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/registration-owner-omitted/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+        }
+      ],
+      "negative": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-registration-owner-omitted-typed-invalid-plain",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-invalid-plain",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T02:19:06.138024+00:00",
+          "completed_utc": "2026-10-03T02:19:06.960472+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-registration-owner-omitted-typed-invalid-plain.log",
+          "log_sha256": "86eefd562d24f6d499eb207fe1b6ec0f73766a42c2df379f5cf80d2296510b64"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-invalid-plain",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.StartsWithException",
+              "Message": "Assert.StartsWith() Failure: String start does not match\nString:         \"Batch timing for bus 'unknown': At endpoint 'loopb\"···\nExpected start: \"Batch timing for bus 'BatchDiagnostic.PublicConsum\"···",
+              "StackTrace": "   at Xunit.Assert.StartsWith(String expectedStartString, String actualString, StringComparison comparisonType) in /_/src/xunit.v3.assert/Asserts/StringAsserts.cs:line 1432\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.<>c__DisplayClass0_0.<<RunAsync>b__4>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 94\n--- End of stack trace from previous location ---\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.RunAsync(Boolean typed, Boolean invalid, Boolean grouped, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 64\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/Program.cs:line 26",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "447b5d81085b306f196d182cf4fb481a7fa08ddc483a38e1ce17ff2ea4b7684e"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "positive": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-registration-owner-omitted-typed-valid-plain",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-valid-plain",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T02:19:07.046668+00:00",
+          "completed_utc": "2026-10-03T02:19:07.830422+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-registration-owner-omitted-typed-valid-plain.log",
+          "log_sha256": "08f43cc352341321b80c1f4d0ea5842786a721df238a9f0d06f02d32553fdde4"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-valid-plain",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "447b5d81085b306f196d182cf4fb481a7fa08ddc483a38e1ce17ff2ea4b7684e"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "status": "INDEPENDENTLY_VERIFIED_ACTUAL_CAUSAL_KILL",
+      "pack_per_mutant": false
+    },
+    {
+      "name": "connector-constant-default",
+      "source_effects": [
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/connector-constant-default/results.cs.txt",
+            "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/connector-constant-default/host.cs.txt",
+            "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/connector-constant-default/host_xml.cs.txt",
+            "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/connector-constant-default/batch.cs.txt",
+            "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/connector-constant-default/batch_options.cs.txt",
+            "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/connector-constant-default/registration.cs.txt",
+            "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/connector-constant-default/connector.cs.txt",
+            "sha256": "e0d48984efa85e21e6b12a096767546d1210506b3e36b572af473175c3c7ae24"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/connector-constant-default/identity.cs.txt",
+            "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+          },
+          "exact_expected_bytes": true
+        }
+      ],
+      "delta": {
+        "path": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+        "delta": "--- corrected\n+++ connector-constant-default\n@@ -37,7 +37,7 @@\n \n         var options = specification.Options<BatchOptions>();\n         string busKey = specification.TryGetOptions<ConsumerBusIdentityOptions>(out var identity)\n-            ? identity.BusKey\n+            ? \"default\"\n             : \"unknown\";\n \n         IConsumerMessageSpecification<TConsumer, IMessageBatch<TMessage>> batchMessageSpecification = specification.GetMessageSpecification<IMessageBatch<TMessage>>();\n"
+      },
+      "compiled_binaries": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/connector-constant-default/ViciOne.ServiceBus.dll",
+          "sha256": "b39309d585b4c8e07ecabd419469968ce5c0993e257b16a9f446adee447f325d"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/connector-constant-default/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+        }
+      ],
+      "negative": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-connector-constant-default-typed-invalid-plain",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-invalid-plain",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T02:19:16.642556+00:00",
+          "completed_utc": "2026-10-03T02:19:17.520196+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-connector-constant-default-typed-invalid-plain.log",
+          "log_sha256": "1ac12ca545cb9bf197aa690305f479142e01a7d9c4880c48b0be6339e3e0fba8"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-invalid-plain",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.StartsWithException",
+              "Message": "Assert.StartsWith() Failure: String start does not match\nString:         \"Batch timing for bus 'default': At endpoint 'loopb\"···\nExpected start: \"Batch timing for bus 'BatchDiagnostic.PublicConsum\"···",
+              "StackTrace": "   at Xunit.Assert.StartsWith(String expectedStartString, String actualString, StringComparison comparisonType) in /_/src/xunit.v3.assert/Asserts/StringAsserts.cs:line 1432\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.<>c__DisplayClass0_0.<<RunAsync>b__4>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 94\n--- End of stack trace from previous location ---\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.RunAsync(Boolean typed, Boolean invalid, Boolean grouped, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 64\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/Program.cs:line 26",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "b39309d585b4c8e07ecabd419469968ce5c0993e257b16a9f446adee447f325d"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "positive": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-connector-constant-default-typed-valid-plain",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-valid-plain",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T02:19:17.606162+00:00",
+          "completed_utc": "2026-10-03T02:19:18.477756+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-connector-constant-default-typed-valid-plain.log",
+          "log_sha256": "bfefb4683f4f4df28554f83d2df55e29c8b5f7862ca5e9f74be8d7b788f078ef"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-valid-plain",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "b39309d585b4c8e07ecabd419469968ce5c0993e257b16a9f446adee447f325d"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "status": "INDEPENDENTLY_VERIFIED_ACTUAL_CAUSAL_KILL",
+      "pack_per_mutant": false
+    },
+    {
+      "name": "plain-handoff-omitted",
+      "source_effects": [
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/plain-handoff-omitted/results.cs.txt",
+            "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/plain-handoff-omitted/host.cs.txt",
+            "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/plain-handoff-omitted/host_xml.cs.txt",
+            "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/plain-handoff-omitted/batch.cs.txt",
+            "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/plain-handoff-omitted/batch_options.cs.txt",
+            "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/plain-handoff-omitted/registration.cs.txt",
+            "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/plain-handoff-omitted/connector.cs.txt",
+            "sha256": "ced0422059c971ee737e64f69dc76f8f7a1df6b8467cc694a4a21a4e6503a2b0"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/plain-handoff-omitted/identity.cs.txt",
+            "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+          },
+          "exact_expected_bytes": true
+        }
+      ],
+      "delta": {
+        "path": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+        "delta": "--- corrected\n+++ plain-handoff-omitted\n@@ -55,7 +55,7 @@\n \n         IBatchCollector<TMessage> collector;\n         if (options.GroupKeyProvider == null)\n-            collector = new BatchCollector<TMessage>(options, batchMessagePipe, busKey);\n+            collector = new BatchCollector<TMessage>(options, batchMessagePipe, \"unknown\");\n         else\n         {\n             if (options.GroupKeyProvider.GetType().TryGetSingleClosedGenericArguments(typeof(IGroupKeyProvider<,>), out Type[] types))\n"
+      },
+      "compiled_binaries": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/plain-handoff-omitted/ViciOne.ServiceBus.dll",
+          "sha256": "e68d7d97d8b018a9ced16d3ecc9a5ae54eb45eeb518bab159b8ad520f4df3596"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/plain-handoff-omitted/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+        }
+      ],
+      "negative": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-plain-handoff-omitted-typed-invalid-plain",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-invalid-plain",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T02:19:25.830904+00:00",
+          "completed_utc": "2026-10-03T02:19:26.748527+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-plain-handoff-omitted-typed-invalid-plain.log",
+          "log_sha256": "85c012bbc69574a299324902bfcac5459f96b6252c296bdc4eddd58707528e69"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-invalid-plain",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.StartsWithException",
+              "Message": "Assert.StartsWith() Failure: String start does not match\nString:         \"Batch timing for bus 'unknown': At endpoint 'loopb\"···\nExpected start: \"Batch timing for bus 'BatchDiagnostic.PublicConsum\"···",
+              "StackTrace": "   at Xunit.Assert.StartsWith(String expectedStartString, String actualString, StringComparison comparisonType) in /_/src/xunit.v3.assert/Asserts/StringAsserts.cs:line 1432\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.<>c__DisplayClass0_0.<<RunAsync>b__4>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 94\n--- End of stack trace from previous location ---\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.RunAsync(Boolean typed, Boolean invalid, Boolean grouped, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 64\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/Program.cs:line 26",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "e68d7d97d8b018a9ced16d3ecc9a5ae54eb45eeb518bab159b8ad520f4df3596"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "positive": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-plain-handoff-omitted-typed-valid-plain",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-valid-plain",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T02:19:26.847535+00:00",
+          "completed_utc": "2026-10-03T02:19:27.671057+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-plain-handoff-omitted-typed-valid-plain.log",
+          "log_sha256": "3b4909c5d8d869c45186e2240e7a3d6670cc9b3b4ca17a8c6b70f5f264d8de29"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-valid-plain",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "e68d7d97d8b018a9ced16d3ecc9a5ae54eb45eeb518bab159b8ad520f4df3596"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "status": "INDEPENDENTLY_VERIFIED_ACTUAL_CAUSAL_KILL",
+      "pack_per_mutant": false
+    },
+    {
+      "name": "grouped-handoff-omitted",
+      "source_effects": [
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/grouped-handoff-omitted/results.cs.txt",
+            "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/grouped-handoff-omitted/host.cs.txt",
+            "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/grouped-handoff-omitted/host_xml.cs.txt",
+            "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/grouped-handoff-omitted/batch.cs.txt",
+            "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/grouped-handoff-omitted/batch_options.cs.txt",
+            "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/grouped-handoff-omitted/registration.cs.txt",
+            "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/grouped-handoff-omitted/connector.cs.txt",
+            "sha256": "ce4991c9e161a44250769d5afa318242bceca67399b8bb4d11afc32b4ff6af95"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/grouped-handoff-omitted/identity.cs.txt",
+            "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+          },
+          "exact_expected_bytes": true
+        }
+      ],
+      "delta": {
+        "path": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+        "delta": "--- corrected\n+++ grouped-handoff-omitted\n@@ -62,7 +62,7 @@\n             {\n                 var collectorType = typeof(BatchCollector<,>).MakeGenericType(typeof(TMessage), types[1]);\n                 collector = (IBatchCollector<TMessage>)(Activator.CreateInstance(collectorType,\n-                    options, batchMessagePipe, options.GroupKeyProvider, busKey) ?? throw new System.InvalidOperationException(\"The requested runtime type could not be activated.\"));\n+                    options, batchMessagePipe, options.GroupKeyProvider, \"unknown\") ?? throw new System.InvalidOperationException(\"The requested runtime type could not be activated.\"));\n             }\n             else\n                 throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(\"Batch Consumer Message Connector\", \"unknown\", \"The GroupKeyProvider does not implement IGroupKeyProvider<TMessage,TKey>\", \"Correct the named configuration before starting the host\"));\n"
+      },
+      "compiled_binaries": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/grouped-handoff-omitted/ViciOne.ServiceBus.dll",
+          "sha256": "b82f4af261fe57ea31c529810cdafc6c2eaf33115975a699e7a95be67ad5b8f0"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/grouped-handoff-omitted/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+        }
+      ],
+      "negative": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-grouped-handoff-omitted-typed-invalid-grouped",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-invalid-grouped",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T02:19:34.091458+00:00",
+          "completed_utc": "2026-10-03T02:19:34.955438+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-grouped-handoff-omitted-typed-invalid-grouped.log",
+          "log_sha256": "1962612322cca11126c816577ca4a64f10f23eca41fa26d7a818bcbf2d331cbc"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-invalid-grouped",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.StartsWithException",
+              "Message": "Assert.StartsWith() Failure: String start does not match\nString:         \"Batch timing for bus 'unknown': At endpoint 'loopb\"···\nExpected start: \"Batch timing for bus 'BatchDiagnostic.PublicConsum\"···",
+              "StackTrace": "   at Xunit.Assert.StartsWith(String expectedStartString, String actualString, StringComparison comparisonType) in /_/src/xunit.v3.assert/Asserts/StringAsserts.cs:line 1432\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.<>c__DisplayClass0_0.<<RunAsync>b__4>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 94\n--- End of stack trace from previous location ---\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.RunAsync(Boolean typed, Boolean invalid, Boolean grouped, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 64\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/Program.cs:line 26",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "b82f4af261fe57ea31c529810cdafc6c2eaf33115975a699e7a95be67ad5b8f0"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "positive": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-grouped-handoff-omitted-typed-valid-grouped",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-valid-grouped",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T02:19:35.042404+00:00",
+          "completed_utc": "2026-10-03T02:19:35.835413+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-grouped-handoff-omitted-typed-valid-grouped.log",
+          "log_sha256": "d9b9a3d134a6f1133a9a54a4eac525a76e5ee50baa82060102164b5b9a9a4515"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-valid-grouped",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "b82f4af261fe57ea31c529810cdafc6c2eaf33115975a699e7a95be67ad5b8f0"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "status": "INDEPENDENTLY_VERIFIED_ACTUAL_CAUSAL_KILL",
+      "pack_per_mutant": false
+    },
+    {
+      "name": "beta-owner-replaced-by-alpha",
+      "source_effects": [
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/beta-owner-replaced-by-alpha/results.cs.txt",
+            "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/beta-owner-replaced-by-alpha/host.cs.txt",
+            "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/beta-owner-replaced-by-alpha/host_xml.cs.txt",
+            "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/beta-owner-replaced-by-alpha/batch.cs.txt",
+            "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/beta-owner-replaced-by-alpha/batch_options.cs.txt",
+            "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/beta-owner-replaced-by-alpha/registration.cs.txt",
+            "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/beta-owner-replaced-by-alpha/connector.cs.txt",
+            "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/beta-owner-replaced-by-alpha/identity.cs.txt",
+            "sha256": "87c0c02f77f420d57cc0649656c53ca21b3a596d206646450ee0f8e6f3a6c522"
+          },
+          "exact_expected_bytes": true
+        }
+      ],
+      "delta": {
+        "path": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+        "delta": "--- corrected\n+++ beta-owner-replaced-by-alpha\n@@ -3,5 +3,5 @@\n /// <summary>Carries the owning registration's stable diagnostic key without retaining its services.</summary>\n internal sealed class ConsumerBusIdentityOptions(string busKey) : IOptions\n {\n-    internal string BusKey { get; } = busKey;\n+    internal string BusKey { get; } = busKey.Replace(\"IBetaBus\", \"IAlphaBus\", System.StringComparison.Ordinal);\n }\n"
+      },
+      "compiled_binaries": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/beta-owner-replaced-by-alpha/ViciOne.ServiceBus.dll",
+          "sha256": "2deba9de726e7458cad41d9ff295c0759b90b6076e8140ad5cabc728510b68ba"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/beta-owner-replaced-by-alpha/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+        }
+      ],
+      "negative": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-beta-owner-replaced-by-alpha-typed-invalid-plain",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-invalid-plain",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T02:19:42.298732+00:00",
+          "completed_utc": "2026-10-03T02:19:43.190669+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-beta-owner-replaced-by-alpha-typed-invalid-plain.log",
+          "log_sha256": "f1fef0a0bad0a9ede88466095e4578a7dd6f3ea85f5328eb3920253c4cb9eb08"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-invalid-plain",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.StartsWithException",
+              "Message": "Assert.StartsWith() Failure: String start does not match\nString:         \"Batch timing for bus 'BatchDiagnostic.PublicConsum\"···\nExpected start: \"Batch timing for bus 'BatchDiagnostic.PublicConsum\"···",
+              "StackTrace": "   at Xunit.Assert.StartsWith(String expectedStartString, String actualString, StringComparison comparisonType) in /_/src/xunit.v3.assert/Asserts/StringAsserts.cs:line 1432\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.<>c__DisplayClass0_0.<<RunAsync>b__4>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 94\n--- End of stack trace from previous location ---\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.RunAsync(Boolean typed, Boolean invalid, Boolean grouped, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 64\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/Program.cs:line 26",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "2deba9de726e7458cad41d9ff295c0759b90b6076e8140ad5cabc728510b68ba"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "positive": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-beta-owner-replaced-by-alpha-typed-valid-plain",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-valid-plain",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T02:19:43.279250+00:00",
+          "completed_utc": "2026-10-03T02:19:44.077275+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-beta-owner-replaced-by-alpha-typed-valid-plain.log",
+          "log_sha256": "ae8c9fb6abac86ff70ca5079491fc915733e091c07a583eacfc43484965728c3"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-valid-plain",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "2deba9de726e7458cad41d9ff295c0759b90b6076e8140ad5cabc728510b68ba"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "status": "INDEPENDENTLY_VERIFIED_ACTUAL_CAUSAL_KILL",
+      "pack_per_mutant": false
+    },
+    {
+      "name": "collector-owner-ignored",
+      "source_effects": [
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/collector-owner-ignored/results.cs.txt",
+            "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/collector-owner-ignored/host.cs.txt",
+            "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/collector-owner-ignored/host_xml.cs.txt",
+            "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/collector-owner-ignored/batch.cs.txt",
+            "sha256": "0a96ac2d581529ddb4dfc81872c23245bf4798f7a8c3062371d6397e45c08f6c"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/collector-owner-ignored/batch_options.cs.txt",
+            "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/collector-owner-ignored/registration.cs.txt",
+            "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/collector-owner-ignored/connector.cs.txt",
+            "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+          },
+          "exact_expected_bytes": true
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+          "snapshot": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/collector-owner-ignored/identity.cs.txt",
+            "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+          },
+          "exact_expected_bytes": true
+        }
+      ],
+      "delta": {
+        "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+        "delta": "--- corrected\n+++ collector-owner-ignored\n@@ -25,7 +25,7 @@\n     protected BatchCollectorBase(BatchOptions options, IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe, string busKey)\n     {\n         _settings = new BatchRuntimeSettings(options);\n-        _busKey = busKey;\n+        _busKey = \"unknown\";\n         _consumerPipe = consumerPipe ?? throw new ArgumentNullException(nameof(consumerPipe));\n         _lifetime = new BatchCollectorLifetime(_settings.ConcurrencyLimit);\n     }\n"
+      },
+      "compiled_binaries": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/collector-owner-ignored/ViciOne.ServiceBus.dll",
+          "sha256": "0c85d60e832986b236db1199342a7be6a25b0495eee63bdf0ff7cadc58e1ce5a"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-diagnostic-binaries/collector-owner-ignored/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+        }
+      ],
+      "negative": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-collector-owner-ignored-typed-invalid-plain",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-invalid-plain",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T02:19:49.474079+00:00",
+          "completed_utc": "2026-10-03T02:19:50.467901+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-collector-owner-ignored-typed-invalid-plain.log",
+          "log_sha256": "f518418d19d9797fd26bc96a25d261af89db0eeeeccf95fbd8d9ebd04cd313f1"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-invalid-plain",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.StartsWithException",
+              "Message": "Assert.StartsWith() Failure: String start does not match\nString:         \"Batch timing for bus 'unknown': At endpoint 'loopb\"···\nExpected start: \"Batch timing for bus 'BatchDiagnostic.PublicConsum\"···",
+              "StackTrace": "   at Xunit.Assert.StartsWith(String expectedStartString, String actualString, StringComparison comparisonType) in /_/src/xunit.v3.assert/Asserts/StringAsserts.cs:line 1432\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.<>c__DisplayClass0_0.<<RunAsync>b__4>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 94\n--- End of stack trace from previous location ---\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.CorePackage05.DiagnosticOwnerAssertions.RunAsync(Boolean typed, Boolean invalid, Boolean grouped, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/DiagnosticOwnerAssertions.cs:line 64\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/Program.cs:line 26",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "0c85d60e832986b236db1199342a7be6a25b0495eee63bdf0ff7cadc58e1ce5a"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "positive": {
+        "receipt": {
+          "phase": "package05-diagnostic-mut-collector-owner-ignored-typed-valid-plain",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+            "typed-valid-plain",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T02:19:50.573566+00:00",
+          "completed_utc": "2026-10-03T02:19:51.395953+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-collector-owner-ignored-typed-valid-plain.log",
+          "log_sha256": "da8c82021a5fc8fc2c62b4f74e1d732e577801e88d3c7d74e9869a8f2392fd71"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "typed-valid-plain",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "0c85d60e832986b236db1199342a7be6a25b0495eee63bdf0ff7cadc58e1ce5a"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "status": "INDEPENDENTLY_VERIFIED_ACTUAL_CAUSAL_KILL",
+      "pack_per_mutant": false
+    }
+  ],
+  "baseline": [
+    {
+      "receipt": {
+        "phase": "package05-diagnostic-mut-corrected-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:18:51.954132+00:00",
+        "completed_utc": "2026-10-03T02:18:53.097578+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-corrected-all.log",
+        "log_sha256": "7281619327079f86ee5cae293fb2036392ac488056e0449d2d3664890a74f242"
+      },
+      "actual": {
+        "cases": [
+          {
+            "case": "default-valid-plain",
+            "assertions_passed": true
+          },
+          {
+            "case": "default-valid-grouped",
+            "assertions_passed": true
+          },
+          {
+            "case": "default-invalid-plain",
+            "assertions_passed": true
+          },
+          {
+            "case": "default-invalid-grouped",
+            "assertions_passed": true
+          },
+          {
+            "case": "typed-valid-plain",
+            "assertions_passed": true
+          },
+          {
+            "case": "typed-valid-grouped",
+            "assertions_passed": true
+          },
+          {
+            "case": "typed-invalid-plain",
+            "assertions_passed": true
+          },
+          {
+            "case": "typed-invalid-grouped",
+            "assertions_passed": true
+          }
+        ],
+        "count": 8,
+        "failures": 0,
+        "runtime": {
+          "framework": ".NET 10.0.10",
+          "processArchitecture": "X64",
+          "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+          "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+          "loadedProductAssemblies": [
+            {
+              "name": "ViciOne.ServiceBus",
+              "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+              "sha256": "08e4c4de89a37e5a3729c81750b552843eb217fb07d14ba4dd83834671f4e9b6"
+            },
+            {
+              "name": "ViciOne.ServiceBus.Abstractions",
+              "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+              "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "rollback": {
+    "receipt": {
+      "phase": "package05-diagnostic-mut-rollback-all",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/BatchDiagnostic.PublicConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T02:19:56.366190+00:00",
+      "completed_utc": "2026-10-03T02:19:57.344409+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-mut-rollback-all.log",
+      "log_sha256": "7281619327079f86ee5cae293fb2036392ac488056e0449d2d3664890a74f242"
+    },
+    "actual": {
+      "cases": [
+        {
+          "case": "default-valid-plain",
+          "assertions_passed": true
+        },
+        {
+          "case": "default-valid-grouped",
+          "assertions_passed": true
+        },
+        {
+          "case": "default-invalid-plain",
+          "assertions_passed": true
+        },
+        {
+          "case": "default-invalid-grouped",
+          "assertions_passed": true
+        },
+        {
+          "case": "typed-valid-plain",
+          "assertions_passed": true
+        },
+        {
+          "case": "typed-valid-grouped",
+          "assertions_passed": true
+        },
+        {
+          "case": "typed-invalid-plain",
+          "assertions_passed": true
+        },
+        {
+          "case": "typed-invalid-grouped",
+          "assertions_passed": true
+        }
+      ],
+      "count": 8,
+      "failures": 0,
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "08e4c4de89a37e5a3729c81750b552843eb217fb07d14ba4dd83834671f4e9b6"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05-diagnostic/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          }
+        ]
+      }
+    }
+  },
+  "mutation_package_boundary": "Compiled DLL substitution in separately NuGet-compiled public consumer; no pack per mutant claim."
+}

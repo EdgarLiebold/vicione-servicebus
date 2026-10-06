@@ -1,0 +1,40 @@
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Providers.Persistence;
+using ViciOne.ServiceBus.Operations;
+
+namespace ViciOneReview.ActivityOwnership;
+
+// Observes the real store's successful fenced transition; owns neither storage nor its disposal.
+internal sealed class StoreObservation(IOutboxStore<IBus> inner, DurableSendId expected) : IOutboxStore<IBus>
+{
+    public string InnerType => inner.GetType().FullName!;
+    public TaskCompletionSource<(DurableSendId Id, Guid Generation)> Retired { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    public Task<DurableSendAdmissionResult> AdmitAsync(SerializedDurableSend message, DurableSendStoreLimits limits,
+        DateTimeOffset enqueuedAt, CancellationToken cancellationToken = default) => inner.AdmitAsync(message, limits, enqueuedAt, cancellationToken);
+    public Task<IReadOnlyList<DurableSendDelivery>> ClaimDueAsync(DateTimeOffset now, int maximumCount,
+        TimeSpan leaseDuration, CancellationToken cancellationToken = default) => inner.ClaimDueAsync(now, maximumCount, leaseDuration, cancellationToken);
+    public Task<bool> MarkDeliveredAsync(DurableSendId id, DurableSendLease lease, DateTimeOffset deliveredAt,
+        CancellationToken cancellationToken = default) => inner.MarkDeliveredAsync(id, lease, deliveredAt, cancellationToken);
+    public Task<bool> AwaitConsumerCompletionAsync(DurableSendId id, DurableSendLease lease, int deliveryAttempts,
+        DateTimeOffset nextAttemptAt, CancellationToken cancellationToken = default) => inner.AwaitConsumerCompletionAsync(id, lease, deliveryAttempts, nextAttemptAt, cancellationToken);
+    public async Task<bool> CompleteConsumerDeliveryAsync(DurableSendId id, Guid generationToken, DateTimeOffset completedAt,
+        CancellationToken cancellationToken = default)
+    {
+        bool actual = await inner.CompleteConsumerDeliveryAsync(id, generationToken, completedAt, cancellationToken).ConfigureAwait(false);
+        if (actual && id == expected && generationToken != Guid.Empty) Retired.TrySetResult((id, generationToken));
+        return actual;
+    }
+    public Task<bool> ScheduleRetryAsync(DurableSendId id, DurableSendLease lease, int deliveryAttempts, DateTimeOffset nextAttemptAt,
+        DurableSendFailureKind failureKind, string? failureType, DateTimeOffset failedAt, CancellationToken cancellationToken = default)
+        => inner.ScheduleRetryAsync(id, lease, deliveryAttempts, nextAttemptAt, failureKind, failureType, failedAt, cancellationToken);
+    public Task<bool> QuarantineAsync(DurableSendId id, DurableSendLease lease, int deliveryAttempts, DurableSendFailureKind failureKind,
+        string? failureType, DateTimeOffset quarantinedAt, CancellationToken cancellationToken = default)
+        => inner.QuarantineAsync(id, lease, deliveryAttempts, failureKind, failureType, quarantinedAt, cancellationToken);
+    public Task<DurableSendStoreSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default) => inner.GetSnapshotAsync(cancellationToken);
+    public Task<DurableSendQuarantinePage> GetQuarantineAsync(DurableSendQuarantineQuery query, CancellationToken cancellationToken = default)
+        => inner.GetQuarantineAsync(query, cancellationToken);
+    public Task<DurableSendOperationResult> RequeueAsync(DurableSendId id, DateTimeOffset dueAt, CancellationToken cancellationToken = default)
+        => inner.RequeueAsync(id, dueAt, cancellationToken);
+    public Task<DurableSendOperationResult> DiscardQuarantinedAsync(DurableSendId id, CancellationToken cancellationToken = default)
+        => inner.DiscardQuarantinedAsync(id, cancellationToken);
+}

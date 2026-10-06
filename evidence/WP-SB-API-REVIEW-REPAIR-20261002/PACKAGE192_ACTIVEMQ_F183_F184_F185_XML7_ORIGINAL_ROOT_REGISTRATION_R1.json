@@ -1,0 +1,146 @@
+{
+  "utc": "2026-10-05T15:38:39.163065+00:00",
+  "status": "THREE_ACTUAL_PUBLISHED_XML_CAUSES_ROOT_REGISTERED_REPAIR_PENDING",
+  "counts": {
+    "known_before": 182,
+    "known_after": 185,
+    "accepted_before": 181,
+    "accepted_after": 181
+  },
+  "findings": [
+    {
+      "id": "F-SB-API-183",
+      "severity": "Low",
+      "title": "ActiveMQ Publish(Type) XML promises message delivery for a topology configuration operation",
+      "nodes": [
+        {
+          "ordinal": 37,
+          "assembly": "ViciOne.ServiceBus.ActiveMq",
+          "id": "M:ViciOne.ServiceBus.ActiveMq.Configuration.ActiveMqBusFactoryConfigurator.Publish(System.Type,System.Action{ViciOne.ServiceBus.ActiveMq.IActiveMqMessagePublishTopologyConfigurator})",
+          "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Configuration/ActiveMqBusFactoryConfigurator.cs",
+          "before_sha256": "726d9a4139a2c9637b1d4bd7bd87225ffbc1f8ce83a9c13f2c2b15975c365ec3",
+          "proposed_sha256": "c65797e6c4e38cf4f909dfda72c95f5f0e069e9889659b53c9b547c8b3f660e4",
+          "before_summary": "Publishes a message to its configured consumers.",
+          "proposed_summary": "Configures publish topology for a runtime message type.",
+          "node_count": 1
+        },
+        {
+          "ordinal": 123,
+          "assembly": "ViciOne.ServiceBus.ActiveMq",
+          "id": "M:ViciOne.ServiceBus.ActiveMq.IActiveMqBusFactoryConfigurator.Publish(System.Type,System.Action{ViciOne.ServiceBus.ActiveMq.IActiveMqMessagePublishTopologyConfigurator})",
+          "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/IActiveMqBusFactoryConfigurator.cs",
+          "before_sha256": "0afa5e3e59c06911d895c5a97c32c0d5027f4396784921610c62e17061606dcf",
+          "proposed_sha256": "1b8de19ba586fff6cbd3a94d3ea6f50d2ffe19fea3bf628d83ad827f8f7abd69",
+          "before_summary": "Publishes a message to its configured consumers.",
+          "proposed_summary": "Configures publish topology for a runtime message type.",
+          "node_count": 1
+        }
+      ],
+      "native_count": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "id": "F-SB-API-184",
+      "severity": "Low",
+      "title": "ActiveMQ topology XML promises immutability despite exposed mutable array snapshots",
+      "nodes": [
+        {
+          "ordinal": 245,
+          "assembly": "ViciOne.ServiceBus.ActiveMq",
+          "id": "M:ViciOne.ServiceBus.ActiveMq.Topology.PublishEndpointBrokerTopologyBuilder.BuildBrokerTopology",
+          "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/PublishEndpointBrokerTopologyBuilder.cs",
+          "before_sha256": "3525b1a5ff33357abd7fa81a76840ac52dbf325fabfab384446f6a9829f309ca",
+          "proposed_sha256": "69475d561ce0b75036138aa6a9b998f243fed8e0df01d2d2878e420c5f60979f",
+          "before_summary": "Creates an immutable snapshot of the accumulated publish topology.",
+          "proposed_summary": "Creates array snapshots of the accumulated publish topology with retained entity references.",
+          "node_count": 1
+        },
+        {
+          "ordinal": 249,
+          "assembly": "ViciOne.ServiceBus.ActiveMq",
+          "id": "M:ViciOne.ServiceBus.ActiveMq.Topology.ReceiveEndpointBrokerTopologyBuilder.BuildTopologyLayout",
+          "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ReceiveEndpointBrokerTopologyBuilder.cs",
+          "before_sha256": "9dbf1363adf041cd4cbb96e8fa6204bdb8da2a822b91a7714e86e5229fb63deb",
+          "proposed_sha256": "5bfcc7203a5abfd973c8452ed58fc01a79a67ff66b47e8b427e72783df092529",
+          "before_summary": "Creates an immutable snapshot of the accumulated receive topology.",
+          "proposed_summary": "Creates array snapshots of the accumulated receive topology with retained entity references.",
+          "node_count": 1
+        },
+        {
+          "ordinal": 599,
+          "assembly": "ViciOne.ServiceBus.ActiveMq",
+          "id": "T:ViciOne.ServiceBus.ActiveMq.Topology.ActiveMqBrokerTopology",
+          "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ActiveMqBrokerTopology.cs",
+          "before_sha256": "3f891991bd7269f38a9737c989c3560f643618445c82a63b8b2cfe8c4a6d6571",
+          "proposed_sha256": "86d3bb01b3de74cbff4a613e0069f9c2c2f3e96e167364825c812eb9289213fc",
+          "before_summary": "Provides an immutable snapshot of ActiveMQ topics, queues, and consumer bindings.",
+          "proposed_summary": "Stores array snapshots of ActiveMQ topics, queues, and consumer bindings with retained entity references.",
+          "node_count": 1
+        }
+      ],
+      "native_count": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "id": "F-SB-API-185",
+      "severity": "Low",
+      "title": "ActiveMQ cached producer XML promises usage notifications for operations without notification",
+      "nodes": [
+        {
+          "ordinal": 518,
+          "assembly": "ViciOne.ServiceBus.ActiveMq",
+          "id": "T:ViciOne.ServiceBus.ActiveMq.CachedMessageProducer",
+          "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/CachedMessageProducer.cs",
+          "before_sha256": "c333251f7831dbb7872bc2ddaf68bcf75d5d4eb593094c8acd5476fe385e6947",
+          "proposed_sha256": "ea1822b1eb3065a253b92f453b9b1356d0db4b1e94c874341b58452bfa00f47c",
+          "before_summary": "Decorates an Apache NMS producer and reports each operation as cache usage.",
+          "proposed_summary": "Decorates an Apache NMS producer and reports cache usage from send, message-creation, and asynchronous-close methods.",
+          "node_count": 1
+        },
+        {
+          "ordinal": null,
+          "outside_original637": true,
+          "assembly": "ViciOne.ServiceBus.ActiveMq",
+          "id": "E:ViciOne.ServiceBus.ActiveMq.CachedMessageProducer.Used",
+          "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/CachedMessageProducer.cs",
+          "before_sha256": "c333251f7831dbb7872bc2ddaf68bcf75d5d4eb593094c8acd5476fe385e6947",
+          "proposed_sha256": "ea1822b1eb3065a253b92f453b9b1356d0db4b1e94c874341b58452bfa00f47c",
+          "before_summary": "Occurs whenever an operation uses the wrapped producer.",
+          "proposed_summary": "Occurs when a send, message-creation, or asynchronous-close method reports use of the wrapped producer.",
+          "node_count": 1
+        }
+      ],
+      "native_count": 0,
+      "grade": null,
+      "closed": false
+    }
+  ],
+  "proposal_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package218-activemq-seven-documentation-product-proposed-r2/MANIFEST.json",
+    "sha256": "4afd7dcbeee4f0ce8184dbfd430ac679ed8202f3bfac72d6642794e3b4165fa4"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package218-activemq-doc7-independent-scanner-peer-r1/REPORT.json",
+    "sha256": "92fc74af4ffb247f018eea06c1056d703b14d3b1189388e85ff80d1925df45aa"
+  },
+  "patch_label_erratum": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package218-doc7-delta-path-label-erratum-r1/ERRATUM.json",
+    "sha256": "f023af68cc33c3821b307863f1b95951f727a789124e8ce8dda2b27398ca8b31"
+  },
+  "root_review": {
+    "whole_proposed6_sources_706_lines": [
+      "41b551",
+      "fd6b0f"
+    ],
+    "whole_exact_changes_and_actual185_nodes": "3a0482",
+    "whole_peer_and_erratum": "952564",
+    "actual_archive_CRC_XML7_PDB_source6_binding": "this tool result",
+    "retained_own_actual185_PDB157_parse": [
+      "0d0dfd",
+      "198575"
+    ]
+  },
+  "whole_api_closed": false
+}

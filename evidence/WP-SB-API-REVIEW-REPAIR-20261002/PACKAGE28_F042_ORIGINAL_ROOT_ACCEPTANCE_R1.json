@@ -1,0 +1,23 @@
+{
+  "status": "ROOT_CONFIRMED_F042_FINITE_OUTGOING_LOSS_PRODUCT_REPAIR_PENDING",
+  "actor": "/root",
+  "utc": "2026-10-03T22:36:00.055588+00:00",
+  "source_native_candidate_sha256": "bf86cfaf60eda899c31eeda32d82358004b4d7938b37344fea6af334bb1b0b57",
+  "native_log_sha256": "e544a0cdf1b842ff483a2aaaa20f478a493d6f62185a4c013b3fe55d061a69e5",
+  "root_full_native_log_read": true,
+  "root_full_peer_manifest_review_and_bounded_summary_read": true,
+  "peer_manifest_sha256": "215a558a6b321c04ef104385eaab4d95ad7a7eff2fabcab398e44db386373592",
+  "all_peer_artifact_hashes_rechecked": true,
+  "case_counts": {
+    "observations": 3,
+    "finite_receives": 6
+  },
+  "loss_case": "volatile-fault",
+  "positive_controls": [
+    "volatile-positive",
+    "ef-fault"
+  ],
+  "old_loaded_Core_PDB_not_latest_comment_source": true,
+  "current_product_patch_accepted": false,
+  "global_green_Aplus_claimed": false
+}

@@ -1,0 +1,222 @@
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/EndpointConfiguration.cs", "bytes": 14872, "sha256": "9823652a8666e8f8cddb0fb43ad11cf69d5c62a2ab0e8b3c00a67f5c6a4ba5e6", "start_line": 241, "end_line": 356}
+    /// <param name="callback">The callback invoked by the operation.</param>
+    public void ConfigurePublish(Action<IPublishPipeConfigurator> callback)
+    {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        callback(Publish.Configurator);
+    }
+
+    /// <summary>Configures send.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    public void ConfigureSend(Action<ISendPipeConfigurator> callback)
+    {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        callback(Send.Configurator);
+    }
+
+    /// <summary>Configures receive.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    public void ConfigureReceive(Action<IReceivePipeConfigurator> callback)
+    {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        callback(Receive.Configurator);
+    }
+
+    /// <summary>Configures dead letter.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    public void ConfigureDeadLetter(Action<IPipeConfigurator<ReceiveContext>> callback)
+    {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        callback(Receive.DeadLetterConfigurator);
+    }
+
+    /// <summary>Configures error.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    public void ConfigureError(Action<IPipeConfigurator<ExceptionReceiveContext>> callback)
+    {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        callback(Receive.ErrorConfigurator);
+    }
+
+    /// <summary>Configures transport.</summary>
+    /// <param name="callback">The callback invoked by the operation.</param>
+    public void ConfigureTransport(Action<ITransportConfigurator> callback)
+    {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        callback(Transport.Configurator);
+    }
+
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
+    public virtual IEnumerable<ValidationResult> Validate()
+    {
+        return Send.Specification.Validate()
+            .Concat(Publish.Specification.Validate())
+            .Concat(Consume.Specification.Validate())
+            .Concat(Receive.Specification.Validate())
+            .Concat(Topology.Validate())
+            .Concat(Serialization.Validate())
+            .Concat(Transport.Validate());
+    }
+
+    /// <summary>Gets the consume.</summary>
+    public IConsumePipeConfiguration Consume { get; }
+    /// <summary>Gets the send.</summary>
+    public ISendPipeConfiguration Send { get; }
+    /// <summary>Gets the publish.</summary>
+    public IPublishPipeConfiguration Publish { get; }
+    /// <summary>Gets the receive.</summary>
+    public IReceivePipeConfiguration Receive { get; }
+    /// <summary>Gets the topology.</summary>
+    public ITopologyConfiguration Topology { get; }
+    /// <summary>Gets the serialization.</summary>
+    public ISerializationConfiguration Serialization { get; }
+    /// <summary>Gets the transport.</summary>
+    public ITransportConfiguration Transport { get; }
+
+    /// <summary>Adds serializer to the configuration.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="isSerializer">The is serializer.</param>
+    public void AddSerializer(ISerializerFactory factory, bool isSerializer = true)
+    {
+        Serialization.AddSerializer(factory, isSerializer);
+    }
+
+    /// <summary>Adds deserializer to the configuration.</summary>
+    /// <param name="factory">The factory invoked by the operation.</param>
+    /// <param name="isDefault">The is default.</param>
+    public void AddDeserializer(ISerializerFactory factory, bool isDefault = false)
+    {
+        Serialization.AddDeserializer(factory, isDefault);
+    }
+
+    /// <summary>Configures system text json serializer options.</summary>
+    /// <param name="configure">The callback used to configure the component.</param>
+    public void ConfigureSystemTextJsonSerializerOptions(Func<JsonSerializerOptions, JsonSerializerOptions> configure)
+    {
+        Serialization.ConfigureSystemTextJsonSerializerOptions(configure);
+    }
+
+    /// <summary>Clears serialization.</summary>
+    public void ClearSerialization()
+    {
+        Serialization.Clear();
+    }
+}
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/IEndpointConfiguration.cs", "bytes": 1053, "sha256": "c1221801468865669490224ba6a1c43319ab2bad6bbb59ea5b30ef83d8954cae", "start_line": 1, "end_line": 31}
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>Defines endpoint configuration.</summary>
+public interface IEndpointConfiguration :
+    IConsumePipeConfigurator,
+    ISendPipelineConfigurator,
+    IPublishPipelineConfigurator,
+    IReceivePipelineConfigurator,
+    ISpecification
+{
+    /// <summary>Gets a value indicating whether bus endpoint.</summary>
+    bool IsBusEndpoint { get; }
+
+    /// <summary>Gets the consume.</summary>
+    IConsumePipeConfiguration Consume { get; }
+    /// <summary>Gets the send.</summary>
+    ISendPipeConfiguration Send { get; }
+    /// <summary>Gets the publish.</summary>
+    IPublishPipeConfiguration Publish { get; }
+    /// <summary>Gets the receive.</summary>
+    IReceivePipeConfiguration Receive { get; }
+
+    /// <summary>Gets the topology.</summary>
+    ITopologyConfiguration Topology { get; }
+
+    /// <summary>Gets the serialization.</summary>
+    ISerializationConfiguration Serialization { get; }
+
+    /// <summary>Gets the transport.</summary>
+    ITransportConfiguration Transport { get; }
+}
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/IReceiveEndpointConfiguration.cs", "bytes": 2773, "sha256": "5591c175c6e0b8bb692b352b2f48bff6741e7408b07db7ece42cd9be20d85918", "start_line": 1, "end_line": 69}
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Observables;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>Defines receive endpoint configuration.</summary>
+public interface IReceiveEndpointConfiguration :
+    IEndpointConfiguration,
+    IReceiveEndpointObserverConnector,
+    IReceiveEndpointDependencyConnector,
+    IReceiveEndpointDependentConnector
+{
+    /// <summary>Gets the consume pipe.</summary>
+    IConsumePipe ConsumePipe { get; }
+
+    /// <summary>Gets the host address.</summary>
+    Uri HostAddress { get; }
+
+    /// <summary>Gets the input address.</summary>
+    Uri InputAddress { get; }
+
+    /// <summary>Gets or sets the configure consume topology.</summary>
+    bool ConfigureConsumeTopology { get; set; }
+
+    /// <summary>Gets or sets the publish faults.</summary>
+    bool PublishFaults { get; set; }
+
+    /// <summary>Gets the prefetch count.</summary>
+    int PrefetchCount { get; }
+
+    /// <summary>Gets the concurrent message limit.</summary>
+    int? ConcurrentMessageLimit { get; }
+
+    /// <summary>Gets the endpoint observers.</summary>
+    ReceiveEndpointObservable EndpointObservers { get; }
+    /// <summary>Gets the receive observers.</summary>
+    ReceiveObservable ReceiveObservers { get; }
+    /// <summary>Gets the transport observers.</summary>
+    ReceiveTransportObservable TransportObservers { get; }
+    /// <summary>Gets the receive endpoint.</summary>
+    IReceiveEndpoint ReceiveEndpoint { get; }
+
+    /// <summary>Configures whether consume topology is created for a message type.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="enabled">Whether topology creation is enabled.</param>
+    void ConfigureMessageTopology<T>(bool enabled = true)
+        where T : class;
+
+    /// <summary>Configures whether consume topology is created for a message type.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="enabled">Whether topology creation is enabled.</param>
+    void ConfigureMessageTopology(Type messageType, bool enabled = true);
+
+    /// <summary>Completed once the receive endpoint dependencies are ready.</summary>
+    Task DependenciesReady { get; }
+
+    /// <summary>Completed once the receive endpoint dependents are completed.</summary>
+    Task DependentsCompleted { get; }
+
+    /// <summary>Create the receive pipe, using the endpoint configuration.</summary>
+    /// <returns>The created receive pipe.</returns>
+    IReceivePipe CreateReceivePipe();
+
+    /// <summary>Creates receive endpoint context.</summary>
+    /// <returns>The created receive endpoint context.</returns>
+    ReceiveEndpointContext CreateReceiveEndpointContext();
+}
+

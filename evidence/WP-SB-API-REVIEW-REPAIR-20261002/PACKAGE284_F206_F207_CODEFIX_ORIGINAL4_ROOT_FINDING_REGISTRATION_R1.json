@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-06T00:42:29.419943+00:00",
+  "status": "TWO_CONFIRMED_PUBLIC_CODEFIX_ORIGINAL_CAUSES_REPAIR_PENDING",
+  "findings": [
+    {
+      "id": "F-SB-API-206",
+      "severity": "Medium",
+      "title": "Cancellation-token codefix shifts an already supplied token into the added-token parameter",
+      "source_owner": "src/ViciOne.ServiceBus.Analyzers/CancellationTokenOverloadMethodAnalyzer.cs",
+      "first_causal_boundary": "Original existing-tokenTrue Equal61 expected CancellationToken.None at originalindex1; actualcontext.CancellationToken. Actual code action result compilation succeeds, but token argument association changed.",
+      "family_reconciliation": "Distinct overload matching index selection cause; no existing registration match under Root561630, no second finding from unreached later assertions."
+    },
+    {
+      "id": "F-SB-API-207",
+      "severity": "Medium",
+      "title": "Pipeline-context keyword identifier loses escaping and generates non-compilable codefix",
+      "source_owner": "src/ViciOne.ServiceBus.Analyzers/CancellationTokenOverloadMethodAnalyzer.cs",
+      "first_causal_boundary": "Original escapedKeywordTrue Null100 captures InvalidOperationException from genuine code action result compilation CS1525/CS1073 on class. Initial binding compilation and real diagnostic valid.",
+      "family_reconciliation": "Distinct CSharp identifier spelling cause; no existing registration match under Root561630. No originalfixture/compiler configuration failure inferred."
+    }
+  ],
+  "original_native": {
+    "total": 4,
+    "passed": 2,
+    "failed": 2,
+    "skipped": 0
+  },
+  "original_capture": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package281-codefix-original4-root-native-capture-r1/REPORT.json",
+    "sha256": "e71f6270898e0bd37e00c5f8c7f2c9483373cc57f06ebe0fdfb2ef01df7e71c1"
+  },
+  "independent_original_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package281-codefix-original4-independent-qualification-r1/REPORT.json",
+    "sha256": "a99f3a0156539f39c2fbe12d3afe294b9acf4510529a39f71f171825f0c9cb61"
+  },
+  "mandatory_test_peer_registry_precision": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package270-codefix-registry-read-authority-precision-r1/ERRATUM.json",
+    "sha256": "8f0598bd833854a5d5efa1396eef04533d602c1f91a133d0040b09ed4fb0cc5f"
+  },
+  "root_whole_qualification_receipt": "a6ee9e; twofalse controls fullypass, later truecase assertions not credited.",
+  "native_fixed_cases_added": 0,
+  "whole_API_closed": false
+}

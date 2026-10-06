@@ -1,0 +1,20 @@
+{
+  "phase": "package13-f033-public-previous-ten",
+  "original_r1_causal_default_red": 3,
+  "original_r1_default_positive": 4,
+  "excluded_typed_setup_failures": 3,
+  "cause": "new helper erased generic type at Limits extension, declared default bus limits for typed bus; corrected by preserving concrete typed lambda through Limits+UsingInMemory",
+  "Root_FULL_actual_MessageLimitsConfigurationExtensions": true,
+  "product_change_required": false,
+  "archived_inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE13_F033_TYPED_SETUP_previous.cs.txt",
+      "sha256": "44535b626939cd423515265d1b6046a0fda933f6055e53e1599eae7ac506d989"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE13_F033_TYPED_SETUP_corrected.cs.txt",
+      "sha256": "44535b626939cd423515265d1b6046a0fda933f6055e53e1599eae7ac506d989"
+    }
+  ],
+  "require": "repeat original all10 with identical final corrected consumer and no setup failures before claiming5 red/5positive"
+}

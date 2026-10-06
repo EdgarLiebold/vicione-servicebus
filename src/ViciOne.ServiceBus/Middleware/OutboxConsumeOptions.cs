@@ -13,7 +13,7 @@ public sealed class OutboxConsumeOptions
     /// <summary>The number of message to deliver at a time from the outbox.</summary>
     public required int MessageDeliveryLimit { get; init; }
 
-    /// <summary>The time to wait when delivering a message to the broker.</summary>
+    /// <summary>The positive, timer-supported timeout used to request cancellation when delivering a message to the broker.</summary>
     public required TimeSpan MessageDeliveryTimeout { get; init; }
 
     internal void Validate()
@@ -26,6 +26,8 @@ public sealed class OutboxConsumeOptions
             throw Invalid(nameof(MessageDeliveryLimit), "must be greater than zero", "Set a positive delivery batch limit");
         if (MessageDeliveryTimeout <= TimeSpan.Zero)
             throw Invalid(nameof(MessageDeliveryTimeout), "must be greater than zero", "Set a positive broker delivery timeout");
+        if ((long)MessageDeliveryTimeout.TotalMilliseconds > uint.MaxValue - 1L)
+            throw Invalid(nameof(MessageDeliveryTimeout), "exceeds the supported timer range", "Set a broker delivery timeout below 4294967295 milliseconds");
     }
 
     static ConfigurationException Invalid(string property, string problem, string fix) =>

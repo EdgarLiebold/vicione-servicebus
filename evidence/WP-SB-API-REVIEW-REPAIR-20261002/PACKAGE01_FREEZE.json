@@ -1,0 +1,97 @@
+{
+  "status": "CODE_AND_TESTS_FROZEN",
+  "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "files": [
+    {
+      "path": "docs/changelog/product-fixes.md",
+      "bytes": 27282,
+      "sha256": "c2bc141a0fc9b3ae3c805529659d27993c17f6a10ffebbaa28bf9271143c610e",
+      "baseline_sha256": "d9a5062208372c480e982dbc756736c81e80531e1dde6a6d1851d2abd306c901"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/HostSettings.cs",
+      "bytes": 3048,
+      "sha256": "e3ebda96dcf52830f12ba2baca06bbdd94873cddb2bed08f14dbf18423e022a8",
+      "baseline_sha256": "a57d5545d4dd781f941f33fbd88fa5e1c0b701be15717370a2477667a187eb10"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs",
+      "bytes": 7262,
+      "sha256": "a693723e346542fbec2c921651db0f633b64fae47a275eaafbbaff7a8f9d636d",
+      "baseline_sha256": "0b52008444b659453098077b9239c65a79db703762e37157b068205034bc83ea"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+      "bytes": 22734,
+      "sha256": "baaf584e5293b7fd896ab11a2c4e78b79182f9d5a8ed98eefb9987aa683f650b",
+      "baseline_sha256": "749ae49b80c9737709fada793336973d9594f70902a8c53cb16e3c3a3bc68faa"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs",
+      "bytes": 3182,
+      "sha256": "4bf182e49632282f7908f16a777c981807e6d6e18c5271f8b57d841051f9ccd7",
+      "baseline_sha256": "3f9d7ecc415d0da3aeba43f0c8748c4a8e8e04256df5d02ca28128ce7c02dee5"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/IServiceBusHostConfigurator.cs",
+      "bytes": 2733,
+      "sha256": "36a5d5f9db3880cbcf837ec5fea88be39cd03feeeedda6246d6c73e796306bdd",
+      "baseline_sha256": "65c9d559807f4306369a733c8a4eb803b5a84484e0640666ba509917d2d6f4ea"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusHostConfigurator.cs",
+      "bytes": 11710,
+      "sha256": "ebb03406b03ced5a79517a5fb30027821bef57173652de2c44d7f02cc6313e93",
+      "baseline_sha256": "30eea384e77aacfc8d867fd0df29a54671e2dd01e7a0a59db9062f1f73c81200"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusHostSettings.cs",
+      "bytes": 3044,
+      "sha256": "74416b3386b9dc6cb5142dd3a2de7a3252e2e5de66f64f2dc402b64c8583539b",
+      "baseline_sha256": "b892528f2a55d8402253412e706ebaa2bbb013c7966223737c94742b817b0337"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs",
+      "bytes": 3162,
+      "sha256": "f2cb75c8d811a285b1a777b647b543619302d4f1b7b59c0aafc90bdc1c67b047",
+      "baseline_sha256": "72681fc37657703ff4ad0d4ec8c659984080c34db6f732db8c3a7deea8ee49da"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "bytes": 65803,
+      "sha256": "8ade935241c8e5a059ee9901f88af887abacfa94bce04521dc305b2d4e135105",
+      "baseline_sha256": "1657e2120176cdb667cdd940574887e68dd85a138f97c3743f2a69ea87b08a60"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs",
+      "bytes": 12448,
+      "sha256": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+      "baseline_sha256": null
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs",
+      "bytes": 3638,
+      "sha256": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+      "baseline_sha256": null
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs",
+      "bytes": 2534,
+      "sha256": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785",
+      "baseline_sha256": null
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "bytes": 32978,
+      "sha256": "b861de7665883089a93ad927cf01c8c0f50858d834389424e330c36f2999bc5c",
+      "baseline_sha256": "24ef367a2e722e73bff4f77281636a5c16b033b4a7b98cf9d8d49222c9488f28"
+    }
+  ],
+  "findings": [
+    "F-SB-API-007",
+    "F-SB-API-008",
+    "F-SB-API-011",
+    "F-SB-API-015"
+  ],
+  "validation": "Azure Unit424/424 and EventHub hermetic4/4 green. Original red and 17 countermutants running; not yet final accepted."
+}

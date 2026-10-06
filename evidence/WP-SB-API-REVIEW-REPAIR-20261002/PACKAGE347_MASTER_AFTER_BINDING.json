@@ -1,0 +1,16 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE347_F152_EXTENDED24_CONSUMER16_AZURE12_FIXED_FRESH2_SOURCE8_NORM2_IDENTITY14_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "8ca5f12aabcfeb0ba33e83dfe033d421fc6405902b5f41f0bd148b8b166d7823"
+  },
+  "Master_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "789baa3cd9a5e54e82bfb0e529e15c9b89031cb6a77b285d5addc4d4a64bec3f"
+  },
+  "rows": 19071,
+  "Original_accepted": 18209,
+  "Original_remaining": 360,
+  "known": 214,
+  "bounded": 214,
+  "administrative_retry": "a1d987 sourceidentity guard indexed missing legacy native_cases_added field, before any Master/STATE write; same immutable report and whole prior field existence preserved."
+}

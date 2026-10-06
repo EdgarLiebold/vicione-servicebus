@@ -1,0 +1,14 @@
+{
+  "Root_FULL_summary_selfreview_refinements": true,
+  "manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/futures-signalr-quartz-family-review/FINAL_MANIFEST.json",
+  "manifest_sha256": "e64e6bea28ae597eeff21868bd43de890dfe09fcd91e696785816c90e2c9e2df",
+  "verified_artifacts": 123,
+  "new_FULL": 120,
+  "prior_whole_rows_preserved": 4320,
+  "before_FULL": 4320,
+  "after_FULL": 4440,
+  "ledger_sha256_before": "1e979a798c8ce93a607990f6b3693ce53ee1ebe94954fa6096628c360e7a371b",
+  "ledger_sha256_after": "345edda89d8dc769d959d8525993ed81e499ce6b0936b86e0c11638575f268d5",
+  "candidates": "5 UNVERIFIED",
+  "whole_API_CLOSED": 0
+}

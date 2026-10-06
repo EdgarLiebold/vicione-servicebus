@@ -1,0 +1,374 @@
+{
+  "utc": "2026-10-04T20:29:07.744874+00:00",
+  "decision": "ROOT_ACCEPT21_BOUNDED_SOURCE_AND_SPECIFIC_QUALIFIED_ASSERTION_CONTRACTS",
+  "accepted_before": 2125,
+  "accepted_after": 2146,
+  "master_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "c100cc024cce53cc5f7c43287d98fb3c53dd287379edb2ecb169ac083379ddbd"
+  },
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package131-fsq39-current-runtime-assertion-overlay-r3/PER_ID39_RUNTIME_RECONCILIATION_R3.json",
+    "sha256": "ecca3cbc78cc09fbeceab6019bb70b16a03ff50e228f9bccf83f7afe0acce6ea"
+  },
+  "report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package131-fsq39-current-runtime-assertion-overlay-r3/REPORT.json",
+    "sha256": "7ae4981ab726dc050b0251b1d5f35a39c23808db0b4daa7073c49f34ca1cd468"
+  },
+  "assertions": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package131-fsq39-current-runtime-assertion-overlay-r3/ACTUAL_ASSERTION_TRACES_R3.json",
+    "sha256": "885af2e40d61c8f39f61575e91d2be477055d9e35118b07790d6827db83a0d6a"
+  },
+  "owners": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package131-fsq39-current-runtime-assertion-overlay-r3/CURRENT_OWNER_BINDINGS_R3.json",
+    "sha256": "27713f5a94e9b216a302710834827014bae1863924f86eb2ca331bd05fa20dd2"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package131-fsq39-current-runtime-assertion-overlay-r3/MANIFEST.json",
+    "sha256": "78eda6d1f0cfdef9509996b3a9c75ff0097cc6c68b6195a49d3335357306a24a"
+  },
+  "root_personal_reads": [
+    "Prior complete39 report35ac22 and pending21 individual semantic rows0558b6/c9835a/9d87fe; no whole credit from duplicated metadata inventories.",
+    "All38 named assertion sources: prior73bb97 truncation corrected rows4/5 in66c31e; rows10..18 in66c31e;19..30 in df33c5; focused31..37 complete scopes and actual case lines in d3143b, with genuine prior complete test-owner reads retained.",
+    "All sealed artifacts and33 current Source/test bindings checked810b35; individual limitations21 complete810b35."
+  ],
+  "scope": "Exact member signatures/Source contracts and individually named qualified positive/negative workflows. Futures125, Quartz120, SignalR96 are explicitly historical bounded epochs; unrelated later Core mutations do not inherit that runtime proof. Literal forwarding/defaults/retry ordering are Source-qualified. No all-branch lifecycle, arbitrary custom SPI, universal machine identity, all-leaf aggregation, external scheduler or complete XML runtime acceptance. All CLOSED remain false; global API review incomplete.",
+  "members": [
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRequestConsumerDefinition`2.ConfigureConsumer(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.IConsumerConfigurator{`0},ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "original187_index": 17,
+      "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRequestConsumerDefinition.cs",
+      "source_sha256": "a605fbddcb37692d1f801707e7e16b27c0c8206f491c3a753cdd2ca105bec846",
+      "contract": "Guards endpoint/consumer/context, disables consume topology, captures endpoint.InputAddress in Lazy<Uri>, then calls base.ConfigureConsumer. RequestAddress becomes available after actual configuration.",
+      "individual_reason": "Default real companion activation/request-response/request-fault cases now current125qualified; selectedtyped address equality direct. Consume-topology disabling remains literalSource, not fabricated settingassertion.",
+      "assertion_evidence_indexes": [
+        0,
+        1,
+        2,
+        32
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.RequestConsumerFutureDefinition`4.#ctor(ViciOne.ServiceBus.Advanced.Registration.IConsumerDefinition{`1})",
+      "original187_index": 19,
+      "path": "src/ViciOne.ServiceBus.Futures/Configuration/RequestConsumerFutureDefinition.cs",
+      "source_sha256": "c7b302fd7c9ab9589a66dd490972fd415ff16283fec734d5333e9b8af24dcd45",
+      "contract": "Null consumerDefinition guard; requires IFutureRequestDefinition<TRequest> cast else ArgumentException consumerDefinition; stores exact request definition and creates companion endpoint definition. Four-argument constructor delegates to five-argument base. No global untyped alias inserted.",
+      "individual_reason": "Fourgenericctor exactdelegation tofivegeneric; actualdefault/typed activation andcustomSPIresolveddefinitions prove constructor andselecteddependency.",
+      "assertion_evidence_indexes": [
+        0,
+        1,
+        2,
+        32,
+        33
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.RequestConsumerFutureDefinition`5.#ctor(ViciOne.ServiceBus.Advanced.Registration.IConsumerDefinition{`1})",
+      "original187_index": 20,
+      "path": "src/ViciOne.ServiceBus.Futures/Configuration/RequestConsumerFutureDefinition.cs",
+      "source_sha256": "c7b302fd7c9ab9589a66dd490972fd415ff16283fec734d5333e9b8af24dcd45",
+      "contract": "Null consumerDefinition guard; requires IFutureRequestDefinition<TRequest> cast else ArgumentException consumerDefinition; stores exact request definition and creates companion endpoint definition. Four-argument constructor delegates to five-argument base. No global untyped alias inserted.",
+      "individual_reason": "Fivegenericctor validates matchingIFutureRequestDefinition; actualexplicitfaultSPIresolveddefinition control+typeddefault selected-address equality coverrealactivation.",
+      "assertion_evidence_indexes": [
+        0,
+        1,
+        2,
+        32,
+        33
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.RequestConsumerFutureDefinition`5.ConfigureSaga(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.ISagaConfigurator{ViciOne.ServiceBus.Futures.FutureState},ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "original187_index": 21,
+      "path": "src/ViciOne.ServiceBus.Futures/Configuration/RequestConsumerFutureDefinition.cs",
+      "source_sha256": "c7b302fd7c9ab9589a66dd490972fd415ff16283fec734d5333e9b8af24dcd45",
+      "contract": "Guards endpoint/saga/context and composes technical retry followed by volatile outbox. Returns void; actual delivery/durability belongs to configured middleware.",
+      "individual_reason": "Retrybeforeoutbox literalcomposition sourcevisible; actualpublic response/fault workflows prove usablecomposition. Retrytiming/exhaustion/durability areseparatemiddlewareownerobligations.",
+      "assertion_evidence_indexes": [
+        0,
+        1,
+        2
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureExtensions.AddSubscription``1(ViciOne.ServiceBus.Sagas.IEventActivityBinder{ViciOne.ServiceBus.Futures.FutureState,``0})",
+      "original187_index": 26,
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureExtensions.cs",
+      "source_sha256": "89719a52a2a78d02ca0ce16e8e02c5854d5ad2a5c205e454a248b69aa84d53c3",
+      "contract": "Null binder guard; appends context.AddSubscription activity. Returns extended Then binder, actual subscriber deduplication belongs to FutureState helper.",
+      "individual_reason": "Delegate actualAddSubscription identity/dedup/noResponseAddress assertions matchedcurrentqualifiedcase; no binder-mirrorneeded.",
+      "assertion_evidence_indexes": [
+        3
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureExtensions.InitializeFuture``1(ViciOne.ServiceBus.Sagas.IEventActivityBinder{ViciOne.ServiceBus.Futures.FutureState,``0})",
+      "original187_index": 27,
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureExtensions.cs",
+      "source_sha256": "89719a52a2a78d02ca0ce16e8e02c5854d5ad2a5c205e454a248b69aa84d53c3",
+      "contract": "Null binder guard; appends activity storing Created from SentTime or provider clock, serializes command, creates normalized FutureLocation, adds subscription. Runs when binder event executes, not at composition.",
+      "individual_reason": "Created/SentTime-providerclock/header/locationselection remains exactSourcecontract; actualresponse/fault initiation+subscriptionroute observed. Everytimestamp/headerfield not falselyassertedfromworkflow.",
+      "assertion_evidence_indexes": [
+        0,
+        1,
+        3
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureExtensions.SetFault``1(ViciOne.ServiceBus.Sagas.IEventActivityBinder{ViciOne.ServiceBus.Futures.FutureState,ViciOne.ServiceBus.Courier.Contracts.IRoutingSlipFaulted},ViciOne.ServiceBus.Sagas.EventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,ViciOne.ServiceBus.Courier.Contracts.IRoutingSlipFaulted,``0})",
+      "original187_index": 28,
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureExtensions.cs",
+      "source_sha256": "89719a52a2a78d02ca0ce16e8e02c5854d5ad2a5c205e454a248b69aa84d53c3",
+      "contract": "Guards binder/factory and request variant getResultId; request Fault<T> uses caller selector, routing variant uses TrackingNumber; appends low-level context.SetFault. No separate tracked acceptance guard in helper.",
+      "individual_reason": "Actualrouting-slipfault terminalcases before/aftercallbackcoverunknown/replaygating and acceptedstoredoutcome/current125; low-levelSetFault remainsuntracked.",
+      "assertion_evidence_indexes": [
+        4
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureExtensions.SetFault``2(ViciOne.ServiceBus.Sagas.IEventActivityBinder{ViciOne.ServiceBus.Futures.FutureState,ViciOne.ServiceBus.Fault{``0}},System.Func{ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState,ViciOne.ServiceBus.Fault{``0}},System.Guid},ViciOne.ServiceBus.Sagas.EventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,ViciOne.ServiceBus.Fault{``0},``1})",
+      "original187_index": 29,
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureExtensions.cs",
+      "source_sha256": "89719a52a2a78d02ca0ce16e8e02c5854d5ad2a5c205e454a248b69aa84d53c3",
+      "contract": "Guards binder/factory and request variant getResultId; request Fault<T> uses caller selector, routing variant uses TrackingNumber; appends low-level context.SetFault. No separate tracked acceptance guard in helper.",
+      "individual_reason": "Actualrequestfaultfirst/remainingoperation andcallbackordering casescoverstoredidentity/lifecycle/replay; low-levelSetFault remainsuntracked.",
+      "assertion_evidence_indexes": [
+        5
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureSubscriptionExtensions.SendMessageToSubscriptionsAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},ViciOne.ServiceBus.SagaStateMachine.ContextMessageFactory{ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},``0},System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Futures.FutureSubscription},System.Threading.CancellationToken)",
+      "original187_index": 69,
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureSubscriptionExtensions.cs",
+      "source_sha256": "dc9c67715777eef900d7a896050260214daa0ebc9fe96605e7b467672feed455",
+      "contract": "Guards context/factory/subscriptions and checks supplied token before user work; materializes nonnull subscriber array. factory.UseAsync initializes once, starts each target GetSendEndpoint+SendAsync with token, maps RequestId through FutureResultPipe, awaits all started sends via Task.WhenAll, returns initialized message. All-leaf exception aggregation and noncooperative timeout are not promised. ContextMessageFactory has no disposable resource; UseAsync is initialization plus caller callback, with no factory-owned scope-disposal promise.",
+      "individual_reason": "Actualstate-context fanout2success/failurecases prove initializedonce, exactsubscriberIds/Tokens/Message; firstsendheldwhileothercompletes/fails andouterTaskjoinedbeforeexactreturn/erroridentity.",
+      "assertion_evidence_indexes": [
+        6,
+        7,
+        8,
+        31
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureSubscriptionExtensions.SendMessageToSubscriptionsAsync``2(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState,``0},ViciOne.ServiceBus.SagaStateMachine.ContextMessageFactory{ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState,``0},``1},System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Futures.FutureSubscription},System.Threading.CancellationToken)",
+      "original187_index": 70,
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureSubscriptionExtensions.cs",
+      "source_sha256": "dc9c67715777eef900d7a896050260214daa0ebc9fe96605e7b467672feed455",
+      "contract": "Guards context/factory/subscriptions and checks supplied token before user work; materializes nonnull subscriber array. factory.UseAsync initializes once, starts each target GetSendEndpoint+SendAsync with token, maps RequestId through FutureResultPipe, awaits all started sends via Task.WhenAll, returns initialized message. All-leaf exception aggregation and noncooperative timeout are not promised. ContextMessageFactory has no disposable resource; UseAsync is initialization plus caller callback, with no factory-owned scope-disposal promise.",
+      "individual_reason": "Actualtyped-context fanout2samecausalbarriercases cover per-subscriber metadata/token andjoin. Noall-leafaggregation/disposablefactorypromise.",
+      "assertion_evidence_indexes": [
+        6,
+        7,
+        8,
+        31
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`2.#ctor",
+      "original187_index": 81,
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+      "source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+      "contract": "Protected generic base initializes lifecycle states, result request correlation, initiation/subscription/terminal-reply binders and default fault mapping. Two-argument implicit protected ctor delegates to generic base with Fault<TCommand>.",
+      "individual_reason": "Actualdefault/typed builtincomposition andstatefullifecycle reachimplicit2genericbaseconstructor; sameclosedtwoownerdispatchfixedqualifiedseparately, noarbitraryoverrideidentitypromise.",
+      "assertion_evidence_indexes": [
+        0,
+        1,
+        2,
+        9,
+        34
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.#ctor",
+      "original187_index": 82,
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+      "source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+      "contract": "Protected generic base initializes lifecycle states, result request correlation, initiation/subscription/terminal-reply binders and default fault mapping. Two-argument implicit protected ctor delegates to generic base with Fault<TCommand>.",
+      "individual_reason": "Actualbasewiringinitiation/requests/subscriptions/terminalflows backedbynamedcallbackorder/replay/storedidentity tests; customoverridebehaviornotuniversallytested.",
+      "assertion_evidence_indexes": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        9,
+        34
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.RequestConsumerFuture`2.#ctor(ViciOne.ServiceBus.Configuration.IFutureDefinition)",
+      "original187_index": 95,
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/RequestConsumerFuture.cs",
+      "source_sha256": "586fde0a6c81c7d3c976ce640b4e2f18c6d38486946dfb23498e3fa609521197",
+      "contract": "Guards definition; requires matching IFutureRequestDefinition<TRequest> else ArgumentException definition. Registers request with deferred settings.RequestAddress provider and response input mapping; constructor preserves public IFutureDefinition signature.",
+      "individual_reason": "PublicIFutureDefinition ctor unchanged; selected/deferredRequestAddress andResponseResultinput workactualdefault/typed/twoBusowncompanion. Independentoverride3/generatedwrapper1 boundseparately. F105documents concreteTRequestdefaultinitializerctor; noTResponsectorrequirement.",
+      "assertion_evidence_indexes": [
+        0,
+        1,
+        2,
+        32,
+        34,
+        35,
+        36
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Quartz",
+      "id": "M:ViciOne.ServiceBus.Quartz.QuartzSchedulingExtensions.ConfigureInMemoryQuartzScheduler(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator,System.Action{ViciOne.ServiceBus.Quartz.QuartzSchedulerOptions})",
+      "original187_index": 101,
+      "path": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulingExtensions.cs",
+      "source_sha256": "2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107",
+      "contract": "Guards bus configurator, creates owned in-memory factory and direct lease; configuration failure disposes factory, combines primary+cleanup ordered if both fail. Caller must dispose returned lease after bus stop.",
+      "individual_reason": "ActualQuartz322owned directpublicscheduler/lease controls prove lifecycle/QoS/configerrorpreservation/cleanup; noexternalremoteSchedulerpromise.",
+      "assertion_evidence_indexes": [
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Quartz",
+      "id": "M:ViciOne.ServiceBus.Quartz.QuartzSchedulingExtensions.ConfigureQuartzScheduler(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator,Quartz.ISchedulerFactory,System.Action{ViciOne.ServiceBus.Quartz.QuartzSchedulerOptions})",
+      "original187_index": 102,
+      "path": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulingExtensions.cs",
+      "source_sha256": "2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107",
+      "contract": "Guards bus configurator and explicit factory; direct lease borrows factory, owns observer/partitioner only. Optional options callback default null.",
+      "individual_reason": "ActualQuartz322explicitdirectborrowed factory controls prove lifecycle/selectedcontext andcaller-vs-adaptercleanup; factorynotbusowned.",
+      "assertion_evidence_indexes": [
+        11,
+        12,
+        15,
+        16,
+        17,
+        18
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Quartz",
+      "id": "M:ViciOne.ServiceBus.Quartz.QuartzSchedulingExtensions.ConfigureQuartzScheduling(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.IBusRegistrationContext)",
+      "original187_index": 103,
+      "path": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulingExtensions.cs",
+      "source_sha256": "2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107",
+      "contract": "Guards receive configurator/context, configures four schedule/cancel/pause/resume consumers using context.BusType-specific binding. Returns void.",
+      "individual_reason": "ActualQuartz322manualcommandconsumption/trigger-time control usesselectedbusbinding; ConfigureQuartzScheduling returnsvoid, nofluentidentity.",
+      "assertion_evidence_indexes": [
+        19,
+        20
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Quartz",
+      "id": "M:ViciOne.ServiceBus.Quartz.QuartzSchedulingExtensions.UseInMemoryQuartzScheduler``1(ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator{``0},System.Action{ViciOne.ServiceBus.Quartz.QuartzEndpointOptions})",
+      "original187_index": 104,
+      "path": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulingExtensions.cs",
+      "source_sha256": "2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107",
+      "contract": "Guards configurator; requires provider whose bus type equals TBus, creates owned factory via registration, establishes six v1 contracts and endpoint scheduler adapter, returns exact configurator.",
+      "individual_reason": "ActualQuartz322in-memoryreliablepositive assertsstabletechnicalcontracts andrealpayload/headerdelivery; separateowner-isolationcontrolstaysownsemanticcredit.",
+      "assertion_evidence_indexes": [
+        21
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Quartz",
+      "id": "M:ViciOne.ServiceBus.Quartz.QuartzSchedulingExtensions.UseQuartzScheduler``1(ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator{``0},System.Func{System.IServiceProvider,Quartz.ISchedulerFactory},System.Action{ViciOne.ServiceBus.Quartz.QuartzEndpointOptions})",
+      "original187_index": 105,
+      "path": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulingExtensions.cs",
+      "source_sha256": "2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107",
+      "contract": "Guards configurator/resolver; provider must match typeof(TBus), registers borrowed explicit factory and reliable endpoint scheduling, returns exact configurator.",
+      "individual_reason": "NewactualQuartz322borrowedreliablecontrol proves realcommandconsumption/triggercreation andSamefactory-scheduleridentity afterbus/providerdisposal. Year2100due doesnotprovepayloadfire.",
+      "assertion_evidence_indexes": [
+        22,
+        23,
+        24,
+        37
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SignalR",
+      "id": "M:ViciOne.ServiceBus.SignalR.SignalRBackplaneExtensions.AddSignalRBackplane``1(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,System.Action{ViciOne.ServiceBus.SignalR.SignalRBackplaneOptions})",
+      "original187_index": 106,
+      "path": "src/Transports/ViciOne.ServiceBus.SignalR/SignalRBackplaneExtensions.cs",
+      "source_sha256": "84ca65a80bf3bacc97d3186385331f181be8e60a78a828f5f3040adef40c2237",
+      "contract": "Guards configurator, optional callback default null; validates options then rejects duplicate same hub settings before descriptor mutation. Captures actual configurator.BusType; registers scope provider, isolated endpoint/lifetime manager, selected GroupCommand request client and seven consumers. Returns same configurator; runtime selected publish/client and atomic group membership obligations remain current package83/84 tests.",
+      "individual_reason": "HistoricalqualifiedSignalR125actualregistration/selectedGroupCommandacknowledgement controls remainvalidunchangedSource; nofreshCore/Futuresruntimecredittransferred.",
+      "assertion_evidence_indexes": [
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Configuration.FutureRequestConsumerDefinition`2.RequestAddress",
+      "original187_index": 111,
+      "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRequestConsumerDefinition.cs",
+      "source_sha256": "a605fbddcb37692d1f801707e7e16b27c0c8206f491c3a753cdd2ca105bec846",
+      "contract": "Returns Lazy<Uri>.Value from actual configured endpoint; before configuration throws actionable ConfigurationException. No request dispatch or eager endpoint creation.",
+      "individual_reason": "Default/typedpublicdispatch andactualcustomSPIRequestAddressbefore-config error coverlazyendpointproperty; noeagerendpoint/globalaliaspromise.",
+      "assertion_evidence_indexes": [
+        0,
+        1,
+        2,
+        32,
+        33
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Configuration.RequestConsumerFutureDefinition`5.RequestAddress",
+      "original187_index": 112,
+      "path": "src/ViciOne.ServiceBus.Futures/Configuration/RequestConsumerFutureDefinition.cs",
+      "source_sha256": "c7b302fd7c9ab9589a66dd490972fd415ff16283fec734d5333e9b8af24dcd45",
+      "contract": "Forwards exact _requestDefinition.RequestAddress; no cache, no container resolution, preserves failure if consumer endpoint not configured.",
+      "individual_reason": "Actualtypedcontroldirectlycompares underlyingselectedconsumer/future RequestAddress; actualsameTFuturetwoBusownreplies. Independentmanualoverridesintentionallyuser-ownedcompanion.",
+      "assertion_evidence_indexes": [
+        0,
+        1,
+        2,
+        32,
+        34
+      ],
+      "CLOSED": false
+    }
+  ]
+}

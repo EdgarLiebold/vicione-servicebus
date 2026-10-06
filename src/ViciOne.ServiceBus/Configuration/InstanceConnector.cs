@@ -60,10 +60,27 @@ public sealed class InstanceConnector<TConsumer> :
 
             return new MultipleConnectHandle(handles);
         }
-        catch (Exception)
+        catch (Exception admissionFailure)
         {
+            List<Exception>? cleanupFailures = null;
             foreach (var handle in handles)
-                handle.Dispose();
+            {
+                try
+                {
+                    handle.Dispose();
+                }
+                catch (Exception cleanupFailure)
+                {
+                    (cleanupFailures ??= []).Add(cleanupFailure);
+                }
+            }
+
+            if (cleanupFailures is not null)
+            {
+                cleanupFailures.Insert(0, admissionFailure);
+                throw new AggregateException("Instance admission and registration cleanup failed.", cleanupFailures);
+            }
+
             throw;
         }
     }

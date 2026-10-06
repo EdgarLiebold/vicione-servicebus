@@ -1,0 +1,104 @@
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using Xunit;
+
+namespace DefinitionLifetime;
+
+public interface IStateValue { OwnedState State { get; } }
+public sealed class OwnedState
+{
+    readonly Probe _probe;
+    readonly Dependency _dependency;
+    int _releaseBegun, _disposed, _rawSync, _rawAsync;
+    public string Name { get; }
+    public object? Settings { get; }
+    public int Disposed => Volatile.Read(ref _disposed);
+    public int RawSync => Volatile.Read(ref _rawSync);
+    public int RawAsync => Volatile.Read(ref _rawAsync);
+    public Dependency Dependency => _dependency;
+    public OwnedState(Probe probe, Dependency dependency, object? settings = null, string? explicitName = null)
+    {
+        _probe = probe; _dependency = dependency; Settings = settings;
+        Name = explicitName ?? probe.Queue + "-" + Interlocked.Increment(ref probe.ActivationAttempts);
+        if (explicitName != null) Interlocked.Increment(ref probe.ActivationAttempts);
+        probe.Values.Enqueue(this);
+        probe.ConstructorEntered.TrySetResult();
+        if (probe.GateConstructor) probe.ReleaseConstructor.Wait();
+        if (probe.ConstructorFailure != null) throw probe.ConstructorFailure;
+    }
+    public void AssertAlive() { Assert.Equal(0, Disposed); Assert.Equal(0, _dependency.Disposed); }
+    void Begin()
+    {
+        if (!_probe.AllowDisposedDependency) Assert.Equal(0, _dependency.Disposed);
+        _probe.DisposeEntered.TrySetResult(this);
+    }
+    public void ReleaseSync()
+    {
+        Interlocked.Increment(ref _rawSync);
+        if (Interlocked.Exchange(ref _releaseBegun, 1) != 0) return;
+        Begin(); Interlocked.Increment(ref _disposed);
+        if (_probe.CleanupFailure != null) throw _probe.CleanupFailure;
+    }
+    public async ValueTask ReleaseAsync()
+    {
+        Interlocked.Increment(ref _rawAsync);
+        if (Interlocked.Exchange(ref _releaseBegun, 1) != 0) return;
+        Begin();
+        if (_probe.GateCleanup) await _probe.ReleaseCleanup.Task;
+        if (!_probe.AllowDisposedDependency) Assert.Equal(0, _dependency.Disposed);
+        Interlocked.Increment(ref _disposed);
+        if (_probe.CleanupFailure != null) throw _probe.CleanupFailure;
+    }
+}
+public abstract class DefinitionBase : ConsumerDefinition<Receiver>, IStateValue
+{
+    protected readonly Probe Probe;
+    public OwnedState State { get; }
+    protected DefinitionBase(Probe probe, Dependency dependency)
+    {
+        Probe = probe; State = new(probe, dependency); EndpointName = State.Name;
+    }
+    protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpoint, IConsumerConfigurator<Receiver> consumer, IRegistrationContext context)
+    {
+        State.AssertAlive(); Interlocked.Increment(ref Probe.Configured);
+    }
+}
+public sealed class PlainDefinition(Probe p, Dependency d) : DefinitionBase(p, d);
+public sealed class SyncDefinition(Probe p, Dependency d) : DefinitionBase(p, d), IDisposable
+{
+    public void Dispose() => State.ReleaseSync();
+}
+public sealed class AsyncDefinition(Probe p, Dependency d) : DefinitionBase(p, d), IAsyncDisposable
+{
+    public ValueTask DisposeAsync() => State.ReleaseAsync();
+}
+public sealed class DualDefinition(Probe p, Dependency d) : DefinitionBase(p, d), IDisposable, IAsyncDisposable
+{
+    public void Dispose() => State.ReleaseSync();
+    public ValueTask DisposeAsync() => State.ReleaseAsync();
+}
+public abstract class EndpointBase : SettingsEndpointDefinition<Receiver>, IStateValue
+{
+    public OwnedState State { get; }
+    protected EndpointBase(Probe probe, Dependency dependency, IEndpointSettings<IEndpointDefinition<Receiver>> settings) : base(settings)
+    {
+        State = new(probe, dependency, settings, settings.Name);
+    }
+    protected override string FormatEndpointName(IEndpointNameFormatter formatter) => State.Name;
+}
+public sealed class PlainEndpoint(Probe p, Dependency d, IEndpointSettings<IEndpointDefinition<Receiver>> settings) : EndpointBase(p, d, settings);
+public sealed class SyncEndpoint(Probe p, Dependency d, IEndpointSettings<IEndpointDefinition<Receiver>> settings) : EndpointBase(p, d, settings), IDisposable
+{
+    public void Dispose() => State.ReleaseSync();
+}
+public sealed class AsyncEndpoint(Probe p, Dependency d, IEndpointSettings<IEndpointDefinition<Receiver>> settings) : EndpointBase(p, d, settings), IAsyncDisposable
+{
+    public ValueTask DisposeAsync() => State.ReleaseAsync();
+}
+public sealed class DualEndpoint(Probe p, Dependency d, IEndpointSettings<IEndpointDefinition<Receiver>> settings) : EndpointBase(p, d, settings), IDisposable, IAsyncDisposable
+{
+    public void Dispose() => State.ReleaseSync();
+    public ValueTask DisposeAsync() => State.ReleaseAsync();
+}

@@ -1,0 +1,26 @@
+--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdSendTopologyConvention.cs
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdSendTopologyConvention.cs
+@@ -13,7 +13,7 @@
+     {
+         DefaultFormatter = new EmptySessionIdFormatter();
+ 
+-        _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(new Factory());
++        _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(new Factory(this));
+     }
+ 
+     bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)
+@@ -25,12 +25,12 @@
+     public ISessionIdFormatter DefaultFormatter { get; set; }
+ 
+ 
+-    class Factory :
++    class Factory(SessionIdSendTopologyConvention owner) :
+         IConventionTypeFactory<IMessageSendTopologyConvention>
+     {
+         IMessageSendTopologyConvention IConventionTypeFactory<IMessageSendTopologyConvention>.Create<T>()
+         {
+-            return new SessionIdMessageSendTopologyConvention<T>(null);
++            return new SessionIdMessageSendTopologyConvention<T>(owner.DefaultFormatter);
+         }
+     }
+ }

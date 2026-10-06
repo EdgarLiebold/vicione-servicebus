@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-05T11:11:05.520119+00:00",
+  "actor": "/root",
+  "scope": "61 originalcanonical rows, no accessor sidecars, bodyless30+linkedawaitwrapper30+protectedExecute1",
+  "semantic_evidence": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package191-sql-client61-current178-rebase-r3/PER_ID61_CURRENT_SOURCE_XML_CONTRACTS.json",
+    "sha256": "e2b6338f19f133328992d747d52ee840d4a69b0d3ed6b84f89b651872fc2ec7e"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package191-sql-client61-current178-rebase-independent-scanner-r2/REPORT.json",
+    "sha256": "24651b00f5b1e1c63562cef66b616d200b0368e56700718f23261cb7c74d4064"
+  },
+  "root_personal_review": "All61 individual norms genuinely personally read 79f287/8919de/ac89a1+prior partial7bc52e, protectedSqlClient167 full109cb0; exact4current178 Touch rebase norms wholec2ea6e. Other57semanticnorms byteequal independent24651b. RootallMAN/live4/fragments61/CSV/actualpublishedXML nodes checked beforeappend. Does not claim whole704source Root or inherited whole269assertion bodies.",
+  "before": {
+    "raw": 8734,
+    "original": 7872,
+    "sidecars": 833
+  },
+  "after": {
+    "raw": 8795,
+    "original": 7933,
+    "sidecars": 833
+  },
+  "new_native": 0,
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "limits": [
+    "BodylessSPI sourcecontract bounded; concrete providers retain DB obligations.",
+    "Existing wrapper named cases retained, no all30wrapper execution projection.",
+    "LinkedCTS ownership/error/cancellation obligations kept; no Taskidentity or forcedprovider stopping claim.",
+    "Qualified178 physicalPDB/XML proof reused with exactlive4/current179selectedXML equality; wholecurrentcompiler pending."
+  ]
+}

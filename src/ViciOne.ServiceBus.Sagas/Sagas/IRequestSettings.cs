@@ -25,13 +25,13 @@ public interface IRequestSettings<TSaga, TRequest, TResponse>
     TimeSpan? TimeToLive { get; }
 
     /// <summary>Gets the correlation configuration applied to the completed response event.</summary>
-    Action<IEventCorrelationConfigurator<TSaga, TResponse>> Completed { get; }
+    Action<IEventCorrelationConfigurator<TSaga, TResponse>>? Completed { get; }
 
     /// <summary>Gets the correlation configuration applied to the request fault event.</summary>
-    Action<IEventCorrelationConfigurator<TSaga, Fault<TRequest>>> Faulted { get; }
+    Action<IEventCorrelationConfigurator<TSaga, Fault<TRequest>>>? Faulted { get; }
 
     /// <summary>Gets the correlation configuration applied to the request-timeout event.</summary>
-    Action<IEventCorrelationConfigurator<TSaga, IRequestTimeoutExpired<TRequest>>> TimeoutExpired { get; }
+    Action<IEventCorrelationConfigurator<TSaga, IRequestTimeoutExpired<TRequest>>>? TimeoutExpired { get; }
 }
 
 
@@ -48,7 +48,7 @@ public interface IRequestSettings<TSaga, TRequest, TResponse, TResponse2> :
     where TResponse2 : class
 {
     /// <summary>Gets the correlation configuration applied to the second completed response event.</summary>
-    Action<IEventCorrelationConfigurator<TSaga, TResponse2>> Completed2 { get; }
+    Action<IEventCorrelationConfigurator<TSaga, TResponse2>>? Completed2 { get; }
 }
 
 
@@ -67,5 +67,5 @@ public interface IRequestSettings<TSaga, TRequest, TResponse, TResponse2, TRespo
     where TResponse3 : class
 {
     /// <summary>Gets the correlation configuration applied to the third completed response event.</summary>
-    Action<IEventCorrelationConfigurator<TSaga, TResponse3>> Completed3 { get; }
+    Action<IEventCorrelationConfigurator<TSaga, TResponse3>>? Completed3 { get; }
 }

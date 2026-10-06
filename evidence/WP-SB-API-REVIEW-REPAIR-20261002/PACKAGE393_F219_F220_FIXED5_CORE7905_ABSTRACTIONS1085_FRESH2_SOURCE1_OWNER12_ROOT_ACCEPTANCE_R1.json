@@ -1,0 +1,157 @@
+{
+  "utc": "2026-10-06T08:58:11.341812+00:00",
+  "status": "ROOT_F219_F220_BOUNDED_REPAIRS_ACCEPTED_CURRENT388",
+  "source_norms2": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.ConsumerSpecification`1.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.IConsumerMessageSpecification{`0}})",
+      "original_csv_zero_based_index": 6707,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.Configuration.ConsumerSpecification`1.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.IConsumerMessageSpecification{`0}})",
+        "assembly": "ViciOne.ServiceBus",
+        "source_path": "./vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerSpecification.cs",
+        "source_line": "25",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "proposal_kind": "EXISTING_MEMBER_REBIND_AND_NORM_PRECISION_NO_NEW_UID",
+      "existing_Master_row_and_history": {
+        "row_zero_based": 133,
+        "entire_object": {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.Configuration.ConsumerSpecification`1.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.IConsumerMessageSpecification{`0}})",
+          "source_sha256": "0588767c92b0bfb4df24d097dd4bce826abbe84b5e2bdba9d5258e901a9b9b89",
+          "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-final64-contract-context-r2/PER_SYMBOL64_CONTEXT_AND_RECOMMENDATIONS.json",
+          "semantic_evidence_sha256": "8293440960aaf6da2f84e9811ca5bf7bda5e300c6d1b78e8a53823828823c100",
+          "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+          "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE58_CORE50_MEMBER_ROOT_ACCEPTANCE_R1.json",
+          "limit": "Exact member only; independent methods, current future repair overlays, external SPI and untested runtime dimensions remain separately bounded."
+        }
+      },
+      "individual_contract_norm": "Rejects a null per-message enumerable before observer acquisition. Builds a dictionary keyed by each specification's MessageType; enumeration, element/getter and duplicate-key failures occur before any forwarding observer handle is acquired. Creates the consumer observer stream, then acquires each per-message forwarding registration in that retained dictionary's Values iteration order, tracking each returned handle locally and assigning the retained _handles array after complete acquisition. Successful construction retains these registrations and the supplied per-message specification objects; no defensive replacement or disposal of borrowed specifications is inferred. If acquisition or final array construction fails, the existing MultipleConnectHandle independently attempts synchronous Disconnect on each nonnull already-returned handle. With successful cleanup the original admission exception is rethrown unchanged. With cleanup failure an outer AggregateException retains the original admission first and the exact cleanup exception second; a multiple-cleanup aggregate remains nested and its original exception objects/attempt order are not flattened or deduplicated. No general later validation/notification rollback, unreturned partial provider effect, asynchronous disposal or nonreturning custom handle closure is promised.",
+      "current388_source_pdb_XML_binding": {
+        "original_index": 6707,
+        "id": "M:ViciOne.ServiceBus.Configuration.ConsumerSpecification`1.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.IConsumerMessageSpecification{`0}})",
+        "current388_XML_structural": "<member name=\"M:ViciOne.ServiceBus.Configuration.ConsumerSpecification`1.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.IConsumerMessageSpecification{`0}})\">\n            <summary>Creates a consumer specification from the convention-discovered message contracts.</summary>\n            <param name=\"messageSpecifications\">The per-message specifications owned by this consumer.</param>\n        </member>\n        ",
+        "source_sha256": "aaa533c284b41a817a4795aa7b311ef79e83e1b38d0e4e30138fe2e9d3509a96",
+        "source_and_existing_compiled_member_XML_only_no_IL_or_native_grade": true,
+        "frame_scope": "observer3",
+        "frame_DLL_sha256": "90860d34f088f9c7cc6e9d532434b9b58a4693c8eb8eb897048ea1141ad80bb4",
+        "pdb_sha256": "af8ba5e8a9765f62a8789ffc2daf2ac8b7f38991d18636db0d1d1965485fbe2b",
+        "frozen_after_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package388-joint-basic6-observer3-dependency2-fixed-source-capture-r1/observer3/AFTER.json"
+      },
+      "targeted_fixed_native_scope_limit": "observer3 modes0/1/2; healthy typed projection/Validate and actual forwarding; failed admission Count0/all returned-handle attempts; mode2 exact primary/cleanup occurrences in flattened cause-tree enumeration. No Native primary ordering, aggregate nesting or absence of additional causes asserted.",
+      "native_evidence_status": "Parent actualfocused fixed12/3/2 all17PASS supplied; independentQualifier final pending. Source author/testauthor roles do not selfqualify Native. Root decides conditional acceptance after distinct qualified proof.",
+      "native_count_owned_independent": 0,
+      "grade": null,
+      "closed": false,
+      "Root_accepted_by_this_proposal": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguratorDependencyExtensions.AddDependency(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator)",
+      "original_csv_zero_based_index": 11904,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguratorDependencyExtensions.AddDependency(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator)",
+        "assembly": "ViciOne.ServiceBus.Abstractions",
+        "source_path": "./vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/ReceiveEndpointConfiguratorDependencyExtensions.cs",
+        "source_line": "13",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "proposal_kind": "CONDITIONAL_NEW_ORIGINAL_MEMBER_BOUNDED_SOURCE_CANDIDATE",
+      "existing_Master_row_and_history": null,
+      "individual_contract_norm": "Rejects missing connector or dependency before acquiring endpoint observers. Constructs the first readiness helper with its actual RunContinuationsAsynchronously Ready promise and connects its observer to the dependency endpoint; a missing returned handle is rejected by the existing helper constructor. Calls connector.AddDependency with that real helper. If this first admission throws, it attempts synchronous disconnection of that helper's already-returned registration; successful cleanup rethrows the exact admission exception, while cleanup failure yields a primary-first aggregate containing the exact admission and cleanup objects. When first admission succeeds, construction/observer acquisition for the dependent-completion helper and dependency.AddDependent proceed in the original order entirely outside this new catch. Existing Ready/Completed/Faulted helper callback and promise-completion policy is unchanged. No production terminal policy is added for the readiness promise after rejected admission, and no rollback of a previously adopted first edge when the later AddDependent fails is claimed. Unknown custom SPI storage-before-throw, inline observer replay and concurrent graph/lifecycle behavior remain separate obligations.",
+      "current388_source_pdb_XML_binding": {
+        "original_index": 11904,
+        "id": "M:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguratorDependencyExtensions.AddDependency(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator)",
+        "current388_XML_structural": "<member name=\"M:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguratorDependencyExtensions.AddDependency(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator)\">\n            <summary>Starts one endpoint only after another is ready and stops the dependency only after its dependent completes.</summary>\n            <param name=\"connector\">The endpoint that depends on another endpoint.</param>\n            <param name=\"dependency\">The endpoint that must become ready first and stop last.</param>\n        </member>\n        ",
+        "source_sha256": "2529de7250ff8ffd7253070600295937b8908dfa1ece9b489faeff4d4fb04b54",
+        "source_and_existing_compiled_member_XML_only_no_IL_or_native_grade": true,
+        "frame_scope": "dependency2",
+        "frame_DLL_sha256": "e23f3c737680a053cd33c0c243e7eca74bed3b123d90f57e5e6caeb9f0a07437",
+        "pdb_sha256": "4ef4c00725b6f85a3e62a2cfabbcdcda1bd359747d6b5de4ccc5f8fcc768e053",
+        "frozen_after_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package388-joint-basic6-observer3-dependency2-fixed-source-capture-r1/dependency2/AFTER.json"
+      },
+      "targeted_fixed_native_scope_limit": "dependency2 healthy Ready/Completed callback+actual public promise joins; hostile first admission exact primary/noStorage/actual Count0 before fallback. Cleanup-error aggregation is Source-only, not exercised by these2; later halfgraph/abandonedReady policy remains unqualified.",
+      "native_evidence_status": "Parent actualfocused fixed12/3/2 all17PASS supplied; independentQualifier final pending. Source author/testauthor roles do not selfqualify Native. Root decides conditional acceptance after distinct qualified proof.",
+      "native_count_owned_independent": 0,
+      "grade": null,
+      "closed": false,
+      "Root_accepted_by_this_proposal": false
+    }
+  ],
+  "different_norm_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package389-source8-independent-runtime-norm-peer-r1/REPORT.json",
+    "sha256": "1252ddec21a3c287adea92120f70c142352179b228083ae2c6dc93899cb32f45",
+    "MAN": "6c976c060cf4b71969faf22bfbf1213c23878eefaa0e12b864c51b1398c74773",
+    "mandatoryProofMAN": "84bb830227ef18ad84e8c8021afcc795442a6b7370ef7142322781e34020a263"
+  },
+  "qualified_actual": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package388-observer3-fixed-independent-qualification-r1/REPORT.json",
+      "sha256": "d2990dd11634a5f976c9f1040518217ab489f3ae5b2cce024aaa385713b172a0",
+      "MAN": "b95b65b5b731b74b539aba2b0ba90296358aab7f9eafd803f2f17bf40bdef83e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package388-dependency2-fixed-independent-qualification-r1/REPORT.json",
+      "sha256": "c6e908990c19e3d94662907cb4c07c08e97f5c73b43622cc1f57f674e2cf561f",
+      "MAN": "dfd1d89fee3789a2e676d90123380eeba4f6bf5f9d1fdcc9fce9287c74ce484c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package388-core-abstractions-publication-independent-qualification-r1/REPORT.json",
+      "sha256": "85e80885dc1052055580b62429c32ef4be9592937f62ee2c1a8b086db59ab8ef",
+      "MAN": "26afe22a6654073f4b7ea6aa6f45c963ca19b1a0727e7dfdcbc0bbf8ffaad2d9"
+    }
+  ],
+  "Root_whole_reads": [
+    "Consumer213770668",
+    "Dependency1576b4c47",
+    "Norm8bd63fe",
+    "Normpeer634513",
+    "FixedREPORTsf8357a/22a7c7",
+    "PublicationREPORTcdca6b"
+  ],
+  "fixed_cases": {
+    "Observer": 3,
+    "Dependency": 2,
+    "fail": 0,
+    "skip": 0
+  },
+  "module_counts": {
+    "Core": 7905,
+    "Abstractions": 1085,
+    "fail": 0,
+    "skip": 0,
+    "focused_already_included": true
+  },
+  "strict": "both actual0W0E",
+  "fresh2": [
+    "a861cd644f9e598656acd673bdceb9fc42f39e6ca152e5cbc68563362c9da69e",
+    "1221a66e5528f94903cc7d7af5305eb0cf9fc0d9ae947c776357f4ed946a0b6d"
+  ],
+  "Owner12_existing_history_retained": true,
+  "Ctor6707_existing_noNewUID": true,
+  "other11body_literalexact": true,
+  "AddDependency11904_newOriginal1": true,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": [
+    "Observer nativecausepresence only; order/nesting/extracauseabsence Source-only",
+    "Dependency cleanup-fault aggregateSource-only; first admission2 native only",
+    "Later adoptedhalfgraph/replay/abandonedReadyPromise/customSPI/asyncdrain/concurrency remain held",
+    "F152Basic6fixed12 retained;Extra2actualOriginal4/module/pub repairpending"
+  ],
+  "manifest_guard_precision": "b4f5bb stopped before backup/acceptance/mutation at fileswrapper;fcfa6d/9d0aa3 actualschema verified, recursiveallpayload+boundrefs nowchecked"
+}

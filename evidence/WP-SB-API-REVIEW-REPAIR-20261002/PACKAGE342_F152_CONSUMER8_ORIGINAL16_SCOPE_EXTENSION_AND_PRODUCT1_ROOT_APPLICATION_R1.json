@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-06T04:44:46.095575+00:00",
+  "status": "EXISTING_F152_FAMILY_EXTENDED_TO_CONSUMER8_INDEPENDENT_SOURCE_REVIEWED_PRODUCT1_APPLIED_FIXED_NATIVE_PENDING",
+  "finding": "F-SB-API-152",
+  "family_decision": "Same existing broad owning optional-diagnostic workflow family F152, historical14 calls Saga5/Azure3/Dynamo2/EF2/ConfigSaga2 verified Root175983c8b5e. Additional8 Consumer/ConnectConsumer registrations cause the same diagnostic-displaces-business failure. Extend scope14→22, no eight-cause or new uniqueFinding inflation. New8 observed Original failures require fresh repair proof, not covered by historical175/global325 acceptance.",
+  "original_native": {
+    "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package336-consumer16-original-independent-qualification-r1",
+    "manifest_sha256": "4666641a5143e83bae58e735e069e72b6234255162c423f8772ae41985662bcd",
+    "total": 16,
+    "passed": 8,
+    "failed": 8,
+    "skipped": 0,
+    "cause": "All8 hostilecases first166Null uniqueIO after startup/selectedlogger/type/attempt1/factory0/SameIO. Laterhandle/callback/businessUNREACHED; all8 healthy actualsend/publication/consumptionPASS."
+  },
+  "proposal_manifest_sha256": "6d35b586c8c560195b692bd37dbfdeb96dd45ea7decdc2b69d49b3811abde265",
+  "independent_product_source_peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package338-consumer-diagnostics8-independent-scanner-source-peer-r1",
+  "independent_product_peer_manifest_sha256": "c2ebb3755a715f97e79e17e88d83cd78fedb96e5ef9aae12cb1c19fb1ab0eb4c",
+  "Root_own_authority": "Entire actual16raw46703d; entirebefore182027a61; entireproposed238afd554; fulldifferentagentSource+Originalreports3fa8fa; exact8inverse/manifests beforeapply.",
+  "change": {
+    "path": "src/ViciOne.ServiceBus/Advanced/Registration/ConsumerExtensions.cs",
+    "before_sha256": "586d717f324529529ef51acc6790eca7ea8138afdd3cbd1474ad3872c836c2cd",
+    "after_sha256": "255425b2ab64f0e196186d853f4650b43e0601de965e0fad9d53ab1ea976dcf1",
+    "before_lines": 182,
+    "after_lines": 238,
+    "literal8_inverse_exact": true,
+    "public_declarations_XML_unchanged": true
+  },
+  "test_and_requirements_unchanged": true,
+  "Master_methodrows_added": 0,
+  "existing_owner_Master_type_rows": 1,
+  "known_unique_before_after": 214,
+  "bounded_current_before": 214,
+  "bounded_current_after": 213,
+  "reason_bounded_current_decrement": "Existing F152 is pending its newly confirmed expanded scope until fresh independent fixed proof; prior historical14 acceptance preserved.",
+  "Native_fixed_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

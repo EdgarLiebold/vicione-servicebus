@@ -1,0 +1,10 @@
+--- src/ViciOne.ServiceBus/Advanced/LogContext.cs
++++ PrematureFactoryDispose
+@@ -93,6 +93,7 @@
+                     && !automatic.HasSameLoggerFactory(effectiveFactory)))
+             {
+                 Current = new BusLogContext(effectiveFactory, automaticallyConfigured: true);
++                loggerFactory?.Dispose();
+             }
+         }
+ 

@@ -1,0 +1,186 @@
+{
+  "status": "CODE_AND_REGRESSIONS_FROZEN",
+  "findings": [
+    "F-SB-API-012"
+  ],
+  "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/SharedConnectionContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/00-SharedConnectionContext.cs",
+      "sha256": "1aec605efe1c9501a24169f415142ee101b05b4c967e032ea7896ba31b2ccf46",
+      "bytes": 6359,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/SharedConnectionContext.cs",
+      "baseline_sha256": "3b7750aa2f8e13aaeb4b01772f4c2438ef8748e448fc01727d49842bcab065e2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSharedAdministrationLeaseTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/01-ServiceBusSharedAdministrationLeaseTests.cs",
+      "sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+      "bytes": 19760,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/02-AzureServiceBusRequirements.json",
+      "sha256": "b1827009b4276a3fa9930eefa6d9b290f0d9b3325e8e75a41dce994d6b4b667a",
+      "bytes": 73120,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/03-AzureServiceBusRequirements.json",
+      "baseline_sha256": "a1ba8b05aa90849904a44572152e0489555591dcb5a448e3fb558f35ceb6ecc0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/03-product-fixes.md",
+      "sha256": "237c517e0bd223e4dfd2966a42d15e6af0de32f30599297fcdb554363d712fb3",
+      "bytes": 28700,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/04-product-fixes.md",
+      "baseline_sha256": "d79cef7bb2bf0ea8bf1cfb5aa98f39e95ee891019233f4500bab2da689199e43"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package03_azure_lease_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/04-package03_azure_lease_mutations.py",
+      "sha256": "45431bbf5c20b8d317768708d0e1ceda8d732eff8aa56039db2e82ab2b403b6d",
+      "bytes": 6644,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    }
+  ],
+  "mutation_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE03_AZURE_LEASE_MUTATIONS.json",
+  "mutation_evidence_sha256": "4c7483ef11f94b72ec21a722952f21def3e9082a4ab24327975ac2e28ba190f9",
+  "actual_native_mutants_killed": 8,
+  "original_tracked_mutation_rollback_verified": 6209,
+  "original_target_cases": "18 total,8 fail,10 positivecontrols pass,0 skipped native exit2",
+  "corrected_target_cases": "18/18 pass,0 skipped native exit0",
+  "current_complete_owner": "448 total,447 pass,1 F038 fail,0 skipped native exit2",
+  "native_product_receipts": [
+    {
+      "phase": "package03-azure-lease-original-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:45:09.191404+00:00",
+      "completed_utc": "2026-10-02T22:45:19.624083+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-original-build.log",
+      "log_sha256": "9d8995c27320a6b935c5310fdc0db1523ef55d30d57d0136448bfdf75c907fbd"
+    },
+    {
+      "phase": "package03-azure-lease-original-eighteen-cases",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+        "--minimum-expected-tests",
+        "18",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 2,
+      "started_utc": "2026-10-02T22:46:49.600344+00:00",
+      "completed_utc": "2026-10-02T22:46:51.924015+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-original-eighteen-cases.log",
+      "log_sha256": "0adcf129434b582c94f4072960eb923afc0386c03ce5f5ea3961071cc841230f"
+    },
+    {
+      "phase": "package03-azure-lease-corrected-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:48:25.902727+00:00",
+      "completed_utc": "2026-10-02T22:48:39.713621+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-corrected-build.log",
+      "log_sha256": "647fe2825a9ca0fd2777fd153b36fdf61eed7514dce535027656dd898c507f9c"
+    },
+    {
+      "phase": "package03-azure-lease-corrected-eighteen-cases",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+        "--minimum-expected-tests",
+        "18",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:49:03.804845+00:00",
+      "completed_utc": "2026-10-02T22:49:06.043910+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-corrected-eighteen-cases.log",
+      "log_sha256": "a42bf26d4e5088fda6152797227e274dfbb7ef65137790a5fece075807d11080"
+    },
+    {
+      "phase": "package03-azure-lease-projection-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:53:48.547376+00:00",
+      "completed_utc": "2026-10-02T22:53:59.305647+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-projection-build.log",
+      "log_sha256": "eea4b0de98387c5ce1094c2be2b9fd5634d7e1440c5f2e72cb534febef8563b3"
+    },
+    {
+      "phase": "package03-azure-lease-complete-owner",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--minimum-expected-tests",
+        "448",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 2,
+      "started_utc": "2026-10-02T22:54:57.888664+00:00",
+      "completed_utc": "2026-10-02T22:55:01.236486+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-complete-owner.log",
+      "log_sha256": "2ddb0e0039db77efcd87d8016e0f9694d7fa75d79361a28c2b5cf557a269b87a"
+    }
+  ],
+  "proof_limits": "No broker started; actual public SharedConnection/Send wrappers+gated custom context SPI. No wholeAPI/fresh NuGet/current integratedprofile acceptance. Public Task signatures preserved; custom synchronous SPI throw now captured as faulted async Task. Original fault/result/token identity and completed linked-registration disposal verified."
+}

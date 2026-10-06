@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-06T05:37:09.531088+00:00",
+  "status": "F146_SAME_NULLABILITY_FAMILY_PROTECTED_FORMATTER_EXTENSION_AND_PRODUCT1_APPLIED",
+  "finding_id": "F-SB-API-146",
+  "same_cause": "Supported null default suppressed via null! while exposed read contract advertises NotNull, same emitted supported-null contract defect as historical optionalSaga callbacks. Five constructor observations one declaration; unique finding count unchanged.",
+  "actual_original": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-independent-qualification-r1/MANIFEST.json",
+    "sha256": "657d3c3cba0eadca25ff78209f455fecafbbb319fe72e2fe52cd7fd5e9818d94"
+  },
+  "source_author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-formatter-joinseparator-nullability1-proposed-r1/MANIFEST.json",
+    "sha256": "1f50e642f6945beac683dc32723377ddca97492e71cdab79a831524c1bea4b35"
+  },
+  "independent_product_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-formatter-nullability1-independent-runtime-source-peer-r1/MANIFEST.json",
+    "sha256": "f4eb0332671df4f40ae2c8e2a988b1a5a5d76bdccedf45146aaa23100344e72a"
+  },
+  "mandatory_current_guard": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-formatter-joinseparator-nullability-current-guard-supplement-r1/MANIFEST.json",
+    "sha256": "fb40a904e7dfaec2efb2d7b352d2c1753f746882bc34319f41bf8498976d2502"
+  },
+  "source_before_sha256": "a0a5728a255acc76e5e584d28d0eade124d46e22cb5fe41510cead78837df1bd",
+  "source_after_sha256": "aabcd1fef862ef31a67d794ac0ab4449493b5e896ecea965accc2583ee8f9616",
+  "literal_inverse_entire_source_equal": true,
+  "runtime_and_XML_source_body_unchanged": true,
+  "Root_whole_before_receipt": "1f716d",
+  "Root_actual_original6_receipt": "03597d",
+  "Root_actual_qualifier_and_product_peer_receipt": "9c97d2",
+  "Root_literal_one_line_patch_receipt": "11644c",
+  "known_before_after": 215,
+  "bounded_before": 214,
+  "bounded_after_pending": 213,
+  "master_mutations": 0,
+  "administrative_preflight": "b7a86f guessed proposed/ path failed before any writes; actual sealed directfile discovered0d99b7; product hashes unchanged.",
+  "grade": null,
+  "whole_API_closed": false
+}

@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-04T16:11:38.521158+00:00",
+  "product_files": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/ScopeClientContext.cs",
+      "before": "8693708a08ee5ba0b8ee61bfaad8aa7ecbe9248c3ce696f5a7311af64d2d6a34",
+      "after": "adea04628c018e4f9d4051a2fec29f06f3eaea9156235e9d63eada341a22e6bc"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/SharedClientContext.cs",
+      "before": "13e5d06aae0051ea1461ef9802988b217dd77777431cbdac1fabe27a7d356720",
+      "after": "42f47b319d86fa0acb9dba2908a8e25de2c791bcc36f68e0e1a9c072233d6d17"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlHeaderProvider.cs",
+      "before": "ed5a51731032364a6686bcf9ef8e194dd4cdf9a033d5c988a405e36da303ab1e",
+      "after": "cb1d6f53478b41bc1556250fd77181c21cbdecad33c8137c5da51ad4a0f554ce"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveContext.cs",
+      "before": "71168d2ac24e88d84a9468ce0699e8ec594867f4f1d95fbb1fda9e961a5f343d",
+      "after": "75c49b2bdc6a167af1b84d77e38b435fa292c7b7ac7c4a0377e699491b37c29d"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "before": "77f819acac22b4bd69f20016a0eef2c6f9c75f87b25a61d9d499d3453891cef6",
+      "after": "4a4a922e5818c5818b004f99c4947dced275e0feba3c8a2acbda66e58d5f6288"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Runtime/SqlServerTransportConnection.cs",
+      "before": "f6d2e0c83320d924692f0b49d102212690e7fa708fb3dc9003056e01e601ee7a",
+      "after": "2da2a67600a96055219bddb9ba95640c42a0a676d636df2ea5fde73ad75fcb19"
+    }
+  ],
+  "source_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package71-sql-five-fixes-product-adversarial-r2/REPORT.json",
+    "sha256": "35f2e52304845156e6eeeb8e25f1586b09f3510a99888ab6c2b75bd3b8afa090"
+  },
+  "header_test_review": "Root independent exact whole delta1d7d20; canonical/lowercase cases plus every enumerated actualkey exact TryGet value/type, existing assertions retained, unchanged requirement row. No test weakening.",
+  "original13_frozen": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package83-sql-original13-independent-r1/FREEZE.json",
+    "sha256": "343461dd669bbdaf3c0f2a34be3177df4d68964de829c3ca35593bf6b302f5ae"
+  },
+  "header_test_after": "b5cc04171f2527fb496ccc32a792e36f29542dbc715698184af048dec97bdcbc",
+  "status": "SOURCE_APPLIED_NATIVE_AND_EXISTING_CONTROL_UPDATES_PENDING"
+}

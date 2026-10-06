@@ -1,0 +1,123 @@
+{
+  "utc": "2026-10-03T12:02:00.790307+00:00",
+  "finding": "F-SB-API-032",
+  "status": "ROOT_PREAUTHOR_WITH_TWO_ADVERSARIAL_TECHNICAL_PLANS",
+  "owned_source_inputs": [
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/CreatedConsumeScopeContext.cs",
+      "sha256": "e1382db4f9c8b4d02a877724c19e15bc7b7c10ccad537b9a22abbc4fa7906a36",
+      "bytes": 3900,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ExistingConsumeScopeContext.cs",
+      "sha256": "0b43522c6d8d4a62607f372a769276dad1559bc7347e0ffd2c3c2a34aae1105e",
+      "bytes": 3774,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/CreatedExecuteScopeContext.cs",
+      "sha256": "5e1c4ec53881998984757aaaca46f19041806ca0376174fc688d9f3fbbf94def",
+      "bytes": 1744,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ExistingExecuteScopeContext.cs",
+      "sha256": "db2b8323cf5bbe898a8f52320404163c66bcfcfccf65dd0156e1bad1d8c791c8",
+      "bytes": 1740,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/CreatedCompensateScopeContext.cs",
+      "sha256": "f140e289d4f566a02f0011aab8119217cae782af7cb7b7e69395b821a39ebbb8",
+      "bytes": 1720,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ExistingCompensateScopeContext.cs",
+      "sha256": "c26aa7e1d7e3eedc10e4104249967f776d742fea9890f2c6b6d321450bcb07f2",
+      "bytes": 1716,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ConsumeScopeLifetime.cs",
+      "sha256": "f99a3c70b5db3e507ee1124a4c5cf887c5a1e60774df1050ec06697303d106f3",
+      "bytes": 1957,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/FilterScopeProvider.cs",
+      "sha256": "96edef6c6e20813e23abaf59ffaa0ab5c706f94b1ac8983aeb8fb1207c396cc9",
+      "bytes": 3114,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedConsumeFilter.cs",
+      "sha256": "b200b74407c78b956a1b842eea85171ca39b496b1ae76230f8303f193532538d",
+      "bytes": 1806,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedFilter.cs",
+      "sha256": "b66da0a0878029a80a777766b459c544772098fe63e868dcf0af46fb32a8e0ee",
+      "bytes": 1605,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedExecuteFilter.cs",
+      "sha256": "98270d195d532c5906f95b719cde98c58544012d237c09cf53bd4e0b64bc5c4b",
+      "bytes": 1904,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedCompensateFilter.cs",
+      "sha256": "883c00774d71d3f479b8175965698586253839383cf357802fa0254dd47336d9",
+      "bytes": 1934,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/IConsumeScopeContext.cs",
+      "sha256": "949d25896661d3a91caf2745c3aae5dfe8871d290241c029c703f1c542bc6d54",
+      "bytes": 1363,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/IExecuteScopeContext.cs",
+      "sha256": "9a636425696999725d08adfab3d7de7d54ee9d7f79db60e9db36ca1240521fe9",
+      "bytes": 586,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ICompensateScopeContext.cs",
+      "sha256": "7a7a47e617ffe2f135a8b04f7213f3348776ea8cc65c89000822e350a660db12",
+      "bytes": 565,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/IFilterScopeContext.cs",
+      "sha256": "f5e436a15b27adf3814e9c1af20a031558db10e3e1751c3cb258345bd59281e4",
+      "bytes": 490,
+      "Root_personally_FULL": true
+    }
+  ],
+  "personally_full_plans": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f032-current-lifetime-plan/SOURCE_REPAIR_PLAN.json",
+      "sha256": "72cc9a3d8fea9deea3f5d5fb1663aca173149f1228f2df087b24b86d35916eaa"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f032-current-lifetime-plan/PUBLIC_NATIVE_PLAN.json",
+      "sha256": "46e71c4f98757daac133a4c85666b97bd57d031a28e99ba7aac09f5e4f7d4e2e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f032-current-lifetime-plan/MUTANT_PLAN.json",
+      "sha256": "2e66f66dad665a9f0241fe2d909f42aa0f5117e821f4db26732b16157c7076fb"
+    }
+  ],
+  "policy": "Private preallocated successful-fallback node and admission count; open/closing state; reverse publication order async-first disposal; shared actual async completion preserving exception/token. No user factory, provider property, disposer or wait under owner state lock. Outgoing separate cache attempt handshake, factory outside cache lock, retry on construction fault, same-thread recursive getter explicitly rejected; admitted waiters survive close and are drained. Registered DI/caller values borrowed; repeated typed fallback distinct; explicit CreateInstance remains caller managed. Dispose awaits admitted resolution then owned fallbacks then restore then owned DI, all attempted, ordered cleanup outcome; middleware preserves operation then cleanup errors.",
+  "public_api": "No signatures changed; default-provider scope ownership remarks only",
+  "root_author_only": true,
+  "canonical_tests_changed": false,
+  "native_operations_active": 0,
+  "acceptance_pending": true
+}

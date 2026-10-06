@@ -1,0 +1,85 @@
+{
+  "utc": "2026-10-05T23:06:25.197080+00:00",
+  "status": "INDEPENDENT_SOURCE_REVIEWED_XML_ONLY_PRODUCT3_PREDICATE_DOC5_APPLIED_PUBLICATION_PENDING",
+  "existing_family": "F-SB-API-147 purpose family, no new numbered findings",
+  "root_basis": "Own fullAssemblyTypeCache120 before bf2a7a and reopenedfeb23b +TypeSet50/TypeQuery31 feb23b. Whole SourceGO reports feb23b/d0766c. Literal inverse each reviewed proposal restores allsource; code/publicdecl/otherdocs unchanged. Independent Runtime own fullbefore/proposed3+2 and actualbeforeCorePDB/XML3; Source2GO specifically constructors.",
+  "changes": [
+    {
+      "relative": "src/ViciOne.ServiceBus/Util/AssemblyTypeCache.cs",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/AssemblyTypeCache.cs",
+      "before_sha256": "f8aeaea1419c8cf38136bf7e99db04da3d143d2f72bdc65f79426d16eae7a4ce",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package243-core630-assembly-scan-doc3-product-proposed-r1/proposed/src/ViciOne.ServiceBus/Util/AssemblyTypeCache.cs",
+      "proposed_sha256": "30f9c2c1147435ef0dc21d947f5105e3b4dc57d9632101980714adf97410b914",
+      "before": "<param name=\"filter\">The filter to add to the pipeline.</param>",
+      "after": "<param name=\"filter\">The optional predicate that selects discovered types.</param>",
+      "node_count": 3,
+      "exact_original_ids": [
+        "M:ViciOne.ServiceBus.Util.AssemblyTypeCache.FindTypes(System.Collections.Generic.IEnumerable{System.Reflection.Assembly},System.Func{System.Type,System.Boolean})",
+        "M:ViciOne.ServiceBus.Util.AssemblyTypeCache.FindTypes(System.Collections.Generic.IEnumerable{System.Reflection.Assembly},ViciOne.ServiceBus.Util.TypeClassification,System.Func{System.Type,System.Boolean})",
+        "M:ViciOne.ServiceBus.Util.AssemblyTypeCache.FindTypes(System.Reflection.Assembly,ViciOne.ServiceBus.Util.TypeClassification,System.Func{System.Type,System.Boolean})"
+      ]
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Util/TypeSet.cs",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/TypeSet.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-scanning-predicate-doc2-xml-only-proposed-r1/before/src/ViciOne.ServiceBus/Util/TypeSet.cs",
+      "before_sha256": "be65652ad4a51f73c44b3596fbc2e02c60066103cb746a55670d8709eb0cc6f8",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-scanning-predicate-doc2-xml-only-proposed-r1/proposed/src/ViciOne.ServiceBus/Util/TypeSet.cs",
+      "proposed_sha256": "f01bd815fa334200d1401debe229de4215b2db5bca310f02040b122ee9dae374",
+      "before": "<param name=\"filter\">The filter to add to the pipeline.</param>",
+      "after": "<param name=\"filter\">The optional predicate that selects discovered types.</param>",
+      "node_count": 1,
+      "exact_original_ids": [
+        "M:ViciOne.ServiceBus.Util.TypeSet.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Util.Scanning.AssemblyScanTypeInfo},System.Func{System.Type,System.Boolean})"
+      ],
+      "original_index": 8789,
+      "source_lines": 50,
+      "own_whole_read_receipt": "feb23b",
+      "existing_master_id": true,
+      "literal_inverse_and_nonXML_public_declaration_bytes_exact": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Util/Scanning/TypeQuery.cs",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Scanning/TypeQuery.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-scanning-predicate-doc2-xml-only-proposed-r1/before/src/ViciOne.ServiceBus/Util/Scanning/TypeQuery.cs",
+      "before_sha256": "e139cc1f8dac27d0b09dfb49b55e5e09ad076bef39bba6c2c5e192bed1560975",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-scanning-predicate-doc2-xml-only-proposed-r1/proposed/src/ViciOne.ServiceBus/Util/Scanning/TypeQuery.cs",
+      "proposed_sha256": "25511f81b3e1810cd79aa4180c72b9e7971f1d1fd8227c4c44d920d0d560d265",
+      "before": "<param name=\"filter\">The filter to add to the pipeline.</param>",
+      "after": "<param name=\"filter\">The optional predicate that selects discovered types.</param>",
+      "node_count": 1,
+      "exact_original_ids": [
+        "M:ViciOne.ServiceBus.Util.Scanning.TypeQuery.#ctor(ViciOne.ServiceBus.Util.TypeClassification,System.Func{System.Type,System.Boolean})"
+      ],
+      "original_index": 8742,
+      "source_lines": 31,
+      "own_whole_read_receipt": "feb23b",
+      "existing_master_id": true,
+      "literal_inverse_and_nonXML_public_declaration_bytes_exact": true
+    }
+  ],
+  "source_peer_doc3": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package243-core630-assembly-scan-doc3-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "6b6c439a175ee11648a3261443344a09d1998794922ff55d457a45a381d71478",
+    "manifest_sha256": "35d31c3339a86bc6b132ee39c6b8a3bb4a3282268cb34b2e1d1207e92723e394"
+  },
+  "source_peer_doc2": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-predicate-doc2-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "a8c622dc10cb17213ad26ee7e18153a4706781609cb42173bf14c67295edc0dc",
+    "manifest_sha256": "3fb081c742bf181427256d57a3045b9825ec68d97deb464b411076da6484b1a0"
+  },
+  "product_sources": 3,
+  "XML_nodes": 5,
+  "before_DLL_sha256": "ef7f53349bfc67f56e899e2bdf4920f10d9cf72af96166df146657e758e97c15",
+  "before_XML_sha256": "652103bd34f6793d3623735a640f267f02ceb8710764732584ec88cc01613db0",
+  "before_PDB_sha256": "8e2734a084a79ed1fc5647925cc51aea614ac9ad6b12e1bcc3121e815cc533b5",
+  "original_core630_selected_three_members_still_pending": true,
+  "existing_master_support_two_ctor_IDs_require_current_rebinding_afterpublication": true,
+  "master_sha256_unchanged": "7e7f465d3e05c4ca11398152e280b9daec621fe9b441e9e79abeef1387b9c60e",
+  "API_count_change": 0,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-predicate-doc5-root-before-r1",
+  "initial_admin_stop": "CoreDoc3 MAN nested files schema required normalization; firstguard stopped beforemutation; everyactualpayload SHA subsequentlyverified.",
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

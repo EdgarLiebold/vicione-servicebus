@@ -1,0 +1,130 @@
+{
+  "status": "F012_BOUNDED_ADVERSARIAL_REVIEW_COMPLETE_NO_BLOCKING_FINDING",
+  "read_by": "azure_test_scope",
+  "author_independence": true,
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE03_AZURE_LEASE_FREEZE.json",
+    "sha256": "a9233b0349bc27172a8e36adc4310bfa133c659a91d72073a151eaa3ebdf8d58"
+  },
+  "scope": [
+    "F012 SharedConnectionContext four administration methods",
+    "Every new fixture assertion / 18 cases",
+    "Four requirement rows, product changelog three-line delta, mutation runner and 18 native receipt logs",
+    "Fresh full Azure owner/shared textual closure; signing binary hash-only"
+  ],
+  "conclusion": "The using-linked-CTS lifetime now spans awaiting each administration operation, with caller and lease links retained while pending and released on asynchronous success/fault/cancellation. Same inputs and three result objects are preserved. No blocking defect found in the bounded patch.",
+  "blocking_findings": [],
+  "compatibility_limits": [
+    {
+      "id": "SYNC_CUSTOM_SPI_THROW_TIMING",
+      "severity": "Informational residual behavior change, not proven runtime by supplied 18 cases",
+      "before": "Custom ConnectionContext implementation throwing before returning a Task caused immediate synchronous throw from non-async SharedConnectionContext method.",
+      "after": "Async wrapper returns a faulted Task; awaiting propagates the same exception, and using cleanup still executes. Task object identity also changes.",
+      "contract": "Public return types and signatures remain Task/Task<T>; interface does not promise synchronous throw timing or Task object identity. Existing SharedSendEndpointContext already uses await lifetime convention.",
+      "runtime_evidence": "18 cases deliberately inject asynchronous TCS fault; they do not execute synchronous custom SPI throw. Root must retain this limitation or add a bounded synchronous-throw case if accepting that timing as supported compatibility."
+    }
+  ],
+  "current_complete_owner": {
+    "total": 448,
+    "passed": 447,
+    "failed": 1,
+    "skipped": 0,
+    "native_exit": 2,
+    "known_failure": "F038 / ServiceBusFamilyRegressionTests nested automatic subscription identity, line131 expected2 actual1; distinct from F012",
+    "whole_owner_pass": false
+  },
+  "test_antipattern_audit": {
+    "skill": "pinned Microsoft dotnet-test/test-anti-patterns/SKILL.md",
+    "pinned_commit": "2124a6e3518b2120cda1c076d62ed79491b00693",
+    "methods_audited": 4,
+    "expanded_cases": 18,
+    "critical": 0,
+    "warning": 0,
+    "informational": 1,
+    "informational_note": "Synchronous SPI throw timing is not among fixture runtime cases; bounded patch compatibility limit reported explicitly. Strict call-count/result identity checks are contract controls, not private implementation spying."
+  },
+  "evidence": [
+    "READ_CLOSURE.json",
+    "ASSERTIONS.json",
+    "NATIVE_RECEIPTS_READ.json",
+    "MUTANT_REVIEW.json",
+    "ROLLBACK_INDEPENDENT.json"
+  ],
+  "limits": [
+    "Reviewer executed no builds/tests/restores and authored no product/test changes. Native logs are Root executions personally reviewed.",
+    "Current five frozen files/snapshots SHA checked; independent 6209 known tracked mutation files match FILE_COVERAGE hashes and newly added F012 fixture is absent there. Hash check is not semantic FULL read of those 6209 files.",
+    "No whole owner PASS, fresh feed restore, final NuGet package profile, broker behavior or globally CLOSED API claim.",
+    "Core family review stays PARTIAL and will resume from batch92."
+  ],
+  "frozen_current_bindings": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/SharedConnectionContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/00-SharedConnectionContext.cs",
+      "sha256": "1aec605efe1c9501a24169f415142ee101b05b4c967e032ea7896ba31b2ccf46",
+      "bytes": 6359,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/SharedConnectionContext.cs",
+      "baseline_sha256": "3b7750aa2f8e13aaeb4b01772f4c2438ef8748e448fc01727d49842bcab065e2",
+      "current_snapshot_sha_match": true,
+      "current_bytes": 6359,
+      "current_full_read": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSharedAdministrationLeaseTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/01-ServiceBusSharedAdministrationLeaseTests.cs",
+      "sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+      "bytes": 19760,
+      "comparison_baseline": null,
+      "baseline_sha256": null,
+      "current_snapshot_sha_match": true,
+      "current_bytes": 19760,
+      "current_full_read": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/02-AzureServiceBusRequirements.json",
+      "sha256": "b1827009b4276a3fa9930eefa6d9b290f0d9b3325e8e75a41dce994d6b4b667a",
+      "bytes": 73120,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/03-AzureServiceBusRequirements.json",
+      "baseline_sha256": "a1ba8b05aa90849904a44572152e0489555591dcb5a448e3fb558f35ceb6ecc0",
+      "current_snapshot_sha_match": true,
+      "current_bytes": 73120,
+      "current_full_read": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/03-product-fixes.md",
+      "sha256": "237c517e0bd223e4dfd2966a42d15e6af0de32f30599297fcdb554363d712fb3",
+      "bytes": 28700,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/04-product-fixes.md",
+      "baseline_sha256": "d79cef7bb2bf0ea8bf1cfb5aa98f39e95ee891019233f4500bab2da689199e43",
+      "current_snapshot_sha_match": true,
+      "current_bytes": 28700,
+      "current_full_read": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package03_azure_lease_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/04-package03_azure_lease_mutations.py",
+      "sha256": "45431bbf5c20b8d317768708d0e1ceda8d732eff8aa56039db2e82ab2b403b6d",
+      "bytes": 6644,
+      "comparison_baseline": null,
+      "baseline_sha256": null,
+      "current_snapshot_sha_match": true,
+      "current_bytes": 6644,
+      "current_full_read": true
+    }
+  ],
+  "additional_personal_full_source_reads": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/SharedSendEndpointContext.cs",
+      "sha256": "c301a770b063d799c2f36e51c930b4542185a8f972e3c5998784ee35ee5c7144",
+      "bytes": 3464,
+      "semantic_notes": "Existing public send/schedule/cancel wrapper retains linked CTS across await; positive reference lifetime contract."
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContext.cs",
+      "sha256": "20db116066412542eb3dd75f1f0cc1c014a1afb6d6cfae4b62d3321fe0db94ea",
+      "bytes": 4159,
+      "semantic_notes": "Public SPI Task/Task<T> methods accept cancellation and return SDK properties; no explicit synchronous exception timing or Task identity guarantee."
+    }
+  ]
+}

@@ -1,0 +1,321 @@
+{
+  "status": "ROOT_PREAUTHOR_SOURCE_RESEARCH_AND_BOUNDED_PUBLIC_PLAN_NATIVE_UNEXECUTED",
+  "finding": "F-SB-API-034",
+  "utc": "2026-10-03T08:48:26.750327+00:00",
+  "root_sources": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IContainerRegistrar.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IContainerRegistrar.cs",
+      "sha256": "05ef80e203adba261511eebedbd1a55f74e5e25341a441be90919ce8a5c619ed",
+      "bytes": 3217,
+      "root_read": "ROOT_OWN_PRIOR_FULL_HASH_IDENTICAL_PACKAGE18"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IContainerSelector.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IContainerSelector.cs",
+      "sha256": "84a562c2a3e59783a9471f27e745d0101c45392a091fe2cc800d383794859b85",
+      "bytes": 3064,
+      "root_read": "ROOT_OWN_PRIOR_FULL_HASH_IDENTICAL_PACKAGE18"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+      "bytes": 18371,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+      "sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de",
+      "bytes": 25412,
+      "root_read": "ROOT_OWN_PRIOR_FULL_HASH_IDENTICAL_PACKAGE18"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ExecuteActivityRegistration.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ExecuteActivityRegistration.cs",
+      "sha256": "fc1f71aad0ff0d12503aa01e7522afa34652efa6477b160ace523d039ebd7026",
+      "bytes": 4622,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ActivityRegistration.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ActivityRegistration.cs",
+      "sha256": "c1ced58aa978c363c4b6e41120785e4a6dc3e2046084dbcd049ce2bd3392ea78",
+      "bytes": 8942,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ExecuteActivityRegistrationConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ExecuteActivityRegistrationConfigurator.cs",
+      "sha256": "ad5cb69f62c7a532d234829e6a1653897a836df02e95508a05c15faddbbe89ab",
+      "bytes": 2548,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ActivityRegistrationConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ActivityRegistrationConfigurator.cs",
+      "sha256": "765efa266ee7d15ac288a86fd444b4cdca22b4718c98418d93e2072bc1661f81",
+      "bytes": 3866,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/ExecuteActivityEndpointDefinition.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/ExecuteActivityEndpointDefinition.cs",
+      "sha256": "0a2162ee037cabd2ca12a7ea154216aefadb45053654095e37887fc4d411d48c",
+      "bytes": 1368,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CompensateActivityEndpointDefinition.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/CompensateActivityEndpointDefinition.cs",
+      "sha256": "fc80eb6fea5324b4febc275c8d431eb3b1baa05f09219357b058f3687d29bc04",
+      "bytes": 1344,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/IExecuteActivityRegistration.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/IExecuteActivityRegistration.cs",
+      "sha256": "fb49bdc381e7c6ec2cb2b1c06d005a77c69c6ba1cae3a1986d46666ce704885d",
+      "bytes": 1465,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/IActivityRegistration.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/IActivityRegistration.cs",
+      "sha256": "bed0acc495df0f099c7a7e839564ab760f8b4afed26cc0b4b6deb43e5e4af91d",
+      "bytes": 3075,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/IExecuteActivityRegistrationConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/IExecuteActivityRegistrationConfigurator.cs",
+      "sha256": "69181e0cd041931a1888565c4046cb443298b46d2134bfede8f79853ede4d8d6",
+      "bytes": 998,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/IActivityRegistrationConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/IActivityRegistrationConfigurator.cs",
+      "sha256": "ed6722d75b1771cec20b99c2e6ab38144451a5814a9f5ccfeedf8d503c4ec6bf",
+      "bytes": 1528,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierRegistrationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/CourierRegistrationExtensions.cs",
+      "sha256": "3f69644777a3d773d6cdd89003b9a6e24635c2d2c6ad9cea027b2f7191d32ac4",
+      "bytes": 13192,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/DependencyInjectionExecuteActivityRegistrationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/DependencyInjectionExecuteActivityRegistrationExtensions.cs",
+      "sha256": "e8f403722911eab835e04d734eca9fbb38fafd8b0cf956011aa58245fd1f10b2",
+      "bytes": 5407,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/DependencyInjectionActivityRegistrationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/DependencyInjectionActivityRegistrationExtensions.cs",
+      "sha256": "da1c3ed305d6b5b530df4cd8dabaa272d71675e291a8e62ba55b737cae2d68eb",
+      "bytes": 5569,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierRegistrationConfiguratorExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/CourierRegistrationConfiguratorExtensions.cs",
+      "sha256": "744c21ecc39ad9b45ef0c7b3d32b30078e9ec8815531bad4c03f082b29c1327b",
+      "bytes": 9460,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/IExecuteActivityDefinition.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/IExecuteActivityDefinition.cs",
+      "sha256": "ffc013bac69f3644f68242d24f48328c6a0f111be7e088d52019dede83cdb186",
+      "bytes": 1946,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/IActivityDefinition.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/IActivityDefinition.cs",
+      "sha256": "651a362fddf408a407ff63100e8efefb6add68c6729a33b9ece8cb6fd58e5847",
+      "bytes": 2000,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/ExecuteActivityDefinition.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/ExecuteActivityDefinition.cs",
+      "sha256": "6c31bb41e9a35e44b267eb2270cd7d5e3500bc501b203107652197e55040da3b",
+      "bytes": 4370,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/ActivityDefinition.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Configuration/ActivityDefinition.cs",
+      "sha256": "f2eeda3e421bf05c154401debf9e9c7af1d80591a0bea45337d6e26839206a61",
+      "bytes": 3812,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/ExecuteActivityConsumerKind.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/ExecuteActivityConsumerKind.cs",
+      "sha256": "92d660c0a424c636905df0b47334908964edd0459a5825d74064f2a407e06f10",
+      "bytes": 4531,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/ActivityConsumerKind.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/ActivityConsumerKind.cs",
+      "sha256": "2fb24f5a39c92dc658a1d003b8d0cd8f71474daebe40538988277979341fa871",
+      "bytes": 6515,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/SettingsEndpointDefinition.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/SettingsEndpointDefinition.cs",
+      "sha256": "71d1c9027aaf53a5ec7b0dbdd9f273803fbf648109a224e4ee95811cdef8a15e",
+      "bytes": 3630,
+      "root_read": "ROOT_PERSONAL_FULL_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/DependencyInjection/ScopeExecuteActivityFactory.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/DependencyInjection/ScopeExecuteActivityFactory.cs",
+      "sha256": "22b7bad9e4f64ba3bbbf0402bc032a4f5e77ee1da5e9ea39b9aeb18ce78f2332",
+      "bytes": 3023,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/DependencyInjection/ScopeCompensateActivityFactory.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/DependencyInjection/ScopeCompensateActivityFactory.cs",
+      "sha256": "5699f80aaacda0de93019e61e1b14e017459d83b589dcb6f827c36605fa13b04",
+      "bytes": 3018,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/FactoryMethodExecuteActivityFactory.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/FactoryMethodExecuteActivityFactory.cs",
+      "sha256": "473a6c93c5e608c97bf5a399fdd2e9f76a1c148c9cd5b3c8642ad2eb340c9831",
+      "bytes": 4570,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/CourierServiceRegistration.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/CourierServiceRegistration.cs",
+      "sha256": "09c42d4ca3c204bfd0fb434787714191ca82b588f6cbfd350c1be04ca048beed",
+      "bytes": 2034,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/RoutingSlipBuilder.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/RoutingSlipBuilder.cs",
+      "sha256": "3ea0dcf4417fc4ac044cf6a5d8417819f0666d664c2fd5afe002cd7cdd32a00b",
+      "bytes": 25656,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/RoutingSlipExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/RoutingSlipExtensions.cs",
+      "sha256": "f123024ac98318d46547a7b1e5913d9a1acb645dbcccccb0f2a53d457d0ccdc9",
+      "bytes": 3744,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/Contracts/IRoutingSlipCompleted.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/Contracts/IRoutingSlipCompleted.cs",
+      "sha256": "749b149ec794d3905fea4a5bc307b79255ab504a195b6efa45e928a7b0f38351",
+      "bytes": 702,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/Contracts/IRoutingSlipFaulted.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/Contracts/IRoutingSlipFaulted.cs",
+      "sha256": "683d5ca50d61ed2d3668df50443a81cf685dbac1b4f99d53fbcbb8bd32f112ea",
+      "bytes": 891,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Courier/ExecuteContext.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Courier/ExecuteContext.cs",
+      "sha256": "93bf57d711c99868cd61f1fb7e28cc1f72a1e19d1a9982e75b70dfa5541e5698",
+      "bytes": 11373,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Courier/CompensateContext.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Courier/CompensateContext.cs",
+      "sha256": "d53692311efe44e7912e1b187aec6f15fa7a7ca8b0338f96fa30e041edc9b9cc",
+      "bytes": 2588,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/ActivityContext.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/ActivityContext.cs",
+      "sha256": "73e23ca251c8581da505d73f4cae719e8d89d99b0579b8afa0f832f4dc66b302",
+      "bytes": 1683,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+      "relative": "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+      "sha256": "3f04063a3393b887bc0d1b666c73e7f4375e73860b8d6b7640960d559913adad",
+      "bytes": 1739,
+      "root_read": "ROOT_PERSONAL_FRESH_FULL_COMPLETE_BODY_THIS_CONTEXT"
+    }
+  ],
+  "source_patch_planned": [
+    "Both sealed generated activity endpoint classes additionally IDefinition; inherited concurrency contract unchanged",
+    "All3selection sites same bus selector exact closed generated type first; optional generic fallback accepts genuine caller definitions; sealed foreign generated endpoint rejected by exact generic type identity; explicit own generated generic fallback allowed",
+    "No public API signature/wire/schema/capability/definition-name precedence/cache removal"
+  ],
+  "public_cases": [
+    "execute-shared",
+    "execute-distinct",
+    "execute-single",
+    "full-shared",
+    "full-args",
+    "full-log",
+    "full-distinct",
+    "default-mixed-execute-first",
+    "default-mixed-execute-last",
+    "default-mixed-full-first",
+    "default-mixed-full-last",
+    "typed-mixed-execute-first",
+    "typed-mixed-execute-last",
+    "typed-mixed-full-first",
+    "typed-mixed-full-last",
+    "conventional-execute",
+    "conventional-full",
+    "definition-execute",
+    "definition-full",
+    "repeated-execute",
+    "repeated-full",
+    "caller-fallback-execute",
+    "caller-fallback-full",
+    "custom-selector-execute",
+    "custom-selector-full",
+    "two-buses-execute",
+    "two-buses-full",
+    "compensation-default",
+    "compensation-typed",
+    "pre-cancel-default",
+    "pre-cancel-typed",
+    "caller-fallback-compensate"
+  ],
+  "ordinary_routes": "Default and two named actual InMemory DI owners; exact finite endpoint multiset before any Start; real correlated routing slip completion and reverse concrete compensation; normal registration or separately-labelled public registrar extension controls",
+  "public_owner": "Fresh paired NuGet-only owner will be Root whole FULL and independent adversarial preflight before native; same sources original/corrected, existing canonical Core766 untouched",
+  "oracle": "Actual typed argument/log tracking and owner payload; business A/B exact once, compensation B/A order, Completed/Faulted typed consumer+PostConsume exact correlated message ID,2validslips where appropriate; pre-cancel exact caller token then ordinary recovery; no serialized exception reference claim",
+  "fault_and_cleanup": "Retain all actual tasks, always independent stop/observer/provider cleanup, preserve primary plus teardown separately; guard/setup/compiler not causal red; start only after finite materialization assertions; no external broker execution/migration",
+  "mutants_planned": [
+    "restore execute-only generic",
+    "restore full execute generic",
+    "restore compensation generic",
+    "priority-only foreign generated execute fallback",
+    "priority-only foreign generated compensation fallback",
+    "reject caller generic fallback",
+    "prefer generic over concrete",
+    "root/default lookup bypass in typed"
+  ],
+  "skills": "code-testing-agent complete reread before author, broad inline Research\u2192Plan\u2192Implement retained; prior once source pairing; assertquality+gap inline plus adversary; run-tests/filter syntax current pinned consulted before Native",
+  "limits": "No original runtime qualifier yet; no canonical owner/whole API/A+ grade; endpoint external deployment migration not applied"
+}

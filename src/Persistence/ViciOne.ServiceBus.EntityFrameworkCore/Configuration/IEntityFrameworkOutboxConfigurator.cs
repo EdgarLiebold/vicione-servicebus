@@ -28,7 +28,7 @@ public interface IEntityFrameworkOutboxConfigurator
     /// <summary>Database query timeout.</summary>
     TimeSpan QueryTimeout { get; set; }
 
-    /// <summary>Disable the inbox cleanup service, removing the hosted service from the service collection.</summary>
+    /// <summary>Prevents registration of the inbox cleanup service during outbox configuration.</summary>
     void DisableInboxCleanupService();
 
     /// <summary>

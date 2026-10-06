@@ -15,7 +15,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the behavior context.</param>
     /// <param name="message">The message to produce.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the produce activity appended.</returns>
+    /// <returns>The binder with the produce activity appended.</returns>
     public static IEventActivityBinder<TInstance> Produce<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
         EventHubNameProvider<TInstance> nameProvider, TMessage message, Action<SendContext<TMessage>>? contextCallback = null)
         where TInstance : class, ISagaStateMachineInstance
@@ -31,7 +31,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the behavior context.</param>
     /// <param name="message">The task that supplies the message.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the produce activity appended.</returns>
+    /// <returns>The binder with the produce activity appended.</returns>
     public static IEventActivityBinder<TInstance> Produce<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
         EventHubNameProvider<TInstance> nameProvider, Task<TMessage> message, Action<SendContext<TMessage>>? contextCallback = null)
         where TInstance : class, ISagaStateMachineInstance
@@ -47,7 +47,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the behavior context.</param>
     /// <param name="messageFactory">Creates the message from the current behavior context.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the produce activity appended.</returns>
+    /// <returns>The binder with the produce activity appended.</returns>
     public static IEventActivityBinder<TInstance> Produce<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
         EventHubNameProvider<TInstance> nameProvider, AsyncEventMessageFactory<TInstance, TMessage> messageFactory,
         Action<SendContext<TMessage>>? contextCallback = null)
@@ -64,7 +64,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the behavior context.</param>
     /// <param name="messageFactory">Creates the initialized message and its initializer pipe.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the produce activity appended.</returns>
+    /// <returns>The binder with the produce activity appended.</returns>
     public static IEventActivityBinder<TInstance> Produce<TInstance, TMessage>(this IEventActivityBinder<TInstance> source,
         EventHubNameProvider<TInstance> nameProvider, Func<IBehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         Action<SendContext<TMessage>>? contextCallback = null)
@@ -82,7 +82,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the behavior context.</param>
     /// <param name="message">The message to produce.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the produce activity appended.</returns>
+    /// <returns>The binder with the produce activity appended.</returns>
     public static IEventActivityBinder<TInstance, TData> Produce<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         EventHubNameProvider<TInstance, TData> nameProvider, TMessage message, Action<SendContext<TMessage>>? contextCallback = null)
         where TInstance : class, ISagaStateMachineInstance
@@ -100,7 +100,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the behavior context.</param>
     /// <param name="message">The task that supplies the message.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the produce activity appended.</returns>
+    /// <returns>The binder with the produce activity appended.</returns>
     public static IEventActivityBinder<TInstance, TData> Produce<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         EventHubNameProvider<TInstance, TData> nameProvider, Task<TMessage> message, Action<SendContext<TMessage>>? contextCallback = null)
         where TInstance : class, ISagaStateMachineInstance
@@ -118,7 +118,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the behavior context.</param>
     /// <param name="messageFactory">Creates the message from the current behavior context and data.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the produce activity appended.</returns>
+    /// <returns>The binder with the produce activity appended.</returns>
     public static IEventActivityBinder<TInstance, TData> Produce<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         EventHubNameProvider<TInstance, TData> nameProvider, AsyncEventMessageFactory<TInstance, TData, TMessage> messageFactory,
         Action<SendContext<TMessage>>? contextCallback = null)
@@ -137,7 +137,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the behavior context.</param>
     /// <param name="messageFactory">Creates the initialized message and its initializer pipe.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the produce activity appended.</returns>
+    /// <returns>The binder with the produce activity appended.</returns>
     public static IEventActivityBinder<TInstance, TData> Produce<TInstance, TData, TMessage>(this IEventActivityBinder<TInstance, TData> source,
         EventHubNameProvider<TInstance, TData> nameProvider, Func<IBehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
         Action<SendContext<TMessage>>? contextCallback = null)
@@ -156,7 +156,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the exception context.</param>
     /// <param name="message">The message to produce.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the faulted produce activity appended.</returns>
+    /// <returns>The binder with the faulted produce activity appended.</returns>
     public static IExceptionActivityBinder<TInstance, TException> Produce<TInstance, TException, TMessage>(
         this IExceptionActivityBinder<TInstance, TException> source, ExceptionEventHubNameProvider<TInstance, TException> nameProvider, TMessage message,
         Action<SendContext<TMessage>>? contextCallback = null)
@@ -176,7 +176,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the exception context.</param>
     /// <param name="message">The task that supplies the message.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the faulted produce activity appended.</returns>
+    /// <returns>The binder with the faulted produce activity appended.</returns>
     public static IExceptionActivityBinder<TInstance, TException> Produce<TInstance, TException, TMessage>(
         this IExceptionActivityBinder<TInstance, TException> source, ExceptionEventHubNameProvider<TInstance, TException> nameProvider,
         Task<TMessage> message, Action<SendContext<TMessage>>? contextCallback = null)
@@ -196,7 +196,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the exception context.</param>
     /// <param name="messageFactory">Creates the message from the current exception context.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the faulted produce activity appended.</returns>
+    /// <returns>The binder with the faulted produce activity appended.</returns>
     public static IExceptionActivityBinder<TInstance, TException> Produce<TInstance, TException, TMessage>(
         this IExceptionActivityBinder<TInstance, TException> source, ExceptionEventHubNameProvider<TInstance, TException> nameProvider,
         AsyncEventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory,
@@ -217,7 +217,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the exception context.</param>
     /// <param name="messageFactory">Creates the initialized message and its initializer pipe.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the faulted produce activity appended.</returns>
+    /// <returns>The binder with the faulted produce activity appended.</returns>
     public static IExceptionActivityBinder<TInstance, TException> Produce<TInstance, TException, TMessage>(
         this IExceptionActivityBinder<TInstance, TException> source, ExceptionEventHubNameProvider<TInstance, TException> nameProvider,
         Func<IBehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,
@@ -239,7 +239,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the exception context.</param>
     /// <param name="message">The message to produce.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the faulted produce activity appended.</returns>
+    /// <returns>The binder with the faulted produce activity appended.</returns>
     public static IExceptionActivityBinder<TInstance, TData, TException> Produce<TInstance, TData, TException, TMessage>(
         this IExceptionActivityBinder<TInstance, TData, TException> source, ExceptionEventHubNameProvider<TInstance, TData, TException> nameProvider,
         TMessage message, Action<SendContext<TMessage>>? contextCallback = null)
@@ -261,7 +261,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the exception context.</param>
     /// <param name="message">The task that supplies the message.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the faulted produce activity appended.</returns>
+    /// <returns>The binder with the faulted produce activity appended.</returns>
     public static IExceptionActivityBinder<TInstance, TData, TException> Produce<TInstance, TData, TException, TMessage>(
         this IExceptionActivityBinder<TInstance, TData, TException> source, ExceptionEventHubNameProvider<TInstance, TData, TException> nameProvider,
         Task<TMessage> message, Action<SendContext<TMessage>>? contextCallback = null)
@@ -283,7 +283,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the exception context.</param>
     /// <param name="messageFactory">Creates the message from the current exception context and data.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the faulted produce activity appended.</returns>
+    /// <returns>The binder with the faulted produce activity appended.</returns>
     public static IExceptionActivityBinder<TInstance, TData, TException> Produce<TInstance, TData, TException, TMessage>(
         this IExceptionActivityBinder<TInstance, TData, TException> source, ExceptionEventHubNameProvider<TInstance, TData, TException> nameProvider,
         AsyncEventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory,
@@ -306,7 +306,7 @@ public static class ProduceExtensions
     /// <param name="nameProvider">Selects the destination Event Hub from the exception context.</param>
     /// <param name="messageFactory">Creates the initialized message and its initializer pipe.</param>
     /// <param name="contextCallback">Optionally configures the outbound send context.</param>
-    /// <returns>The same binder with the faulted produce activity appended.</returns>
+    /// <returns>The binder with the faulted produce activity appended.</returns>
     public static IExceptionActivityBinder<TInstance, TData, TException> Produce<TInstance, TData, TException, TMessage>(
         this IExceptionActivityBinder<TInstance, TData, TException> source, ExceptionEventHubNameProvider<TInstance, TData, TException> nameProvider,
         Func<IBehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>> messageFactory,

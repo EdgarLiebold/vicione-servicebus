@@ -1,0 +1,81 @@
+{
+  "status": "SCOPED_F039_CODE_AND_PUBLIC_NATIVE_EVIDENCE_ACCEPTED",
+  "utc": "2026-10-03T04:00:17.292597+00:00",
+  "finding": "F-SB-API-039",
+  "blockers": [],
+  "freeze_sha256": "0dc7415ee56a76034a34cc78b73d3c2e26585ee442666cb03b9744ab7d554e17",
+  "contracts": {
+    "construction": "Outer internal factory keeps normalized immutable Uri and caller callback. Each CreateBus null-checks original arguments, allocates private OwnedBusFactory and new topology/bus configuration/host. Existing TransportRegistrationBusFactory continues per-provider message-limit/admission configuration, observers/journal, callback, validation, build/specification. BaseHostConfiguration one-owner guard remains intact.",
+    "public_default_typed": "Distinct public AddViciOneServiceBus vs <IGraphBus> overloads, default Bind<IBus,IBusInstance> vs typed IBusInstance<IGraphBus>, default delay vs Bind<IGraphBus,IInMemoryDelayProvider>. Own prior FULL registration extension/configurator/context/bind source exact SHA checked.",
+    "two_provider_identity": "Shared cases build two providers from one actual configured ServiceCollection; independent controls recreate collection. Provider-resolved distinct Marker references and callback configurators, actual BusControl/HostConfiguration identities and exact receipt markers asserted.",
+    "address": "Eager InMemoryHostAddress validation preserves registration-time ArgumentException(address). Canonical URI loopback://graphhost/team%2Fblue has no trailing slash. Current factory normalization then host normalization is idempotent for observed route. Seven invalid classes exercised separately for both bus selections.",
+    "limits": "Per-bus body8192/envelope16384/depth32 through normal configuration. Oversized send must throw exact PayloadAdmissionException with configured8192 and actual>8192, then small own-fabric delivery succeeds for each started provider. Current BaseHostConfiguration retains original one-owner assignment guards.",
+    "post_stop": "B creates pending one-day logical delay; await A.CloseAsync stops A and disposes its provider; advance B two logical days and positively await delay completion plus exact B-survives receipt. Independent controls run same assertions. No timed absence assertion.",
+    "recovery": "First provider callback throws exact owned-graph-callback-fault before BuildConfiguredBus try. New provider from same collection must create independent graph, second callback marker/configurator and two actual B receipts. Failed construction is not treated as started bus.",
+    "cleanup": "OwnedLifetime keeps operation exception first, attempts every cleanup despite failures, EDI sole propagation and ordered aggregate. Pending logical delay cancelled and joined, owners reversed and each Stop/Provider.Dispose independently attempted, global LogContext restored. Started flag is set before awaiting Start to attempt cleanup of partial startup. Successful explicit close/dispose guarded against repeats.",
+    "oracle_refinement": "Missing Advanced import is compiler setup exclusion with actual three errors. Archived R1 callback wrapper and trailing-slash expectations are oracle mistakes; final identical previous/corrected3949b502 body fixes them and repeats all eight. Source contract independently agrees, not product modification to fit oracle."
+  },
+  "independent_proofs": {
+    "owned_full": 28,
+    "source_frame": 14,
+    "public_route_sources": 25,
+    "actual_receipts_and_FULL_logs": 25,
+    "pure_source_effects": 56,
+    "compiled_mutants": 2,
+    "causal_negative_routes": 4,
+    "valid_positive_routes": 4,
+    "baseline8": true,
+    "rollback8": true,
+    "selected_package_chains": 4,
+    "pdb_frame_and_public_oracle_checksum_conditions": 90,
+    "pdb_route_checksum_conditions": 50,
+    "pdb_counting": "90 +50 bound checksum conditions include overlapping frame/route paths; not 140 unique sources.",
+    "original_M_6209_restored": true,
+    "oracle_restored": true,
+    "selected_DLL_restored": true
+  },
+  "native_summary": {
+    "original_final": {
+      "total": 8,
+      "causal_red": 4,
+      "positive": 4,
+      "guard_failures": 0
+    },
+    "corrected": {
+      "total": 8,
+      "positive": 8
+    },
+    "mutation": {
+      "total": 24,
+      "causal_red": 4,
+      "positive": 20
+    },
+    "accepted_native_case_observations": 40,
+    "excluded_early_R1": {
+      "total": 8,
+      "causal_red": 2,
+      "invalid_positive": 2,
+      "oracle_error": 4,
+      "not_counted_in_final": 8
+    },
+    "compiler_setup_failure_not_product_or_kill": true
+  },
+  "package_dependencies": {
+    "lock_nodes_per_mode": 19,
+    "runtime": ".NET10.0.10 X64",
+    "Microsoft_extensions_selected": "10.0.12",
+    "xunit_assert": "4.0.0",
+    "limits": "Complete locks read; selected product ZIP/cache/runtime and native public DI imports observed, not every dependency implementation reviewed."
+  },
+  "risks_and_limits": [
+    "Scoped F039 internal factory and eight public console modes only. No Core766/all-InMemory/canonical-test-owner grades, no CLOSED symbol or whole API acceptance.",
+    "Two sequential providers, not parallel CreateBus; no ARM/cloud/broker/restart/retained-heap claim. Explicit public logging override isolates open F019.",
+    "Imported F004 and earlier package frames are personally FULL or own exact SHA reused here, but their complete native review is not transferred or regraded.",
+    "Frozen selected Graph package/PDB/source frame only. Later Package13 current ScopeConsumerFactory/build outputs are outside this acceptance.",
+    "Compiled mutants substitute strict-built DLLs into unchanged NuGet consumer; no fresh pack per mutant claim.",
+    "Guards are exclusions and cannot PASS. WaitAsync is an observation deadline, not universal underlying task cancellation. All accepted runs completed without guard failure.",
+    "No builds/restores/tests/native/product/canonical-test/CSV writes by this internal independent reviewer."
+  ],
+  "whole_api_closed": false,
+  "closed_symbols": 0
+}

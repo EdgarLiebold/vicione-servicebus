@@ -1,0 +1,8 @@
+{
+  "status": "COMPILER_SETUP_EXCLUDED_NOT_FINDING_OR_MUTANT_KILL",
+  "phase": "package19-f034-public-previous-build-r2",
+  "log_sha256": "3cd3740506acd8b8ed1733fc49332d38fb3e2aa8eedea0ba8d118dec1d15b267",
+  "errors": 2,
+  "cause": "Public fixture settings generic parameter must be endpoint-definition contract; paired type-argument-only correction.",
+  "fixed_models_sha256": "a8f4ab45e1f728fe75da0ddbd232cc29aaa9da99d869f2af0ed5d14e7d178250"
+}

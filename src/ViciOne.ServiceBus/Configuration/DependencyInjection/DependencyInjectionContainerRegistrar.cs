@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.DependencyInjection;
@@ -106,6 +108,19 @@ public class DependencyInjectionContainerRegistrar :
         EnsureConcreteDefinition<TDefinition>();
 
         Collection.AddSingleton<TDefinition>();
+        Collection.AddSingleton<T>(provider => provider.GetRequiredService<TDefinition>());
+    }
+
+    // Internal constructor-argument activation keeps public registration SPI unchanged.
+    internal virtual void AddDefinitionWithArguments<T, TDefinition>(Func<IServiceProvider, object[]> arguments)
+        where T : class, IDefinition
+        where TDefinition : class, T
+    {
+        ArgumentNullException.ThrowIfNull(arguments);
+        EnsureConcreteDefinition<TDefinition>();
+
+        Collection.AddSingleton<TDefinition>(provider =>
+            ActivatorUtilities.CreateInstance<TDefinition>(provider, arguments(provider)));
         Collection.AddSingleton<T>(provider => provider.GetRequiredService<TDefinition>());
     }
 
@@ -387,8 +402,34 @@ public class DependencyInjectionContainerRegistrar<TBus> :
     {
         EnsureConcreteDefinition<TDefinition>();
 
+        Collection.TryAddTransient<DefinitionOwner<TDefinition>>(provider =>
+        {
+            // Allocate the capability-correct owner before activation, then let DI capture it
+            // after the successfully created definition and its constructor dependencies.
+            DefinitionOwner<TDefinition> owner = DefinitionOwner<TDefinition>.Create();
+            owner.Value = ActivatorUtilities.CreateInstance<TDefinition>(provider);
+            return owner;
+        });
         Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
-            Bind<TBus>.Create(ActivatorUtilities.CreateInstance<TDefinition>(provider)));
+            Bind<TBus>.Create(provider.GetRequiredService<DefinitionOwner<TDefinition>>().Value));
+        Collection.AddSingleton<Bind<TBus, T>>(provider =>
+            Bind<TBus>.Create<T>(provider.GetRequiredService<Bind<TBus, TDefinition>>().Value));
+    }
+
+    internal override void AddDefinitionWithArguments<T, TDefinition>(Func<IServiceProvider, object[]> arguments)
+    {
+        ArgumentNullException.ThrowIfNull(arguments);
+        EnsureConcreteDefinition<TDefinition>();
+
+        Collection.TryAddTransient<DefinitionOwner<TDefinition>>(provider =>
+        {
+            // Preserve the owning definition's disposal order after constructor dependencies.
+            DefinitionOwner<TDefinition> owner = DefinitionOwner<TDefinition>.Create();
+            owner.Value = ActivatorUtilities.CreateInstance<TDefinition>(provider, arguments(provider));
+            return owner;
+        });
+        Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
+            Bind<TBus>.Create(provider.GetRequiredService<DefinitionOwner<TDefinition>>().Value));
         Collection.AddSingleton<Bind<TBus, T>>(provider =>
             Bind<TBus>.Create<T>(provider.GetRequiredService<Bind<TBus, TDefinition>>().Value));
     }
@@ -401,20 +442,70 @@ public class DependencyInjectionContainerRegistrar<TBus> :
     {
         EnsureConcreteDefinition<TDefinition>();
 
-        if (settings == null)
-        {
-            Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
-                Bind<TBus>.Create(ActivatorUtilities.CreateInstance<TDefinition>(provider)));
-        }
-        else
-        {
-            Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
-                Bind<TBus>.Create(ActivatorUtilities.CreateInstance<TDefinition>(provider, settings)));
-        }
+        // A distinct transient registration owns each materialized concrete binding while
+        // preserving ordinary Bind values, lazy settings and last-concrete interface aliases.
+        var definitionKey = new object();
+        Collection.AddKeyedTransient<TDefinition>(definitionKey, (provider, _) => settings == null
+            ? ActivatorUtilities.CreateInstance<TDefinition>(provider)
+            : ActivatorUtilities.CreateInstance<TDefinition>(provider, settings));
+        Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
+            Bind<TBus>.Create(provider.GetRequiredKeyedService<TDefinition>(definitionKey)));
 
         Collection.AddSingleton<Bind<TBus, IEndpointDefinition<T>>>(provider =>
             Bind<TBus>.Create<IEndpointDefinition<T>>(
                 provider.GetRequiredService<Bind<TBus, TDefinition>>().Value));
+    }
+
+    class DefinitionOwner<TDefinition>
+        where TDefinition : class
+    {
+        public TDefinition Value { get; set; } = null!;
+
+        public static DefinitionOwner<TDefinition> Create()
+        {
+            if (typeof(IDisposable).IsAssignableFrom(typeof(TDefinition)))
+                return new SynchronousDefinitionOwner<TDefinition>();
+            if (typeof(IAsyncDisposable).IsAssignableFrom(typeof(TDefinition)))
+                return new AsynchronousDefinitionOwner<TDefinition>();
+
+            return new DefinitionOwner<TDefinition>();
+        }
+    }
+
+    sealed class AsynchronousDefinitionOwner<TDefinition> :
+        DefinitionOwner<TDefinition>, IAsyncDisposable
+        where TDefinition : class
+    {
+        int _disposed;
+
+        public ValueTask DisposeAsync() => Interlocked.Exchange(ref _disposed, 1) == 0
+            ? ((IAsyncDisposable)Value).DisposeAsync()
+            : ValueTask.CompletedTask;
+    }
+
+    sealed class SynchronousDefinitionOwner<TDefinition> :
+        DefinitionOwner<TDefinition>, IDisposable, IAsyncDisposable
+        where TDefinition : class
+    {
+        int _disposed;
+
+        public void Dispose()
+        {
+            if (Interlocked.Exchange(ref _disposed, 1) == 0)
+                ((IDisposable)Value).Dispose();
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            if (Interlocked.Exchange(ref _disposed, 1) != 0)
+                return ValueTask.CompletedTask;
+
+            if (Value is IAsyncDisposable asynchronous)
+                return asynchronous.DisposeAsync();
+
+            ((IDisposable)Value).Dispose();
+            return ValueTask.CompletedTask;
+        }
     }
 
     /// <summary>Registers the endpoint naming convention for this bus owner.</summary>

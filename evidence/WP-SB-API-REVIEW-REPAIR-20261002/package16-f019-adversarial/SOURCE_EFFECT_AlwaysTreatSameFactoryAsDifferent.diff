@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs
++++ AlwaysTreatSameFactoryAsDifferent
+@@ -39,7 +39,7 @@
+ 
+     internal bool IsAutomaticallyConfigured { get; }
+ 
+-    internal bool HasSameLoggerFactory(ILoggerFactory loggerFactory) => ReferenceEquals(_loggerFactory, loggerFactory);
++    internal bool HasSameLoggerFactory(ILoggerFactory loggerFactory) => false;
+ 
+     public ILogger Logger { get; }
+ 

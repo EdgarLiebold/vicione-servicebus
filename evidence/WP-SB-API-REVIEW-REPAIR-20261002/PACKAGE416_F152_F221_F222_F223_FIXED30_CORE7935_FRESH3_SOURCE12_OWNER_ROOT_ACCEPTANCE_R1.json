@@ -1,0 +1,630 @@
+{
+  "utc": "2026-10-06T10:34:37.097481+00:00",
+  "status": "ROOT_BOUNDED_REPAIRS_F152_F221_F222_F223_ACCEPTED_CURRENT411_412_413",
+  "different_product_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package409-public30-independent-product-source-peer-r1/REPORT.json",
+    "sha256": "5ba489fa731a97c4690de36088ebe3a0d4e8b1498f869da5eb785aa0964f029b"
+  },
+  "source_norm12": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package414-product5-original12-root-source-norm-proposed-r1/PER_ID12_CURRENT_SOURCE_NORMS.json",
+    "sha256": "13a53e78ba884abb35e2c7afa18da37ef2f6546aa7ad098ff6a7cdd3d87bd358"
+  },
+  "different_norm_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package414-product5-source12-independent-norm-peer-r1/REPORT.json",
+    "sha256": "38d978b12950cd2abd9541f9ee39a267bb8e9bf00f8ca386e3a2c8b7a7216d64"
+  },
+  "actual_fixed_independent": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package412-fixed30-independent-qualification-r1/REPORT.json",
+    "sha256": "faef9de5c66107f7d9d5c14cad00466abf6b53a55cb7e27fbc8e21197104d557"
+  },
+  "actual_module_publication_independent": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package413-product5-independent-module-publication-r1/REPORT.json",
+    "sha256": "16b909e4d252da0d88dece01e049e7c1eb71558529fc19d7f11b4ceb7fc86b99"
+  },
+  "mandatory_JOIN_only_overlay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package413-courier-pack-join-only-precision-overlay-r1/REPORT.json",
+    "sha256": "992b19e7451f0aceede25ef09b7ad605604d7d6564dfe079019218a95dd6d551"
+  },
+  "Root_whole_reports": [
+    "d1bad3 fixed412",
+    "dcdd3e publication413",
+    "c9b2c4 Normpeer12"
+  ],
+  "fixed30": {
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0,
+    "exact_original_UIDs": true,
+    "unchanged_test4_and_req4677": true
+  },
+  "module": {
+    "passed": 7935,
+    "failed": 0,
+    "skipped": 0,
+    "exact30_subset": true,
+    "human7935_testbody_credit": 0
+  },
+  "strict3": "Actual0W0E",
+  "fresh3": [
+    "bded4a687f4afd3402a587d7a8ea0e632481332077a5beaefb099c46396e883e",
+    "e889d980c03d5e1ad70a5149cf2035808a4ff31001569c67bc179eade9dea01b",
+    "51bf119078eb38ba4b5249b4740506c06378b449f5daba5e0617d7ebe840283b"
+  ],
+  "source12_new": [
+    6509,
+    6510,
+    18062,
+    18085,
+    18086,
+    18228,
+    14323,
+    14330,
+    14331,
+    14346,
+    14347,
+    14348
+  ],
+  "existing_owner_rebinds": [
+    {
+      "row_zero_based": 14872,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "E:ViciOne.ServiceBus.Testing.BusTestHarness.BusConfigured",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14873,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "E:ViciOne.ServiceBus.Testing.BusTestHarness.BusConfiguring",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14874,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "E:ViciOne.ServiceBus.Testing.BusTestHarness.BusCreating",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14875,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "E:ViciOne.ServiceBus.Testing.BusTestHarness.ObserversConnecting",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14876,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "E:ViciOne.ServiceBus.Testing.BusTestHarness.ReceiveEndpointConfiguring",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14915,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.AsyncTestHarness.#ctor",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14916,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.AsyncTestHarness.#ctor(System.TimeProvider)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14917,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.AsyncTestHarness.BeginTestScope",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14918,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.AsyncTestHarness.Cancel",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14919,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.AsyncTestHarness.CreateConsumeObserver",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14920,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.AsyncTestHarness.CreateConsumeObserver``1",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14921,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.AsyncTestHarness.CreateTaskCompletionSource``1(System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14922,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.AsyncTestHarness.ForceInactive",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14928,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.#ctor",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14929,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.#ctor(System.TimeProvider)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14930,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.CleanAsync(System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14931,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.ConfigureBus(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14932,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.ConfigureReceiveEndpoint(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14933,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.ConnectConsumeObserver(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14934,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.ConnectObservers(ViciOne.ServiceBus.IBus)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14935,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.ConnectPublishObserver(ViciOne.ServiceBus.Advanced.Observers.IPublishObserver)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14936,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.ConnectSendObserver(ViciOne.ServiceBus.Advanced.Observers.ISendObserver)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14937,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.CreateBusAsync(System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14938,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.CreateRequestClient``1",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14939,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.CreateRequestClient``1(System.Uri)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14940,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.Dispose",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14941,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.GetSendEndpointAsync(System.Uri,System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14942,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.NotifyBusConfigured(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14943,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.WaitForConsumerAsync``1(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14944,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.WaitForHandledMessageAsync``1(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Func{ViciOne.ServiceBus.ConsumeContext{``0},System.Boolean},System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14945,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.WaitForHandledMessageAsync``1(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Int32,System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14946,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.WaitForHandledMessageAsync``1(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14947,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.WaitForHandlerExecutionAsync``1(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Advanced.MessageHandler{``0},System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14948,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.WaitForMessageAsync``1(System.Func{ViciOne.ServiceBus.ConsumeContext{``0},System.Boolean},System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 14949,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.BusTestHarness.WaitForMessageAsync``1(System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15073,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.MultiTestConsumer.#ctor(System.TimeSpan,System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Consumers/MultiTestConsumer.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15074,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.MultiTestConsumer.#ctor(System.TimeSpan,System.TimeProvider,System.Threading.CancellationToken)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Consumers/MultiTestConsumer.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15075,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.MultiTestConsumer.AddConsumer``1",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Consumers/MultiTestConsumer.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15076,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.MultiTestConsumer.AddFaultingConsumer``1",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Consumers/MultiTestConsumer.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15077,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "M:ViciOne.ServiceBus.Testing.MultiTestConsumer.Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Consumers/MultiTestConsumer.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15192,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.AsyncTestHarness.ContextSaveMode",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15193,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.AsyncTestHarness.InactivityTask",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15194,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.AsyncTestHarness.InactivityToken",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15195,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.AsyncTestHarness.MaximumSavedContexts",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15196,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.AsyncTestHarness.TestCancellationToken",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15197,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.AsyncTestHarness.TestInactivityTimeout",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15198,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.AsyncTestHarness.TestTimeout",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15199,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.AsyncTestHarness.TimeProvider",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15204,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.BusTestHarness.Bus",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15205,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.BusTestHarness.BusAddress",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15206,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.BusTestHarness.BusControl",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15207,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.BusTestHarness.BusSendEndpoint",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15208,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.BusTestHarness.CancellationToken",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15209,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.BusTestHarness.Consumed",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15210,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.BusTestHarness.InputQueueAddress",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15211,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.BusTestHarness.InputQueueName",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15212,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.BusTestHarness.InputQueueSendEndpoint",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15213,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.BusTestHarness.Published",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15214,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.BusTestHarness.Sent",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15285,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.MultiTestConsumer.Consumed",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Consumers/MultiTestConsumer.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15286,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "P:ViciOne.ServiceBus.Testing.MultiTestConsumer.Timeout",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Consumers/MultiTestConsumer.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15329,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "T:ViciOne.ServiceBus.Testing.AsyncTestHarness",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15331,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "T:ViciOne.ServiceBus.Testing.BusTestHarness",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 15366,
+      "assembly": "ViciOne.ServiceBus.Testing",
+      "id": "T:ViciOne.ServiceBus.Testing.MultiTestConsumer",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Consumers/MultiTestConsumer.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 17572,
+      "assembly": "ViciOne.ServiceBus",
+      "id": "T:ViciOne.ServiceBus.Configuration.ActivityObserverConfigurationExtensions",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ActivityObserverConfigurationExtensions.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 18617,
+      "assembly": "ViciOne.ServiceBus.Courier",
+      "id": "M:ViciOne.ServiceBus.Configuration.CourierHostConfiguratorExtensions.CompensateActivityHost``2(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Action{ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator{``0,``1}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierHostConfiguratorExtensions.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 18618,
+      "assembly": "ViciOne.ServiceBus.Courier",
+      "id": "M:ViciOne.ServiceBus.Configuration.CourierHostConfiguratorExtensions.CompensateActivityHost``2(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Func{``0},System.Action{ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator{``0,``1}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierHostConfiguratorExtensions.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 18619,
+      "assembly": "ViciOne.ServiceBus.Courier",
+      "id": "M:ViciOne.ServiceBus.Configuration.CourierHostConfiguratorExtensions.CompensateActivityHost``2(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Func{``1,``0},System.Action{ViciOne.ServiceBus.Configuration.ICompensateActivityConfigurator{``0,``1}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierHostConfiguratorExtensions.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 18620,
+      "assembly": "ViciOne.ServiceBus.Courier",
+      "id": "M:ViciOne.ServiceBus.Configuration.CourierHostConfiguratorExtensions.ExecuteActivityHost``2(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator{``0,``1}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierHostConfiguratorExtensions.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 18621,
+      "assembly": "ViciOne.ServiceBus.Courier",
+      "id": "M:ViciOne.ServiceBus.Configuration.CourierHostConfiguratorExtensions.ExecuteActivityHost``2(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Func{``0},System.Action{ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator{``0,``1}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierHostConfiguratorExtensions.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 18622,
+      "assembly": "ViciOne.ServiceBus.Courier",
+      "id": "M:ViciOne.ServiceBus.Configuration.CourierHostConfiguratorExtensions.ExecuteActivityHost``2(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Func{``1,``0},System.Action{ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator{``0,``1}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierHostConfiguratorExtensions.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 18623,
+      "assembly": "ViciOne.ServiceBus.Courier",
+      "id": "M:ViciOne.ServiceBus.Configuration.CourierHostConfiguratorExtensions.ExecuteActivityHost``2(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Uri,System.Action{ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator{``0,``1}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierHostConfiguratorExtensions.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 18624,
+      "assembly": "ViciOne.ServiceBus.Courier",
+      "id": "M:ViciOne.ServiceBus.Configuration.CourierHostConfiguratorExtensions.ExecuteActivityHost``2(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Uri,System.Func{``0},System.Action{ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator{``0,``1}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierHostConfiguratorExtensions.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 18625,
+      "assembly": "ViciOne.ServiceBus.Courier",
+      "id": "M:ViciOne.ServiceBus.Configuration.CourierHostConfiguratorExtensions.ExecuteActivityHost``2(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Uri,System.Func{``1,``0},System.Action{ViciOne.ServiceBus.Configuration.IExecuteActivityConfigurator{``0,``1}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierHostConfiguratorExtensions.cs",
+      "XML_present": true
+    },
+    {
+      "row_zero_based": 18837,
+      "assembly": "ViciOne.ServiceBus.Courier",
+      "id": "T:ViciOne.ServiceBus.Configuration.CourierHostConfiguratorExtensions",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Configuration/CourierHostConfiguratorExtensions.cs",
+      "XML_present": true
+    }
+  ],
+  "prior_owner_entire_rows": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package416-product5-repair4-source12-owner-root-acceptance-before-r1/OWNER_PRIOR_ENTIRE_ROWS.json",
+    "sha256": "922be18d587407e3e32aab161f206eb6912e1c6a589f62728502b1aabeff3762"
+  },
+  "before": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package416-product5-repair4-source12-owner-root-acceptance-before-r1/API_MEMBER_ACCEPTANCE_CURRENT.json",
+      "sha256": "b28e8483ef63d41bd7095049fb77d9a6b24fd3d39910ac67c8c7ef6f98ad3b09"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package416-product5-repair4-source12-owner-root-acceptance-before-r1/STATE.json",
+      "sha256": "feaca84e944d3e76f5a48f7a7f0a5516f1eeccd9358163cd420c8a984f359a61"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package416-product5-repair4-source12-owner-root-acceptance-before-r1/PO_BERICHT.txt",
+      "sha256": "f7dcf707e66ea8cb3f55a69ab2c52d48b8d0f4e8de18fe353dc06d3213107ef7"
+    }
+  ],
+  "accounting": {
+    "master_before": 19322,
+    "master_after": 19334,
+    "original_before": 18460,
+    "original_after": 18472,
+    "remaining": 97,
+    "known": 223,
+    "bounded_accepted_before": 219,
+    "bounded_accepted_after": 223
+  },
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": [
+    "Source all-attempt/order/nesting distinct from native exact cause presence/count.",
+    "BusDispose18082/private inactivity CTS/concurrent arbitrary SPI remain unclosed.",
+    "F152 bounded known reproduced cases repaired; new unqualified owning diagnostic hypotheses are not silently certified.",
+    "Existing owner member contracts retained; prior source/context fields explicitly historical. No fresh individual native grade borrowed."
+  ]
+}

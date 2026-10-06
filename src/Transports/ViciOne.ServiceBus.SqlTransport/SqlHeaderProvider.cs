@@ -9,6 +9,26 @@ namespace ViciOne.ServiceBus.SqlTransport;
 public class SqlHeaderProvider :
     IHeaderProvider
 {
+    static readonly string[] NativeHeaderNames =
+    [
+        MessageHeaders.ContentType,
+        MessageHeaders.MessageType,
+        MessageHeaders.MessageId,
+        MessageHeaders.CorrelationId,
+        MessageHeaders.ConversationId,
+        MessageHeaders.RequestId,
+        MessageHeaders.InitiatorId,
+        MessageHeaders.SourceAddress,
+        MessageHeaders.ResponseAddress,
+        MessageHeaders.FaultAddress,
+        MessageHeaders.TransportMessageId,
+        nameof(SqlTransportMessage.MessageDeliveryId),
+        nameof(SqlTransportMessage.DeliveryCount),
+        MessageHeaders.RedeliveryCount,
+        nameof(SqlTransportMessage.RoutingKey),
+        nameof(SqlTransportMessage.PartitionKey),
+    ];
+
     readonly SqlTransportMessage _message;
 
     /// <summary>Creates a header provider for one materialized SQL transport message.</summary>
@@ -18,7 +38,7 @@ public class SqlHeaderProvider :
         _message = message ?? throw new ArgumentNullException(nameof(message));
     }
 
-    /// <summary>Enumerates application and transport headers once, with transport-owned values taking precedence.</summary>
+    /// <summary>Enumerates application and transport headers once, with authoritative native metadata taking precedence.</summary>
     /// <returns>The merged case-insensitive header set.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
@@ -28,6 +48,13 @@ public class SqlHeaderProvider :
             headers[header.Key] = header.Value;
         foreach (KeyValuePair<string, object> header in _message.GetTransportHeaders().GetAll())
             headers[header.Key] = header.Value;
+
+        foreach (string key in NativeHeaderNames)
+        {
+            headers.Remove(key);
+            if (TryGetHeader(key, out object? value))
+                headers.Add(key, value);
+        }
 
         return headers;
     }

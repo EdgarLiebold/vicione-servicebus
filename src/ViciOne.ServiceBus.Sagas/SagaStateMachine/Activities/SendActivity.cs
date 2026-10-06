@@ -90,9 +90,12 @@ public class SendActivity<TSaga, TMessage> :
     {
         var destinationAddress = _destinationAddressProvider(context);
 
-        var endpoint = await context.GetSendEndpointAsync(destinationAddress).ConfigureAwait(false);
+        var endpoint = await context.GetSendEndpointAsync(destinationAddress, context.CancellationToken).ConfigureAwait(false);
 
-        await _messageFactory.UseAsync(context, (ctx, s) => endpoint.SendAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+        context.CancellationToken.ThrowIfCancellationRequested();
+
+        await _messageFactory.UseAsync(context, (ctx, s) => endpoint.SendAsync(s.Message, s.Pipe, ctx.CancellationToken),
+            context.CancellationToken).ConfigureAwait(false);
     }
 }
 
@@ -142,9 +145,12 @@ public class SendActivity<TSaga, TData, TMessage> :
     {
         var destinationAddress = _destinationAddressProvider(context);
 
-        var endpoint = await context.GetSendEndpointAsync(destinationAddress).ConfigureAwait(false);
+        var endpoint = await context.GetSendEndpointAsync(destinationAddress, context.CancellationToken).ConfigureAwait(false);
 
-        await _messageFactory.UseAsync(context, (ctx, s) => endpoint.SendAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+        context.CancellationToken.ThrowIfCancellationRequested();
+
+        await _messageFactory.UseAsync(context, (ctx, s) => endpoint.SendAsync(s.Message, s.Pipe, ctx.CancellationToken),
+            context.CancellationToken).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }

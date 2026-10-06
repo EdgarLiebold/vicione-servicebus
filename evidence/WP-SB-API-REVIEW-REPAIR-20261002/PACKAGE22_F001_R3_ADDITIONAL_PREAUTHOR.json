@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-03T12:37:12.693762+00:00",
+  "root_personally_full_inputs": [
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/ConsumeContext.cs",
+      "sha256": "0293ff373678d391b8bf26d8bce9511147d7b12b21cbb7d6a3a222ea82ee6b0f"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Scheduling/IMessageScheduler.cs",
+      "sha256": "5e49cbfe782d528a5f9c022cb4187a5202daa7ba950102fd6c13642d6da41e82"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedMessageScheduler.cs",
+      "sha256": "87592237079fe48c6d906e9a91cd169a79e3acfcbd352331ef26eef2a2e3259a"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Scheduling/MessageScheduler.cs",
+      "sha256": "88da3746c0f78e703908961cfb90587bb7db42e8f52a9e863a50bcf0c6fc1072"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Context/Consumption/BaseConsumeContext.cs",
+      "sha256": "79a84a1ca1225442e5bc5486ba1f8ee9293ee28234d84501cc3db490ef0294d0"
+    }
+  ],
+  "scope": "F001 XML-only, no runtime or public signature change",
+  "reason": "Adversary found inherited DeferResponse successful-consumption and accepted/canceled scheduling overclaims; direct real implementation forwards configured operations."
+}

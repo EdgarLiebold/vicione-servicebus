@@ -1,0 +1,198 @@
+{
+  "status": "ROOT_PERSONAL_FULL_ALL26_ORIGINAL_LOGS_PENDING_FINAL_BINARY_QUALIFICATION",
+  "actor": "/root",
+  "utc": "2026-10-04T02:51:23.734437+00:00",
+  "logs": [
+    {
+      "phase": "package36-r4-toolchain",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-toolchain.log",
+      "bytes": 3612,
+      "sha256": "aa444e187aa6111661baeb5486433671e5435f0157e32863c5cc09cad2d4345e",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-restore",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-restore.log",
+      "bytes": 124,
+      "sha256": "d7558ed960c2b2ad78b436a3d1c3781262f5976ca9646ebb7b91265bead3fb6c",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-baseline-build",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-baseline-build.log",
+      "bytes": 2764,
+      "sha256": "9034b3e3cd3ee6d8d197d0df5983d5dee336eee7b1920630b6d16a0f19f201da",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-baseline-method-0",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-baseline-method-0.log",
+      "bytes": 568,
+      "sha256": "300a44f44039595b53a389bef54038521dd00ea76014603fea075cda49a97241",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-baseline-method-1",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-baseline-method-1.log",
+      "bytes": 565,
+      "sha256": "6de2b776e854358ea5f5218f90a896f1e1b0481022e2e88a51202c78e4e15c32",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-baseline-method-2",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-baseline-method-2.log",
+      "bytes": 568,
+      "sha256": "940443a153303ca64685fe66f578d1727e92846c38584350d17ab518b254a3b6",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-default-formatter-ignored-build",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-default-formatter-ignored-build.log",
+      "bytes": 2764,
+      "sha256": "6829bea62aa8382a5832b6624450a103907eaa58e2e99b0dc531d10d837abd95",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-default-formatter-ignored-counterproof",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-default-formatter-ignored-counterproof.log",
+      "bytes": 1570,
+      "sha256": "5eb8d78179cbe91d174aee9de9badca6081eba5dbb4c105cb258ab293a17ba04",
+      "exit_code": 2
+    },
+    {
+      "phase": "package36-r4-default-formatter-ignored-control-build",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-default-formatter-ignored-control-build.log",
+      "bytes": 2764,
+      "sha256": "151228f31433516fb7b6d07e394cd939a9a45f195b3778413195bc9a701310fc",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-default-formatter-ignored-control-matched-green",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-default-formatter-ignored-control-matched-green.log",
+      "bytes": 568,
+      "sha256": "afe76fbb1ff819c910081ac063f2f9adbb3dc0ce2c37f7647cad192e2f5a27bd",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-typed-override-ignored-build",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-typed-override-ignored-build.log",
+      "bytes": 2764,
+      "sha256": "3f8034de1af2777b77af67ed7b6efe7265d6d8af85f4afe0408a6eeda77ebd12",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-typed-override-ignored-counterproof",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-typed-override-ignored-counterproof.log",
+      "bytes": 1633,
+      "sha256": "370fb308aac2b25b2d689e1b3bd8746e6872881a12675fdf2a7afc93fca474fd",
+      "exit_code": 2
+    },
+    {
+      "phase": "package36-r4-typed-override-ignored-control-build",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-typed-override-ignored-control-build.log",
+      "bytes": 2764,
+      "sha256": "53312fb98025754a80671d51ec40d9ef0f794d3b63e577f4ab3271e1603ba8cf",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-typed-override-ignored-control-matched-green",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-typed-override-ignored-control-matched-green.log",
+      "bytes": 568,
+      "sha256": "a22c9fd5d83e2aad508f1b75376e57c95f699919dbabb88fed169afd9a1d79e4",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-conflict-validation-removed-build",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-conflict-validation-removed-build.log",
+      "bytes": 2764,
+      "sha256": "bdc6fff48d2feccde315d6b284fae50946214884373d1d5eadf968509ba00a04",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-conflict-validation-removed-counterproof",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-conflict-validation-removed-counterproof.log",
+      "bytes": 2783,
+      "sha256": "46d9a21a3543f66333a74ae25b18456075a283c8e06c0aaf57e3e704174ff377",
+      "exit_code": 2
+    },
+    {
+      "phase": "package36-r4-conflict-validation-removed-control-build",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-conflict-validation-removed-control-build.log",
+      "bytes": 2764,
+      "sha256": "89d88d374419102a43a66d5d0f89a02b0e2e2eb86d1fe8589bb7140a26710f5f",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-conflict-validation-removed-control-matched-green",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-conflict-validation-removed-control-matched-green.log",
+      "bytes": 568,
+      "sha256": "0c186083201e22ffa2368a85db044420eaf80945a34701ea205071372c923850",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-single-rule-overrejected-build",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-single-rule-overrejected-build.log",
+      "bytes": 2764,
+      "sha256": "f704ee06374331fde048e941318f9d64099079f6b21dab87e077cb749d1c6196",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-single-rule-overrejected-counterproof",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-single-rule-overrejected-counterproof.log",
+      "bytes": 2817,
+      "sha256": "04e8f2f6fa24785314875eddcf0305bb2c2ebf5142b3a9cda1050fb840626228",
+      "exit_code": 2
+    },
+    {
+      "phase": "package36-r4-single-rule-overrejected-control-build",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-single-rule-overrejected-control-build.log",
+      "bytes": 2764,
+      "sha256": "0c26f6f4094024aedbe2b52f94c0247f1ae2e846b4f02d978738e2d653c73949",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-single-rule-overrejected-control-matched-green",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-single-rule-overrejected-control-matched-green.log",
+      "bytes": 568,
+      "sha256": "e9150022d026d3b584dcf3e063bde68d7ea15b430cbf95c6185a326394d59796",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-rollback-build",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-rollback-build.log",
+      "bytes": 2764,
+      "sha256": "81eca80f53749fdd0485319b158b49ea9c70d8c7ee94631ec686ea8b4048413c",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-rollback-method-0",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-rollback-method-0.log",
+      "bytes": 568,
+      "sha256": "91ef15a534995c8750be14fddc0d6e1c4a117b1e5b61aaad7a1777519f06fa98",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-rollback-method-1",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-rollback-method-1.log",
+      "bytes": 568,
+      "sha256": "6d6922838635883ee7114d12db92b880109675adbf90dec5a6980ba504427159",
+      "exit_code": 0
+    },
+    {
+      "phase": "package36-r4-rollback-method-2",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package36-r4-rollback-method-2.log",
+      "bytes": 568,
+      "sha256": "bc2927bff39199630ee4d80b809fa6b4a509a57c86b6e5383bccf0c16354bc83",
+      "exit_code": 0
+    }
+  ],
+  "strict_builds": 10,
+  "native_runs": 14,
+  "unique_cases": 5,
+  "native_case_executions": 22,
+  "matched_assertion_failures": 6,
+  "positive_case_executions": 16,
+  "skipped": 0,
+  "compiled_counterproofs": 4,
+  "scope": "All26 personally FULL untruncated in current context; ten strict builds warn/error0; four mutations each finite assertion-failure exit2; matched green controls and baseline/rollback exit0. No cloud-broker or whole-API/current-Unit-suite claim."
+}

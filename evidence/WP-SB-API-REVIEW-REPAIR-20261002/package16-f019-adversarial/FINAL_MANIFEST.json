@@ -1,0 +1,140 @@
+{
+  "status": "IMMUTABLE_SCOPED_F019_READONLY_ADVERSARIAL_REVIEW",
+  "artifacts": [
+    {
+      "path": "ACTUAL_RECEIPTS.json",
+      "bytes": 49387,
+      "sha256": "3d9afdc66234dac3f1089dba31da6e5feecfc9a6bad62002ff7410fa78cb3687"
+    },
+    {
+      "path": "API_XML_COMPATIBILITY.json",
+      "bytes": 1637,
+      "sha256": "66f966863d1990855eeb137569db30a87f9faca86049c881e185805ad87295bc"
+    },
+    {
+      "path": "EXCLUSIONS_AND_LIMITS.json",
+      "bytes": 1526,
+      "sha256": "731731a349d6daed63913653115538b5c380a9ff5fff7eb27a795707384b4f3f"
+    },
+    {
+      "path": "FREEZE_HASH_CHECK.json",
+      "bytes": 23754,
+      "sha256": "e783c9197021d0659d9f3a2205b349bc3714b1b13b1b65de65d35ac1c2656179"
+    },
+    {
+      "path": "LOG_DICTIONARY.json",
+      "bytes": 41484,
+      "sha256": "021066ec54af7b142198a2aca5ba5f9dc5ffd63559281eacea4a40588648ce73"
+    },
+    {
+      "path": "LOSSLESS_LOG_READ_MAP.json",
+      "bytes": 63156,
+      "sha256": "a001f30a9fd895a4fc893ec23dbe9b828c41d3b725b8b34b0c55088198a3fb4a"
+    },
+    {
+      "path": "MICROSOFT_RUNTIME_BINDING.json",
+      "bytes": 21928,
+      "sha256": "90b76d5875b056ea10626566e32e1ed566468caf4421c4c92260fd3d5185f13f"
+    },
+    {
+      "path": "NATIVE_COUNTERPROOF.json",
+      "bytes": 5952,
+      "sha256": "7b559f773da59b53ee984e447a284cda5abcb2e09f2ab1adf5f86c9c3152820a"
+    },
+    {
+      "path": "ORIGINAL_GIT_BINDING.json",
+      "bytes": 436,
+      "sha256": "e588cbee321c9996a18461cdc85512f312f07e0a361ad7d41406e737a71aec83"
+    },
+    {
+      "path": "PACKAGE_BINDING.json",
+      "bytes": 3845,
+      "sha256": "682c0cf99e5af856bc71b443ec029b12d609bb363bdae11cc363ddea74a007d5"
+    },
+    {
+      "path": "PDB_DOCUMENTS.json",
+      "bytes": 5965224,
+      "sha256": "57dbbe77b9f948818982465bb5f10a57ea991ca706ee233f40a05b037ee61a66"
+    },
+    {
+      "path": "PDB_SOURCE_BINDING.json",
+      "bytes": 12430592,
+      "sha256": "c1d3d118832b1a27aa5d085a1beda888b87dbc58e66e5d63f923787eca492004"
+    },
+    {
+      "path": "READ_CLOSURE.json",
+      "bytes": 52709,
+      "sha256": "3931da771e6bc77e2884611be6bf609aced271a9550a3af50c1f8aab235041ac"
+    },
+    {
+      "path": "REQUIREMENT_EVIDENCE.json",
+      "bytes": 24630,
+      "sha256": "0d268c224ae35bbda009fff0e67f052da94a579d07f936480b40c9b2b7dd97c7"
+    },
+    {
+      "path": "RESTORE_CHECK.json",
+      "bytes": 284,
+      "sha256": "9759eed0e072d0832abd07c3382c91127c223b1fd0e77bcabad9f1c1d28513be"
+    },
+    {
+      "path": "REVIEW.json",
+      "bytes": 1424,
+      "sha256": "26bfae520485fb6510354c2eabe9f5fd3c82d815dc170478809dad90ffaad2b8"
+    },
+    {
+      "path": "REVIEW.txt",
+      "bytes": 5684,
+      "sha256": "62b1d6c3a67f74f0fc858fbb44255465700ecd01e38b0bdb3c6abdc92e70ec54"
+    },
+    {
+      "path": "SOURCE_EFFECT_AlwaysTreatSameFactoryAsDifferent.diff",
+      "bytes": 416,
+      "sha256": "aeb3a7ab5d4e55c15d54c0ddaa56d6df4bae010214e738e0871d5257a996e393"
+    },
+    {
+      "path": "SOURCE_EFFECT_CHECK.json",
+      "bytes": 100031,
+      "sha256": "ed2eb89e1fb05066d91fc5642f59e004d18260135c207d631d5abb93e45b2b1a"
+    },
+    {
+      "path": "SOURCE_EFFECT_DiscardExplicitNullIdentity.diff",
+      "bytes": 594,
+      "sha256": "25ec48cca58ed28d15d05d7267c55b75e158a500ad9944dee20af06a5d98fc22"
+    },
+    {
+      "path": "SOURCE_EFFECT_FailRetireToNoFactory.diff",
+      "bytes": 679,
+      "sha256": "d44e0ef8c5a0188a8f6e847afd09a8a3c88c4a8575e0ea029b69f33fdb5c9a57"
+    },
+    {
+      "path": "SOURCE_EFFECT_LoseChildAutomaticOrigin.diff",
+      "bytes": 502,
+      "sha256": "5c97d9aed7688ba38cf8edb0a24223b753d7b9159d5ff4c6c02fee4f22eaedff"
+    },
+    {
+      "path": "SOURCE_EFFECT_LoseMessagesAutomaticOrigin.diff",
+      "bytes": 755,
+      "sha256": "a57c820f798334691adcd59c8d01335a67f7d78074b1b9de75601b7ffe9dce25"
+    },
+    {
+      "path": "SOURCE_EFFECT_MarkExplicitAsAutomatic.diff",
+      "bytes": 296,
+      "sha256": "21f3d669852bd8e33de15d43fc7cd18629984fde3c01ed39499bed2c6eca66d8"
+    },
+    {
+      "path": "SOURCE_EFFECT_PrematureFactoryDispose.diff",
+      "bytes": 353,
+      "sha256": "ae11fe2b26d9cf952d31fefdbccd6463c5418193f3ebf1cbb8df47e23e6703d6"
+    },
+    {
+      "path": "SOURCE_EFFECT_RemoveAutomaticRefresh.diff",
+      "bytes": 535,
+      "sha256": "d87a385f44cb65e40123d8cd8becf66b20204f11e5326abd4efa761694c783ae"
+    },
+    {
+      "path": "verify_readonly.py",
+      "bytes": 10879,
+      "sha256": "17ca2178860ea8fe4b1463cf2ad9b0d974f51627ea50f50a7d3853802954f1db"
+    }
+  ]
+}

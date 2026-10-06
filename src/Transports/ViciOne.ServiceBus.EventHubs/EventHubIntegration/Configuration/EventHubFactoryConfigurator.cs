@@ -218,13 +218,29 @@ public class EventHubFactoryConfigurator :
     /// <returns>The configured Event Hubs rider.</returns>
     public IEventHubRider Build(IRiderRegistrationContext context, IBusInstance busInstance)
     {
-        ConnectSendObserver(busInstance.HostConfiguration.SendObservers);
+        var sendObserverHandle = ConnectSendObserver(busInstance.HostConfiguration.SendObservers);
 
-        var endpoints = new ReceiveEndpointCollection();
-        foreach (var endpoint in _endpoints)
-            endpoints.Add(endpoint.EndpointName, endpoint.CreateReceiveEndpoint(busInstance));
+        try
+        {
+            var endpoints = new ReceiveEndpointCollection();
+            foreach (var endpoint in _endpoints)
+                endpoints.Add(endpoint.EndpointName, endpoint.CreateReceiveEndpoint(busInstance));
 
-        return new EventHubRider(this, busInstance, endpoints, context);
+            return new EventHubRider(this, busInstance, endpoints, context);
+        }
+        catch (Exception buildFailure)
+        {
+            try
+            {
+                sendObserverHandle.Disconnect();
+            }
+            catch (Exception cleanupFailure)
+            {
+                throw new AggregateException("Event Hubs rider construction and observer cleanup both failed.", buildFailure, cleanupFailure);
+            }
+
+            throw;
+        }
     }
 
     /// <summary>Validates the current configuration.</summary>

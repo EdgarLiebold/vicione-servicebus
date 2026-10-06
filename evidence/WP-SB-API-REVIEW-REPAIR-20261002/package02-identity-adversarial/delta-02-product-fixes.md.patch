@@ -1,0 +1,10 @@
+--- /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/02-product-fixes.md
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md
+@@ -333,3 +333,7 @@
+   because an SDK name can also contain the original fragment. The configured SDK URI is retained.
+ - Amazon S3 message-data options now reject the AWS-reserved `amzn-s3-demo-` prefix.
+   Valid names containing that text elsewhere and the shorter `amzn-s3-demo` name remain accepted.
++- Encryption-key identifiers now reject malformed UTF-16 before an envelope can be stored.
++  Valid Unicode, the inclusive 65535-byte UTF-8 limit, supported AES sizes and defensive key copies are retained.
++- Stable message-contract names now reject unpaired UTF-16 surrogates at the common identity boundary.
++  Constructor, parsing, attributes and catalog registration share that validation; valid Unicode and existing length/version bounds are retained.

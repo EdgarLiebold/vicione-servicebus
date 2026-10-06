@@ -1,0 +1,80 @@
+{
+  "utc": "2026-10-05T05:32:33.670860+00:00",
+  "actor": "/root",
+  "status": "ROOT_APPLIED_CREATED_FIXTURE_R2_AND_TYPED_LOAD_ORIGINAL3_NATIVE_PENDING",
+  "files": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/SagaRepositoryLifecycleDeepContractTests.cs",
+      "before_sha256": "7a8c08dd0a14715cd43c49e49180f0735a161d72c699d3e07a4c10bac9661f4f",
+      "after_sha256": "94b25151ce6dc8881522300f1850c6019bc7ca87f2da0d0e42c722ef205e7c40"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryContextTests.cs",
+      "before_sha256": "038452ad5421798068064a02e4f1b49bebc34baf6921a2be464b9a9ee2bd9fed",
+      "after_sha256": "088b487e02e1dcb420498c0b54179bd78b8e4fdf8eef8bea1fcadc698eaeaee9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "0422f11ca32487e429605bcd9e90a7e81ff81cb3f7c421b98d91c976c204ac73",
+      "after_sha256": "05fa13b77847376b3afc9438542fdef44f544e1cb9b613a04ec27d31f093ccb1"
+    }
+  ],
+  "authors_and_independent_adversarial_reviews": [
+    {
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-saga-created-fixture-original6-corrected-proposed-r2/REPORT.json",
+        "sha256": "0680d5c0859e3acd0a214ca738bbef337d536e167b1019766e81f8504d1d9d80"
+      },
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-saga-created-fixture-original6-corrected-proposed-r2/MANIFEST.json",
+        "sha256": "e35ed6d7e8cb18dd30e737983989a465aed302c907cacb09ed1bdb1b48af6941"
+      },
+      "files_verified": 4
+    },
+    {
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-saga-created-fixture-independent-scanner-r2/REPORT.json",
+        "sha256": "74b4ed82c1275164216d61682dccc3ad39a626c1b27162c976d3ca6e6b82dcfd"
+      },
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-saga-created-fixture-independent-scanner-r2/MANIFEST.json",
+        "sha256": "d664c906fd2a74d6ceaee1a370cc6c174052383b794fcf647d6a5d8c0eb90cf2"
+      },
+      "files_verified": 1
+    },
+    {
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-inmemory-typed-load-original3-oracles-proposed-r1/REPORT.json",
+        "sha256": "e9d88d036faef5b548704545ef3265b0d3aac263c6beff6dfaffb060dfe57786"
+      },
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-inmemory-typed-load-original3-oracles-proposed-r1/MANIFEST.json",
+        "sha256": "5b31060593e9b71d451adf112631f72e43a6dae0bd05244abdcb66ff53e34bc9"
+      },
+      "files_verified": 4
+    },
+    {
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-inmemory-typed-load-original3-independent-scanner-r2/REPORT.json",
+        "sha256": "fbc3db36bd577174ba2f28ab5ce97781615de33ca49de459ce66f95b90fba390"
+      },
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-inmemory-typed-load-original3-independent-scanner-r2/MANIFEST.json",
+        "sha256": "016ea0672797a7a5be900736023678325321c0e83b790365d4169d293be53904"
+      },
+      "files_verified": 1
+    }
+  ],
+  "requirements_before": 4643,
+  "requirements_after": 4644,
+  "prefix_preserved": true,
+  "root_read_authority": "Whole literalCreatedR2+newLoad112 patch and reports042523; independentpeerwholef19de8. ExactfourCreated replacements/inverseold735 test validatedhere; no impersonatedRootwhole493helper or847 test context.",
+  "original_product_source_changed": false,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package167-root-before-r1",
+  "limits": [
+    "Created166 failures wereFixture only; rerun correctedpublicinput before newProductCausecredit.",
+    "ActualtypedLoad3 candidate pending finite runtime failure, nofindingfromstatichypothesis.",
+    "F152UsedRemoved/F153Transition remain registeredopen untilrepair."
+  ],
+  "CLOSED": false
+}

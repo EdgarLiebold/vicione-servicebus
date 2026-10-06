@@ -1,0 +1,85 @@
+{
+  "status": "ROOT_ACCEPTED_F198_AND_F147_TWO_NODE_EXTENSION_CORRECTED_PUBLISHED_XML",
+  "utc": "2026-10-05T18:17:07.428288+00:00",
+  "new_finding": "F-SB-API-198",
+  "existing_family_extension": "F-SB-API-147",
+  "changed_XML_nodes": 3,
+  "source_owners": 2,
+  "source_lines": 121,
+  "genuine_root_source_receipt": "286060 plus exact reviewed comment delta",
+  "source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package205-saga-factory-purpose-doc3-independent-runtime-source-peer-r2/REPORT.json",
+    "sha256": "11473ab24ab13ec2cc8f080478982021d362c9961e4a274ada744f691ab79286"
+  },
+  "root_actual_publication": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package205-saga-doc3-fresh-root-counterproof-r1/REPORT.json",
+    "sha256": "543aa6180b77400e4affaf2c5e3ec2378df647060cb5b953ffd28c37b9c6af1d"
+  },
+  "independent_actual_publication": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package205-saga-doc3-fresh-publication-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "1a07016ce563c1811baa216083b7cd6d4d37c164d8c3d648471a3062c083523b"
+  },
+  "root_peer_whole_report_receipt": "4ae9df",
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE205_SAGA_FACTORY_DOC3_PRODUCT2_ROOT_APPLICATION_R1.json",
+    "sha256": "a4a471a347b401a1367f49671f8c151eb64d7119eaa70021646d34c6404c2552"
+  },
+  "strict_build": {
+    "phase": "package205-sagas-factory-doc3-strict-build-r1",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T18:05:34.461239+00:00",
+    "completed_utc": "2026-10-05T18:05:42.162537+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package205-sagas-factory-doc3-strict-build-r1.log",
+    "log_sha256": "85d5c56acfd29e7000fa22fb295cc1832b60ca48b547abe645530b3a320082c0"
+  },
+  "fresh_pack": {
+    "phase": "package205-sagas-factory-doc3-fresh-pack-r1",
+    "command": [
+      "dotnet",
+      "pack",
+      "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "-warnaserror",
+      "--output",
+      "artifacts/packages-package205-sagas-doc3-r1"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T18:12:46.706841+00:00",
+    "completed_utc": "2026-10-05T18:12:49.938499+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package205-sagas-factory-doc3-fresh-pack-r1.log",
+    "log_sha256": "66b2b65ea76997ed9f2b287d684146893b4731f03c736eb35d9ac025c117a9bc"
+  },
+  "package": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/packages-package205-sagas-doc3-r1/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+    "sha256": "0daa39e1754ce9d417c31df19196641dab1a7863f7c47293e63ae1bdd6c610a8",
+    "CRC_valid": true
+  },
+  "PDB": {
+    "sha256": "f9652682b12396ddb906da94f80d3122267800949396105970b78be8fc2af67d",
+    "documents": 374,
+    "physical": 374,
+    "virtual_generated": 0,
+    "all_actual_current_checksums_exact": true,
+    "selected2_after_checksums_exact": true
+  },
+  "whole_XML_inverse_exact198": true,
+  "prior43_F147_acceptances_retained": true,
+  "native_cases_added": 0,
+  "global_grade": null,
+  "whole_API_member_review_closed": false,
+  "limits": "Exact local Source/published-purpose clauses only. No broker transport or arbitrary factory lifetime proof."
+}

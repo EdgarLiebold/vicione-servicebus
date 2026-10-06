@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -110,21 +112,109 @@ public class EventHubDataReceiver :
     /// <returns>A task that completes after the processor and checkpoint resources have stopped.</returns>
     protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
-        var stopProcessing = _client.StopProcessingAsync();
+        Task? stopProcessing = null;
+        Exception? stopFailure = null;
+        List<Exception>? cleanupFailures = null;
 
-        await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
+        try
+        {
+            stopProcessing = _client.StopProcessingAsync();
+        }
+        catch (Exception exception)
+        {
+            stopFailure = exception;
+        }
 
-        await _executorPool.DisposeAsync().ConfigureAwait(false);
+        try
+        {
+            await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            (cleanupFailures ??= new List<Exception>()).Add(exception);
+        }
 
-        // A drained executor queue makes further checkpoint waiting unnecessary.
-        _checkpointTokenSource.Cancel();
+        try
+        {
+            await _executorPool.DisposeAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            (cleanupFailures ??= new List<Exception>()).Add(exception);
+        }
 
-        await stopProcessing.ConfigureAwait(false);
-        _client.ProcessEventAsync -= HandleMessageAsync;
-        _client.ProcessErrorAsync -= HandleErrorAsync;
+        try
+        {
+            _checkpointTokenSource.Cancel();
+        }
+        catch (Exception exception)
+        {
+            (cleanupFailures ??= new List<Exception>()).Add(exception);
+        }
 
-        _admission.Dispose();
-        await _lockContext.DisposeAsync().ConfigureAwait(false);
-        _checkpointTokenSource.Dispose();
+        if (stopFailure == null)
+        {
+            try
+            {
+                await stopProcessing!.ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                stopFailure = exception;
+            }
+        }
+
+        try
+        {
+            _client.ProcessEventAsync -= HandleMessageAsync;
+        }
+        catch (Exception exception)
+        {
+            (cleanupFailures ??= new List<Exception>()).Add(exception);
+        }
+
+        try
+        {
+            _client.ProcessErrorAsync -= HandleErrorAsync;
+        }
+        catch (Exception exception)
+        {
+            (cleanupFailures ??= new List<Exception>()).Add(exception);
+        }
+
+        try
+        {
+            _admission.Dispose();
+        }
+        catch (Exception exception)
+        {
+            (cleanupFailures ??= new List<Exception>()).Add(exception);
+        }
+
+        try
+        {
+            await _lockContext.DisposeAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            (cleanupFailures ??= new List<Exception>()).Add(exception);
+        }
+
+        try
+        {
+            _checkpointTokenSource.Dispose();
+        }
+        catch (Exception exception)
+        {
+            (cleanupFailures ??= new List<Exception>()).Add(exception);
+        }
+
+        if (stopFailure != null)
+            (cleanupFailures ??= new List<Exception>()).Insert(0, stopFailure);
+
+        if (cleanupFailures?.Count == 1)
+            ExceptionDispatchInfo.Capture(cleanupFailures[0]).Throw();
+        if (cleanupFailures != null)
+            throw new AggregateException("Event Hubs receiver shutdown failed in multiple owned stages.", cleanupFailures);
     }
 }

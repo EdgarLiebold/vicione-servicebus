@@ -1,0 +1,4 @@
+{
+  "status": "SIXTEEN_VALIDATED_MUTANTS_RETAINED_SEVENTEENTH_COMPILER_FAILURE_EXCLUDED",
+  "cause": "Wrong-key mutant selected four-argument Failure overload with nonnullable specification: compile CS8625, not a runtime kill. Use existing supported three-argument overload with wrong key Batch instead, then rebuild and execute actual case. Preserve16 validated rows on unchanged sources/oracles, repeat baseline42+final rollback42."
+}

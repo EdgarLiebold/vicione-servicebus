@@ -1,0 +1,123 @@
+{
+  "schema": "F043_TARGETED_ROOT_ACCEPTANCE_R1",
+  "utc": "2026-10-04T04:28:00.105938+00:00",
+  "status": "FIXED_TARGETED_ROOT_CURRENT_UNIT_AND_SHARED_FINAL_PENDING",
+  "finding": "F-SB-API-043",
+  "scope": "Three plural public SignalR routes: connections/groups/users. Already started actual publication tasks owned until terminal before real scoped DI cleanup. Synchronous admission failure or null task stops new admission; primary/prefix/cleanup causes retained without promise of asynchronous fault input order.",
+  "actual_sources": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ServiceBusHubLifetimeManager.cs",
+      "bytes": 28580,
+      "sha256": "41de21e4212be966caf469c2a9b206375c7d74be175477d3130d693a4d0f648d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/BackplaneOperationLifetime.cs",
+      "bytes": 2717,
+      "sha256": "078c9e2c3d9c132da483f265ef5e1fb22b85c962c077bd22c05918254d429ebe"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SignalR.Tests/BackplanePublicationLifetimeTests.cs",
+      "bytes": 15089,
+      "sha256": "8e586a18d78899eaa386891940c265df2a080e3d697deef0a6a636aac135ea58"
+    }
+  ],
+  "root_whole_source_read": "Current product helper/manager, current new test, preedit owner25 plus all shared contexts fully read; explicit parser receipt remains separately bound.",
+  "owner_language_closure": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE37_F043_ROOT_OWNER25_LANGUAGE_CLOSURE_R1.json",
+    "bytes": 1602,
+    "sha256": "05d3b8f6e8adcf71723a1473202d9538dfeacccee66a69fc32bb71dc2a472fb8"
+  },
+  "product_source_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package37-f043-product-source-preflight-r1/REVIEW.md",
+    "bytes": 7169,
+    "sha256": "1a4604432c99afd2b642858105caeefe1975f61cd864024ed3a2c4c2f3b98815"
+  },
+  "canonical_test_source_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package37-f043-canonical-tests-source-preflight-r4/REVIEW.md",
+    "bytes": 2040,
+    "sha256": "2ec096afbf488972cd31d5fa778506446265c2aee915fc64c11c14641f666123"
+  },
+  "runner_source_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package37-f043-counterproof-runner-source-preflight-r5/REVIEW.md",
+    "bytes": 4216,
+    "sha256": "da5547f17a1fd880d9d6ebe6435fec680c87dd9ad4276f768da4f472a03b1d0d"
+  },
+  "native_independent_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package37-f043-counterproof-native-independent-r1/REVIEW.md",
+    "bytes": 4310,
+    "sha256": "e6df8b082c3abc9cecee55bade82f52541e1b82a1d4cc15a3d56395253b4b089"
+  },
+  "native_independent_seal": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package37-f043-counterproof-native-independent-r1/FINAL_NATIVE_COUNTERPROOF_QUALIFICATION_R1.json",
+    "bytes": 23444,
+    "sha256": "00d7c5a5a18ed317379315b78d66fd6f6109240f997117703dd73a3941d29b94"
+  },
+  "symbol_independent_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package37-f043-pe-pdb-native-qualification-r1/REVIEW.md",
+    "bytes": 7391,
+    "sha256": "715d99203f1e5ea5afbfc0018576aee8f09d3c0e9bb5203f120be038e6d58d81"
+  },
+  "symbol_independent_seal": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package37-f043-pe-pdb-native-qualification-r1/MANIFEST_R2.json",
+    "bytes": 14988,
+    "sha256": "5db9b715cdfbb5c461febb82f5d80b38d35eab560adcd92edfe9818dde7f7ffa"
+  },
+  "root_symbol_replay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package37-f043-pe-pdb-native-qualification-r1/ACTUAL_STAGE_BINDING_ROOT_REPLAY_R6.json",
+    "bytes": 10183110,
+    "sha256": "da36f11b0169cf535a59583fd9dc9775b234198853c61bcf86de4c15dc16d52c"
+  },
+  "root_replay_actual_exit": 0,
+  "qualification_source": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package37-f043-pe-pdb-native-qualification-r1/qualify_stages_r6.py",
+    "bytes": 13892,
+    "sha256": "2d5d19be77bd3130bb41eb82824c9d47c3ab0c1d108aa7ec05bcb5c50f8c6b9a"
+  },
+  "qualification_source_preflight": {
+    "path": "/private/tmp/vicione-adversarial-package37-source-preflight-20261004-r1/QUALIFIER_R6_REVIEW.json",
+    "bytes": 3395,
+    "sha256": "a8d6928f36dd329a5509763b8b156fa8fe99f6ce0a790ddd16ea5e3a5b1148f6"
+  },
+  "native_review_tool_source_post_review": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE37_F043_NATIVE_REVIEW_TOOLS_ROOT_ADVERSARIAL_R1.json",
+    "bytes": 1492,
+    "sha256": "e49ecc4ecabf5140c3e3b0975ca8d30cb3f15897dc18f1f1146ebe5b34b6b50d"
+  },
+  "root_personal_full_results_read": "All seven actual clone rawlogs/receipts, both canonical logs and selected JSONL receipts, RESULT, both entire independent review/seals; no personal full claim for 10MB machine symbol report or PREPARED6223 source rows.",
+  "native_results": {
+    "baseline_total": 21,
+    "baseline_pass": 21,
+    "historical_fanout_total": 21,
+    "historical_fanout_causal_fail": 12,
+    "historical_fanout_controls_pass": 9,
+    "rollback_total": 21,
+    "rollback_pass": 21,
+    "canonical_unfiltered_signalr_total": 122,
+    "canonical_unfiltered_signalr_pass": 122,
+    "skipped": 0,
+    "strict_builds": 4,
+    "strict_warnings": 0,
+    "strict_errors": 0,
+    "timeouts_counted_as_causal_kills": 0
+  },
+  "symbols": {
+    "pairs": 16,
+    "document_occurrences": 8408,
+    "raw_bytes_binding": true,
+    "virtual_generated_embedded_only_occurrences": 190,
+    "Root_machine_replay_byte_equal": true
+  },
+  "restoration": {
+    "all6223_source_origin_snapshot_bytes": true,
+    "mutant_only_changed_runtime_file": "ViciOne.ServiceBus.SignalR.dll",
+    "all156_rollback_bin_equal_baseline": true,
+    "only_three_manager_source_replacements": true
+  },
+  "limits": [
+    "Targeted native lifetime defect at public replaceable scoped PublishEndpoint; no claim default endpoint always throws synchronously, no wire loss claim.",
+    "Nine named passing controls inferred from complete theory source and twelve named actual failures plus native total, not printed individually.",
+    "No loaded dependency inventory; retained pretest copy/posttest map only, canonical five selected physical artifacts.",
+    "Portable PDB structural identity and all document/embedded source bytes bound; opaque debug payload semantics not completely interpreted.",
+    "Current Core Unit, repeated shared31/package30 API gate and integrated all43 adversarial acceptance pending; no global A+ approval."
+  ]
+}

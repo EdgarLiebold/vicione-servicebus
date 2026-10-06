@@ -1,0 +1,288 @@
+[
+  {
+    "phase": "package20-f002-previous-unit-restore",
+    "command": [
+      "dotnet",
+      "restore",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "--locked-mode"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:14:59.689070+00:00",
+    "completed_utc": "2026-10-03T11:15:13.983656+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-previous-unit-restore.log",
+    "log_sha256": "d1f6d1d93999b16b80b72e93c243f8ccb2051d9b1425aa7f747e7516c7ce7aee"
+  },
+  {
+    "phase": "package20-f002-previous-unit-build",
+    "command": [
+      "dotnet",
+      "build",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:15:27.309393+00:00",
+    "completed_utc": "2026-10-03T11:17:32.434251+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-previous-unit-build.log",
+    "log_sha256": "75ea21518bd42dedb56e9f46674c6eee6579c0509e5b502f8949766448cad2b5"
+  },
+  {
+    "phase": "package20-f002-previous-unit-unfiltered",
+    "command": [
+      "dotnet",
+      "test",
+      "--solution",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "--results-directory",
+      "artifacts/test-results/unit",
+      "--minimum-expected-tests",
+      "4900",
+      "--max-parallel-test-modules",
+      "1"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous",
+    "exit_code": 2,
+    "started_utc": "2026-10-03T11:18:23.083320+00:00",
+    "completed_utc": "2026-10-03T11:24:54.178161+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-previous-unit-unfiltered.log",
+    "log_sha256": "7e04595ae37f31f929e38a30fd09d8b71b292e8674702875bd0a841c7d209a50"
+  },
+  {
+    "phase": "package20-f002-previous-engineering-restore",
+    "command": [
+      "dotnet",
+      "restore",
+      "ViciOne.ServiceBus.Engineering.slnx",
+      "--locked-mode"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:26:04.270598+00:00",
+    "completed_utc": "2026-10-03T11:26:19.410035+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-previous-engineering-restore.log",
+    "log_sha256": "734076729fe540c8f69302e7f362ec10289fc75ada36d5a42fa01668d661139e"
+  },
+  {
+    "phase": "package20-f002-previous-same-owner-positive",
+    "command": [
+      "dotnet",
+      "test",
+      "--project",
+      "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "--filter-method",
+      "*.EveryExecutableTestProject_UsesPortableSymbolsRequiredByMtpDiscovery",
+      "--minimum-expected-tests",
+      "1"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:27:51.627510+00:00",
+    "completed_utc": "2026-10-03T11:28:22.948275+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-previous-same-owner-positive.log",
+    "log_sha256": "791d9f09075d3eacd8edb9d3858cb3cadc94453fad7cafd99fb38dfae0229a86"
+  },
+  {
+    "phase": "package20-f002-corrected-engineering-restore",
+    "command": [
+      "dotnet",
+      "restore",
+      "ViciOne.ServiceBus.Engineering.slnx",
+      "--locked-mode"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:29:22.726666+00:00",
+    "completed_utc": "2026-10-03T11:29:33.226401+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-corrected-engineering-restore.log",
+    "log_sha256": "d6421af6a53a7e53d37ff1d2acf20b386827f746ba4fda3815fc4ec22c4bf1dc"
+  },
+  {
+    "phase": "package20-f002-corrected-unit-restore",
+    "command": [
+      "dotnet",
+      "restore",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "--locked-mode"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:30:45.251738+00:00",
+    "completed_utc": "2026-10-03T11:30:53.602717+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-corrected-unit-restore.log",
+    "log_sha256": "d7558ed960c2b2ad78b436a3d1c3781262f5976ca9646ebb7b91265bead3fb6c"
+  },
+  {
+    "phase": "package20-f002-corrected-unit-build",
+    "command": [
+      "dotnet",
+      "build",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:31:33.067211+00:00",
+    "completed_utc": "2026-10-03T11:33:13.290119+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-corrected-unit-build.log",
+    "log_sha256": "bc7e7e713ac516430a53a5bdbe5c4ea95c919ac7c4532b223ae4a027bd90f15d"
+  },
+  {
+    "phase": "package20-f002-corrected-unit-unfiltered",
+    "command": [
+      "dotnet",
+      "test",
+      "--solution",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "--results-directory",
+      "artifacts/test-results/unit",
+      "--minimum-expected-tests",
+      "4900",
+      "--max-parallel-test-modules",
+      "1"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:35:24.087716+00:00",
+    "completed_utc": "2026-10-03T11:41:40.157882+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-corrected-unit-unfiltered.log",
+    "log_sha256": "816929c3d965395d11bce082e52fdd9a0dc475cf0feb110b67369cf92b581226"
+  },
+  {
+    "phase": "package20-f002-countercase-unit-restore",
+    "command": [
+      "dotnet",
+      "restore",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "--locked-mode"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:49:05.986215+00:00",
+    "completed_utc": "2026-10-03T11:49:20.114468+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-unit-restore.log",
+    "log_sha256": "b1d22296dfcd2e87e1a43946e1198c4b5aecab9282fc0c3dbde5df699c273086"
+  },
+  {
+    "phase": "package20-f002-countercase-unit-build",
+    "command": [
+      "dotnet",
+      "build",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "-c",
+      "Release",
+      "--no-restore",
+      "--warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:49:54.719749+00:00",
+    "completed_utc": "2026-10-03T11:51:31.777993+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-unit-build.log",
+    "log_sha256": "775a2004e23d688e15c9aea54dea4112688e6ed5e0a619d6741e2a686b12cc91"
+  },
+  {
+    "phase": "package20-f002-countercase-omitted-prerequisite-negative",
+    "command": [
+      "dotnet",
+      "test",
+      "--project",
+      "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "--filter-method",
+      "*.EveryExecutableTestProject_UsesPortableSymbolsRequiredByMtpDiscovery",
+      "--minimum-expected-tests",
+      "1"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase",
+    "exit_code": 2,
+    "started_utc": "2026-10-03T11:51:59.600720+00:00",
+    "completed_utc": "2026-10-03T11:52:34.253033+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-omitted-prerequisite-negative.log",
+    "log_sha256": "a10f7a040f7f581a6697e61f56e83b4aefa5aed307bc3ed0a15847425a1798e8"
+  },
+  {
+    "phase": "package20-f002-countercase-unrelated-positive",
+    "command": [
+      "dotnet",
+      "test",
+      "--project",
+      "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "--filter-method",
+      "*.EveryExecutableTestProject_IsClassifiedAsTestProject",
+      "--minimum-expected-tests",
+      "1"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:53:27.363950+00:00",
+    "completed_utc": "2026-10-03T11:54:00.984892+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-unrelated-positive.log",
+    "log_sha256": "21309a8eab6748c11173999e6a506f6718960cebc9103b8ed5ef5bf75a687eda"
+  },
+  {
+    "phase": "package20-f002-countercase-engineering-restore-only",
+    "command": [
+      "dotnet",
+      "restore",
+      "ViciOne.ServiceBus.Engineering.slnx",
+      "--locked-mode"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:55:14.405498+00:00",
+    "completed_utc": "2026-10-03T11:55:25.626492+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-engineering-restore-only.log",
+    "log_sha256": "2867b165e42d83a4c4ac4eb3a11e03c2771249823c00fd8568d4b4c9595f417c"
+  },
+  {
+    "phase": "package20-f002-countercase-same-rule-positive",
+    "command": [
+      "dotnet",
+      "test",
+      "--project",
+      "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "--filter-method",
+      "*.EveryExecutableTestProject_UsesPortableSymbolsRequiredByMtpDiscovery",
+      "--minimum-expected-tests",
+      "1"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:56:45.690829+00:00",
+    "completed_utc": "2026-10-03T11:57:16.124741+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-same-rule-positive.log",
+    "log_sha256": "00a5107af24fc1147ed8122c4ea2b179293deb5b739f1d33956d492019146c8a"
+  }
+]

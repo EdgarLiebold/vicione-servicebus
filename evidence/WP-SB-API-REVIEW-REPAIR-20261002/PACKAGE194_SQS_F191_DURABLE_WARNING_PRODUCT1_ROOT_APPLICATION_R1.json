@@ -1,0 +1,39 @@
+{
+  "utc": "2026-10-05T16:28:03.767592+00:00",
+  "status": "REVIEWED_PRODUCT1_APPLIED_FIXED_REGRESSION_PENDING",
+  "finding": "F-SB-API-191",
+  "change": {
+    "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DurableResourceStore.cs",
+    "before_sha256": "66d327709126033ace4abaee0d56f4846b4346718403f87aea54d7563f158706",
+    "after_sha256": "0e44570cc0d229e800f4c93354a5f795ab709c36513c5b08f5a6dea38e9e67ff",
+    "before_lines": 259,
+    "after_lines": 271,
+    "literal_inverse_exact": true
+  },
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE193_SQS_F191_DURABLE_WARNING_ORIGINAL6_ROOT_REGISTRATION_R1.json",
+    "sha256": "3bd681f9b9318e61fd3e2e6757aecf466cdc9c322c34f1fd2913bb2ea8036e84"
+  },
+  "proposal_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package194-sqs-durable-warning-product1-proposed-r2/REPORT.json",
+    "sha256": "c6702fb1071a405912ae0089c94abb8957ad32cd25608391738998e9728c8c93"
+  },
+  "proposal_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package194-sqs-durable-warning-product1-proposed-r2/MANIFEST.json",
+    "sha256": "5b4316609ee886d59fe24dce70996f328a72648a2ee3aba9f01c5986ec567395"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package194-durable-warning-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "c91d7aaf396dcf237a841071ad3815d647daecdc1be0b5a0ca930e531e7d356c"
+  },
+  "root_source_authority": [
+    "100be4 entire three-literal patch and peer",
+    "924b26 whole R2 report",
+    "768c32 whole source patch"
+  ],
+  "literal_inverse_exact_original259": true,
+  "public_API_XML_tests_requirements_unchanged": true,
+  "private_synchronous_helper_added": true,
+  "fixed_native_acceptance_pending": true,
+  "global_Aplus": false
+}

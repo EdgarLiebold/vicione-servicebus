@@ -223,7 +223,7 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
                 Assert.Equal(OverrideAddress, address);
             },
             cancellationToken: cancellation.Token,
-            endpointCancellation: token => Assert.Equal(CancellationToken.None, token));
+            endpointCancellation: token => Assert.Equal(cancellation.Token, token));
         var factory = new ContextMessageFactory<IBehaviorContext<Saga>, Request>(observed =>
         {
             Assert.Same(context, observed);
@@ -374,6 +374,281 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
         Assert.Equal(previousId, saga.RequestId);
         Assert.Empty(next.Seen);
         Assert.Equal(["generate", "send"], trace);
+    }
+
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(0, true)]
+    [InlineData(1, false)]
+    [InlineData(1, true)]
+    [InlineData(2, false)]
+    [InlineData(2, true)]
+    [InlineData(3, false)]
+    [InlineData(3, true)]
+    [InlineData(4, false)]
+    [InlineData(4, true)]
+    [InlineData(5, false)]
+    [InlineData(5, true)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "request-resolution-preserves-owner-token-and-order")]
+    public async Task RequestResolution_HealthyOwnerTokenAndOrderingAsync(int route, bool cancellable)
+    {
+        using var caller = new CancellationTokenSource();
+        CancellationToken token = cancellable ? caller.Token : CancellationToken.None;
+        var trace = new List<string>();
+        var saga = new Saga { RequestId = Guid.NewGuid() };
+        var message = new Request();
+        var request = NewRequest(TimeSpan.Zero, ConfiguredAddress, out Guid requestId, trace);
+        CancellationToken? resolvedToken = null;
+        object? factoryContext = null;
+        var sends = 0;
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((method, args) =>
+        {
+            Assert.Equal("SendAsync", method.Name);
+            Assert.Same(message, args[0]);
+            Assert.Equal(token, args[2]);
+            sends++;
+            trace.Add("send");
+            Assert.DoesNotContain("persist", trace);
+            return Task.CompletedTask;
+        });
+        var operation = StartRequestRoute(route, saga, request, message, token, trace,
+            context => factoryContext = context, () => { }, (address, suppliedToken) =>
+            {
+                Assert.Equal(OverrideAddress, address);
+                resolvedToken = suppliedToken;
+                trace.Add("endpoint");
+                return Task.FromResult<ISendEndpoint>(Assert.IsAssignableFrom<ISendEndpoint>(endpoint));
+            });
+
+        await operation.Running;
+
+        Assert.Equal(token, resolvedToken);
+        Assert.Equal(1, sends);
+        Assert.Same(operation.Context, factoryContext);
+        Assert.Same(operation.Context, Assert.Single(operation.Seen));
+        Assert.Equal(requestId, saga.RequestId);
+        Assert.Equal(["provider", "factory", "generate", "endpoint", "send", "persist", "next"], trace);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "request-resolution-cooperative-held-cancellation")]
+    public async Task RequestResolution_CooperativeHeldResolutionCancellationPreventsDispatchAsync(int route)
+    {
+        using var caller = new CancellationTokenSource();
+        var trace = new List<string>();
+        Guid previousId = Guid.NewGuid();
+        var saga = new Saga { RequestId = previousId };
+        var request = NewRequest(TimeSpan.FromMinutes(1), ConfiguredAddress, out _, trace);
+        var resolver = new TaskCompletionSource<ISendEndpoint>(TaskCreationOptions.RunContinuationsAsynchronously);
+        CancellationTokenRegistration registration = default;
+        CancellationToken? resolvedToken = null;
+        var sends = 0;
+        var schedulerCalls = 0;
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((_, _) =>
+        {
+            sends++;
+            return Task.CompletedTask;
+        });
+        MessageSchedulerContext scheduler = NewScheduler((_, _) =>
+        {
+            schedulerCalls++;
+            throw new InvalidOperationException("Canceled request reached its timeout scheduler.");
+        });
+        var operation = StartRequestRoute(route, saga, request, new Request(), caller.Token, trace,
+            _ => { }, () => { }, (address, suppliedToken) =>
+            {
+                Assert.Equal(OverrideAddress, address);
+                resolvedToken = suppliedToken;
+                trace.Add("endpoint");
+                registration = suppliedToken.Register(() => resolver.TrySetCanceled(suppliedToken));
+                return resolver.Task;
+            }, scheduler);
+        try
+        {
+            Assert.False(operation.Running.IsCompleted);
+            Assert.Equal(["provider", "factory", "generate", "endpoint"], trace);
+            // This finite assertion precedes any wait on cancellation cooperation.
+            Assert.Equal(caller.Token, resolvedToken);
+            caller.Cancel();
+            Assert.True(resolver.Task.IsCanceled);
+            OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => operation.Running);
+            Assert.Equal(caller.Token, canceled.CancellationToken);
+            Assert.Equal(previousId, saga.RequestId);
+            Assert.Empty(operation.Seen);
+            Assert.Equal(0, sends);
+            Assert.Equal(0, schedulerCalls);
+            Assert.Equal(["provider", "factory", "generate", "endpoint"], trace);
+        }
+        finally
+        {
+            caller.Cancel();
+            resolver.TrySetResult(Assert.IsAssignableFrom<ISendEndpoint>(endpoint));
+            await Record.ExceptionAsync(() => operation.Running);
+            registration.Dispose();
+        }
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "request-resolution-cancel-before-send-admission")]
+    public async Task RequestResolution_CancellationAtSuccessfulResolutionPreventsDispatchAsync(int route)
+    {
+        using var caller = new CancellationTokenSource();
+        var trace = new List<string>();
+        Guid previousId = Guid.NewGuid();
+        var saga = new Saga { RequestId = previousId };
+        var request = NewRequest(TimeSpan.FromMinutes(1), ConfiguredAddress, out _, trace);
+        CancellationToken? resolvedToken = null;
+        var sends = 0;
+        var schedulerCalls = 0;
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((_, _) =>
+        {
+            sends++;
+            return Task.CompletedTask;
+        });
+        MessageSchedulerContext scheduler = NewScheduler((_, _) =>
+        {
+            schedulerCalls++;
+            throw new InvalidOperationException("Canceled request reached its timeout scheduler.");
+        });
+        var operation = StartRequestRoute(route, saga, request, new Request(), caller.Token, trace,
+            _ => { }, () => { }, (address, suppliedToken) =>
+            {
+                Assert.Equal(OverrideAddress, address);
+                resolvedToken = suppliedToken;
+                trace.Add("endpoint");
+                caller.Cancel();
+                return Task.FromResult<ISendEndpoint>(Assert.IsAssignableFrom<ISendEndpoint>(endpoint));
+            }, scheduler);
+
+        Exception? failure = await Record.ExceptionAsync(() => operation.Running);
+        Assert.Equal(0, sends);
+        Assert.Equal(0, schedulerCalls);
+        Assert.Equal(caller.Token, resolvedToken);
+        OperationCanceledException canceled = Assert.IsAssignableFrom<OperationCanceledException>(failure);
+        Assert.Equal(caller.Token, canceled.CancellationToken);
+        Assert.Equal(previousId, saga.RequestId);
+        Assert.Empty(operation.Seen);
+        Assert.Equal(["provider", "factory", "generate", "endpoint"], trace);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "request-address-cancellation-prevents-factory-admission")]
+    public async Task RequestResolution_CancellationInAddressProviderPreventsFactoryAdmissionAsync(int route)
+    {
+        using var caller = new CancellationTokenSource();
+        var trace = new List<string>();
+        Guid previousId = Guid.NewGuid();
+        var saga = new Saga { RequestId = previousId };
+        var request = NewRequest(TimeSpan.Zero, ConfiguredAddress, out _, trace);
+        var factories = 0;
+        var resolutions = 0;
+        var operation = StartRequestRoute(route, saga, request, new Request(), caller.Token, trace,
+            _ => factories++, caller.Cancel, (_, _) =>
+            {
+                resolutions++;
+                throw new InvalidOperationException("Canceled request reached endpoint resolution.");
+            });
+
+        OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => operation.Running);
+        Assert.Equal(caller.Token, canceled.CancellationToken);
+        Assert.Equal(0, factories);
+        Assert.Equal(0, resolutions);
+        Assert.Equal(previousId, saga.RequestId);
+        Assert.Empty(operation.Seen);
+        Assert.Equal(["provider"], trace);
+    }
+
+    static (Task Running, object Context, List<object> Seen) StartRequestRoute(int route, Saga saga,
+        IRequest<Saga, Request, Response> request, Request message, CancellationToken token, List<string> trace,
+        Action<object> factory, Action addressAction, Func<Uri, CancellationToken, Task<ISendEndpoint>> resolver,
+        MessageSchedulerContext? scheduler = null)
+    {
+        Task<InitializedMessage<Request>> CreateMessageAsync(object context)
+        {
+            factory(context);
+            trace.Add("factory");
+            return Task.FromResult(new InitializedMessage<Request>(message));
+        }
+        Uri Address(object context)
+        {
+            trace.Add("provider");
+            addressAction();
+            return OverrideAddress;
+        }
+        T Context<T>() where T : class => NewContext<T>(saga, scheduler: scheduler,
+            cancellationToken: token, endpointResolver: resolver);
+
+        switch (route)
+        {
+            case 0:
+            {
+                IBehaviorContext<Saga> context = Context<IBehaviorContext<Saga>>();
+                var next = new NextBehavior(trace);
+                var activity = new RequestActivity<Saga, Request, Response>(request,
+                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorContext<Saga>, Request>(ctx => CreateMessageAsync(ctx)));
+                return (activity.ExecuteAsync(context, next), context, next.Seen);
+            }
+            case 1:
+            {
+                IBehaviorContext<Saga, Data> context = Context<IBehaviorContext<Saga, Data>>();
+                var next = new TypedNextBehavior(trace: trace);
+                var activity = new RequestActivity<Saga, Request, Response>(request,
+                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorContext<Saga>, Request>(ctx => CreateMessageAsync(ctx)));
+                return (activity.ExecuteAsync<Data>(context, next), context, next.Seen);
+            }
+            case 2:
+            {
+                IBehaviorContext<Saga, Data> context = Context<IBehaviorContext<Saga, Data>>();
+                var next = new TypedNextBehavior(trace: trace);
+                var activity = new RequestActivity<Saga, Data, Request, Response>(request,
+                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorContext<Saga, Data>, Request>(ctx => CreateMessageAsync(ctx)));
+                return (activity.ExecuteAsync(context, next), context, next.Seen);
+            }
+            case 3:
+            {
+                IBehaviorExceptionContext<Saga, DerivedFault> context = Context<IBehaviorExceptionContext<Saga, DerivedFault>>();
+                var next = new NextBehavior(trace);
+                var activity = new FaultedRequestActivity<Saga, BaseFault, Request, Response>(request,
+                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorExceptionContext<Saga, BaseFault>, Request>(ctx => CreateMessageAsync(ctx)));
+                return (activity.FaultedAsync<DerivedFault>(context, next), context, next.Seen);
+            }
+            case 4:
+            {
+                IBehaviorExceptionContext<Saga, Data, DerivedFault> context = Context<IBehaviorExceptionContext<Saga, Data, DerivedFault>>();
+                var next = new TypedNextBehavior(trace: trace);
+                var activity = new FaultedRequestActivity<Saga, BaseFault, Request, Response>(request,
+                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorExceptionContext<Saga, BaseFault>, Request>(ctx => CreateMessageAsync(ctx)));
+                return (activity.FaultedAsync<Data, DerivedFault>(context, next), context, next.Seen);
+            }
+            case 5:
+            {
+                IBehaviorExceptionContext<Saga, Data, DerivedFault> context = Context<IBehaviorExceptionContext<Saga, Data, DerivedFault>>();
+                var next = new TypedNextBehavior(trace: trace);
+                var activity = new FaultedRequestActivity<Saga, Data, BaseFault, Request, Response>(request,
+                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorExceptionContext<Saga, Data, BaseFault>, Request>(ctx => CreateMessageAsync(ctx)));
+                return (activity.FaultedAsync<DerivedFault>(context, next), context, next.Seen);
+            }
+            default:
+                throw new ArgumentOutOfRangeException(nameof(route));
+        }
     }
 
     static readonly Uri InputAddress = new("loopback://localhost/input");
@@ -659,7 +934,7 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
                 trace.Add("endpoint");
                 Assert.Equal(OverrideAddress, address);
             }, cancellationToken: cancellation.Token,
-            endpointCancellation: token => Assert.Equal(CancellationToken.None, token));
+            endpointCancellation: token => Assert.Equal(cancellation.Token, token));
         var factory = new ContextMessageFactory<IBehaviorExceptionContext<Saga, BaseFault>, Request>(ctx =>
         {
             trace.Add("factory");
@@ -1774,7 +2049,8 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
         CancellationToken? cancellationToken = null, Guid? scheduledToken = null,
         ISendEndpointProvider? sendEndpointProvider = null,
         Action<CancellationToken>? endpointCancellation = null,
-        TimeProvider? timeProvider = null) where T : class
+        TimeProvider? timeProvider = null,
+        Func<Uri, CancellationToken, Task<ISendEndpoint>>? endpointResolver = null) where T : class
     {
         Headers headers = Proxy<Headers>((method, args) => method.Name switch
         {
@@ -1794,7 +2070,9 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
             "get_Headers" => headers,
             "get_ReceiveContext" => receive,
             "TryGetPayload" => SetPayload(method, args, scheduler, timeProvider),
-            "GetSendEndpointAsync" => GetEndpointAsync(args, endpoint, endpointAddress, endpointCancellation),
+            "GetSendEndpointAsync" => endpointResolver is not null
+                ? endpointResolver(Assert.IsType<Uri>(args[0]), Assert.IsType<CancellationToken>(args[1]))
+                : GetEndpointAsync(args, endpoint, endpointAddress, endpointCancellation),
             _ => throw new NotSupportedException(method.Name)
         });
     }

@@ -1,0 +1,19 @@
+{
+  "receipt": {
+    "phase": "package15-f033-signalr-public-previous-fortyone-r2",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll",
+      "all",
+      "00:00:12",
+      "00:00:45"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T05:18:30.656777+00:00",
+    "completed_utc": "2026-10-03T05:18:31.048874+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-previous-fortyone-r2.log",
+    "log_sha256": "21d7b297daa71d71bdf933a237eb1b3f777e2f58abe54c83f7f764307992c63f"
+  },
+  "reason": "41 pre-operation DI setup failures: core SignalR authorization requires EndpointDataSource; add public Routing services; 0 causal F033 reds"
+}

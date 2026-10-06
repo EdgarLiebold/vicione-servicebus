@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Util;
@@ -620,9 +621,32 @@ internal sealed class InMemoryOutboxMessageSchedulerContext :
 
         var tasks = new PendingTaskCollection(scheduledMessages.Length);
         foreach (var scheduledMessage in scheduledMessages)
-            tasks.Add(_scheduler.Value.Advanced().CancelScheduledSendAsync(scheduledMessage.Destination, scheduledMessage.TokenId, cancellationToken: cancellationToken));
+        {
+            try
+            {
+                tasks.Add(_scheduler.Value.Advanced().CancelScheduledSendAsync(scheduledMessage.Destination, scheduledMessage.TokenId, cancellationToken: cancellationToken));
+            }
+            catch (Exception providerFailure)
+            {
+                return JoinStartedCancellationsAsync(providerFailure);
+            }
+        }
 
         return tasks.CompletedAsync(cancellationToken: cancellationToken);
+
+        async Task JoinStartedCancellationsAsync(Exception providerFailure)
+        {
+            try
+            {
+                await tasks.CompletedAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception completionFailure) when (!ReferenceEquals(providerFailure, completionFailure))
+            {
+                throw new AggregateException("Scheduled-message cancellation admission and completion both failed.", providerFailure, completionFailure);
+            }
+
+            ExceptionDispatchInfo.Capture(providerFailure).Throw();
+        }
     }
 
     /// <summary>Executes every deferred scheduled-message cancellation.</summary>

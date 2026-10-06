@@ -37,7 +37,7 @@ public class SplitFilter<TInput, TSplit> :
         _split.Probe(scope);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Projects the input context for the retained filter and supplies a merge continuation.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

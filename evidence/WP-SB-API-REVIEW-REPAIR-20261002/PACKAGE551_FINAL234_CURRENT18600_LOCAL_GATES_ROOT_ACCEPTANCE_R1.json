@@ -1,0 +1,218 @@
+{
+  "utc": "2026-10-06T20:21:37.008926+00:00",
+  "status": "ROOT_FINAL_ALL234_CONFIRMED_FINDINGS_BOUNDED_REPAIR_ACCEPTED_CURRENT18600_SOURCE_CONTRACTS_ACCOUNTED",
+  "before_MASTER": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINAL_EVIDENCE/root551-before/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "8ccffb084c4a34372489a51bf7658bce398057e08b3ec6edacf0e3ffa9446345",
+    "bytes": 86412898
+  },
+  "before_STATE": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINAL_EVIDENCE/root551-before/STATE.json",
+    "sha256": "b4795c5c71d326c60c700d03a5d20179c522e7af07936379a7ca6b06d5a52fd3",
+    "bytes": 2190057
+  },
+  "scope": "Final administrative disposition, exact current provenance and local validation. No Source/Test/Product changes or new SDK run. No universal A+ release/Native/ABI grade.",
+  "prior225_retained": 225,
+  "exact9": [
+    {
+      "id": "F-SB-API-147",
+      "current_selector": "additional_finding_status[111]",
+      "canonical_before_row_sha256": "3c7a4e416ebdf0487ea02d51928584ccaa53aeab7e0027b11586dc58857caff4",
+      "proposed_only_after_all_prerequisites": {
+        "status": "ROOT_FINAL_SELECTED_CAUSE_SOURCE_AND_CURRENT_VALIDATION_REPAIR_ACCEPTED_BOUNDED",
+        "root_acceptance_pending": false,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "final_bounded_scope": "Only the individually reviewed emitted XML family, including current514 Rabbit recreation accepted-management-request wording; actual behavior and signatures are unchanged by these documentation repairs. Historical titles/counts remain historical. Current546 packages/XML/source joins support current publication; no executable/native contract upgrade.",
+        "final_validation_references": [
+          "package537-all23-independent-native-qualification-r1",
+          "package539-event6-independent-native-qualification-r1",
+          "package540-event166-independent-scoped-summary-qualification-r1",
+          "package546-fresh31-sdk-gate-independent-current-qualification-r1"
+        ]
+      }
+    },
+    {
+      "id": "F-SB-API-152",
+      "current_selector": "additional_finding_status[116]",
+      "canonical_before_row_sha256": "7be72de7305ece705235b33606cae062768320d78db75b5356a454a5dc9343a3",
+      "proposed_only_after_all_prerequisites": {
+        "status": "ROOT_FINAL_SELECTED_CAUSE_SOURCE_AND_CURRENT_VALIDATION_REPAIR_ACCEPTED_BOUNDED",
+        "root_acceptance_pending": false,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "final_bounded_scope": "Only the individually selected Product-owned optional diagnostic expressions and their diagnostic-only argument evaluation are contained. Actual business/SDK/configuration/adoption/headers/state operations remain outside catches. Explicitly includes current525 completed/fallback sites and current512 host/scheduling guards. Direct/global LogContext, arbitrary logger users, cloud/provider lifetime and unselected paths receive no universal containment grade.",
+        "final_validation_references": [
+          "package537-all23-independent-native-qualification-r1",
+          "package539-event6-independent-native-qualification-r1",
+          "package540-event166-independent-scoped-summary-qualification-r1",
+          "package546-fresh31-sdk-gate-independent-current-qualification-r1"
+        ]
+      }
+    },
+    {
+      "id": "F-SB-API-228",
+      "current_selector": "additional_finding_status[182]",
+      "canonical_before_row_sha256": "f5f5e32ea4680061d134ba24af689b3aaceed2ed92802651ac151ef67a35cf42",
+      "proposed_only_after_all_prerequisites": {
+        "status": "ROOT_FINAL_SELECTED_CAUSE_SOURCE_AND_CURRENT_VALIDATION_REPAIR_ACCEPTED_BOUNDED",
+        "root_acceptance_pending": false,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "final_bounded_scope": "Attempt and drain every captured owned shutdown stage within the actual public cancellation/budget policy, preserving genuine provider failures. Failed application endpoint transport stop keeps its handle and ResetCalls=0 before fallback; the successfully stopped bus endpoint resets once. No forced reset of live/faulted native transport, rollback guarantee or uncooperative-provider termination claim.",
+        "final_validation_references": [
+          "package537-all23-independent-native-qualification-r1",
+          "package539-event6-independent-native-qualification-r1",
+          "package540-event166-independent-scoped-summary-qualification-r1",
+          "package546-fresh31-sdk-gate-independent-current-qualification-r1"
+        ]
+      }
+    },
+    {
+      "id": "F-SB-API-229",
+      "current_selector": "additional_finding_status[183]",
+      "canonical_before_row_sha256": "683cabe92787474bc015811a868c52d2e4a6bc437b9c44201f1f6b77e412d2bf",
+      "proposed_only_after_all_prerequisites": {
+        "status": "ROOT_FINAL_SELECTED_CAUSE_SOURCE_AND_CURRENT_VALIDATION_REPAIR_ACCEPTED_BOUNDED",
+        "root_acceptance_pending": false,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "final_bounded_scope": "Attempt release of every distinct already-retained provider despite an earlier ordinary release failure; retain exact sole failure and ordered unflattened local aggregation. No promise of a fresh cache generation after failed reset, replay success or compensation of collaborators that did not return an acquisition.",
+        "final_validation_references": [
+          "package537-all23-independent-native-qualification-r1",
+          "package539-event6-independent-native-qualification-r1",
+          "package540-event166-independent-scoped-summary-qualification-r1",
+          "package546-fresh31-sdk-gate-independent-current-qualification-r1"
+        ]
+      }
+    },
+    {
+      "id": "F-SB-API-230",
+      "current_selector": "additional_finding_status[184]",
+      "canonical_before_row_sha256": "2cdb0571d5e13aad85cb370eb447e7d4e1759e460a823842775f4b27ff2379ce",
+      "proposed_only_after_all_prerequisites": {
+        "status": "ROOT_FINAL_SELECTED_CAUSE_SOURCE_AND_CURRENT_VALIDATION_REPAIR_ACCEPTED_BOUNDED",
+        "root_acceptance_pending": false,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "final_bounded_scope": "On later typed-observer admission rejection, independently disconnect every previously returned registration; bare rethrow preserves sole admission failure, otherwise primary-first ordered unflattened cleanup causes. No compensation of collaborator effects before returning a handle, atomicity or arbitrary nonreturning SPI guarantee.",
+        "final_validation_references": [
+          "package537-all23-independent-native-qualification-r1",
+          "package539-event6-independent-native-qualification-r1",
+          "package540-event166-independent-scoped-summary-qualification-r1",
+          "package546-fresh31-sdk-gate-independent-current-qualification-r1"
+        ]
+      }
+    },
+    {
+      "id": "F-SB-API-231",
+      "current_selector": "additional_finding_status[185]",
+      "canonical_before_row_sha256": "bb312b3105b64224f1388f5089b125c146c3fe36158ee7d77ebdce6cb4098311",
+      "proposed_only_after_all_prerequisites": {
+        "status": "ROOT_FINAL_SELECTED_CAUSE_SOURCE_AND_CURRENT_VALIDATION_REPAIR_ACCEPTED_BOUNDED",
+        "root_acceptance_pending": false,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "final_bounded_scope": "After genuine observer Disconnect failure, adopted producer agent Stop/Completed are still independently attempted and drained; the real Disconnect failure remains visible. Native focused controls support that bounded route; multiple cleanup failures/order and unknown SPI behavior remain Source-qualified only, not suppressed or universally retired.",
+        "final_validation_references": [
+          "package537-all23-independent-native-qualification-r1",
+          "package539-event6-independent-native-qualification-r1",
+          "package540-event166-independent-scoped-summary-qualification-r1",
+          "package546-fresh31-sdk-gate-independent-current-qualification-r1"
+        ]
+      }
+    },
+    {
+      "id": "F-SB-API-232",
+      "current_selector": "additional_finding_status[186]",
+      "canonical_before_row_sha256": "10cc7d3f35d2203021c2c99db103451708a54a82914e414552dd07a079328bd1",
+      "proposed_only_after_all_prerequisites": {
+        "status": "ROOT_FINAL_SELECTED_CAUSE_SOURCE_AND_CURRENT_VALIDATION_REPAIR_ACCEPTED_BOUNDED",
+        "root_acceptance_pending": false,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "final_bounded_scope": "Explicit adopted Source policy for the already-running owned visibility task: retain active CancelAsync failure, independently await the stored renewal task before public CTS disposal, preserve sole primary/ordered unflattened cancellation-plus-worker causes. Cancellation failure still prevents delete/redelivery. Original515 four PASS cases supply ZERO early-exit/drain counterexample; fixed522 four PASS/module411 are bounded characterization. Pre-entry cancellation, repeated/concurrent callers, uncooperative SDK waits and unrelated caller-owned waits are excluded.",
+        "final_validation_references": [
+          "package537-all23-independent-native-qualification-r1",
+          "package539-event6-independent-native-qualification-r1",
+          "package540-event166-independent-scoped-summary-qualification-r1",
+          "package546-fresh31-sdk-gate-independent-current-qualification-r1"
+        ]
+      }
+    },
+    {
+      "id": "F-SB-API-233",
+      "current_selector": "additional_finding_status[187]",
+      "canonical_before_row_sha256": "1a0de20cf0f88169b4501c7731af2e593000f996367fe7f0d76e49f5f48b8ffa",
+      "proposed_only_after_all_prerequisites": {
+        "status": "ROOT_FINAL_SELECTED_CAUSE_SOURCE_AND_CURRENT_VALIDATION_REPAIR_ACCEPTED_BOUNDED",
+        "root_acceptance_pending": false,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "final_bounded_scope": "Retain the actual returned SendObserverHandle and compensate it on later rider-build failure. Preserve sole primary or ordered primary-first cleanup aggregation. Native current539 focused two controls show observed observer count retirement; no pre-return unknown provider side effects or universal native graph rollback claim.",
+        "final_validation_references": [
+          "package537-all23-independent-native-qualification-r1",
+          "package539-event6-independent-native-qualification-r1",
+          "package540-event166-independent-scoped-summary-qualification-r1",
+          "package546-fresh31-sdk-gate-independent-current-qualification-r1"
+        ]
+      }
+    },
+    {
+      "id": "F-SB-API-234",
+      "current_selector": "additional_finding_status[188]",
+      "canonical_before_row_sha256": "fb518afc3380053bc77e3a839e482775c540ee3df84556918813b80e104b1324",
+      "proposed_only_after_all_prerequisites": {
+        "status": "ROOT_FINAL_SELECTED_CAUSE_SOURCE_AND_CURRENT_VALIDATION_REPAIR_ACCEPTED_BOUNDED",
+        "root_acceptance_pending": false,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "final_bounded_scope": "After real SDK Stop admission, independently observe its terminal outcome and attempt locally owned admission/lease/pending/CTS retirement. Disposed acquired lock independently attempts ReleaseClient and pending collection disposal. Preserve sole failure by EDI and ordered unflattened local cleanup aggregation. Current539 focused controls preserve actual SDK IO and reacquire the lease; additional ReleaseClient/pending multiple-fault ordering is Source policy, not fabricated native evidence.",
+        "final_validation_references": [
+          "package537-all23-independent-native-qualification-r1",
+          "package539-event6-independent-native-qualification-r1",
+          "package540-event166-independent-scoped-summary-qualification-r1",
+          "package546-fresh31-sdk-gate-independent-current-qualification-r1"
+        ]
+      }
+    }
+  ],
+  "current_graph_different_reviews": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINAL_EVIDENCE/package552-current33-independent-graph-artifact-proof-r1/REPORT.json",
+      "sha256": "2d002b79f39c3a0c951b8c78ccd166aa86535a29bc5c69a7c683a656f50c9977",
+      "bytes": 5658
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINAL_EVIDENCE/package552-current18600-source-packed-UID-pdb-xml-readonly-census-proof-r1/REPORT.json",
+      "sha256": "50d204c8c5322129bc7e71ee269a223af5ab09d35050e1db363963593f33b31b",
+      "bytes": 5077
+    }
+  ],
+  "native_source_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE547_CURRENT_NATIVE_AND_FINAL_SOURCE_AGGREGATE_ROOT_QUALIFICATION_R1.json",
+    "sha256": "82ec990c134d50ef350f67dd45043db20be322a05129bd72d77a8d57cee51dbc",
+    "bytes": 3220
+  },
+  "binding703": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE548_CURRENT546_SOURCE703_IDENTITY_HISTORY_ROOT_APPLICATION_R1.json",
+    "sha256": "d040efbf7cedaa6d6763abf75e6ed41ce481caad9326280cc92b149061f42b34",
+    "bytes": 3762
+  },
+  "binding133": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE549_CURRENT546_SOURCE133_MIXED_SCHEMA_HISTORY_ROOT_APPLICATION_R1.json",
+    "sha256": "1f7750f9000206fcbe5fdffaf9cabaca9af0a4ef684667b99afd205ac9330c7c",
+    "bytes": 3407
+  },
+  "property2": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE550_CURRENT546_PUBLIC_CANCELLATION_PROPERTY2_ROOT_SOURCE_ACCEPTANCE_R1.json",
+    "sha256": "c0d259371ef94545f26dc168aefb021f81a3460395dd77812dd6c2e574f577bc",
+    "bytes": 13504
+  },
+  "final234_disposition_authority": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package529-final234-placeholder44-current-scope-precision-overlay-r1/CORRECTED_CURRENT234_INDIVIDUAL_BOUNDED_DISPOSITIONS.json",
+    "sha256": "171c4cc759707a20f328a7746f03bb1909359c502aac67c0240d916e472ce1ac",
+    "bytes": 418182
+  },
+  "limitations": "Source18600+curated833 accessor rows, not19433 separately executed Native contracts. Unit23 13460PASS; Event22selectedclasses166PASS with6subset,7emulatorclasses excluded;31packages;18journeyscompiled/Journey13configuration+4isolatedDI-smokes. External/provider/hardware evidence PARTIAL. Historical failed runs unchanged."
+}

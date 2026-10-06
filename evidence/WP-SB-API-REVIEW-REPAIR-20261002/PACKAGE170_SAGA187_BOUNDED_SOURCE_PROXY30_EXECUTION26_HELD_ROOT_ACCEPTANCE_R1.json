@@ -1,0 +1,353 @@
+{
+  "utc": "2026-10-05T06:48:44.975342+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED187_BOUNDED_CURRENT_SOURCE_ONLY",
+  "child_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package167-saga-dispatch-observation-correlation243-contract-context-r2/REPORT.json",
+    "sha256": "ca557493b077f25b628a96572f66eda3beb225cde0ea6f805b39eba9f6510663"
+  },
+  "source_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package167-saga-dispatch-observation-correlation243-contract-context-r2/PER_MEMBER243_TYPED_SOURCE_XML_CONTRACTS.json",
+    "sha256": "4c2242e9b519a9773c6c0c2461b52ecf1d15af0103dd2acacee12a1ae419daad"
+  },
+  "root_read_scope": "All196unique literal membernorms covering243 personally read ca5342/eb7b8f/d1cf0f; all28ownercontexts personally read bcf497; whole ownboundary/helpernotes af80ae. AllMAN/source187 currentSHA, qualified169PDB and per-ID physicalXML associations independently checked. Child genuine28whole owners1960lines remains childread, not Rootwhole1960. Exclude all30 local rows of changed BehaviorContextProxy owner pending current272 overlay, plus26 exact execution obligations (includes6 sameowner methods); uniqueheld56. No inherited-body or Native transfer.",
+  "accepted_raw_rows": 187,
+  "original_canonical_rows": 150,
+  "accessor_sidecar_rows": 37,
+  "held_rows": [
+    {
+      "ordinal": 38,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.#ctor(ViciOne.ServiceBus.Sagas.IStateMachine{`0},ViciOne.ServiceBus.Advanced.SagaConsumeContext{`0},ViciOne.ServiceBus.Sagas.IEvent)",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 39,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.CreateProxy(ViciOne.ServiceBus.Sagas.IEvent)",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 40,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.CreateProxy``1(ViciOne.ServiceBus.Sagas.IEvent{``0},``0)",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 41,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.get_CorrelationId",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 42,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.get_Instance",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 43,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.get_IsCompleted",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 44,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.get_Saga",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 45,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.get_StateMachine",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 46,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.RaiseAsync(ViciOne.ServiceBus.Sagas.IEvent,System.Threading.CancellationToken)",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 47,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.RaiseAsync``1(ViciOne.ServiceBus.Sagas.IEvent{``0},``0,System.Threading.CancellationToken)",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 48,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.SetCompletedAsync(System.Threading.CancellationToken)",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 49,
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.CorrelationId",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 50,
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.Instance",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 51,
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.IsCompleted",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 52,
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.Saga",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 53,
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy.StateMachine",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 54,
+      "id": "T:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 55,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.#ctor(ViciOne.ServiceBus.Sagas.IStateMachine{`0},ViciOne.ServiceBus.Advanced.SagaConsumeContext{`0},ViciOne.ServiceBus.ConsumeContext{`1},ViciOne.ServiceBus.Sagas.IEvent{`1})",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 56,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.CreateProxy(ViciOne.ServiceBus.Sagas.IEvent)",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 57,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.CreateProxy``1(ViciOne.ServiceBus.Sagas.IEvent{``0},``0)",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 58,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.get_CorrelationId",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 59,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.get_Data",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 60,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.get_Instance",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 61,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.get_IsCompleted",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 62,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.get_Saga",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 63,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.get_StateMachine",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 64,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.RaiseAsync(ViciOne.ServiceBus.Sagas.IEvent,System.Threading.CancellationToken)",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 65,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.RaiseAsync``1(ViciOne.ServiceBus.Sagas.IEvent{``0},``0,System.Threading.CancellationToken)",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 66,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.SetCompletedAsync(System.Threading.CancellationToken)",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 67,
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.CorrelationId",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 68,
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.Data",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 69,
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.Instance",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 70,
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.IsCompleted",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 71,
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.Saga",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 72,
+      "id": "P:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1.StateMachine",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 73,
+      "id": "T:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorContextProxy`1",
+      "reason": "Changed168 BehaviorContextProxy272 needs current token/proxy contract overlay"
+    },
+    {
+      "ordinal": 75,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorExceptionContextProxy`1.CreateProxy``1(ViciOne.ServiceBus.Sagas.IEvent{``0},``0)",
+      "reason": [
+        "DELEGATED_PUBLIC_EXECUTION: supplied machine/saga/context factories own actual completion/cancellation/fault and replacement semantics beyond attached concrete success/guard assertions."
+      ]
+    },
+    {
+      "ordinal": 80,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.BehaviorExceptionContextProxy`2.CreateProxy``1(ViciOne.ServiceBus.Sagas.IEvent{``0},``0)",
+      "reason": [
+        "DELEGATED_PUBLIC_EXECUTION: supplied machine/saga/context factories own actual completion/cancellation/fault and replacement semantics beyond attached concrete success/guard assertions."
+      ]
+    },
+    {
+      "ordinal": 85,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.EventObservable.ExecuteFaultAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0},System.Exception)",
+      "reason": [
+        "OBSERVER_FANOUT: actual Connectable normalizes synchronous failures/nullTasks and joins snapshot callbacks. Specific single-failing observer controls support narrow paths; no universal multicast all-causes ordering/late-connect policy acceptance."
+      ]
+    },
+    {
+      "ordinal": 86,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.EventObservable.ExecuteFaultAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,``0},System.Exception)",
+      "reason": [
+        "OBSERVER_FANOUT: actual Connectable normalizes synchronous failures/nullTasks and joins snapshot callbacks. Specific single-failing observer controls support narrow paths; no universal multicast all-causes ordering/late-connect policy acceptance."
+      ]
+    },
+    {
+      "ordinal": 87,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.EventObservable.PostExecuteAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0})",
+      "reason": [
+        "OBSERVER_FANOUT: actual Connectable normalizes synchronous failures/nullTasks and joins snapshot callbacks. Specific single-failing observer controls support narrow paths; no universal multicast all-causes ordering/late-connect policy acceptance."
+      ]
+    },
+    {
+      "ordinal": 88,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.EventObservable.PostExecuteAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,``0})",
+      "reason": [
+        "OBSERVER_FANOUT: actual Connectable normalizes synchronous failures/nullTasks and joins snapshot callbacks. Specific single-failing observer controls support narrow paths; no universal multicast all-causes ordering/late-connect policy acceptance."
+      ]
+    },
+    {
+      "ordinal": 89,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.EventObservable.PreExecuteAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0})",
+      "reason": [
+        "OBSERVER_FANOUT: actual Connectable normalizes synchronous failures/nullTasks and joins snapshot callbacks. Specific single-failing observer controls support narrow paths; no universal multicast all-causes ordering/late-connect policy acceptance."
+      ]
+    },
+    {
+      "ordinal": 90,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.EventObservable.PreExecuteAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,``0})",
+      "reason": [
+        "OBSERVER_FANOUT: actual Connectable normalizes synchronous failures/nullTasks and joins snapshot callbacks. Specific single-failing observer controls support narrow paths; no universal multicast all-causes ordering/late-connect policy acceptance."
+      ]
+    },
+    {
+      "ordinal": 93,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.SelectedEventObserver.ExecuteFaultAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0},System.Exception)",
+      "reason": [
+        "CUSTOM_EQUALS_AND_OBSERVER: event.Equals and exact selected observer calls can synchronously fail; source-visible propagation, no particular custom side-effect contract or rollback claim."
+      ]
+    },
+    {
+      "ordinal": 94,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.SelectedEventObserver.ExecuteFaultAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,``0},System.Exception)",
+      "reason": [
+        "CUSTOM_EQUALS_AND_OBSERVER: event.Equals and exact selected observer calls can synchronously fail; source-visible propagation, no particular custom side-effect contract or rollback claim."
+      ]
+    },
+    {
+      "ordinal": 95,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.SelectedEventObserver.PostExecuteAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0})",
+      "reason": [
+        "CUSTOM_EQUALS_AND_OBSERVER: event.Equals and exact selected observer calls can synchronously fail; source-visible propagation, no particular custom side-effect contract or rollback claim."
+      ]
+    },
+    {
+      "ordinal": 96,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.SelectedEventObserver.PostExecuteAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,``0})",
+      "reason": [
+        "CUSTOM_EQUALS_AND_OBSERVER: event.Equals and exact selected observer calls can synchronously fail; source-visible propagation, no particular custom side-effect contract or rollback claim."
+      ]
+    },
+    {
+      "ordinal": 97,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.SelectedEventObserver.PreExecuteAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0})",
+      "reason": [
+        "CUSTOM_EQUALS_AND_OBSERVER: event.Equals and exact selected observer calls can synchronously fail; source-visible propagation, no particular custom side-effect contract or rollback claim."
+      ]
+    },
+    {
+      "ordinal": 98,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.SelectedEventObserver.PreExecuteAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,``0})",
+      "reason": [
+        "CUSTOM_EQUALS_AND_OBSERVER: event.Equals and exact selected observer calls can synchronously fail; source-visible propagation, no particular custom side-effect contract or rollback claim."
+      ]
+    },
+    {
+      "ordinal": 101,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.StateObservable.StateChangedAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0},ViciOne.ServiceBus.Sagas.IState,ViciOne.ServiceBus.Sagas.IState)",
+      "reason": [
+        "OBSERVER_FANOUT: actual Connectable normalizes synchronous failures/nullTasks and joins snapshot callbacks. Specific single-failing observer controls support narrow paths; no universal multicast all-causes ordering/late-connect policy acceptance."
+      ]
+    },
+    {
+      "ordinal": 121,
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.EventCorrelationExpressionConverter`2.Convert(System.Linq.Expressions.Expression{System.Func{`0,ViciOne.ServiceBus.ConsumeContext{`1},System.Boolean}})",
+      "reason": [
+        "EXPRESSION_SHAPE_BOUNDARY: rooted member evaluation and parameter removal supported; arbitrary context method/bareparameter invocation not replaced by VisitMember. No general query translator support assertion or confirmed defect."
+      ]
+    },
+    {
+      "ordinal": 122,
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.EventCorrelationExpressionConverter`2.VisitMember(System.Linq.Expressions.MemberExpression)",
+      "reason": [
+        "EXPRESSION_SHAPE_BOUNDARY: rooted member evaluation and parameter removal supported; arbitrary context method/bareparameter invocation not replaced by VisitMember. No general query translator support assertion or confirmed defect."
+      ]
+    },
+    {
+      "ordinal": 148,
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.MessageEventCorrelation`2.get_Policy",
+      "reason": [
+        "LAZY_POLICY_FIRST_OBSERVATION: machine initial-event membership computed on first lazy evaluation and policy then cached; mutable machine changes later do not refresh this correlation."
+      ]
+    },
+    {
+      "ordinal": 155,
+      "id": "P:ViciOne.ServiceBus.SagaStateMachine.MessageEventCorrelation`2.Policy",
+      "reason": [
+        "LAZY_POLICY_FIRST_OBSERVATION: machine initial-event membership computed on first lazy evaluation and policy then cached; mutable machine changes later do not refresh this correlation."
+      ]
+    },
+    {
+      "ordinal": 179,
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.StateMachineGraphExtensions.GetGraph``1(ViciOne.ServiceBus.Sagas.IStateMachine{``0})",
+      "reason": [
+        "GRAPH_TRAVERSAL: actual visitor handles current built-in transition/composite/exception/state-event routes; custom machine Accept traversal owns completeness and callbacks. Attached tests cover ordered declarations/error short-circuit only."
+      ]
+    }
+  ],
+  "native_cases_added": 0,
+  "before": {
+    "raw_rows": 7761,
+    "original_canonical": 7184,
+    "current_historical_r2_canonical": 7213,
+    "sidecars": 548
+  },
+  "after": {
+    "raw_rows": 7948,
+    "original_canonical": 7334,
+    "current_historical_r2_canonical": 7363,
+    "sidecars": 585
+  },
+  "whole_API_closed": false
+}

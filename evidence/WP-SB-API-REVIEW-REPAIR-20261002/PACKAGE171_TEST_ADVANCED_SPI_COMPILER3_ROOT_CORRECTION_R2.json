@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-05T07:08:15.250041+00:00",
+  "actor": "/root",
+  "status": "ROOT_APPLIED_PEER_REVIEWED_TEST_COMPILER3_NATIVE_PENDING",
+  "path": "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryContextTests.cs",
+  "before_sha256": "7352922f23e33a05ba2ac18e662fe327839bc8b19d3561ffb7c15f926a049b7c",
+  "after_sha256": "310b14c861b77c88a0b3ba53d2a78cfd0272545cd11d3f812c6e7e7d44cb95ea",
+  "lines_unchanged": 1093,
+  "exact_three_replacements": [
+    [
+      "Assert.Same(consumed.ReceiveContext, factory.MessageContext.ReceiveContext);",
+      "Assert.Same(consumed.Advanced().ReceiveContext, factory.MessageContext.ReceiveContext);"
+    ],
+    [
+      "Assert.Same(consumed.ReceiveContext, created.ReceiveContext);",
+      "Assert.Same(consumed.Advanced().ReceiveContext, created.ReceiveContext);"
+    ],
+    [
+      "MessageContext = consumeContext;",
+      "MessageContext = consumeContext.Advanced();"
+    ]
+  ],
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package171-add-insert-advanced-spi-compiler-correction-proposed-r2/REPORT.json",
+    "sha256": "b85a380cdde8120012c8f6df446e29543b87349bb00ece9afae68280b032ab5c"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package171-add-insert-advanced-spi-compiler-independent-scanner-r3/REPORT.json",
+    "sha256": "7aad23f4d8bf18ff545ae422b07df354d7cc8abe42134f024cb4cff1e4d2fa16"
+  },
+  "failed_source_freeze": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package171-strict-r1-compile-failure-source5-independent-r1/FREEZE.json",
+    "sha256": "b8006f29b158873f6257f818dfa68d2df280bb52deb6d6f27b5eaba793540048"
+  },
+  "root_human_scope": "Whole literal3 patch/report334fef, actual publicAdvanced.method and genericinterface aa6278 plus actualfactory/leasecb2a83. Allauthor/peerMAN and entireproposed3literalreplace/inverse equality checked. Preserves all8 actualProviderTask/selectedToken oracles; no_product_or_requirement_delta.",
+  "limits": [
+    "No native/effectiveness credit from failedR1; newstrictR2 required.",
+    "Only correct public checked Advanced() view access; linked/equal token policy/gates/leasecleanup unchanged."
+  ]
+}

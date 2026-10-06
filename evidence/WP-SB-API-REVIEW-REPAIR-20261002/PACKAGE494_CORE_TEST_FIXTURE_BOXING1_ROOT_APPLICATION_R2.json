@@ -1,0 +1,24 @@
+{
+  "utc": "2026-10-06T15:18:15.581331+00:00",
+  "status": "ROOT_APPLIED_EXACT_ONE_FIXTURE_BOXING_CORRECTION_PRODUCT_UNCHANGED_RETRY_PENDING",
+  "author_REPORT": "f825c04c102ffe1d874eb80c5d383faac4e10549f6d3a2214d159d1e8e7efaf0",
+  "different_REPORT": "960b21f70b3d3d2e9cc4f229651d57ec657ac381d8ea0c35d257b8942757d1b3",
+  "Root_whole_R1_481": [
+    "37e8cd",
+    "3c6fde"
+  ],
+  "Root_R2_delta_and_peer": "24cb19",
+  "before_MAN": "410a515f95a8d5fc634921ce2674a8391bf3a10920506d3a95fa695efd6076f4",
+  "test": {
+    "relative": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerDuplicateAndTypedObserverAdmissionTests.cs",
+    "before": "bd0102b937629dcf0115f2954fc79676d8753251bc0ed7d6a1873aae5e3dc5a3",
+    "after": "b52061d3423f9e29a390dc8ea6b866fb6d61125414dbf5bf25bdbb40e47391a7",
+    "lines": 481,
+    "full_inverse_exact": true
+  },
+  "requirements_unchanged": "4e66ca29fa487ec49b533c909e4086f68b29f26679daf8dc4e871c3ace086d59",
+  "Product_changed": false,
+  "historical493": "Fixture-confounded 1P4F remains immutable, no clean Original5 grade",
+  "native_credit": 0,
+  "grade": null
+}

@@ -1,0 +1,392 @@
+// Administration cancellation stays linked for the entire pending connection lease operation.
+using System.Reflection;
+using Azure.Messaging.ServiceBus;
+using Azure.Messaging.ServiceBus.Administration;
+using ViciOne.ServiceBus.AzureServiceBus;
+using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using Xunit;
+
+namespace ViciOne.ServiceBus.AzureServiceBus.Tests;
+
+public sealed class ServiceBusSharedAdministrationLeaseTests
+{
+    private static TimeSpan Timeout =>
+        TestConfigurationProvider.ForCurrentTestRun().GetValidatedOptions().OperationTimeout!.Value;
+    private static CancellationToken TestToken => TestContext.Current.CancellationToken;
+
+    [Theory]
+    [InlineData(AdministrationOperation.Queue, false)]
+    [InlineData(AdministrationOperation.Queue, true)]
+    [InlineData(AdministrationOperation.Topic, false)]
+    [InlineData(AdministrationOperation.Topic, true)]
+    [InlineData(AdministrationOperation.CreateSubscription, false)]
+    [InlineData(AdministrationOperation.CreateSubscription, true)]
+    [InlineData(AdministrationOperation.DeleteSubscription, false)]
+    [InlineData(AdministrationOperation.DeleteSubscription, true)]
+    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "shared-administration-lease-keeps-both-cancellation-links-until-completion")]
+    public async Task PendingAdministration_ForwardsCallerAndLeaseCancellationAsync(
+        AdministrationOperation operation, bool cancelLease)
+    {
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(TestToken);
+        using var lease = new CancellationTokenSource();
+        // Exercise both valid subscription forms across the cancellation cases.
+        var fixture = new AdministrationFixture(operation, lease.Token, useRule: cancelLease);
+        try
+        {
+            Task pending = fixture.Start(caller.Token);
+            await WaitForEntryAsync(fixture.Gate, pending);
+            fixture.AssertForwarding(caller.Token, lease.Token);
+            Assert.False(pending.IsCompleted); // backed by an unreleased TCS, never elapsed time
+
+            (cancelLease ? lease : caller).Cancel();
+
+            // PRIMARY ORIGINAL-FAIL STATEMENT: synchronous Cancel completed all registrations.
+            Assert.True(fixture.Gate.ForwardedToken.IsCancellationRequested,
+                $"{operation}: cancellation link was detached while the inner request was pending.");
+            fixture.Gate.ReleaseCanceled();
+            OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => pending.WaitAsync(Timeout, TestToken));
+            Assert.Equal(fixture.Gate.ForwardedToken, canceled.CancellationToken);
+            Assert.True(pending.IsCanceled);
+            Assert.Equal(1, fixture.Calls);
+        }
+        finally
+        {
+            fixture.Gate.ReleaseSuccess();
+            await fixture.ObserveOwnedTasksAsync();
+        }
+    }
+
+    [Theory]
+    [InlineData(AdministrationOperation.Queue)]
+    [InlineData(AdministrationOperation.Topic)]
+    [InlineData(AdministrationOperation.CreateSubscription)]
+    [InlineData(AdministrationOperation.DeleteSubscription)]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "shared-administration-success-retains-options-result-and-detaches-completed-link")]
+    public async Task SuccessfulAdministration_PreservesInputsResultsAndDisposesTheCompletedLinkAsync(
+        AdministrationOperation operation)
+    {
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(TestToken);
+        using var lease = new CancellationTokenSource();
+        var fixture = new AdministrationFixture(operation, lease.Token, useRule: false);
+        try
+        {
+            Task pending = fixture.Start(caller.Token);
+            await WaitForEntryAsync(fixture.Gate, pending);
+            fixture.AssertForwarding(caller.Token, lease.Token);
+            Assert.False(pending.IsCompleted);
+            fixture.Gate.ReleaseSuccess();
+            await pending.WaitAsync(Timeout, TestToken);
+            await fixture.AssertSuccessfulResultAsync();
+            Assert.True(pending.IsCompletedSuccessfully);
+            Assert.Equal(1, fixture.Calls);
+            Assert.False(fixture.Gate.ForwardedToken.IsCancellationRequested);
+
+            // No-disposal mutant fails here; completed wrapper includes execution of using/finally.
+            caller.Cancel();
+            lease.Cancel();
+            Assert.False(fixture.Gate.ForwardedToken.IsCancellationRequested);
+        }
+        finally
+        {
+            fixture.Gate.ReleaseSuccess();
+            await fixture.ObserveOwnedTasksAsync();
+        }
+    }
+
+    [Theory]
+    [InlineData(AdministrationOperation.Queue)]
+    [InlineData(AdministrationOperation.Topic)]
+    [InlineData(AdministrationOperation.CreateSubscription)]
+    [InlineData(AdministrationOperation.DeleteSubscription)]
+    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "shared-administration-original-fault-survives-and-detaches-completed-link")]
+    public async Task FaultedAdministration_PreservesOriginalFaultAndDisposesTheCompletedLinkAsync(
+        AdministrationOperation operation)
+    {
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(TestToken);
+        using var lease = new CancellationTokenSource();
+        var fixture = new AdministrationFixture(operation, lease.Token, useRule: true);
+        var original = new InvalidOperationException($"original {operation} fault");
+        fixture.ExpectedFault = original;
+        try
+        {
+            Task pending = fixture.Start(caller.Token);
+            await WaitForEntryAsync(fixture.Gate, pending);
+            fixture.AssertForwarding(caller.Token, lease.Token);
+            Assert.False(pending.IsCompleted);
+            fixture.Gate.ReleaseFault(original);
+            InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => pending.WaitAsync(Timeout, TestToken));
+            Assert.Same(original, actual);
+            Assert.True(pending.IsFaulted);
+            Assert.Equal(1, fixture.Calls);
+            Assert.False(fixture.Gate.ForwardedToken.IsCancellationRequested);
+            caller.Cancel();
+            lease.Cancel();
+            Assert.False(fixture.Gate.ForwardedToken.IsCancellationRequested);
+        }
+        finally
+        {
+            fixture.Gate.ReleaseSuccess();
+            await fixture.ObserveOwnedTasksAsync();
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ASB-HOST-CONFIGURATION", "shared-send-control-retains-the-same-pending-lease-cancellation-contract")]
+    public async Task PendingSend_ControlRetainsCallerAndLeaseCancellationAsync(bool cancelLease)
+    {
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(TestToken);
+        using var lease = new CancellationTokenSource();
+        var gate = new PendingGate<bool>(true);
+        var message = new ServiceBusMessage(BinaryData.FromString("pending-send-control"));
+        SendEndpointContext inner = DispatchProxy.Create<SendEndpointContext, StrictProxy>();
+        int calls = 0;
+        ((StrictProxy)(object)inner).Handler = (method, args) =>
+        {
+            Assert.Equal(nameof(SendEndpointContext.SendAsync), method.Name);
+            Assert.Equal(2, args.Length);
+            Assert.Same(message, args[0]);
+            calls++;
+            gate.RecordEntry(Assert.IsType<CancellationToken>(args[1]));
+            return gate.InnerTask;
+        };
+        var shared = new SharedSendEndpointContext(inner, lease.Token);
+        Task? pending = null;
+        try
+        {
+            pending = shared.SendAsync(message, caller.Token);
+            await WaitForEntryAsync(gate, pending);
+            AssertLinkedToken(gate.ForwardedToken, caller.Token, lease.Token);
+            Assert.False(pending.IsCompleted);
+            (cancelLease ? lease : caller).Cancel();
+            Assert.True(gate.ForwardedToken.IsCancellationRequested);
+            gate.ReleaseCanceled();
+            OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => pending.WaitAsync(Timeout, TestToken));
+            Assert.Equal(gate.ForwardedToken, canceled.CancellationToken);
+            Assert.True(pending.IsCanceled);
+            Assert.Equal(1, calls);
+        }
+        finally
+        {
+            gate.ReleaseSuccess();
+            try
+            {
+                await ObserveAsync(gate.InnerTask, gate.ForwardedToken, expectedFault: null);
+            }
+            finally
+            {
+                await ObserveAsync(pending, gate.ForwardedToken, expectedFault: null);
+            }
+        }
+    }
+
+    private static void AssertLinkedToken(CancellationToken forwarded, CancellationToken caller, CancellationToken lease)
+    {
+        Assert.True(forwarded.CanBeCanceled);
+        Assert.False(forwarded.IsCancellationRequested);
+        Assert.NotEqual(caller, forwarded);
+        Assert.NotEqual(lease, forwarded);
+    }
+
+    private static async Task WaitForEntryAsync(IPendingGate gate, Task pending)
+    {
+        await Task.WhenAny(gate.Entered, pending).WaitAsync(Timeout, TestToken);
+        if (!gate.Entered.IsCompleted)
+        {
+            // Surface an unexpected proxy fault immediately instead of waiting for the gate timeout.
+            await pending.WaitAsync(Timeout, TestToken);
+            Assert.True(gate.Entered.IsCompleted, "Operation completed before entering its inner boundary.");
+        }
+        await gate.Entered.WaitAsync(Timeout, TestToken);
+    }
+
+    private static async Task ObserveAsync(Task? task, CancellationToken forwarded, Exception? expectedFault)
+    {
+        if (task is null)
+            return;
+        try
+        {
+            // Cleanup must still join owned tasks after the test-run token or an assertion failed.
+            await task.WaitAsync(Timeout, CancellationToken.None);
+        }
+        catch (OperationCanceledException error) when (task.IsCanceled && error.CancellationToken == forwarded)
+        {
+        }
+        catch (Exception error) when (task.IsFaulted && ReferenceEquals(error, expectedFault))
+        {
+        }
+    }
+
+    public enum AdministrationOperation { Queue, Topic, CreateSubscription, DeleteSubscription }
+
+    private sealed class AdministrationFixture
+    {
+        private readonly AdministrationOperation _operation;
+        private readonly SharedConnectionContext _shared;
+        private readonly CreateQueueOptions _queue = new("lease-queue");
+        private readonly CreateTopicOptions _topic = new("lease-topic");
+        private readonly CreateSubscriptionOptions _subscription = new("lease-topic", "lease-subscription");
+        private readonly CreateRuleOptions? _rule;
+        private readonly RuleFilter? _filter;
+        private object?[]? _recordedArguments;
+        private Task? _ownedOperation;
+
+        public AdministrationFixture(AdministrationOperation operation, CancellationToken lease, bool useRule)
+        {
+            _operation = operation;
+            _rule = useRule ? new CreateRuleOptions("only-27", new SqlRuleFilter("ClientId = 27")) : null;
+            _filter = useRule ? null : new SqlRuleFilter("ClientId = 69");
+            Gate = operation switch
+            {
+                AdministrationOperation.Queue => new PendingGate<QueueProperties>(CreateQueueProperties(_queue.Name)),
+                AdministrationOperation.Topic => new PendingGate<TopicProperties>(CreateTopicProperties(_topic.Name)),
+                AdministrationOperation.CreateSubscription => new PendingGate<SubscriptionProperties>(CreateSubscriptionProperties(_subscription)),
+                AdministrationOperation.DeleteSubscription => new PendingGate<bool>(true),
+                _ => throw new ArgumentOutOfRangeException(nameof(operation))
+            };
+            ConnectionContext inner = DispatchProxy.Create<ConnectionContext, StrictProxy>();
+            ((StrictProxy)(object)inner).Handler = Record;
+            _shared = new SharedConnectionContext(inner, lease);
+        }
+
+        public IPendingGate Gate { get; }
+        public int Calls { get; private set; }
+        public Exception? ExpectedFault { get; set; }
+
+        public Task Start(CancellationToken caller)
+        {
+            _ownedOperation = _operation switch
+            {
+                AdministrationOperation.Queue => _shared.CreateQueueAsync(_queue, caller),
+                AdministrationOperation.Topic => _shared.CreateTopicAsync(_topic, caller),
+                AdministrationOperation.CreateSubscription => _shared.CreateTopicSubscriptionAsync(_subscription, _rule, _filter, caller),
+                AdministrationOperation.DeleteSubscription => _shared.DeleteTopicSubscriptionAsync(_subscription, caller),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            return _ownedOperation;
+        }
+
+        private object Record(MethodInfo method, object?[] args)
+        {
+            string expectedMethod = _operation switch
+            {
+                AdministrationOperation.Queue => nameof(ConnectionContext.CreateQueueAsync),
+                AdministrationOperation.Topic => nameof(ConnectionContext.CreateTopicAsync),
+                AdministrationOperation.CreateSubscription => nameof(ConnectionContext.CreateTopicSubscriptionAsync),
+                AdministrationOperation.DeleteSubscription => nameof(ConnectionContext.DeleteTopicSubscriptionAsync),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            if (method.Name != expectedMethod)
+                throw new NotSupportedException($"Unexpected context call: {method.Name}");
+            _recordedArguments = args;
+            Calls++;
+            Gate.RecordEntry(Assert.IsType<CancellationToken>(args[^1]));
+            return Gate.InnerTask;
+        }
+
+        public void AssertForwarding(CancellationToken caller, CancellationToken lease)
+        {
+            Assert.Equal(1, Calls);
+            object?[] args = Assert.IsType<object?[]>(_recordedArguments);
+            Assert.Equal(_operation == AdministrationOperation.CreateSubscription ? 4 : 2, args.Length);
+            object expectedOptions = _operation switch
+            {
+                AdministrationOperation.Queue => _queue,
+                AdministrationOperation.Topic => _topic,
+                _ => _subscription
+            };
+            Assert.Same(expectedOptions, args[0]);
+            if (_operation == AdministrationOperation.CreateSubscription)
+            {
+                Assert.Same(_rule, args[1]);
+                Assert.Same(_filter, args[2]);
+            }
+            Assert.Equal(Gate.ForwardedToken, Assert.IsType<CancellationToken>(args[^1]));
+            AssertLinkedToken(Gate.ForwardedToken, caller, lease);
+        }
+
+        public async Task AssertSuccessfulResultAsync()
+        {
+            object actual = _operation switch
+            {
+                AdministrationOperation.Queue => await Assert.IsAssignableFrom<Task<QueueProperties>>(_ownedOperation).WaitAsync(Timeout, TestToken),
+                AdministrationOperation.Topic => await Assert.IsAssignableFrom<Task<TopicProperties>>(_ownedOperation).WaitAsync(Timeout, TestToken),
+                AdministrationOperation.CreateSubscription => await Assert.IsAssignableFrom<Task<SubscriptionProperties>>(_ownedOperation).WaitAsync(Timeout, TestToken),
+                AdministrationOperation.DeleteSubscription => await Assert.IsType<PendingGate<bool>>(Gate).ResultTask.WaitAsync(Timeout, TestToken),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            if (_operation == AdministrationOperation.DeleteSubscription)
+                Assert.True(Assert.IsType<bool>(actual));
+            else
+                Assert.Same(Gate.ExpectedResult, actual);
+        }
+
+        public async Task ObserveOwnedTasksAsync()
+        {
+            try { await ObserveAsync(Gate.InnerTask, Gate.ForwardedToken, ExpectedFault); }
+            finally { await ObserveAsync(_ownedOperation, Gate.ForwardedToken, ExpectedFault); }
+        }
+    }
+
+    private interface IPendingGate
+    {
+        Task Entered { get; }
+        Task InnerTask { get; }
+        object? ExpectedResult { get; }
+        CancellationToken ForwardedToken { get; }
+        void RecordEntry(CancellationToken token);
+        void ReleaseSuccess();
+        void ReleaseCanceled();
+        void ReleaseFault(Exception error);
+    }
+
+    private sealed class PendingGate<T>(T result) : IPendingGate
+    {
+        private readonly TaskCompletionSource _entered = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource<T> _completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public Task Entered => _entered.Task;
+        public Task InnerTask => _completion.Task;
+        public Task<T> ResultTask => _completion.Task;
+        public object? ExpectedResult => result;
+        public CancellationToken ForwardedToken { get; private set; }
+        public void RecordEntry(CancellationToken token) { ForwardedToken = token; _entered.TrySetResult(); }
+        public void ReleaseSuccess() => _completion.TrySetResult(result);
+        public void ReleaseCanceled() => _completion.TrySetCanceled(ForwardedToken);
+        public void ReleaseFault(Exception error) => _completion.TrySetException(error);
+    }
+
+    // Public, non-sealed DispatchProxy base, matching the existing public baseline consumer.
+    public class StrictProxy : DispatchProxy
+    {
+        public Func<MethodInfo, object?[], object?> Handler { get; set; } = null!;
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            Handler(targetMethod ?? throw new InvalidOperationException("Missing target method"), args ?? []);
+    }
+
+    // SDK 7.20.2 overloads copied from existing owner HarnessBoundary and Reconciliation tests.
+    private static QueueProperties CreateQueueProperties(string name) => ServiceBusModelFactory.QueueProperties(
+        name, lockDuration: TimeSpan.FromMinutes(1), maxSizeInMegabytes: 1024,
+        requiresDuplicateDetection: false, requiresSession: false,
+        defaultMessageTimeToLive: TimeSpan.MaxValue, autoDeleteOnIdle: TimeSpan.MaxValue,
+        deadLetteringOnMessageExpiration: false, duplicateDetectionHistoryTimeWindow: TimeSpan.FromMinutes(10),
+        maxDeliveryCount: 10, enableBatchedOperations: true, status: EntityStatus.Active,
+        forwardTo: string.Empty, forwardDeadLetteredMessagesTo: string.Empty, userMetadata: string.Empty,
+        enablePartitioning: false);
+
+    private static TopicProperties CreateTopicProperties(string name) => ServiceBusModelFactory.TopicProperties(
+        name, maxSizeInMegabytes: 1024, requiresDuplicateDetection: false,
+        defaultMessageTimeToLive: TimeSpan.MaxValue, autoDeleteOnIdle: TimeSpan.MaxValue,
+        duplicateDetectionHistoryTimeWindow: TimeSpan.FromMinutes(10),
+        enableBatchedOperations: true, status: EntityStatus.Active, enablePartitioning: false);
+
+    private static SubscriptionProperties CreateSubscriptionProperties(CreateSubscriptionOptions options) =>
+        ServiceBusModelFactory.SubscriptionProperties(options.TopicName, options.SubscriptionName,
+            options.LockDuration, options.RequiresSession, options.DefaultMessageTimeToLive,
+            options.AutoDeleteOnIdle, options.DeadLetteringOnMessageExpiration, 5,
+            options.EnableBatchedOperations, EntityStatus.Active, string.Empty, string.Empty, string.Empty);
+}

@@ -12,10 +12,7 @@ public interface IRequestConfigurator
     /// <summary>Sets the request timeout.</summary>
     TimeSpan Timeout { set; }
 
-    /// <summary>
-    /// Set the time to live of the request message sent by the saga. If not specified, and the timeout
-    /// is > TimeSpan.Zero, the <see cref="Timeout" /> value is used.
-    /// </summary>
+    /// <summary>Sets the outgoing request lifetime. Only a positive configured value is applied; <see langword="null" /> leaves it unspecified.</summary>
     TimeSpan? TimeToLive { set; }
 
     /// <summary>By default, the RequestId is not cleared when the request is Faulted. Set to true to clear the requestId.</summary>
@@ -34,13 +31,13 @@ public interface IRequestConfigurator<TInstance, TRequest, TResponse> :
     where TResponse : class
 {
     /// <summary>Sets the correlation configuration applied to the completed response event.</summary>
-    Action<IEventCorrelationConfigurator<TInstance, TResponse>> Completed { set; }
+    Action<IEventCorrelationConfigurator<TInstance, TResponse>>? Completed { set; }
 
     /// <summary>Sets the correlation configuration applied to the request fault event.</summary>
-    Action<IEventCorrelationConfigurator<TInstance, Fault<TRequest>>> Faulted { set; }
+    Action<IEventCorrelationConfigurator<TInstance, Fault<TRequest>>>? Faulted { set; }
 
     /// <summary>Sets the correlation configuration applied to the request-timeout event.</summary>
-    Action<IEventCorrelationConfigurator<TInstance, IRequestTimeoutExpired<TRequest>>> TimeoutExpired { set; }
+    Action<IEventCorrelationConfigurator<TInstance, IRequestTimeoutExpired<TRequest>>>? TimeoutExpired { set; }
 }
 
 
@@ -57,7 +54,7 @@ public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2
     where TRequest : class
 {
     /// <summary>Sets the correlation configuration applied to the second completed response event.</summary>
-    Action<IEventCorrelationConfigurator<TInstance, TResponse2>> Completed2 { set; }
+    Action<IEventCorrelationConfigurator<TInstance, TResponse2>>? Completed2 { set; }
 }
 
 
@@ -76,5 +73,5 @@ public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2
     where TRequest : class
 {
     /// <summary>Sets the correlation configuration applied to the third completed response event.</summary>
-    Action<IEventCorrelationConfigurator<TInstance, TResponse3>> Completed3 { set; }
+    Action<IEventCorrelationConfigurator<TInstance, TResponse3>>? Completed3 { set; }
 }

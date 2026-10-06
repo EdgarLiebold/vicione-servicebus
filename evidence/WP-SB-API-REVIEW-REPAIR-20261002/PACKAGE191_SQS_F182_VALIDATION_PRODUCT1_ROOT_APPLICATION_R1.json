@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-05T15:35:06.184126+00:00",
+  "status": "ADVERSARIALLY_REVIEWED_VALIDATION_PRODUCT1_APPLIED_FIXED_NATIVE_PENDING",
+  "findings": [
+    "F-SB-API-182"
+  ],
+  "changes": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsReceiveEndpointConfiguration.cs",
+      "before_sha256": "6a6c673da07bc7c53319f2212a337fd7ef5e5adcafcdd8e915b68d2fcdd34a7d",
+      "after_sha256": "e48df40b20173b3397981176f554a7f966489b9ba39063d0d0a7f8a4f0084083",
+      "before_lines": 330,
+      "after_lines": 336,
+      "literal_inverse_exact": true
+    }
+  ],
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE190_SQS_F182_VALIDATION_ORIGINAL2_ROOT_REGISTRATION_R1.json",
+    "sha256": "8341ffcfb1d22bec10787f14db5535e0ac43938787ebdb265340c3ae2bf64b4b"
+  },
+  "proposal_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package191-sqs-configured-pipe-validation-product1-proposed-r1/MANIFEST.json",
+    "sha256": "2db5ddbd86d8142dec053e0cd5e070ecc82d18fca6ae390b3229da59f9c051f6"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package191-sqs-configured-validation-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "cfdd2348bc6bc0c1b91bdbf9aa38159241ef79779aea635f60be9cda2c9f07e5"
+  },
+  "root_review": {
+    "prior_whole330": "537ab5/ebc3b1",
+    "entire_exact_delta_and_report": "8713e9",
+    "independent_source_report_whole": "530268"
+  },
+  "tests_requirements_and_public_signatures_unchanged": true,
+  "fixed_native_pending": true,
+  "global_Aplus": false
+}

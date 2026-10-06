@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-04T13:16:26.075653+00:00",
+  "finding_id": "F-SB-API-069",
+  "application": "EXACT_XML5_PARAMETER_NODES_ONLY",
+  "proposal_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package63-azure-settlement-token-doc-proposal-r1/REPORT.json",
+  "proposal_sha256": "49f470c1f58241ade0b03916d36ae9b6df3895a9158401973058e0d532590202",
+  "root_whole_before_read": "636986",
+  "root_exact5_delta_review": "d41f0c",
+  "adversarial_review": "Root independent of peer author: all5 descriptions match precheckcaller and stored callback token SDK forwarding; signatures/defaults/executable unchanged",
+  "files": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/MessageLockContext.cs",
+      "before_sha256": "45233b386d46f8a2640ece2ddb17554cb49af05500c8595cf02a49bb1609c6b9",
+      "after_sha256": "96d28b70bd1a89ae930f3ca1ded41b97f65a7643d4857185d8a7d168cb62c02c",
+      "changed_parameter_nodes": 4,
+      "executable_lines_unchanged": true,
+      "whole_source_before": "before/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/MessageLockContext.cs",
+      "whole_source_after": "proposed/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/MessageLockContext.cs"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusSessionMessageLockContext.cs",
+      "before_sha256": "1ade59cedf16a7997f0d5cf09ac0c87ebb0ce0d0fe61ed05812cf70d68b02de2",
+      "after_sha256": "912c7dd6424006d58f0e4bc81326524a91453acef677e642b32ec3dd5f303f10",
+      "changed_parameter_nodes": 1,
+      "executable_lines_unchanged": true,
+      "whole_source_before": "before/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusSessionMessageLockContext.cs",
+      "whole_source_after": "proposed/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusSessionMessageLockContext.cs"
+    }
+  ],
+  "doc_ids": [
+    "M:ViciOne.ServiceBus.AzureServiceBus.MessageLockContext.CompleteAsync(System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.MessageLockContext.AbandonAsync(System.Exception,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.MessageLockContext.DeadLetterAsync(System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.MessageLockContext.DeadLetterAsync(System.Exception,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusSessionMessageLockContext.DeadLetterAsync(System.Threading.CancellationToken)"
+  ],
+  "published_XML_and_fresh_package_pending": true
+}

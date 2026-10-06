@@ -1,0 +1,12 @@
+{
+  "status": "UNVERIFIED_RESEARCH_CANDIDATE_NO_FINDING_CREDIT",
+  "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/BatchEndpointExtensions.cs",
+  "source_sha256": "0841653d0dce1370dbe1f3e5089139e81848b6c2e851e95da113afd66e387005",
+  "Root_personally_FULL": true,
+  "routes": 24,
+  "candidate": "Lazy Select invokes endpoint methods during WhenAll enumeration; a later legal synchronous endpoint/SPI throw can prevent construction of joined WhenAll after earlier real tasks already started. Similar separate unverified SignalR fanout candidate.",
+  "qualification_required": "NuGet-only public ISendEndpoint/IPublishEndpoint controlled contract: first actual task gated pending, second actual synchronous primary throw; operation must join prior task before completing while preserving primary. Include ordinary all-success/fault/cancel/control and exact finite fail, no timeout kill. Existing ValidateBatch snapshots enumerable and rejects all null entries before first dispatch; do not misclassify that safe validation.",
+  "code_changes": 0,
+  "native_outcomes": "UNVERIFIED",
+  "whole_API_CLOSED": false
+}

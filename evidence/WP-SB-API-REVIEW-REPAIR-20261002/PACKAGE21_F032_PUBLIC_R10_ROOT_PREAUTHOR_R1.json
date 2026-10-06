@@ -1,0 +1,158 @@
+{
+  "status": "ROOT_RESEARCH_PLAN_PREAUTHOR_BEFORE_TEST_EDITS",
+  "utc": "2026-10-03T14:15:59.051536+00:00",
+  "research_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package21-f032-matrix-supplement-research/FINAL_REFINEMENT_MANIFEST.json",
+    "sha256": "74da9f78b093b9ed1bf4ffdecdd430f01174a6ef236357c95f3aa262975e3a94",
+    "all_artifacts_hash_verified": true
+  },
+  "root_support_full_read": [
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionFilterExtensions.cs",
+      "sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ScopedConsumePipeSpecificationObserver.cs",
+      "sha256": "42120c908e2cff98661058bb5e263d37355553bfd1576b732da3a33ef219b92a",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/BaseConsumeScopeProvider.cs",
+      "sha256": "c3b78593ce7d2d4b28939dedf9a76f992a3dcc627212e1c21e9e31c0c151c7b1",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/CompensateScopeProvider.cs",
+      "sha256": "f7ebf33d566aaa425e5d7c895fdf4af018fedf74ca6473d5e4279e4771de90ba",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ConsumeScopeLifetime.cs",
+      "sha256": "45cfc82eaa2b5896449331bb0ffa97e87934cefc20278598b0d2eda814bcd66f",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ConsumeScopeProvider.cs",
+      "sha256": "3750b38ebbda662be62c63b589fbab1a06d9deb4e2dc58d8884c244dc49d31ce",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/CreatedConsumeScopeContext.cs",
+      "sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ExecuteScopeProvider.cs",
+      "sha256": "5f468235a9c4a8f79c7652b7e3ecf38b370fd397dbf6f51ca583c10c60438569",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ExistingConsumeScopeContext.cs",
+      "sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/FilterScopeProvider.cs",
+      "sha256": "a9e243b844a43544b4563066051c01f38a1c8f2e8f6e4d1c887627185bbabcc7",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/IConsumeScopeProvider.cs",
+      "sha256": "5b5c6949fedc0a80084de5b02d5b2878837494f7c273f582942e0bc9251fabf4",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/IFilterScopeProvider.cs",
+      "sha256": "8e1055239af543b4ba0d4be3593de9fd032910ddd11230e0e47d90edc43370cb",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ScopedServiceLifetime.cs",
+      "sha256": "97116c4a83389a921a52075a5de26929600ad6791a0e049f072ec173cd8cb0af",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedCompensateFilter.cs",
+      "sha256": "b1adbff5e18bf32e57f3f96ac40fedc76f24af8068afb4feff18c526fce00dfa",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedConsumeFilter.cs",
+      "sha256": "5fa3d762fc58b742a9245deaba75075007e4b3b9343c37dfa212d7a4ba45995c",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedExecuteFilter.cs",
+      "sha256": "1ee459e3e4d6816a368d276eeb1227ebf9c3d7f497c88a7c0d9d10287da95724",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedFilter.cs",
+      "sha256": "bafa94a4559526d8b4b0788821953e48bbe9d39767fa7534cd20825d89e67e9e",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Contexts/SagaConsumeContext.cs",
+      "sha256": "eb00f3e996d7243427078e7cc91eb9fb217107e814e471e6934a2678c005b7ab",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Configuration/DependencyInjection/InMemorySagaRepositoryRegistrationExtensions.cs",
+      "sha256": "3b72a20fdcf5d917f3fd22343a3b8017f17978bbe5863fb687f28321c4a17b3f",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Configuration/SagaConnector.CorrelatedSagaMessageConnector.cs",
+      "sha256": "6c2f2d572fa5728c70bcb1998530a9c4569068e569d5aeea9553a8c151101119",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Configuration/SagaConnector.SagaMessageConnector.cs",
+      "sha256": "c0a8e116cf323b62d2bfb4f5e2654330ae7b6db5405594c2674b1799ac09456e",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Configuration/SagaRegistrationConfiguratorExtensions.cs",
+      "sha256": "f45ef7881f381702b1aa6619951fc0f14860828751510de7654d5a4e877c332e",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/DependencyInjection/DependencyInjectionSagaRepositoryContextFactory.cs",
+      "sha256": "2c8ea57384de49afdf3e206242de456d117cc4dc967657ef1cd6ba4ffad7a94e",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/SagaMergePipe.cs",
+      "sha256": "7a1f419622bc6ae6ec0e5077caadc4fd83141280c48009807d41dbdec4894773",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/IInitiatedBy.cs",
+      "sha256": "628c272278ed0a95c695444615def60dc555004c6dfde542b891db88184dcadc",
+      "root_read": "FULL personally before authoring; unchanged prior 17-source/SPI read reused; support declarations/providers/observer fresh FULL this turn"
+    }
+  ],
+  "owner_before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/.testagent/source-candidate-r9.json",
+    "sha256": "d1ba21da1cf94b15380a2afd8479ecd9647ef7171fe3ec181ac8ef94ae3fcbd5",
+    "all13_original_inputs_exact_full_root_read_before_authoring": true
+  },
+  "scope": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10",
+  "plan": "37 additions in bounded consumer scope: all5route aggregate-both/cancel-both10; send/publish owned/borrowed registered/external8; sixSPI provider-throw/wrong-cast12; outgoing wrong-cast2; all5route acquisition negative plus real recovery5. Original119 retained. Saga3 deferred to next bounded phase requiring actual new immutable Sagas package/feed. Total156 here; final159 still required.",
+  "safety": "Actual SDK callbacks, real DI scopes; invalid-output provider is explicit public decorator. Immediate ownership, tracked actual tasks, finite failures, exact primary/cleanup identity, no flatten, canceled-primary plus cleanup is Faulted aggregate. Do not alter canonical test projects. Adversarial preflight before SDK.",
+  "checklist_map": {
+    "aggregate-both/cancel-both": "middleware/{consume,send,publish,execute,compensate}/{aggregate-both,cancel-both}",
+    "registered/external": "cache/{send,publish}/{owned-registered,owned-external,borrowed-registered,borrowed-external}",
+    "getter error recovery": "spi/{six Sites}/{provider-throw,wrong-cast}",
+    "cache invalid-output recovery": "cache/{send,publish}/wrong-cast",
+    "no transferred lease acquisition failure": "middleware/{five routes}/scope-acquisition-failure"
+  },
+  "native_pending": true,
+  "canonical_test_owner_authority_transferred": false
+}

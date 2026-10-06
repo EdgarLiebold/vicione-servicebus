@@ -1,0 +1,56 @@
+{
+  "utc": "2026-10-05T17:02:33.444518+00:00",
+  "status": "REVIEWED_F191_REPAIR_ROOT_ACCEPTED_BOUNDED",
+  "finding": "F-SB-API-191",
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE193_SQS_F191_DURABLE_WARNING_ORIGINAL6_ROOT_REGISTRATION_R1.json",
+    "sha256": "3bd681f9b9318e61fd3e2e6757aecf466cdc9c322c34f1fd2913bb2ea8036e84"
+  },
+  "source_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE194_SQS_F191_DURABLE_WARNING_PRODUCT1_ROOT_APPLICATION_R1.json",
+    "sha256": "7ec3681b78ffb662b066611701a6a98529ad690fd05848af6e8f935af3206af4"
+  },
+  "source_independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package194-durable-warning-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "c91d7aaf396dcf237a841071ad3815d647daecdc1be0b5a0ca930e531e7d356c"
+  },
+  "qualified_fixed353": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package194-fixed353-independent-r1/REPORT.json",
+    "sha256": "e509bab421dcf1d5e2d984f571c1892e68c298d4b9291edcb0577e14340421dd"
+  },
+  "independent_fixed_selected25_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package194-fixed-warning6-selected25-independent-runtime-result-peer-r2/REPORT.json",
+    "sha256": "7a62495efcb28c3808068f9570bde0ec298e9051fb893fb9c6ba98afd88baf82"
+  },
+  "independent_final_result_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package194-fixed353-final-independent-runtime-result-peer-r1/REPORT.json",
+    "sha256": "ad9ad53755714363e133b25827fc34d4e151b35696981dcb87a90a5411961c12"
+  },
+  "actual_counts": {
+    "total": 353,
+    "passed": 353,
+    "failed": 0,
+    "skipped": 0
+  },
+  "original_failed3_now_pass_and_healthy3_retained": true,
+  "prior347_same_IDs_all_pass": true,
+  "source206_and_fixed271_PDB_Runtime10_bound": true,
+  "embedded186_requirement_prefix184_ADD2_exact_once": true,
+  "dependency_XML_equal193": true,
+  "root_reads": [
+    "60715c entire fixed353 qualificationreport",
+    "27038c every immutable resultpayload manifest hash",
+    "dc7c4a entire final independentpeer",
+    "5717eb actual25namedoutcomes+summary",
+    "d7c433 whole actualfixed271",
+    "100be4 exactthree-literal delta/peer"
+  ],
+  "targeted_native_scope": "Four actual owner cancellation/drain cases and two committed-resource disposal cases; formerly failed False67/remainingDispose120 and later Null68/121/removal71/72 now reached. Prior validation still proves key suffix, full parent key Source-only.",
+  "limits": [
+    "Private detached creationworker/CTS disposal and separate LateValue4 failing-value branch not empirically closed.",
+    "Remaining328 bodies have mechanical outcomes/ID retention, no new human full-body grade.",
+    "No freshSQSNuGet/all23final31/cloud or wholeAPI A+ claim."
+  ],
+  "whole_API_closed": false,
+  "global_Aplus": false
+}

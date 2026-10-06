@@ -75,7 +75,14 @@ public class ServiceBusHost :
 
         configuration.Validate().ThrowIfContainsFailure("The receive endpoint configuration is invalid:");
 
-        TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
+        try
+        {
+            TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics cannot replace the endpoint or broker operation.
+        }
 
         configuration.Build(this);
 
@@ -128,7 +135,14 @@ public class ServiceBusHost :
 
     IHostReceiveEndpointHandle ConnectSubscriptionEndpoint(IServiceBusSubscriptionEndpointConfiguration configuration)
     {
-        LogContext.Debug?.Log("Connect subscription endpoint: {Topic}/{SubscriptionName}", configuration.Settings.Path, configuration.Settings.Name);
+        try
+        {
+            LogContext.Debug?.Log("Connect subscription endpoint: {Topic}/{SubscriptionName}", configuration.Settings.Path, configuration.Settings.Name);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics cannot replace the endpoint or broker operation.
+        }
 
         configuration.Validate().ThrowIfContainsFailure("The subscription endpoint configuration is invalid:");
 

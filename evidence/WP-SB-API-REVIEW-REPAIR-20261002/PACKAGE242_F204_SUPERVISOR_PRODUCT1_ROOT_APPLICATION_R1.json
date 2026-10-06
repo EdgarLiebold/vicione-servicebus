@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-05T21:17:47.318377+00:00",
+  "status": "ROOT_APPLIED_REVIEWED_PRODUCT1_F204_FIXED_NATIVE_PENDING",
+  "source": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/Supervisor.cs",
+    "before_sha256": "c15469f80011eb9e40a567a5d8a6ca606f20ffd5b4ec20b237ced0be8e295b63",
+    "after_sha256": "2ee56d44806512cd6e873d154f87df29f16fa0ec5abcad0dad53ddc29974d201",
+    "before_lines": 156,
+    "after_lines": 166
+  },
+  "root_original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE242_F204_SUPERVISOR_SYNCHRONOUS_CHILD_STOP_ORIGINAL16_ROOT_REGISTRATION_R1.json",
+    "sha256": "05092afb4f06119f383a71244615a54962b5fb46d04268d33c0e366917b291c5"
+  },
+  "author_report_sha256": "977bf174b7cc3dbc5d591295cf954b9f8d9b86e95aba64a7fd6611425f78759d",
+  "author_manifest_sha256": "8f90604a82d6a15e7b5dfd29b85c7c1b41da213ba7ad3034e4d3840186966d04",
+  "independent_sourcepeer_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package242-supervisor-stop-admitted-work-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "8f5a09509c9d2b32d372e5c7cf9b738982840ad80c1585845f3509c609e51472",
+    "manifest_sha256": "b1360d59ea55739574193d5db916a23cc1915a9b60538276703ad354e9de9014"
+  },
+  "own_whole_proposed166_read": "a5d5cf; exact10-line patch f6e155; allphysicalpayloadhashes7702ec",
+  "tests_and_requirements_unchanged": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/Advanced/Middleware/SupervisorLifecycleTests.cs",
+      "before_sha256": "8f9225b42111c5287cb772280864a24b440d41d6b231f5439e9c05ed0e66171c",
+      "after_sha256": "bf76c31d16f265801b3a29000474acbb5127913fcdc55545722fe75b64bda2f9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/Requirements/AbstractionsRequirements.json",
+      "before_sha256": "c28038b7f50ffa16c37d5ea83f44019710188157861b817b5d009010ebe60df0",
+      "after_sha256": "92210e342641659211440a78b482d1b980003c641be7468ee66204a4392fd25d"
+    }
+  ],
+  "public_shape_changed": false,
+  "literal_patch_inverse_exact": true,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package242-supervisor-product1-root-before-r1",
+  "native_count": 0,
+  "grade": null
+}

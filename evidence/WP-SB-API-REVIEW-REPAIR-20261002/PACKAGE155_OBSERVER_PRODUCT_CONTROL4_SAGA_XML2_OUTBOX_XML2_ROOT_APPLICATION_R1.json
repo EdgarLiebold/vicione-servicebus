@@ -1,0 +1,93 @@
+{
+  "utc": "2026-10-04T23:18:47.592291+00:00",
+  "decision": "APPLY_INDEPENDENTLY_REVIEWED_OBSERVER_FIX_CONTROL4_AND_XML4",
+  "after_original154_freeze": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package154-observer-original52-independent-r1/FREEZE.json",
+    "sha256": "8402e648d169c0358b153d5b0fd40f0505e66dd121c218d052e27f98a544769c"
+  },
+  "sources": [
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/ViciOneServiceBusStateMachine.StateMachineState.cs",
+      "before_sha256": "dc520b51635e235e297bc3e76ad246eefec5475016910242405ecb4fc25b41c3",
+      "after_sha256": "966a0c691bc22356b9d161341d642ec07c291b1c7be2bcbc16d92aae126f9ddc",
+      "author": "package155-state-event-observer-primary-preservation-product-proposed-r2"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Configuration/SagaDefinition.cs",
+      "before_sha256": "125101ca9474ca2152f0825c8e46741527bbf4b358c04db5a5b356c112f42698",
+      "after_sha256": "2fdff440649c19c7ded9859f76737a0ab575e0a5a43d24d7467ec5fc68ccd31c",
+      "author": "package151-saga-definition-sibling-xml2-product-proposal-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/IOutboxContextFactory.cs",
+      "before_sha256": "724fa8745169895a7e0a3e479388fcf54ae0924c41dd3ed9d2cf25b74c54bdb8",
+      "after_sha256": "2d2e660f4cc23963871d2039f8352c82eaff3c85c78bf51db591a633389e24e7",
+      "author": "package155-outbox-factory-filter-summary-xml2-product-proposal-r2"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/OutboxConsumeFilter.cs",
+      "before_sha256": "fd7593ccb8020ab0639baa265a9d5b6877933325bce91668f4233c105360bfe4",
+      "after_sha256": "0fe9b95abb0c31118a869b133aaef244d28c82c36e54fc80eef0d7ccb7bd854c",
+      "author": "package155-outbox-factory-filter-summary-xml2-product-proposal-r2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorProxyObserverDeepContractTests.cs",
+      "before_sha256": "15dba3746ea96bcbf22d37f98a80675d8e30579b6e8186e41b679e5edfa25cf1",
+      "after_sha256": "b68adc9fef530b498e51dd9154021e2fbdedd20ea33d5a9bebef145b541cd358",
+      "author": "package155-state-event-observer-controls4-oracles-proposed-r1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "cb06da744fbc336b23e2650329ac3ad071682d7c1c38849b219812e84210a579",
+      "after_sha256": "e7b8d1fd705bd0ba70bac5a95f3b55b3816480c04a3fce12e9065095641cb644",
+      "add_only": 2
+    }
+  ],
+  "author_and_peer_manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-state-event-observer-primary-preservation-product-proposed-r2/MANIFEST.json",
+      "sha256": "4c5c7334f43b69d351b2254523c90d7f32bd77caa5ff0762950a99b72e4c6880"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-state-event-observer-primary-preservation-independent-scanner-r1/MANIFEST.json",
+      "sha256": "e29aaf5d21d6e20af99863327f2b1f810f4998601b18c0093b9af3bb5e908dfe"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-saga-definition-sibling-xml2-product-proposal-r1/MANIFEST.json",
+      "sha256": "fc7a39fe5b5e37834c6ef40ea85b864f273e5f0ed86188ed618a6e32525846f3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-saga-definition-sibling-xml2-independent-scanner-r1/MANIFEST.json",
+      "sha256": "172bcd4057ecc555c77d447543829d3f16e3bf440acf593efb38a7f702bc5b15"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-outbox-factory-filter-summary-xml2-product-proposal-r2/MANIFEST.json",
+      "sha256": "2d86704f1258dc28a4864657b48faa11640480456e7ed5dc16150d0a58fee521"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-outbox-factory-filter-summary-xml2-independent-scanner-r1/MANIFEST.json",
+      "sha256": "56a8535c8ec636f74eb9689bd5b588723c721b22c7dceeae1633024c52637623"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-state-event-observer-controls4-oracles-proposed-r1/MANIFEST.json",
+      "sha256": "f7effcca034f393395e382f647d1d6914b990026e12b7e392830a7419618b29d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-state-event-observer-controls4-independent-scanner-r1/MANIFEST.json",
+      "sha256": "8deb9e3c3b7a01a2c604e9ab64ff12a178bea4dd819e97fef7707037d0ce1dc2"
+    }
+  ],
+  "root_own_reviews": [
+    "5c6334",
+    "63ee55",
+    "99b890",
+    "053ecf",
+    "de8515",
+    "790a20"
+  ],
+  "requirements_before": 4608,
+  "requirements_after": 4610,
+  "runtime_delta": "Only two StateMachineState nested observer-await catches; same-reference/caller cancellation preserved. XML4 pureSource. Original52 testcases byte-preserved, additive4 controls.",
+  "verification_pending": "Strict build, actual56Observer native, meaningful Sagas neighbors, fresh Core/Sagas compiled XML/package qualification",
+  "whole_API_closed": false
+}

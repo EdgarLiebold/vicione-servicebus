@@ -20,13 +20,16 @@ public sealed class ReceiveNotificationContractTests
     const string MessageType = "ViciOne.ServiceBus.Tests.Transports.Receiving.ReceiveNotificationContractTests+NotificationMessage";
 
     [Theory]
-    [InlineData(0)]
-    [InlineData(1)]
-    [InlineData(2)]
+    [InlineData(false, 0)]
+    [InlineData(false, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 0)]
+    [InlineData(true, 1)]
+    [InlineData(true, 2)]
     [RequirementCoverage("REQ-VSB-RECEIVE-NOTIFICATION", "logger-cannot-suppress-receive-notification")]
-    public async Task LoggerFailure_CannotSuppressTheRecordedOutcomeOrObserverAsync(int operation)
+    public async Task LoggerFailure_CannotSuppressTheRecordedOutcomeOrObserverAsync(bool useMediator, int operation)
     {
-        using var fixture = new Fixture(useMediator: false);
+        using var fixture = new Fixture(useMediator);
         var failure = new InvalidOperationException("delivery failed");
         var logger = new ThrowingLogger();
         ILogContext? previous = LogContext.Current;

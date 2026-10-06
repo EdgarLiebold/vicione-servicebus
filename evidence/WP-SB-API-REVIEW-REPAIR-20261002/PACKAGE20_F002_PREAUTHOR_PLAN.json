@@ -1,0 +1,54 @@
+{
+  "finding": "F-SB-API-002",
+  "status": "PREAUTHOR_FRESH_WORKER_CAUSAL_PLAN",
+  "utc": "2026-10-03T11:13:59.768302+00:00",
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/vicione-architecture/work/CURRENT_ORDER.yaml",
+      "sha256": "429ddb619a5dbca13cd5b85542e066ce947151628496891f0fde390649e44a50",
+      "bytes": 312695
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.github/workflows/native-tests.yml",
+      "sha256": "2041926c8fc20c6f73cb1ea4fbee766b1be1eaaad5a18da47fd5a5ee27e75a6c",
+      "bytes": 9639
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/build.md",
+      "sha256": "fd061ba3ccf679e69e3be1a18c884eab074386d86990136db4e30909d35b13b9",
+      "bytes": 7696
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/global.json",
+      "sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93",
+      "bytes": 63
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Packages.props",
+      "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e",
+      "bytes": 5677
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
+      "sha256": "917a1cfeb7a7ec52dc0f317b5f7068b26441f7f30855f06b9d73d6654f24da0c",
+      "bytes": 4033
+    }
+  ],
+  "authorization": "Existing explicit PO repair-all task; Architect records exact necessary native-tests workflow in direct maintenance scope. No remote CI reactivation.",
+  "patch": "Add locked Engineering restore before existing locked Unit restore in isolated unit-architecture job; document architecture evaluation of complete test tree. No changed assertion/filter/Unit graph/package/lock.",
+  "skills": [
+    "dotnet-test:run-tests",
+    "dotnet-msbuild:msbuild-antipatterns"
+  ],
+  "verification": [
+    "original fresh 6209 source-only worker: Unit restore/build/unfiltered run; actual finite architecture classification failure required",
+    "same unchanged compiled owner after Engineering restore: exact assertion becomes green in new process",
+    "independent fresh corrected worker: Engineering then Unit restore/build/unfiltered run",
+    "independent fresh countercase worker: omit only prerequisite; exact assertion red and same-DLL restore positive"
+  ],
+  "limits": [
+    "Focused original-input CI causality, not final repaired API acceptance",
+    "No canonical architecture source modification or whole-owner personal grade",
+    "Native operations strictly serial; setup failures excluded"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-04T15:01:53.692599+00:00",
+  "status": "F076_ORIGINAL4_CAUSAL_RED_CONFIRMED_REVIEWED_PRODUCT_AND_CONTROL_APPLIED_FIXED_NATIVE_PENDING",
+  "source_changes": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+      "before": "baaf584e5293b7fd896ab11a2c4e78b79182f9d5a8ed98eefb9987aa683f650b",
+      "after": "a6464295ca7b855e8f1bd109a22520f1d606c473924ed9419108217c8a94d2d4"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs",
+      "before": "ecc2408915b0d006e85ac7533093a95d8dc3b86a49023c506e3d8896c7f2f3d3",
+      "after": "549ad3f482e0ac5411080634485dde48f768ee3493978f9680008e1d160606e3"
+    }
+  ],
+  "requirements": {
+    "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+    "before": "d9344b7792a0ecc4c6c8fc771d1b43787071fa57ad9d2d674643eb8300f1ff1e",
+    "after": "6f14ad8085a8e7d4dc2619caa4f671c658eedb465b846425cba0120ff477fa52",
+    "rows_before": 206,
+    "rows_after": 207,
+    "add": 1,
+    "remove": 0
+  },
+  "root_reads": [
+    "Original27qualifiedReport full7d9172",
+    "WholeproductSourceadversarial895615",
+    "exactRoot53linefaultcontrol5f97b3 plusfulladversarial7d9172"
+  ],
+  "independent_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/root-azure-disconnect-diagnostics-product-adversarial-r1/REPORT.json",
+      "sha256": "98b2c5de874414870192e9199d60945c9889ef1a0c722f15432187935d19a26e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/root-azure-disconnect-sdk-fault-control-adversarial-r1/REPORT.json",
+      "sha256": "7f688a9a110500e35bfb06496f007bb9d924dda571641cd9844046fa34a50aa9"
+    }
+  ],
+  "original_frame": "70e51f9ebcf38de5e32d82190b9583dcec9808263341f948a82d00bec138cf2e",
+  "original_native_log_sha256": "8734f41c36ca67db8e41b69e80cf4d420f1906a69a1a8fda7fdb7a33197e7e2f",
+  "limits": "Two diagnostic calls isolated, actualSDK ownedawait/fault/cancel andborrowedpolicyunchanged. FullyQualifiedNamespace virtualgetter exceptionsnotnewlyisolated."
+}

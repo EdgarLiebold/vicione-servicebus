@@ -1,0 +1,152 @@
+    "System.Threading.Tasks.TaskCanceledException: A task was canceled.\n   at ViciOneReview.OutboxComposition.FailOnce.SendAsync(SendContext`1 context, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package31-outbox-boundaries/Program.cs:line 148\n   at ViciOneReview.OutboxComposition.FailOnce.SendAsync(SendContext`1 context, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package31-outbox-boundaries/Program.cs:line 157\n   at ViciOne.ServiceBus.Transports.SendEndpoint.SendEndpointPipe`1.SendAsync(SendContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/SendEndpoint.cs:line 284\n   at ViciOne.ServiceBus.InMemoryTransport.Runtime.InMemorySendTransportContext.CreateSendContextAsync[T](T message, IPipe`1 pipe, CancellationToken cancellationToken) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemorySendTransportContext.cs:line 53\n   at ViciOne.ServiceBus.Transports.SendTransport`1.SendPipe`1.CreateSendContextAsync(TContext context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs:line 136\n   at ViciOne.ServiceBus.Transports.SendTransport`1.SendPipe`1.SendAsync(TContext context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs:line 119\n   at ViciOne.ServiceBus.Middleware.OutboxMessagePipe`1.DeliverOutboxMessagesAsync(OutboxConsumeContext context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs:line 137\n   at ViciOne.ServiceBus.Middleware.OutboxMessagePipe`1.SendAsync(OutboxConsumeContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs:line 69\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.<>c__DisplayClass7_0`1.<<SendAsync>g__ExecuteAsync|0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 130\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.<>c__DisplayClass7_0`1.<<SendAsync>g__ExecuteAsync|0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 178\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.<>c__DisplayClass7_0`1.<<SendAsync>g__ExecuteAsync|0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 178\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAttemptAsync[TResult](DbContext dbContext, Func`1 operation) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 124\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.SendAsync[T](ConsumeContext`1 context, OutboxConsumeOptions options, IPipe`1 next, CancellationToken cancellationToken) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 190\n   at ViciOne.ServiceBus.Middleware.OutboxConsumeFilter`2.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxConsumeFilter.cs:line 49\n   at ViciOne.ServiceBus.Middleware.OutboxConsumeFilter`2.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxConsumeFilter.cs:line 49\n   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.SendAsync(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 53\n   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.SendAsync(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 63\n   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.SendAsync(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 53\n   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.SendAsync(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 63\n   at ViciOne.ServiceBus.Middleware.TeeFilter`1.<>c__DisplayClass5_0.<<SendAsync>g__SendAsync|1>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/TeeFilter.cs:line 45\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendToOutputAsync(IPipe`1 next, ConsumeContext`1 pipeContext) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs:line 95\n   at ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendToOutputAsync(IPipe`1 next, ConsumeContext`1 pipeContext) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs:line 114\n   at ViciOne.ServiceBus.Middleware.DeserializeFilter.SendAsync(ReceiveContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/DeserializeFilter.cs:line 72\n   at ViciOne.ServiceBus.Middleware.RescueFilter`2.ViciOne.ServiceBus.Advanced.Middleware.IFilter<TContext>.SendAsync(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/RescueFilter.cs:line 47\n   at ViciOne.ServiceBus.Middleware.RescueFilter`2.ViciOne.ServiceBus.Advanced.Middleware.IFilter<TContext>.SendAsync(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/RescueFilter.cs:line 52\n   at ViciOne.ServiceBus.Middleware.DeadLetterFilter.ViciOne.ServiceBus.Advanced.Middleware.IFilter<ViciOne.ServiceBus.Advanced.ReceiveContext>.SendAsync(ReceiveContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/DeadLetterFilter.cs:line 33\n   at ViciOne.ServiceBus.InMemoryTransport.DurableSend.InMemoryDurableSendCompletionFilter.SendAsync(ReceiveContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/DurableSend/InMemoryDurableSendCompletionFilter.cs:line 14\n   at ViciOne.ServiceBus.Transports.ReceivePipeDispatcher.DispatchAndSettleAsync(ReceiveContext context, ReceiveLockContext receiveLock, CancellationToken cancellationToken) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs:line 113\n   at ViciOne.ServiceBus.Transports.ReceivePipeDispatcher.DispatchAsync(ReceiveContext context, ReceiveLockContext receiveLock, CancellationToken cancellationToken) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs:line 81\n   at ViciOne.ServiceBus.Transports.ReceivePipeDispatcher.DispatchAsync(ReceiveContext context, ReceiveLockContext receiveLock, CancellationToken cancellationToken) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs:line 87\n   at ViciOne.ServiceBus.Transports.ReceivePipeDispatcher.DispatchAsync(ReceiveContext context, ReceiveLockContext receiveLock, CancellationToken cancellationToken) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs:line 94\n   at ViciOne.ServiceBus.Transports.ConsumerAgent`1.TrackDispatchAsync(Task dispatchTask, TKey key) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs:line 296\n   at ViciOne.ServiceBus.InMemoryTransport.Runtime.InMemoryReceiveTransport.ReceiveTransportAgent.<>c__DisplayClass6_0.<<DeliverAsync>b__0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveTransport.cs:line 121"
+  ],
+  "entries_in_actual_nonempty_line_order": [
+    {
+      "observation": "receive-terminal-before-sink",
+      "name": "volatile-positive",
+      "phase": 0,
+      "BusinessCalls": 1,
+      "FilterCalls": 1,
+      "Throws": 0,
+      "received": [
+        "05006209-0028-4019-8020-000000000002"
+      ],
+      "failures": []
+    },
+    {
+      "observation": "receive-terminal-before-sink",
+      "name": "volatile-positive",
+      "phase": 1,
+      "BusinessCalls": 1,
+      "FilterCalls": 1,
+      "Throws": 0,
+      "received": [
+        "05006209-0028-4019-8020-000000000002"
+      ],
+      "failures": []
+    },
+    {
+      "name": "volatile-positive",
+      "observations": [
+        {
+          "phase": 0,
+          "businessCalls": 1,
+          "filterCalls": 1,
+          "throws": 0,
+          "outgoingRows": 0,
+          "Consumed": "2026-10-03T23:22:35.325117+00:00",
+          "Delivered": "2026-10-03T23:22:35.41302+00:00",
+          "LastSequenceNumber": 1,
+          "ReceiveCount": 1,
+          "actualOutgoingIds": [
+            "05006209-0028-4019-8020-000000000002"
+          ],
+          "receiveFailures": []
+        },
+        {
+          "phase": 1,
+          "businessCalls": 1,
+          "filterCalls": 1,
+          "throws": 0,
+          "outgoingRows": 0,
+          "Consumed": "2026-10-03T23:22:35.325117+00:00",
+          "Delivered": "2026-10-03T23:22:35.41302+00:00",
+          "LastSequenceNumber": 1,
+          "ReceiveCount": 2,
+          "actualOutgoingIds": [
+            "05006209-0028-4019-8020-000000000002"
+          ],
+          "receiveFailures": []
+        }
+      ],
+      "snapshots": [
+        {
+          "BusinessValue": 1,
+          "Inbox": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000001",
+              "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "Received": "2026-10-03T23:22:35.050476+00:00",
+              "ExpirationTime": null,
+              "ReceiveCount": 1,
+              "Consumed": "2026-10-03T23:22:35.325117+00:00",
+              "Delivered": "2026-10-03T23:22:35.41302+00:00",
+              "LastSequenceNumber": 1
+            }
+          ],
+          "Outgoing": []
+        },
+        {
+          "BusinessValue": 1,
+          "Inbox": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000001",
+              "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "Received": "2026-10-03T23:22:35.050476+00:00",
+              "ExpirationTime": null,
+              "ReceiveCount": 2,
+              "Consumed": "2026-10-03T23:22:35.325117+00:00",
+              "Delivered": "2026-10-03T23:22:35.41302+00:00",
+              "LastSequenceNumber": 1
+            }
+          ],
+          "Outgoing": []
+        }
+      ],
+      "atInjectedSend": null,
+      "finiteLossObserved": false
+    },
+    {
+      "observation": "case-cleanup",
+      "name": "volatile-positive",
+      "AllTrackedTasksCompleted": true,
+      "primary": null,
+      "cleanup": null
+    },
+    {
+      "observation": "receive-terminal-before-sink",
+      "name": "volatile-fault",
+      "phase": 0,
+      "BusinessCalls": 1,
+      "FilterCalls": 1,
+      "Throws": 1,
+      "received": [],
+      "failures": [
+        {
+          "$full_string_ref": 0
+        }
+      ]
+    },
+    {
+      "observation": "receive-terminal-before-sink",
+      "name": "volatile-fault",
+      "phase": 1,
+      "BusinessCalls": 1,
+      "FilterCalls": 2,
+      "Throws": 1,
+      "received": [
+        "05006209-0028-4019-8020-000000000002"
+      ],
+      "failures": []
+    },
+    {
+      "name": "volatile-fault",
+      "observations": [
+        {
+          "phase": 0,
+          "businessCalls": 1,
+          "filterCalls": 1,
+          "throws": 1,
+          "outgoingRows": 1,
+          "Consumed": "2026-10-03T23:22:35.726147+00:00",
+          "Delivered": null,
+          "LastSequenceNumber": null,
+          "ReceiveCount": 1,
+          "actualOutgoingIds": [],
+          "receiveFailures": [
+            {
+              "$full_string_ref": 0
+            }
+          ]
+        },
+        {

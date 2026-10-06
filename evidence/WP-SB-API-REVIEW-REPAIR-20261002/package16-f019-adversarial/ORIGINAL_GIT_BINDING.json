@@ -1,0 +1,12 @@
+[
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+    "sha256": "4e2f6717ad21d08723ae083ce1c46ce4dba652d9f76239916844d515ab724608"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+    "sha256": "59bb94ea1dbc25064b7237e373708e7fc5e594721ded3dd3ac98b6542d0b696c"
+  }
+]

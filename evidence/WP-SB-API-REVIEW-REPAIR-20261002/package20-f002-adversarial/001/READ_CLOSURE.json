@@ -1,0 +1,51 @@
+{
+  "own_prior_complete_source_body_reuse": [
+    {
+      "own_prior_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/001/MANIFEST.json",
+      "sha256": "a03032aee64501bfdb3eac37aea48c2fc238dc7350a2852f63357b816d866b94",
+      "all_artifacts_reverified": 24
+    },
+    {
+      "own_prior_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/002-verification-precision/MANIFEST.json",
+      "sha256": "ac234df60297fea8f32fc1728e8b01a5fd23584197bc875dd12fa36ba7f58003",
+      "all_artifacts_reverified": 2
+    },
+    {
+      "own_prior_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/003-previous-raw-qualification/MANIFEST.json",
+      "sha256": "800f2426f10fa878c3180584e1fde26253f3720532c742e7a720ae0d8c646994",
+      "all_artifacts_reverified": 7
+    },
+    {
+      "own_prior_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/004-corrected-raw-qualification/MANIFEST.json",
+      "sha256": "b4b87ffd4c6fc99bd80cc3059212ee19a18d723380a080732dbc35c35d607983",
+      "all_artifacts_reverified": 13
+    },
+    {
+      "own_prior_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package20-f002-source-preflight/005-original-pdb-input-supplement/MANIFEST.json",
+      "sha256": "ae3853414da23fce2401481b4c9ed1416701bd399dbbf9d966fbb22013c330ed",
+      "all_artifacts_reverified": 1
+    }
+  ],
+  "fresh_FULL_freeze_and_counter_logs": [
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE20_F002_FINAL_NATIVE_FREEZE_R1.json",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-unit-restore.log",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-unit-build.log",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-omitted-prerequisite-negative.log",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-unrelated-positive.log",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-engineering-restore-only.log",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-same-rule-positive.log"
+  ],
+  "previous_corrected9logs": "OwnFULL001..005exacthashreuse; allcurrentlogs rehashed against15actualreceipts.",
+  "frame_review": "Every encoded source/bin/asset row parsed and independently rehashed; no FULLsemantic source-owner claim inferred from metadata processing.",
+  "source_exact_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-adversarial/001/EXACT_OWN_PERSONAL_SOURCE_REUSE.json",
+  "native_operations_by_reviewer": 0,
+  "product_test_globalCSV_writes": 0,
+  "limits": [
+    "Physical executed SDK/runtimehost version retrospectively unbound; symbolic dotnet receipts, actual MTPnet10/x64 and selected projectDLL/sourcePDB/deps are bound.",
+    "Original Previous initial hashcapture4s overlap is historical qualification, not strict preRestore proof. Fresh countercase is strictly preRestore completed.",
+    "Three generated RegexGenerator document disk bodies absent (one/image); identical PDBexpectedSHA recorded. 46/47physical documents perimage match and39originaldocs perimage independently F/Input/Git bound.",
+    "Workers use original product/test baseline: Corrected includes only two F002 workflow/docs changes. This is not an integrated current-product all-repairs test run.",
+    "Local fresh generated directories with existing globalNuGetcache; no coldcache or actual remote GitHub UbuntuCI run claimed.",
+    "All12324green is execution coverage, not canonical suite/owner grade or wholeAPI/Core/A+/ARM/heap acceptance. No assertions, tests, graph or locks changed for this package."
+  ]
+}

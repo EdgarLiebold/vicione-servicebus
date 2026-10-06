@@ -1,0 +1,94 @@
+{
+  "utc": "2026-10-04T20:59:48.718182+00:00",
+  "decision": "APPLY_PEER_APPROVED_STARTUP10_AND_FOUR_VALIDATORS12_ORIGINAL_TESTS_WITHOUT_BUS_OR_VALIDATOR_PRODUCT_EDITS",
+  "author_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package142-startup-warning-cleanup10-oracles-proposed-r1/REPORT.json",
+      "sha256": "43226f66abb96ae94fea8b7bb11f07eeb2f243abe8a6ce041c4204a30d707d0b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package144-entity-name-trailing-boundary12-oracles-proposed-r1/REPORT.json",
+      "sha256": "095235bad7f19e4b3ee1ff355ad254297881560f5587bca2227961e93c366570"
+    }
+  ],
+  "peer_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package144-startup10-independent-runtime-source-r1/REPORT.json",
+      "sha256": "a2ba9c6dd78c9d8191355b4aefb012939996c1ad081f20b0187589a1edfb529a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package144-validator12-independent-source-r1/REPORT.json",
+      "sha256": "32de903e22e27c44a446a5adcce40d56411506cf51abb683b91aa18a544b3ab9"
+    }
+  ],
+  "author_manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package142-startup-warning-cleanup10-oracles-proposed-r1/MANIFEST.json",
+      "sha256": "a22660d50c4a96d40e978b178485a266c356701ba2a7fc864f98250c747cd3c6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package144-entity-name-trailing-boundary12-oracles-proposed-r1/MANIFEST.json",
+      "sha256": "01b4c54ccc67d4108f003805d1c060ffa0c85de72653de1d6a1be82f67e5cfa1"
+    }
+  ],
+  "peer_manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package144-startup10-independent-runtime-source-r1/MANIFEST.json",
+      "sha256": "22250c7ef80deb0ab47b385522dfe2dc1de10478a724c5a3928d69b421b6f684"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package144-validator12-independent-source-r1/MANIFEST.json",
+      "sha256": "c52e74a7a9eaecc29134d4dec9123c7196b93f5b380bc895590f1eadc754d4a5"
+    }
+  ],
+  "changes": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs",
+      "before_sha256": "1d2ee1806b90ac14154a2825bb76905194934fbed27d9acd1d2d033d5ea1fc85",
+      "after_sha256": "9f023f37020808ba51cd0692fdb7d6408725f4e4df5749fc9d0814b358919c61"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "fe69588ca7c1164898a8065af7f15312843da639496bd770b22f20555355bd76",
+      "after_sha256": "733909112e6cfce88217f95c3b9c14d0bd7f027d6239bc838e6869857c8b161f"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqEndpointAddressTests.cs",
+      "before_sha256": "be70e41f1725e61a200aff4ec32dad3d9daf11593df69ea85de4f1694a9a6027",
+      "after_sha256": "e904d1994bbc361ec8ccdcd5e92f944dc40f6fb106e5df4d72405c855ab59961"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/Requirements/ActiveMqRequirements.json",
+      "before_sha256": "0ec5841e134c5c5f96d9b58765f4560e38a5cce4eb1be88f46f27366a0740d8b",
+      "after_sha256": "4bf6a1e467c852c10bfdead69d37ce6c88467ceb0ed6421a3acc8b4121b11f48"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsEntityNameTests.cs",
+      "before_sha256": "56a63596d36d13d3756d2c29f6b446b45993c37bc16c2fcb038457fa611e02c5",
+      "after_sha256": "0402470232ec8b4d3c4e84a9017cb7c37a94469ee4c610dc47926d2e483f3842"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "before_sha256": "023ad57179aa66b6862dba47da011df468b3ee4c2c2f8e836181e14708cfcca9",
+      "after_sha256": "cbeab11eadab08db8de58b83dafe7430f4df64cad9fb585055e1271b219381fb"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "before_sha256": "ac2c90a9f850394fe2857092ed8ea5949ed3c11b3bb12ec58ed31dd3558ff928",
+      "after_sha256": "d944e66c07613042e9fa3f4c461fb4fdda5e1ef834e7ef6cbb6478263a78f487"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusEndpointAddressTests.cs",
+      "before_sha256": "1c5cb48ca5dd98773a601ab03d895a55bce11ce99520c45b8361c43abf103bf8",
+      "after_sha256": "aee898d0c82c4b80ea21406f93956ccb8897b7a4da4b7e4dc44bb6cfe4fa2e4f"
+    }
+  ],
+  "requirements": "Core4594->4596, ActiveMQ130->131, Azure219->220, AWS178->179; each existing row preserved exactly in parsed order, only explicit variants appended.",
+  "prior_freeze_ACK": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package143-future10-consumption252-independent-r1/FREEZE.json",
+    "sha256": "509e0d05f6568761c9b7d885e5b4632925e5f5349ca3c4665746c4eaf2ced39f"
+  },
+  "root_personal_review": "Startup new two methods/helpers whole37062d+c119ed, wholeactual InMemory198c119ed, previouswholeBusLifecyclef68a34, author+erratum37062d, wholepeer c6207b; fourwholecurrentvalidators4b2756, newmethods+actualdeltasf920f1, author/research15d5f9, current3wholeOriginaltestownersc6207b. Peer normativevalidatorreport visiblec9d7fc allnorms before mechanicalinput list truncated; no wholemechanicalinput/humanSource claim. All sealed/liveBefore checks repeated before first mutation.",
+  "source_state": "FutureF120 one-line fixed already145; BusLifecycle/Factory and fourvalidator original sources remain unchanged for causal Original counterexamples; SDK inactive.",
+  "scope": "22 newly added cases; no finding/native success inferred. Strict solution build and original/fixed selected native pending. WholeAPI PARTIAL."
+}

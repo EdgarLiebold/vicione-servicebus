@@ -59,7 +59,7 @@ public sealed class RabbitMqQueueRedeliveryPlan
         _routingKeys = delayValues.ToDictionary(
             milliseconds => milliseconds,
             milliseconds => milliseconds.ToString(CultureInfo.InvariantCulture));
-        Intervals = delayValues.Select(milliseconds => TimeSpan.FromMilliseconds(milliseconds)).ToArray();
+        Intervals = Array.AsReadOnly(delayValues.Select(milliseconds => TimeSpan.FromMilliseconds(milliseconds)).ToArray());
     }
 
     /// <summary>Gets the queue name.</summary>

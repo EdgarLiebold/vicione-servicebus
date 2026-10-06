@@ -1,0 +1,91 @@
+{
+  "utc": "2026-10-04T22:50:33.755753+00:00",
+  "decision": "CONFIRM_TWO_SOURCE_XML_FINDINGS_NOT_YET_FINAL_PACKAGE_ACCEPTED",
+  "confirmed_before": 125,
+  "confirmed_after": 127,
+  "accepted_unchanged": 125,
+  "findings": [
+    {
+      "id": "F-SB-API-126",
+      "severity": "Low",
+      "title": "Nine setter-only configuration properties falsely document a public getter",
+      "classification": "CONFIRMED_SOURCE_XML_CONTRACT_DEFECT",
+      "source_owners": [
+        "src/ViciOne.ServiceBus/Configuration/ILatestConfigurator.cs",
+        "src/ViciOne.ServiceBus/Configuration/IOutboxConfigurator.cs",
+        "src/ViciOne.ServiceBus/Configuration/ReceiverConfiguration.cs",
+        "src/ViciOne.ServiceBus/Configuration/Redelivery/RedeliveryRetryPipeSpecification.cs",
+        "src/ViciOne.ServiceBus/Configuration/SerializationConfiguration.cs",
+        "src/ViciOne.ServiceBus/Configuration/TransactionPipeSpecification.cs"
+      ],
+      "status": "SOURCE_REPAIRED_ADVERSARIAL_NO_BLOCK_CURRENT_FRESH_PACK_REVIEW_PENDING",
+      "author": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-setter-summary-xml9-product-proposal-r1/REPORT.json",
+        "sha256": "295a6d6eb96cd55a9c381b0243e398197791a88dae2548231db9f80016205371"
+      },
+      "adversarial_review": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-setter-xml9-independent-scanner-r1/REPORT.json",
+        "sha256": "d8f97279c53ebee92974b42c1780f070fb86c7fe0bab603ce56a7c7fcc9a24c7"
+      },
+      "precision_erratum": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-setter-xml9-last-two-rationale-erratum-r1/ERRATUM.json",
+        "sha256": "8454146ce3f5d6d25473755f623351a0a9ca002405e9b87831e47dace55b5c50"
+      },
+      "actual_XML_nodes": 9,
+      "scope": "XML-only truthful setter operation descriptions; no runtime or public signature edits",
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-127",
+      "severity": "Low",
+      "title": "Ten saga interface methods document incorrect return, lifecycle, insertion or activity-data contracts",
+      "classification": "CONFIRMED_SOURCE_XML_CONTRACT_DEFECT",
+      "status": "SOURCE_REPAIRED_ADVERSARIAL_NO_BLOCK_CURRENT_FRESH_PACK_REVIEW_PENDING",
+      "author_packages": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-saga-six-doc-methods-xml9-product-proposed-r1/REPORT.json",
+          "sha256": "7b6f3938789ebb4b8367ce95bbe2f04d0ced7dabd02237fd23402a4957e98ee3"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-preinsert-xml2-product-proposed-r1/REPORT.json",
+          "sha256": "da0718d4c323052821e847a08968e0a7130240d4e6e07fff843a4d932aa3a686"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-untyped-activity-selector-xml2-product-proposed-r1/REPORT.json",
+          "sha256": "8f7ada83c741b635e4146107912e6220955754db11e9809af1605a12c83a6a81"
+        }
+      ],
+      "adversarial_reviews": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-saga-xml9-independent-qualification-r1/REPORT.json",
+          "sha256": "e1809db054219f4679c70d4bbb44d77cf92a8a317274674dd70b58c2a842d364"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-preinsert-selector-xml4-independent-r1/REPORT.json",
+          "sha256": "f5a70400f3c951758bb696947d431c46b443f2f2050d83d2ca4e85037df5a7a2"
+        }
+      ],
+      "actual_XML_nodes": 13,
+      "interface_methods": 10,
+      "scope": "Only truthful saga naming, provider-specific Undo and PreInsert, configurator returns, event activity commit, final state entry, instance selector contracts. No universal provider failure suppression or rollback promise.",
+      "whole_API_member_review_closed": false
+    }
+  ],
+  "root_reads": [
+    "f58f90",
+    "18d016",
+    "da3f9a",
+    "0112a9"
+  ],
+  "source_application": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE151_DOC18_REQUEST30_TEST4_REQUIREMENTS_ROOT_APPLICATION_R1.json",
+      "sha256": "19cc598d46a0558e1bcc8d80b666e935a595aca2fdfdf9ef27053a47e76ded04"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE153_REQUEST_TOKEN_SOURCE_OLD_ORACLE2_AND_SAGA_DOC4_ROOT_APPLICATION_R1.json",
+      "sha256": "8df35fd414c523395d134c2711d74018f41349f35b87419c5c14ca80908c7eed"
+    }
+  ],
+  "whole_api_status": "PARTIAL"
+}

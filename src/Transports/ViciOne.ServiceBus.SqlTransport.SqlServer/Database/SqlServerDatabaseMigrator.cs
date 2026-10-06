@@ -130,7 +130,7 @@ END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_Queue_AutoDelete' AND objects.name = 'Queue')
+    WHERE indexes.name ='IX_Queue_AutoDelete' AND indexes.object_id = OBJECT_ID('{0}.Queue'))
 BEGIN
     CREATE INDEX IX_Queue_AutoDelete ON {0}.Queue (AutoDelete) INCLUDE (Id);
 END;
@@ -176,21 +176,21 @@ END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_TopicSubscription_Unique' AND objects.name = 'TopicSubscription')
+    WHERE indexes.name ='IX_TopicSubscription_Unique' AND indexes.object_id = OBJECT_ID('{0}.TopicSubscription'))
 BEGIN
     CREATE UNIQUE INDEX IX_TopicSubscription_Unique ON {0}.TopicSubscription (SourceId, DestinationId, SubType, RoutingKey, Filter);
 END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_TopicSubscription_Source' AND objects.name = 'TopicSubscription')
+    WHERE indexes.name ='IX_TopicSubscription_Source' AND indexes.object_id = OBJECT_ID('{0}.TopicSubscription'))
 BEGIN
     CREATE INDEX IX_TopicSubscription_Source ON {0}.TopicSubscription (SourceId) INCLUDE (Id, DestinationId, SubType, RoutingKey, Filter);
 END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_TopicSubscription_Destination' AND objects.name = 'TopicSubscription')
+    WHERE indexes.name ='IX_TopicSubscription_Destination' AND indexes.object_id = OBJECT_ID('{0}.TopicSubscription'))
 BEGIN
     CREATE INDEX IX_TopicSubscription_Destination ON {0}.TopicSubscription (DestinationId) INCLUDE (Id, SourceId, SubType, RoutingKey, Filter);
 END;
@@ -227,21 +227,21 @@ END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_QueueSubscription_Unique' AND objects.name = 'QueueSubscription')
+    WHERE indexes.name ='IX_QueueSubscription_Unique' AND indexes.object_id = OBJECT_ID('{0}.QueueSubscription'))
 BEGIN
     CREATE UNIQUE INDEX IX_QueueSubscription_Unique ON {0}.QueueSubscription (SourceId, DestinationId, SubType, RoutingKey, Filter);
 END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_QueueSubscription_Source' AND objects.name = 'QueueSubscription')
+    WHERE indexes.name ='IX_QueueSubscription_Source' AND indexes.object_id = OBJECT_ID('{0}.QueueSubscription'))
 BEGIN
     CREATE INDEX IX_QueueSubscription_Source ON {0}.QueueSubscription (SourceId) INCLUDE (Id, DestinationId, SubType, RoutingKey, Filter);
 END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_QueueSubscription_Destination' AND objects.name = 'QueueSubscription')
+    WHERE indexes.name ='IX_QueueSubscription_Destination' AND indexes.object_id = OBJECT_ID('{0}.QueueSubscription'))
 BEGIN
     CREATE INDEX IX_QueueSubscription_Destination ON {0}.QueueSubscription (DestinationId) INCLUDE (Id, SourceId, SubType, RoutingKey, Filter);
 END;
@@ -278,7 +278,7 @@ END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_Message_SchedulingTokenId' AND objects.name = 'Message')
+    WHERE indexes.name ='IX_Message_SchedulingTokenId' AND indexes.object_id = OBJECT_ID('{0}.Message'))
 BEGIN
     CREATE INDEX IX_Message_SchedulingTokenId ON {0}.Message (SchedulingTokenId) where Message.SchedulingTokenId IS NOT NULL;
 END;
@@ -316,21 +316,21 @@ END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_MessageDelivery_Fetch' AND objects.name = 'MessageDelivery')
+    WHERE indexes.name ='IX_MessageDelivery_Fetch' AND indexes.object_id = OBJECT_ID('{0}.MessageDelivery'))
 BEGIN
     CREATE INDEX IX_MessageDelivery_Fetch ON {0}.MessageDelivery (QueueId, Priority, EnqueueTime, MessageDeliveryId);
 END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_MessageDelivery_FetchPart' AND objects.name = 'MessageDelivery')
+    WHERE indexes.name ='IX_MessageDelivery_FetchPart' AND indexes.object_id = OBJECT_ID('{0}.MessageDelivery'))
 BEGIN
     CREATE INDEX IX_MessageDelivery_FetchPart ON {0}.MessageDelivery (QueueId, PartitionKey, Priority, EnqueueTime, MessageDeliveryId);
 END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_MessageDelivery_TransportMessageId' AND objects.name = 'MessageDelivery')
+    WHERE indexes.name ='IX_MessageDelivery_TransportMessageId' AND indexes.object_id = OBJECT_ID('{0}.MessageDelivery'))
 BEGIN
     CREATE INDEX IX_MessageDelivery_TransportMessageId ON {0}.MessageDelivery (TransportMessageId);
 END;
@@ -376,7 +376,7 @@ END;
 
 IF NOT EXISTS(SELECT TOP 1 1 FROM sys.indexes indexes
     INNER JOIN sys.objects objects ON indexes.object_id = objects.object_id
-    WHERE indexes.name ='IX_QueueMetric_Unique' AND objects.name = 'QueueMetric')
+    WHERE indexes.name ='IX_QueueMetric_Unique' AND indexes.object_id = OBJECT_ID('{0}.QueueMetric'))
 BEGIN
     CREATE UNIQUE INDEX IX_QueueMetric_Unique ON {0}.QueueMetric (StartTime, Duration, QueueId);
 END;
@@ -446,8 +446,8 @@ CREATE OR ALTER PROCEDURE {0}.CreateTopicSubscription
     @SourceTopicName nvarchar(256),
     @DestinationTopicName nvarchar(256),
     @SubscriptionType tinyint = 1,
-    @RoutingKey varchar(256) = '',
-    @Filter varchar(1024) = '{{}}'
+    @RoutingKey nvarchar(256) = '',
+    @Filter nvarchar(1024) = '{{}}'
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -497,8 +497,8 @@ CREATE OR ALTER PROCEDURE {0}.CreateQueueSubscription
     @SourceTopicName nvarchar(256),
     @DestinationQueueName nvarchar(256),
     @SubscriptionType tinyint = 1,
-    @RoutingKey varchar(256) = '',
-    @Filter varchar(1024) = '{{}}'
+    @RoutingKey nvarchar(256) = '',
+    @Filter nvarchar(1024) = '{{}}'
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -545,22 +545,22 @@ END;
 
     const string SqlFnPublish = @"
 CREATE OR ALTER PROCEDURE {0}.PublishMessage
-    @entityName varchar(256),
+    @entityName nvarchar(256),
     @priority int = 100,
     @transportMessageId uniqueidentifier,
     @body nvarchar(max) = NULL,
     @binaryBody varbinary(max) = NULL,
-    @contentType varchar(max) = NULL,
-    @messageType varchar(max) = NULL,
+    @contentType nvarchar(max) = NULL,
+    @messageType nvarchar(max) = NULL,
     @messageId uniqueidentifier = NULL,
     @correlationId uniqueidentifier = NULL,
     @conversationId uniqueidentifier = NULL,
     @requestId uniqueidentifier = NULL,
     @initiatorId uniqueidentifier = NULL,
-    @sourceAddress varchar(max) = NULL,
-    @destinationAddress varchar(max) = NULL,
-    @responseAddress varchar(max) = NULL,
-    @faultAddress varchar(max) = NULL,
+    @sourceAddress nvarchar(max) = NULL,
+    @destinationAddress nvarchar(max) = NULL,
+    @responseAddress nvarchar(max) = NULL,
+    @faultAddress nvarchar(max) = NULL,
     @sentTime datetimeoffset = NULL,
     @expirationTime datetimeoffset = NULL,
     @headers nvarchar(max) = NULL,
@@ -662,22 +662,22 @@ END;
 
     const string SqlFnSend = @"
 CREATE OR ALTER PROCEDURE {0}.SendMessage
-    @entityName varchar(256),
+    @entityName nvarchar(256),
     @priority int = 100,
     @transportMessageId uniqueidentifier,
     @body nvarchar(max) = NULL,
     @binaryBody varbinary(max) = NULL,
-    @contentType varchar(max) = NULL,
-    @messageType varchar(max) = NULL,
+    @contentType nvarchar(max) = NULL,
+    @messageType nvarchar(max) = NULL,
     @messageId uniqueidentifier = NULL,
     @correlationId uniqueidentifier = NULL,
     @conversationId uniqueidentifier = NULL,
     @requestId uniqueidentifier = NULL,
     @initiatorId uniqueidentifier = NULL,
-    @sourceAddress varchar(max) = NULL,
-    @destinationAddress varchar(max) = NULL,
-    @responseAddress varchar(max) = NULL,
-    @faultAddress varchar(max) = NULL,
+    @sourceAddress nvarchar(max) = NULL,
+    @destinationAddress nvarchar(max) = NULL,
+    @responseAddress nvarchar(max) = NULL,
+    @faultAddress nvarchar(max) = NULL,
     @sentTime datetimeoffset = NULL,
     @expirationTime datetimeoffset = NULL,
     @headers nvarchar(max) = NULL,
@@ -733,13 +733,13 @@ BEGIN
     SELECT TOP 1 @vDeliveryId = MessageDeliveryId FROM @vDelivery;
 
     SELECT @vDeliveryId;
-    RETURN @vDeliveryId;
+    RETURN 0;
 END;
 ";
 
     const string SqlFnFetchMessages = @"
 CREATE OR ALTER PROCEDURE {0}.FetchMessages
-    @queueName varchar(256),
+    @queueName nvarchar(256),
     @consumerId uniqueidentifier,
     @lockId uniqueidentifier,
     @lockDuration int,
@@ -779,11 +779,11 @@ BEGIN
         EnqueueTime datetimeoffset,
         ExpirationTime datetimeoffset,
         DeliveryCount int,
-        PartitionKey text,
-        RoutingKey text,
+        PartitionKey nvarchar(128),
+        RoutingKey nvarchar(256),
         TransportHeaders nvarchar(max),
-        ContentType text,
-        MessageType text,
+        ContentType nvarchar(max),
+        MessageType nvarchar(max),
         Body nvarchar(max),
         BinaryBody varbinary(max),
         MessageId uniqueidentifier,
@@ -791,10 +791,10 @@ BEGIN
         ConversationId uniqueidentifier,
         RequestId uniqueidentifier,
         InitiatorId uniqueidentifier,
-        SourceAddress text,
-        DestinationAddress text,
-        ResponseAddress text,
-        FaultAddress text,
+        SourceAddress nvarchar(max),
+        DestinationAddress nvarchar(max),
+        ResponseAddress nvarchar(max),
+        FaultAddress nvarchar(max),
         SentTime datetimeoffset,
         Headers nvarchar(max),
         Host nvarchar(max)
@@ -893,7 +893,7 @@ END";
 
     const string SqlFnFetchMessagesPartitioned = @"
 CREATE OR ALTER PROCEDURE {0}.FetchMessagesPartitioned
-    @queueName varchar(256),
+    @queueName nvarchar(256),
     @consumerId uniqueidentifier,
     @lockId uniqueidentifier,
     @lockDuration int,
@@ -935,11 +935,11 @@ BEGIN
         EnqueueTime datetimeoffset,
         ExpirationTime datetimeoffset,
         DeliveryCount int,
-        PartitionKey text,
-        RoutingKey text,
+        PartitionKey nvarchar(128),
+        RoutingKey nvarchar(256),
         TransportHeaders nvarchar(max),
-        ContentType text,
-        MessageType text,
+        ContentType nvarchar(max),
+        MessageType nvarchar(max),
         Body nvarchar(max),
         BinaryBody varbinary(max),
         MessageId uniqueidentifier,
@@ -947,10 +947,10 @@ BEGIN
         ConversationId uniqueidentifier,
         RequestId uniqueidentifier,
         InitiatorId uniqueidentifier,
-        SourceAddress text,
-        DestinationAddress text,
-        ResponseAddress text,
-        FaultAddress text,
+        SourceAddress nvarchar(max),
+        DestinationAddress nvarchar(max),
+        ResponseAddress nvarchar(max),
+        FaultAddress nvarchar(max),
         SentTime datetimeoffset,
         Headers nvarchar(max),
         Host nvarchar(max)
@@ -1097,12 +1097,12 @@ BEGIN
     END;
 
     SELECT @outMessageDeliveryId;
-    RETURN @outMessageDeliveryId;
+    RETURN 0;
 END";
 
     const string SqlFnTouchQueue = @"
 CREATE OR ALTER PROCEDURE {0}.TouchQueue
-    @queueName varchar(256)
+    @queueName nvarchar(256)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -1125,7 +1125,7 @@ END";
 
     const string SqlFnDeadLetterMessages = @"
 CREATE OR ALTER PROCEDURE {0}.DeadLetterMessages
-    @queueName varchar(256),
+    @queueName nvarchar(256),
     @messageCount int
 AS
 BEGIN
@@ -1179,7 +1179,7 @@ END";
 
     const string SqlFnPurgeQueue = @"
 CREATE OR ALTER PROCEDURE {0}.PurgeQueue
-    @queueName varchar(256)
+    @queueName nvarchar(256)
 AS
 BEGIN
     SET NOCOUNT ON;

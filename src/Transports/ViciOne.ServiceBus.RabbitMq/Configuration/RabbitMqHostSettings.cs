@@ -88,7 +88,7 @@ public interface RabbitMqHostSettings
     /// <summary>The maximum number of channels for the connection.</summary>
     ushort RequestedChannelMax { get; }
 
-    /// <summary>The requested connection timeout, in milliseconds.</summary>
+    /// <summary>Gets the requested connection timeout.</summary>
     TimeSpan RequestedConnectionTimeout { get; }
 
     /// <summary>Gets the client-side publish-batch settings.</summary>

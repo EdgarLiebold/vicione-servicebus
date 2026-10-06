@@ -27,7 +27,7 @@ public class PayloadFilter<TContext, TPayload> :
         context.CreateFilterScope("inline");
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Provides the captured payload when absent, then invokes the continuation.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

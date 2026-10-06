@@ -93,7 +93,14 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
 
     Task DeclareAsync(SessionContext context, Topic topic)
     {
-        LogContext.Debug?.Log("Declare topic {Topic}", topic);
+        try
+        {
+            LogContext.Debug?.Log("Declare topic {Topic}", topic);
+        }
+        catch
+        {
+            // Optional diagnostics must not interrupt transport creation or topology setup.
+        }
 
         // Topology deployment completes only after the broker confirms that the topic exists.
         return context.EnsureTopicExistsAsync(topic);
@@ -101,7 +108,14 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
 
     Task DeclareAsync(SessionContext context, Queue queue)
     {
-        LogContext.Debug?.Log("Get queue {Queue}", queue);
+        try
+        {
+            LogContext.Debug?.Log("Get queue {Queue}", queue);
+        }
+        catch
+        {
+            // Optional diagnostics must not interrupt transport creation or topology setup.
+        }
 
         return context.GetQueueAsync(queue);
     }

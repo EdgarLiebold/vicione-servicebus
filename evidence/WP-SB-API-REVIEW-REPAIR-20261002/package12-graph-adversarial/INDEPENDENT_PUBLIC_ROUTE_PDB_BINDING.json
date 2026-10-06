@@ -1,0 +1,509 @@
+{
+  "status": "STATIC_BOUND_BOUNDED_25_PUBLIC_ROUTE_SOURCES_IN_BOTH_SELECTED_PACKAGES",
+  "count": 50,
+  "bindings": [
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationBusFactory.cs",
+      "sha256": "a48cf56a209a2d0539925e99df4afc840ba2636a3c7f581cf2680d53e82b74be",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationBusFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "a48cf56a209a2d0539925e99df4afc840ba2636a3c7f581cf2680d53e82b74be"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusFactoryConfigurator.cs",
+      "sha256": "667c1f8c0b1d1bdd293ae3dc1b45c54f44dabf7388f2ccf925c56513c52a7e5a",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusFactoryConfigurator.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "667c1f8c0b1d1bdd293ae3dc1b45c54f44dabf7388f2ccf925c56513c52a7e5a"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryTopologyConfiguration.cs",
+      "sha256": "afe7d630bbc272b69287a67a68bd7b9b1e04cb8240163092f97751547bf087ed",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryTopologyConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "afe7d630bbc272b69287a67a68bd7b9b1e04cb8240163092f97751547bf087ed"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryDelayProvider.cs",
+      "sha256": "3a48b29ec8165d8af994138dcc9222f2fa19120278db72fa91f136a4c39b449c",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryDelayProvider.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "3a48b29ec8165d8af994138dcc9222f2fa19120278db72fa91f136a4c39b449c"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryHost.cs",
+      "sha256": "97c3abed508531b9c686458adbb5cf32f7382c34309d1b8c0ffa2cfde4329753",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryHost.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "97c3abed508531b9c686458adbb5cf32f7382c34309d1b8c0ffa2cfde4329753"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryTransportProvider.cs",
+      "sha256": "b6b41198f318dcd3172349a3b0f9cbd2572715113562671c4ffdb99d58c3d1b6",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryTransportProvider.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b6b41198f318dcd3172349a3b0f9cbd2572715113562671c4ffdb99d58c3d1b6"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryBusFactoryConfigurator.cs",
+      "sha256": "16a9c5f4f7d8e2d892eabbabf3c5e9daf92c24bf1508f711205ff0d765d97905",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryBusFactoryConfigurator.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "16a9c5f4f7d8e2d892eabbabf3c5e9daf92c24bf1508f711205ff0d765d97905"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryDelayProvider.cs",
+      "sha256": "ef3acc185d000b01f23b0ff1cfa4dd2531ff6a255f974eef599010f55c5810ee",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryDelayProvider.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "ef3acc185d000b01f23b0ff1cfa4dd2531ff6a255f974eef599010f55c5810ee"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Providers/Transports/InMemory/InMemoryBus.cs",
+      "sha256": "a9be3e6a7850c969954347ca7fdf69a60f4ace25026befd7ac90ba5a9be74182",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Transports/InMemory/InMemoryBus.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "a9be3e6a7850c969954347ca7fdf69a60f4ace25026befd7ac90ba5a9be74182"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Transports/Hosting/MultiBusInstance.cs",
+      "sha256": "134486a76d999a9e8e2cab4c9f7f97e5d719ab4d07521a00cf566fa3258399d6",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/MultiBusInstance.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "134486a76d999a9e8e2cab4c9f7f97e5d719ab4d07521a00cf566fa3258399d6"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Transports/Hosting/TransportBusInstance.cs",
+      "sha256": "022411e69a6977706272c9fe1b0c98bd67aac209b03665fc42572b48416f453b",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/TransportBusInstance.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "022411e69a6977706272c9fe1b0c98bd67aac209b03665fc42572b48416f453b"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Bind.cs",
+      "sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/Bind.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "f236623fdb28e5745365501bee6c15c2bfd42855e640877747ab159b13c13bf6",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f236623fdb28e5745365501bee6c15c2bfd42855e640877747ab159b13c13bf6"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Addressing/InMemoryHostAddress.cs",
+      "sha256": "16367e7a179234e310ed5a39aac0c922e1614f97811db116c00718d3ef0ec265",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Addressing/InMemoryHostAddress.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "16367e7a179234e310ed5a39aac0c922e1614f97811db116c00718d3ef0ec265"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusConfiguration.cs",
+      "sha256": "f434862f967b22837e2d3988dcdde507eb9ae9897938b64ae5a4a605df3b6612",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f434862f967b22837e2d3988dcdde507eb9ae9897938b64ae5a4a605df3b6612"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryHostConfiguration.cs",
+      "sha256": "414c32cae0345b670e5a9799eb5e2105c8569adb38b0b219f6660d77b08c6f9c",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryHostConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "414c32cae0345b670e5a9799eb5e2105c8569adb38b0b219f6660d77b08c6f9c"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryBusInstance.cs",
+      "sha256": "f4251cbd910265dce9d7eb23f8c4ba5f199171736b4b717c056e841b5af58044",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryBusInstance.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f4251cbd910265dce9d7eb23f8c4ba5f199171736b4b717c056e841b5af58044"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Transports/Hosting/IBusInstance.cs",
+      "sha256": "3d6cbe937f0e13bce8695881e35b61289d4f8a101eee2c9f659b5ff6e1ec882f",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/IBusInstance.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "3d6cbe937f0e13bce8695881e35b61289d4f8a101eee2c9f659b5ff6e1ec882f"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs",
+      "sha256": "6594736c849a6f95031c368dc469a5d57dce59e97a0bc6cf4579aebc6ee0ecd3",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "6594736c849a6f95031c368dc469a5d57dce59e97a0bc6cf4579aebc6ee0ecd3"
+      }
+    },
+    {
+      "mode": "previous",
+      "source": "src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+      "sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationBusFactory.cs",
+      "sha256": "a48cf56a209a2d0539925e99df4afc840ba2636a3c7f581cf2680d53e82b74be",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationBusFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "a48cf56a209a2d0539925e99df4afc840ba2636a3c7f581cf2680d53e82b74be"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusFactoryConfigurator.cs",
+      "sha256": "667c1f8c0b1d1bdd293ae3dc1b45c54f44dabf7388f2ccf925c56513c52a7e5a",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusFactoryConfigurator.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "667c1f8c0b1d1bdd293ae3dc1b45c54f44dabf7388f2ccf925c56513c52a7e5a"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryTopologyConfiguration.cs",
+      "sha256": "afe7d630bbc272b69287a67a68bd7b9b1e04cb8240163092f97751547bf087ed",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryTopologyConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "afe7d630bbc272b69287a67a68bd7b9b1e04cb8240163092f97751547bf087ed"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryDelayProvider.cs",
+      "sha256": "3a48b29ec8165d8af994138dcc9222f2fa19120278db72fa91f136a4c39b449c",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryDelayProvider.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "3a48b29ec8165d8af994138dcc9222f2fa19120278db72fa91f136a4c39b449c"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryHost.cs",
+      "sha256": "97c3abed508531b9c686458adbb5cf32f7382c34309d1b8c0ffa2cfde4329753",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryHost.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "97c3abed508531b9c686458adbb5cf32f7382c34309d1b8c0ffa2cfde4329753"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryTransportProvider.cs",
+      "sha256": "b6b41198f318dcd3172349a3b0f9cbd2572715113562671c4ffdb99d58c3d1b6",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryTransportProvider.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b6b41198f318dcd3172349a3b0f9cbd2572715113562671c4ffdb99d58c3d1b6"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryBusFactoryConfigurator.cs",
+      "sha256": "16a9c5f4f7d8e2d892eabbabf3c5e9daf92c24bf1508f711205ff0d765d97905",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryBusFactoryConfigurator.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "16a9c5f4f7d8e2d892eabbabf3c5e9daf92c24bf1508f711205ff0d765d97905"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryDelayProvider.cs",
+      "sha256": "ef3acc185d000b01f23b0ff1cfa4dd2531ff6a255f974eef599010f55c5810ee",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryDelayProvider.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "ef3acc185d000b01f23b0ff1cfa4dd2531ff6a255f974eef599010f55c5810ee"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Providers/Transports/InMemory/InMemoryBus.cs",
+      "sha256": "a9be3e6a7850c969954347ca7fdf69a60f4ace25026befd7ac90ba5a9be74182",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Transports/InMemory/InMemoryBus.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "a9be3e6a7850c969954347ca7fdf69a60f4ace25026befd7ac90ba5a9be74182"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Transports/Hosting/MultiBusInstance.cs",
+      "sha256": "134486a76d999a9e8e2cab4c9f7f97e5d719ab4d07521a00cf566fa3258399d6",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/MultiBusInstance.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "134486a76d999a9e8e2cab4c9f7f97e5d719ab4d07521a00cf566fa3258399d6"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Transports/Hosting/TransportBusInstance.cs",
+      "sha256": "022411e69a6977706272c9fe1b0c98bd67aac209b03665fc42572b48416f453b",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/TransportBusInstance.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "022411e69a6977706272c9fe1b0c98bd67aac209b03665fc42572b48416f453b"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Bind.cs",
+      "sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/Bind.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Addressing/InMemoryHostAddress.cs",
+      "sha256": "16367e7a179234e310ed5a39aac0c922e1614f97811db116c00718d3ef0ec265",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Addressing/InMemoryHostAddress.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "16367e7a179234e310ed5a39aac0c922e1614f97811db116c00718d3ef0ec265"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusConfiguration.cs",
+      "sha256": "f434862f967b22837e2d3988dcdde507eb9ae9897938b64ae5a4a605df3b6612",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f434862f967b22837e2d3988dcdde507eb9ae9897938b64ae5a4a605df3b6612"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryHostConfiguration.cs",
+      "sha256": "414c32cae0345b670e5a9799eb5e2105c8569adb38b0b219f6660d77b08c6f9c",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryHostConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "414c32cae0345b670e5a9799eb5e2105c8569adb38b0b219f6660d77b08c6f9c"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryBusInstance.cs",
+      "sha256": "f4251cbd910265dce9d7eb23f8c4ba5f199171736b4b717c056e841b5af58044",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryBusInstance.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f4251cbd910265dce9d7eb23f8c4ba5f199171736b4b717c056e841b5af58044"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Transports/Hosting/IBusInstance.cs",
+      "sha256": "3d6cbe937f0e13bce8695881e35b61289d4f8a101eee2c9f659b5ff6e1ec882f",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/IBusInstance.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "3d6cbe937f0e13bce8695881e35b61289d4f8a101eee2c9f659b5ff6e1ec882f"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs",
+      "sha256": "6594736c849a6f95031c368dc469a5d57dce59e97a0bc6cf4579aebc6ee0ecd3",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "6594736c849a6f95031c368dc469a5d57dce59e97a0bc6cf4579aebc6ee0ecd3"
+      }
+    },
+    {
+      "mode": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+      "sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad",
+      "pdb_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad"
+      }
+    }
+  ],
+  "limits": [
+    "Own preflight complete current source or own earlier exact SHA FULL reading only. Previous factory expected original. Later Pkg13 source frame excluded; no every-source/Core766 or dynamic contract closure."
+  ]
+}

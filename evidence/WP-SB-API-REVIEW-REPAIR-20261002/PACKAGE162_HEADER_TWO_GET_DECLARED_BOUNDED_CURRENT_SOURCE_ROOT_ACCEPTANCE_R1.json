@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-05T02:15:20.971112+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED_TWO_BOUNDED_CURRENT_SOURCE_CONTRACTS",
+  "accepted_before": 6041,
+  "accepted_after": 6043,
+  "qualified_repair": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package162-header-fixed30-outbox-routing-schedule-original48-neighbors2304-fresh2-independent-r1/REPORT.json",
+    "sha256": "f7d50a7d072c499d4f5373e91a6acbbde3ab921b286198fb8194283a363af8f4"
+  },
+  "root_reads": [
+    "a915e9 actualoriginal2 typed/norm",
+    "1f33ee genuinewholecurrent274",
+    "c81d73 actual2 matrixtyped/norm and currentoverlayreview"
+  ],
+  "source_sha256": "49127396dd7f0d0778f8a33fc08e56ad1cac1acda31ef064e39ccbca3b066010",
+  "exact_ids": [
+    "M:ViciOne.ServiceBus.Serialization.DictionarySendHeaders.Get``1(System.String,``0)",
+    "M:ViciOne.ServiceBus.Serialization.DictionarySendHeaders.Get``1(System.String,System.Nullable{``0})"
+  ],
+  "member_contract": "Reject blank key before lookup; absent/null and recognized incompatible representation yield exact supplied fallback; directly compatible T retains identity, compatible text/JSON conversions retained. JsonNull uses fallback. Recognized incompatible scalar/owned BCL collection shapes fall back only when the converter boundary is known callback-free; malformed/Undefined/native serialization and actual custom converter read failures propagate. Stores original header values; no transport, token or ownership transfer.",
+  "remaining_runtime_limit": "Bounded current Source and exact25 qualified Header cases support repaired local fallback/cause policy. Unknown DTO/member-converter/arbitrary collection/polymorphism graphs remain outside universal runtime closure; no Native25 transfer to each overload. Signature constraints/defaultValue-notoptional/ref shape unchanged; no fresh compiler-inventory rerun claimed.",
+  "actual_fresh_XML_two_nodes_crc_hash_verified": true,
+  "native_credit": 0,
+  "CLOSED": false
+}

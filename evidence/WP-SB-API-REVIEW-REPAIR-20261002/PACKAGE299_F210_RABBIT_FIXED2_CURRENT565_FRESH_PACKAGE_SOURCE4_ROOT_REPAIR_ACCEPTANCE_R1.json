@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-06T01:47:25.248527+00:00",
+  "status": "ROOT_BOUNDED_F210_REPAIR_ACCEPTED_WITH_INDEPENDENT_SOURCE_NATIVE_PUBLICATION_PROOFS",
+  "finding": "F-SB-API-210",
+  "master_before_sha256": "d5758da17f6162cdf6f924299226f255aa4c3d12be6560906d442725d389756d",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package296-rabbit-fixed-root-native-publication-capture-r1",
+      "manifest_sha256": "a190520fb765383b6e5311c76fb7460aa3854b0301ae7722b687fd20577d9f30"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package296-rabbit-fixed2-whole565-publication-independent-runtime-r1",
+      "manifest_sha256": "e9dd8e4b37626bea23eae1b954ceadd0500ba5c74eb6f1f3ba9089a8ee34c4a0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package290-rabbit-purge-own-debug2-product-proposed-r1",
+      "manifest_sha256": "68c5abb421280bb8102e8397bc28a8dfa04e8770a3b1d19a15379fd65c069270"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package290-rabbit-purge-debug2-independent-source-peer-r1",
+      "manifest_sha256": "59be35779ac8edebdb45081bb92960b80a963e52aca9e6cdcc337e28bd324f20"
+    }
+  ],
+  "native": {
+    "true_fixed_focused": 2,
+    "whole": 565,
+    "failed": 0,
+    "skipped": 0,
+    "focused_subset_not_additive": true
+  },
+  "root_authority": "Wholetruefixedbc8a23; wholepeer684097, wholeProduct79 5d47ce. Physicalcapture982fcd/14selected/PDB2/Req289exactPEonce/currentNuGet. Rootwhole565body notclaimed, nativeindividual2 exact public controls only. Earlier fixed2-r1 is OriginalrepeatZERO fixedcredit; exact Root296 applicationerratum mandatory.",
+  "identity_rebase": "Exactly4 existingSourceSHA/currentPDB/currentrebaseref fields; all oldnorms/status/native/XML/history preserved. Earlier broad suffix scan contained othertransports; exact assembly+absoluteowner selects4 only. Existing SendAsync is already boundedSource accepted: no newOriginalcredit. Current normative revalidation requested separately, old contextual logger hypothesis retained as historical source evidence, not currentF210failure.",
+  "known_findings_before": 210,
+  "bounded_dispositions_before": 209,
+  "bounded_dispositions_after": 210,
+  "master_count_preserved": 18918,
+  "Original_remaining_preserved": 513,
+  "grade": null,
+  "whole_API_closed": false
+}

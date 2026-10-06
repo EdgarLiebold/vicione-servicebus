@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T00:03:12.799043+00:00",
+  "id": "F-SB-API-205",
+  "severity": "Medium",
+  "status": "CONFIRMED_ORIGINAL_NATIVE_PUBLIC_OPERATION_DIAGNOSTIC_FAILURE_REPAIR_PENDING",
+  "title": "Successful Amazon SQS startup purge fails pipeline continuation when optional own Debug logger throws",
+  "source_owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/PurgeOnStartupFilter.cs",
+  "original_native": {
+    "total": 2,
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0
+  },
+  "original_capture": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package270-sqs-public-purge-original2-root-native-capture-r1/REPORT.json",
+    "sha256": "04fcc5f3f9add7fc58146daca03dfc1d212cbc0c1f857810ebd9e08814526e12"
+  },
+  "independent_original_and_Product_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package270-purge-original2-and272-product-independent-peer-r1/REPORT.json",
+    "sha256": "f21d8026c0b0d5bccebcb442867b092f4a58ed6e28cb56d84aa10937b1400540"
+  },
+  "root_whole_peer": "62b844",
+  "first_causal_boundary": "SDKHTTP200 and exactresponse/structuredDebug/unique exception identity assertions reached; hostilefirstNull114fails; healthyfalsepassesfulloncecontrol. Hostilelater115+unreached, no additionalnativeclaim.",
+  "family_reconciliation": "Separate from F191 DurableResourceStore Warning. Exactly one new family, bounded owning post-success purge Debug.",
+  "native_fixed_credit": 0,
+  "whole_API_closed": false
+}

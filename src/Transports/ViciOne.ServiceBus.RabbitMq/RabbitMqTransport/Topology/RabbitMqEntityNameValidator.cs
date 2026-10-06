@@ -39,7 +39,7 @@ public sealed partial class RabbitMqEntityNameValidator :
             && EntityNamePattern().IsMatch(name);
     }
 
-    [GeneratedRegex(@"^[\p{L}\p{Nd}_\-.:]+$", RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"\A[\p{L}\p{Nd}_\-.:]+\z", RegexOptions.CultureInvariant)]
     private static partial Regex EntityNamePattern();
 
 

@@ -1,0 +1,1514 @@
+{
+  "utc": "2026-10-06T11:57:17.888739+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_FIXED425_FINDINGS3_AND_INDIVIDUAL_SOURCE18_GLOBAL_OPEN",
+  "pins": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package424-public-fixed11-current423-source-capture-r1/fixed11-r1/AFTER.json",
+      "sha256": "2309aa15d1ffb3fc119c2422205c0ff5f872b613cfd1c0adf0952347a876ea96"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package424-public-fixed11-current423-source-capture-r1/fixed11-r1/MANIFEST.json",
+      "sha256": "599ac12d418c20b4d9e6938cc9d0346bfcf58ab0a680cad736fc6535382dffdd"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package424-fixed11-independent-native-qualification-r1/REPORT.json",
+      "sha256": "c430fdb19d2c790cd17df6b7dc7022001b4acbefeaf0c089cd7981e1ae8154d8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package424-fixed11-independent-native-qualification-r1/MANIFEST.json",
+      "sha256": "440400aa4d8f50dcee62a59514c867f3218e81d21bf66f017141153111d3b501"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package425-core-ef-module-current423-root-capture-r1/REPORT.json",
+      "sha256": "3394dbd4af50c9ece9c1f43ce783672674835345a010a45682121e2c3af1ec38"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package425-core-ef-module-current423-root-capture-r1/MANIFEST.json",
+      "sha256": "c3c4f277454e19f1df9c64fd4ce216fbc2df45a3f860b205678e8b4e419d9726"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package425-core-ef-module-independent-qualification-r1/REPORT.json",
+      "sha256": "1cc6be3b52af39fc78664ee1bd7a48f832ae57e56663fa000a2bdee066b12b9e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package425-core-ef-module-independent-qualification-r1/MANIFEST.json",
+      "sha256": "aa8cb30821661be8b3e2c335382c7d71762e70f3cb0818ed7160479084eba1c8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package425-strict-fresh4-current423-root-capture-r1/REPORT.json",
+      "sha256": "52f06d006f4f3043aaed9a60dfaacf8af2ff30b0d2ca6b4116d21c1129b92751"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package425-strict-fresh4-current423-root-capture-r1/MANIFEST.json",
+      "sha256": "5ac1a977cbf6007492a756cc129b1a5b8698ab719908892911791651979bc64d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package425-strict-fresh4-independent-publication-peer-r1/REPORT.json",
+      "sha256": "87943bbe1fb7b234002309b90c76deadbe9c9337019c4e8c1a2116238c89c620"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package425-strict-fresh4-independent-publication-peer-r1/MANIFEST.json",
+      "sha256": "f4fd3785976523834c2c92c631caea73861126efbc7bda2d50a185636e335d46"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql17-individual-source-root-proposed-r1/REPORT.json",
+      "sha256": "2aed384fe293f240f29ea60428e6e4cbef3cf779c903ee5eb7eb92f61d3c87b0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql17-individual-source-root-proposed-r1/MANIFEST.json",
+      "sha256": "ec1ac779b1376eb4a71de4ede0227ed9a75ade99a02894f805312016a4cfe5c0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql17-norm5398-ordering-overlay-r1/REPORT.json",
+      "sha256": "60d7c82885a3125ac7610454937de1613fe34e45fff90fcbd2de8ff7db78cfba"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql17-norm5398-ordering-overlay-r1/MANIFEST.json",
+      "sha256": "0047575f9afe6b981eab7f59cb30cddd126c8a77a930583e38ed1bc9e683afc1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql17-norm5398-5914-ordering-overlay-r2/REPORT.json",
+      "sha256": "477ffbfc11592dcc1222be23d82e2d2ffb4d14ccadebc79b5ceecbd5c500ad2a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql17-norm5398-5914-ordering-overlay-r2/MANIFEST.json",
+      "sha256": "6f0c9ec4ee59b18e8dd8ddac5b8adf2f638412d182a30e90bf30f48aaf868c0e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql17-independent-scanner-source-peer-r1/REPORT.json",
+      "sha256": "104462d6964bd040319d14fd14453cbb1bb51beb483d97ba1b022cc5a44f6087"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql17-independent-scanner-source-peer-r1/MANIFEST.json",
+      "sha256": "0e236cf5ef944fdec17f5c713b6705ac695f6841adeff89ae64bd43e8f22ff65"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql17-independent-scanner-prose-precision-erratum-r1/MANIFEST.json",
+      "sha256": "a10413afa53ea961371f6bf2336a0bd6b085ff41c533ca9f81b2e31cee48a4aa"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-sqs-topic-publish1616-bounded-local-source-proposed-r1/REPORT.json",
+      "sha256": "e7099a8654021aaa67d24432ffb9a9dce2dc12901c1255a216c5f109da23e2bf"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-sqs-topic-publish1616-bounded-local-source-proposed-r1/MANIFEST.json",
+      "sha256": "ba98872896bd8959c8c76c0390123f58682de61ac28f8ecdf0fd94767104efd5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-topic-publish1616-independent-scanner-source-peer-r2/REPORT.json",
+      "sha256": "a7e3a514fe78a09021831c01b5d4b62ab35214653d6d65e2ea3305f37249ec6b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-topic-publish1616-independent-scanner-source-peer-r2/MANIFEST.json",
+      "sha256": "44226262cfae4a9f8771e557dab64a691ab4aa0aa7a63a459f6505860a6f12fb"
+    }
+  ],
+  "current_product4": {
+    "src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs": "b16a8873c80786616168406f25604b285ad128b57169e6dab8c60959054549ab",
+    "src/ViciOne.ServiceBus.Sagas/DependencyInjection/Registration/Sagas/SagaStateMachineRegistration.cs": "9a87521cf6cb9a947a9f6668b1865bf9d291c38da38c00782f8986de311e1570",
+    "src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs": "eaa5b74233e96183781c2f4e935883d4119f5fdcd18921d1edbe445441802565",
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs": "9f446ca009eea0316734cee21dd6081791d880f535abfba1a7a7a46f8db38388"
+  },
+  "finding3_full_before": {
+    "F-SB-API-152": {
+      "id": "F-SB-API-152",
+      "severity": "Medium",
+      "title": "Product-owned Saga Created, Used and Removed diagnostics interrupt healthy processing and persistence progress",
+      "classification": "CONFIRMED_FINITE_NATIVE_PRODUCT_DIAGNOSTIC_WORKFLOW_DEFECT",
+      "actual_original_contexts": [
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Removed\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source867 Assert.Null(operationFailure) receives unique InvalidOperationException from selected Removed Debug logger.",
+          "reached": [
+            "Exact selected template single, Debug level, correlation ID and hostile logger throwcount1",
+            "Actual repository load ID once; actual saga consume context async-disposed1/sync0",
+            "Actual Delete received exact saga context before diagnostic"
+          ],
+          "unreached": [
+            "Next continuation single/context assertions869 onward",
+            "Post-Assert.Null repository update/delete/suppression assertions"
+          ],
+          "source_cause": "SendSagaPipe existing lifecycle invokes LogRemoved unguarded at109 after actual Delete; lifecycle captures logger error as operation failure and rethrows after actual cleanup.",
+          "healthy_control": "Same emission/loggerThrows:false passes complete continuation/persistence assertions."
+        },
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Used\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source867 Assert.Null(operationFailure) receives unique InvalidOperationException from selected Used Debug logger.",
+          "reached": [
+            "Exact selected template single, Debug level, correlation ID and hostile logger throwcount1",
+            "Actual repository load ID once; actual saga consume context async-disposed1/sync0"
+          ],
+          "unreached": [
+            "Next continuation single/context assertions869 onward",
+            "Post-Assert.Null repository update/delete/suppression assertions"
+          ],
+          "source_cause": "SendSagaPipe existing lifecycle invokes LogUsed unguarded at89 before policy.ExistingAsync; lifecycle captures logger error as operation failure and rethrows after actual cleanup.",
+          "healthy_control": "Same emission/loggerThrows:false passes complete continuation/persistence assertions."
+        }
+      ],
+      "policy": "Product-owned processing diagnostics must not replace business processing/persistence outcome. Global public LogContext and explicit logging extension propagation contracts remain separate. Existing ownership-on-logger-fault test must be deliberately reconciled when guarded owner callsite changes.",
+      "limits": "Current167 Created healthy control passes and hostile first871 finite diagnostic failure is qualified. Historical166 Created remains fixture failure; Added/Inserted/Dupe/Fault outside this family evidence.",
+      "status": "PRODUCT_CURRENT423_APPLIED_FIXED11_INDEPENDENT_MODULE_PUBLICATION_PENDING",
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-inner-outbox-fixed100-parent18-saga-original38-neighbors2268-fresh2-independent-r1/REPORT.json",
+        "sha256": "f8c594350912b23d430ef0743b6d5a9b63a4888a784416e0f43776a138048381"
+      },
+      "whole_API_member_review_closed": false,
+      "root_registration": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA_DIAGNOSTIC_TRANSITION_TWO_CAUSES_ROOT_FINDING_REGISTRATION_R1.json",
+        "sha256": "332a0d74720708b8ab2d8e7947a8d801eb8c3d55c98964443136e3849264eb62"
+      },
+      "current167_original_contexts": [
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Removed\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source871 Assert.Null(operationFailure) receives unique Removed InvalidOperationException diagnostic.",
+          "reached": [
+            "Real selected structured diagnostic single; Debug level; exact saga CorrelationId; hostile ThrowCount1",
+            "Actual repository load identity; actual AsyncDispose1/Dispose0",
+            "Exact Delete context already reached"
+          ],
+          "unreached": [
+            "Next continuation/context/state assertions after871",
+            "Later repository persistence assertions"
+          ],
+          "source_cause": "SendSagaPipe unguarded LogRemoved at109 after actual Delete",
+          "healthy_control": "Same emission/loggerThrows:false passes full continuation and applicable persistence assertions.",
+          "prior166_precision": "Created both cases in166 failed earlier852 fixture; current realinput correction now makes healthyCreatedpass and hostilecase reach actuallogger. Do not retroactively upgrade166 fixture outcomes."
+        },
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Used\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source871 Assert.Null(operationFailure) receives unique Used InvalidOperationException diagnostic.",
+          "reached": [
+            "Real selected structured diagnostic single; Debug level; exact saga CorrelationId; hostile ThrowCount1",
+            "Actual repository load identity; actual AsyncDispose1/Dispose0"
+          ],
+          "unreached": [
+            "Next continuation/context/state assertions after871",
+            "Later repository persistence assertions"
+          ],
+          "source_cause": "SendSagaPipe unguarded LogUsed at89 before policy",
+          "healthy_control": "Same emission/loggerThrows:false passes full continuation and applicable persistence assertions.",
+          "prior166_precision": "Created both cases in166 failed earlier852 fixture; current realinput correction now makes healthyCreatedpass and hostilecase reach actuallogger. Do not retroactively upgrade166 fixture outcomes."
+        },
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Created\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source871 Assert.Null(operationFailure) receives unique Created InvalidOperationException diagnostic.",
+          "reached": [
+            "Real selected structured diagnostic single; Debug level; exact saga CorrelationId; hostile ThrowCount1",
+            "Valid concrete InMemory message input correlation guard; real factory invocation1; exact input callback reference"
+          ],
+          "unreached": [
+            "Next continuation/context/state assertions after871",
+            "Later repository persistence assertions"
+          ],
+          "source_cause": "FactoryMethodSagaFactory.SendAsync proxy.LogCreated at55 synchronously throws before actual next.SendAsync",
+          "healthy_control": "Same emission/loggerThrows:false passes full continuation and applicable persistence assertions.",
+          "prior166_precision": "Created both cases in166 failed earlier852 fixture; current realinput correction now makes healthyCreatedpass and hostilecase reach actuallogger. Do not retroactively upgrade166 fixture outcomes."
+        }
+      ],
+      "created_extension_qualification": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE167_CREATED_DIAGNOSTIC_F152_EXTENSION_ROOT_QUALIFICATION_R1.json",
+        "sha256": "8324890f91d07a010f33ffaff07d6a2ef62009d51d9e8fe0355b56dd33f7a374"
+      },
+      "current_three_call_fix_qualification": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE168_F153_REPAIR_F152_PARTIAL_AND_TWO_NEW_CAUSES_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "11575430e85031232a683d5e6d0b2c661d6a8fd008a80c20625b949a9988ea60"
+      },
+      "remaining_family_candidate": "Actual Azure Insert success/409/500 diagnostic extension qualified172; pre-reviewed repair182 ready. Actual Dynamo/EF Original12 pre-reviewed181 not yet executed; connection owning boundaries research pending.",
+      "current169_default_created_original": {
+        "case": "ViciOne.ServiceBus.Tests.Configuration.SagaInstanceFactoryDeepContractTests.DefaultSend_CreatedDebugDoesNotPreventDownstreamProgressAsync(loggerThrows: True)",
+        "classification": "CAUSAL_PRODUCT_DEFAULT_FACTORY_CREATED_DEBUG_FAILURE_EXISTING_F152_FAMILY",
+        "first_failure": "Source375 Assert.Null(failure) receives unique IOException Default saga Created diagnostic failure after public async wrapper terminal and manually released completion TCS completed successfully.",
+        "reached": [
+          "Actual public DefaultSagaFactory.SendAsync with valid correlated concrete message, selected structuredCreated single/Debug/correlation and hostile ThrowCount1; fixture logger.ThrownFailure identity equals unique expected IOException.",
+          "Actual public wrapper joined and timeout excluded; wrapper terminal and fixture completion TCS successful before375."
+        ],
+        "unreached": [
+          "Actual returned downstream-task identity, pipe.Count1/context/result/source metadata assertions after375"
+        ],
+        "source_cause": "DefaultSagaFactory.SendAsync44 calls proxy.LogCreated synchronously before next.SendAsync47; diagnostic exception exits first, so downstream is not invoked. Same captured public wrapper produces native unique IOException.",
+        "healthy_control": "loggerThrows:false proves real downstream invoked once; public task pending on completion TCS; exact returned TCS task; all saga/message/receive/serializer identity assertions passed.",
+        "precision": "The released fixture completion TCS in hostile case is not evidence the downstream ran; exact returned-task/pipe assertions are unreached. Original family F152 remains open for this sibling until actual fix qualifies.",
+        "cleanup": "Finally releases/joins completion task and observes actual wrapper even terminal fault; timeout excluded; exact ambient LogContext restored. No transport/durable/wholeSaga claim."
+      },
+      "default_created_original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package169-load-outbox-fixed-default-created-original118-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+        "sha256": "fe50839abafc15255e2d2e7c6a9d13a3a434a7ab742ab879ab2081a1d09e7d2e",
+        "manifest_sha256": "ad68c05f26e8eb0a7eff5fd3769b1ca80ef189fef1cacc95870e0ff3235815ca",
+        "freeze_sha256": "d1bde8c30a7c52c41f4a651a3a2e4a714301c19b98c8082329d57697adf7926e"
+      },
+      "current170_default_fixed_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-default-created-fixed-added-ctor-original134-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+        "sha256": "f8716481dbee8a61c8c13d029c0c89c10b4b78c7be02dff159ca940e9ac7796e",
+        "manifest_sha256": "d825a63c6382e5d8540754671c27e378a539f67c1827ad64ec1f9aa0331d128a",
+        "freeze_sha256": "04d1af01d3a724e7909b64259ce5b4591edc05c813d608f64bdc5c1f88ffb2da"
+      },
+      "current170_added_original": {
+        "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.MissingSaga_AddedDebugDoesNotPreventOwnedDownstreamProgressAsync(loggerThrows: True)",
+        "classification": "CAUSAL_PRODUCT_ADDED_DEBUG_FAILURE_EXISTING_F152_FAMILY",
+        "first_failure": "Source949 Assert.Null(failure) receives exact unique IOException Added diagnostic failure.",
+        "reached": [
+          "Actual public MissingSagaPipe operation terminal; timeout excluded; actual repository.Add state identity exactlyonce.",
+          "Selected structuredAdded single/Debug/correlation/hostile ThrowCount1; acquired addedcontext AsyncDispose1/Dispose0; borrowedinput disposal0; failure identity Same(loggerFailure,failure) before949."
+        ],
+        "unreached": [
+          "Next/Save exact acquired-context assertions after949",
+          "Post949 public success and unrelated repository route absence assertions"
+        ],
+        "source_cause": "MissingSagaPipe52 calls acquiredContext.LogAdded before next.SendAsync54; diagnostic becomes operationFailure and triggers original discard/disposal then preserved IOException.",
+        "healthy_control": "loggerThrows:false passes exact next/save context, success, no discard/other routes. Source same caller/new fixture valid.",
+        "cleanup": "Public task rejoined/observed with timeout exclusion and ambient logger restored. Runtime reached AsyncDispose1 beforefirst949.",
+        "family_precision": "Adds another concrete caller to still-open F152; no automatic unrelated new finding ID."
+      },
+      "current170_added_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-default-created-fixed-added-ctor-original134-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+        "sha256": "f8716481dbee8a61c8c13d029c0c89c10b4b78c7be02dff159ca940e9ac7796e",
+        "manifest_sha256": "d825a63c6382e5d8540754671c27e378a539f67c1827ad64ec1f9aa0331d128a",
+        "freeze_sha256": "04d1af01d3a724e7909b64259ce5b4591edc05c813d608f64bdc5c1f88ffb2da"
+      },
+      "current170_root_registration": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE170_DEFAULT_CREATED_FIXED_ADDED_EXTENSION_F156_CTOR_ROOT_REGISTRATION_R1.json",
+        "sha256": "05331b027a1d4772e8eb91eefd108db578b0b0e488c68333ab0c8057b32ee468"
+      },
+      "added_controls": 2,
+      "scope": "MissingSagaPipe acquired Add context progresses through exact next and Save; optional hostile Added logger cannot turn success into discard; owned async disposal remains once, borrowed input unowned.",
+      "family_open": true,
+      "current_added_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE171_F156_FIXED_F152_ADDED_EXTENSION_AND_F157_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "33bdd3550f81b047cb2fb8b60e2a24316d4a071a81d68c01af3463d203db5f82"
+      },
+      "current172_azure_original_contexts": [
+        {
+          "family": "Azure Table insert diagnostic outcome",
+          "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 0, loggerThrows: True)",
+          "first_failure": "103 Assert.Null(failure)",
+          "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+          "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+          "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+          "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+          "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+        },
+        {
+          "family": "Azure Table insert diagnostic outcome",
+          "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 1, loggerThrows: True)",
+          "first_failure": "103 Assert.Null(failure)",
+          "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+          "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+          "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+          "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+          "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+        },
+        {
+          "family": "Azure Table insert diagnostic outcome",
+          "case": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests.Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(outcome: 2, loggerThrows: True)",
+          "first_failure": "96 Assert.Same(storageFailure,failure)",
+          "cause": "Actual success/409-conflict/500-storage routes reach selected structuredDebug whose exact unique IOException escapes. On success logging prevents context creation; conflict no longer returns null;500primary is replaced.",
+          "reached": "Actual joined repository operation, SDK write count/token/entity/ETag for success, exact structured template/correlation/error and diagnostic identity/count checked before first failure.",
+          "unreached": "Final expected return context/token/ETag success and operation-success assertions after103; outcome2 storage-status/nullresult/task-fault assertions after96.",
+          "healthy": "Three same storage routes with healthy logger PASS all terminal result/error assertions; no actual cloud/HTTP claim.",
+          "cleanup": "Actual InsertTask joined under timeout-exclusion; ambient LogContext restored in nested finally."
+        }
+      ],
+      "current172_azure_original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-add-insert-fixed-ownership-azure-original-fresh3-independent-r1/REPORT.json",
+        "sha256": "08a094db43708a72c045c296bae1538d0187867e898167611b7bfb9da859027c",
+        "manifest_sha256": "2e00191254b29b3bad11a1f3773309f2b3eeb2e45f9e0e4f61acfe76b496da84",
+        "freeze_sha256": "2549deb6205053271a043ef129a15bb14511d154d7c1f2df8db603d57ae46c2a"
+      },
+      "current_azure_source_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE173_TRANSPORT_PRODUCT3_AZURE_PRODUCT1_MULTISTOP_TEST1_PROVIDER_ORIGINAL_TEST2_REQ3_ROOT_APPLICATION_R1.json",
+        "sha256": "7ce81c5c9bcf4d25855d7e031c7fef8275e05d60ae49bbb523b7bd40cb66b10d"
+      },
+      "current173_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE173_TRANSPORT_THREE_FIXED_F152_AZURE_FIXED_PROVIDER_FIVE_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "e13eb819d80bf4b1d26550977499ef6ec1289e2eca42e74b4d293a8c4b341ac4"
+      },
+      "current173_provider_original_contexts": [
+        {
+          "scope": "dynamo",
+          "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 2, loggerThrows: True)",
+          "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:117 Assert.Same",
+          "actual_cause": "DynamoDB insert diagnostic failure",
+          "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+          "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+          "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+          "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+        },
+        {
+          "scope": "dynamo",
+          "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 0, loggerThrows: True)",
+          "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:107 Assert.Null",
+          "actual_cause": "DynamoDB insert diagnostic failure",
+          "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+          "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+          "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+          "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+        },
+        {
+          "scope": "dynamo",
+          "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 1, loggerThrows: True)",
+          "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:117 Assert.Same",
+          "actual_cause": "DynamoDB insert diagnostic failure",
+          "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+          "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+          "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+          "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+        },
+        {
+          "scope": "ef",
+          "case": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.DbContextSagaRepositoryContextTests.Insert_DebugDiagnosticsPreservePersistedOutcomeAsync(outcome: 0, loggerThrows: True)",
+          "first_assertion": "DbContextSagaRepositoryContextTests.cs:104 Assert.Null",
+          "actual_cause": "EF insert diagnostic failure",
+          "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+          "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+          "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+          "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+        },
+        {
+          "scope": "ef",
+          "case": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.DbContextSagaRepositoryContextTests.Insert_DebugDiagnosticsPreservePersistedOutcomeAsync(outcome: 1, loggerThrows: True)",
+          "first_assertion": "DbContextSagaRepositoryContextTests.cs:104 Assert.Null",
+          "actual_cause": "EF insert diagnostic failure",
+          "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+          "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+          "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+          "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+        }
+      ],
+      "current173_Azure_fixed_scope": "All39 current Azure tests pass, including original6 real SDK-table success/409/500 healthy and hostile diagnostics. Three owning optional diagnostic calls guarded; storage/factory/token/ETag contracts unchanged.",
+      "current174_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE174_PROVIDER_FIXED_F152_CONFIG_ORIGINAL_HOST_CONSUMER_TWO_REGISTERED_F001_XML5_EXTENSION_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "bcc34fc92291a4991c54b732f522d3fa6c3974f2f7712fbc1b2bff315cfc81e2"
+      },
+      "current174_provider_fixed_scope": "All36 Dynamo and19EF unchanged selected case IDs pass, including all12 original insert cases with actual later identity, context/state, primary storage error, terminal operation and owned SDK disposal assertions. Azure39, Coreold160, prior117/neighbors2263 pass. Twelve owningSaga/Azure/Dynamo/EF callsites fixed; two ConfigSaga routes now qualified Original failures awaiting175 repair.",
+      "current174_config_original_contexts": [
+        {
+          "scope": "core",
+          "case": "ViciOne.ServiceBus.Tests.Sagas.LegacySagaIntegrationTests.SagaRegistration_DebugFailureDoesNotPreventPublicMessageDeliveryAsync(directConnection: True, loggerThrows: True)",
+          "first_assertion": "LegacySagaIntegrationTests.cs:91 Assert.Null",
+          "actual_unique_diagnostic": "Saga registration diagnostic failure",
+          "source_cause": "Actual optional Saga/ConnectSaga log executes before repository specification/configuration/connection admission.",
+          "reached": "Actual bus startup/direct registration joined; selected structured debug Saga type identity, level, call count and exact logger cause were checked.",
+          "unreached": "Configuration callback count, selected public-send persistence, delivered snapshot and healthy handle after firstNull were not reached.",
+          "controls": "Matching healthy logger route passes; actual finally restores logging and joins owned work. No inferred later assertions on failure."
+        },
+        {
+          "scope": "core",
+          "case": "ViciOne.ServiceBus.Tests.Sagas.LegacySagaIntegrationTests.SagaRegistration_DebugFailureDoesNotPreventPublicMessageDeliveryAsync(directConnection: False, loggerThrows: True)",
+          "first_assertion": "LegacySagaIntegrationTests.cs:91 Assert.Null",
+          "actual_unique_diagnostic": "Saga registration diagnostic failure",
+          "source_cause": "Actual optional Saga/ConnectSaga log executes before repository specification/configuration/connection admission.",
+          "reached": "Actual bus startup/direct registration joined; selected structured debug Saga type identity, level, call count and exact logger cause were checked.",
+          "unreached": "Configuration callback count, selected public-send persistence, delivered snapshot and healthy handle after firstNull were not reached.",
+          "controls": "Matching healthy logger route passes; actual finally restores logging and joins owned work. No inferred later assertions on failure."
+        }
+      ],
+      "current175_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE175_CONFIG_HOST_CONSUMER_PRODUCT3_INITIALIZER_MEDIATOR_XML3_ROOT_APPLICATION_R1.json",
+        "sha256": "1a76a37b0a7d67f16f281164d036fce6b62c751e0e861417a2ec70ee871d7420"
+      },
+      "historical_pre175_root_acceptance_status": "CURRENT175_INDEPENDENT_REPAIR_APPLIED_STRICT_NATIVE_FRESH_PENDING",
+      "current175_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE175_F001_XML5_F152_ALL14_HOST_CONSUMER_CURRENT2677_FRESH7_ROOT_REPAIR_ACCEPTANCE_R1.json",
+        "sha256": "983c8b5e8845387d8cd662a3eaef8c99efbbf474daaa6897b63e3fbb1e7d7df9"
+      },
+      "current175_repair_scope": "All14 reviewed owning optional diagnostics: Saga5,Azure3,Dynamo2,EF2,ConfigSaga2. Last two real public registration routes now pass healthy/hostile controls plus genuine send/persistence/consume. Earlier12 fixed under independent prior receipts and current retained case sets. Public direct Log helpers retain their own propagation contract.",
+      "historical_pre342_status": "CURRENT_REPAIR_ROOT_ACCEPTED_BOUNDED",
+      "current342_consumer_extension": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE342_F152_CONSUMER8_ORIGINAL16_SCOPE_EXTENSION_AND_PRODUCT1_ROOT_APPLICATION_R1.json",
+        "sha256": "60587dae32447777e91a4ccb4aa06fb90714e6b6f7a16fdb29fd9be398694b42"
+      },
+      "current344_azure_extension": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE344_F152_AZURE2_ORIGINAL12_R2_SCOPE_EXTENSION_PRODUCT1_ROOT_APPLICATION_R1.json",
+        "sha256": "881058ccb9041ee216bee39edd1105d74b49fb0a5f508ffbc060bba9e77bb22b"
+      },
+      "current347_extended24_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE347_F152_EXTENDED24_CONSUMER16_AZURE12_FIXED_FRESH2_SOURCE8_NORM2_IDENTITY14_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "8ca5f12aabcfeb0ba33e83dfe033d421fc6405902b5f41f0bd148b8b166d7823"
+      },
+      "current347_scope": "Historical14 +Consumer8/AzureBlob2. Actual unchangedfixed16/12 independently qualified +Core7878/Azure37 strictfresh2; fullAPI remains open.",
+      "historical_pre383_status": "CURRENT_REPAIR_ROOT_ACCEPTED_BOUNDED",
+      "current383_rabbit_basic6_extension": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE383_F152_RABBIT_BASIC6_ORIGINAL12_ROOT_SCOPE_EXTENSION_REGISTRATION_R1.json",
+        "sha256": "33eb061e11504a2c652226233dbefc3bd09c4155762b1089bd6e6a9f4fbf15ca"
+      },
+      "current383_scope": "Current new6 owning Log sites only; Original12 six healthy controls pass/six hostile fail. Historical24-site repair acceptance retained in its original scope. Extra EndOfStream/private channel-shutdown calls held.",
+      "historical_pre388_status": "CURRENT383_RABBIT_BASIC6_INDEPENDENT_ORIGINAL_CONFIRMED_REPAIR_PENDING",
+      "current388_joint_product_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE388_F152_BASIC6_F219_OBSERVER_F220_DEPENDENCY_JOINT_PRODUCT3_ROOT_APPLICATION_R1.json",
+        "sha256": "1d263820971892354c1fa8a19ab3240877541cdd6265469f5280054025e02b78"
+      },
+      "historical_pre391_status": "CURRENT388_REPAIR_APPLIED_FOCUSED_NATIVE_MODULE_STRICT_FRESH_PENDING",
+      "current391_extra2_extension": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE391_F152_BASIC_EXTRA2_ORIGINAL4_ROOT_SCOPE_EXTENSION_REGISTRATION_R1.json",
+        "sha256": "df4d56aea9da698a9b861f4c634690acbfeccd666ed133ef7b7d3f800629cac7"
+      },
+      "current391_scope": "Historical24 and current6 repair/focusedproof preserved; extra2 original4 actual2P2F firstNull86; no newFinding or currentF152 closure",
+      "historical_pre394_status": "CURRENT390_RABBIT_EXTRA2_INDEPENDENT_ORIGINAL_CONFIRMED_REPAIR_PENDING",
+      "current394_root_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE394_F152_BASIC_EXTRA2_PRODUCT1_ROOT_APPLICATION_R1.json",
+        "sha256": "e885a4bcd72409bdd20b99d9c838ebf2374be75f731458f128b27d9b0249d97a"
+      },
+      "historical_pre398_status": "CURRENT394_REPAIR_APPLIED_FIXED4_PRIOR12_MODULE_STRICT_FRESH_PENDING",
+      "current398_root_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE398_F152_BASIC8_FIXED16_RABBIT595_STRICT_FRESH_SOURCE6_OWNER4_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "af61bcce9255710227de7dfefe4722345aa083522a2360bcbc3666c2745ea484"
+      },
+      "current398_scope": [
+        "Only eight optional owning diagnostic expressions; mandatory state/SDK/base work and general transportfault helper policy unchanged.",
+        "Native public lifecycle and event removal evidence finite16; private worker/drain, broker/network, arbitrary replay/concurrent SPI remain separate."
+      ],
+      "historical_pre408_status": "CURRENT398_BASIC8_FIXED16_MODULE595_STRICT_FRESH_ROOT_REPAIR_ACCEPTED_BOUNDED",
+      "current408_extension": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE408_ORIGINAL30_F221_F222_F223_F152_ROOT_FINDING_REGISTRATION_R1.json",
+        "sha256": "57c60573316d54dff62d03a617ea615d76f39ed9799c307934bb533e32a63c25"
+      },
+      "historical_pre411_status": "CURRENT407_OWNING_COURIER_AND_HARNESS_DIAGNOSTICS_CONFIRMED_REPAIR_PENDING",
+      "current411_product_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE411_F152_F221_F222_F223_PRODUCT5_ROOT_APPLICATION_R1.json",
+        "sha256": "7fbc13579435815b0c7db1bfe8e6e9287e4fcc7a7ae89318c1327737fa517cdb"
+      },
+      "historical_pre416_status": "CURRENT411_PRODUCT_APPLIED_UNCHANGED_FOCUSED30_MODULE_STRICT_FRESH_PENDING",
+      "root_repair_acceptance": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE416_F152_F221_F222_F223_FIXED30_CORE7935_FRESH3_SOURCE12_OWNER_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "2db64416416c9dbec310a502a410779a8e6dab1cff6501a60ff6df777c7215a3"
+      },
+      "root416_admin_completion": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE416_ADMIN_COMPLETION_FINDING_ID_FORMAT_PRECISION_R1.json",
+        "sha256": "17da477334a91c925dacd127e3f4d86ecc15041bac5f13cc0c4856583876484d"
+      },
+      "historical_pre421_status": "ROOT_ACCEPTED_BOUNDED_REPAIR_CURRENT411_FIXED30_MODULE7935_STRICT3_FRESH3",
+      "current421_extension": {
+        "root_registration": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE421_ORIGINAL11_F224_F225_AND_F152_SCOPE_EXTENSION_ROOT_REGISTRATION_R1.json",
+          "sha256": "b460b14aebd23f1645e1df5cfd66af8aa4edb06303f334be4d6994021cbf529b"
+        },
+        "original": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-original11-independent-native-qualification-r1/REPORT.json",
+          "sha256": "11d7b3deb8a554ec5a40d21d8c9d2a71c1b49c77045a55467863b85a2dca0df0"
+        },
+        "native_total": 6,
+        "passed": 3,
+        "failed": 3,
+        "scopes": [
+          "BaseHost.Start Debug/Warning",
+          "SagaStateMachineRegistration.Configure Info"
+        ],
+        "all_prior_repairs_retained": true
+      },
+      "historical_pre423_status": "REOPENED_CURRENT419_HOST_SAGA_OWNING_DIAGNOSTICS_PRODUCT_REPAIR_PENDING",
+      "current423_product_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE423_F152_F224_F225_PRODUCT4_ROOT_APPLICATION_R1.json",
+        "sha256": "22579f9da2ae9428cbe73846ca6b2d5a0705e1d7267e128918ca080ac06ebcc9"
+      }
+    },
+    "F-SB-API-224": {
+      "id": "F-SB-API-224",
+      "severity": "Medium",
+      "title": "Bus-Harness observer disposal failure skips remaining observer and base resource retirement",
+      "classification": "CONFIRMED_FINITE_NATIVE_PUBLIC_LIFECYCLE_DEFECT",
+      "status": "PRODUCT_CURRENT423_APPLIED_FIXED11_INDEPENDENT_MODULE_PUBLICATION_PENDING",
+      "source_owners": [
+        "src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs"
+      ],
+      "actual_original": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-original11-independent-native-qualification-r1/REPORT.json",
+        "sha256": "11d7b3deb8a554ec5a40d21d8c9d2a71c1b49c77045a55467863b85a2dca0df0"
+      },
+      "actual_native_counts": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "causal_bound": "Successful real InMemory Start and rawStop; one actual observer timer inner released then unique cleanup IOException returned; before fallback first saved TestCancellationToken oracle71 actualFalse. Later inactivitytoken/alltimers/disposedGetter oracles unreached. Local all-attempt Dispose XML contradicts skipping later cleanup.",
+      "scope": "Different owning derived Bus cleanup before base entry from F222 entered base callback failure. No ID per timer/test. Unexposed private CTS resource disposal/concurrent calls ungraded.",
+      "whole_API_member_review_closed": false,
+      "root_registration": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE421_ORIGINAL11_F224_F225_AND_F152_SCOPE_EXTENSION_ROOT_REGISTRATION_R1.json",
+        "sha256": "b460b14aebd23f1645e1df5cfd66af8aa4edb06303f334be4d6994021cbf529b"
+      },
+      "historical_pre423_status": "CONFIRMED_CURRENT419_ORIGINAL_PRODUCT_REPAIR_PENDING",
+      "current423_product_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE423_F152_F224_F225_PRODUCT4_ROOT_APPLICATION_R1.json",
+        "sha256": "22579f9da2ae9428cbe73846ca6b2d5a0705e1d7267e128918ca080ac06ebcc9"
+      }
+    },
+    "F-SB-API-225": {
+      "id": "F-SB-API-225",
+      "severity": "Medium",
+      "title": "EF-Outbox second observer admission failure leaves returned first consumer registration attached",
+      "classification": "CONFIRMED_FINITE_NATIVE_PUBLIC_REGISTRATION_DEFECT",
+      "status": "PRODUCT_CURRENT423_APPLIED_FIXED11_INDEPENDENT_MODULE_PUBLICATION_PENDING",
+      "source_owners": [
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs"
+      ],
+      "actual_original": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-original11-independent-native-qualification-r1/REPORT.json",
+        "sha256": "11d7b3deb8a554ec5a40d21d8c9d2a71c1b49c77045a55467863b85a2dca0df0"
+      },
+      "actual_native_counts": {
+        "total": 3,
+        "passed": 1,
+        "failed": 2,
+        "skipped": 0
+      },
+      "causal_bound": "Actual real DI stable bus identity/public setter; configure1 and same optionsobserver; consumer→saga admission, second throws before returned handle. First actual consumer Count72 is1 expected0 after exact admission cause once. Both modes1/2 confirm stale registration, cleanupIO/orderedAggregate remains unreached.",
+      "scope": "Own public EF method returned-handle admission integrity; separate F021 identity repair and related F124/F156/F219/F223 owners retained with no native transfer. Only returned first handle; arbitrary unreturned second side effects not promised.",
+      "whole_API_member_review_closed": false,
+      "root_registration": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE421_ORIGINAL11_F224_F225_AND_F152_SCOPE_EXTENSION_ROOT_REGISTRATION_R1.json",
+        "sha256": "b460b14aebd23f1645e1df5cfd66af8aa4edb06303f334be4d6994021cbf529b"
+      },
+      "historical_pre423_status": "CONFIRMED_CURRENT419_ORIGINAL_PRODUCT_REPAIR_PENDING",
+      "current423_product_application": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE423_F152_F224_F225_PRODUCT4_ROOT_APPLICATION_R1.json",
+        "sha256": "22579f9da2ae9428cbe73846ca6b2d5a0705e1d7267e128918ca080ac06ebcc9"
+      }
+    }
+  },
+  "repair_evidence": {
+    "actual_fixed11": "11P0F0S independently qualified424",
+    "actual_modules": "Core7943P + EF419P =8362P0F0S; Normal summaries, no caseUID subset claim",
+    "strict_build": "current425 --warnaserror --no-incremental graph 0W0E",
+    "fresh_packages": "four current425 native ZIP/producer exact, independent before427 ACK; no installed consumer result"
+  },
+  "Source18": [
+    {
+      "original_csv_zero_based_index": 5202,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.IClientContextSupervisor)",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+        "source_line": "20",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.IClientContextSupervisor)",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+      "current_source_sha256": "04ebf6d5bceb54cc63cdb6bd04124e3888a214d8f5db73043a29bffc99c62bed",
+      "individual_contract_norm": "Creates SharedClientContextFactory over the supplied client supervisor, initializes the inherited TransportPipeContextSupervisor, then registers this child with that same parent AddSendAgent. The constructor does not eagerly acquire a native SQL client. Parent callbacks/base/factory errors remain visible; no arbitrary SPI compensation guarantee.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "04ebf6d5bceb54cc63cdb6bd04124e3888a214d8f5db73043a29bffc99c62bed",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 2,
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.IClientContextSupervisor)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"clientContextSupervisor\">The client context supervisor.</param>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5203,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.IConnectionContextSupervisor)",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+        "source_line": "12",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.IConnectionContextSupervisor)",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+      "current_source_sha256": "04ebf6d5bceb54cc63cdb6bd04124e3888a214d8f5db73043a29bffc99c62bed",
+      "individual_contract_norm": "Creates ScopeClientContextFactory over the supplied connection supervisor, initializes the inherited TransportPipeContextSupervisor, then registers this child with that same parent AddConsumeAgent. No eager SQL client is acquired in this constructor. Parent callbacks/base/factory errors remain visible; no constructor transaction guarantee.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "04ebf6d5bceb54cc63cdb6bd04124e3888a214d8f5db73043a29bffc99c62bed",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 2,
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.IConnectionContextSupervisor)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"connectionContextSupervisor\">The connection context supervisor.</param>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5283,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.SqlTransport.ConnectionContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration,ViciOne.ServiceBus.SqlTransport.Configuration.ISqlTopologyConfiguration,ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory{ViciOne.ServiceBus.SqlTransport.ConnectionContext})",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+        "source_line": "22",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ConnectionContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration,ViciOne.ServiceBus.SqlTransport.Configuration.ISqlTopologyConfiguration,ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory{ViciOne.ServiceBus.SqlTransport.ConnectionContext})",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+      "current_source_sha256": "57a462dffc86aacb0e97eb73b959caf8c8c82b49bcf868e59ab1473860dd877c",
+      "individual_contract_norm": "Initializes the inherited TransportPipeContextSupervisor with the supplied context factory, then individually guards and retains hostConfiguration followed by topologyConfiguration. Base initialization precedes these local argument guards. Does not itself acquire a SQL connection or call the native provider.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "57a462dffc86aacb0e97eb73b959caf8c8c82b49bcf868e59ab1473860dd877c",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 49,
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.ConnectionContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration,ViciOne.ServiceBus.SqlTransport.Configuration.ISqlTopologyConfiguration,ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory{ViciOne.ServiceBus.SqlTransport.ConnectionContext})\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"hostConfiguration\">The host configuration.</param>\n            <param name=\"topologyConfiguration\">The topology configuration.</param>\n            <param name=\"connectionContextFactory\">The connection context factory.</param>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5309,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.SqlTransport.QueueSqlReceiveEndpointContext.#ctor(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration,ViciOne.ServiceBus.SqlTransport.Configuration.ISqlReceiveEndpointConfiguration,ViciOne.ServiceBus.SqlTransport.Topology.BrokerTopology)",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+        "source_line": "22",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.QueueSqlReceiveEndpointContext.#ctor(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration,ViciOne.ServiceBus.SqlTransport.Configuration.ISqlReceiveEndpointConfiguration,ViciOne.ServiceBus.SqlTransport.Topology.BrokerTopology)",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+      "current_source_sha256": "44c62aedeb3beb084e403eae37fcd5b885a907392ac5ef97a77e1a967c8e65f6",
+      "individual_contract_norm": "Runs BaseReceiveEndpointContext first: validates required public configuration objects/addresses, creates observer/provider/pipe lazy state and connects this context to the host. Derived body then retains host/configuration, exposes supplied BrokerTopology and creates a lazy Recycle client-supervisor factory. ClientContextSupervisor getter or agent registration can later initialize the child. No eager SQL client or arbitrary base-host callback atomicity guarantee.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "44c62aedeb3beb084e403eae37fcd5b885a907392ac5ef97a77e1a967c8e65f6",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 67,
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.QueueSqlReceiveEndpointContext.#ctor(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration,ViciOne.ServiceBus.SqlTransport.Configuration.ISqlReceiveEndpointConfiguration,ViciOne.ServiceBus.SqlTransport.Topology.BrokerTopology)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"hostConfiguration\">The host configuration.</param>\n            <param name=\"configuration\">The SQL receive-endpoint configuration used by this context.</param>\n            <param name=\"brokerTopology\">The broker topology.</param>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5397,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.#ctor(System.Uri,ViciOne.ServiceBus.SqlTransport.SqlTransportMessage,ViciOne.ServiceBus.SqlTransport.ReceiveSettings,ViciOne.ServiceBus.SqlTransport.ClientContext,System.TimeProvider)",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "source_line": "31",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.#ctor(System.Uri,ViciOne.ServiceBus.SqlTransport.SqlTransportMessage,ViciOne.ServiceBus.SqlTransport.ReceiveSettings,ViciOne.ServiceBus.SqlTransport.ClientContext,System.TimeProvider)",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "current_source_sha256": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+      "individual_contract_norm": "Guards inputAddress, message, settings, clientContext and timeProvider in order. Reads initial UTC time, retains all supplied references, creates own active CTS and settlement semaphore and marks locked. If the retained message currently has LockId, starts the actual async renewal loop immediately and retains its task; otherwise no renewal task. Settings/message remain borrowed mutable inputs; no arbitrary TimeProvider/provider constructor compensation guarantee.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 95,
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.#ctor(System.Uri,ViciOne.ServiceBus.SqlTransport.SqlTransportMessage,ViciOne.ServiceBus.SqlTransport.ReceiveSettings,ViciOne.ServiceBus.SqlTransport.ClientContext,System.TimeProvider)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"inputAddress\">The input address.</param>\n            <param name=\"message\">The message to process.</param>\n            <param name=\"settings\">The settings that control the operation.</param>\n            <param name=\"clientContext\">The client context.</param>\n            <param name=\"timeProvider\">The time source used by the operation.</param>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5398,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.CompleteAsync(System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "source_line": "97",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.CompleteAsync(System.Threading.CancellationToken)",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "current_source_sha256": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+      "individual_contract_norm": "Delegates to the shared settlement gate. Caller cancellation can abort gate admission. The first successful locked-state transition cancels active renewal and joins the retained renewal task. Only absent preceding cancellation/join failure does it invoke the delete operation with retained lock/delivery ids and caller token; false or absent LockId produces TransportException. The active CTS is disposed in the entered teardown finally AFTER the conditional settle operation, even when cancellation/join or delete failed; semaphore release follows in its outer finally. A previously unlocked/lost state returns before this teardown without another settlement. No retry/reset or transactional provider delete guarantee.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 95,
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.CompleteAsync(System.Threading.CancellationToken)\">\n            <summary>Marks the current operation as complete.</summary>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5399,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.ExpiredAsync(System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "source_line": "175",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.ExpiredAsync(System.Threading.CancellationToken)",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "current_source_sha256": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+      "individual_contract_norm": "Deserializes the current transport headers and adds reason expired before entering MoveToQueueAsync. That path validates destination and headers then uses the common settlement gate/renewal teardown, checks client and caller cancellation plus LockId, and invokes MoveMessageAsync to configured primary queue DeadLetterQueue with original expiration. False result is lock loss; repeated already-unlocked settlement is a local no-op. Header decoding/getter/provider errors are not optional diagnostics.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 95,
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.ExpiredAsync(System.Threading.CancellationToken)\">\n            <summary>Creates an expired result.</summary>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5400,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.FaultedAsync(System.Exception,System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "source_line": "119",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.FaultedAsync(System.Exception,System.Threading.CancellationToken)",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "current_source_sha256": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+      "individual_contract_norm": "Guards exception, then enters shared settlement gate and renewal teardown. Settlement checks retained client and caller cancellation and LockId. GetBaseException override failure preserves the original exception; exception utility builds message/stack and adds fault metadata to transport headers. UnlockAsync receives retained lock/delivery ids, settings UnlockDelay or zero, mutated headers and caller token; false is lock loss. Arbitrary header/settings/provider errors remain visible; no native retry guarantee.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 95,
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.FaultedAsync(System.Exception,System.Threading.CancellationToken)\">\n            <summary>Reports that the operation has faulted.</summary>\n            <param name=\"exception\">The exception associated with the operation.</param>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5401,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.ScheduleRedeliveryAsync(System.TimeSpan,System.Action{ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.SendContext},System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "source_line": "59",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.ScheduleRedeliveryAsync(System.TimeSpan,System.Action{ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.SendContext},System.Threading.CancellationToken)",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "current_source_sha256": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+      "individual_contract_norm": "Synchronously rejects negative delay, then rejects every non-null send callback because native SQL unlock cannot represent that callback. Shared settlement checks client/caller cancellation and LockId after renewal teardown, increments redelivery count on retained transport headers and invokes UnlockAsync with delay and caller token. False is lock loss. Only the owning RESEND diagnostic is contained after success; header/provider errors remain visible. No general rollback of header mutation.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 95,
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.ScheduleRedeliveryAsync(System.TimeSpan,System.Action{ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.SendContext},System.Threading.CancellationToken)\">\n            <summary>Releases the delivery lock and defers the next delivery attempt.</summary>\n            <param name=\"delay\">The delay before the delivery becomes eligible again.</param>\n            <param name=\"callback\">An optional send-context callback, which native SQL lock release cannot represent.</param>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5855,
+      "exact_original_row": {
+        "symbol_id": "T:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+        "source_line": "6",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "T:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+      "current_source_sha256": "04ebf6d5bceb54cc63cdb6bd04124e3888a214d8f5db73043a29bffc99c62bed",
+      "individual_contract_norm": "Public transport client-context supervisor offers inherited agent/lifecycle and pipe supervision. Its two constructor variants create scoped connection or shared-client factories and adopt this child into the supplied parent consume or send collection respectively. Type-level role only: native acquisition, inherited all-cause lifecycle and arbitrary parent callbacks are separate contracts, not automatically graded.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "04ebf6d5bceb54cc63cdb6bd04124e3888a214d8f5db73043a29bffc99c62bed",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 2,
+      "actual_frozen320_XML_node_serialized": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor\">\n            <summary>Supervises the lifecycle of client context.</summary>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5880,
+      "exact_original_row": {
+        "symbol_id": "T:ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextFactory.cs",
+        "source_line": "11",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "T:ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextFactory.cs",
+      "current_source_sha256": "2cd5a65cbef84438648153c3b39903f5a399924a11958292c5e235f2af7dc5f6",
+      "individual_contract_norm": "Abstract connection-context factory implements the public pipe factory. CreateContext requires an ITransportSupervisor, invokes subclass CreateConnection then registers its returned connection via AddContext. Active creation retains the parent context handle and actual shared-context task; already successful parent task uses Result, otherwise caller-bounded OrCanceled wait. Concrete provider behavior/admission rollback and fast-path cancellation remain separate; no eager cancellation claim for an already completed parent.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2cd5a65cbef84438648153c3b39903f5a399924a11958292c5e235f2af7dc5f6",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 48,
+      "actual_frozen320_XML_node_serialized": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory\">\n            <summary>Creates connection context instances.</summary>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5881,
+      "exact_original_row": {
+        "symbol_id": "T:ViciOne.ServiceBus.SqlTransport.ConnectionContextSupervisor",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+        "source_line": "11",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "T:ViciOne.ServiceBus.SqlTransport.ConnectionContextSupervisor",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+      "current_source_sha256": "57a462dffc86aacb0e97eb73b959caf8c8c82b49bcf868e59ab1473860dd877c",
+      "individual_contract_norm": "Owns host/topology references and inherited SQL connection supervision, normalizes endpoint addresses and creates scoped client supervisors plus concrete send transport contexts. Type role and local constructor only. The two public transport creation methods remain explicitly held for actual owning diagnostic controls; no grade is transferred from this type row to those methods or native SQL IO.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "57a462dffc86aacb0e97eb73b959caf8c8c82b49bcf868e59ab1473860dd877c",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 49,
+      "actual_frozen320_XML_node_serialized": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.ConnectionContextSupervisor\">\n            <summary>Owns the shared SQL connection context and creates endpoint-scoped send transports.</summary>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5895,
+      "exact_original_row": {
+        "symbol_id": "T:ViciOne.ServiceBus.SqlTransport.QueueSqlReceiveEndpointContext",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+        "source_line": "10",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "T:ViciOne.ServiceBus.SqlTransport.QueueSqlReceiveEndpointContext",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+      "current_source_sha256": "44c62aedeb3beb084e403eae37fcd5b885a907392ac5ef97a77e1a967c8e65f6",
+      "individual_contract_norm": "Queue receive-endpoint context exposes the supplied broker topology, inherited pipes/observers/providers and a lazily recycled client supervisor. AddSendAgent/AddConsumeAgent delegate to that lazy supervisor. Probe and provider construction use retained configuration/host. Type role only; inherited ResetAsync release failure behavior and lazy child concurrent lifecycle remain independently ungraded.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "44c62aedeb3beb084e403eae37fcd5b885a907392ac5ef97a77e1a967c8e65f6",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 67,
+      "actual_frozen320_XML_node_serialized": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.QueueSqlReceiveEndpointContext\">\n            <summary>Carries state for queue sql receive endpoint operations.</summary>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5898,
+      "exact_original_row": {
+        "symbol_id": "T:ViciOne.ServiceBus.SqlTransport.ScopeClientContextFactory",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ScopeClientContextFactory.cs",
+        "source_line": "9",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "T:ViciOne.ServiceBus.SqlTransport.ScopeClientContextFactory",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/ScopeClientContextFactory.cs",
+      "current_source_sha256": "a0a1890fbad352861719e94fd6a11f66ec688f413c3df985257c30e4caec5fa5",
+      "individual_contract_norm": "Retains the supplied connection supervisor. Interface CreateContext registers an async client agent first, then asks the parent StartAgent to create a client using that child supervisor Stopped token; it returns the actual registered agent. Active factory wraps an already successful client task directly or awaits it with caller-bounded cancellation, then registers active context. Borrowed provider work, synchronous parent errors and unreturned resources are not transactionally compensated here.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ScopeClientContextFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "a0a1890fbad352861719e94fd6a11f66ec688f413c3df985257c30e4caec5fa5",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 71,
+      "actual_frozen320_XML_node_serialized": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.ScopeClientContextFactory\">\n            <summary>Creates scope client context instances.</summary>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5901,
+      "exact_original_row": {
+        "symbol_id": "T:ViciOne.ServiceBus.SqlTransport.SharedClientContextFactory",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SharedClientContextFactory.cs",
+        "source_line": "9",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "T:ViciOne.ServiceBus.SqlTransport.SharedClientContextFactory",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/SharedClientContextFactory.cs",
+      "current_source_sha256": "c3ef7da3b43dfd531d64f5040cf0d8f8641ecea33d14d782de868620b9713785",
+      "individual_contract_norm": "Retains the supplied client supervisor. Interface CreateContext registers an async child agent, then uses parent StartAgent to create SharedClientContext with the child supervisor Stopped token. Active factory wraps an already successful parent client immediately or waits with OrCanceled before constructing SharedClientContext and registering it. Type role/local ordering only; native IO/provider disposal and parent failure compensation are separate.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SharedClientContextFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c3ef7da3b43dfd531d64f5040cf0d8f8641ecea33d14d782de868620b9713785",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 75,
+      "actual_frozen320_XML_node_serialized": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.SharedClientContextFactory\">\n            <summary>Creates shared client context instances.</summary>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5905,
+      "exact_original_row": {
+        "symbol_id": "T:ViciOne.ServiceBus.SqlTransport.SqlHost",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlHost.cs",
+        "source_line": "8",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "T:ViciOne.ServiceBus.SqlTransport.SqlHost",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlHost.cs",
+      "current_source_sha256": "dbdaf124b289bdc43004b1fb04aafa02b2539e8305af8c890677fa8248be6514",
+      "individual_contract_norm": "SQL host retains typed host configuration and topology after BaseHost setup, adapts neutral endpoint callbacks to typed callbacks, uses configured connection supervisor as its agent handle and exposes it in Probe. Type role and forwarding shape only. Public named/definition typed endpoint connection methods remain held because their owning ConnectReceiveEndpoint diagnostic precedes Build and actual Start.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlHost.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "dbdaf124b289bdc43004b1fb04aafa02b2539e8305af8c890677fa8248be6514",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 82,
+      "actual_frozen320_XML_node_serialized": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.SqlHost\">\n            <summary>Hosts SQL-backed receive endpoints and the connection resources they share.</summary>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 5914,
+      "exact_original_row": {
+        "symbol_id": "T:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext",
+        "assembly": "ViciOne.ServiceBus.SqlTransport",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "source_line": "10",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "T:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "current_source_sha256": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+      "individual_contract_norm": "Owns one SQL delivery renewal task, active CTS, settlement semaphore and locked-state gate. Terminal methods share serialized first-transition cancellation/join, conditional settlement and finally active CTS disposal, with later local no-op policy. Renewal reads initial settings.LockDuration and calculates initial delay before entering its loop try; failures there fault the retained renewal task without the loop locked0 or Warning policy. Inside the loop, refused renewal and caught provider/time/settings failures mark locked zero and contain only owning Warning diagnostics; active-owner cancellation exits, timeout retries without delay and maximum-duration exit does not mark lost. Type role/local control flow only: resource retirement after renewal already marked unlocked is an explicit separate review hypothesis, not a disposal guarantee or Native grade.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "Local ordering and arbitrary SPI/lifecycle/IO behaviors are Source-only. SQL renewal-loss active CTS retirement hypothesis and BaseReceiveEndpoint Reset two-provider release are separate unqualified work items.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "PDB_rid": 95,
+      "actual_frozen320_XML_node_serialized": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext\">\n            <summary>Owns renewal and terminal state transitions for one locked SQL transport delivery.</summary>\n        </member>",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "original_csv_zero_based_index": 1616,
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "source_line": "59",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)",
+      "current_source_relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+      "current_source_sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+      "member_contract": "Synchronously invokes the current Used event delegate first; an ordinary subscriber exception escapes before batcher access and no Task is returned. Otherwise reads the retained Lazy<IBatcher<PublishBatchRequestEntry>>.Value and directly returns that batcher ExecuteAsync(entry, cancellationToken) Task, without a local async wrapper, null guard, disposal-state check or caller-token precheck before Used/lazy construction. Lazy factory creates PublishBatcher with the original client, ARN and owner cancellation token retained by the TopicInfo constructor; this owner token is distinct from the per-call caller token. The direct actual Batcher prechecks caller cancellation, allocates a BatchEntry and writes to the bounded channel with that caller token, then awaits its entry completion. Failed/canceled/closed admission disposes the entry registration; closed admission becomes BatchAdmissionClosedException. Entry cancellation before dispatch suppresses provider submission; cancellation after dispatch may end only the caller completion while actual native PublishBatchAsync continues under the retained owner token. Actual provider submission reindexes admitted entries and maps valid successful/failure IDs to completion; provider OCE cancels dispatched entries and other provider faults fault them. The selected Publish method does not dispose the borrowed client, acquire a connection, or join a later TopicInfo.Dispose operation.",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_RECOMMENDATION",
+      "runtime_obligation": "No operational/native grade for SDK success/cancellation timing, arbitrary Used callbacks, concurrent Publish/Dispose, batch reader/executor failure recovery, or post-disposal reuse. Local method has no promised ODE/reject-after-dispose rule; absence of a guard is recorded as behavior, not a defect. Source contract does not guarantee raw-provider task terminality when caller completion ends. Actual clients/worker retirement and cloud semantics require separately scoped actual evidence.",
+      "actual_frozen320_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)\">\n            <summary>Queues an Amazon SNS publish entry and waits for its batch result.</summary>\n            <param name=\"entry\">The publish batch entry.</param>\n            <param name=\"cancellationToken\">The token used to cancel admission to the batch queue.</param>\n            <returns>A task that completes when Amazon SNS reports the entry result.</returns>\n        </member>\n        ",
+      "historical_remaining25_full_record_unchanged": {
+        "original_csv_zero_based_index": 1616,
+        "exact_original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)",
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+          "source_line": "59",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        },
+        "assembly": "ViciOne.ServiceBus.AmazonSqs",
+        "id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)",
+        "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-amazonsqs25-original-current-independent-author-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "current_source_sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+        "own_whole_source_read": {
+          "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+          "sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+          "lines": 64,
+          "own_whole_authority": "OWN_FRESH_PERSONAL_COMPLETE_SOURCE_READ",
+          "own_whole_read_tool_receipts": [
+            "be2983"
+          ]
+        },
+        "member_contract": "Invokes public Used subscribers first, then obtains lazy PublishBatcher and returns its exact ExecuteAsync(entry,callerToken) Task. No disposed check, local null-entry guard or token linking; batcher checks caller cancellation before admission and observes each actual batch result. Used exception prevents batcher access. Lazy first access may occur even after TopicInfo.Dispose returned without initialization.",
+        "recommendation": "HELD_OPERATIVE_PUBLIC_RESEARCH",
+        "runtime_obligation": "Public Dispose-before-first-Publish may reactivate owner-owned batch worker; healthy/terminated-owner real SDK controls must settle intended lifetime policy. Used callbacks/native SNS behavior remain separate; no current native/finding claim.",
+        "native_credit": 0,
+        "grade": null,
+        "closed": false,
+        "actual_frozen320_PDB_document": {
+          "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_frozen320_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)\">\n            <summary>Queues an Amazon SNS publish entry and waits for its batch result.</summary>\n            <param name=\"entry\">The publish batch entry.</param>\n            <param name=\"cancellationToken\">The token used to cancel admission to the batch queue.</param>\n            <returns>A task that completes when Amazon SNS reports the entry result.</returns>\n        </member>\n        ",
+        "historical_prior_473_held_record_unchanged": {
+          "ordinal": 245,
+          "original_ordinal": 1617,
+          "assembly": "ViciOne.ServiceBus.AmazonSqs",
+          "id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)",
+          "original_row": {
+            "symbol_id": "M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)",
+            "assembly": "ViciOne.ServiceBus.AmazonSqs",
+            "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+            "source_line": "59",
+            "snapshot_diagnostics": "False",
+            "contract": "",
+            "implementation": "",
+            "tests": "",
+            "package_consumer": "",
+            "status": "PENDING",
+            "finding": ""
+          },
+          "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+          "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+          "current_source_sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+          "member_contract": "Invokes Used then resolves lazy batcher and returns exact ExecuteAsync(entry,caller token). Does not check disposed flag here; late lazy activation/lifetime admission policy held.",
+          "actual_current_PDB_document": {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+            "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+            "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+          },
+          "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)\">\n            <summary>Queues an Amazon SNS publish entry and waits for its batch result.</summary>\n            <param name=\"entry\">The publish batch entry.</param>\n            <param name=\"cancellationToken\">The token used to cancel admission to the batch queue.</param>\n            <returns>A task that completes when Amazon SNS reports the entry result.</returns>\n        </member>\n        ",
+          "original_source_line_basis": "OriginalCSV historical coordinate, not fabricated current declaration line. Symbol ID rebound to actual emitted XML where present and own whole current source; original typedTuple41 is historical, not fresh reflected NRT metadata.",
+          "recommendation": "HELD_OPERATIVE_CONTRACT",
+          "hold_reason": "Publish invokes lazy batcher after public Dispose without checking disposed flag; previously unused batcher can initialize after owner terminated, held for genuine public Original.",
+          "runtime_obligation": "This ID local/declarative Source facts only. Actual arbitrary callback/provider errors, batcher/cache/base/agent acquisition, partial mutation, cancellation cooperation and resource ownership remain separate; no tests/native or universal workflow closure. Bodyless SPI requirements are declaration bounds, not concrete body proof.",
+          "native_credit": 0,
+          "grade": null,
+          "closed": false
+        },
+        "historical_index_precision": "prior473.original_ordinal is historical one-based label; current original_csv_zero_based_index is independently matched exact CSV UID",
+        "runtime_grade": false
+      },
+      "native_credit": 0,
+      "grade": null,
+      "closed": false,
+      "runtime_grade": false
+    }
+  ],
+  "compiled_validation": [
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "04ebf6d5bceb54cc63cdb6bd04124e3888a214d8f5db73043a29bffc99c62bed",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.IClientContextSupervisor)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"clientContextSupervisor\">The client context supervisor.</param>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "04ebf6d5bceb54cc63cdb6bd04124e3888a214d8f5db73043a29bffc99c62bed",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.IConnectionContextSupervisor)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"connectionContextSupervisor\">The connection context supervisor.</param>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "57a462dffc86aacb0e97eb73b959caf8c8c82b49bcf868e59ab1473860dd877c",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.ConnectionContextSupervisor.#ctor(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration,ViciOne.ServiceBus.SqlTransport.Configuration.ISqlTopologyConfiguration,ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory{ViciOne.ServiceBus.SqlTransport.ConnectionContext})\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"hostConfiguration\">The host configuration.</param>\n            <param name=\"topologyConfiguration\">The topology configuration.</param>\n            <param name=\"connectionContextFactory\">The connection context factory.</param>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "44c62aedeb3beb084e403eae37fcd5b885a907392ac5ef97a77e1a967c8e65f6",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.QueueSqlReceiveEndpointContext.#ctor(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration,ViciOne.ServiceBus.SqlTransport.Configuration.ISqlReceiveEndpointConfiguration,ViciOne.ServiceBus.SqlTransport.Topology.BrokerTopology)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"hostConfiguration\">The host configuration.</param>\n            <param name=\"configuration\">The SQL receive-endpoint configuration used by this context.</param>\n            <param name=\"brokerTopology\">The broker topology.</param>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.#ctor(System.Uri,ViciOne.ServiceBus.SqlTransport.SqlTransportMessage,ViciOne.ServiceBus.SqlTransport.ReceiveSettings,ViciOne.ServiceBus.SqlTransport.ClientContext,System.TimeProvider)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"inputAddress\">The input address.</param>\n            <param name=\"message\">The message to process.</param>\n            <param name=\"settings\">The settings that control the operation.</param>\n            <param name=\"clientContext\">The client context.</param>\n            <param name=\"timeProvider\">The time source used by the operation.</param>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.CompleteAsync(System.Threading.CancellationToken)\">\n            <summary>Marks the current operation as complete.</summary>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.ExpiredAsync(System.Threading.CancellationToken)\">\n            <summary>Creates an expired result.</summary>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.FaultedAsync(System.Exception,System.Threading.CancellationToken)\">\n            <summary>Reports that the operation has faulted.</summary>\n            <param name=\"exception\">The exception associated with the operation.</param>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext.ScheduleRedeliveryAsync(System.TimeSpan,System.Action{ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.SendContext},System.Threading.CancellationToken)\">\n            <summary>Releases the delivery lock and defers the next delivery attempt.</summary>\n            <param name=\"delay\">The delay before the delivery becomes eligible again.</param>\n            <param name=\"callback\">An optional send-context callback, which native SQL lock release cannot represent.</param>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "04ebf6d5bceb54cc63cdb6bd04124e3888a214d8f5db73043a29bffc99c62bed",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.ClientContextSupervisor\">\n            <summary>Supervises the lifecycle of client context.</summary>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextFactory.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2cd5a65cbef84438648153c3b39903f5a399924a11958292c5e235f2af7dc5f6",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory\">\n            <summary>Creates connection context instances.</summary>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "57a462dffc86aacb0e97eb73b959caf8c8c82b49bcf868e59ab1473860dd877c",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.ConnectionContextSupervisor\">\n            <summary>Owns the shared SQL connection context and creates endpoint-scoped send transports.</summary>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "44c62aedeb3beb084e403eae37fcd5b885a907392ac5ef97a77e1a967c8e65f6",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.QueueSqlReceiveEndpointContext\">\n            <summary>Carries state for queue sql receive endpoint operations.</summary>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/ScopeClientContextFactory.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/ScopeClientContextFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "a0a1890fbad352861719e94fd6a11f66ec688f413c3df985257c30e4caec5fa5",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.ScopeClientContextFactory\">\n            <summary>Creates scope client context instances.</summary>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/SharedClientContextFactory.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SharedClientContextFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c3ef7da3b43dfd531d64f5040cf0d8f8641ecea33d14d782de868620b9713785",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.SharedClientContextFactory\">\n            <summary>Creates shared client context instances.</summary>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlHost.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlHost.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "dbdaf124b289bdc43004b1fb04aafa02b2539e8305af8c890677fa8248be6514",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.SqlHost\">\n            <summary>Hosts SQL-backed receive endpoints and the connection resources they share.</summary>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"T:ViciOne.ServiceBus.SqlTransport.SqlReceiveLockContext\">\n            <summary>Owns renewal and terminal state transitions for one locked SQL transport delivery.</summary>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package426-sql-original21-root-source-research-before-r1",
+      "dll_sha256": "b625e0bf9a49663350de4399e5a6cca30c7ab3a2dfcc57721bde8494748d6623"
+    },
+    {
+      "source": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+      "document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.AmazonSqs.TopicInfo.PublishAsync(Amazon.SimpleNotificationService.Model.PublishBatchRequestEntry,System.Threading.CancellationToken)\">\n            <summary>Queues an Amazon SNS publish entry and waits for its batch result.</summary>\n            <param name=\"entry\">The publish batch entry.</param>\n            <param name=\"cancellationToken\">The token used to cancel admission to the batch queue.</param>\n            <returns>A task that completes when Amazon SNS reports the entry result.</returns>\n        </member>",
+      "frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package422-activemq8-sqsdispose1-root-source-validation-before-r1/frames/ViciOne.ServiceBus.AmazonSqs",
+      "dll_sha256": "dd1f960c8fa5e8e142d2489de486522f6c497305979bd23f1994610ef7f2120c"
+    }
+  ],
+  "known_findings_before": 225,
+  "bounded_findings_before": 222,
+  "known_findings_after": 225,
+  "bounded_findings_after": 225,
+  "original_accepted_before": 18481,
+  "original_accepted_after": 18499,
+  "original_remaining_after": 70,
+  "master_before": 19343,
+  "master_after": 19361,
+  "Source18_native_credit": 0,
+  "current430_new_original6_actual": "3P3F0S independent Native pending; not Findings or repairs credited here",
+  "scope_limits": [
+    "The repaired four owner API member norm acceptance remains a separate current rebase task.",
+    "SQL renewal resource and BaseReset public ownership hypotheses remain separate, not graded by Source17.",
+    "Source18 local contracts preserve explicit non-native obligations; no global A+ or all-fault lifetime promise.",
+    "Frozen425 producer epoch remains precise before427; current430 different Test/Req source not falsely imposed on it.",
+    "Fresh final solution/tests/31packages/journeys/publicAPI still pending."
+  ],
+  "historical_po_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PO_BERICHT_BIS_PAKET429.txt",
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package429-fixed425-source18-root-acceptance-before-r1"
+}

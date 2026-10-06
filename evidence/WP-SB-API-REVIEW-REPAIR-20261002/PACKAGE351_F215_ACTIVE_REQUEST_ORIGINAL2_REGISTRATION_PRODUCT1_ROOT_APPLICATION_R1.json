@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-06T05:33:03.335057+00:00",
+  "status": "F215_REGISTERED_AND_INDEPENDENTLY_PEERED_PRODUCT1_APPLIED",
+  "finding": {
+    "id": "F-SB-API-215",
+    "severity": "Medium",
+    "title": "ActiveRequest timer release failure skips owned CTS and request capacity release",
+    "classification": "CONFIRMED_FINITE_NATIVE_PUBLIC_CUSTOM_TIMER_OWNER_ACCOUNTING_DEFECT",
+    "status": "REPAIR_APPLIED_FIXED_NATIVE_MODULE_STRICT_FRESH_PENDING",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Util/ActiveRequest.cs",
+    "actual_original": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package349-active-request-original2-independent-qualification-r1/MANIFEST.json",
+      "sha256": "b7d48314b140a86fc27637233a63edfed0b49a611ac5ab8f14ba8a4f20bae6f9"
+    },
+    "causal_boundary": "Supported public TimeProvider/ITimer disposal throws exactIO; actual publicActiveRequestCount remains1 after one attempt. Healthycounterpart passes. Firsthostileassert58; successor assertions unreached.",
+    "not_same_family": "F019 logger/DIowner lifetime andF147 documentation purposes have separate causes; this is admitted request owner cleanup/accounting.",
+    "whole_API_member_review_closed": false
+  },
+  "product_author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package351-active-request-owning-disposal1-product-root-proposed-r1/MANIFEST.json",
+    "sha256": "6072d4a495b28ee67bde4d738454e1c4f8a0a4af1c67f0e49e9e2ebb5429f605"
+  },
+  "independent_product_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package351-active-request-disposal1-independent-runtime-source-peer-r1/MANIFEST.json",
+    "sha256": "5cc7b811104ee973cad4c0ff21ada3a726ff86cc0c8197a7aee9ffb5456effcd"
+  },
+  "independent_actual_original": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package349-active-request-original2-independent-qualification-r1/MANIFEST.json",
+    "sha256": "b7d48314b140a86fc27637233a63edfed0b49a611ac5ab8f14ba8a4f20bae6f9"
+  },
+  "source_before_sha256": "827176590d51f0976aeed90259c2b4ab2efb7acda1199b6039a371c09608235d",
+  "source_after_sha256": "e61ef00edebafbb5909b3faaa54b1af16b21574d2cd264e78c837782ada5fe9e",
+  "root_whole_product_patch_receipt": "3e7e41",
+  "root_whole_product_peer_receipt": "fbbcbd",
+  "root_whole_actual_original_qualifier_receipt": "f474ed",
+  "known_before": 214,
+  "known_after": 215,
+  "bounded_accepted": 214,
+  "master_mutations": 0,
+  "fixed_native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

@@ -1,0 +1,65 @@
+{
+  "status": "SCOPED_ACCEPTED",
+  "role": "INTERNAL_INDEPENDENT_READ_ONLY_ADVERSARIAL_ASSISTANCE",
+  "findings": [
+    "F024",
+    "F025",
+    "F026"
+  ],
+  "freeze_sha256": "6a3ac93d204488b5f23e2bb003b0ad7c0ff3babe188e38ee7a42c910ed293dac",
+  "owned_inputs": 9,
+  "personally_full_actual_logs": 62,
+  "counted_native_mutants": 9,
+  "original_controls": {
+    "failed": 4,
+    "passed": 3
+  },
+  "corrected_public_modes": 7,
+  "rollback_public_modes": 7,
+  "native_owner_reported": {
+    "total": 96,
+    "passed": 96,
+    "failed": 0,
+    "skipped": 0,
+    "unchanged_source_files_hashchecked": 15,
+    "personal_whole_assertion_grade": false
+  },
+  "bdn": {
+    "actual_workloads": 12,
+    "n_per_tuple": 1,
+    "claim": "EXECUTION_ONLY"
+  },
+  "physical_packages": 6,
+  "reviewer_native_runs": 0,
+  "product_edits": 0,
+  "whole_A_plus": false,
+  "product_approval": false,
+  "blockers": [],
+  "separate_unverified": [
+    {
+      "key": "PKG07-MEDIATOR-LIFETIME-UNVERIFIED",
+      "source": "benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorBatchBenchmark.cs",
+      "contract": "IMediator : IAsyncDisposable",
+      "original_already_present": true,
+      "native_resource_leak_claim": false,
+      "status": "SEPARATE_READ_ONLY_RESEARCH_PENDING"
+    }
+  ],
+  "limits": [
+    "No throughput/performance/budget claims from Dry N1",
+    "No full payload-value proof from bool materialization",
+    "Concurrent gate is not exhaustive scheduling proof",
+    "No whole native-owner assertion grade",
+    "No chronologically earliest callback-entry claim",
+    "No runtime XML files or XML-runtime binding claimed",
+    "coreDll is physically Abstractions",
+    "No all-API or global source CLOSED claim"
+  ],
+  "excluded": [
+    "initial MSB3277 and subsequent accidental checks",
+    "DI10.0.10 intermediate restore",
+    "Attempt1 CS0649 is not runtime kill"
+  ],
+  "review_text_sha256": "2e304720fe90a2c5ed203fea03873b4819bca2219db9b10b656de660673a0283",
+  "bindings_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks-adversarial/INDEPENDENT_BINDINGS.json"
+}

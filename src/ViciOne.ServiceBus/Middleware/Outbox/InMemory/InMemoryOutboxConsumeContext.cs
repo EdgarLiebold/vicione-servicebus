@@ -31,7 +31,7 @@ internal sealed class InMemoryOutboxConsumeContext<TMessage> :
     /// <summary>Gets or sets whether the receive pipeline may continue after outbox processing.</summary>
     public override bool ContinueProcessing { get; set; } = true;
 
-    /// <summary>Gets a value indicating whether consumption has been committed.</summary>
+    /// <summary>Gets whether consumption has been recorded in the process-local inbox entry.</summary>
     public override bool IsMessageConsumed => _inboxMessage.Consumed.HasValue;
     /// <summary>Gets a value indicating whether every captured message has been delivered.</summary>
     public override bool IsOutboxDelivered => _inboxMessage.Delivered.HasValue;
@@ -42,7 +42,7 @@ internal sealed class InMemoryOutboxConsumeContext<TMessage> :
 
     Guid InboxMessageId => _inboxMessage.MessageId;
 
-    /// <summary>Marks consumption as committed at the current bus time.</summary>
+    /// <summary>Records consumption in the process-local inbox entry at the current bus time.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A completed task after the timestamp has been stored.</returns>
     public override Task SetConsumedAsync(CancellationToken cancellationToken = default)
@@ -86,7 +86,7 @@ internal sealed class InMemoryOutboxConsumeContext<TMessage> :
         return Task.FromResult(messages.Cast<OutboxMessageContext>().ToList());
     }
 
-    /// <summary>Advances the durable delivery position to a delivered message.</summary>
+    /// <summary>Advances the process-local delivery position to a delivered message.</summary>
     /// <param name="message">The delivered outbox message.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A completed task after the delivery position has been advanced.</returns>
@@ -103,7 +103,7 @@ internal sealed class InMemoryOutboxConsumeContext<TMessage> :
         return Task.CompletedTask;
     }
 
-    /// <summary>Removes every committed outgoing message from the inbox entry.</summary>
+    /// <summary>Removes every outgoing message from the process-local inbox entry.</summary>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A completed task after the messages have been removed.</returns>
     public override Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default)

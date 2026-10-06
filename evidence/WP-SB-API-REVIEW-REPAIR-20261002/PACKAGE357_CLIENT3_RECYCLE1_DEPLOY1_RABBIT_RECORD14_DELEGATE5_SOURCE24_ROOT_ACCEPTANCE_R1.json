@@ -1,0 +1,168 @@
+{
+  "utc": "2026-10-06T05:59:43.785150+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_CLIENT_FACTORY3_RECYCLE1_DEPLOY1_RABBIT_RECORD14_DELEGATE5_SOURCE24",
+  "master_before_sha256": "b747fac882155c426063cbb21d024efa923b8a46276f156df82bd3949187de4b",
+  "author_manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-client-factory-connect-dispose3-bounded-source-contracts-proposed-r1/MANIFEST.json",
+      "sha256": "d732b03c6863005d2c9e66809ab8558ca70317db645bacc002f85b51311ab34f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-recycle-supervisor1-bounded-source-contract-proposed-r1/MANIFEST.json",
+      "sha256": "8194c4759e916fb5303e1f1f667d79a18d98faada570dd3c8ab9993fffe82cd4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-bus-deploy1-bounded-source-contract-proposed-r1/MANIFEST.json",
+      "sha256": "bb9e5c729a1d676cffc747f6de340e7a53483389bcba1888407570ac18664cba"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package356-rabbit-redrive-record14-individual-source-language-contracts-proposed-r1/MANIFEST.json",
+      "sha256": "3f5015724bcdf1bd02117bcce52e4b1c20ad1d8bc96b58a3b7eb35608db93117"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package356-rabbit-delegate5-individual-source-language-contracts-proposed-r1/MANIFEST.json",
+      "sha256": "b7b19618664ae158aeeb558fedc778e4b44b9309cbe7e7f8ff3384274ef0c97e"
+    }
+  ],
+  "independent_source_peers": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-client-factory3-independent-runtime-source-peer-r1/MANIFEST.json",
+      "sha256": "059edfc46a6bcb0757185ebc74f18f6942079748e1bb96a2234327302d74e9a1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-recycle1-independent-source-peer-r1/MANIFEST.json",
+      "sha256": "208fa13b62d2a3f1d6e6e6f2b1985c2b154899a5a51abc766c43cfc04d0f0ba2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-bus-deploy1-independent-runtime-source-peer-r1/MANIFEST.json",
+      "sha256": "f9f9501145eb3d02455891fb092cbd1db920c4ce0ac5880c560fd4e58bfcad78"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-bus-deploy1-read-count-precision-erratum-r1/MANIFEST.json",
+      "sha256": "7c8c0b73dd16607c5761c25fb117b1a4ec2bdd96dbd285427a7425e60add0f4f"
+    }
+  ],
+  "Root_other_author_Rabbit19_source_language_peer": true,
+  "Root_whole_Rabbit4_75lines_receipt": "691264 complete four source files and five delegate norms; truncated record TYPE block replaced8d51fd",
+  "Root_Rabbit14_norms_and2_complete_TYPE_blocks_receipt": "8d51fd",
+  "Root_local5_full_norm_receipts": [
+    "d429bd Recycle1/Deploy1 complete; ClientDispose partial explicitly replaced75ae37",
+    "75ae37 Client3complete"
+  ],
+  "Root_whole_current_helpers_and_Recycle_Deploy_receipt": "3921f2",
+  "Root_exact_ClientFactory267_FactoryExt130_BusContext88_Context36_retained_receipts": [
+    "517edd",
+    "742049",
+    "322c0b"
+  ],
+  "Root_whole3_independent_Source_reports_receipt": "f870ba",
+  "currentCore354_selected_checksum_XML5_join": true,
+  "historicalRabbit320_selected_source_checksum_reflected19_present_XML19_absent": true,
+  "master_before": 19113,
+  "master_after": 19137,
+  "original_before": 18251,
+  "original_after": 18275,
+  "original_remaining": 294,
+  "new_native_count": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "individual_members": [
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.ClientFactoryExtensions.ConnectClientFactory(ViciOne.ServiceBus.Configuration.IReceiveConnector,ViciOne.ServiceBus.Advanced.RequestTimeout)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.ClientFactoryExtensions.CreateClientFactory(ViciOne.ServiceBus.Configuration.IReceiveConnector,ViciOne.ServiceBus.Advanced.RequestTimeout)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Clients.ClientFactory.DisposeAsync"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.BusControlExtensions.DeployAsync(ViciOne.ServiceBus.IBusControl,System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.Equals(System.Object)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.Equals(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.GetHashCode"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.ToString"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.op_Equality(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest,ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.op_Inequality(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest,ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.{Clone}$"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.Equals(System.Object)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.Equals(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.GetHashCode"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.ToString"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.op_Equality(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult,ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.op_Inequality(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult,ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.{Clone}$"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqConfigureEndpointsCallback.#ctor(System.Object,System.IntPtr)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RefreshConnectionFactoryCallback.#ctor(System.Object,System.IntPtr)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RefreshConnectionFactoryCallback.BeginInvoke(RabbitMQ.Client.ConnectionFactory,System.AsyncCallback,System.Object)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RefreshConnectionFactoryCallback.EndInvoke(System.IAsyncResult)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RefreshConnectionFactoryCallback.Invoke(RabbitMQ.Client.ConnectionFactory)"
+    ]
+  ],
+  "limits": "Five local wrappers/getter/disposal and nineteen individual language/generated delegate/record contracts. Arbitrary SPI tasks, partial endpoint acquisition rollback, generations, lifecycle, callbacks, broker workflows, IL/MethodDef/raw bindings remain separate. Adjacent stopped-vs-Stopping summary is a separately pending F147 documentation precision, not a new defect from this property contract."
+}

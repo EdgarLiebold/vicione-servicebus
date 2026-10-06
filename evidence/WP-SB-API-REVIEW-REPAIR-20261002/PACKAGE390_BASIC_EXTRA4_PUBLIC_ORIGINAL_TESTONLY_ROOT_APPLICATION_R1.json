@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-06T08:48:28.189275+00:00",
+  "status": "ROOT_TESTONLY_ORIGINAL4_APPLIED_REQUIRES_ACTUAL_SERIAL_NATIVE",
+  "research_before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package390-basic-extra4-original-testonly-root-source-capture-r1/RESEARCH_BEFORE.json",
+    "sha256": "92d8cbd45fce884a8748edb51ba75e26e929352aae76c5e2f0f93a3e5f7a557d"
+  },
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package384-basic-extra4-public-original-testonly-proposed-r1",
+    "REPORT": "a116a644c7526ecf55936f4f011f78e588c066f83b7d700ef4a171fc8adf4339",
+    "MAN": "1ae9efc4a33573a787903de72683bd49ca8f471c16019f9f7cb1103e13463e91"
+  },
+  "different_author_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package384-basic-extra4-independent-test-source-peer-r1",
+    "REPORT": "4d475a1142f5feeb036305080b30b0978c8d288ebda0cada53934fc206b2ce35",
+    "MAN": "905ef03d0856afdfe414e00f0e05fe1e40b8daf836d0f59725dac21dcdb74a33"
+  },
+  "test": {
+    "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqBasicConsumerExtraDiagnosticsTests.cs",
+    "sha256": "3b7727197cadd3d6adb04948e30b9c5560b5794d36bed98dde79aeb88d06f13a",
+    "lines": 366,
+    "cases": 4,
+    "class": "RabbitMqBasicConsumerExtraDiagnosticsTests",
+    "method": "ExtraCallbacks_OwningDiagnosticsPreservePublicOutcomesAsync",
+    "first_finite_norm_line": 86
+  },
+  "requirements": {
+    "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+    "before_sha256": "eef4bc67e21d42a62b3b80e9464a1d7b172ba16dca01d569428f86f996aeacd0",
+    "after_sha256": "5f5ecc35a77d34a10f41324cc882f2615de84825a8500cc20df4bf33d65e1c91",
+    "before_rows": 292,
+    "after_rows": 293,
+    "exact_addition_literal": ",\n  {\n    \"requirementId\": \"REQ-VSB-RABBITMQ-CONSUMER-LIFECYCLE\",\n    \"variantKey\": \"owning-end-of-stream-and-native-shutdown-event-diagnostics-preserve-public-outcomes\",\n    \"testAssembly\": \"ViciOne.ServiceBus.RabbitMq.Tests\",\n    \"testType\": \"ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.RabbitMqBasicConsumerExtraDiagnosticsTests\",\n    \"testMethod\": \"ExtraCallbacks_OwningDiagnosticsPreservePublicOutcomesAsync\"\n  }",
+    "inverse_entire_bytes_equal": true,
+    "unchanged_prefix292": true,
+    "addition": {
+      "requirementId": "REQ-VSB-RABBITMQ-CONSUMER-LIFECYCLE",
+      "variantKey": "owning-end-of-stream-and-native-shutdown-event-diagnostics-preserve-public-outcomes",
+      "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+      "testType": "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.RabbitMqBasicConsumerExtraDiagnosticsTests",
+      "testMethod": "ExtraCallbacks_OwningDiagnosticsPreservePublicOutcomesAsync"
+    }
+  },
+  "Product3_unchanged": true,
+  "existingOriginal12_unchanged": true,
+  "compiler_and_Native_not_yet_run": true,
+  "grade": null,
+  "Finding_ID": null
+}

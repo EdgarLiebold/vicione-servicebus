@@ -21,6 +21,12 @@ public class RabbitMqQueueReceiveEndpointContext :
     /// <param name="brokerTopology">The topology deployed for the endpoint.</param>
     public RabbitMqQueueReceiveEndpointContext(IRabbitMqHostConfiguration hostConfiguration, IRabbitMqReceiveEndpointConfiguration configuration,
         BrokerTopology brokerTopology)
+        : this(hostConfiguration, configuration, brokerTopology, null)
+    {
+    }
+
+    internal RabbitMqQueueReceiveEndpointContext(IRabbitMqHostConfiguration hostConfiguration, IRabbitMqReceiveEndpointConfiguration configuration,
+        BrokerTopology brokerTopology, Func<IPipe<ConnectionContext>, IPipe<ConnectionContext>>? connectionPipe)
         : base(hostConfiguration, configuration)
     {
         _hostConfiguration = hostConfiguration;
@@ -36,7 +42,13 @@ public class RabbitMqQueueReceiveEndpointContext :
             concurrentMessageLimit = ushort.MaxValue;
 
         _channelContext = new Recycle<IChannelContextSupervisor>(() =>
-            new ChannelContextSupervisor(hostConfiguration.ConnectionContextSupervisor, (ushort)concurrentMessageLimit));
+        {
+            IConnectionContextSupervisor connectionSupervisor = hostConfiguration.ConnectionContextSupervisor;
+            if (connectionPipe is not null)
+                connectionSupervisor = new ConfiguredConnectionContextSupervisor(connectionSupervisor, connectionPipe);
+
+            return new ChannelContextSupervisor(connectionSupervisor, (ushort)concurrentMessageLimit);
+        });
     }
 
     /// <summary>Gets the broker topology.</summary>

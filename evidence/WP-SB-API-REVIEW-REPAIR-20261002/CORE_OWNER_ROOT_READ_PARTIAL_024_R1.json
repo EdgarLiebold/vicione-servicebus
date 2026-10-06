@@ -1,0 +1,38 @@
+{
+  "status": "PARTIAL_ROOT_PERSONAL_COMPLETE_LITERAL_DICTIONARY_NO_OWNER_FULL_CREDIT",
+  "actor": "/root",
+  "utc": "2026-10-03T23:45:41.982851+00:00",
+  "source_packs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0077.txt",
+      "sha256": "5447220e2f561f4eb1f492aa2247360eeefc81c97975d9fb6172287a92f70632",
+      "bytes": 13956,
+      "personally_complete_untruncated": true,
+      "read_method": "whole raw SOURCE pack"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0078.txt",
+      "sha256": "ff3c0ca1b8dccb596c9ef674890e9201bf0b41db6a7bd85e6f0b8e96174d9313",
+      "bytes": 13898,
+      "personally_complete_untruncated": true,
+      "read_method": "whole raw SOURCE pack"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0079.txt",
+      "sha256": "baad664e15ddea708d4737d35ccb92c1b55c5915e3e410bc1e73944cd12790b0",
+      "bytes": 13975,
+      "personally_complete_untruncated": true,
+      "read_method": "whole reversible sequential literal text with complete first/last-ID and EOL-prefix metadata"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0080.txt",
+      "sha256": "e1f8752537aa88e807bc350dabb2bc4a47dbb13d7634957d7ba53bdc122ef7ec",
+      "bytes": 13966,
+      "personally_complete_untruncated": true,
+      "read_method": "whole reversible sequential literal text with complete first/last-ID and EOL-prefix metadata"
+    }
+  ],
+  "line_ids": "12876..13524; exact per-file ordered mappings still pending",
+  "whole_owner766": false,
+  "RAW_increment": 0
+}

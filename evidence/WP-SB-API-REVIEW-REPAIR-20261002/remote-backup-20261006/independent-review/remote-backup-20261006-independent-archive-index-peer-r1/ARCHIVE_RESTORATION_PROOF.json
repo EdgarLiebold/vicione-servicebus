@@ -1,0 +1,36 @@
+{
+  "scope": "Complete actual regular-file archive reconstruction and restoration; no SDK/O/Git writes",
+  "archive_sha256": "1cb6ac2ad9af96e5c2b38e5bd758a1a5eadc40791a97bdb2da34707ec1cb998a",
+  "archive_bytes": 100800092,
+  "chunks": [
+    {
+      "file": "review-evidence.tar.gz.part-001",
+      "bytes": 41943040,
+      "sha256": "89d632a13590472771fe71e5935d20abe97e373d5181e9ba3b50d8eaef7cab70"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-002",
+      "bytes": 41943040,
+      "sha256": "c1033e24e2b8fef7d9192355f3d91a4721297c879da4256d8a9f9081c69037c2"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-003",
+      "bytes": 16914012,
+      "sha256": "0e0d9c5ddb503425c0fe494c7afb2dd9980e9b42d109c20bff7de3abd2c00839"
+    }
+  ],
+  "member_manifest_sha256": "923188ff1079af7737704e2ed3a928d2e0199b4b7faaa6fa01e1ce5ac301e516",
+  "regular_unique_safe_members": 11601,
+  "restored_bytes": 1220855711,
+  "per_root_counts": {
+    "repositories/vicione-servicebus/evidence": 4782,
+    "SERVICEBUS_API_REVIEW_AND_REPAIR": 6819
+  },
+  "all_member_stream_restored_live_SHA_equal": true,
+  "missing_manifest_members_from_live": [],
+  "live_regular_postcapture_additions_outside_bundle": [],
+  "restoration_directory": "/private/tmp/servicebus-backup-independent-restore-20261006-r1/restored",
+  "archive_reconstructed": "/private/tmp/servicebus-backup-independent-restore-20261006-r1/review-evidence.tar.gz",
+  "symlinks_special_files_in_archive": 0,
+  "other_sources": "Tracked implementation is stored normally in Git, not within this retained review/evidence archive."
+}

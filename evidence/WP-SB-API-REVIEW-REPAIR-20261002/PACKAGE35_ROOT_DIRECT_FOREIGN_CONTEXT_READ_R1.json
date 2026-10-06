@@ -1,0 +1,40 @@
+{
+  "status": "ROOT_PERSONAL_FOREIGN_CONTEXT_INPUT_READ_PARTIAL_NO_OWNER766_CLOSURE",
+  "actor": "/root",
+  "utc": "2026-10-04T00:36:33.599550+00:00",
+  "files": [
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.proto",
+      "bytes": 331,
+      "sha256": "0e274fde70f5cd345b7f0b3f648d415be786a5b9968067c58fd6320853011fad",
+      "lines": 13,
+      "own_semantic_read": "FULL_LITERAL_TOOL_DISPLAY_FROM_FIRST_BYTE_THROUGH_EOF"
+    },
+    {
+      "relative": ".editorconfig",
+      "bytes": 451,
+      "sha256": "620cf8f37fd9c45ae51dccf0ddadca145d1bb44daacd3b092e1a910444646f66",
+      "lines": 24,
+      "own_semantic_read": "FULL_LITERAL_TOOL_DISPLAY_FROM_FIRST_BYTE_THROUGH_EOF"
+    },
+    {
+      "relative": ".gitattributes",
+      "bytes": 1973,
+      "sha256": "c17b2e3401aac308943eefaffa5316a3110445858bf848917a7a774e232020aa",
+      "lines": 55,
+      "own_semantic_read": "FULL_LITERAL_TOOL_DISPLAY_FROM_FIRST_BYTE_THROUGH_EOF"
+    },
+    {
+      "relative": ".github/workflows/native-tests.yml",
+      "bytes": 9790,
+      "sha256": "2cd77f10f95e87fea7c5bbefcae9908adadb5dd27f7add3e289898100a10406d",
+      "lines": 219,
+      "own_semantic_read": "FULL_LITERAL_TOOL_DISPLAY_FROM_FIRST_BYTE_THROUGH_EOF"
+    }
+  ],
+  "editorconfig_disposition": "Whole sections/options reviewed: root inheritance, UTF8/LF and text cleanup; explicit Markdown trailing-whitespace and command CRLF overrides; CSharp namespace/usings style. No edit needed.",
+  "gitattributes_disposition": "Whole globs and attributes reviewed, including exact two immutable historical evidence whitespace exceptions; no current source/test waiver or edit.",
+  "workflow_disposition": "All jobs/build/locked-restores/nativeMTPminimums/provider wrappers and package gates reviewed; workflow runtime not executed or inferred.",
+  "whole_owner766": false,
+  "ordinary_RAW_increment": 0
+}

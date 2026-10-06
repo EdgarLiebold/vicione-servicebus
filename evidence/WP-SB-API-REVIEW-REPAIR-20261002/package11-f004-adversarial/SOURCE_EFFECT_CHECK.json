@@ -1,0 +1,1136 @@
+[
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/journal_telemetry.cs.txt",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/journal_registration.cs.txt",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "corrected",
+    "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/corrected/inmemory_factory.cs.txt",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/journal_telemetry.cs.txt",
+      "sha256": "68dc62ae5359d9363be3406ac0216780932186665079e84ad93d3090041ba74c"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/journal_registration.cs.txt",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "process-meter-selected",
+    "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/process-meter-selected/inmemory_factory.cs.txt",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/journal_telemetry.cs.txt",
+      "sha256": "74e031b208bad4f582d38f3a1c0bd93453860d9dc197284ef460c5e5541fd5c4"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/journal_registration.cs.txt",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "factory-failure-global-fallback",
+    "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/factory-failure-global-fallback/inmemory_factory.cs.txt",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/journal_telemetry.cs.txt",
+      "sha256": "eab4cd0ce3bf76f0c4fe39b1aed1b3bc6dcb3d97e92a34db81d21bf588eeb42e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/journal_registration.cs.txt",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "borrowed-factory-meter-disposed",
+    "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/borrowed-factory-meter-disposed/inmemory_factory.cs.txt",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/journal_telemetry.cs.txt",
+      "sha256": "725210026d1c99efe71d802b537edcc6285c303255e7a87e67ae46983621b0a2"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/journal_registration.cs.txt",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "owned-source-disposal-omitted",
+    "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/owned-source-disposal-omitted/inmemory_factory.cs.txt",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/journal_telemetry.cs.txt",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/journal_registration.cs.txt",
+      "sha256": "197ddb8511f8e9463b6031927db6ed913cdaefca7bcea8135a85a0a9988cd681"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "registration-caches-first-telemetry",
+    "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/registration-caches-first-telemetry/inmemory_factory.cs.txt",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/journal_telemetry.cs.txt",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/journal_registration.cs.txt",
+      "sha256": "0045dc60d0303dbe3b3230641b692c167ee1473f8624d3bf531edb554ff5b042"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "di-writer-forgets-owner",
+    "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/di-writer-forgets-owner/inmemory_factory.cs.txt",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/journal_telemetry.cs.txt",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/journal_registration.cs.txt",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "shared-transport-graph-restored",
+    "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/shared-transport-graph-restored/inmemory_factory.cs.txt",
+      "sha256": "f236623fdb28e5745365501bee6c15c2bfd42855e640877747ab159b13c13bf6"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/journal_telemetry.cs.txt",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/journal_registration.cs.txt",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+    },
+    "independently_reconstructed": true
+  },
+  {
+    "variant": "rollback",
+    "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+    "snapshot": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package11-f004-binaries/rollback/inmemory_factory.cs.txt",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+    },
+    "independently_reconstructed": true
+  }
+]

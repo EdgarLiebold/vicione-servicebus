@@ -238,7 +238,7 @@ public class ScopeChannelContext :
     /// <param name="multiple">Whether to reject this tag and every preceding unacknowledged delivery.</param>
     /// <param name="requeue">Whether RabbitMQ should place rejected deliveries back on their queues.</param>
     /// <param name="cancellationToken">Additional cancellation for this operation.</param>
-    /// <returns>A task that completes after the negative acknowledgement is written.</returns>
+    /// <returns>A task that completes after rejection handling, which may be a no-op when the channel is unavailable or already closed.</returns>
     public async Task BasicNackAsync(ulong deliveryTag, bool multiple, bool requeue, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);

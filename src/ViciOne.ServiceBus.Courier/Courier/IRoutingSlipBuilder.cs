@@ -7,6 +7,6 @@ public interface IRoutingSlipBuilder :
     IItineraryBuilder
 {
     /// <summary>Builds the routing slip using the current state of the builder.</summary>
-    /// <returns>An immutable routing-slip contract representing the accumulated builder state.</returns>
+    /// <returns>A routing-slip contract representing the accumulated builder state.</returns>
     IRoutingSlip Build();
 }

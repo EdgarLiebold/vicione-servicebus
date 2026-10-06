@@ -1,0 +1,405 @@
+{
+  "utc": "2026-10-06T06:29:40.257649+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_BUILD2_DISPATCH4_RABBIT_LANGUAGE8_SOURCE14",
+  "master_before_sha256": "3742b25c1388b730d9df8a618a680c47a8412c5cd69f7eb44dd065dcb67c7319",
+  "author_manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-bus-factory-build2-bounded-source-contracts-proposed-r1/MANIFEST.json",
+      "sha256": "552017e3bc6ef6b975f306f30e9e2528d39db7f94e7aadc6dbdb1c93d4f41709"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-async-context-dispatch4-connector-lock-boundary-precision-r3/MANIFEST.json",
+      "sha256": "be82537016944b392049a723277aff6903a96e31eb76e150d4db7904659f5343"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package357-rabbit-struct-default3-individual-source-language-contracts-proposed-r1/MANIFEST.json",
+      "sha256": "9b89c29e863f182b86db62996a80ea996dec507b7890c3c6400d2ba2d4fa542b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package357-cluster-node-equality5-individual-source-language-contracts-proposed-r2/MANIFEST.json",
+      "sha256": "2f684ec3eb438d12a2d0602c7a180ab1efb27021e3a8bd36a315bf114bfea186"
+    }
+  ],
+  "independent_peers_and_mandatory_overlays": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-build2-independent-source-peer-r1/MANIFEST.json",
+      "sha256": "cf236232d3e5aed35af22b0be3eaa9c20afcc3e83fdd5f2d58ce77e04234ad5d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-dispatch4-independent-source-peer-r1/MANIFEST.json",
+      "sha256": "af777d9e3d8a643c44f4fe4cfb32b3e67ac0da40f91747b5f09f175c72c86481"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package357-rabbit-language8-independent-source-peer-r1/MANIFEST.json",
+      "sha256": "fda9466a0f3f5fc49efdfcf0da435f93510f5d17f2ae4402a1ebda1d07f5656b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-async-context-dispatch4-bounded-source-contracts-proposed-r1/MANIFEST.json",
+      "sha256": "77a8f5552a6bbd14f499ade1e8409103a3a2f8202268d7e68efb617d8a15bdca"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-async-context-dispatch4-cached-output-precision-r2/MANIFEST.json",
+      "sha256": "bccc95dd1ba405765d3394a7d4c92bdcbd74d3ce0445a1da0f77029656986cfd"
+    }
+  ],
+  "Root_whole_Build11_838_receipts": [
+    "30ba0a first3/506",
+    "b8c948 remaining6/287",
+    "ed75ec helpers2/45 complete before metadata fragment truncation"
+  ],
+  "Root_whole_Dispatch15_1185_receipts": [
+    "e038da",
+    "524e11",
+    "5a29db"
+  ],
+  "Root_individual6_norm_receipts": [
+    "e58fcd",
+    "ed75ec first5 norms complete",
+    "6dde91 recovered Apply norm complete"
+  ],
+  "Root_whole_independent_Source_reports_Build_Dispatch": "a31452",
+  "Root_whole_Rabbit3_843_receipts": [
+    "5a4ad8",
+    "20268f",
+    "0f265b"
+  ],
+  "Root_individual_Rabbit8_norms_and_independent_peer": "0f265b",
+  "Root_complete3_public_TYPE_blocks": "3c67f7",
+  "Root_primary_Microsoft_struct_language_sections": [
+    "turn290view1",
+    "turn291view0",
+    "turn291view1",
+    "turn292view0"
+  ],
+  "current_Core359_Abstr352_selected_Source26_PDB_bindings": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusFactoryExtensions.cs",
+      "sha256": "4b6ece0088dda57570fa4852f75168e72b8dde9e4c2cc984befa5d5e769f8d09",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusFactoryExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "4b6ece0088dda57570fa4852f75168e72b8dde9e4c2cc984befa5d5e769f8d09",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/MessageRouteTable.cs",
+      "sha256": "7bef19a60172a27a5747cbbc1a5ba887ea7ac8091f9c3ac16e454559cae48f67",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/MessageRouteTable.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "7bef19a60172a27a5747cbbc1a5ba887ea7ac8091f9c3ac16e454559cae48f67",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Runtime/ServiceBusRuntime.cs",
+      "sha256": "fdb8a75d182886d32468204ea0413a430fb1f66038e8c25af8cd606515889c56",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Runtime/ServiceBusRuntime.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "fdb8a75d182886d32468204ea0413a430fb1f66038e8c25af8cd606515889c56",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/IBusFactory.cs",
+      "sha256": "bc68693c51bb6bde5edd8e13c93181345bda1dc8978a945c8d97b1139a41244f",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/IBusFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "bc68693c51bb6bde5edd8e13c93181345bda1dc8978a945c8d97b1139a41244f",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/IBusConfiguration.cs",
+      "sha256": "4b1dbc13755ed919318217a9d321326bffa48ac9f2802ca3a0219c5f4a032807",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/IBusConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "4b1dbc13755ed919318217a9d321326bffa48ac9f2802ca3a0219c5f4a032807",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/IHostConfiguration.cs",
+      "sha256": "e3da1c2b4b1f364398503cef07fbf5cc7569d08c6f64ae52c41ceefd4ccf9fee",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/IHostConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "e3da1c2b4b1f364398503cef07fbf5cc7569d08c6f64ae52c41ceefd4ccf9fee",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Observers/Observables/BusObservable.cs",
+      "sha256": "b1a8a38541574e30f156226f43fca98ae9ab40b0151f5cd373475ba267716d7e",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Observers/Observables/BusObservable.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b1a8a38541574e30f156226f43fca98ae9ab40b0151f5cd373475ba267716d7e",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ViciOneServiceBusExceptionExtensions.cs",
+      "sha256": "cd517b26c7157003a873013595f44a0c02ed4415677311b45f080a53e3e4b304",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ViciOneServiceBusExceptionExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "cd517b26c7157003a873013595f44a0c02ed4415677311b45f080a53e3e4b304",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/AsyncPipeContextAgent.cs",
+      "sha256": "c57c4facd5e2011d1ef5f94f0f3f553323b3b0d6a045198c9edd340db30c2000",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/AsyncPipeContextAgent.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c57c4facd5e2011d1ef5f94f0f3f553323b3b0d6a045198c9edd340db30c2000",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/AsyncPipeContextFilter.cs",
+      "sha256": "38c480e2c99c7811d39cdb6436cd67e9f86f5aab433d64b1b906af7a23e9f7c5",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/AsyncPipeContextFilter.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "38c480e2c99c7811d39cdb6436cd67e9f86f5aab433d64b1b906af7a23e9f7c5",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/AsyncPipeContextPipe.cs",
+      "sha256": "c581ca459d41077814f8926bf328c3fe396aa8eae972a38664d9d786eede2ab4",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/AsyncPipeContextPipe.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c581ca459d41077814f8926bf328c3fe396aa8eae972a38664d9d786eede2ab4",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DispatchPipeSpecification.cs",
+      "sha256": "fc2083304367c6c8742a3b9dc885275662304b304df7fae06716503602e28759",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DispatchPipeSpecification.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "fc2083304367c6c8742a3b9dc885275662304b304df7fae06716503602e28759",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextAgent.cs",
+      "sha256": "5c27427277bbc080d1729d9200843ea6cfd816caa1c26ceed5dff5136fcf0daf",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextAgent.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "5c27427277bbc080d1729d9200843ea6cfd816caa1c26ceed5dff5136fcf0daf",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/IAsyncPipeContextHandle.cs",
+      "sha256": "64c013c9667f7ad6defb1aae00fbab5e6a9fc964eec5a72b0caff9ef51a0750d",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/IAsyncPipeContextHandle.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "64c013c9667f7ad6defb1aae00fbab5e6a9fc964eec5a72b0caff9ef51a0750d",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/IAsyncPipeContextAgent.cs",
+      "sha256": "b9b9ee6fc5eae84ec5a7f1f0a1430bffb8ee67d182ff18b623296d3fc951ac39",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/IAsyncPipeContextAgent.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b9b9ee6fc5eae84ec5a7f1f0a1430bffb8ee67d182ff18b623296d3fc951ac39",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/DynamicFilter.cs",
+      "sha256": "14bc6e97f7a10e3a141e1b4a789ffd5d5698b61242047131cf5b49ed615acd39",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/DynamicFilter.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "14bc6e97f7a10e3a141e1b4a789ffd5d5698b61242047131cf5b49ed615acd39",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/IPipeContextConverterFactory.cs",
+      "sha256": "8214cd1d54b88e569dd26f6c67f0d61713f0aa6767465ee5a6a0c9771fa3fdd8",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/IPipeContextConverterFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "8214cd1d54b88e569dd26f6c67f0d61713f0aa6767465ee5a6a0c9771fa3fdd8",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConfiguratorPipeConnectorSpecification.cs",
+      "sha256": "f5ab84c02c59bed3f73091d1785941649c11c461881e1bfbd487790980bfb4de",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConfiguratorPipeConnectorSpecification.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f5ab84c02c59bed3f73091d1785941649c11c461881e1bfbd487790980bfb4de",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/IPipeConnectorSpecification.cs",
+      "sha256": "b5499c46584026bb2a65f851d593552d4eae129e7a51d139a945e85226b76492",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/IPipeConnectorSpecification.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b5499c46584026bb2a65f851d593552d4eae129e7a51d139a945e85226b76492",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/IPipeBuilder.cs",
+      "sha256": "76f15fc1772efbbda50b7abc142dbdd65eadc40b49e363323b744679c7e77761",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/IPipeBuilder.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "76f15fc1772efbbda50b7abc142dbdd65eadc40b49e363323b744679c7e77761",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/Agent.cs",
+      "sha256": "4c213dd9b4f1e76411fe9310d7d39cf09a4596aa45b9dc63793460183b461140",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/Agent.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "4c213dd9b4f1e76411fe9310d7d39cf09a4596aa45b9dc63793460183b461140",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/PipeConfigurator.cs",
+      "sha256": "3ceb5da4b84704720359cc99774160b5ead449a673fed41cd7ad4e88fab7eca3",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/PipeConfigurator.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "3ceb5da4b84704720359cc99774160b5ead449a673fed41cd7ad4e88fab7eca3",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextDisposer.cs",
+      "sha256": "22d17d0020d88d3e209defb8fe3fda604de3f03934aa6408af5b043e3a857620",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextDisposer.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "22d17d0020d88d3e209defb8fe3fda604de3f03934aa6408af5b043e3a857620",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResult.cs",
+      "sha256": "71e6b4437fd8adb48ab9efd30b166bb8880331b83669d0cc5acb5579b7998261",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResult.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "71e6b4437fd8adb48ab9efd30b166bb8880331b83669d0cc5acb5579b7998261",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ViciOneServiceBusException.cs",
+      "sha256": "56733f056519084e403f2dbba155296882a4b53492c347f187fb9c237dfe797a",
+      "current_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ViciOneServiceBusException.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "56733f056519084e403f2dbba155296882a4b53492c347f187fb9c237dfe797a",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    }
+  ],
+  "original_before": 18285,
+  "original_after": 18299,
+  "remaining_after": 270,
+  "master_before": 19147,
+  "master_after": 19161,
+  "new_original_source14": [
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Configuration.BusFactoryExtensions.Build(ViciOne.ServiceBus.Configuration.IBusFactory,ViciOne.ServiceBus.Configuration.IBusConfiguration)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Configuration.BusFactoryExtensions.Build(ViciOne.ServiceBus.Configuration.IBusFactory,ViciOne.ServiceBus.Configuration.IBusConfiguration,System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ISpecification})"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.Middleware.AsyncPipeContextAgent`1.ToString"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.Middleware.AsyncPipeContextFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.Middleware.AsyncPipeContextPipe`1.SendAsync(`0)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Configuration.DispatchPipeSpecification`1.Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder{`0})"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.#ctor"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqEndpointAddress.#ctor"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.RabbitMqHostAddress.#ctor"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.Equals(System.Object)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.Equals(ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.GetHashCode"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.op_Equality(ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode,ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode)"
+    ],
+    [
+      "ViciOne.ServiceBus.RabbitMq",
+      "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.op_Inequality(ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode,ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode)"
+    ]
+  ],
+  "known_unique_findings": 215,
+  "bounded_dispositions": 215,
+  "new_native_count": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": "Six individually bounded local sequencing contracts and eight individually bounded Source-language contracts. Original operative ownership/failure-path/lifecycle/SPI obligations are retained. Historical Rabbit320 selected source/reflection/XML is not a current assembly or MethodDef/IL/ABI/native/broker validation claim. No speculative product defect registered."
+}

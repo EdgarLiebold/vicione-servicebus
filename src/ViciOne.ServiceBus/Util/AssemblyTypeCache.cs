@@ -54,7 +54,7 @@ public static class AssemblyTypeCache
 
     /// <summary>Finds types.</summary>
     /// <param name="assemblies">The assemblies.</param>
-    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="filter">The optional predicate that selects discovered types.</param>
     /// <returns>The matching types.</returns>
     public static TypeSet FindTypes(IEnumerable<Assembly> assemblies, Func<Type, bool>? filter = null)
     {
@@ -65,7 +65,7 @@ public static class AssemblyTypeCache
     /// <summary>Finds types.</summary>
     /// <param name="assemblies">The assemblies.</param>
     /// <param name="classification">The classification.</param>
-    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="filter">The optional predicate that selects discovered types.</param>
     /// <returns>The matching types.</returns>
     public static IEnumerable<Type> FindTypes(IEnumerable<Assembly> assemblies, TypeClassification classification, Func<Type, bool>? filter = null)
     {
@@ -77,7 +77,7 @@ public static class AssemblyTypeCache
     /// <summary>Finds types.</summary>
     /// <param name="assembly">The assembly.</param>
     /// <param name="classification">The classification.</param>
-    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="filter">The optional predicate that selects discovered types.</param>
     /// <returns>The matching types.</returns>
     public static IEnumerable<Type> FindTypes(Assembly assembly, TypeClassification classification, Func<Type, bool>? filter = null)
     {

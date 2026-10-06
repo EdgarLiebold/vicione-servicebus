@@ -13,7 +13,7 @@ public class ScopedConsumeSendEndpointProvider :
     readonly IServiceProvider _scope;
 
     /// <summary>Initializes a new instance.</summary>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="provider">The underlying send endpoint provider.</param>
     /// <param name="consumeContext">The consume context.</param>
     /// <param name="scope">The scope.</param>
     public ScopedConsumeSendEndpointProvider(ISendEndpointProvider provider, ConsumeContext consumeContext, IServiceProvider scope)

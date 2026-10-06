@@ -1,0 +1,111 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+using Xunit;
+
+namespace ViciOneReview.ScopeFault;
+
+public static class ConsumerCases
+{
+    public static async Task RunAsync(string mode, TimeSpan timeout, CancellationToken caller)
+    {
+        bool typed = mode.EndsWith("-typed", StringComparison.Ordinal);
+        string behavior = mode[..mode.LastIndexOf('-')];
+        using var dependency = new CancellationTokenSource(); dependency.Cancel();
+        var probe = new Probe(behavior, dependency.Token);
+        var previousLog = LogContext.Current;
+        using var logger = LoggerFactory.Create(_ => { });
+        LogContext.ConfigureCurrentLogContext(logger); // F019 remains a separate finding.
+        ServiceProvider? provider = null;
+        IBusControl? control = null;
+        ConnectHandle? observer = null;
+        bool started = false;
+        Exception? first = null;
+        await OwnedLifetime.RunAsync(async () =>
+        {
+            var services = new ServiceCollection(); services.AddLogging(); services.AddSingleton(probe);
+            if (typed) services.AddViciOneServiceBus<IScopeBus>(registration =>
+            {
+                registration.Limits(MessageLimits.Conservative);
+                ConfigureConsumers(registration);
+                registration.UsingInMemory((context, configuration) => configuration.ConfigureEndpoints(context));
+            });
+            else services.AddViciOneServiceBus(registration =>
+            {
+                registration.Limits(MessageLimits.Conservative);
+                ConfigureConsumers(registration);
+                registration.UsingInMemory((context, configuration) => configuration.ConfigureEndpoints(context));
+            });
+            provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+            control = typed ? provider.GetRequiredService<IBusInstance<IScopeBus>>().BusControl : provider.GetRequiredService<IBusControl>();
+            observer = control.ConnectConsumeObserver(probe);
+            started = true; await control.StartAsync(caller).WaitAsync(timeout, caller);
+            var endpoint = await control.GetSendEndpointAsync(new Uri("loopback://localhost/scope-fault"), cancellationToken: caller).WaitAsync(timeout, caller);
+            for (int index = 1; index <= 2; index++)
+            {
+                await endpoint.SendAsync(new Input(index), caller).WaitAsync(timeout, caller);
+                await probe.Entered(index).Task.WaitAsync(timeout, caller);
+                Assert.Equal(index, probe.Created);
+                Assert.All(probe.Instances.Where(item => item.Index == index), item => Assert.Equal(0, item.DisposeCount));
+                probe.Release(index).TrySetResult();
+                if (probe.Async)
+                {
+                    await probe.CleanupEntered(index).Task.WaitAsync(timeout, caller);
+                    Assert.False(probe.Terminal(index).Task.IsCompleted);
+                    probe.ReleaseCleanup(index).TrySetResult();
+                }
+                Exception? terminal = await probe.Terminal(index).Task.WaitAsync(timeout, caller);
+                if (index == 1) first = terminal;
+                else Assert.Null(terminal);
+            }
+            await control.StopAsync(CancellationToken.None).WaitAsync(timeout); started = false;
+            Assert.Equal(2, probe.Created); Assert.Equal(2, probe.Disposed);
+            Assert.Equal(2, probe.Terminals); Assert.Equal(2, probe.Calls); Assert.Equal(2, probe.AliveAcrossAwait);
+            Assert.Equal(probe.HasOperationFault ? 1 : 2, probe.Successes);
+            Assert.Equal(behavior == "success" ? 0 : 1, probe.Faults);
+            Assert.Equal(probe.Async ? 2 : 0, probe.AsyncDisposals);
+            Assert.Equal(probe.Async ? 0 : 2, probe.SyncDisposals);
+            Assert.Equal(0, probe.TerminalsBeforeCleanupCompleted);
+            Assert.All(probe.Instances, item => Assert.Equal(1, item.DisposeCount));
+            switch (behavior)
+            {
+                case "success": Assert.Null(first); break;
+                case "operation-only": Assert.Same(probe.Operation, first); Assert.Contains(nameof(TrackedConsumer.ConsumeAsync), first!.StackTrace!); break;
+                case "cleanup-only": Assert.Same(probe.Cleanup, first); break;
+                case "dependency-cancel-only":
+                    var canceled = Assert.IsType<ConsumerCanceledException>(first);
+                    Assert.Same(probe.Operation, canceled.InnerException);
+                    Assert.Equal(dependency.Token, Assert.IsType<OperationCanceledException>(canceled.InnerException).CancellationToken);
+                    break;
+                default:
+                    var aggregate = Assert.IsType<AggregateException>(first);
+                    Assert.Equal(2, aggregate.InnerExceptions.Count);
+                    Assert.Same(probe.Operation, aggregate.InnerExceptions[0]); Assert.Same(probe.Cleanup, aggregate.InnerExceptions[1]);
+                    if (behavior.StartsWith("dependency-cancel", StringComparison.Ordinal))
+                        Assert.Equal(dependency.Token, Assert.IsType<OperationCanceledException>(aggregate.InnerExceptions[0]).CancellationToken);
+                    break;
+            }
+        }, () => { probe.ReleaseAll(); return Task.CompletedTask; }, async () =>
+        {
+            if (control is not null && started) { await control.StopAsync(CancellationToken.None).WaitAsync(timeout); started = false; }
+        }, async () =>
+        {
+            if (observer is not null) await observer.DisposeAsync().AsTask().WaitAsync(timeout);
+        }, async () =>
+        {
+            if (provider is not null) await provider.DisposeAsync().AsTask().WaitAsync(timeout);
+        }, () => { LogContext.Current = previousLog; return Task.CompletedTask; });
+
+        void ConfigureConsumers(IBusRegistrationConfigurator registration)
+        {
+            if (probe.Async) registration.AddConsumer<AsyncConsumer>().Endpoint(endpoint => endpoint.Name = "scope-fault");
+            else registration.AddConsumer<SyncConsumer>().Endpoint(endpoint => endpoint.Name = "scope-fault");
+
+        }
+    }
+
+    public interface IScopeBus : IBus;
+}

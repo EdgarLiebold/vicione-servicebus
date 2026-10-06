@@ -1,0 +1,837 @@
+{
+  "utc": "2026-10-04T01:41:48.629003+00:00",
+  "status": "CURRENT_STATUS_RECONCILED_ROOT_AZURE36_37_ACCEPTANCE_AND_INTEGRATED_FINAL_PENDING",
+  "scope": "Metadata only. Historical evidence is unchanged. No product, test or runner edits. No overall A+ or current Unit pass.",
+  "accepted_references": {
+    "azure": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F038_ROOT_ACCEPTANCE_R1.json",
+      "bytes": 2697,
+      "sha256": "6098bc86601162c41f2f8463aceddbea43e0a5ac3c2bb90e42ad9adc9da27af0"
+    },
+    "endpoint": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F034_F041_ROOT_ACCEPTANCE.json",
+      "bytes": 2442,
+      "sha256": "a28ce26e1ee4ee00baf2970660cda698dfe1ecd98e71bb40d4d179380e656094"
+    },
+    "batch": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE25_F030_ROOT_CONTRACT_DISPOSITION_ACCEPTANCE_R1.json",
+      "bytes": 2740,
+      "sha256": "ee74a25117d4a914155a9d4f2023f9ed3c6e385af9117db53ebdb8d4367c79d4"
+    },
+    "owner": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_05_ROOT_SCOPED_REVIEW_ACCEPTANCE.json",
+      "bytes": 5009,
+      "sha256": "653dd5036606719fd27660ac91e6ff34be1fb2cb7225e653706dbb7b684ed5a4"
+    },
+    "outbox": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_TARGETED_ROOT_ACCEPTANCE_R1.json",
+      "bytes": 10448,
+      "sha256": "6125be2c7166eebe463088935c98076f9131692e2e0c4f968cf0ea972c0c1aec"
+    }
+  },
+  "changes": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+      "original_sha256": "ee5fd44474132cc01f789fc497d998c364dcd434aac388a94d42302a0b8b9fbe",
+      "current_sha256": "7db8c4b7e52a0c04b60686c7aef207bbdacb597c693572cbc644b23472ebb707",
+      "changed_fields": [
+        {
+          "key": "additional_finding_status",
+          "before": [
+            {
+              "id": "F-SB-API-036",
+              "severity": "Medium",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "Default session formatter ignored",
+              "research_candidate_id": "AZURE-FAMILY-001",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdSendTopologyConvention.cs",
+              "exact_native_oracle_tests": [
+                "DefaultSessionFormatter_ReachesTheSendFilterAndPreservesExplicitOverridesAsync"
+              ],
+              "actual_original_cases_receipt": "package09-azure-original-six-cases",
+              "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+              "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+              "status": "FIX_IMPLEMENTED_5_TARGETED_CASES_GREEN_MUTATION_REVIEW_PENDING",
+              "proof_limit": "Runtime shows public topology/DI declarations and field/filter effects, not actual Azure cloud deliveries."
+            },
+            {
+              "id": "F-SB-API-037",
+              "severity": "Medium",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "Rule/filter conflict omitted from forwarding subscription validation",
+              "research_candidate_id": "AZURE-FAMILY-002",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SubscriptionConsumeTopologySpecification.cs",
+              "exact_native_oracle_tests": [
+                "ConsumeSubscriptions_RetainRuleFilterValidation",
+                "BusConstruction_RejectsConflictingConsumeRuleAndFilter"
+              ],
+              "actual_original_cases_receipt": "package09-azure-original-six-cases",
+              "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+              "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+              "status": "FIX_IMPLEMENTED_5_TARGETED_CASES_GREEN_MUTATION_REVIEW_PENDING",
+              "proof_limit": "Runtime shows public topology/DI declarations and field/filter effects, not actual Azure cloud deliveries."
+            },
+            {
+              "id": "F-SB-API-038",
+              "severity": "High",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "Distinct nested queue paths share one automatic subscription name",
+              "research_candidate_id": "AZURE-FAMILY-003",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusReceiveEndpointBuilder.cs",
+              "exact_native_oracle_tests": [
+                "NestedQueueDestinations_HaveDistinctAutomaticSubscriptionsAsync"
+              ],
+              "actual_original_cases_receipt": "package09-azure-original-six-cases",
+              "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+              "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+              "status": "PRODUCT_NAMING_COMPATIBILITY_DECISION_PENDING",
+              "proof_limit": "Runtime shows public topology/DI declarations and field/filter effects, not actual Azure cloud deliveries."
+            },
+            {
+              "id": "F-SB-API-039",
+              "severity": "Medium",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "InMemory mutable bus configuration shared between service providers",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+              "exact_native_oracle_tests": [
+                "shared-default",
+                "shared-typed",
+                "callback-recovery-default",
+                "callback-recovery-typed"
+              ],
+              "actual_original_cases_receipt": "package12-graph-public-previous-eight-r2",
+              "actual_original_receipt_log_sha256": "d7cd511850a1d1b4b540768c7411272428d858cf44febd4fcab6f2360ac0124f",
+              "positive_controls": [
+                "independent-default",
+                "independent-typed",
+                "invalid-default",
+                "invalid-typed"
+              ],
+              "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+              "causal_separation": "Previous selected Core20ed contains corrected F004 and exact original InMemory factory; 4 exact second-owner PayloadAdmission ConfigurationException red/4 actual positive/noGuard. Separate compiled factory-only reversion matches same causal failure, journal kept corrected.",
+              "proof_limit": "8 actual CLI cases; no canonical Core owner grade, no broker/cloud/restart/wholeAPI claim.",
+              "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_GRAPH_ROOT_ACCEPTANCE.json",
+              "adversarial_review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/REVIEW.json"
+            },
+            {
+              "id": "F-SB-API-040",
+              "severity": "High",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "InMemory escaped input names declare a different queue and exchange than receiving and sending use",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs",
+              "source_original_sha256": "05814107628e3345f1c13d360f77a40bad8e1742d9b1cb954d07bb1b2bce5873",
+              "exact_native_oracle_tests": [
+                "default-backtick",
+                "default-space",
+                "default-percent",
+                "default-unicode",
+                "typed-backtick",
+                "typed-space",
+                "typed-percent",
+                "typed-unicode",
+                "default-wildcard",
+                "typed-wildcard",
+                "default-vhost",
+                "typed-vhost"
+              ],
+              "actual_original_cases_receipt": "package19-transport-public-previous-fourteen",
+              "actual_original_receipt_log_sha256": "072b3c5c53f2db7a29b3d21b63b2ef46a5fbf869d462b5abb3e0a91a97b887c1",
+              "positive_controls": [
+                "default-ascii",
+                "typed-ascii"
+              ],
+              "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+              "proof_limit": "Final14:12finiteSDKprobe queueassert reds+2ASCIIpositives; corrected14green;threeactualstrictcompiledsingleeffect finite79/83/83reds+positivegreen; baseline/rollback14green. Twelveordinary/vhostmode2formal real sends each; wildcardtopologyonly. FinalindependentPE/PDB172documentchecks complete; global API review pending.",
+              "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F040_ROOT_ACCEPTANCE.json",
+              "adversarial_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/REVIEW.json"
+            },
+            {
+              "id": "F-SB-API-041",
+              "severity": "High",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "Companion endpoint settings override the planned unique endpoint identity and cause duplicate receive endpoint creation",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+              "actual_original_cases_receipt": "package19-f034-public-previous-thirtyfour",
+              "actual_original_receipt_log_sha256": "9dee23830984dfdd2f2072a682518abad65b8b0dfd6fe5cec7df3c33db8a3cae",
+              "independent_incremental_receipt": "package19-f034-public-corrected-thirtyfour",
+              "independent_incremental_log_sha256": "26443b4400762df5485670a083e063c2737837f52819aaf8d05640cbcab2d67e",
+              "exact_native_oracle_tests": [
+                "definition-full"
+              ],
+              "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+              "contract": "IConsumerKindEndpointContext endpointName unique companion identity; optional definition settings do not select a different physical endpoint. Actual finite duplicate ignored-fluent-compensate repeats before/after independent fourfile F034patch.",
+              "proof_limit": "Separate F041; no F034kill credit. New strict fiveendpointmultiset owner refinement and final correction/mutants still pending. No cloud/broker/wholeAPIgrade.",
+              "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F034_F041_ROOT_ACCEPTANCE.json",
+              "adversarial_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f034-f041-final-adversarial/REVIEW.json"
+            },
+            {
+              "id": "F-SB-API-042",
+              "severity": "High",
+              "classification": "CONFIRMED_DURABILITY_DEFECT",
+              "title": "Classic inline outbox records delivery before an enclosing volatile outbox actually dispatches the message",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+              "exact_native_oracle_tests": [
+                "volatile-positive",
+                "volatile-fault",
+                "ef-fault"
+              ],
+              "actual_original_cases_receipt": "package28-composition-native-observe-r6",
+              "actual_original_receipt_log_sha256": "e544a0cdf1b842ff483a2aaaa20f478a493d6f62185a4c013b3fe55d061a69e5",
+              "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE28_F042_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+              "root_acceptance_sha256": "01ae1db907c9b6134742416d047d312cee61c54f28d00ff99d220a12fb1bfe7a",
+              "adversarial_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package28-composition-native-qualification-r6/REVIEW.md",
+              "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+              "proof_limit": "Original finite public SQLite loss reproduced. Corrected8EF16Receive+4neighbor6Receive boundaries;5distinct strict compiled variants/six causal counterproofs/six controls plus12case baseline and12case rollback. Same-process-only Classic repository; no cloud, wholeCore766 or globalAplus claim.",
+              "repair_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_TARGETED_ROOT_ACCEPTANCE_R1.json",
+              "repair_evidence_sha256": "6125be2c7166eebe463088935c98076f9131692e2e0c4f968cf0ea972c0c1aec",
+              "repair_adversarial_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-f042-mutations-native-qualification-r2/REVIEW.md"
+            }
+          ],
+          "after": [
+            {
+              "id": "F-SB-API-036",
+              "severity": "Medium",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "Default session formatter ignored",
+              "research_candidate_id": "AZURE-FAMILY-001",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdSendTopologyConvention.cs",
+              "exact_native_oracle_tests": [
+                "DefaultSessionFormatter_ReachesTheSendFilterAndPreservesExplicitOverridesAsync"
+              ],
+              "actual_original_cases_receipt": "package09-azure-original-six-cases",
+              "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+              "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+              "status": "ADVERSARIAL_REVIEW_ACCEPTED_ROOT_TARGETED_ACCEPTANCE_PENDING",
+              "proof_limit": "Runtime shows public topology/DI declarations and field/filter effects, not actual Azure cloud deliveries.",
+              "adversarial_review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-adversarial/REVIEW.json",
+              "root_acceptance_pending": true
+            },
+            {
+              "id": "F-SB-API-037",
+              "severity": "Medium",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "Rule/filter conflict omitted from forwarding subscription validation",
+              "research_candidate_id": "AZURE-FAMILY-002",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SubscriptionConsumeTopologySpecification.cs",
+              "exact_native_oracle_tests": [
+                "ConsumeSubscriptions_RetainRuleFilterValidation",
+                "BusConstruction_RejectsConflictingConsumeRuleAndFilter"
+              ],
+              "actual_original_cases_receipt": "package09-azure-original-six-cases",
+              "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+              "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+              "status": "ADVERSARIAL_REVIEW_ACCEPTED_ROOT_TARGETED_ACCEPTANCE_PENDING",
+              "proof_limit": "Runtime shows public topology/DI declarations and field/filter effects, not actual Azure cloud deliveries.",
+              "adversarial_review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-adversarial/REVIEW.json",
+              "root_acceptance_pending": true
+            },
+            {
+              "id": "F-SB-API-038",
+              "severity": "High",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "Distinct nested queue paths share one automatic subscription name",
+              "research_candidate_id": "AZURE-FAMILY-003",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusReceiveEndpointBuilder.cs",
+              "exact_native_oracle_tests": [
+                "NestedQueueDestinations_HaveDistinctAutomaticSubscriptionsAsync"
+              ],
+              "actual_original_cases_receipt": "package09-azure-original-six-cases",
+              "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+              "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+              "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+              "proof_limit": "10 public naming cases, five strict compiled mutants and 448 canonical Azure tests reviewed within the accepted package. No broker start, Azure cloud delivery or whole API grade.",
+              "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F038_ROOT_ACCEPTANCE_R1.json",
+              "root_acceptance_sha256": "6098bc86601162c41f2f8463aceddbea43e0a5ac3c2bb90e42ad9adc9da27af0"
+            },
+            {
+              "id": "F-SB-API-039",
+              "severity": "Medium",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "InMemory mutable bus configuration shared between service providers",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+              "exact_native_oracle_tests": [
+                "shared-default",
+                "shared-typed",
+                "callback-recovery-default",
+                "callback-recovery-typed"
+              ],
+              "actual_original_cases_receipt": "package12-graph-public-previous-eight-r2",
+              "actual_original_receipt_log_sha256": "d7cd511850a1d1b4b540768c7411272428d858cf44febd4fcab6f2360ac0124f",
+              "positive_controls": [
+                "independent-default",
+                "independent-typed",
+                "invalid-default",
+                "invalid-typed"
+              ],
+              "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+              "causal_separation": "Previous selected Core20ed contains corrected F004 and exact original InMemory factory; 4 exact second-owner PayloadAdmission ConfigurationException red/4 actual positive/noGuard. Separate compiled factory-only reversion matches same causal failure, journal kept corrected.",
+              "proof_limit": "8 actual CLI cases; no canonical Core owner grade, no broker/cloud/restart/wholeAPI claim.",
+              "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_GRAPH_ROOT_ACCEPTANCE.json",
+              "adversarial_review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/REVIEW.json"
+            },
+            {
+              "id": "F-SB-API-040",
+              "severity": "High",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "InMemory escaped input names declare a different queue and exchange than receiving and sending use",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs",
+              "source_original_sha256": "05814107628e3345f1c13d360f77a40bad8e1742d9b1cb954d07bb1b2bce5873",
+              "exact_native_oracle_tests": [
+                "default-backtick",
+                "default-space",
+                "default-percent",
+                "default-unicode",
+                "typed-backtick",
+                "typed-space",
+                "typed-percent",
+                "typed-unicode",
+                "default-wildcard",
+                "typed-wildcard",
+                "default-vhost",
+                "typed-vhost"
+              ],
+              "actual_original_cases_receipt": "package19-transport-public-previous-fourteen",
+              "actual_original_receipt_log_sha256": "072b3c5c53f2db7a29b3d21b63b2ef46a5fbf869d462b5abb3e0a91a97b887c1",
+              "positive_controls": [
+                "default-ascii",
+                "typed-ascii"
+              ],
+              "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+              "proof_limit": "Final14:12finiteSDKprobe queueassert reds+2ASCIIpositives; corrected14green;threeactualstrictcompiledsingleeffect finite79/83/83reds+positivegreen; baseline/rollback14green. Twelveordinary/vhostmode2formal real sends each; wildcardtopologyonly. FinalindependentPE/PDB172documentchecks complete; global API review pending.",
+              "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F040_ROOT_ACCEPTANCE.json",
+              "adversarial_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f040-final-adversarial/REVIEW.json"
+            },
+            {
+              "id": "F-SB-API-041",
+              "severity": "High",
+              "classification": "CONFIRMED_CONTRACT_DEFECT",
+              "title": "Companion endpoint settings override the planned unique endpoint identity and cause duplicate receive endpoint creation",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+              "actual_original_cases_receipt": "package19-f034-public-previous-thirtyfour",
+              "actual_original_receipt_log_sha256": "9dee23830984dfdd2f2072a682518abad65b8b0dfd6fe5cec7df3c33db8a3cae",
+              "independent_incremental_receipt": "package19-f034-public-corrected-thirtyfour",
+              "independent_incremental_log_sha256": "26443b4400762df5485670a083e063c2737837f52819aaf8d05640cbcab2d67e",
+              "exact_native_oracle_tests": [
+                "definition-full"
+              ],
+              "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+              "contract": "IConsumerKindEndpointContext endpointName unique companion identity; optional definition settings do not select a different physical endpoint. Actual finite duplicate ignored-fluent-compensate repeats before/after independent fourfile F034patch.",
+              "proof_limit": "41 public cases, 13 F034 and two distinct F041 strict finite compiled mutants, 15 positive controls and 41 rollback cases accepted. F041 counterproofs remain separate from F034. No whole Core766, cloud, broker or whole API grade.",
+              "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F034_F041_ROOT_ACCEPTANCE.json",
+              "adversarial_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f034-f041-final-adversarial/REVIEW.json",
+              "root_acceptance_sha256": "a28ce26e1ee4ee00baf2970660cda698dfe1ecd98e71bb40d4d179380e656094"
+            },
+            {
+              "id": "F-SB-API-042",
+              "severity": "High",
+              "classification": "CONFIRMED_DURABILITY_DEFECT",
+              "title": "Classic inline outbox records delivery before an enclosing volatile outbox actually dispatches the message",
+              "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+              "source": "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+              "exact_native_oracle_tests": [
+                "volatile-positive",
+                "volatile-fault",
+                "ef-fault"
+              ],
+              "actual_original_cases_receipt": "package28-composition-native-observe-r6",
+              "actual_original_receipt_log_sha256": "e544a0cdf1b842ff483a2aaaa20f478a493d6f62185a4c013b3fe55d061a69e5",
+              "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE28_F042_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+              "root_acceptance_sha256": "01ae1db907c9b6134742416d047d312cee61c54f28d00ff99d220a12fb1bfe7a",
+              "adversarial_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package28-composition-native-qualification-r6/REVIEW.md",
+              "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+              "proof_limit": "Original finite public SQLite loss reproduced. Corrected8EF16Receive+4neighbor6Receive boundaries;5distinct strict compiled variants/six causal counterproofs/six controls plus12case baseline and12case rollback. Same-process-only Classic repository; no cloud, wholeCore766 or globalAplus claim.",
+              "repair_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_TARGETED_ROOT_ACCEPTANCE_R1.json",
+              "repair_evidence_sha256": "6125be2c7166eebe463088935c98076f9131692e2e0c4f968cf0ea972c0c1aec",
+              "repair_adversarial_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package33-f042-mutations-native-qualification-r2/REVIEW.md"
+            }
+          ]
+        },
+        {
+          "key": "package04_f018",
+          "before": {
+            "status": "FROZEN_ADVERSARIAL_PENDING_CANONICAL_OWNER_REPAIR_PENDING",
+            "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_FREEZE.json",
+            "freeze_sha256": "886a76ea04353b018937a3e8455954be58a9fb0b73f9fd941e699b900f668444",
+            "public_cases": 16,
+            "mutants_killed": 6
+          },
+          "after": {
+            "status": "FROZEN_ADVERSARIAL_PENDING_CANONICAL_OWNER_REPAIR_PENDING",
+            "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_FREEZE.json",
+            "freeze_sha256": "886a76ea04353b018937a3e8455954be58a9fb0b73f9fd941e699b900f668444",
+            "public_cases": 16,
+            "mutants_killed": 6,
+            "historical_status_superseded_by": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_05_ROOT_SCOPED_REVIEW_ACCEPTANCE.json",
+              "bytes": 5009,
+              "sha256": "653dd5036606719fd27660ac91e6ff34be1fb2cb7225e653706dbb7b684ed5a4"
+            }
+          }
+        },
+        {
+          "key": "package05_core",
+          "before": {
+            "status": "F027_F028_SCOPED_ACCEPTED_F030_STARTUP_AND_NAMED_BUS_PENDING",
+            "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_FREEZE.json",
+            "sha256": "2911be2c1fec39766f3c964d3aab3f8c157042a6e813088e8cdbba7b7ec78af2",
+            "public_cases": 42,
+            "original_causal_red": 10,
+            "original_positive_controls": 32,
+            "corrected_failed": 0,
+            "actual_mutants_killed": 17,
+            "rollback_cases": 42,
+            "mutations_proof": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+            "canonical_core_owner": "NOT_EDITED_OR_FULL_ACCEPTED",
+            "F030_startup_scope": "Open PO choice: proven guard before System batch creation/admission; general startup unknown late custom provider requires public contract decision",
+            "adversarial_review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/REVIEW.json",
+            "adversarial_review_sha256": "38c8059446c03668f874745b919760586234a39730dd0408684ac83ef4b257f2",
+            "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_05_ROOT_SCOPED_REVIEW_ACCEPTANCE.json"
+          },
+          "after": {
+            "status": "F027_F028_SCOPED_ACCEPTED_F030_STARTUP_AND_NAMED_BUS_PENDING",
+            "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_FREEZE.json",
+            "sha256": "2911be2c1fec39766f3c964d3aab3f8c157042a6e813088e8cdbba7b7ec78af2",
+            "public_cases": 42,
+            "original_causal_red": 10,
+            "original_positive_controls": 32,
+            "corrected_failed": 0,
+            "actual_mutants_killed": 17,
+            "rollback_cases": 42,
+            "mutations_proof": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+            "canonical_core_owner": "NOT_EDITED_OR_FULL_ACCEPTED",
+            "F030_startup_scope": "Open PO choice: proven guard before System batch creation/admission; general startup unknown late custom provider requires public contract decision",
+            "adversarial_review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/REVIEW.json",
+            "adversarial_review_sha256": "38c8059446c03668f874745b919760586234a39730dd0408684ac83ef4b257f2",
+            "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_05_ROOT_SCOPED_REVIEW_ACCEPTANCE.json",
+            "historical_status_superseded_by": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE25_F030_ROOT_CONTRACT_DISPOSITION_ACCEPTANCE_R1.json",
+              "bytes": 2740,
+              "sha256": "ee74a25117d4a914155a9d4f2023f9ed3c6e385af9117db53ebdb8d4367c79d4"
+            }
+          }
+        },
+        {
+          "key": "package04_public_adversarial_final",
+          "before": {
+            "status": "ACCEPTED_SCOPED_CANONICAL_OWNER_PENDING",
+            "review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-adversarial/FINAL_REVIEW.json",
+            "sha256": "c330b383d1393d97103765da29dc682c1f726af4e82118d01444a548045c9ead",
+            "Root_personally_FULL_review_txt_json_PDB_rollback": true
+          },
+          "after": {
+            "status": "ACCEPTED_SCOPED_CANONICAL_OWNER_PENDING",
+            "review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-adversarial/FINAL_REVIEW.json",
+            "sha256": "c330b383d1393d97103765da29dc682c1f726af4e82118d01444a548045c9ead",
+            "Root_personally_FULL_review_txt_json_PDB_rollback": true,
+            "historical_status_superseded_by": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_05_ROOT_SCOPED_REVIEW_ACCEPTANCE.json",
+              "bytes": 5009,
+              "sha256": "653dd5036606719fd27660ac91e6ff34be1fb2cb7225e653706dbb7b684ed5a4"
+            }
+          }
+        },
+        {
+          "key": "package05_diagnostic_supplement",
+          "before": {
+            "status": "SCOPED_ADVERSARIALLY_AND_ROOT_ACCEPTED_SHARED_FINAL_PENDING",
+            "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_F030_DIAGNOSTIC_FREEZE.json",
+            "sha256": "2b09f2d8d830f1e1de7f900109aeda58cde2b6918cde9bd23ab88d901087a21e",
+            "owned_inputs": 29,
+            "F030_startup": "PO_PENDING",
+            "review_sha256": "855918bbb1c3891319f763e6b265f8f515f8825e6c8f41cd3913f10ff4b3545d",
+            "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_DIAGNOSTIC_ROOT_ACCEPTANCE.json"
+          },
+          "after": {
+            "status": "SCOPED_ADVERSARIALLY_AND_ROOT_ACCEPTED_SHARED_FINAL_PENDING",
+            "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_F030_DIAGNOSTIC_FREEZE.json",
+            "sha256": "2b09f2d8d830f1e1de7f900109aeda58cde2b6918cde9bd23ab88d901087a21e",
+            "owned_inputs": 29,
+            "F030_startup": "PO_PENDING",
+            "review_sha256": "855918bbb1c3891319f763e6b265f8f515f8825e6c8f41cd3913f10ff4b3545d",
+            "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_DIAGNOSTIC_ROOT_ACCEPTANCE.json",
+            "historical_status_superseded_by": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE25_F030_ROOT_CONTRACT_DISPOSITION_ACCEPTANCE_R1.json",
+              "bytes": 2740,
+              "sha256": "ee74a25117d4a914155a9d4f2023f9ed3c6e385af9117db53ebdb8d4367c79d4"
+            }
+          }
+        },
+        {
+          "key": "last_updated_utc",
+          "before": "2026-10-04T01:39:42.132484+00:00",
+          "after": "2026-10-04T01:41:48.624626+00:00"
+        },
+        {
+          "key": "targeted_disposition_current",
+          "before": {
+            "confirmed": 42,
+            "targeted_repaired_and_reviewed": 41,
+            "explicit_contract_disposition_and_runtime_guard_reviewed": 1,
+            "shared_final_pending": true,
+            "all41_original_requirements_implemented_claimed": false,
+            "unresolved_runtime_composition_question_not_yet_confirmed": false,
+            "confirmed_f042_product_review_pending": false
+          },
+          "after": {
+            "confirmed": 42,
+            "targeted_repaired_and_reviewed": 41,
+            "explicit_contract_disposition_and_runtime_guard_reviewed": 1,
+            "shared_final_pending": true,
+            "all41_original_requirements_implemented_claimed": false,
+            "unresolved_runtime_composition_question_not_yet_confirmed": false,
+            "confirmed_f042_product_review_pending": false,
+            "explicit_root_acceptance_missing": [
+              "F-SB-API-036",
+              "F-SB-API-037"
+            ],
+            "targeted_repaired_and_adversarially_reviewed": 41
+          }
+        },
+        {
+          "key": "package28_outbox_composition_progress",
+          "before": {
+            "status": "ROOT_CONFIRMED_F042_FINITE_OUTGOING_LOSS_PRODUCT_REPAIR_PENDING",
+            "source_candidate": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE28_PUBLIC_COMPOSITION_SOURCE_CANDIDATE_R6.json",
+            "r6_native_exit": 0,
+            "finite_receives": 6,
+            "cases": 3,
+            "actual_volatile_ef_loss_observed": true,
+            "independent_native_qualification_pending": false,
+            "root_private_owner_full": true,
+            "canonical_core766_full": false,
+            "root_original_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE28_F042_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+            "root_original_acceptance_sha256": "01ae1db907c9b6134742416d047d312cee61c54f28d00ff99d220a12fb1bfe7a"
+          },
+          "after": {
+            "status": "ROOT_CONFIRMED_F042_FINITE_OUTGOING_LOSS_PRODUCT_REPAIR_PENDING",
+            "source_candidate": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE28_PUBLIC_COMPOSITION_SOURCE_CANDIDATE_R6.json",
+            "r6_native_exit": 0,
+            "finite_receives": 6,
+            "cases": 3,
+            "actual_volatile_ef_loss_observed": true,
+            "independent_native_qualification_pending": false,
+            "root_private_owner_full": true,
+            "canonical_core766_full": false,
+            "root_original_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE28_F042_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+            "root_original_acceptance_sha256": "01ae1db907c9b6134742416d047d312cee61c54f28d00ff99d220a12fb1bfe7a",
+            "historical_status_superseded_by": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_TARGETED_ROOT_ACCEPTANCE_R1.json",
+              "bytes": 10448,
+              "sha256": "6125be2c7166eebe463088935c98076f9131692e2e0c4f968cf0ea972c0c1aec"
+            }
+          }
+        },
+        {
+          "key": "package30_f042_progress",
+          "before": {
+            "status": "ROOT_TARGETED_F042_ACCEPTED_SHARED_FINAL_PENDING",
+            "bounded_root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE30_F042_BOUNDED5_ROOT_ACCEPTANCE_R1.json",
+            "bounded_root_acceptance_sha256": "5649120a80fe801c7b39d99f811c812c20143e7559350c896f658d44545edaac",
+            "extra_boundaries_pending": true,
+            "compiled_mutations_executed": false,
+            "product_code_adversarial_source_reviews": 2
+          },
+          "after": {
+            "status": "ROOT_TARGETED_F042_ACCEPTED_SHARED_FINAL_PENDING",
+            "bounded_root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE30_F042_BOUNDED5_ROOT_ACCEPTANCE_R1.json",
+            "bounded_root_acceptance_sha256": "5649120a80fe801c7b39d99f811c812c20143e7559350c896f658d44545edaac",
+            "extra_boundaries_pending": true,
+            "compiled_mutations_executed": false,
+            "product_code_adversarial_source_reviews": 2,
+            "historical_status_superseded_by": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_TARGETED_ROOT_ACCEPTANCE_R1.json",
+              "bytes": 10448,
+              "sha256": "6125be2c7166eebe463088935c98076f9131692e2e0c4f968cf0ea972c0c1aec"
+            }
+          }
+        },
+        {
+          "key": "package31_f042_progress",
+          "before": {
+            "status": "ROOT_ACCEPTED_BOUNDED_NATIVE_FULL_F042_MUTATIONS_SHARED_FINAL_PENDING",
+            "cases": 8,
+            "finite_receives": 16,
+            "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE31_F042_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+            "compiled_mutations_executed": false
+          },
+          "after": {
+            "status": "ROOT_ACCEPTED_BOUNDED_NATIVE_FULL_F042_MUTATIONS_SHARED_FINAL_PENDING",
+            "cases": 8,
+            "finite_receives": 16,
+            "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE31_F042_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+            "compiled_mutations_executed": false,
+            "historical_status_superseded_by": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_TARGETED_ROOT_ACCEPTANCE_R1.json",
+              "bytes": 10448,
+              "sha256": "6125be2c7166eebe463088935c98076f9131692e2e0c4f968cf0ea972c0c1aec"
+            }
+          }
+        },
+        {
+          "key": "package32_f042_progress",
+          "before": {
+            "status": "ROOT_ACCEPTED_BOUNDED_NATIVE_FULL_F042_MUTATIONS_SHARED_FINAL_PENDING",
+            "cases": 4,
+            "finite_receives": 6,
+            "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE32_F042_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+            "compiled_mutations_executed": false
+          },
+          "after": {
+            "status": "ROOT_ACCEPTED_BOUNDED_NATIVE_FULL_F042_MUTATIONS_SHARED_FINAL_PENDING",
+            "cases": 4,
+            "finite_receives": 6,
+            "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE32_F042_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+            "compiled_mutations_executed": false,
+            "historical_status_superseded_by": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_TARGETED_ROOT_ACCEPTANCE_R1.json",
+              "bytes": 10448,
+              "sha256": "6125be2c7166eebe463088935c98076f9131692e2e0c4f968cf0ea972c0c1aec"
+            }
+          }
+        },
+        {
+          "key": "package33_f042_mutation_progress",
+          "before": {
+            "status": "ROOT_TARGETED_F042_ACCEPTED_SHARED_FINAL_PENDING",
+            "session_id": 85627,
+            "runner_sha256": "a511e780ec88d1fe7eda0d0438b0caa9a2584e24728e532a187f41fc8f52741c",
+            "preview_sha256": "1a35ffde9a4a19c19134cbbeda595a0d81c3b44a81639b121faf159356e134ad",
+            "compiled_preflight_sha256": "e6e1d97da443195bc892dc4a1c30c275102d4f7a6bea786142dd0818e37a78b3",
+            "five_distinct_variants": true,
+            "six_counterproofs_planned": true,
+            "executed_kills_claimed": 0,
+            "session_closed": true,
+            "final_result": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_MUTATIONS_R1.json",
+            "final_result_sha256": "dc1363521b30df60542a8b9b77b65ff790d68916eb1afbc6dc7d31a142def93b",
+            "actual_operation_receipts": 24,
+            "actual_strict_builds": 8,
+            "actual_native_invocations": 16,
+            "runner_reported_finite_counterproofs": 6,
+            "root_accepted_kills": 6,
+            "restoration_reported": 6209,
+            "root_acceptance": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_TARGETED_ROOT_ACCEPTANCE_R1.json",
+              "sha256": "6125be2c7166eebe463088935c98076f9131692e2e0c4f968cf0ea972c0c1aec",
+              "bytes": 10448
+            },
+            "distinct_compiled_variants": 5,
+            "matched_green_controls": 6,
+            "baseline_cases": 12,
+            "rollback_cases": 12
+          },
+          "after": {
+            "status": "ROOT_TARGETED_F042_ACCEPTED_SHARED_FINAL_PENDING",
+            "session_id": 85627,
+            "runner_sha256": "a511e780ec88d1fe7eda0d0438b0caa9a2584e24728e532a187f41fc8f52741c",
+            "preview_sha256": "1a35ffde9a4a19c19134cbbeda595a0d81c3b44a81639b121faf159356e134ad",
+            "compiled_preflight_sha256": "e6e1d97da443195bc892dc4a1c30c275102d4f7a6bea786142dd0818e37a78b3",
+            "five_distinct_variants": true,
+            "six_counterproofs_planned": true,
+            "executed_kills_claimed": 6,
+            "session_closed": true,
+            "final_result": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_MUTATIONS_R1.json",
+            "final_result_sha256": "dc1363521b30df60542a8b9b77b65ff790d68916eb1afbc6dc7d31a142def93b",
+            "actual_operation_receipts": 24,
+            "actual_strict_builds": 8,
+            "actual_native_invocations": 16,
+            "runner_reported_finite_counterproofs": 6,
+            "root_accepted_kills": 6,
+            "restoration_reported": 6209,
+            "root_acceptance": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_TARGETED_ROOT_ACCEPTANCE_R1.json",
+              "sha256": "6125be2c7166eebe463088935c98076f9131692e2e0c4f968cf0ea972c0c1aec",
+              "bytes": 10448
+            },
+            "distinct_compiled_variants": 5,
+            "matched_green_controls": 6,
+            "baseline_cases": 12,
+            "rollback_cases": 12
+          }
+        }
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/ADDITIONAL_FINDINGS.json",
+      "original_sha256": "d945c8e9d4b8e124c77f0603bd6207cbe2b88378a482c2e99c5988a46b166631",
+      "current_sha256": "0bd370bd2245ae64b981edaf91c947d928fe5d9869edcbbc61af14cd2c234096",
+      "changed_fields": [
+        {
+          "id": "F-SB-API-036",
+          "before": {
+            "id": "F-SB-API-036",
+            "severity": "Medium",
+            "classification": "CONFIRMED_CONTRACT_DEFECT",
+            "title": "Default session formatter ignored",
+            "research_candidate_id": "AZURE-FAMILY-001",
+            "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+            "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdSendTopologyConvention.cs",
+            "exact_native_oracle_tests": [
+              "DefaultSessionFormatter_ReachesTheSendFilterAndPreservesExplicitOverridesAsync"
+            ],
+            "actual_original_cases_receipt": "package09-azure-original-six-cases",
+            "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+            "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+            "status": "FIX_IMPLEMENTED_5_TARGETED_CASES_GREEN_MUTATION_REVIEW_PENDING",
+            "proof_limit": "Runtime shows public topology/DI declarations and field/filter effects, not actual Azure cloud deliveries."
+          },
+          "after": {
+            "id": "F-SB-API-036",
+            "severity": "Medium",
+            "classification": "CONFIRMED_CONTRACT_DEFECT",
+            "title": "Default session formatter ignored",
+            "research_candidate_id": "AZURE-FAMILY-001",
+            "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+            "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdSendTopologyConvention.cs",
+            "exact_native_oracle_tests": [
+              "DefaultSessionFormatter_ReachesTheSendFilterAndPreservesExplicitOverridesAsync"
+            ],
+            "actual_original_cases_receipt": "package09-azure-original-six-cases",
+            "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+            "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+            "status": "ADVERSARIAL_REVIEW_ACCEPTED_ROOT_TARGETED_ACCEPTANCE_PENDING",
+            "proof_limit": "Runtime shows public topology/DI declarations and field/filter effects, not actual Azure cloud deliveries.",
+            "adversarial_review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-adversarial/REVIEW.json",
+            "root_acceptance_pending": true
+          }
+        },
+        {
+          "id": "F-SB-API-037",
+          "before": {
+            "id": "F-SB-API-037",
+            "severity": "Medium",
+            "classification": "CONFIRMED_CONTRACT_DEFECT",
+            "title": "Rule/filter conflict omitted from forwarding subscription validation",
+            "research_candidate_id": "AZURE-FAMILY-002",
+            "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+            "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SubscriptionConsumeTopologySpecification.cs",
+            "exact_native_oracle_tests": [
+              "ConsumeSubscriptions_RetainRuleFilterValidation",
+              "BusConstruction_RejectsConflictingConsumeRuleAndFilter"
+            ],
+            "actual_original_cases_receipt": "package09-azure-original-six-cases",
+            "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+            "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+            "status": "FIX_IMPLEMENTED_5_TARGETED_CASES_GREEN_MUTATION_REVIEW_PENDING",
+            "proof_limit": "Runtime shows public topology/DI declarations and field/filter effects, not actual Azure cloud deliveries."
+          },
+          "after": {
+            "id": "F-SB-API-037",
+            "severity": "Medium",
+            "classification": "CONFIRMED_CONTRACT_DEFECT",
+            "title": "Rule/filter conflict omitted from forwarding subscription validation",
+            "research_candidate_id": "AZURE-FAMILY-002",
+            "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+            "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SubscriptionConsumeTopologySpecification.cs",
+            "exact_native_oracle_tests": [
+              "ConsumeSubscriptions_RetainRuleFilterValidation",
+              "BusConstruction_RejectsConflictingConsumeRuleAndFilter"
+            ],
+            "actual_original_cases_receipt": "package09-azure-original-six-cases",
+            "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+            "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+            "status": "ADVERSARIAL_REVIEW_ACCEPTED_ROOT_TARGETED_ACCEPTANCE_PENDING",
+            "proof_limit": "Runtime shows public topology/DI declarations and field/filter effects, not actual Azure cloud deliveries.",
+            "adversarial_review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-adversarial/REVIEW.json",
+            "root_acceptance_pending": true
+          }
+        },
+        {
+          "id": "F-SB-API-038",
+          "before": {
+            "id": "F-SB-API-038",
+            "severity": "High",
+            "classification": "CONFIRMED_CONTRACT_DEFECT",
+            "title": "Distinct nested queue paths share one automatic subscription name",
+            "research_candidate_id": "AZURE-FAMILY-003",
+            "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+            "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusReceiveEndpointBuilder.cs",
+            "exact_native_oracle_tests": [
+              "NestedQueueDestinations_HaveDistinctAutomaticSubscriptionsAsync"
+            ],
+            "actual_original_cases_receipt": "package09-azure-original-six-cases",
+            "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+            "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+            "status": "PRODUCT_NAMING_COMPATIBILITY_DECISION_PENDING",
+            "proof_limit": "Runtime shows public topology/DI declarations and field/filter effects, not actual Azure cloud deliveries."
+          },
+          "after": {
+            "id": "F-SB-API-038",
+            "severity": "High",
+            "classification": "CONFIRMED_CONTRACT_DEFECT",
+            "title": "Distinct nested queue paths share one automatic subscription name",
+            "research_candidate_id": "AZURE-FAMILY-003",
+            "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+            "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusReceiveEndpointBuilder.cs",
+            "exact_native_oracle_tests": [
+              "NestedQueueDestinations_HaveDistinctAutomaticSubscriptionsAsync"
+            ],
+            "actual_original_cases_receipt": "package09-azure-original-six-cases",
+            "actual_original_receipt_log_sha256": "5bbf813ce9ea46dcb1a2c6d5100963a9a60f3a32a0bf4ed53425c5ccb59c0641",
+            "positive_controls": "Existing typed session override and null-result preservation; rule-only/filter-only named and typed bus builds; distinct nested destination queues admitted and visible in normal public DI probe. No broker started.",
+            "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+            "proof_limit": "10 public naming cases, five strict compiled mutants and 448 canonical Azure tests reviewed within the accepted package. No broker start, Azure cloud delivery or whole API grade.",
+            "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F038_ROOT_ACCEPTANCE_R1.json",
+            "root_acceptance_sha256": "6098bc86601162c41f2f8463aceddbea43e0a5ac3c2bb90e42ad9adc9da27af0"
+          }
+        },
+        {
+          "id": "F-SB-API-041",
+          "before": {
+            "id": "F-SB-API-041",
+            "severity": "High",
+            "classification": "CONFIRMED_CONTRACT_DEFECT",
+            "title": "Companion endpoint settings override the planned unique endpoint identity and cause duplicate receive endpoint creation",
+            "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+            "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+            "actual_original_cases_receipt": "package19-f034-public-previous-thirtyfour",
+            "actual_original_receipt_log_sha256": "9dee23830984dfdd2f2072a682518abad65b8b0dfd6fe5cec7df3c33db8a3cae",
+            "independent_incremental_receipt": "package19-f034-public-corrected-thirtyfour",
+            "independent_incremental_log_sha256": "26443b4400762df5485670a083e063c2737837f52819aaf8d05640cbcab2d67e",
+            "exact_native_oracle_tests": [
+              "definition-full"
+            ],
+            "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+            "contract": "IConsumerKindEndpointContext endpointName unique companion identity; optional definition settings do not select a different physical endpoint. Actual finite duplicate ignored-fluent-compensate repeats before/after independent fourfile F034patch.",
+            "proof_limit": "Separate F041; no F034kill credit. New strict fiveendpointmultiset owner refinement and final correction/mutants still pending. No cloud/broker/wholeAPIgrade.",
+            "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F034_F041_ROOT_ACCEPTANCE.json",
+            "adversarial_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f034-f041-final-adversarial/REVIEW.json"
+          },
+          "after": {
+            "id": "F-SB-API-041",
+            "severity": "High",
+            "classification": "CONFIRMED_CONTRACT_DEFECT",
+            "title": "Companion endpoint settings override the planned unique endpoint identity and cause duplicate receive endpoint creation",
+            "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+            "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+            "actual_original_cases_receipt": "package19-f034-public-previous-thirtyfour",
+            "actual_original_receipt_log_sha256": "9dee23830984dfdd2f2072a682518abad65b8b0dfd6fe5cec7df3c33db8a3cae",
+            "independent_incremental_receipt": "package19-f034-public-corrected-thirtyfour",
+            "independent_incremental_log_sha256": "26443b4400762df5485670a083e063c2737837f52819aaf8d05640cbcab2d67e",
+            "exact_native_oracle_tests": [
+              "definition-full"
+            ],
+            "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+            "contract": "IConsumerKindEndpointContext endpointName unique companion identity; optional definition settings do not select a different physical endpoint. Actual finite duplicate ignored-fluent-compensate repeats before/after independent fourfile F034patch.",
+            "proof_limit": "41 public cases, 13 F034 and two distinct F041 strict finite compiled mutants, 15 positive controls and 41 rollback cases accepted. F041 counterproofs remain separate from F034. No whole Core766, cloud, broker or whole API grade.",
+            "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F034_F041_ROOT_ACCEPTANCE.json",
+            "adversarial_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f034-f041-final-adversarial/REVIEW.json",
+            "root_acceptance_sha256": "a28ce26e1ee4ee00baf2970660cda698dfe1ecd98e71bb40d4d179380e656094"
+          }
+        }
+      ]
+    }
+  ]
+}

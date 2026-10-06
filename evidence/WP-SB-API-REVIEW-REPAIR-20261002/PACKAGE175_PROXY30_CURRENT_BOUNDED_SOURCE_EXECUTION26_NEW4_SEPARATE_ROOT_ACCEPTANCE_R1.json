@@ -1,0 +1,30 @@
+{
+  "utc": "2026-10-05T09:24:33.550048+00:00",
+  "actor": "root",
+  "semantic_evidence": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-behavior-context-proxy30-current-contract-context-r2/PER_MEMBER30_CURRENT_ORIGINAL_TYPED_SOURCE_XML_CONTRACTS.json",
+    "sha256": "b57e5ce21b4b79039547c998696f5be0c8a40739ed0188f6acf71c08e4e4a5b8"
+  },
+  "scope": "Exact30 original proxy member/source contracts:19originalcanonical +11getter sidecars. Native0 appended; five existing named cases support only their actual assertions, no new implementation/workflow closure.",
+  "root_reads": "Wholecurrent272 actual295b6b; wholeall30compact84aa16; author/peerreports7c35a2. a9ba62 allauthor/peerMAN/all30exactsource slices/19canonical11getter exactpropertyparent maps/currentMasterguards. Qualified173 pairedSource/PDB/CRC/XML authority independentlyRoot7e688d.",
+  "source_policy": "Ordinary views preserve selected machine/saga/message references. Scoped views call actual public source CreateProxy exactlyonce before selected-token wrapping, preserving source error/null. No cloned saga, CTS merge, disposal transfer or forced custom provider deadline. Typed Correlation58/67 source-only; Instance60/69 completionData; ordinary typedidentity excluded39/56/57.",
+  "preserved_remaining": {
+    "all_original243_execution_holds": 26,
+    "local_owner_execution_holds": 6,
+    "new_CT_property2_accessor2_fresh_compiler_declared_proof_pending": 4
+  },
+  "counts_before": {
+    "raw": 8218,
+    "original": 7529,
+    "accessor": 660
+  },
+  "counts_after": {
+    "raw": 8248,
+    "original": 7548,
+    "r2_canonical": 7577,
+    "accessor": 671,
+    "original_remaining": 11021,
+    "unique_accessor_original_parents": 557
+  },
+  "whole_API_closed": false
+}

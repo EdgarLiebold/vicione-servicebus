@@ -1,0 +1,11 @@
+{
+  "read_by": "azure_test_scope",
+  "status": "ALL_6209_ORIGINAL_TRACKED_HASHES_MATCH",
+  "started_utc": "2026-10-03T04:19:30.451758+00:00",
+  "completed_utc": "2026-10-03T04:19:34.450339+00:00",
+  "coverage_sha256": "b6e08ca2e4e17207892048c10ec95af971469cff1b3251a5e1ba0bf5a62b3fe5",
+  "checked": 6209,
+  "mismatches": [],
+  "new_identity_source_removed": true,
+  "limits": "Readonly checkpoint; does not forbid later separately controlled mutation work."
+}

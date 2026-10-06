@@ -1,0 +1,90 @@
+{
+  "utc": "2026-10-06T16:15:56.920981+00:00",
+  "status": "ROOT_ACCEPTED_EXACT_SOURCE3_CURRENT_PROJECTIONS_NATIVE_SEPARATE_GLOBAL_OPEN",
+  "before": {
+    "API_MEMBER_ACCEPTANCE_CURRENT.json": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package510-core2-active1-root-bounded-acceptance-before-r1/API_MEMBER_ACCEPTANCE_CURRENT.json",
+      "sha256": "f5a07ab4ede9ceac985805a0fc5f76a1cb9e5a7f5b03f07a20ccee90a924adf7"
+    },
+    "STATE.json": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package510-core2-active1-root-bounded-acceptance-before-r1/STATE.json",
+      "sha256": "2f4fc06c51421c814390f507bcbd4d84b249d607f7e187e15721897264b0709c"
+    },
+    "PO_BERICHT.txt": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package510-core2-active1-root-bounded-acceptance-before-r1/PO_BERICHT.txt",
+      "sha256": "58656e00391ee5f99118e0bb4c9421196aa34af20fa177e15e35e25ac4ab11e5"
+    }
+  },
+  "exact_indices": [
+    8418,
+    8528,
+    780
+  ],
+  "own_read_authority": {
+    "Corewhole731": "ae5b38 preserved; owning two norms e99bcb; current504 source/XML supplement and cases6bf6aa; different Norm2deb149; actual5/module reports a79397",
+    "ActivewholeFactory": "db68ab preserved; entire norm+history+differentpeer a54f5a",
+    "currentSource_binding": "Exact individually unchanged currentSource versus compiled frozen504 Core/434 Active; historical dependencygraphs not relabeled current"
+  },
+  "author_norms": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package505-core-current-product2-local-norm-draft-r1/DRAFT2_INDIVIDUAL_LOCAL_NORMS.json",
+      "sha256": "bcd372838180fde98136e5bddd8b18a5c667ad3d85ab9cc9dfa8c3cefc1b6eac"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package505-core-current-product2-local-norm-current504-binding-supplement-r1/OWN_ACTUAL504_SOURCE_XML2_BINDING.json",
+      "sha256": "ff9ef903fd6cb46d02e7b35375c3fff1afed8e05653cacdb1e0e4a6157a43f56"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package488-activemq780-individual-bounded-source-contract-proposed-r1/INDIVIDUAL_SOURCE_CONTRACT1.json",
+      "sha256": "6ef202380264d8df355cb732f560be5e5eaf04870352d5ca9cd10ceeca91f078"
+    }
+  ],
+  "different_norm_peers": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package505-core-source2-independent-current504-norm-peer-r1/REPORT.json",
+      "sha256": "277d5e1757b3ae6bc967060ee390afda96beec5959427a9f76ec32aa75e347ed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package488-activemq780-independent-bounded-source-norm-peer-r1/REPORT.json",
+      "sha256": "d05c76acf02f183ce8596ad0bfe620a26043e494d46c2b689c6ba912f453bf80"
+    }
+  ],
+  "native_cases_added_by_source_append": 0,
+  "Core_fixed5_independent": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package504-core-fixed5-independent-native-qualification-r1/REPORT.json",
+    "sha256": "a770d834d5a9f623edddaa33fbfffa73f3a7ac0c1f40970d50f7d21f4bf31759",
+    "counts": {
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "Core_module7958_independent": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package504-core-module7958-independent-summary-qualification-r1/INDEPENDENT_REPORT.json",
+    "sha256": "24482bb9fb29d85ed41c703aebfc2505db07f2aedd99d660aff7014b74c3b35b",
+    "counts": {
+      "passed": 7958,
+      "failed": 0,
+      "skipped": 0
+    },
+    "scope": "Summary-only, separate from causal5; original historical module failures preserved"
+  },
+  "native_credit_added": 0,
+  "old_source_rows_identity_rebase": "Separate Runtime proposal requested, pending; no silently rewritten prior norms",
+  "whole_API_member_review_closed": false,
+  "grade": null,
+  "accounting": {
+    "master_before": 19410,
+    "master_after": 19413,
+    "original_before": 18548,
+    "original_after": 18551,
+    "original_remaining": 18,
+    "sidecar": 833
+  },
+  "limits": [
+    "Whole old MASTER/STATE/PO preserved; entire author held prior histories retained in new Source rows.",
+    "Source2 current repaired public bodies individually inspected plus different504 fixed5 actual proof; strict/currentNuGet/global remain open.",
+    "Active Source780 only no confirmed defect in undocumented private callback-task join omission; no private-drain/native/success guarantee. No fictional provider rollback policy.",
+    "Neither Source3 membership nor focused/module greens gives full A+ completion."
+  ]
+}

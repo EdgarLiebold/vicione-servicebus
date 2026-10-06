@@ -1,0 +1,25 @@
+{
+  "utc": "2026-10-06T02:04:15.001869+00:00",
+  "status": "ROOT_EXISTING_TYPE_UID_EXACT_ONE_NORM_CLAUSE_REVALIDATED",
+  "master_before_sha256": "0073c6a747e481a64d7df09b714926837549b091106bf1f408b75555e1e97652",
+  "author_MAN": "de4cb29100266a68fcde895fff0290af77917c8df82fb7da0b6ae4cd1d5c9e73",
+  "independent_MAN": "da736a62fd314c7ea3fcdb9eaea624d134d461739eb7fbb29d23df04603b17a7",
+  "delta": {
+    "assembly": "ViciOne.ServiceBus.RabbitMq",
+    "id": "T:ViciOne.ServiceBus.RabbitMq.Middleware.PurgeOnStartupFilter",
+    "field": "member_contract",
+    "before_clause": "Unguarded owning Debug may blocknext on completedprovider (omittedmethod hypothesis, no native finding).",
+    "after_clause": "Current79 locally contains both optional owning Debug emissions; separate actual296 unchanged public controls bound successful continuation despite their failures, without a general type/pipeline runtime guarantee.",
+    "literal_inverse_exact": true,
+    "all_other_rowfields_equal": true,
+    "native_credit": 0,
+    "new_UID_count": 0
+  },
+  "root_authority": "Entire author/peer/correctedrow/oneclause32b48f; retainedown79+actualRoot299fixedpublication. Fresh exact entire selectedbefore/after inverse in thiscall.",
+  "preservation": "Allother18936Masterrows whole unchanged, selectedrow exactlyone member_contract substring changes. Status/native/XML/sourcebindings/historical185195/Root299rebase preserved. No newUID/count/grade/native/wholepipeline claim.",
+  "master_rows": 18937,
+  "Original_remaining": 494,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>Recycles a supervisor once it is stopped, replacing it with a new one.</summary>
+/// <summary>Makes a new supervisor available lazily when the current supervisor begins stopping.</summary>
 /// <typeparam name="T">The value type.</typeparam>
 public class Recycle<T>
     where T : class, IAgent

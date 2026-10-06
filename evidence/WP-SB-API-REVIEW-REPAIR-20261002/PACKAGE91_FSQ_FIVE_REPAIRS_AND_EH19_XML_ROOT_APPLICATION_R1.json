@@ -1,0 +1,267 @@
+{
+  "utc": "2026-10-04T16:48:39.581391+00:00",
+  "status": "SOURCE_APPLIED_STRICT_NATIVE_AND_PACK_PENDING",
+  "fsq_records": [
+    {
+      "path": "src/Scheduling/ViciOne.ServiceBus.Quartz/Runtime/QuartzScheduledMessageSendPipe.cs",
+      "before_sha256": "ab8a34f26c9e23dae2c01a658b9022ac3c2a6766b9d477dcab8bfef8a41a9185",
+      "after_sha256": "def851f9de1244937b06949dd53497eb9adeb9223df83deb62bb6ed26cb4d916",
+      "diff_sha256": "c2f3bd5ec6efc450b178c4502005b5bac0f9ba9a40e5ea4f7a62e09dcdf48944",
+      "lines_after": 103
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SignalR/Configuration/SignalRBackplaneSettings.cs",
+      "before_sha256": "b6147dab67316769e7053422e06e167a5e203757649412214dc6a2f6fbacf624",
+      "after_sha256": "ae5bd8b6b202fb7f4904bc59f493bfc798234859bfc61d4dfdb68f34c2bea55b",
+      "diff_sha256": "5efecba371bb5619478406b44b3fe81d4325879961f1f6d9c27c6244c272ac93",
+      "lines_after": 12
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ConnectionGroupFeature.cs",
+      "before_sha256": "312efaa528e70122de1a254de48bbd726e0ea69560b11a95f8bd7879e346fd18",
+      "after_sha256": "15a8961c2ceaeeb89eef483d4d185c2e48dd6fb4ad42d732869a778ecf951ced",
+      "diff_sha256": "f852ee63a600c4662810463e4a0d20a85b62865b29bd6ecd5c60e01b4bd328d3",
+      "lines_after": 80
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SignalR/Runtime/DependencyInjectionBackplaneScopeProvider.cs",
+      "before_sha256": "c313bcfe684d2120507f0f4c0c1c70d8fa79a273e269304b870a89dd36635ef5",
+      "after_sha256": "3af78c8144e485921b04faf05674576336ed01b89ffda3b42f0105182f977d7c",
+      "diff_sha256": "d0cfd6ebea74376f86101f95b8c7b0361c7e2af6ee54b2e2b9b5372265dcfc7c",
+      "lines_after": 102
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ServiceBusHubLifetimeManager.cs",
+      "before_sha256": "41de21e4212be966caf469c2a9b206375c7d74be175477d3130d693a4d0f648d",
+      "after_sha256": "3179bec723f105baacf202c64e40da9aeba8a49955641c770a114ff3af5a2a03",
+      "diff_sha256": "34e7d3bdb9d177207c9322afa6c224de5e9cd2e5d3457842f2f31a403b3eec7a",
+      "lines_after": 718
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SignalR/SignalRBackplaneExtensions.cs",
+      "before_sha256": "fd4efd7e76f6fa880b6e0a8d0175a93e698927473860ee91e0c5c4cc31613ffc",
+      "after_sha256": "84ca65a80bf3bacc97d3186385331f181be8e60a78a828f5f3040adef40c2237",
+      "diff_sha256": "6305c8c449b3b98132f3584192d7762d98466b2be2d147171918dfc96e2b3d9a",
+      "lines_after": 76
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/DependencyInjection/FutureServiceCollectionExtensions.cs",
+      "before_sha256": "993b8b2fda9f87b447c5e246d350b7a412d1f4285c6c4e4092468d344fa611ec",
+      "after_sha256": "48837f8ff524c3ef4beb388be159af7cbb233144693163f857e5eacc95b55b53",
+      "diff_sha256": "41a337a357618e1b039e296538d8f74aef37299a66536cef9f04d76b0ac67434",
+      "lines_after": 167
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+      "before_sha256": "5c46d9bd8b613b71d45631cf99d3fa39b1ae9d382203b2d06bcc1981a9f28b7c",
+      "after_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+      "diff_sha256": "2aec3877ddebb8bfc7bd697543578d4098f20153c408292d1ce63712cfd521a4",
+      "lines_after": 535
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/PendingFutureEventActivity.cs",
+      "before_sha256": null,
+      "after_sha256": "1b2df801520b438c09d8fc2dbc31d8efa3d57c9a3a1bd6641b30c882a43e20ed",
+      "diff_sha256": "cda5687b9dfc978c454037d939d5424a874a3525ad0f9ec94930897e4a834026",
+      "lines_after": 70
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/RequestConsumerFuture.cs",
+      "before_sha256": "0d60fdde99e6c280b5b3aaaeaf4a71e073e3472e078178d9c93cb920ba0d9690",
+      "after_sha256": "6089d48f1b7d6a420c4f398914862351ff78e19f08b058dbf77daca658cf388f",
+      "diff_sha256": "3e403951ac4d5704eac3948e8ea87df16062df70a336ef1745cef7c003215444",
+      "lines_after": 28
+    }
+  ],
+  "eh_records": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubConnectionContext.cs",
+      "beforeSha256": "bf82168cc7881373d6383d741372943d397e064aa609a9312fd0bf9710b8f175",
+      "proposedSha256": "46e8499ffd7f4ece68732a7c777f1ce97d9c83271f2622b854088cd47ad586db",
+      "liveEqualsBefore": true,
+      "executableBytesEqual": true,
+      "linesWholeReviewed": 56,
+      "xmlNodes": [
+        {
+          "line": 17,
+          "node": "summary",
+          "attrs": {},
+          "before": "Creates a connection context from immutable rider settings.",
+          "after": "Creates a connection context from the supplied rider settings."
+        }
+      ]
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/IEventHubProducerCache.cs",
+      "beforeSha256": "15ec8d5e2a4b49b29a32ecbb92ba3b6128e3f10a4da35b5e4e985592f1bfad83",
+      "proposedSha256": "3f846e9ab77a734a7c5c0b5241291c6f87f43b8d25ddc46c4a36f64e65433f2a",
+      "liveEqualsBefore": true,
+      "executableBytesEqual": true,
+      "linesWholeReviewed": 18,
+      "xmlNodes": [
+        {
+          "line": 15,
+          "node": "param",
+          "attrs": {
+            "name": "cancellationToken"
+          },
+          "before": "Cancels cache lookup or producer creation.",
+          "after": "Cancels this caller's cache lookup, capacity wait, or producer wait without canceling shared producer creation."
+        }
+      ]
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerCache.cs",
+      "beforeSha256": "381fac4d926306822466da0382d9168f21a8b82e3cb34ff5a3db8e9484d4c778",
+      "proposedSha256": "0c4f398020f9839a205befbc3dfe087555c78a84afd789c771122df10722566b",
+      "liveEqualsBefore": true,
+      "executableBytesEqual": true,
+      "linesWholeReviewed": 43,
+      "xmlNodes": [
+        {
+          "line": 34,
+          "node": "param",
+          "attrs": {
+            "name": "cancellationToken"
+          },
+          "before": "Cancels cache lookup or producer creation.",
+          "after": "Cancels this caller's cache lookup, capacity wait, or producer wait without canceling shared producer creation."
+        }
+      ]
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/ProduceExtensions.cs",
+      "beforeSha256": "43b5b8aa0be889f8eaf32eb2c13ce3f1d35a4d44e2a939c24b22b113c8879078",
+      "proposedSha256": "04a2fc5b1839ebff56824e94706baa59eaf888fa3d2faa3188442bcc46c562e4",
+      "liveEqualsBefore": true,
+      "executableBytesEqual": true,
+      "linesWholeReviewed": 322,
+      "xmlNodes": [
+        {
+          "line": 18,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the produce activity appended.",
+          "after": "The binder with the produce activity appended."
+        },
+        {
+          "line": 34,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the produce activity appended.",
+          "after": "The binder with the produce activity appended."
+        },
+        {
+          "line": 50,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the produce activity appended.",
+          "after": "The binder with the produce activity appended."
+        },
+        {
+          "line": 67,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the produce activity appended.",
+          "after": "The binder with the produce activity appended."
+        },
+        {
+          "line": 85,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the produce activity appended.",
+          "after": "The binder with the produce activity appended."
+        },
+        {
+          "line": 103,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the produce activity appended.",
+          "after": "The binder with the produce activity appended."
+        },
+        {
+          "line": 121,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the produce activity appended.",
+          "after": "The binder with the produce activity appended."
+        },
+        {
+          "line": 140,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the produce activity appended.",
+          "after": "The binder with the produce activity appended."
+        },
+        {
+          "line": 159,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the faulted produce activity appended.",
+          "after": "The binder with the faulted produce activity appended."
+        },
+        {
+          "line": 179,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the faulted produce activity appended.",
+          "after": "The binder with the faulted produce activity appended."
+        },
+        {
+          "line": 199,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the faulted produce activity appended.",
+          "after": "The binder with the faulted produce activity appended."
+        },
+        {
+          "line": 220,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the faulted produce activity appended.",
+          "after": "The binder with the faulted produce activity appended."
+        },
+        {
+          "line": 242,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the faulted produce activity appended.",
+          "after": "The binder with the faulted produce activity appended."
+        },
+        {
+          "line": 264,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the faulted produce activity appended.",
+          "after": "The binder with the faulted produce activity appended."
+        },
+        {
+          "line": 286,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the faulted produce activity appended.",
+          "after": "The binder with the faulted produce activity appended."
+        },
+        {
+          "line": 309,
+          "node": "returns",
+          "attrs": {},
+          "before": "The same binder with the faulted produce activity appended.",
+          "after": "The binder with the faulted produce activity appended."
+        }
+      ]
+    }
+  ],
+  "root_review": "complete10delta6ae66e plus current before whole reads;new activity5a4693,selected definition whole254c94;EH whole19 prior root bound reads and full peer7c4d71",
+  "independent_reviews": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package83-fsq-five-product-adversarial-r1/REPORT.json",
+      "sha256": "ac03f114345a40e71a9d64b18481074747b5130a0181b1770a0c5f6f6ee8af24"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package79-eventhubs19-xml-adversarial-r1/REPORT.json",
+      "sha256": "9a6d605c021615ed8d94e242002a27f887a2fecc9667b8f8f1dd8dcce00f7c55"
+    }
+  ],
+  "no_closure_from_application": true
+}

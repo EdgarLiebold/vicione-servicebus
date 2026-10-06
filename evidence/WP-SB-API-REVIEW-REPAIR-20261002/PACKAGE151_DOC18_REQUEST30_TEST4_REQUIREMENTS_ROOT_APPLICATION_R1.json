@@ -1,0 +1,107 @@
+{
+  "utc": "2026-10-04T22:42:34.222766+00:00",
+  "status": "ROOT_APPLIED_SOURCE_NO_BLOCK_PENDING_COMPILE_NATIVE_AND_PACKAGE_QUALIFICATION",
+  "sources": [
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/ILatestConfigurator.cs",
+      "before_sha256": "2df3fd4e8f6a5ad347877202d455596af8f5aac0a232a35f0471aaafe6e7f34e",
+      "after_sha256": "40c5ef648ef4e267f54a5538287a56de46ce54058e276e3fb3b626c1f076b420",
+      "kind": "XML_ONLY",
+      "author_package": "package151-setter-summary-xml9-product-proposal-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/IOutboxConfigurator.cs",
+      "before_sha256": "c07212d81b93da642c7be872a35347820391e9921e167e593eb353cd2ae7474d",
+      "after_sha256": "045079be0f04da88cc3e9f7a06f4ba3657bc9066a614d67a4e3990a0cc71b440",
+      "kind": "XML_ONLY",
+      "author_package": "package151-setter-summary-xml9-product-proposal-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/ReceiverConfiguration.cs",
+      "before_sha256": "2977b94d768e75be1c909b937699e63a960c33964f6874d7ce3aa6f960d518d8",
+      "after_sha256": "4f57329afac478bf77302df55abda45310502e0571e43026994ed0213ee6e13a",
+      "kind": "XML_ONLY",
+      "author_package": "package151-setter-summary-xml9-product-proposal-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/Redelivery/RedeliveryRetryPipeSpecification.cs",
+      "before_sha256": "556fbd99ac7fa5ee075143b29501b2b3bf47ef8ae985ee657c3f198929d909b2",
+      "after_sha256": "0cb613c3c0cbb660aee2a957dc1363c4e5a2c669ffa7a21f1f22f8a1bc5ab046",
+      "kind": "XML_ONLY",
+      "author_package": "package151-setter-summary-xml9-product-proposal-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/SerializationConfiguration.cs",
+      "before_sha256": "2be0e276566dff8256b71f47e5a2b7d78f9559d0cdead133b2017fd953851514",
+      "after_sha256": "f3c45371c4d4ea02f1fb7c0d5ca90ffb490c11d2d6e480be115de81b09ae73db",
+      "kind": "XML_ONLY",
+      "author_package": "package151-setter-summary-xml9-product-proposal-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/TransactionPipeSpecification.cs",
+      "before_sha256": "ac6f6735046737224a3a43c33e65c7b717a4d70671686cc22e89ec5c2cf13574",
+      "after_sha256": "4d6d8bf277b85aa21428415ed6ea57c08fdbf848e17ed9d70649989d6847976d",
+      "kind": "XML_ONLY",
+      "author_package": "package151-setter-summary-xml9-product-proposal-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Configuration/ISagaDefinition.cs",
+      "before_sha256": "de28b1f1c7b69e9a97ef20d4fcf94e8393084019c2f52f67f7767a7c56ae40b8",
+      "after_sha256": "bb72b45000f542427d7c4d148488648c0edbcf9582c92f4a628f558b965140ca",
+      "kind": "XML_ONLY",
+      "author_package": "package151-saga-six-doc-methods-xml9-product-proposed-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Saga/ISagaRepositoryContext.cs",
+      "before_sha256": "e3a9a1f7ef35c498dbdc8d1e94e49f3fda402c5751a4df5d79d9acf4e8f39090",
+      "after_sha256": "2bb648e3e93682b1b664ac5811554c3e5da2f0c2f1de84bafca3ee7eea4d51ab",
+      "kind": "XML_ONLY",
+      "author_package": "package151-saga-six-doc-methods-xml9-product-proposed-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IEventCorrelationConfigurator.cs",
+      "before_sha256": "e84e4811b5f3bb9fb004c99868b6ab89d2cc06efe56d315f86414a74b0f210da",
+      "after_sha256": "678d90ca8e2dfb356ea1817de0bb13ed5fa9b4e4c8f942d67aa2296ce548f41f",
+      "kind": "XML_ONLY",
+      "author_package": "package151-saga-six-doc-methods-xml9-product-proposed-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/IStateMachineEventActivitiesBuilder.cs",
+      "before_sha256": "6890af93fe86233249a86805dfd9c2de20a338ea350c0f1585833daa646c5e0d",
+      "after_sha256": "35275deffac87deb1db416068ecff8187a640eb6dbb01086ae24e75721893628",
+      "kind": "XML_ONLY",
+      "author_package": "package151-saga-six-doc-methods-xml9-product-proposed-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/IStateMachineModifier.cs",
+      "before_sha256": "e9a3812a0c1bf447fbaf9382549772a8affef89746b2176b5e5c7cd9965d74fd",
+      "after_sha256": "b570c68a8459f33992194bef8b33002c81b70d6af6c7792be8b9d9f188a753c7",
+      "kind": "XML_ONLY",
+      "author_package": "package151-saga-six-doc-methods-xml9-product-proposed-r1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineFaultedRequestScheduleActivitiesDeepContractTests.cs",
+      "before_sha256": "ee6e31205f7c5edd41d834910a7b4459213e89bdf98070d9767145f27546b03e",
+      "after_sha256": "1360d0d41d52338fe0b6a7593ba2cd2cc294209e6c0c8ef6e4d4e9d72d6f9c5e",
+      "kind": "REQUEST30_ORIGINAL_ORACLES",
+      "author_package": "package151-request-resolution-cancellation30-oracles-proposed-r1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "942dca7ffd4ab7096560d44725b9570da2cd66d255920f52435ac08989661f84",
+      "after_sha256": "1f2f4f0fe38f1290e15a51b51f59e035d83a94459b9943406ff080da0f7a78f6",
+      "kind": "ADD_ONLY_4_REQUIREMENTS",
+      "author_package": "package151-request-resolution-cancellation30-oracles-proposed-r1"
+    }
+  ],
+  "XML_nodes": 18,
+  "new_Theory_cases": 30,
+  "requirements_before": 4603,
+  "requirements_after": 4607,
+  "original_request_product_unchanged": true,
+  "findings_not_yet_promoted": true,
+  "adversarial_manifests_checked_output": "597ed5",
+  "root_oracle_review_output": "f58f90",
+  "literal_XML_executable_bytes_unchanged": true,
+  "whole_API_closed": false
+}

@@ -282,8 +282,15 @@ internal sealed class ReceivePipeDispatcher :
                         }
                         catch (Exception exception)
                         {
-                            LogContext.Error?.Log(exception, "A zero-activity handler failed after receive dispatch completed: {InputAddress}",
-                                _inputAddress);
+                            try
+                            {
+                                LogContext.Error?.Log(exception, "A zero-activity handler failed after receive dispatch completed: {InputAddress}",
+                                    _inputAddress);
+                            }
+                            catch
+                            {
+                                // Diagnostics cannot change the dispatch outcome or skip later subscribers.
+                            }
                         }
                     }
                 }

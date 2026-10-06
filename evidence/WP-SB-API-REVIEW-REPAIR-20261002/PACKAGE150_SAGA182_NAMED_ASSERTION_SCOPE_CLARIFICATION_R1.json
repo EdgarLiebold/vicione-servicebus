@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-04T22:03:09.911947+00:00",
+  "decision": "CLARIFY_SAGA182_EXISTING_BOUNDED_ACCEPTANCE_ACTUAL_USED_NAMED_ASSERTIONS",
+  "original_root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE148_SAGA_FACTORY_SEND182_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "4f53068824a518f7ff9ffc33fff8c6c386bec3ca7690434551c34c89e142619e"
+  },
+  "qualified_overlay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-saga182-qualified-native147-overlay-r1/REPORT.json",
+    "sha256": "89960b21a5b32f5df8800d546fd4fc9e96d2196e82e284f21f71d34d2e6829a5"
+  },
+  "catalog_methods": 23,
+  "catalog_actual147_cases": 24,
+  "actually_used_by182_methods": 19,
+  "actually_used_by182_cases": 20,
+  "root_complete_norms_read": [
+    "8eb415 previously",
+    "0ad58b currentwhole report+allmanifestpins"
+  ],
+  "clarification": "Only182 matrix referenced19methods20actual147cases count toward their specific assertion contracts.23catalogmethods24whole5classcases include unused2Publish-only methods and other unused catalog entries, no extra182 reachability. CurrentQ149 testowner1017 contains old7 method bodies preserved by exact inverse; actual147 full862 file epoch retained, new8 not147 credited. NormalSend downstream token gap became actual F125 and remains independently pending fixednative150. No API count change or closure increase.",
+  "whole_api_status": "PARTIAL"
+}

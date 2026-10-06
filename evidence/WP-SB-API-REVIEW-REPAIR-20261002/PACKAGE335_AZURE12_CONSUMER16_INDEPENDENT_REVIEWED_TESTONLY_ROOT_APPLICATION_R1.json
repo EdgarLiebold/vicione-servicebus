@@ -1,0 +1,51 @@
+{
+  "utc": "2026-10-06T04:28:12.197244+00:00",
+  "status": "INDEPENDENT_SOURCE_REVIEWED_TEST2_CATALOG3_ADDITIONS_ONLY_ORIGINAL_NATIVE_PENDING",
+  "azure12": {
+    "author_manifest": "ddb6ed6dc80c6916f1f57f36a6f1a2c318a380160e3b29c3f486f02102ee6127",
+    "independent_root_peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package335-azure12-independent-root-test-source-peer-r1",
+    "independent_root_peer_manifest": "b4770bc6ce74c087cb8efb3898f0052074633657e3afae129f3020b4b43bf96f"
+  },
+  "consumer16": {
+    "author_manifest": "b938029ca2caf29e1063b4dab958f5446fa98c63fc5717c0dc7004501857a057",
+    "independent_peer_manifest": "cb73069be7f03927de10f571ce708767a7687513a91f368eeb69e238baec6607",
+    "mandatory_count_precision_manifest": "6ced5f501aa4840b5be112cfd45203b7be792af355859f61bcb1797eee18e5c8",
+    "root_whole287": "110c95",
+    "root_whole_owner182": "027a61",
+    "root_whole_independent_peer": "fd86bd"
+  },
+  "changes": [
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/Requirements/AzureStorageRequirements.json",
+      "before_sha256": "f3f5959403f7e9d8810a209862357c41c5fbbb93b9470e945bcc8b2dd2ba12df",
+      "after_sha256": "ea246e143b45725db1f9d5e8597615ef18f33229968980fde75d1bf3d95000aa",
+      "rows_before": 24,
+      "rows_after": 26,
+      "old_prefix_semantic_exact": true,
+      "old_raw_record_prefix_exact": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "5bce66843e0be0eb4e408bd020dc9585c276fc070e263f10a32e5fc2d2de17bd",
+      "after_sha256": "32d328867e6105d514e1add3d0c4b621ff8ad3532a6e7b83115af6bd6112f627",
+      "rows_before": 4662,
+      "rows_after": 4663,
+      "old_prefix_semantic_exact": true,
+      "old_raw_record_prefix_exact": true
+    }
+  ],
+  "new_test_sources": [
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/MessageData/AzureBlobOptionalDiagnosticsTests.cs",
+      "sha256": "d7a0403e99a68f2a2f124c8f761cd3d756adfc1b65fcf8e8ce245a6cbd2c8171"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerRegistrationDiagnosticTests.cs",
+      "sha256": "e6b920dd53ded882afc265a73b52e19c6fa99af645717fc39396966edd894949"
+    }
+  ],
+  "Product_changes": 0,
+  "Native_credit": 0,
+  "new_findings": 0,
+  "grade": null
+}

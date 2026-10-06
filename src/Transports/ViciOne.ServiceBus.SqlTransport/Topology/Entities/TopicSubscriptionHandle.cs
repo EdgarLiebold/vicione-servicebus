@@ -2,7 +2,7 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>Controls the lifetime of topic subscription.</summary>
+/// <summary>Identifies a topic-to-topic subscription within its owning SQL topology builder.</summary>
 public interface TopicSubscriptionHandle :
     EntityHandle
 {

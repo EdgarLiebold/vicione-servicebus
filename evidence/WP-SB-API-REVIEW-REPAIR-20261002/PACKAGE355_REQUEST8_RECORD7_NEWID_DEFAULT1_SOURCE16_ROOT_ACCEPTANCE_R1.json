@@ -1,0 +1,119 @@
+{
+  "utc": "2026-10-06T05:42:22.110647+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_REQUEST8_RECORD_LANGUAGE7_NEWID_DEFAULT1_SOURCE16",
+  "request_author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-request-extensions8-bounded-source-contracts-proposed-r1/MANIFEST.json",
+    "sha256": "35c66ae097416efae400bbcf89eba0770b0f26b4095dc363f5bfb83b1d3b99c9"
+  },
+  "request_independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-request-extensions8-independent-source-peer-r1/MANIFEST.json",
+    "sha256": "eaf298d09fa902132a95897210050a9976e0eef4b4cba4eb9fb8203e3c4d0276"
+  },
+  "record_author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package343-message-sensitivity-record7-individual-source-language-contracts-proposed-r1/MANIFEST.json",
+    "sha256": "73cde1ac0f73c13f50a1b8e43f9ceea099da4405f333517eac83160c8666cb5a"
+  },
+  "newid_author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package343-newid-default-ctor1-bounded-source-language-contract-proposed-r1/MANIFEST.json",
+    "sha256": "d02a5e4f6c71cd74550fd23f9b360bb409046a394070c0ca76f0d15158880bb0"
+  },
+  "root_is_other_author_source_language_peer": true,
+  "root_whole_request17_2045_receipts": [
+    "517edd",
+    "742049",
+    "322c0b",
+    "490ae7"
+  ],
+  "root_whole_request8_norms_receipts": [
+    "071672",
+    "6a0838"
+  ],
+  "root_truncated_prior_norm_batch": "ebd85b explicitly replaced by complete0..3 and4..7 focusedreads",
+  "root_whole_record61_enum11_receipts": [
+    "279c48",
+    "cf40a4"
+  ],
+  "root_whole_record7_newid1_norms_receipt": "194ff0",
+  "root_whole_record_actual320_TYPE_block_receipt": "645734",
+  "root_whole_newid590_retained_receipt": "e1bf8c",
+  "root_external_language_policy_browsed": [
+    "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/classes",
+    "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/record",
+    "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/default-values"
+  ],
+  "root_current_source_frozen350_PDB_checksum_join": true,
+  "original_before": 18233,
+  "original_after": 18249,
+  "remaining_after": 320,
+  "master_before_sha256": "f85abf838eea9fffa782ef76fa0b21c2e0bfe1bca22d0391177355f54d68bdca",
+  "members": [
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.RequestExtensions.RequestAsync``2(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.IBus,System.Object,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Action{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.RequestExtensions.RequestAsync``2(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.IBus,System.Uri,System.Object,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Action{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.RequestExtensions.RequestAsync``2(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.IBus,System.Uri,``0,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Action{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.RequestExtensions.RequestAsync``2(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.IBus,``0,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Action{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.RequestExtensions.RequestAsync``2(ViciOne.ServiceBus.IBus,System.Object,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Action{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.RequestExtensions.RequestAsync``2(ViciOne.ServiceBus.IBus,System.Uri,System.Object,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Action{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.RequestExtensions.RequestAsync``2(ViciOne.ServiceBus.IBus,System.Uri,``0,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Action{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Advanced.RequestExtensions.RequestAsync``2(ViciOne.ServiceBus.IBus,``0,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Action{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.MessageSensitivityDescriptor.Equals(System.Object)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.MessageSensitivityDescriptor.Equals(ViciOne.ServiceBus.MessageSensitivityDescriptor)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.MessageSensitivityDescriptor.GetHashCode"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.MessageSensitivityDescriptor.ToString"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.MessageSensitivityDescriptor.op_Equality(ViciOne.ServiceBus.MessageSensitivityDescriptor,ViciOne.ServiceBus.MessageSensitivityDescriptor)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.MessageSensitivityDescriptor.op_Inequality(ViciOne.ServiceBus.MessageSensitivityDescriptor,ViciOne.ServiceBus.MessageSensitivityDescriptor)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.MessageSensitivityDescriptor.{Clone}$"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Advanced.NewId.#ctor"
+    ]
+  ],
+  "native_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": "Request8 local wrapper ordering/cancellation/adoption, record7 individual language contracts and NewId1 four-field default0 language contract only. No arbitrary routing/initializer/callback/custom SPI or constructor static initialization/target runtime/IL/MethodDef grade. Actual XML absences individually checked and separate emitted reflection records preserved; no generated-NA promotion."
+}

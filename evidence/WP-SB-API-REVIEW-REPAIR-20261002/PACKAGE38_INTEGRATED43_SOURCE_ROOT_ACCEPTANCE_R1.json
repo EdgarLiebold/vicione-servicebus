@@ -1,0 +1,36 @@
+{
+  "actor": "/root",
+  "status": "INTEGRATED43_SOURCE_NO_NEW_REGRESSION_PROVIDER_HYPOTHESIS_NATIVE_PENDING",
+  "review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/integrated-final43-source-review-r1/REVIEW.md",
+    "bytes": 11717,
+    "sha256": "cc0dee8e77f4492fb7b8a12e37227c92aed87f1c04fe9bcbe8e6a543a3b7db2c"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/integrated-final43-source-review-r1/FINAL_INTEGRATED43_SOURCE_REVIEW_R1.json",
+    "bytes": 7120,
+    "sha256": "82ea8b20fab1e27caa1e8a6cafb6034a23578d3b859d72ef4bae7db6ef91b396"
+  },
+  "root_whole_report_and_seal_read": true,
+  "source129_current_bindings_fresh": true,
+  "adversarial_tools_root_whole_source_post_execution_review_no_block": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/integrated-final43-source-review-r1/prepare_readonly.py",
+      "bytes": 4774,
+      "sha256": "d4342b40090d7e36dd58e1385e8ab0171c531927aa38172637cca0ac57616994"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/integrated-final43-source-review-r1/seal_readonly.py",
+      "bytes": 9414,
+      "sha256": "f9eb1f2b2531554efe3dfeac6d2efcb4f3dda2cec3dc793bb590de25fd073334"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/integrated-final43-source-review-r1/seal_final_manifest.py",
+      "bytes": 4430,
+      "sha256": "5dff9ef30987dc8d7ed1a69281e2f531f0b19d792382a0577303151c02e8c96a"
+    }
+  ],
+  "tool_review_timing": "Root independent adversarial review after metadata execution; no pre-execution timing claim",
+  "canonical_test_delta_r1_superseded_by": "package38-root-core-oracles-source-preflight-r1/REVIEW_R2.json for Batch source R2; two others unchanged",
+  "whole_API_or_Aplus": false
+}

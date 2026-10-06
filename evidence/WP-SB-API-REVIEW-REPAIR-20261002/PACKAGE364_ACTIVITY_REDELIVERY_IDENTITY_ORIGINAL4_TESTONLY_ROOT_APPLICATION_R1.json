@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-06T06:49:33.325069+00:00",
+  "status": "ROOT_APPLIED_REVIEWED_ORIGINAL4_TESTONLY_R2_NATIVE_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package361-activity-redelivery-identity-original4-testonly-proposed-r2/MANIFEST.json",
+    "sha256": "6af692d42895b89c0d8c63145b3705495738417dc4b673402d225af696b4c02a"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package361-activity-original4-independent-test-source-peer-r2/MANIFEST.json",
+    "sha256": "88c40c4f60f1d70198111165f787fd6db19ff256e6f5f2ad16f6dd93aa26e9a6"
+  },
+  "Root_whole_Test338_and_ReqPatch14_receipt": "f2573f",
+  "Root_entire_author_and_peer_REPORT_receipt": "1e81f6",
+  "Root_whole_public_Source23_1971_receipts": [
+    "6d9e70",
+    "f1727a",
+    "f9acf6",
+    "91ddcd",
+    "f11f8d",
+    "53887c"
+  ],
+  "current_source_hash_guard_count": 56,
+  "R1_fixture_address_before_Start_correction": "Unapplied; R2 defers actual public ExecuteAddress getters until awaited tracked Start.",
+  "root_readonly_guard_retry": "644147 failed before any writes; e58d04 separately validated both full manifests. Explicit requirement entries schema used.",
+  "test_sha256": "3ab164dfcacf340b0b20386cec0c0ad24d00c91d166977047fef055cfce62ec4",
+  "requirements_before_sha256": "ea7e224bb45923593658bc98c49fe95f23d81759681ae616b1f1f4d71bb4c837",
+  "requirements_after_sha256": "1962891a2937f0dd14ce9256c9f6d4d051c42e3f4b483bd8b843648e295a6fc3",
+  "Req_ADD2": 2,
+  "actual_Req_rows": 4668,
+  "Product_source_mutations": 0,
+  "native_count": 0,
+  "grade": null,
+  "new_finding_registered": false,
+  "whole_API_closed": false,
+  "master_sha256_unchanged": "6a01d6c6750d14e66f8e512c4b7768cc724831d5ab899a168f9b4ca6555e844b"
+}

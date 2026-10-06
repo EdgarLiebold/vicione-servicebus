@@ -1,0 +1,34 @@
+{
+  "status": "TEST_FIXTURE_AND_F018_FACTORY_PORTABLE_PDB_DOCUMENT_SHA256_EXACT",
+  "proofs": [
+    {
+      "dll": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll",
+      "dll_sha256": "052900d7ca4b9ac0feb657af073559928af87dda89ce01e61efb11883c2b0115",
+      "pdb_kind": "SIDECAR_PORTABLE_PDB_CODEVIEW_ID_MATCHED",
+      "pdb_sha256": "fc08d412a6da16f53980964b14cfd0a61337bb3502f0a657b1f35ea1e983df63",
+      "document_count": 40,
+      "source_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/EntityFrameworkSagaRepositoryFactoryTests.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "e2ba79021011bd50a55f492d74d56e5bb9200b3bdbc2a9ca7f01378d85b66e3f"
+      }
+    },
+    {
+      "dll": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "dll_sha256": "3d9cfe2389b8ae86292c476479ae1cd6ee752c707969cd10a272e00ecfe471af",
+      "pdb_kind": "EMBEDDED_MPDB",
+      "pdb_sha256": "8e16f1628ae8cc4912b8a67444c0a3198ae9b0aa3830cb2fff0e4f276eeb055d",
+      "document_count": 38,
+      "source_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "53473b843b6a9d28ed03fcc5c9de7848bd15c2772efb9018e39b1d7054ce43cd"
+      }
+    }
+  ],
+  "limits": [
+    "Separate test PDB matched to exact DLL CodeView GUID and stamp; product PDB embedded",
+    "Static document checksums, no complete compiler/IL/PDB method-table review",
+    "Native owner uses current Package05 Core/Abstractions dependency hashes from freeze, no reuse of earlier runtime profile claimed"
+  ]
+}

@@ -52,6 +52,7 @@ public class ReadWriteProperty<T> : ReadOnlyProperty<T>
     /// <summary>Writes the property on an instance.</summary>
     /// <param name="instance">The target instance.</param>
     /// <param name="value">The new property value.</param>
+    /// <exception cref="InvalidOperationException">The target type is a value type passed by value, or the property has no eligible setter.</exception>
     public void Set(T instance, object? value) => _setter(instance, value);
 }
 
@@ -83,5 +84,6 @@ public class ReadWriteProperty<T, TProperty> : ReadOnlyProperty<T, TProperty>
     /// <summary>Writes the property on an instance.</summary>
     /// <param name="instance">The target instance.</param>
     /// <param name="value">The new property value.</param>
+    /// <exception cref="InvalidOperationException">The target type is a value type passed by value, or the property has no eligible setter.</exception>
     public void Set(T instance, TProperty value) => _setter(instance, value);
 }

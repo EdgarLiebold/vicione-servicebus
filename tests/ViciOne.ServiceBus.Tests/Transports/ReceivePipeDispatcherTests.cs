@@ -260,6 +260,56 @@ public sealed class ReceivePipeDispatcherTests
         Assert.Equal(0, dispatcher.ActiveDispatchCount);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RECEIVE-DISPATCH", "zero-activity-logger-failure-preserves-outcome-and-later-subscribers")]
+    public async Task ZeroActivityLoggerFailure_PreservesTheDispatchOutcomeAndInvokesLaterSubscribersAsync(bool pipelineFails)
+    {
+        var pipelineFailure = new ExpectedPipelineException();
+        var zeroActivityFailure = new ExpectedZeroActivityException();
+        var loggerFailure = new InvalidOperationException("zero-activity diagnostic logger failed");
+        var receiveLock = new RecordingReceiveLock();
+        var context = new TestReceiveContext();
+        var dispatcher = CreateDispatcher(_ => pipelineFails ? Task.FromException(pipelineFailure) : Task.CompletedTask);
+        int laterSubscriberCalls = 0;
+        dispatcher.ZeroActivity += () => Task.FromException(zeroActivityFailure);
+        dispatcher.ZeroActivity += () =>
+        {
+            Interlocked.Increment(ref laterSubscriberCalls);
+            return Task.CompletedTask;
+        };
+        var logger = new ThrowingErrorLogger(loggerFailure);
+        ILogContext? previous = LogContext.Current;
+        LogContext.ConfigureCurrentLogContext(logger);
+        try
+        {
+            // Preserve the hostile ambient logger; the existing helper intentionally disables it.
+            Exception? observed = await Record.ExceptionAsync(() =>
+                dispatcher.DispatchAsync(context, receiveLock, TestContext.Current.CancellationToken));
+            if (pipelineFails)
+                Assert.Same(pipelineFailure, observed);
+            else
+                Assert.Null(observed);
+
+            Assert.Equal(1, laterSubscriberCalls);
+            Assert.Equal(1, logger.CallCount);
+            Assert.Same(zeroActivityFailure, logger.ObservedFailure);
+            Assert.Equal(1, receiveLock.ValidationCount);
+            Assert.Equal(pipelineFails ? 0 : 1, receiveLock.CompletionCount);
+            Assert.Equal(pipelineFails ? 1 : 0, receiveLock.FaultCount);
+            Assert.Same(pipelineFails ? pipelineFailure : null, receiveLock.Failure);
+            Assert.Equal(pipelineFails, context.IsFaulted);
+            Assert.Equal(0, dispatcher.ActiveDispatchCount);
+            Assert.Equal(1, dispatcher.DispatchCount);
+            Assert.Equal(1, dispatcher.MaxConcurrentDispatchCount);
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
+    }
+
     private static ReceivePipeDispatcher CreateDispatcher(Func<ReceiveContext, Task> dispatch, ReceiveObservable? observers = null)
     {
         var hostConfiguration = DispatchProxy.Create<IHostConfiguration, HostConfigurationProxy>();

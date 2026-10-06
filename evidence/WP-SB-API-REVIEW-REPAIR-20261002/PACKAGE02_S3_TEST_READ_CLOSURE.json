@@ -1,0 +1,73 @@
+{
+  "status": "READ_FULL_BEFORE_EDIT",
+  "files": [
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataConfigurationTests.cs",
+      "sha256": "c1e72d626044f19e633cfbc66eaa62ed5b5da5ef0a42799fa68cfa825ed64466",
+      "bytes": "15357",
+      "kind": "test",
+      "read_status": "READ_FULL",
+      "owner": "MessageData/initializers/serialization/S3 and dated coverage",
+      "semantic_evidence": "Full related source/test reads; exact retention precedence, UTF8 threshold, exception identity, binary snapshots, lazy single-load, multi-bus policy isolation and initializer graphs assessed; S3 wrong AWS reserved prefix F006, dated T176 raw replay; package runtime and remaining tests/closure open",
+      "open_work": "Complete semantic API/test/package closure remains open",
+      "prior_read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataObserverTests.cs",
+      "sha256": "d7235da4eec9cd5ff83a2c59138bd1d671eb0d79880878b1db0e6791cfaef966",
+      "bytes": "27105",
+      "kind": "test",
+      "read_status": "READ_FULL",
+      "owner": "MessageData/initializers/serialization/S3 and dated coverage",
+      "semantic_evidence": "Full related source/test reads; exact retention precedence, UTF8 threshold, exception identity, binary snapshots, lazy single-load, multi-bus policy isolation and initializer graphs assessed; S3 wrong AWS reserved prefix F006, dated T176 raw replay; package runtime and remaining tests/closure open",
+      "open_work": "Complete semantic API/test/package closure remains open",
+      "prior_read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/Requirements/AmazonS3Requirements.json",
+      "sha256": "b8efd9687ce08eb26e7b55f2e1a4a98408d6ac61815c67664c449b520d123986",
+      "bytes": "7157",
+      "kind": "test",
+      "read_status": "READ_FULL",
+      "owner": "MessageData S3 and transitive bus lifecycle",
+      "semantic_evidence": "All specified files fully read in untruncated chunks; S3 local readiness/lifecycle/stream/caller cancellation paths, Courier staged expiry ownership, stable observer fanout and lifecycle gate checked. Core observer cancellation/reentrancy/default timeout hypotheses recorded; own runtime replays blocked, complete closure remains open",
+      "open_work": "Complete semantic API/test/package closure remains open",
+      "prior_read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "ae34f127c0423bfdbfd505a4e025ea1c0597f75d53831e920ed9043d0e7daadb",
+      "bytes": "1307",
+      "kind": "test",
+      "read_status": "READ_FULL",
+      "owner": "MessageData S3 and transitive bus lifecycle",
+      "semantic_evidence": "All specified files fully read in untruncated chunks; S3 local readiness/lifecycle/stream/caller cancellation paths, Courier staged expiry ownership, stable observer fanout and lifecycle gate checked. Core observer cancellation/reentrancy/default timeout hypotheses recorded; own runtime replays blocked, complete closure remains open",
+      "open_work": "Complete semantic API/test/package closure remains open",
+      "prior_read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+      "sha256": "3808c5366244f1ca5f258b99d58581343495e773ac48dde7ea5185244c6260ed",
+      "bytes": "1076",
+      "kind": "test",
+      "read_status": "READ_FULL",
+      "owner": "MessageData S3 and transitive bus lifecycle",
+      "semantic_evidence": "All specified files fully read in untruncated chunks; S3 local readiness/lifecycle/stream/caller cancellation paths, Courier staged expiry ownership, stable observer fanout and lifecycle gate checked. Core observer cancellation/reentrancy/default timeout hypotheses recorded; own runtime replays blocked, complete closure remains open",
+      "open_work": "Complete semantic API/test/package closure remains open",
+      "prior_read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/packages.lock.json",
+      "sha256": "46df372db0f9225e84a1a7b4e7ba7e925a61eab95824334a2cf4b8a122914a4b",
+      "bytes": "16389",
+      "kind": "test",
+      "read_status": "READ_FULL",
+      "owner": "",
+      "semantic_evidence": "",
+      "open_work": "Read fully and evaluate in API context",
+      "prior_read_status": "PENDING"
+    }
+  ],
+  "reused_prior_full_files": 5,
+  "new_direct_full_reads": 1
+}

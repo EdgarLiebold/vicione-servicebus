@@ -1,0 +1,19 @@
+{
+  "status": "TEAM_FULL_READ_PROGRESS_ONLY_RUNTIME_PARTIAL",
+  "utc": "2026-10-03T04:11:38.352838+00:00",
+  "final_checkpoint": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/testing-family-review/FINAL_CHECKPOINT.json",
+  "sha256": "ba5c53db6952f1ae28f05e4b941566432183b8d23f937f2022ac0e6d19b2e56c",
+  "all217_artifacts_verified": true,
+  "all135_frozen_source_hashes_verified": true,
+  "new_FULL": 107,
+  "before_FULL": 4496,
+  "after_FULL": 4603,
+  "prior4496_entire_rows_preserved": true,
+  "before_ledger": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/TESTING_FAMILY_LEDGER_BEFORE.csv",
+  "before_ledger_sha256": "085920463e3514d6892de96642ccc4d16c94f574cad17cd059c64769a8559326",
+  "after_ledger_sha256": "b6e08ca2e4e17207892048c10ec95af971469cff1b3251a5e1ba0bf5a62b3fe5",
+  "Root_read_scope": "FULL SelfReview+FinalRefinements; all7 semantic candidate fields excluding API-anchor data; mechanical closure+proposal verification, not personal FULL 135source or 190KBanchor ledger",
+  "candidates": "7 UNVERIFIED; no new ID",
+  "CLOSED": 0,
+  "canonical_test_owner_transfer": false
+}

@@ -1,0 +1,45 @@
+{
+  "utc": "2026-10-04T23:10:45.780701+00:00",
+  "decision": "CONFIRM_F129_ORIGINAL_OBSERVER_PRIMARY_ERROR_LOSS",
+  "confirmed_before": 128,
+  "confirmed_after": 129,
+  "accepted_unchanged": 127,
+  "finding": {
+    "id": "F-SB-API-129",
+    "severity": "Medium",
+    "title": "Saga fault observer failure replaces the original activity failure",
+    "classification": "CONFIRMED_NATIVE_PRIMARY_ERROR_OWNERSHIP_DEFECT",
+    "status": "ORIGINAL_NATIVE_SOURCE_RUNTIME_CONFIRMED_PRODUCT_FIX_PEER_PENDING",
+    "source_owners": [
+      "src/ViciOne.ServiceBus.Sagas/Sagas/ViciOneServiceBusStateMachine.StateMachineState.cs"
+    ],
+    "original_native": {
+      "total": 52,
+      "passed": 48,
+      "failed": 4,
+      "skipped": 0,
+      "new6_passed": 2,
+      "new6_failed": 4,
+      "prior46_passed": true
+    },
+    "original_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package154-observer-original52-independent-r1/REPORT.json",
+      "sha256": "ae31d941549c069147c5b9fb76916d6346bf85ebb82cb736370ce48ca6993f98"
+    },
+    "root_causal_reads": [
+      "a19335",
+      "4ea75e",
+      "4599ba",
+      "d19b8b"
+    ],
+    "causal_boundary": "Typed and untyped public raise operations await the fault observer in the primary catch. A secondary IOException or independent OperationCanceledException escapes before rethrow and replaces the primary activity error. Four finite assertion failures; healthy observer controls and old46 pass.",
+    "limits": "Original post-Aggregate identity/count/IsFaulted assertions not reached. Caller-canceled OCE bypass separate, unchanged and not newly native-proved. No all-observers/all-API claim.",
+    "whole_API_member_review_closed": false
+  },
+  "full3332_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package154-observer-original52-independent-r1/MANIFEST.json",
+    "sha256": "bbf292c4196018bb2ba386735fb542e0d4f682fb12e6752ecfce0636c2ca167f"
+  },
+  "root_manifest_verification": "af66e7",
+  "whole_API_closed": false
+}

@@ -1,0 +1,1165 @@
+{
+  "actor": "/root",
+  "utc": "2026-10-05T10:02:17.321138+00:00",
+  "status": "BOUNDED_CURRENT_SOURCE54_ROOT_ACCEPTED_NO_NEW_NATIVE",
+  "before": {
+    "raw_rows": 8248,
+    "original_canonical": 7548,
+    "sidecar": 671
+  },
+  "after": {
+    "raw_rows": 8302,
+    "original_canonical": 7602,
+    "sidecar": 671,
+    "original_remaining": 10967
+  },
+  "groups": {
+    "Small39": "All39 individually reviewed norms; two abstract handler declarations retain concrete implementation obligations. Author15whole1177 plus independent15whole1177; Root all39norms personally read in2fullcompactparts, exactGraphviz37backslasherratum. Initializer25+Mediator10 current175PDB/XML/freshpolicy5 verified; MessagePack2/Visualizer2 explicitlySource-only.",
+    "SqlConnection15": "Root all17norms personally read and entire5currentowners304 personally read. Eight bodyless declarations, four exacttransparent forwarders and three localmethods accepted; custom supervisor side-effect/registration rollback/SDKtransaction/cooperation obligations remain explicit."
+  },
+  "held": {
+    "SqlConnection2": "ActualCreateSendTransport andPublish initialownDebug candidates not accepted until Original workflow controls. No newFinding/Native from Sourcecandidate."
+  },
+  "current175_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package175-host-consumer-saga-fixed-xml5-fresh7-independent-r1/REPORT.json",
+    "sha256": "0eb4c443f3933e523362c4239439d983526b86cc64c4a1e5c0052d7ae1c3be8f"
+  },
+  "native_cases_added": 0,
+  "whole_API_A_plus": false,
+  "rows": [
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.PublishAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.Object,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedMessageInitializerExtensions.cs",
+      "source_sha256": "40437d47bd2195dd55d018a2ce6d5cf3a6ba5105550199220e8026625ae402d4",
+      "member_contract": "Publish initializer for reference contract T; no pipe argument. RequireAdvanced validates endpoint before capability cast (IAdvancedPublishEndpoint) and before values; supplied pipe is guarded after values. The selected provider initializer receives the same object values, exact pipe where present and caller token; this method directly returns that provider Task, with no async wrapper or detached initialization. Generic typed pipe infers T; untyped/no-pipe routes explicitly select T.",
+      "result_error_ownership": "Provider defines initialization and local capture/transport outcome; synchronous errors and null Task behavior are forwarded. The wrapper owns neither a message instance nor operation disposal; completion does not establish delivery/consumption.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.PublishAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.PublishContext{``0}},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedMessageInitializerExtensions.cs",
+      "source_sha256": "40437d47bd2195dd55d018a2ce6d5cf3a6ba5105550199220e8026625ae402d4",
+      "member_contract": "Publish initializer for reference contract T; typed context pipe. RequireAdvanced validates endpoint before capability cast (IAdvancedPublishEndpoint) and before values; supplied pipe is guarded after values. The selected provider initializer receives the same object values, exact pipe where present and caller token; this method directly returns that provider Task, with no async wrapper or detached initialization. Generic typed pipe infers T; untyped/no-pipe routes explicitly select T.",
+      "result_error_ownership": "Provider defines initialization and local capture/transport outcome; synchronous errors and null Task behavior are forwarded. The wrapper owns neither a message instance nor operation disposal; completion does not establish delivery/consumption.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.PublishAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.PublishContext},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedMessageInitializerExtensions.cs",
+      "source_sha256": "40437d47bd2195dd55d018a2ce6d5cf3a6ba5105550199220e8026625ae402d4",
+      "member_contract": "Publish initializer for reference contract T; untyped context pipe. RequireAdvanced validates endpoint before capability cast (IAdvancedPublishEndpoint) and before values; supplied pipe is guarded after values. The selected provider initializer receives the same object values, exact pipe where present and caller token; this method directly returns that provider Task, with no async wrapper or detached initialization. Generic typed pipe infers T; untyped/no-pipe routes explicitly select T.",
+      "result_error_ownership": "Provider defines initialization and local capture/transport outcome; synchronous errors and null Task behavior are forwarded. The wrapper owns neither a message instance nor operation disposal; completion does not establish delivery/consumption.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.SendAsync``1(ViciOne.ServiceBus.ISendEndpoint,System.Object,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedMessageInitializerExtensions.cs",
+      "source_sha256": "40437d47bd2195dd55d018a2ce6d5cf3a6ba5105550199220e8026625ae402d4",
+      "member_contract": "Send initializer for reference contract T; no pipe argument. RequireAdvanced validates endpoint before capability cast (IAdvancedSendEndpoint) and before values; supplied pipe is guarded after values. The selected provider initializer receives the same object values, exact pipe where present and caller token; this method directly returns that provider Task, with no async wrapper or detached initialization. Generic typed pipe infers T; untyped/no-pipe routes explicitly select T.",
+      "result_error_ownership": "Provider defines initialization and local capture/transport outcome; synchronous errors and null Task behavior are forwarded. The wrapper owns neither a message instance nor operation disposal; completion does not establish delivery/consumption.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.SendAsync``1(ViciOne.ServiceBus.ISendEndpoint,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedMessageInitializerExtensions.cs",
+      "source_sha256": "40437d47bd2195dd55d018a2ce6d5cf3a6ba5105550199220e8026625ae402d4",
+      "member_contract": "Send initializer for reference contract T; typed context pipe. RequireAdvanced validates endpoint before capability cast (IAdvancedSendEndpoint) and before values; supplied pipe is guarded after values. The selected provider initializer receives the same object values, exact pipe where present and caller token; this method directly returns that provider Task, with no async wrapper or detached initialization. Generic typed pipe infers T; untyped/no-pipe routes explicitly select T.",
+      "result_error_ownership": "Provider defines initialization and local capture/transport outcome; synchronous errors and null Task behavior are forwarded. The wrapper owns neither a message instance nor operation disposal; completion does not establish delivery/consumption.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.SendAsync``1(ViciOne.ServiceBus.ISendEndpoint,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedMessageInitializerExtensions.cs",
+      "source_sha256": "40437d47bd2195dd55d018a2ce6d5cf3a6ba5105550199220e8026625ae402d4",
+      "member_contract": "Send initializer for reference contract T; untyped context pipe. RequireAdvanced validates endpoint before capability cast (IAdvancedSendEndpoint) and before values; supplied pipe is guarded after values. The selected provider initializer receives the same object values, exact pipe where present and caller token; this method directly returns that provider Task, with no async wrapper or detached initialization. Generic typed pipe infers T; untyped/no-pipe routes explicitly select T.",
+      "result_error_ownership": "Provider defines initialization and local capture/transport outcome; synchronous errors and null Task behavior are forwarded. The wrapper owns neither a message instance nor operation disposal; completion does not establish delivery/consumption.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.Create``1(ViciOne.ServiceBus.IRequestClient{``0},System.Object,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedRequestInitializerExtensions.cs",
+      "source_sha256": "462f8901324d870de6f2759e96434caeb60bc6cbc2d6a24cd6d47de0afc0167b",
+      "member_contract": "Reference request TRequest, created handle; no request callback argument. Guard client/null then advanced capability, then values. Exact object values, RequestTimeout and cancellationToken are passed to the corresponding IAdvancedRequestClient<TRequest> operation; no initialization continuation is detached.",
+      "result_error_ownership": "Create directly returns the provider RequestHandle<TRequest>; caller controls its returned lifetime.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget. RequestTimeout default is passed unchanged; this wrapper does not calculate a deadline.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.GetResponseAsync``2(ViciOne.ServiceBus.IRequestClient{``0},System.Object,ViciOne.ServiceBus.Advanced.RequestPipeConfiguratorCallback{``0},ViciOne.ServiceBus.Advanced.RequestTimeout,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedRequestInitializerExtensions.cs",
+      "source_sha256": "462f8901324d870de6f2759e96434caeb60bc6cbc2d6a24cd6d47de0afc0167b",
+      "member_contract": "Reference request TRequest, 1 accepted reference response contract(s); advanced request-pipe callback is forwarded without invocation here. Guard client/null then advanced capability, then values, then callback. Exact object values, RequestTimeout and cancellationToken are passed to the corresponding IAdvancedRequestClient<TRequest> operation; no initialization continuation is detached.",
+      "result_error_ownership": "Directly returns provider Task<Response<...>> for exactly 1 accepted response types. Response arbitration, correlation, timeout defaults and request ownership remain provider behavior, not an independently implemented wrapper guarantee.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget. RequestTimeout default is passed unchanged; this wrapper does not calculate a deadline.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.GetResponseAsync``2(ViciOne.ServiceBus.IRequestClient{``0},System.Object,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedRequestInitializerExtensions.cs",
+      "source_sha256": "462f8901324d870de6f2759e96434caeb60bc6cbc2d6a24cd6d47de0afc0167b",
+      "member_contract": "Reference request TRequest, 1 accepted reference response contract(s); no request callback argument. Guard client/null then advanced capability, then values. Exact object values, RequestTimeout and cancellationToken are passed to the corresponding IAdvancedRequestClient<TRequest> operation; no initialization continuation is detached.",
+      "result_error_ownership": "Directly returns provider Task<Response<...>> for exactly 1 accepted response types. Response arbitration, correlation, timeout defaults and request ownership remain provider behavior, not an independently implemented wrapper guarantee.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget. RequestTimeout default is passed unchanged; this wrapper does not calculate a deadline.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.GetResponseAsync``3(ViciOne.ServiceBus.IRequestClient{``0},System.Object,ViciOne.ServiceBus.Advanced.RequestPipeConfiguratorCallback{``0},ViciOne.ServiceBus.Advanced.RequestTimeout,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedRequestInitializerExtensions.cs",
+      "source_sha256": "462f8901324d870de6f2759e96434caeb60bc6cbc2d6a24cd6d47de0afc0167b",
+      "member_contract": "Reference request TRequest, 2 accepted reference response contract(s); advanced request-pipe callback is forwarded without invocation here. Guard client/null then advanced capability, then values, then callback. Exact object values, RequestTimeout and cancellationToken are passed to the corresponding IAdvancedRequestClient<TRequest> operation; no initialization continuation is detached.",
+      "result_error_ownership": "Directly returns provider Task<Response<...>> for exactly 2 accepted response types. Response arbitration, correlation, timeout defaults and request ownership remain provider behavior, not an independently implemented wrapper guarantee.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget. RequestTimeout default is passed unchanged; this wrapper does not calculate a deadline.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.GetResponseAsync``3(ViciOne.ServiceBus.IRequestClient{``0},System.Object,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedRequestInitializerExtensions.cs",
+      "source_sha256": "462f8901324d870de6f2759e96434caeb60bc6cbc2d6a24cd6d47de0afc0167b",
+      "member_contract": "Reference request TRequest, 2 accepted reference response contract(s); no request callback argument. Guard client/null then advanced capability, then values. Exact object values, RequestTimeout and cancellationToken are passed to the corresponding IAdvancedRequestClient<TRequest> operation; no initialization continuation is detached.",
+      "result_error_ownership": "Directly returns provider Task<Response<...>> for exactly 2 accepted response types. Response arbitration, correlation, timeout defaults and request ownership remain provider behavior, not an independently implemented wrapper guarantee.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget. RequestTimeout default is passed unchanged; this wrapper does not calculate a deadline.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.GetResponseAsync``4(ViciOne.ServiceBus.IRequestClient{``0},System.Object,ViciOne.ServiceBus.Advanced.RequestPipeConfiguratorCallback{``0},ViciOne.ServiceBus.Advanced.RequestTimeout,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedRequestInitializerExtensions.cs",
+      "source_sha256": "462f8901324d870de6f2759e96434caeb60bc6cbc2d6a24cd6d47de0afc0167b",
+      "member_contract": "Reference request TRequest, 3 accepted reference response contract(s); advanced request-pipe callback is forwarded without invocation here. Guard client/null then advanced capability, then values, then callback. Exact object values, RequestTimeout and cancellationToken are passed to the corresponding IAdvancedRequestClient<TRequest> operation; no initialization continuation is detached.",
+      "result_error_ownership": "Directly returns provider Task<Response<...>> for exactly 3 accepted response types. Response arbitration, correlation, timeout defaults and request ownership remain provider behavior, not an independently implemented wrapper guarantee.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget. RequestTimeout default is passed unchanged; this wrapper does not calculate a deadline.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.GetResponseAsync``4(ViciOne.ServiceBus.IRequestClient{``0},System.Object,ViciOne.ServiceBus.Advanced.RequestTimeout,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedRequestInitializerExtensions.cs",
+      "source_sha256": "462f8901324d870de6f2759e96434caeb60bc6cbc2d6a24cd6d47de0afc0167b",
+      "member_contract": "Reference request TRequest, 3 accepted reference response contract(s); no request callback argument. Guard client/null then advanced capability, then values. Exact object values, RequestTimeout and cancellationToken are passed to the corresponding IAdvancedRequestClient<TRequest> operation; no initialization continuation is detached.",
+      "result_error_ownership": "Directly returns provider Task<Response<...>> for exactly 3 accepted response types. Response arbitration, correlation, timeout defaults and request ownership remain provider behavior, not an independently implemented wrapper guarantee.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget. RequestTimeout default is passed unchanged; this wrapper does not calculate a deadline.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.SchedulePublishAsync``1(ViciOne.ServiceBus.IMessageScheduler,System.DateTimeOffset,System.Object,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedScheduleInitializerExtensions.cs",
+      "source_sha256": "3d2fd1edef64612e016075fe0afaf1e7976909e1ee019f2a0c23beb98f03e21a",
+      "member_contract": "Scheduled publication of reference T from same object values; no pipe argument. scheduler.Advanced() validates scheduler/capability first, then values and optional pipe. Exact DateTimeOffset dueAt and supplied objects are forwarded; no normalization, clock read, destination reconstruction or delivery is implemented here. Scheduling publish pipes use SendContext<T>/SendContext, not PublishContext.",
+      "result_error_ownership": "Returns exact provider Task<ScheduledMessage<T>>; provider owns scheduling identity/result and time policy. Task completion is not later broker delivery; no newly owned resource is created by this adapter.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.SchedulePublishAsync``1(ViciOne.ServiceBus.IMessageScheduler,System.DateTimeOffset,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedScheduleInitializerExtensions.cs",
+      "source_sha256": "3d2fd1edef64612e016075fe0afaf1e7976909e1ee019f2a0c23beb98f03e21a",
+      "member_contract": "Scheduled publication of reference T from same object values; typed context pipe. scheduler.Advanced() validates scheduler/capability first, then values and optional pipe. Exact DateTimeOffset dueAt and supplied objects are forwarded; no normalization, clock read, destination reconstruction or delivery is implemented here. Scheduling publish pipes use SendContext<T>/SendContext, not PublishContext.",
+      "result_error_ownership": "Returns exact provider Task<ScheduledMessage<T>>; provider owns scheduling identity/result and time policy. Task completion is not later broker delivery; no newly owned resource is created by this adapter.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.SchedulePublishAsync``1(ViciOne.ServiceBus.IMessageScheduler,System.DateTimeOffset,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedScheduleInitializerExtensions.cs",
+      "source_sha256": "3d2fd1edef64612e016075fe0afaf1e7976909e1ee019f2a0c23beb98f03e21a",
+      "member_contract": "Scheduled publication of reference T from same object values; untyped context pipe. scheduler.Advanced() validates scheduler/capability first, then values and optional pipe. Exact DateTimeOffset dueAt and supplied objects are forwarded; no normalization, clock read, destination reconstruction or delivery is implemented here. Scheduling publish pipes use SendContext<T>/SendContext, not PublishContext.",
+      "result_error_ownership": "Returns exact provider Task<ScheduledMessage<T>>; provider owns scheduling identity/result and time policy. Task completion is not later broker delivery; no newly owned resource is created by this adapter.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.ScheduleSendAsync``1(ViciOne.ServiceBus.IMessageScheduler,System.Uri,System.DateTimeOffset,System.Object,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedScheduleInitializerExtensions.cs",
+      "source_sha256": "3d2fd1edef64612e016075fe0afaf1e7976909e1ee019f2a0c23beb98f03e21a",
+      "member_contract": "Scheduled send to supplied Uri of reference T from same object values; no pipe argument. scheduler.Advanced() validates scheduler/capability first, then destinationAddress, then values and optional pipe. Exact DateTimeOffset dueAt and supplied objects are forwarded; no normalization, clock read, destination reconstruction or delivery is implemented here. Scheduling publish pipes use SendContext<T>/SendContext, not PublishContext.",
+      "result_error_ownership": "Returns exact provider Task<ScheduledMessage<T>>; provider owns scheduling identity/result and time policy. Task completion is not later broker delivery; no newly owned resource is created by this adapter.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.ScheduleSendAsync``1(ViciOne.ServiceBus.IMessageScheduler,System.Uri,System.DateTimeOffset,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{``0}},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedScheduleInitializerExtensions.cs",
+      "source_sha256": "3d2fd1edef64612e016075fe0afaf1e7976909e1ee019f2a0c23beb98f03e21a",
+      "member_contract": "Scheduled send to supplied Uri of reference T from same object values; typed context pipe. scheduler.Advanced() validates scheduler/capability first, then destinationAddress, then values and optional pipe. Exact DateTimeOffset dueAt and supplied objects are forwarded; no normalization, clock read, destination reconstruction or delivery is implemented here. Scheduling publish pipes use SendContext<T>/SendContext, not PublishContext.",
+      "result_error_ownership": "Returns exact provider Task<ScheduledMessage<T>>; provider owns scheduling identity/result and time policy. Task completion is not later broker delivery; no newly owned resource is created by this adapter.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.ScheduleSendAsync``1(ViciOne.ServiceBus.IMessageScheduler,System.Uri,System.DateTimeOffset,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedScheduleInitializerExtensions.cs",
+      "source_sha256": "3d2fd1edef64612e016075fe0afaf1e7976909e1ee019f2a0c23beb98f03e21a",
+      "member_contract": "Scheduled send to supplied Uri of reference T from same object values; untyped context pipe. scheduler.Advanced() validates scheduler/capability first, then destinationAddress, then values and optional pipe. Exact DateTimeOffset dueAt and supplied objects are forwarded; no normalization, clock read, destination reconstruction or delivery is implemented here. Scheduling publish pipes use SendContext<T>/SendContext, not PublishContext.",
+      "result_error_ownership": "Returns exact provider Task<ScheduledMessage<T>>; provider owns scheduling identity/result and time policy. Task completion is not later broker delivery; no newly owned resource is created by this adapter.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.PublishEndpointExtensions.PublishAsync(ViciOne.ServiceBus.IPublishEndpoint,System.Type,System.Object,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/PublishEndpointExtensions.cs",
+      "source_sha256": "5ad124b960ce4507979fea9a9564fd0f16a543c94b30b687a4198088716489fe",
+      "member_contract": "Runtime-Type publish initializer adapter with no pipe argument; directly returns PublishEndpointDispatcher.PublishInitializerAsync(endpoint, messageType, values, optional pipe, cancellationToken). Actual dispatcher guards endpoint, values then runtime messageType; requires closed reference contract and rejects value/byref/pointer/open-generic types. Type-keyed Lazy converter maps to the corresponding generic advanced initializer; adapter does not initialize eagerly or await transport.",
+      "result_error_ownership": "Exact operation Task is provider-owned. Built-in outbox adds a deferred method and can return Task.CompletedTask without invoking transport send; it later separately executes captured work. No guarantee of transport dispatch at adapter Task completion.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.PublishEndpointExtensions.PublishAsync(ViciOne.ServiceBus.IPublishEndpoint,System.Type,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.PublishContext},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/PublishEndpointExtensions.cs",
+      "source_sha256": "5ad124b960ce4507979fea9a9564fd0f16a543c94b30b687a4198088716489fe",
+      "member_contract": "Runtime-Type publish initializer adapter with untyped context pipe; directly returns PublishEndpointDispatcher.PublishInitializerAsync(endpoint, messageType, values, optional pipe, cancellationToken). Actual dispatcher guards endpoint, values, pipe then runtime messageType; requires closed reference contract and rejects value/byref/pointer/open-generic types. Type-keyed Lazy converter maps to the corresponding generic advanced initializer; adapter does not initialize eagerly or await transport.",
+      "result_error_ownership": "Exact operation Task is provider-owned. Built-in outbox adds a deferred method and can return Task.CompletedTask without invoking transport send; it later separately executes captured work. No guarantee of transport dispatch at adapter Task completion.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.SendEndpointExtensions.SendAsync(ViciOne.ServiceBus.ISendEndpoint,System.Type,System.Object,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/SendEndpointExtensions.cs",
+      "source_sha256": "035aa8252dd894d84ff4d1003930abc049290ee75b570fd5aa9b6ccb04752f74",
+      "member_contract": "Runtime-Type send initializer adapter with no pipe argument; directly returns SendEndpointDispatcher.SendInitializerAsync(endpoint, messageType, values, optional pipe, cancellationToken). Actual dispatcher guards endpoint, values then runtime messageType; requires closed reference contract and rejects value/byref/pointer/open-generic types. Type-keyed Lazy converter maps to the corresponding generic advanced initializer; adapter does not initialize eagerly or await transport.",
+      "result_error_ownership": "Exact operation Task is provider-owned. Built-in outbox adds a deferred method and can return Task.CompletedTask without invoking transport send; it later separately executes captured work. No guarantee of transport dispatch at adapter Task completion.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.Initializers.SendEndpointExtensions.SendAsync(ViciOne.ServiceBus.ISendEndpoint,System.Type,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/SendEndpointExtensions.cs",
+      "source_sha256": "035aa8252dd894d84ff4d1003930abc049290ee75b570fd5aa9b6ccb04752f74",
+      "member_contract": "Runtime-Type send initializer adapter with untyped context pipe; directly returns SendEndpointDispatcher.SendInitializerAsync(endpoint, messageType, values, optional pipe, cancellationToken). Actual dispatcher guards endpoint, values, pipe then runtime messageType; requires closed reference contract and rejects value/byref/pointer/open-generic types. Type-keyed Lazy converter maps to the corresponding generic advanced initializer; adapter does not initialize eagerly or await transport.",
+      "result_error_ownership": "Exact operation Task is provider-owned. Built-in outbox adds a deferred method and can return Task.CompletedTask without invoking transport send; it later separately executes captured work. No guarantee of transport dispatch at adapter Task completion.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Initializers.Variables.IdVariable.op_Implicit(ViciOne.ServiceBus.Initializers.Variables.IdVariable)~System.Guid",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Initializers/Variables/IdVariable.cs",
+      "source_sha256": "ee77720787f8109182f02837c32a248751f3b707188d9108dc9cd0bb0c03c186",
+      "member_contract": "Implicit conversion first rejects null variable and returns its captured readonly _id value. Conversion performs no context lookup, token admission, ID generation. Explicit initializer-variable GetValueAsync is a different route using context payload sharing; it is not called by this operator.",
+      "result_error_ownership": "Returns captured Guid by value; owns no resource. TimeProvider/explicit constructor capture is outside this selected operator.",
+      "cancellation_norm": "No token parameter or async operation.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Initializers.Variables.TimestampVariable.op_Implicit(ViciOne.ServiceBus.Initializers.Variables.TimestampVariable)~System.DateTimeOffset",
+      "assembly": "ViciOne.ServiceBus.Initializers",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Initializers/Variables/TimestampVariable.cs",
+      "source_sha256": "84bde67c19dad35915ca3ad47d2d8549eb8e3c50a6534aa79457fc64b5808d17",
+      "member_contract": "Implicit conversion first rejects null variable and returns its captured readonly _timestamp value. Conversion performs no context lookup, token admission, fresh TimeProvider clock read or UTC conversion. Explicit initializer-variable GetValueAsync is a different route using context payload sharing; it is not called by this operator.",
+      "result_error_ownership": "Returns captured DateTimeOffset by value; owns no resource. TimeProvider/explicit constructor capture is outside this selected operator.",
+      "cancellation_norm": "No token parameter or async operation.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:Microsoft.Extensions.DependencyInjection.MediatorServiceCollectionExtensions.AddMediator(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator})",
+      "assembly": "ViciOne.ServiceBus.Mediator",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/DependencyInjection/MediatorServiceCollectionExtensions.cs",
+      "source_sha256": "c38aa3ba1e0ff0be84eee9f6b93662dd7d5c90c31ba9f92229f6abd129aa17b4",
+      "member_contract": "AddMediator default-base-address route guards services, configure, then validates default loopback://localhost/. Absolute loopback address must have host, no credentials/query/fragment/explicit nondefault port. AddMediatorCore rejects existing IMediator descriptor before constructing ServiceCollectionMediatorConfigurator; constructor registers singleton/scoped services, user callback runs, then AddMetrics and Complete. Returns the exact IServiceCollection.",
+      "result_error_ownership": "Service collection owns descriptors; resolved provider owns mediator singleton async disposal. Mandatory message limits are enforced at materialization via registered CreateMediator, not by inventing immediate registration-time enforcement. Callback exceptions can leave previous descriptor additions; no transaction/rollback guarantee is documented.",
+      "cancellation_norm": "Synchronous registration: no token/task.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:Microsoft.Extensions.DependencyInjection.MediatorServiceCollectionExtensions.AddMediator(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Uri,System.Action{ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator})",
+      "assembly": "ViciOne.ServiceBus.Mediator",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/DependencyInjection/MediatorServiceCollectionExtensions.cs",
+      "source_sha256": "c38aa3ba1e0ff0be84eee9f6b93662dd7d5c90c31ba9f92229f6abd129aa17b4",
+      "member_contract": "AddMediator explicit-base-address route guards services, baseAddress, configure, then validates supplied address. Absolute loopback address must have host, no credentials/query/fragment/explicit nondefault port. AddMediatorCore rejects existing IMediator descriptor before constructing ServiceCollectionMediatorConfigurator; constructor registers singleton/scoped services, user callback runs, then AddMetrics and Complete. Returns the exact IServiceCollection.",
+      "result_error_ownership": "Service collection owns descriptors; resolved provider owns mediator singleton async disposal. Mandatory message limits are enforced at materialization via registered CreateMediator, not by inventing immediate registration-time enforcement. Callback exceptions can leave previous descriptor additions; no transaction/rollback guarantee is documented.",
+      "cancellation_norm": "Synchronous registration: no token/task.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Advanced.MediatorRequestExtensions.SendRequestAsync``1(ViciOne.ServiceBus.Mediator.IMediator,ViciOne.ServiceBus.Mediator.IRequest{``0},ViciOne.ServiceBus.Advanced.RequestTimeout,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Mediator",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/Advanced/MediatorRequestExtensions.cs",
+      "source_sha256": "46ca33c23e77917bd6fd1bed932e5c56615f5fa866ccb5c37014db6ab120b259",
+      "member_contract": "SendRequestAsync<TResponse> guards mediator/request, creates actual RequestHandle with the same request, timeout and caller token, uses its returned lifetime via using, awaits GetResponseAsync<TResponse>(same token), then returns Response.Message. A caught RequestException with nonnull InnerException is unwrapped using ExceptionDispatchInfo.Capture(inner).Throw; without inner it is rethrown.",
+      "result_error_ownership": "Returned Task<TResponse> awaits actual response; using owns request-handle Dispose. Exception identity/stack preservation applies to explicit inner-unwrapping branch; arbitrary custom Dispose failure aggregation is not promised. No synthetic response or detached work.",
+      "cancellation_norm": "The optional caller cancellationToken defaults to default and is forwarded unchanged; wrapper does not enforce custom provider cooperation or create a linked budget. Both creation and response wait receive the token.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Configuration.MediatorMessageLimitsConfigurationExtensions.Limits(ViciOne.ServiceBus.Configuration.IMediatorConfigurator,ViciOne.ServiceBus.MessageLimits)",
+      "assembly": "ViciOne.ServiceBus.Mediator",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/Configuration/MediatorMessageLimitsConfigurationExtensions.cs",
+      "source_sha256": "54eb10dccbdaa66360836071c773c5bb42fd430d5964b214a67a47e53fd3d498",
+      "member_contract": "Limits direct configurator overload guards configurator and policy, calls immutable init-only MessageLimits.Validate(\"mediator\") before IMessageLimitsConfigurator capability check, then SetMessageLimits; MediatorConfiguration rejects repeated declaration before assigning host policy. Returns exact supplied configurator. Policy is sealed record of init-only value properties; no mutable-setter or cloning claim.",
+      "result_error_ownership": "Invalid positive sizes/depth, envelope/body relationship and optional thresholds produce ConfigurationException before mutation. Unsupported direct configurator or duplicate DI declaration is visible. Returned policy reference is immutable under supported public setters; reflection mutation is not part of this norm.",
+      "cancellation_norm": "Synchronous configuration: no token/task.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Configuration.MediatorMessageLimitsConfigurationExtensions.Limits(ViciOne.ServiceBus.Configuration.IMediatorRegistrationConfigurator,ViciOne.ServiceBus.MessageLimits)",
+      "assembly": "ViciOne.ServiceBus.Mediator",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/Configuration/MediatorMessageLimitsConfigurationExtensions.cs",
+      "source_sha256": "54eb10dccbdaa66360836071c773c5bb42fd430d5964b214a67a47e53fd3d498",
+      "member_contract": "Limits DI registration overload guards configurator and policy, calls immutable init-only MessageLimits.Validate(\"mediator\") before duplicate service-type lookup; stores the exact policy in MediatorMessageLimitsRegistration via AddSingleton. Returns exact supplied configurator. Policy is sealed record of init-only value properties; no mutable-setter or cloning claim.",
+      "result_error_ownership": "Invalid positive sizes/depth, envelope/body relationship and optional thresholds produce ConfigurationException before mutation. Unsupported direct configurator or duplicate DI declaration is visible. Returned policy reference is immutable under supported public setters; reflection mutation is not part of this norm.",
+      "cancellation_norm": "Synchronous configuration: no token/task.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Mediator.MediatorFactory.Create(System.Action{ViciOne.ServiceBus.Configuration.IMediatorConfigurator},System.Uri,System.TimeProvider)",
+      "assembly": "ViciOne.ServiceBus.Mediator",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/Mediator/MediatorFactory.cs",
+      "source_sha256": "fcad16b81658be55696cae7bd9de69a5e2cfad85bbdc5f884c2451f4eb16ab9a",
+      "member_contract": "Create first requires configure callback, validates supplied/default absolute loopback base address, chooses supplied TimeProvider or TimeProvider.System; builds real in-memory bus/mediator configuration and invokes callback. Explicit MessageLimits must be configured before dispatcher Build. Creates primary and response dispatchers, and constructs InProcessMediator with actual configured observers, limits and time provider.",
+      "result_error_ownership": "Returns caller-owned IMediator async lifetime. Builder and callback faults remain visible; no general partial-build rollback or cloud transport claim. DefaultUri exact loopback://localhost/; source-selected time provider is not proof every downstream timing branch was exercised.",
+      "cancellation_norm": "Synchronous creation has no token; chosen TimeProvider is forwarded, not owned/disposed.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Mediator.MediatorRequestHandler`1.ConsumeAsync(ViciOne.ServiceBus.ConsumeContext{`0})",
+      "assembly": "ViciOne.ServiceBus.Mediator",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/Mediator/MediatorRequestHandler.cs",
+      "source_sha256": "3587575846ccc9c4bb7e9bfcc80de0aeb8e398d1cb9da968299c4d6d7a8b4541",
+      "member_contract": "ConsumeAsync unary request adapter guards context then calls HandleAsync with actual context.Message and context.CancellationToken. Non-async route returns exact nonnull handler Task; null result becomes faulted InvalidOperationException Task naming actual handler; synchronous handler throw remains synchronous.",
+      "result_error_ownership": "No detached handler work or self-generated token. Wrapper never calls RespondAsync and does not dispose provider context. Handler faults/cancellation are not swallowed.",
+      "cancellation_norm": "Delivery context token forwarded; adapter does not enforce arbitrary handler cooperation.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Mediator.MediatorRequestHandler`1.HandleAsync(`0,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Mediator",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/Mediator/MediatorRequestHandler.cs",
+      "source_sha256": "3587575846ccc9c4bb7e9bfcc80de0aeb8e398d1cb9da968299c4d6d7a8b4541",
+      "member_contract": "Protected abstract HandleAsync for reference TRequest; returns Task. No executable body, default interface implementation, ref/out or token default. Concrete ConsumeAsync caller forwards actual message and delivery token, guards null Task. Callback completion/error/cancellation contract belongs to subclass implementation.",
+      "result_error_ownership": "Subclass must return the promised operation; adapter awaits/forwards that actual task. Bodyless declaration does not prove callback lifetime or cancellation cooperation for every user handler.",
+      "cancellation_norm": "Required token parameter; no implementation token handling is present.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Mediator.MediatorRequestHandler`2.ConsumeAsync(ViciOne.ServiceBus.ConsumeContext{`0})",
+      "assembly": "ViciOne.ServiceBus.Mediator",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/Mediator/MediatorRequestHandler.cs",
+      "source_sha256": "3587575846ccc9c4bb7e9bfcc80de0aeb8e398d1cb9da968299c4d6d7a8b4541",
+      "member_contract": "ConsumeAsync typed response adapter guards context then calls HandleAsync with actual context.Message and context.CancellationToken. Async route rejects null handling Task, awaits it, rejects null response and awaits actual context.RespondAsync(response).",
+      "result_error_ownership": "No detached handler work or self-generated token. RespondAsync completes according to context endpoint policy; it can reflect local capture rather than transport dispatch. Handler faults/cancellation are not swallowed.",
+      "cancellation_norm": "Delivery context token forwarded; adapter does not enforce arbitrary handler cooperation.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Mediator.MediatorRequestHandler`2.HandleAsync(`0,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.Mediator",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/Mediator/MediatorRequestHandler.cs",
+      "source_sha256": "3587575846ccc9c4bb7e9bfcc80de0aeb8e398d1cb9da968299c4d6d7a8b4541",
+      "member_contract": "Protected abstract HandleAsync for reference TRequest implementing IRequest<TResponse>, reference TResponse; returns Task<TResponse>. No executable body, default interface implementation, ref/out or token default. Concrete ConsumeAsync caller forwards actual message and delivery token, guards null Task and null returned response before RespondAsync. Callback completion/error/cancellation contract belongs to subclass implementation.",
+      "result_error_ownership": "Subclass must return the promised operation; adapter awaits/forwards that actual task. Bodyless declaration does not prove callback lifetime or cancellation cooperation for every user handler.",
+      "cancellation_norm": "Required token parameter; no implementation token handling is present.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.MessagePack.MessagePackSerializerFactory.CreateDeserializer",
+      "assembly": "ViciOne.ServiceBus.MessagePack",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.MessagePack/MessagePackSerializerFactory.cs",
+      "source_sha256": "1ea20ad426b2e691aad7f2348d936efa50394899f491c894aee26302af0993c0",
+      "member_contract": "CreateDeserializer evaluates the factory-owned Lazy<MessagePackMessageSerializer>.Value and returns that same shared object through IMessageDeserializer. Both methods share exactly one Lazy per factory; there is no new resolver/options injection or serialization execution in this method.",
+      "result_error_ownership": "Lazy publication is shared per factory; underlying instance has no mutable instance option fields. Global MessagePackRuntime defaults are separate runtime policy; no wire round-trip or external serialization native proof from factory body.",
+      "cancellation_norm": "No token/task/disposable creation.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.MessagePack.MessagePackSerializerFactory.CreateSerializer",
+      "assembly": "ViciOne.ServiceBus.MessagePack",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.MessagePack/MessagePackSerializerFactory.cs",
+      "source_sha256": "1ea20ad426b2e691aad7f2348d936efa50394899f491c894aee26302af0993c0",
+      "member_contract": "CreateSerializer evaluates the factory-owned Lazy<MessagePackMessageSerializer>.Value and returns it through IMessageSerializer. Both methods share exactly one Lazy per factory; there is no new resolver/options injection or serialization execution in this method.",
+      "result_error_ownership": "Lazy publication is shared per factory; underlying instance has no mutable instance option fields. Global MessagePackRuntime defaults are separate runtime policy; no wire round-trip or external serialization native proof from factory body.",
+      "cancellation_norm": "No token/task/disposable creation.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.StateMachineVisualizer.StateMachineGraphvizGenerator.Generate",
+      "assembly": "ViciOne.ServiceBus.StateMachineVisualizer",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.StateMachineVisualizer/StateMachineGraphvizGenerator.cs",
+      "source_sha256": "7638cda417f764ba2ae86b60d0fe5726c081b17b44187b23526296e8e4dc5e65",
+      "member_contract": "Generate Graphviz DOT creates a fresh StringBuilder, enumerates immutable graph snapshot nodes indexed in source order and projected edges grouped by source, retains every graph edge including self-loops/inheritance. State/event/composite shapes and inheritance dashed labeled edge derive from node/edge Kind. Node label formatter unwraps fault contract once; indices use invariant decimal representation. Quoted DOT labels escape backslash/quote, CR/LF/TAB/control and lone surrogates, preserving valid surrogate pairs.",
+      "result_error_ownership": "Pure string rendering; graph constructor copies both enumerable inputs, validates node reference identity and edge endpoints, exposes readonly wrappers; generator retains immutable nodes/edges. Empty output is digraph G { followed by LF and }. LF formatting is explicit. No parser/process/file/SDK resources are acquired.",
+      "cancellation_norm": "No token/task; generation is synchronous.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.StateMachineVisualizer.StateMachineMermaidGenerator.Generate",
+      "assembly": "ViciOne.ServiceBus.StateMachineVisualizer",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.StateMachineVisualizer/StateMachineMermaidGenerator.cs",
+      "source_sha256": "9a752d00e4e7f7014c69398342b4ab97b749ecaef30421ee9f62d1bd45353e84",
+      "member_contract": "Generate Mermaid flowchart TB creates a fresh StringBuilder, enumerates immutable graph snapshot nodes indexed in source order and projected edges grouped by source, retains every graph edge including self-loops/inheritance. State/event/composite shapes and inheritance dotted labeled edge derive from node/edge Kind. Node label formatter unwraps fault contract once; indices use invariant decimal representation. Mermaid labels entity-escape reserved markup/syntax plus CR/LF/control and lone surrogates, preserving valid surrogate pairs.",
+      "result_error_ownership": "Pure string rendering; graph constructor copies both enumerable inputs, validates node reference identity and edge endpoints, exposes readonly wrappers; generator retains immutable nodes/edges. Empty output is flowchart TB;. LF formatting is explicit. No parser/process/file/SDK resources are acquired.",
+      "cancellation_norm": "No token/task; generation is synchronous.",
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-small39-current175-independent-peer-rebase-r1/PER_ID39_CURRENT175_PEER_NORMS_AND_BINDINGS.json",
+        "sha256": "1dfa6f75cd0f68b6b01518dccc7a1c542e79754125e2b9287791fef5e7e3c769"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ConnectionContext.CreateClientContext(System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContext.cs",
+      "source_sha256": "4014609d4abc5c424e55c254ba3f44a197bfb2f5b90ec0e28861102b7041843d",
+      "member_contract": "Required explicit CancellationToken parameter; returns ClientContext synchronously. No method default or client disposal contract is added by the interface. Provider implementations construct PostgreSql/SqlServer client wrappers with that token, rather than opening a database connection here.",
+      "result_error_ownership": "ConnectionContext.CreateClientContext has no executable body; caller-selected provider creation/lifetime semantics remain associated with actual provider rows.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ConnectionContext.CreateConnectionAsync(System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContext.cs",
+      "source_sha256": "4014609d4abc5c424e55c254ba3f44a197bfb2f5b90ec0e28861102b7041843d",
+      "member_contract": "Required explicit CancellationToken; returns Task<ISqlTransportConnection>. Concrete providers await OpenOwnedAsync on a newly owned SDK connection and transfer the same successful connection to the caller; failed or canceled opening invokes disposal before rethrowing the original cause.",
+      "result_error_ownership": "Source assertion trace OpenOwned4 proves only the helper policy; provider/SDK opening and caller disposal need their distinct existing runtime obligations.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ConnectionContext.DelayUntilMessageReadyAsync(System.Int64,System.TimeSpan,System.TimeProvider,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContext.cs",
+      "source_sha256": "4014609d4abc5c424e55c254ba3f44a197bfb2f5b90ec0e28861102b7041843d",
+      "member_contract": "Required queueId long, timeout TimeSpan, TimeProvider and caller token; returns Task. SQLServer polls via Task.Delay and ignores queueId; PostgreSQL races notification budget and caller using a linked delay, swallows only queue notification cancellation when caller is not canceled, resets observed canceled generation, then checks caller token. No hard elapsed-time guarantee follows from XML maximum duration.",
+      "result_error_ownership": "Actual SQLServer fake-clock and PostgreSQL real bus notification/polling assertions are narrower than all cancellation/notification races; null/error TimeProvider and concurrent token replacement remain substantive provider obligations.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ConnectionContext.QueryAsync``1(System.Func{System.Data.IDbConnection,System.Data.IDbTransaction,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContext.cs",
+      "source_sha256": "4014609d4abc5c424e55c254ba3f44a197bfb2f5b90ec0e28861102b7041843d",
+      "member_contract": "Unconstrained result T; required Func<IDbConnection,IDbTransaction,Task<T>> plus explicit token returns Task<T>. Callback contains no token parameter. Concrete providers validate callback, run executor/retry with caller budget, await owned connection and transaction, await callback and token-aware commit, then return result; callback cooperation itself is not forcibly canceled.",
+      "result_error_ownership": "Interface is declarative; callback/commit/connection/transaction errors and combined cleanup failure are provider execution obligations, not a hard-cancellation or exactly-once retry promise.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory.CreateActiveContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor,ViciOne.ServiceBus.Advanced.Middleware.IPipeContextHandle{ViciOne.ServiceBus.SqlTransport.ConnectionContext},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextFactory.cs",
+      "source_sha256": "2cd5a65cbef84438648153c3b39903f5a399924a11958292c5e235f2af7dc5f6",
+      "member_contract": "Required supervisor, IPipeContextHandle<ConnectionContext> and token. Evaluates supplied context.Context task and calls actual AddActiveContext with a CreateSharedConnectionAsync task. RanToCompletion uses exact source context; otherwise awaits source.OrCanceledAsync(caller token). New SharedConnectionContext exposes selected token, without owning/disposal or token-link policy in this factory.",
+      "result_error_ownership": "This local method adds no separate null guards. Actual AddActiveContext handle ownership, canceled wait versus borrowed context task and release semantics belong to shared supervisor implementation; no fresh matching runtime assertion here.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory.CreateConnection(ViciOne.ServiceBus.Transports.ITransportSupervisor{ViciOne.ServiceBus.SqlTransport.ConnectionContext})",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextFactory.cs",
+      "source_sha256": "2cd5a65cbef84438648153c3b39903f5a399924a11958292c5e235f2af7dc5f6",
+      "member_contract": "Protected abstract CreateConnection requires ITransportSupervisor<ConnectionContext> and returns ConnectionContext synchronously. PostgreSql/SqlServer overrides construct actual configured connection contexts whose background agents are registered with supplied transport supervisor.",
+      "result_error_ownership": "Abstract method has no body, exception whitelist, disposal transfer or null-handling guarantee. Concrete context construction/startup/rollback is a separate executable obligation.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ConnectionContextFactory.CreateContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextFactory.cs",
+      "source_sha256": "2cd5a65cbef84438648153c3b39903f5a399924a11958292c5e235f2af7dc5f6",
+      "member_contract": "Required ISupervisor; first casts to ITransportSupervisor<ConnectionContext>, rejecting null or wrong kind using actual new ArgumentException(nameof(supervisor)) (message supervisor, no explicit ParamName). Calls virtual CreateConnection exactly once before supervisor.AddContext, returning its actual IPipeContextAgent. No new rollback/disposal if AddContext fails is present in this local method.",
+      "result_error_ownership": "No source-only guarantee that arbitrary CreateConnection/AddContext side effects are rolled back. Custom supervisor registration failure is an explicit lifecycle obligation, not blanket disposal ownership.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ConnectionContextSupervisor.NormalizeAddress(System.Uri)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+      "source_sha256": "57a462dffc86aacb0e97eb73b959caf8c8c82b49bcf868e59ab1473860dd877c",
+      "member_contract": "Required address checked for null; constructs SqlEndpointAddress from exact configured HostAddress and supplied Uri, returns its implicit Uri result. Constructor/conversion exceptions propagate without catch, no asynchronous resource or task is created here.",
+      "result_error_ownership": "Source-local normalization forwarding is sufficient to describe this body; exact URI parsing/default/invalid-address contract belongs to independently reviewed SqlEndpointAddress owner.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.IConnectionContextSupervisor.CreatePublishTransportAsync``1(ViciOne.ServiceBus.SqlTransport.SqlReceiveEndpointContext,System.Uri,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/IConnectionContextSupervisor.cs",
+      "source_sha256": "da140e3a7c48b296b32999045310611d6511204988c6d284e70c2f1bfbcbe905",
+      "member_contract": "T:class; SqlReceiveEndpointContext plus nullable-declared Uri? publishAddress; optional caller CancellationToken defaults to default(None). Returns Task<ISendTransport>; interface makes no explicit null acceptance, creation timing, scoped-agent disposal or hard cancellation implementation promise.",
+      "result_error_ownership": "Declaration semantics only. Built-in implementation null-validates publishAddress and has actual source candidate; custom implementations remain allowed by public SPI and are not closed by this declaration review.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.IConnectionContextSupervisor.CreateSendTransportAsync(ViciOne.ServiceBus.SqlTransport.SqlReceiveEndpointContext,System.Uri,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/IConnectionContextSupervisor.cs",
+      "source_sha256": "da140e3a7c48b296b32999045310611d6511204988c6d284e70c2f1bfbcbe905",
+      "member_contract": "Required SqlReceiveEndpointContext and Uri address, optional CancellationToken default(None); Task<ISendTransport> result. Interface extends ITransportSupervisor<ConnectionContext>; no inherited transport supervisor body or returned ownership is promoted here.",
+      "result_error_ownership": "Actual built-in send creation/diagnostic/agent lifecycle remains separate from bodyless signature/optional default acceptance.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.IConnectionContextSupervisor.NormalizeAddress(System.Uri)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/IConnectionContextSupervisor.cs",
+      "source_sha256": "da140e3a7c48b296b32999045310611d6511204988c6d284e70c2f1bfbcbe905",
+      "member_contract": "Required Uri address, synchronous Uri return. No default, token or generic constraint. Interface adds normalization operation to transport supervisor SPI without declaring physical connection ownership or caller-specific cache identity.",
+      "result_error_ownership": "No executable body; address parsing/normalization is associated with concrete owner, custom implementations not inferred.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SharedConnectionContext.CreateClientContext(System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SharedConnectionContext.cs",
+      "source_sha256": "9eb527ee054665a2186c2fe477b92cb7a476bc46ce5e3e541d6c5c6f34c05122",
+      "member_contract": "Required method token forwarded verbatim to _context.CreateClientContext once; returns the exact actual ClientContext without wrapping/disposal/token merge. Wrapper CancellationToken property does not silently replace this explicit method argument.",
+      "result_error_ownership": "Local forwarding body has no resource acquisition; provider creation/lifetime remains causal implementation obligation.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SharedConnectionContext.CreateConnectionAsync(System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SharedConnectionContext.cs",
+      "source_sha256": "9eb527ee054665a2186c2fe477b92cb7a476bc46ce5e3e541d6c5c6f34c05122",
+      "member_contract": "Required method token forwarded verbatim to _context.CreateConnectionAsync once; returns exact Task<ISqlTransportConnection>, no async wrapper, cancellation interception or connection disposal in this view.",
+      "result_error_ownership": "Source-sufficient local forwarding; source/caller owns actual opened connection policy, no inherited global closure.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SharedConnectionContext.DelayUntilMessageReadyAsync(System.Int64,System.TimeSpan,System.TimeProvider,System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SharedConnectionContext.cs",
+      "source_sha256": "9eb527ee054665a2186c2fe477b92cb7a476bc46ce5e3e541d6c5c6f34c05122",
+      "member_contract": "Exact queueId long, timeout TimeSpan, TimeProvider object and supplied method token forwarded once to underlying delay; returns the exact underlying Task. No added null/default guard, delay or cancellation-source ownership in SharedConnectionContext.",
+      "result_error_ownership": "Forwarding is bounded source-only; notification/polling timer races and cooperative cancellation reside in concrete providers.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SharedConnectionContext.QueryAsync``1(System.Func{System.Data.IDbConnection,System.Data.IDbTransaction,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)",
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SharedConnectionContext.cs",
+      "source_sha256": "9eb527ee054665a2186c2fe477b92cb7a476bc46ce5e3e541d6c5c6f34c05122",
+      "member_contract": "Unconstrained T; exact callback delegate and method token forwarded once to underlying QueryAsync; returns its exact Task<T>. No callback invocation/transaction/cleanup/retry or wrapper property fallback is performed in this transparent method.",
+      "result_error_ownership": "Bounded source-local forwarding sufficient; provider callback transaction and dual failure semantics remain explicit provider obligations.",
+      "cancellation_norm": null,
+      "semantic_evidence": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sql-connection17-current-contract-context-r1/PER_ID17_CURRENT_SOURCE_XML_CONTRACTS.json",
+        "sha256": "07c09cf393b3f0f5f4c6d4cea72fd5f5329fee0f613f63f0ae91666624555062"
+      },
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "provider_boundaries": [
+        "Concrete provider/handler/SPI runtime and cancellation/ownership obligations remain distinct; Source-only acceptance grants no inherited execution or whole API grade."
+      ]
+    }
+  ]
+}

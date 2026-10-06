@@ -23,7 +23,7 @@ public class PipeContextSourceBindFilter<TLeft, TRight> :
         _source = source;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Binds the input context to the supplied context source, runs the output pipeline, then invokes the continuation.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

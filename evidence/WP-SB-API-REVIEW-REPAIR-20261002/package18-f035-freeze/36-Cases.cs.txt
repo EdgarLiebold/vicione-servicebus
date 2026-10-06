@@ -1,0 +1,309 @@
+using System.Runtime.ExceptionServices;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using Xunit;
+
+namespace DefinitionLifetime;
+public static class Cases
+{
+    public static readonly string[] Names = [
+        "default-plain", "default-sync", "default-async", "default-dual",
+        "typed-plain", "typed-sync", "typed-async", "typed-dual",
+        "two-named-buses", "repeat-materialized", "repeat-lazy", "borrowed-caller", "dependency-order",
+        "async-gated", "dual-gated", "sync-sync", "sync-dual", "sync-asynconly-error", "async-solefailure",
+        "constructor-failure", "plain-unmaterialized", "operation-live",
+        "default-endpoint-null-plain", "default-endpoint-null-sync", "default-endpoint-null-async", "default-endpoint-null-dual",
+        "default-endpoint-explicit-plain", "default-endpoint-explicit-sync", "default-endpoint-explicit-async", "default-endpoint-explicit-dual",
+        "typed-endpoint-null-plain", "typed-endpoint-null-sync", "typed-endpoint-null-async", "typed-endpoint-null-dual",
+        "typed-endpoint-explicit-plain", "typed-endpoint-explicit-sync", "typed-endpoint-explicit-async", "typed-endpoint-explicit-dual",
+        "endpoint-two-settings-materialized", "endpoint-lazy-settings", "endpoint-dependency-gated", "endpoint-borrowed-external",
+        "endpoint-sync-dual", "endpoint-failure", "endpoint-two-named-buses", "async-only-disposed-capture"
+    ];
+    public static async Task Run(string name, TimeSpan timeout)
+    {
+        if (!Names.Contains(name, StringComparer.Ordinal)) throw new ArgumentException("Unknown case: " + name);
+        var probe = new Probe(); List<Action> afterJoins = [];
+        var life = new OwnedLifetime(timeout); Exception? primary = null;
+        try
+        {
+            if (name.Contains("-endpoint-", StringComparison.Ordinal))
+            {
+                bool typed = name.StartsWith("typed-", StringComparison.Ordinal);
+                bool explicitly = name.Contains("-explicit-", StringComparison.Ordinal);
+                string kind = name.Split('-')[^1];
+                switch (kind)
+                {
+                    case "plain": await Endpoint<PlainEndpoint>(life, probe, typed, explicitly, afterJoins); break;
+                    case "sync": await Endpoint<SyncEndpoint>(life, probe, typed, explicitly, afterJoins); break;
+                    case "async": await Endpoint<AsyncEndpoint>(life, probe, typed, explicitly, afterJoins); break;
+                    case "dual": await Endpoint<DualEndpoint>(life, probe, typed, explicitly, afterJoins); break;
+                    default: throw new ArgumentException(name);
+                }
+            }
+            else switch (name)
+            {
+                case "default-plain": await Definition<PlainDefinition>(life, probe, false); break;
+                case "default-sync": await Definition<SyncDefinition>(life, probe, false); break;
+                case "default-async": await Definition<AsyncDefinition>(life, probe, false); break;
+                case "default-dual": await Definition<DualDefinition>(life, probe, false); break;
+                case "typed-plain": await Definition<PlainDefinition>(life, probe, true); break;
+                case "typed-sync": await Definition<SyncDefinition>(life, probe, true); break;
+                case "typed-async": await Definition<AsyncDefinition>(life, probe, true); break;
+                case "typed-dual": await Definition<DualDefinition>(life, probe, true); break;
+                case "dependency-order": await Definition<DualDefinition>(life, probe, true); break;
+                case "async-gated": await Definition<AsyncDefinition>(life, probe, true, gated: true); break;
+                case "dual-gated": await Definition<DualDefinition>(life, probe, true, gated: true); break;
+                case "sync-sync": await Definition<SyncDefinition>(life, probe, true, sync: true); break;
+                case "sync-dual": await Definition<DualDefinition>(life, probe, true, sync: true); break;
+                case "repeat-materialized": await Definition<DualDefinition>(life, probe, true, repeats: 2); break;
+                case "repeat-lazy": await Definition<DualDefinition>(life, probe, true, repeats: 2, lazy: true); break;
+                case "two-named-buses": await TwoBuses(life, probe, false, afterJoins); break;
+                case "endpoint-two-named-buses": await TwoBuses(life, probe, true, afterJoins); break;
+                case "borrowed-caller": await Borrowed(life, probe, false, afterJoins); break;
+                case "endpoint-borrowed-external": await Borrowed(life, probe, true, afterJoins); break;
+                case "sync-asynconly-error": await AsyncOnlySyncError(life, probe, afterJoins); break;
+                case "async-solefailure": await DisposalFailure(life, probe, false, afterJoins); break;
+                case "endpoint-failure": await DisposalFailure(life, probe, true, afterJoins); break;
+                case "constructor-failure": await ConstructorFailure(life, probe); break;
+                case "plain-unmaterialized": await Unmaterialized(life, probe); break;
+                case "operation-live": await Operation(life, probe); break;
+                case "endpoint-two-settings-materialized": await Endpoint<DualEndpoint>(life, probe, true, true, afterJoins, repeats: true); break;
+                case "endpoint-lazy-settings": await Endpoint<DualEndpoint>(life, probe, true, true, afterJoins, repeats: true, lazy: true); break;
+                case "endpoint-dependency-gated": await Endpoint<AsyncEndpoint>(life, probe, true, true, afterJoins, gated: true); break;
+                case "endpoint-sync-dual": await Endpoint<DualEndpoint>(life, probe, true, true, afterJoins, sync: true); break;
+                case "async-only-disposed-capture": await DisposedCapture(life, probe); break;
+                default: throw new ArgumentException(name);
+            }
+        }
+        catch (Exception e) { primary = e; }
+        List<Exception> cleanupFailures = [];
+        try { await life.DisposeAsync(); } catch (Exception e) { cleanupFailures.Add(e); }
+        if (life.AllTrackedTasksCompleted)
+        {
+            // Each finalizer is independent and runs only after every actual tracked task has joined.
+            foreach (var cleanup in afterJoins) try { cleanup(); } catch (Exception e) { cleanupFailures.Add(e); }
+            try { probe.ReleaseConstructor.Dispose(); } catch (Exception e) { cleanupFailures.Add(e); }
+        }
+        else cleanupFailures.Add(new InvalidOperationException("Actual tasks remain incomplete; constructor event and caller resources cannot be disposed yet"));
+        if (primary != null && cleanupFailures.Count > 0) throw new AggregateException(new[] { primary }.Concat(cleanupFailures));
+        if (primary != null) ExceptionDispatchInfo.Capture(primary).Throw();
+        if (cleanupFailures.Count == 1) ExceptionDispatchInfo.Capture(cleanupFailures[0]).Throw();
+        if (cleanupFailures.Count > 1) throw new AggregateException(cleanupFailures);
+    }
+    static OwnedState State(object value) => Assert.IsAssignableFrom<IStateValue>(value).State;
+    static void Counts(OwnedState state, string kind, bool typed, bool sync = false)
+    {
+        int count = kind == "plain" ? 0 : 1;
+        Assert.Equal(count, state.Disposed);
+        int raw = count == 0 ? 0 : typed ? 1 : 2;
+        bool asynchronous = kind is "async" or "dual" && !sync;
+        Assert.Equal(asynchronous ? raw : 0, state.RawAsync);
+        Assert.Equal(!asynchronous ? raw : 0, state.RawSync);
+        Assert.Equal(1, state.Dependency.Disposed); Assert.Equal(1, state.Dependency.Invocations);
+    }
+    static string Kind(Type type) => type.Name.StartsWith("Plain", StringComparison.Ordinal) ? "plain"
+        : type.Name.StartsWith("Sync", StringComparison.Ordinal) ? "sync"
+        : type.Name.StartsWith("Async", StringComparison.Ordinal) ? "async" : "dual";
+    static async Task Finish(OwnedLifetime life, RuntimeOwner owner, OwnedState[] states, string kind, bool typed, bool gated, bool sync)
+    {
+        await life.Await(owner.Stop()); Assert.All(states, s => s.AssertAlive());
+        if (sync) owner.DisposeProviderSync();
+        else if (gated)
+        {
+            var disposal = owner.DisposeProviderAsync();
+            await life.Await(Task.WhenAny(disposal, owner.Probe.DisposeEntered.Task));
+            Assert.True(owner.Probe.DisposeEntered.Task.IsCompletedSuccessfully, "Actual definition cleanup did not enter");
+            Assert.False(disposal.IsCompleted, "Actual async definition cleanup was not awaited");
+            Assert.All(states, s => s.AssertAlive());
+            owner.Probe.ReleaseCleanup.TrySetResult(); await life.Await(disposal);
+        }
+        else await life.Await(owner.DisposeProviderAsync());
+        foreach (var state in states) Counts(state, kind, typed, sync);
+    }
+    static async Task Definition<TDefinition>(OwnedLifetime life, Probe probe, bool typed, bool gated = false, bool sync = false, int repeats = 1, bool lazy = false)
+        where TDefinition : class, IConsumerDefinition<Receiver>
+    {
+        probe.GateCleanup = gated;
+        var owner = RuntimeOwner.Definition<TDefinition>(life, probe, typed, repeats);
+        Assert.Empty(probe.Values);
+        TDefinition[] values = lazy ? [owner.DefinitionValue<TDefinition>(typed)] : owner.AllValues<TDefinition>(typed);
+        Assert.Equal(lazy ? 1 : repeats, values.Length); if (values.Length == 2) Assert.NotSame(values[0], values[1]);
+        owner.CheckDefinitionAliases(typed, values[^1], repeats);
+        Assert.Equal(lazy ? 1 : repeats, probe.ActivationAttempts); Assert.Equal(values.Length, probe.Dependencies.Count);
+        var bus = await owner.Start(typed); await owner.Deliver(bus, State(values[^1]).Name);
+        Assert.Equal(2, probe.Business); Assert.Equal(2, probe.Terminals.Count); Assert.Equal(1, probe.Configured);
+        Assert.All(values, value => State(value).AssertAlive());
+        await Finish(life, owner, values.Select(v => State(v)).ToArray(), Kind(typeof(TDefinition)), typed, gated, sync);
+    }
+    static BorrowedSettings Settings(Probe probe, string suffix)
+    {
+        var settings = new BorrowedSettings { Name = probe.Queue + "-" + suffix };
+        settings.AddConfigureEndpointCallback(_ =>
+        {
+            Assert.Equal(0, settings.Disposed);
+            var configured = probe.Values.Where(v => ReferenceEquals(v.Settings, settings)).ToArray();
+            Assert.NotEmpty(configured); Assert.All(configured, v => v.AssertAlive());
+            Interlocked.Increment(ref probe.Configured);
+        });
+        return settings;
+    }
+    static async Task Endpoint<TDefinition>(OwnedLifetime life, Probe probe, bool typed, bool explicitly, List<Action> afterJoins, bool repeats = false, bool lazy = false, bool gated = false, bool sync = false)
+        where TDefinition : class, IEndpointDefinition<Receiver>
+    {
+        probe.GateCleanup = gated;
+        var provided = Settings(probe, "provided"); var first = Settings(probe, "explicit-first"); var second = Settings(probe, "explicit-second");
+        FinalizeSettings(afterJoins, provided); FinalizeSettings(afterJoins, first); FinalizeSettings(afterJoins, second);
+        var owner = RuntimeOwner.Endpoint<TDefinition>(life, probe, typed, provided, explicitly ? first : null, repeats ? second : null);
+        Assert.Empty(probe.Values);
+        first.Name = probe.Queue + "-changed-first"; second.Name = probe.Queue + "-changed-second";
+        var values = lazy ? [owner.DefinitionValue<TDefinition>(typed)] : owner.AllValues<TDefinition>(typed);
+        Assert.Equal(repeats && !lazy ? 2 : 1, values.Length);
+        if (values.Length == 2) { Assert.NotSame(values[0], values[1]); Assert.Same(first, State(values[0]).Settings); }
+        var expected = repeats ? second : explicitly ? first : provided;
+        Assert.Same(expected, State(values[^1]).Settings); Assert.Equal(expected.Name, State(values[^1]).Name);
+        owner.CheckEndpointAliases(typed, values[^1], repeats ? 2 : 1);
+        Assert.Equal(values.Length, probe.ActivationAttempts); Assert.Equal(values.Length, probe.Dependencies.Count);
+        var bus = await owner.Start(typed); await owner.Deliver(bus, values[^1].GetEndpointName(DefaultEndpointNameFormatter.Instance));
+        Assert.Equal(2, probe.Business); Assert.Equal(2, probe.Terminals.Count); Assert.Equal(1, probe.Configured);
+        await Finish(life, owner, values.Select(v => State(v)).ToArray(), Kind(typeof(TDefinition)), typed, gated, sync);
+        Assert.Equal(0, provided.Disposed); Assert.Equal(0, first.Disposed); Assert.Equal(0, second.Disposed);
+    }
+    static async Task TwoBuses(OwnedLifetime life, Probe probe, bool endpoint, List<Action> afterJoins)
+    {
+        var firstSettings = Settings(probe, "first-bus"); var secondSettings = Settings(probe, "second-bus");
+        FinalizeSettings(afterJoins, firstSettings); FinalizeSettings(afterJoins, secondSettings);
+        var owner = RuntimeOwner.TwoBuses(life, probe, endpoint, firstSettings, secondSettings);
+        object first, second;
+        if (endpoint)
+        {
+            first = owner.Provider.GetRequiredService<Bind<INamedBus, DualEndpoint>>().Value;
+            second = owner.Provider.GetRequiredService<Bind<ISecondBus, DualEndpoint>>().Value;
+            Assert.Same(firstSettings, State(first).Settings); Assert.Same(secondSettings, State(second).Settings);
+        }
+        else
+        {
+            first = owner.Provider.GetRequiredService<Bind<INamedBus, DualDefinition>>().Value;
+            second = owner.Provider.GetRequiredService<Bind<ISecondBus, DualDefinition>>().Value;
+        }
+        Assert.NotSame(first, second); Assert.NotSame(State(first).Dependency, State(second).Dependency);
+        var bus1 = await owner.Start(true); var bus2 = await owner.Start(true, true);
+        await owner.Deliver(bus1, State(first).Name, 1); await owner.Deliver(bus2, State(second).Name, 3);
+        Assert.Equal(4, probe.Business); Assert.Equal(4, probe.Terminals.Count); Assert.Equal(2, probe.Configured);
+        await Finish(life, owner, [State(first), State(second)], "dual", true, false, false);
+        Assert.Equal(0, firstSettings.Disposed); Assert.Equal(0, secondSettings.Disposed);
+    }
+    static async Task Borrowed(OwnedLifetime life, Probe probe, bool endpoint, List<Action> afterJoins)
+    {
+        var dependency = new Dependency(probe); var settings = Settings(probe, "caller");
+        object caller = endpoint ? new DualEndpoint(probe, dependency, settings) : new DualDefinition(probe, dependency);
+        afterJoins.Add(() => { ((IDisposable)caller).Dispose(); Assert.Equal(1, State(caller).Disposed); });
+        afterJoins.Add(() => { dependency.Dispose(); Assert.Equal(1, dependency.Disposed); });
+        FinalizeSettings(afterJoins, settings);
+        RuntimeOwner owner;
+        if (endpoint)
+            owner = RuntimeOwner.Endpoint<DualEndpoint>(life, probe, true, settings, settings, final: services =>
+            {
+                services.AddSingleton(Bind<INamedBus>.Create((DualEndpoint)caller));
+                services.AddSingleton(Bind<INamedBus>.Create<IEndpointDefinition<Receiver>>((DualEndpoint)caller));
+            });
+        else owner = RuntimeOwner.Definition<DualDefinition>(life, probe, true, final: services =>
+        {
+            services.AddSingleton(Bind<INamedBus>.Create((DualDefinition)caller));
+            services.AddSingleton(Bind<INamedBus>.Create<IConsumerDefinition<Receiver>>((DualDefinition)caller));
+        });
+        var bus = await owner.Start(true); await owner.Deliver(bus, State(caller).Name);
+        await life.Await(owner.Stop()); await life.Await(owner.DisposeProviderAsync());
+        Assert.Equal(1, probe.ActivationAttempts); Assert.Equal(2, probe.Business); Assert.Equal(2, probe.Terminals.Count);
+        Assert.Equal(0, State(caller).Disposed); Assert.Equal(0, State(caller).RawAsync); Assert.Equal(0, State(caller).RawSync);
+        Assert.Equal(0, dependency.Disposed); Assert.Equal(0, settings.Disposed);
+    }
+    static async Task AsyncOnlySyncError(OwnedLifetime life, Probe probe, List<Action> afterJoins)
+    {
+        var owner = RuntimeOwner.Definition<AsyncDefinition>(life, probe, true);
+        var value = owner.DefinitionValue<AsyncDefinition>(true);
+        afterJoins.Add(() =>
+        {
+            // Explicit caller recovery after SDK disposal; original defective SDK may already have released the dependency.
+            probe.AllowDisposedDependency = true; probe.ReleaseCleanup.TrySetResult();
+            var cleanup = value.DisposeAsync();
+            Assert.True(cleanup.IsCompleted, "Released recovery cleanup must complete synchronously");
+            cleanup.GetAwaiter().GetResult(); Assert.Equal(1, value.State.Disposed);
+        });
+        afterJoins.Add(() => { if (value.State.Dependency.Disposed == 0) value.State.Dependency.Dispose(); });
+        var bus = await owner.Start(true); await owner.Deliver(bus, value.State.Name); await life.Await(owner.Stop());
+        var error = Capture(owner.DisposeProviderSync);
+        Assert.IsType<InvalidOperationException>(error); Assert.Contains("DisposeAsync", error!.Message, StringComparison.Ordinal);
+        Assert.Equal(0, value.State.RawSync); Assert.Equal(0, value.State.RawAsync); Assert.Equal(0, value.State.Disposed);
+        // A failed sync provider disposal is not promised to be retriable; caller recovery runs after joins.
+    }
+    static async Task DisposalFailure(OwnedLifetime life, Probe probe, bool endpoint, List<Action> afterJoins)
+    {
+        var primary = new SentinelException("definition-cleanup"); probe.CleanupFailure = primary;
+        var settings = Settings(probe, "failure"); FinalizeSettings(afterJoins, settings);
+        var owner = endpoint ? RuntimeOwner.Endpoint<AsyncEndpoint>(life, probe, true, settings, settings)
+            : RuntimeOwner.Definition<AsyncDefinition>(life, probe, true);
+        var value = endpoint ? State(owner.DefinitionValue<AsyncEndpoint>(true)) : State(owner.DefinitionValue<AsyncDefinition>(true));
+        afterJoins.Add(() => { if (value.Dependency.Disposed == 0) value.Dependency.Dispose(); Assert.Equal(1, value.Dependency.Disposed); });
+        var bus = await owner.Start(true); await owner.Deliver(bus, value.Name); await life.Await(owner.Stop());
+        var error = await CaptureAsync(() => life.Await(owner.DisposeProviderAsync()));
+        Assert.Same(primary, error); Assert.Equal(1, value.Disposed); Assert.Equal(1, value.RawAsync); Assert.Equal(0, value.RawSync);
+        Assert.Equal(0, value.Dependency.Disposed); // Standard DI aborts remaining cleanup on this exception.
+    }
+    static async Task ConstructorFailure(OwnedLifetime life, Probe probe)
+    {
+        var primary = new SentinelException("definition-constructor"); probe.ConstructorFailure = primary;
+        var owner = RuntimeOwner.Definition<DualDefinition>(life, probe, true);
+        var error = Capture(() => owner.DefinitionValue<DualDefinition>(true));
+        Assert.Same(primary, error); Assert.Equal(1, probe.ActivationAttempts);
+        var attempt = Assert.Single(probe.Values); Assert.Equal(0, attempt.RawAsync); Assert.Equal(0, attempt.RawSync);
+        Assert.Equal(1, probe.Dependencies.Count); // Attempt state is not a successfully returned definition.
+        await life.Await(owner.DisposeProviderAsync());
+        Assert.Equal(0, attempt.Disposed); Assert.Equal(0, attempt.RawAsync); Assert.Equal(0, attempt.RawSync);
+        Assert.Equal(1, attempt.Dependency.Disposed); Assert.Equal(1, attempt.Dependency.Invocations);
+    }
+    static async Task Unmaterialized(OwnedLifetime life, Probe probe)
+    {
+        var owner = RuntimeOwner.Definition<PlainDefinition>(life, probe, true);
+        await life.Await(owner.DisposeProviderAsync());
+        Assert.Empty(probe.Values); Assert.Empty(probe.Dependencies); Assert.Equal(0, probe.ActivationAttempts); Assert.Equal(0, probe.Business);
+    }
+    static async Task Operation(OwnedLifetime life, Probe probe)
+    {
+        probe.GateBusiness = true; var owner = RuntimeOwner.Definition<DualDefinition>(life, probe, true);
+        var value = owner.DefinitionValue<DualDefinition>(true); var bus = await owner.Start(true);
+        var deliveries = life.Track(owner.Deliver(bus, value.State.Name));
+        await life.Await(probe.ConsumerEntered.Task); Assert.False(deliveries.IsCompleted); value.State.AssertAlive();
+        probe.ReleaseBusiness.TrySetResult(); await life.Await(deliveries);
+        Assert.Equal(2, probe.Business); Assert.Equal(2, probe.Terminals.Count);
+        await Finish(life, owner, [value.State], "dual", true, false, false);
+    }
+    static async Task DisposedCapture(OwnedLifetime life, Probe probe)
+    {
+        probe.GateConstructor = true; probe.AllowDisposedDependency = true;
+        var owner = RuntimeOwner.Definition<AsyncDefinition>(life, probe, true);
+        var activation = life.Track(Task.Run(() => owner.DefinitionValue<AsyncDefinition>(true)));
+        await life.Await(probe.ConstructorEntered.Task);
+        Assert.False(activation.IsCompleted); var attempt = Assert.Single(probe.Values);
+        await life.Await(owner.DisposeProviderAsync()); Assert.Equal(1, attempt.Dependency.Disposed);
+        probe.ReleaseConstructor.Set();
+        var error = await CaptureAsync(async () => { await life.Await(activation); });
+        Assert.IsType<ObjectDisposedException>(error); Assert.Equal(1, attempt.Disposed); Assert.Equal(1, attempt.RawAsync); Assert.Equal(0, attempt.RawSync);
+        // Controlled disposal during activation qualifies only SDK capture behavior, not a general race contract.
+    }
+    static void FinalizeSettings(List<Action> afterJoins, BorrowedSettings settings) => afterJoins.Add(() =>
+    {
+        // Caller cleanup is independent of actual definition ownership and occurs after joins.
+        settings.Dispose(); Assert.Equal(1, settings.Disposed);
+    });
+    static Exception? Capture(Action operation) { try { operation(); return null; } catch (Exception e) { return e; } }
+    static async Task<Exception?> CaptureAsync(Func<Task> operation) { try { await operation(); return null; } catch (Exception e) { return e; } }
+}
+public sealed class SentinelException(string message) : Exception(message);
+public sealed class BorrowedSettings : EndpointSettings<IEndpointDefinition<Receiver>>, IDisposable
+{
+    int _disposed;
+    public int Disposed => Volatile.Read(ref _disposed);
+    public void Dispose() => Interlocked.Increment(ref _disposed);
+}

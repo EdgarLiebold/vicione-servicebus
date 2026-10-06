@@ -1,0 +1,45 @@
+{
+  "utc": "2026-10-06T00:07:44.429005+00:00",
+  "status": "INDEPENDENT_SOURCE_REVIEWED_XML_ONLY_PRODUCT2_APPLIED_STRICT_PUBLICATION_PENDING",
+  "proposal": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package274-core-object-projection-row-doc2-product2-proposed-r2/REPORT.json",
+    "sha256": "b7dbc6070f282b0c2d4b74fc114febf39b3addc3dd16629b4846559ff0a9135b"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package274-core-projection-row-doc2-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "393c0ac67ffab7d2c5ede87628d88be7702fa003389e79a07eda92085078956e"
+  },
+  "Root_whole_peer": "47ab9c",
+  "Root_whole_before_Source2_293": "8808b7",
+  "changes": [
+    {
+      "relative": "src/ViciOne.ServiceBus/Util/ConvertObject.cs",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/ConvertObject.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package274-core-object-projection-row-doc3-research-before-r1/before/src/ViciOne.ServiceBus/Util/ConvertObject.cs",
+      "before_sha256": "3af47ac6f93c1fc47d64e5b1c2ae52bbf9e4739a0f72aca60c5954dfb2eb39d5",
+      "proposed_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package274-core-object-projection-row-doc2-product2-proposed-r2/proposed/src/ViciOne.ServiceBus/Util/ConvertObject.cs",
+      "proposed_sha256": "3ba23ba26f9df9c5c0ba87b51b84a44706a64395155a82e7518fe4d9a2882347",
+      "before": "<summary>Converts runtime objects by using cached type-specific conversion delegates.</summary>",
+      "after": "<summary>Projects public readable properties into dictionaries, lowercasing the first key character when uppercase.</summary>",
+      "literal_inverse_exact": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Util/TextTable.cs",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/TextTable.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package274-core-object-projection-row-doc3-research-before-r1/before/src/ViciOne.ServiceBus/Util/TextTable.cs",
+      "before_sha256": "f13d17a05d16dbfaacbc243c99312fccbcbaf63c45ce8d9b5c1e8c7996580fef",
+      "proposed_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package274-core-object-projection-row-doc2-product2-proposed-r2/proposed/src/ViciOne.ServiceBus/Util/TextTable.cs",
+      "proposed_sha256": "fa8154d7de40aa7b50b99f700e2dfe81f4b5ab2a0ded320d89c4a69b6005d807",
+      "before": "<summary>Hides the separator for the selected row.</summary>",
+      "after": "<summary>Hides separators after all data rows when rendering the table.</summary>",
+      "literal_inverse_exact": true
+    }
+  ],
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package274-core-projection-row-doc2-root-before-r1",
+  "XML_nodes": 2,
+  "Product_sources": 2,
+  "body_public_declarations_Test_Req_changes": false,
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

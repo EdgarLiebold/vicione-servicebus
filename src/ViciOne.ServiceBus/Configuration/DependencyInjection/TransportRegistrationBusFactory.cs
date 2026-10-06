@@ -106,8 +106,15 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
             }
             catch (Exception observerException)
             {
-                LogContext.Warning?.Log(observerException,
-                    "Bus creation-fault observation failed without replacing the construction failure");
+                try
+                {
+                    LogContext.Warning?.Log(observerException,
+                        "Bus creation-fault observation failed without replacing the construction failure");
+                }
+                catch
+                {
+                    // Diagnostic failure must not replace the original construction failure.
+                }
             }
 
             throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", "An exception occurred during bus creation", "Correct the named configuration before starting the host"), ex);
@@ -181,7 +188,7 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
         }
 
         if (registrations.Length == 1)
-            registrations[0].Connect(configurator);
+            registrations[0].Connect(configurator, context);
     }
 
     static MessageLimits ConfigureMessageLimits(IBusRegistrationContext context, IHostConfiguration hostConfiguration)

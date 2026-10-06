@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-05T01:17:13.077201+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED90_BOUNDED_SOURCE_CONTRACTS_TWO_SCHEDULE_IDS_HELD",
+  "accepted_before": 5951,
+  "accepted_after": 6041,
+  "semantic_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-saga-main92-current-contracts-r3/PER_MEMBER_CONTRACT_MATRIX.json",
+    "sha256": "f7f847a70f6ec9621124a3549d521e4aaf993d4655910b83d7f7803347a870bc"
+  },
+  "source_authority": "Runtime reviewer personally read whole actual2275+98 and causal helpers. Root read whole human report, all92 manual norms via630713,a114c2,9424df and exact precision overlay; Root does not claim own whole2275 read.",
+  "validation": {
+    "MAN_files": 5,
+    "actual_original_declared_ids": 92,
+    "actual_source_hashes": 2,
+    "actual_XML": 86,
+    "reasoned_accessor_XML_NA": 6,
+    "fresh160_actual_Sagas_ZIP_CRC_valid": true,
+    "all_selected_current_sources_unchanged": true
+  },
+  "held_ordinals": [
+    66,
+    67
+  ],
+  "held_reason": "Actual schedule mismatch debuglogger requires original public control; wrapper66 local norm valid, installed delivery not yet accepted.",
+  "native_credit": 0,
+  "CLOSED": false,
+  "limits": [
+    "No native-grade transfer from nine selected contextual cases.",
+    "Completion setters68/69/70 local declaration only; callback cancellation is cooperative and no forced-stop/join promise inferred.",
+    "Typed signatures remain historical original inventory, not claimed rerun scanner."
+  ]
+}

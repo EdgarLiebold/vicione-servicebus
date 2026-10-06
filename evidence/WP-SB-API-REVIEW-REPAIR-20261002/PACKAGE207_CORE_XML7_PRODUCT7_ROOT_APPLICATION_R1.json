@@ -1,0 +1,78 @@
+{
+  "status": "ROOT_APPLIED_INDEPENDENTLY_REVIEWED_SEVEN_XML_LITERAL_CHANGES_ONLY",
+  "utc": "2026-10-05T18:31:55.660813+00:00",
+  "root_original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE207_CORE_F199_F200_F201_XML6_PLUS_INTERCEPT_PRECISION_ORIGINAL_ROOT_REGISTRATION_R1.json",
+    "sha256": "406a34951fabcc1651ca801c435e990d9dd0a06b5a94f92e88b28247774d6604"
+  },
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package225-core-local-purpose-provider-doc7-product-proposed-r1/REPORT.json",
+    "sha256": "8922e720f78dbe695c3a8751ba2e2d9b261dfc6944d7d4190d063d939b06685c"
+  },
+  "source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package225-core-doc7-independent-source-peer-r1/REPORT.json",
+    "sha256": "5a220371ada90e325fd4bcdacfc349c78a922b8f213fad431ad38586a93b2907"
+  },
+  "changes": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/CompositeFilter.cs",
+      "before_sha256": "e9171a4b298380fa5fc4f0feb8ef636ef164568443f49a4ef668a6f6a8076494",
+      "after_sha256": "23cdaa318ec52a7f570afff318721beeff113a1352b678bdb94298b65c71575c",
+      "lines": 23,
+      "node": "T:ViciOne.ServiceBus.Configuration.CompositeFilter`1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerConnector.cs",
+      "before_sha256": "7c95e39e3546fde71b099762b32f54b935ad6b51b8fd2119991b6a73b36287fe",
+      "after_sha256": "73d5c708d1f16f5fd1ff9f288d22f12f50a81a9043fad40727439656140e236f",
+      "lines": 80,
+      "node": "P:ViciOne.ServiceBus.Configuration.ConsumerConnector`1.Connectors"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InterceptPipeSpecification.cs",
+      "before_sha256": "1bc6820b89e29fdcaacce3e75ef9e8b9f7d0b6a1b74633a93dec5d798b376401",
+      "after_sha256": "37afaa76002f9c4d969c343f07c9bb038d45d06ec55ae0ab8c0c391877def7a4",
+      "lines": 35,
+      "node": "T:ViciOne.ServiceBus.Configuration.InterceptPipeSpecification`1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedConsumePublishEndpointProvider.cs",
+      "before_sha256": "8f6a6b6394123ea035fe6c98caebf88383125877799a0c69e7b32f3046a5eb7d",
+      "after_sha256": "21bfe41f5668b33812f912fb8d0ada9679be603d9b49c63d524fb859a6a14ac9",
+      "lines": 44,
+      "node": "M:ViciOne.ServiceBus.DependencyInjection.ScopedConsumePublishEndpointProvider.#ctor(ViciOne.ServiceBus.Advanced.IPublishEndpointProvider,ViciOne.ServiceBus.ConsumeContext,System.IServiceProvider)"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedConsumeSendEndpointProvider.cs",
+      "before_sha256": "e7842042d63a5079977cc3b5e4016473547d73a3a9f51c3bbb0a4bafcf640a7f",
+      "after_sha256": "d7fa8188d58875e12a268fe1a399d87824003fbc5e6bf891024b76dec3e3bf29",
+      "lines": 47,
+      "node": "M:ViciOne.ServiceBus.DependencyInjection.ScopedConsumeSendEndpointProvider.#ctor(ViciOne.ServiceBus.ISendEndpointProvider,ViciOne.ServiceBus.ConsumeContext,System.IServiceProvider)"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedPublishEndpointProvider.cs",
+      "before_sha256": "0b635dfd8d510926c051136a69d21320b04ab74a728cffa37a40ad59a3fbb876",
+      "after_sha256": "e51741703c39d988fbdb37ea2f1c074152f157a9094001c01e2474f3b49c493d",
+      "lines": 37,
+      "node": "M:ViciOne.ServiceBus.DependencyInjection.ScopedPublishEndpointProvider.#ctor(ViciOne.ServiceBus.Advanced.IPublishEndpointProvider,System.IServiceProvider)"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedSendEndpointProvider.cs",
+      "before_sha256": "8920fd55e4a50ed258792e168d465da5585d8d58beded49baada793df06e0d42",
+      "after_sha256": "6b54d72331599e0cf5f6558855e86f5b05480fecabd0387c6cb489ec48f455b3",
+      "lines": 39,
+      "node": "M:ViciOne.ServiceBus.DependencyInjection.ScopedSendEndpointProvider.#ctor(ViciOne.ServiceBus.ISendEndpointProvider,System.IServiceProvider)"
+    }
+  ],
+  "source_owners": 7,
+  "source_lines": 305,
+  "XML_changes": 7,
+  "confirmed_defect_nodes": 6,
+  "nonfinding_precision_nodes": 1,
+  "literal_inverse_and_nonXML_source_exact": true,
+  "public_API_Test_Requirements_bytes_changed": false,
+  "native_cases_added": 0,
+  "fresh_publication_pending": true,
+  "root_accepted": false,
+  "global_grade": null
+}

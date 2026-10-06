@@ -8,7 +8,7 @@ public class PublishEndpointBrokerTopologyBuilder :
     /// <summary>Gets the Amazon SNS topic to which the message is published.</summary>
     public TopicHandle? Topic { get; set; }
 
-    /// <summary>Creates an immutable snapshot of the accumulated publish topology.</summary>
+    /// <summary>Creates an array snapshot of the accumulated publish topology.</summary>
     /// <returns>The broker topology snapshot.</returns>
     public BrokerTopology BuildBrokerTopology()
     {

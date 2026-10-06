@@ -1,0 +1,71 @@
+{
+  "status": "ROOT_ACCEPTED13_CURRENT_CORRECTED_SOURCE_XML_MEMBER_CONTRACTS",
+  "utc": "2026-10-05T17:40:26.282802+00:00",
+  "finding_repair_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE200_F193_TO_F197_F147_EXTENSION_XML15_FRESH_PACKAGE_ROOT_REPAIR_ACCEPTANCE_R1.json",
+    "sha256": "655e13ce138a6b13884a0ad98c735143f718fa1d5745d438039319b0d6919c6b"
+  },
+  "members": [
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "T:ViciOne.ServiceBus.Middleware.LastPipe`1"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Middleware.LastPipe`1.SendAsync(`0)"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "T:ViciOne.ServiceBus.Middleware.MessagePublishPipe`1"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "T:ViciOne.ServiceBus.Middleware.MessageSendPipe`1"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "T:ViciOne.ServiceBus.Observables.ConsumeObserverConverter`1"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "T:ViciOne.ServiceBus.Observables.IConsumeObserverConverter"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Observables.IConsumeObserverConverter.ConsumeFaultAsync(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver,System.Object,System.Exception,System.Threading.CancellationToken)"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Observables.IConsumeObserverConverter.PostConsumeAsync(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver,System.Object,System.Threading.CancellationToken)"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Observables.IConsumeObserverConverter.PreConsumeAsync(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver,System.Object,System.Threading.CancellationToken)"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "T:ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "P:ViciOne.ServiceBus.Topology.MessageTopology`1.EntityName"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Topology.MessageTopology`1.SetEntityNameFormatter(ViciOne.ServiceBus.Advanced.Topology.IMessageEntityNameFormatter{`0})"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "id": "M:ViciOne.ServiceBus.Topology.MessageTopology`1.SetEntityName(System.String)"
+    }
+  ],
+  "original_canonical_before": 11328,
+  "original_canonical_after": 11341,
+  "original_remaining_after": 7228,
+  "raw_before": 12190,
+  "raw_after": 12203,
+  "source_scope": "Genuine current whole7/475 plus actual13 compiled clauses retained/peerread; no runtime mirror native tests. Ten held723 and additionalLastPipe.Send/two setters only; no omitted1139 workflow closure.",
+  "native_cases_added": 0,
+  "global_grade": null,
+  "history": "All prior12190 complete Master rowobjects retained in original order; historical source epochs stay intact."
+}

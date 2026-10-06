@@ -1,0 +1,29 @@
+{
+  "utc": "2026-10-06T01:16:26.121202+00:00",
+  "status": "F208_FIXED12_CURRENT367_STRICT_FRESH_PACKAGE_INDEPENDENTLY_REVIEWED_BOUNDED",
+  "finding": "F-SB-API-208",
+  "original12_now_all_pass": true,
+  "whole367_all_pass_0skip": true,
+  "capture": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package288-sqs-fixed-root-native-publication-capture-r1/REPORT.json",
+    "sha256": "147573eeeede01b8e98b6336acc3d1730c548a584192172b48c1bfd4b4ebb1af"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package284-sqs-owning-debug4-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "90d7a0854ba8162cfad8dfc147d631272de954c5e1e40b8b7dfb2c7130348453"
+  },
+  "independent_result_publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package288-sqs-fixed12-whole367-publication-independent-runtime-r1/REPORT.json",
+    "sha256": "6bf17e8df8157b5ac2db80a796ebe808bc4a4ae73ae1c2c38452e3930961cc10"
+  },
+  "repair": "Four local owning diagnostic scopes; exact4whole-source inverse; actualSDK/provider/token/policy/cache/error paths outside catches unchanged. Actualprovider-failure controls retain exactprimary.",
+  "source13_rebase": "Existing13 objects sourceSHA/PDB only updated, all individualnorms/status/native/XML preserve; others18882 exact. Source3formerlyheld separatepending recommendations; no extraOriginal IDs added here.",
+  "master_before_sha256": "fe1acf26c4c593fb773a6d3565848fa979c1dac851df811b6d51fe700ad53b10",
+  "known_dispositions_before": 207,
+  "known_dispositions_after": 208,
+  "confirmed_findings": 208,
+  "Originalremaining": 536,
+  "scope": "Whole367result evidence not alltestbody review/globalAWS/ABI/cloud/journeys.12focused subset367 notadditive. Fresh1NuGet matchescurrent testedDLLandXML.",
+  "grade": null,
+  "whole_API_closed": false
+}

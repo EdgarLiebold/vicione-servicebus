@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Logging;
 using System.Data;
 using System.Reflection;
 using Microsoft.Data.Sqlite;
@@ -12,6 +15,156 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga;
 
 public sealed class DbContextSagaRepositoryContextTests
 {
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(0, true)]
+    [InlineData(1, false)]
+    [InlineData(1, true)]
+    [InlineData(2, false)]
+    [InlineData(2, true)]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-INSERT-RACE", "insert-debug-preserves-persisted-context-and-verified-race")]
+    public async Task Insert_DebugDiagnosticsPreservePersistedOutcomeAsync(int outcome, bool loggerThrows)
+    {
+        string template = outcome == 0
+            ? "SAGA:{SagaType}:{CorrelationId} Used {MessageType}"
+            : "SAGA:{SagaType}:{CorrelationId} Dupe {MessageType}";
+        var diagnosticFailure = new IOException("EF insert diagnostic failure");
+        var storageFailure = new DbUpdateException("test-owned unrelated save failure");
+        var logger = new InsertDiagnosticLogger(template, loggerThrows ? diagnosticFailure : null);
+        Guid correlationId = Guid.Parse("d2f9f9bc-b516-45fb-83ea-7fb2ad8aa48c");
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync(TestContext.Current.CancellationToken);
+        await using DbContext database = outcome == 2
+            ? new FailingSagaDbContext(new DbContextOptionsBuilder<FailingSagaDbContext>().UseSqlite(connection).Options, storageFailure)
+            : new SagaDbContext(new DbContextOptionsBuilder<SagaDbContext>().UseSqlite(connection).Options);
+        if (outcome != 2)
+        {
+            await database.Database.EnsureCreatedAsync(TestContext.Current.CancellationToken);
+            if (outcome == 1)
+            {
+                database.Set<TestSaga>().Add(new TestSaga { CorrelationId = correlationId, Value = "winner" });
+                await database.SaveChangesAsync(TestContext.Current.CancellationToken);
+                database.ChangeTracker.Clear();
+            }
+        }
+        using var repository = CreateRepositoryContext(database, new QueryingLockStrategy());
+        var incoming = new TestSaga { CorrelationId = correlationId, Value = outcome == 1 ? "loser" : "created" };
+        ILogContext? previous = LogContext.Current;
+        Task<SagaConsumeContext<TestSaga, TestMessage>?>? operation = null;
+        SagaConsumeContext<TestSaga, TestMessage>? inserted = null;
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            operation = ((ISagaRepositoryContext<TestSaga, TestMessage>)repository).InsertAsync(incoming,
+                TestContext.Current.CancellationToken);
+            Exception? failure = await Record.ExceptionAsync(async () =>
+            {
+                inserted = await operation.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+            });
+            Assert.IsNotType<TimeoutException>(failure);
+            Assert.True(operation.IsCompleted);
+            if (outcome == 2)
+            {
+                Assert.Empty(logger.Entries);
+                Assert.Equal(0, logger.ThrowCount);
+                Assert.Null(logger.ThrownFailure);
+                Assert.Empty(storageFailure.Entries);
+                Assert.Equal(EntityState.Added, database.Entry(incoming).State);
+                Assert.Same(storageFailure, failure);
+                Assert.Null(inserted);
+                Assert.True(operation.IsFaulted);
+            }
+            else
+            {
+                TestSaga persisted = await database.Set<TestSaga>().AsNoTracking()
+                    .SingleAsync(TestContext.Current.CancellationToken);
+                Assert.Equal(correlationId, persisted.CorrelationId);
+                Assert.Equal(outcome == 1 ? "winner" : "created", persisted.Value);
+                InsertDiagnosticLogger.Entry selected = Assert.Single(logger.Entries, entry => entry.Template == template);
+                Assert.Equal(LogLevel.Debug, selected.Level);
+                Assert.Equal(correlationId, selected.CorrelationId);
+                if (outcome == 1)
+                {
+                    DbUpdateException conflict = Assert.IsType<DbUpdateException>(selected.Error);
+                    Assert.Contains(conflict.Entries, entry => ReferenceEquals(entry.Entity, incoming));
+                    Assert.DoesNotContain(database.ChangeTracker.Entries<TestSaga>(), entry => ReferenceEquals(entry.Entity, incoming));
+                }
+                else
+                    Assert.Null(selected.Error);
+                Assert.Equal(loggerThrows ? 1 : 0, logger.ThrowCount);
+                if (loggerThrows)
+                {
+                    Assert.Same(diagnosticFailure, logger.ThrownFailure);
+                    if (failure is not null)
+                        Assert.Same(diagnosticFailure, failure);
+                }
+                else
+                    Assert.Null(logger.ThrownFailure);
+
+                Assert.Null(failure);
+                Assert.True(operation.IsCompletedSuccessfully);
+                if (outcome == 0)
+                {
+                    SagaConsumeContext<TestSaga, TestMessage> actual =
+                        Assert.IsAssignableFrom<SagaConsumeContext<TestSaga, TestMessage>>(inserted);
+                    Assert.Same(incoming, actual.Saga);
+                    Assert.Equal(correlationId, actual.CorrelationId);
+                    Assert.Equal(EntityState.Unchanged, database.Entry(incoming).State);
+                }
+                else
+                    Assert.Null(inserted);
+            }
+        }
+        finally
+        {
+            try
+            {
+                if (operation is not null)
+                    await ObserveInsertDiagnosticOperationAsync(operation);
+            }
+            finally
+            {
+                LogContext.Current = previous;
+            }
+        }
+    }
+
+    private static async Task ObserveInsertDiagnosticOperationAsync(Task task)
+    {
+        try
+        {
+            await task.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+        }
+        catch (Exception failure) when (failure is not TimeoutException && (task.IsFaulted || task.IsCanceled))
+        {
+        }
+    }
+
+    private sealed class InsertDiagnosticLogger(string selectedTemplate, Exception? failure) : ILogger
+    {
+        public sealed record Entry(LogLevel Level, string? Template, Guid? CorrelationId, Exception? Error);
+        public List<Entry> Entries { get; } = [];
+        public int ThrowCount { get; private set; }
+        public Exception? ThrownFailure { get; private set; }
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel level) => level == LogLevel.Debug;
+        public void Log<TState>(LogLevel level, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            IEnumerable<KeyValuePair<string, object?>> fields = state as IEnumerable<KeyValuePair<string, object?>>
+                ?? Array.Empty<KeyValuePair<string, object?>>();
+            string? template = fields.FirstOrDefault(field => field.Key == "{OriginalFormat}").Value as string;
+            object? correlation = fields.FirstOrDefault(field => field.Key == "CorrelationId").Value;
+            Entries.Add(new Entry(level, template, correlation is Guid id ? id : null, exception));
+            if (template == selectedTemplate && failure is not null)
+            {
+                ThrowCount++;
+                ThrownFailure = failure;
+                throw failure;
+            }
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-INSERT-RACE", "existing-correlation-confirms-lost-insert-race")]
     public async Task Insert_ReturnsMissingOnlyWhenTheExactSagaNowExistsAsync()

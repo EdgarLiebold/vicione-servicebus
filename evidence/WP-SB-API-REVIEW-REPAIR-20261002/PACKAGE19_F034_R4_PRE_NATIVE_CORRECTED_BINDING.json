@@ -1,0 +1,38 @@
+{
+  "status": "ROOT_SELECTED_THREE_PACKAGES_AND_WHOLE_NEW_LOCK_BOUND_BEFORE_NATIVE",
+  "lock": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034-r4/corrected/packages.lock.json",
+    "sha256": "b97fb9a54e5dbfc3576dde248e5d92a85f095b4824d079bb1e3a4f89f0f44036",
+    "root_personal_full": true
+  },
+  "chains": [
+    {
+      "name": "ViciOne.ServiceBus",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package19-f034-r4/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "package_sha256": "87a50eb31595a3465c302dceed3381a7df2197ec4fa297f9cae541f900d06a2a",
+      "locked_sha512": "0USHumXaUidZTYLEK9Za9LEC07cviaqo2mXtsrRRCd0y0/IT2UkaFzc/e0EwE1TM29NbrWH7Rg4Kl3izwlX1WA==",
+      "dll_sha256": "43fbefc4df727cd1c108d80f32a635eeb279abc70143da59c0ac3cd03f7ce70a",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034-r4/corrected/restored-packages/vicione.servicebus/1.0.0/lib/net10.0/ViciOne.ServiceBus.dll",
+      "app": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034-r4/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Abstractions",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package19-f034-r4/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "package_sha256": "440bd764b8dff36e641061930227b2065fe8a88f776d78b1f3b85a537277ca16",
+      "locked_sha512": "3yROMBbMy+5DTi1xzWO4onJNKLhIP3QJSQH4RAPnAL5taeCUp2OIGrY+ETHgkdKVvwv9eGjSDKhnMXnB/rrOXA==",
+      "dll_sha256": "ef5817cda765fc00c65671440d18884fda8d7636b0dd5bed8135470507c9d6b2",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034-r4/corrected/restored-packages/vicione.servicebus.abstractions/1.0.0/lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "app": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034-r4/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Courier",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package19-f034-r4/corrected/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "package_sha256": "913b122e04c5bda7581fa4c717e36a77dbda5d4898c9c1b3b07d66ae19022528",
+      "locked_sha512": "JV7PrRCTDA7lzIHh5FlmkUCjcynfOKl2gwj14rUFDcMvjQDoS9BIGatLHBP4GdDLaQGlnntdbf5eMcgwkVzhbw==",
+      "dll_sha256": "4fceb105f02b90d48a587d2fc89cef6f65b5808fcd28537089906dc0e44aaa33",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034-r4/corrected/restored-packages/vicione.servicebus.courier/1.0.0/lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+      "app": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034-r4/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll"
+    }
+  ],
+  "limits": "IncrementalF034+F040; Core43fb doesNOTcontain newlyauthoredF041. Separatecollision remainsqualifiedbeforeitsfix."
+}

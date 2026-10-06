@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-04T14:38:34.723186+00:00",
+  "status": "ROOT_SOURCE_ADVERSARIAL_NO_BLOCK_TESTS_APPLIED_NATIVE_ORIGINAL_PENDING",
+  "root_review": "Logger exactwholeDelta a26857 pluscurrentwholeTest e45e4a and actualDispose/LogContext 937404; Schedule testwhole prior33a5de +actual3owners 2a8a2d; owner source guards preserve historicalAzure24 freeze",
+  "products_changed": 0,
+  "files": [
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs",
+      "before": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+      "after": "ecc2408915b0d006e85ac7533093a95d8dc3b86a49023c506e3d8896c7f2f3d3"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusScheduleProviderOwnershipTests.cs",
+      "before": null,
+      "after": "1cfab54a80de6c5be041e8ad9a6ae1dc7d38dc4463a14dc8e1487cb1e9b0d54b"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "before": "c8d7cd99a487bf37dba1a1bfe9cbbf6ab57ea1d99cf79f9f52b81ea5f2fa753d",
+      "after": "d9344b7792a0ecc4c6c8fc771d1b43787071fa57ad9d2d674643eb8300f1ff1e",
+      "rows_before": 203,
+      "rows_after": 206,
+      "exact_add": 3,
+      "remove": 0
+    }
+  ],
+  "limits": "No confirmed logger finding/native/passed claim; original tests pending. Scheduler actualpublicprovider workflow, not broker acceptance."
+}

@@ -16,7 +16,7 @@ public class RabbitMqReceiveEndpointConfiguration :
     IRabbitMqReceiveEndpointConfiguration,
     IRabbitMqReceiveEndpointConfigurator
 {
-    readonly IBuildPipeConfigurator<ConnectionContext> _connectionConfigurator;
+    readonly PipeConfigurator<ConnectionContext> _connectionConfigurator;
     readonly IRabbitMqEndpointConfiguration _endpointConfiguration;
     readonly IRabbitMqHostConfiguration _hostConfiguration;
     Uri? _builtInputAddress;
@@ -138,7 +138,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         return plan;
     }
 
-    /// <summary>Validates the queue name, reports destructive startup purge, and includes base endpoint validation.</summary>
+    /// <summary>Validates the queue name, prefetch limit, configured channel and connection pipelines, destructive startup purge, and base endpoint configuration.</summary>
     /// <returns>All RabbitMQ receive-endpoint validation results.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
@@ -152,6 +152,12 @@ public class RabbitMqReceiveEndpointConfiguration :
 
         if (_endpointConfiguration.Transport.PrefetchCount > ushort.MaxValue)
             yield return this.Failure("PrefetchCount", "must be at most 65535 for RabbitMQ").WithParentKey(queueName);
+
+        foreach (var result in _channelConfigurator.Validate())
+            yield return result.WithParentKey(queueName);
+
+        foreach (var result in _connectionConfigurator.Validate())
+            yield return result.WithParentKey(queueName);
 
         foreach (var result in base.Validate())
             yield return result.WithParentKey(queueName);
@@ -398,7 +404,7 @@ public class RabbitMqReceiveEndpointConfiguration :
 
         ApplySpecifications(builder);
 
-        return builder.CreateReceiveEndpointContext();
+        return builder.CreateReceiveEndpointContext(_connectionConfigurator.BuildWithContinuation());
     }
 
     Uri FormatInputAddress()

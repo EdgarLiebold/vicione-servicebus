@@ -1,0 +1,64 @@
+{
+  "utc": "2026-10-04T20:02:28.362524+00:00",
+  "decision": "APPLY_F115_F116_THREE_MINIMAL_PRODUCT_OWNERS_AFTER_INDEPENDENT_SOURCE_NO_BLOCK",
+  "findings": [
+    "F-SB-API-115",
+    "F-SB-API-116"
+  ],
+  "author_manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package130-courier-primary-observer-two-filter-product-proposal-r1/MANIFEST_R1.json",
+      "sha256": "bdd4a951f6c3fb1a1e4961516186f703187c4c7cafb49ac8f45377067f284439"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package129-zero-activity-diagnostic-guard-product-proposed-r1/MANIFEST.json",
+      "sha256": "f954c042111436aecfa8401d19c0be596ee3328e7e39c748e2fe5019e48b07e4"
+    }
+  ],
+  "independent_source_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package130-courier-two-filter-product-independent-scanner-r1/REPORT.json",
+      "sha256": "fe6a366917ecc5a9ec6b06a982dbf460ea1440b0eb5cd7f20a58a2b0fcb9696d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package130-zero-activity-product-independent-runtime-review-r1/REPORT.json",
+      "sha256": "cca4d4658b24f694027e6efb08dfb87d0e3b357314dc2a1f741d6ccc14185397"
+    }
+  ],
+  "original_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package129-courier6-logger2-original-independent-r1/REPORT.json",
+    "sha256": "cea7531f57c1529d0c91ef240272ca6fd692ed8c28fe4ab30d6c70f72650b940"
+  },
+  "before": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Middleware/CompensateActivityFilter.cs",
+      "sha256": "334db7632994eeb04314923c651f40f16c6a3fe4f73786b6f23b5678388e176d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Middleware/ExecuteActivityFilter.cs",
+      "sha256": "aa593eb7ce573de0c841c3e2a746f2cf2c2ecd325097320d9cfe9ce4a33d4026"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs",
+      "sha256": "ec36e2bcea79018f384fa506036e397c084cfe7e36d319df530067cd59bb7e8a"
+    }
+  ],
+  "root_review": "Whole cause filters26ce1e/hosts378fb1/resultsd58e93, current classifier8c099a+ActivityObservable/Connectable0ec7e2. Exact twofilter deltas/researchbb3bd3, Zero minimaldeltaf122e2, wholeSourcepeersf86fa5/e73b30. Tests remain unchanged.",
+  "test_changes": 0,
+  "requirements_delta": 0,
+  "current_native_and_fresh_pack_pending": true,
+  "after": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Middleware/CompensateActivityFilter.cs",
+      "sha256": "437566bfef7227a9a1d7546739dafc4b27c887c878a8c99478c6580be3de6c99"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Middleware/ExecuteActivityFilter.cs",
+      "sha256": "5a4f3910f087b821df54c9f4e5efa9509eb1521e3b7ac3985a3c1ee99cde0ed7"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs",
+      "sha256": "3411fe95f72972528c4dbe3e93b274dd485e62a2494b3d8206fe1a334db592d1"
+    }
+  ]
+}

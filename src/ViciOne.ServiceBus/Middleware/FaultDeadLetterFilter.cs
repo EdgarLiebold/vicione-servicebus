@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Middleware;
 public class FaultDeadLetterFilter :
     IFilter<ReceiveContext>
 {
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Throws a message-not-consumed failure for the supplied receive context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

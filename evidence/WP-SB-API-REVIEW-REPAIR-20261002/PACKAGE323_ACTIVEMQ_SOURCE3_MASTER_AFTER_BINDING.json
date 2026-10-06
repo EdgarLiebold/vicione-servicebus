@@ -1,0 +1,8 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE323_ACTIVEMQ_DELETE2_ENSURE_TOPIC1_LOCAL_SOURCE_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "ea5259eee57a82250abbd2db9709e28a26248dfe5affe9970e55c5a53b5d3370"
+  },
+  "master_after_sha256": "5fc254f9ac653db688bd2386f7f3b91260d5dd8de4125774d23974b98dc92d61",
+  "row_count": 18983
+}

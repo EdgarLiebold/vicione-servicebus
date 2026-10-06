@@ -1,0 +1,30 @@
+{
+  "utc": "2026-10-06T00:35:41.000381+00:00",
+  "status": "TEST_ONLY_PUBLIC_CODEFIX_ORIGINAL4_APPLIED_ROOT_SDK_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package270-codefix-public-original4-testonly-proposed-r3/REPORT.json",
+    "sha256": "3ea474ed31473466a78454b88a48d9c9c6992f6ec50f1174aec6bc39e842aafb"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package270-codefix-original4-independent-scanner-source-peer-r1/REPORT.json",
+    "sha256": "6058027d3923aece156d5ac1c1e715df7c87c319316ec3b1c6c235de32f5d482"
+  },
+  "root_whole_test": {
+    "lines": 121,
+    "receipt": "d332eb",
+    "sha256": "74fc13169f9838500bcdd1a7480365b49cd2ae16d1646223ebc9ec83f6dfe8a6"
+  },
+  "requirements": {
+    "before": 13,
+    "after": 15,
+    "prefix_exact": true,
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Requirements/CodeFixRequirements.json",
+    "sha256": "9f1db9f13fe1839d346070b6cb6485192d2eb666f5239607cce2936c7c6b0d6c"
+  },
+  "product_sources_unchanged": true,
+  "test_cases_planned": 4,
+  "native_cases_executed": 0,
+  "findings_registered": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

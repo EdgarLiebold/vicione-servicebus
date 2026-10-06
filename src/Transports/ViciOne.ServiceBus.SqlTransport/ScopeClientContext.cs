@@ -7,7 +7,7 @@ using ViciOne.ServiceBus.SqlTransport.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
-/// <summary>Carries state for scope client operations.</summary>
+/// <summary>Leases a SQL client and links each database operation to the caller and lease cancellation tokens.</summary>
 public class ScopeClientContext :
     ScopePipeContext,
     ClientContext
@@ -34,45 +34,50 @@ public class ScopeClientContext :
     /// <param name="queue">The queue.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the created value.</returns>
-    public Task<long> CreateQueueAsync(Queue queue, CancellationToken cancellationToken = default)
+    public async Task<long> CreateQueueAsync(Queue queue, CancellationToken cancellationToken = default)
     {
-        return _context.CreateQueueAsync(queue, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.CreateQueueAsync(queue, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Creates topic.</summary>
     /// <param name="topic">The topic.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the created value.</returns>
-    public Task<long> CreateTopicAsync(Topic topic, CancellationToken cancellationToken = default)
+    public async Task<long> CreateTopicAsync(Topic topic, CancellationToken cancellationToken = default)
     {
-        return _context.CreateTopicAsync(topic, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.CreateTopicAsync(topic, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Creates topic subscription.</summary>
     /// <param name="subscription">The subscription.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the created value.</returns>
-    public Task<long> CreateTopicSubscriptionAsync(TopicToTopicSubscription subscription, CancellationToken cancellationToken = default)
+    public async Task<long> CreateTopicSubscriptionAsync(TopicToTopicSubscription subscription, CancellationToken cancellationToken = default)
     {
-        return _context.CreateTopicSubscriptionAsync(subscription, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.CreateTopicSubscriptionAsync(subscription, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Creates queue subscription.</summary>
     /// <param name="subscription">The subscription.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the created value.</returns>
-    public Task<long> CreateQueueSubscriptionAsync(TopicToQueueSubscription subscription, CancellationToken cancellationToken = default)
+    public async Task<long> CreateQueueSubscriptionAsync(TopicToQueueSubscription subscription, CancellationToken cancellationToken = default)
     {
-        return _context.CreateQueueSubscriptionAsync(subscription, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.CreateQueueSubscriptionAsync(subscription, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Purges queue.</summary>
     /// <param name="queueName">The queue name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the purge queue outcome.</returns>
-    public Task<long> PurgeQueueAsync(string queueName, CancellationToken cancellationToken)
+    public async Task<long> PurgeQueueAsync(string queueName, CancellationToken cancellationToken)
     {
-        return _context.PurgeQueueAsync(queueName, cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.PurgeQueueAsync(queueName, linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Sends a message to the configured destination.</summary>
@@ -81,10 +86,11 @@ public class ScopeClientContext :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task SendAsync<T>(string queueName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
+    public async Task SendAsync<T>(string queueName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _context.SendAsync(queueName, context, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        await _context.SendAsync(queueName, context, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Publishes a message to its configured consumers.</summary>
@@ -93,10 +99,11 @@ public class ScopeClientContext :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task PublishAsync<T>(string topicName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
+    public async Task PublishAsync<T>(string topicName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _context.PublishAsync(topicName, context, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        await _context.PublishAsync(topicName, context, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Renews lock.</summary>
@@ -105,9 +112,10 @@ public class ScopeClientContext :
     /// <param name="duration">The duration.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the renew lock outcome.</returns>
-    public Task<bool> RenewLockAsync(Guid lockId, long messageDeliveryId, TimeSpan duration, CancellationToken cancellationToken = default)
+    public async Task<bool> RenewLockAsync(Guid lockId, long messageDeliveryId, TimeSpan duration, CancellationToken cancellationToken = default)
     {
-        return _context.RenewLockAsync(lockId, messageDeliveryId, duration, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.RenewLockAsync(lockId, messageDeliveryId, duration, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Releases the current lock.</summary>
@@ -117,9 +125,10 @@ public class ScopeClientContext :
     /// <param name="sendHeaders">The send headers.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the unlock outcome.</returns>
-    public Task<bool> UnlockAsync(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders, CancellationToken cancellationToken = default)
+    public async Task<bool> UnlockAsync(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders, CancellationToken cancellationToken = default)
     {
-        return _context.UnlockAsync(lockId, messageDeliveryId, delay, sendHeaders, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.UnlockAsync(lockId, messageDeliveryId, delay, sendHeaders, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Receives messages.</summary>
@@ -130,19 +139,21 @@ public class ScopeClientContext :
     /// <param name="lockDuration">The lock duration.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the receive messages outcome.</returns>
-    public Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(string queueName, SqlReceiveMode mode, int messageLimit, int concurrentLimit,
+    public async Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(string queueName, SqlReceiveMode mode, int messageLimit, int concurrentLimit,
         TimeSpan lockDuration, CancellationToken cancellationToken = default)
     {
-        return _context.ReceiveMessagesAsync(queueName, mode, messageLimit, concurrentLimit, lockDuration, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.ReceiveMessagesAsync(queueName, mode, messageLimit, concurrentLimit, lockDuration, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
-    /// <summary>Converts this value to uch queue.</summary>
+    /// <summary>Records usage of the specified primary queue through the provider.</summary>
     /// <param name="queueName">The queue name.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default)
+    public async Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
-        return _context.TouchQueueAsync(queueName, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        await _context.TouchQueueAsync(queueName, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Moves to the dead-letter destination queue.</summary>
@@ -150,9 +161,10 @@ public class ScopeClientContext :
     /// <param name="messageCount">The message count.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the dead letter queue outcome.</returns>
-    public Task<int?> DeadLetterQueueAsync(string queueName, int messageCount, CancellationToken cancellationToken = default)
+    public async Task<int?> DeadLetterQueueAsync(string queueName, int messageCount, CancellationToken cancellationToken = default)
     {
-        return _context.DeadLetterQueueAsync(queueName, messageCount, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.DeadLetterQueueAsync(queueName, messageCount, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Deletes message.</summary>
@@ -160,18 +172,20 @@ public class ScopeClientContext :
     /// <param name="messageDeliveryId">The message delivery id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the delete message outcome.</returns>
-    public Task<bool> DeleteMessageAsync(Guid lockId, long messageDeliveryId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteMessageAsync(Guid lockId, long messageDeliveryId, CancellationToken cancellationToken = default)
     {
-        return _context.DeleteMessageAsync(lockId, messageDeliveryId, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.DeleteMessageAsync(lockId, messageDeliveryId, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Deletes scheduled message.</summary>
     /// <param name="tokenId">The token id.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the delete scheduled message outcome.</returns>
-    public Task<bool> DeleteScheduledMessageAsync(Guid tokenId, CancellationToken cancellationToken)
+    public async Task<bool> DeleteScheduledMessageAsync(Guid tokenId, CancellationToken cancellationToken)
     {
-        return _context.DeleteScheduledMessageAsync(tokenId, cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.DeleteScheduledMessageAsync(tokenId, linkedSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>Moves message.</summary>
@@ -183,9 +197,10 @@ public class ScopeClientContext :
     /// <param name="sendHeaders">The send headers.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the move message outcome.</returns>
-    public Task<bool> MoveMessageAsync(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType, DateTimeOffset? expirationTime,
+    public async Task<bool> MoveMessageAsync(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType, DateTimeOffset? expirationTime,
         SendHeaders sendHeaders, CancellationToken cancellationToken = default)
     {
-        return _context.MoveMessageAsync(lockId, messageDeliveryId, queueName, queueType, expirationTime, sendHeaders, cancellationToken: cancellationToken);
+        using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        return await _context.MoveMessageAsync(lockId, messageDeliveryId, queueName, queueType, expirationTime, sendHeaders, cancellationToken: linkedSource.Token).ConfigureAwait(false);
     }
 }

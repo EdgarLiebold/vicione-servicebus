@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T02:31:58.074585+00:00",
+  "status": "INDEPENDENT_PEERED_SINGLE_ACTION_LITERAL_TESTONLY_CORRECTION_APPLIED",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package305-activemq-ensure-topic-record-action-testonly-proposed-r2",
+    "manifest_sha256": "2ca41352ae78255ca4fb8d492751c02444d93c7d3f94d4076ecad408b91cf16c"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package305-ensure-topic-record-action-independent-runtime-peer-r2",
+    "manifest_sha256": "8d9553250467d19e74c60af4aa2460c8cb03db29f8918ec6bb14eed706678029"
+  },
+  "delta": {
+    "before_sha256": "c24bd25a6207a3157fc1efc7d71afa6d443b4037d0b5aad8201e4f16a0473f0e",
+    "after_sha256": "95477dc31c2dfeb4aaa4e87c6cdc76cdcaa4c81a5865e96a3009e64be6a0b089",
+    "before_literal": "            Exception? invocationFailure = Record.Exception(() => operation = context.EnsureTopicExistsAsync(fixture.Topic, caller.Token));",
+    "after_literal": "            Exception? invocationFailure = Record.Exception(() => { operation = context.EnsureTopicExistsAsync(fixture.Topic, caller.Token); });",
+    "exact_inverse": true,
+    "all_other_bytes_identical": true
+  },
+  "actual_previous_CS0619_log_sha256": "2cd7ecef3435442dee9023854ef6547b2a0d53914793ca581dd80ac8942bcb7c",
+  "earlier_run_native_credit": 0,
+  "root_whole_test_R1": "4ee9de",
+  "root_whole_literal_delta": "5f6bb4",
+  "scope": "Only Action lambda overload correction; all native/cancellation/cleanup oracles and Req134 unchanged; no Product finding.",
+  "native": 0,
+  "grade": null
+}

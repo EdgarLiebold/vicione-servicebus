@@ -3,7 +3,7 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.SqlTransport.Middleware;
 
-/// <summary>A filter that uses the model context to create a basic consumer and connect it to the model.</summary>
+/// <summary>Runs a SQL queue receiver and notifies receive endpoint observers of its lifecycle.</summary>
 public class SqlConsumerFilter :
     IFilter<ClientContext>
 {

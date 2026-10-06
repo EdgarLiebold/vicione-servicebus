@@ -1,132 +1,961 @@
 [
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "timestamp-eligibility-compares-normalized-utc-to-epoch", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqHeaderProviderTests", "testMethod": "TimestampAtOrBeforeEpoch_IsUnavailableRegardlessOfLocalOffset" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "native-identities-precede-conflicting-message-properties", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqHeaderProviderTests", "testMethod": "IdentityLookup_UsesNativeFieldsEvenWhenApplicationPropertiesConflict" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "native-timestamp-retains-utc-milliseconds", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqHeaderProviderTests", "testMethod": "TimestampLookup_PreservesTheNativeUtcInstantAndMilliseconds" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "primitive-map-overwrite-preserves-native-neighbors", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.PrimitiveMapHeadersTests", "testMethod": "Set_ChangesOnlyThePermittedNativeProperty" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "primitive-map-string-replacement-and-removal", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.PrimitiveMapHeadersTests", "testMethod": "SetString_ReplacesAndRemovesWithoutChangingOtherProperties" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "primitive-map-readers-preserve-zero-false-and-text", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.PrimitiveMapHeadersTests", "testMethod": "Readers_AgreeOnNonNullNativeValuesAcrossAllEnumerationForms" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "primitive-map-invalid-writes-preserve-state", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.PrimitiveMapHeadersTests", "testMethod": "InvalidKeys_RejectBothWriteOverloadsWithoutMutatingTheMap" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "primitive-map-typed-retrieval-fails-explicitly", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.PrimitiveMapHeadersTests", "testMethod": "TypedRetrieval_RejectsReferenceAndValueTypesDespiteExistingValues" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "native-request-reply-address-ignores-same-name-topic", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TemporaryDestinationOwnershipTests", "testMethod": "RequestSend_UsesTheReplyQueueDespiteASameNameTopicAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "native-reply-destination-cannot-change-during-body-materialization", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TemporaryDestinationOwnershipTests", "testMethod": "RequestSend_RejectsNativeDestinationChangedWhileCreatingBodyAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "same-name-temporary-queue-and-topic-have-independent-ownership", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TemporaryDestinationOwnershipTests", "testMethod": "SameNameQueueAndTopic_KeepIndependentIdentityAndCleanupAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "concurrent-temporary-resolution-creates-one-native-entity", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TemporaryDestinationOwnershipTests", "testMethod": "ConcurrentCreators_ShareOneOwnedDestinationAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "temporary-send-and-consume-share-one-native-destination", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TemporaryDestinationOwnershipTests", "testMethod": "SendAndConsume_ResolveTheSameTemporaryDestinationRegardlessOfStartupOrderAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "connection-factory-rejects-null-host", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ConnectionListenerFailureTests", "testMethod": "Constructor_RejectsNullHost" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "listener-accessor-failure-preserves-owned-cleanup", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ConnectionListenerFailureTests", "testMethod": "ListenerFailure_RetiresConnectionThroughItsOwnerAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "connection-failure-preserves-primary-cause-through-cleanup", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ConnectionCreationFailureTests", "testMethod": "CreateContext_PreservesFailureClassificationAndDisposesOnlyAnAcquiredConnectionAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "dependency-injection-projects-selected-provider", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "RegisteredOptions_ProjectTheSelectedProtocolIntoTheBusAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE", "variantKey": "interrupt-observed-state-contract", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests", "testMethod": "Interrupt_RequiresObservedStoppedOrAbsentState" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE", "variantKey": "restore-failure-is-propagated", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests", "testMethod": "RestoreFailure_IsReportedAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE", "variantKey": "unanswered-request-times-out", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests", "testMethod": "UnansweredRequest_TimesOutAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE", "variantKey": "rejected-interrupt-is-propagated", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests", "testMethod": "RejectedInterrupt_IsReportedAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE", "variantKey": "response-matches-request-and-action", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests", "testMethod": "Response_MatchesTheExactRequest" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE", "variantKey": "malformed-or-mismatched-answer-rejected", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests", "testMethod": "Protocol_RejectsUnconfirmedOrMismatchedResponses" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE", "variantKey": "operation-completes-after-observed-effect", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests", "testMethod": "Interrupt_ReturnsOnlyAfterTheObservedEffectAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "no-implicit-host-or-credentials", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "TransportOptions_DoNotInventAHostOrCredentials" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "options-project-explicit-protocol-and-port", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "TransportOptions_ProjectTheSelectedProtocolAndPort" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "options-require-explicit-protocol", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "TransportOptions_RejectAHostWithoutAProtocol" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "options-require-explicit-port", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "TransportOptions_RejectAMissingOrZeroPort" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "options-require-explicit-host", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "TransportOptions_RejectAProtocolAndPortWithoutAHost" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "options-reject-unknown-protocol", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "TransportOptions_RejectAnUnknownProtocolValue" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "host-must-be-explicit", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "BusConfiguration_RejectsAnUnconfiguredHost" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "explicit-host-satisfies-validation", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "BusConfiguration_AcceptsAnExplicitProtocolHostAndPort" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "protocol-less-host-overload-is-not-public-api", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "HostApi_ExposesNoProtocolLessHostAndPortOverload" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "dead-connection-hook-removed", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "ReceiveEndpointApi_ExposesOnlyTheEffectiveSessionHook" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION", "variantKey": "product-test-harness-removed", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests", "testMethod": "ProductAssembly_DoesNotShipTheLegacyActiveMqTestHarness" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "consumer-contract-identity", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "EntityComparer_IncludesTopicQueueSelectorConsumerAndSharedIdentity" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "named-topic-consumers-coexist", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "NameComparer_PreservesDistinctTopicSubscriptionIdentity" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "conflicting-shared-contract-rejected", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "BrokerTopology_RejectsAConflictingSharedContractForTheSameNamedConsumer" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "artemis-topic-subscription-is-not-an-anycast-queue", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ArtemisTopologyTests", "testMethod": "ArtemisCompatibility_UsesANamedSharedTopicSubscriptionWithoutAnAnycastQueue" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TIME", "variantKey": "artemis-delay-uses-context-time-provider", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests", "testMethod": "ArtemisScheduledDelivery_UsesTheContextTimeProvider" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TIME", "variantKey": "classic-delay-uses-provider-property", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests", "testMethod": "ClassicScheduledDelivery_UsesTheExactProviderDelayProperty" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TIME", "variantKey": "nonpositive-delay-does-not-write-provider-state", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests", "testMethod": "AbsentOrNonPositiveDelay_DoesNotWriteProviderState" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TIME", "variantKey": "positive-ttl-preserved-exactly", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests", "testMethod": "PositiveTimeToLive_IsAppliedWithoutClamping" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TIME", "variantKey": "absent-ttl-retains-openwire-default", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests", "testMethod": "MissingTimeToLive_UsesOnlyTheOpenWireNoExpiryDefault" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TIME", "variantKey": "expired-ttl-cannot-be-serialized", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests", "testMethod": "ExpiredTimeToLive_CannotReachTransportSerialization" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TIME", "variantKey": "generic-expired-send-marked-before-transport", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests", "testMethod": "GenericTimeToLive_IsMarkedExpiredBeforeTransport" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TIME", "variantKey": "inherited-expiry-uses-explicit-time-provider", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests", "testMethod": "InheritedExpiration_UsesTheExplicitTimeProvider" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "manual-auto-delete-is-provider-capability", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "ManualAutoDelete_IsInstalledOnlyForTheProviderThatSupportsDestinationDeletion" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "connection-disposed-after-close-failure", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "ConnectionDispose_AttemptsEveryCleanupStageAfterCloseFailsAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "connection-cleanup-aggregates-in-stage-order", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "ConnectionDispose_AggregatesMultipleFailuresInStageOrderAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "single-aggregate-cleanup-failure-preserves-identity", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "ConnectionDispose_PreservesASoleAggregateFailureAsTheOriginalStageExceptionAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "session-disposed-after-close-failure", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "SessionDispose_AttemptsDisposeAfterCloseFailsAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "session-cleanup-aggregates-in-stage-order", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "SessionDispose_AggregatesMultipleFailuresInStageOrderAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CANCELLATION", "variantKey": "delete-admission-observes-caller-token", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "DestinationDelete_CancelsWhileWaitingForBoundedExecutorCapacityAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-CANCELLATION", "variantKey": "caller-token-propagates-through-session-executor", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "SessionOperation_CancelsWhileWaitingForBoundedExecutorCapacityAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "auto-delete-cleanup-acquires-live-session-at-stop", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "AutoDeleteCleanup_AcquiresALiveSessionWhenTheEndpointStopsAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "auto-delete-cleanup-attempts-every-entity-after-failure", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "AutoDeleteCleanup_AggregatesFailuresInStableOrderAndAttemptsEveryDistinctEntityAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "temporary-entity-removed-after-delete", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "TemporaryEntityDelete_RemovesTheSuccessfulRegistrationAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "failed-temporary-delete-remains-retryable", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "TemporaryEntityDelete_RestoresTheRegistrationWhenTheBrokerDeleteFailsAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "temporary-topic-registration-reused-by-publisher", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "AmqpTemporaryTopicRegistration_IsReusedOnlyForTopicDestinationsAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "openwire-virtual-topic-keeps-canonical-publish-name", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "OpenWireVirtualTopicPublication_DoesNotUseATemporaryTopicRegistrationAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "retained-send-session-retires-with-connection", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests", "testMethod": "SharedSendSession_RetiresWhenItsConnectionFaultsAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "producer-cache-single-flight-and-stop-release", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests", "testMethod": "ConcurrentRequests_ShareOneProducerAndStoppingTheCacheReleasesItExactlyOnceAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "producer-cache-faulted-creation-is-retryable", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests", "testMethod": "FaultedProducerCreation_DoesNotPoisonTheDestinationKeyAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "canceled-producer-waiter-preserves-shared-creation", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests", "testMethod": "CanceledWaiter_DoesNotCancelAnotherSendersProducerCreationAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "independent-destinations-create-and-release-independent-producers", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests", "testMethod": "DifferentDestinations_CreateConcurrentlyAndReleaseTheirOwnProducersAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "first-sender-cancellation-does-not-abort-shared-producer-creation", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSessionProducerCancellationTests", "testMethod": "CanceledFirstSender_DoesNotAbortAnotherSendersQueuedProducerCreationAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "cached-producer-operations-refresh-resource-usage", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests", "testMethod": "ProducerOperations_RefreshUsageAndDelegateToTheOwnedProducerAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "native-message-factory-shapes-preserve-arguments-result-and-usage", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.CachedMessageProducerContractTests", "testMethod": "NativeMessageFactory_PreservesEachShapeResultAndUsageOrderAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "native-send-shapes-preserve-delivery-options-and-async-completion", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.CachedMessageProducerContractTests", "testMethod": "NativeSend_PreservesEveryDestinationAndDeliverySettingsShapeAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "native-close-and-dispose-preserve-lifecycle-boundaries", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.CachedMessageProducerContractTests", "testMethod": "NativeCloseAndDispose_ForwardExactlyOnceWithOnlyAsyncCloseReportingUsageAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "native-producer-properties-forward-both-directions-without-usage", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.CachedMessageProducerContractTests", "testMethod": "NativeProperties_ForwardGetterAndSetterWithoutReportingUsage" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS", "variantKey": "full-address-canonical-roundtrip", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests", "testMethod": "FullAddresses_ParseAndRenderCanonically" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS", "variantKey": "full-address-host-must-match-configuration", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests", "testMethod": "FullAddresses_CannotRedirectTheConfiguredConnection" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS", "variantKey": "short-address-symmetric-resolution", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests", "testMethod": "ShortAddresses_DecodeNamesAndResolveAgainstTheHost" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-OPTIONS", "variantKey": "complete-roundtrip", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests", "testMethod": "EndpointOptions_RoundTripWithoutLosingFlags" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-OPTIONS", "variantKey": "invalid-or-ambiguous-input-fails-fast", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests", "testMethod": "InvalidOrAmbiguousEndpointInputs_AreRejected" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS", "variantKey": "direct-name-is-data-not-uri-control", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests", "testMethod": "DirectConstruction_RejectsNamesThatCouldBecomeUriControl" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS", "variantKey": "topology-name-is-data-not-uri-control", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests", "testMethod": "BusTopology_RejectsANameThatAttemptsToInjectTemporarySemantics" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS", "variantKey": "temporary-generated-name-is-broker-safe", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests", "testMethod": "TemporaryEntityName_UsesBrokerSafeCanonicalForm" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "supported-schemes-ports-and-scope", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "SupportedAddresses_RoundTripCanonically" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "secrets-and-options-never-live-in-uri", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "CredentialsAndTransportOptions_AreRejectedInHostUris" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "typed-protocol-construction", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "ExplicitConstruction_RequiresAndProjectsTheTypedProtocol" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "unknown-typed-protocol-fails-fast", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "ExplicitConstruction_RejectsAnUnknownTypedProtocol" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "uri-invalid-explicit-host-fails-at-construction", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "ExplicitConstruction_RejectsUriInvalidHostsAtConstruction" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "protocol-less-constructor-is-not-public-api", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "PublicApi_ExposesNoProtocolLessHostConstructor" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "default-value-fails-through-configuration-boundary", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "DefaultValue_CannotEscapeAsAnInvalidUri" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "unsupported-scheme-fails-fast", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "UnsupportedSchemes_AreRejected" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "port-must-be-explicit", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "HostUris_RequireAnExplicitPort" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "relative-uri-fails-at-domain-boundary", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "RelativeUri_IsRejectedByTheConfigurationBoundary" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "invalid-explicit-host", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "ExplicitConstruction_RejectsInvalidHosts" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS", "variantKey": "invalid-explicit-port", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests", "testMethod": "ExplicitConstruction_RejectsInvalidPorts" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION", "variantKey": "failover-uri-canonical-and-ipv6-safe", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests", "testMethod": "FailoverUri_HasCanonicalPrecedenceForOpenWireAndAmqp" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION", "variantKey": "failover-protocol-must-match", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests", "testMethod": "FailoverEndpoint_RejectsAProtocolThatCannotBeUsedByTheSelectedProvider" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION", "variantKey": "failover-port-must-be-explicit", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests", "testMethod": "FailoverEndpoint_RejectsAnAddressWithoutAnExplicitPort" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION", "variantKey": "tls-does-not-rewrite-explicit-port", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests", "testMethod": "UseSsl_DoesNotRewriteTheExplicitPort" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION", "variantKey": "duplicate-option-fails-fast", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests", "testMethod": "TransportOptions_RejectDuplicateKeysInsteadOfSilentlyOverwriting" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION", "variantKey": "bus-owns-immutable-settings-snapshot", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests", "testMethod": "BusConfiguration_OwnsAnImmutableSnapshotOfMutableInputSettings" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION", "variantKey": "host-comparer-hash-matches-case-insensitive-equality", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests", "testMethod": "HostComparer_UsesTheSameCaseInsensitiveIdentityForEqualityAndHashing" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-CONFIGURATION", "variantKey": "prefetch-and-concurrency-precedence", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointConfigurationTests", "testMethod": "ConcurrencyAndPrefetch_ResolveFromEndpointAndBusSettings" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-MESSAGE-BODY", "variantKey": "all-access-orders-and-unsupported-provider-types", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqMessageBodyTests", "testMethod": "AllAccessOrders_UseOwnedSnapshotsAndExternalByteOracles" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-RECOVERY", "variantKey": "fault-before-ready-current-watch-and-target-endpoint", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqRecoveryObserverTests", "testMethod": "RecoveryStateMachine_RejectsStaleForeignAndOutOfOrderSignalsAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-REQUIREMENT-PROJECTION", "variantKey": "compiled-metadata-matches-projection", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Requirements.RequirementCoverageProjectionTests", "testMethod": "ActiveMqRequirements_MatchCompiledRequirementMetadata" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-SEND-FAILURE", "variantKey": "typed-chain-and-permanent-precedence", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqSendFailureClassifierTests", "testMethod": "TypedFailures_UseTheCompleteExceptionChainWithPermanentPrecedence" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-SEND-FAILURE", "variantKey": "registration-is-singleton-and-idempotent", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqSendFailureClassifierTests", "testMethod": "BusRegistration_AddsExactlyOneClassifierDescriptor" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-MESSAGE-BODY", "variantKey": "required-native-message-boundary", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqMessageBodyTests", "testMethod": "Constructor_RejectsMissingNativeMessageImmediately" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-MESSAGE-BODY", "variantKey": "provider-interface-buffer-is-copied", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqMessageBodyTests", "testMethod": "Constructor_CopiesAProviderOwnedByteBuffer" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "native-and-provider-owned-values-have-precedence", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests", "testMethod": "SetHeaders_PreservesNativeValuesAndSkipsProviderOwnedOrUnsupportedHeaders" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "temporal-values-preserve-their-instants", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests", "testMethod": "SetHeaders_ProjectsEveryDateTimeKindAsUnixMilliseconds" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "scalar-values-have-provider-safe-wire-representations", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests", "testMethod": "SetHeaders_ProjectsSupportedScalarWireRepresentations" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "shared-provider-native-types-survive-openwire-marshalling", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests", "testMethod": "SetHeaders_PreservesTheSharedOpenWireAndAmqpNativeTypes" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "reference-formattables-use-invariant-culture", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests", "testMethod": "SetHeaders_FormatsReferenceFormattablesInvariantly" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "scheduled-delay-is-transferred-once", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests", "testMethod": "SetHeaders_TransfersAndConsumesTheClassicScheduledDelayHeader" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS", "variantKey": "nonconforming-null-values-remove-native-properties", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests", "testMethod": "SetHeaders_ContainsNullValuesFromExternalImplementations" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-SEND-CONTEXT", "variantKey": "complete-transport-property-roundtrip", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendContextContractTests", "testMethod": "TransportProperties_RoundTripEveryExplicitActiveMqValue" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-SEND-CONTEXT", "variantKey": "absent-values-remain-absent", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendContextContractTests", "testMethod": "TransportProperties_OmitAndRestoreAbsentActiveMqValues" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "queue-contract-identity", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "QueueEntityComparer_UsesExactTypeNameAndLifecycleSettings" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "queue-name-identity", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "QueueNameComparer_UsesExactTypeAndNameOnly" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "queue-diagnostic-lifecycle", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "QueueDiagnostics_IncludeOnlyEnabledLifecycleFlags" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "topic-contract-identity", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "TopicEntityComparer_UsesExactTypeNameAndLifecycleSettings" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "topic-name-identity", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "TopicNameComparer_UsesExactTypeAndNameOnly" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "topic-diagnostic-lifecycle", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "TopicDiagnostics_IncludeOnlyEnabledLifecycleFlags" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "consumer-identity-includes-every-broker-setting", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "EntityComparer_DetectsEveryBrokerRelevantConsumerDifference" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "consumer-name-identity", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "NameComparer_DistinguishesQueueAndDirectTopicConsumers" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "consumer-diagnostics-omit-absent-values", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests", "testMethod": "ConsumerDiagnostics_OmitAbsentOptionalValues" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY", "variantKey": "runtime-message-type-preserves-lifecycle-semantics", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests", "testMethod": "BusTopology_ResolvesRuntimeMessageTypesAndAppliesLifecycleOverrides" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "t79-cached-producer-rejects-missing-owners", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests", "testMethod": "CachedProducer_RejectsMissingDestinationAndNativeProducerAtConstruction" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "t79-null-producer-factory-does-not-poison-cache-key", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests", "testMethod": "NullProducerFactory_DoesNotPoisonTheDestinationAndHealthyRetryOwnsItsDisposalAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "t79-explicit-send-settings-and-async-failure-preserve-ownership", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests", "testMethod": "ExplicitSendSettings_ReachTheNativeProducerAndFailedAsyncSendReportsOneUsageAsync" },
-  { "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE", "variantKey": "t79-synchronous-native-async-throw-reports-usage-first", "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests", "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests", "testMethod": "NativeAsyncSendThrow_ReportsOneUsageBeforePropagatingTheExactSynchronousFailure" }
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "timestamp-eligibility-compares-normalized-utc-to-epoch",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqHeaderProviderTests",
+    "testMethod": "TimestampAtOrBeforeEpoch_IsUnavailableRegardlessOfLocalOffset"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "native-identities-precede-conflicting-message-properties",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqHeaderProviderTests",
+    "testMethod": "IdentityLookup_UsesNativeFieldsEvenWhenApplicationPropertiesConflict"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "native-timestamp-retains-utc-milliseconds",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqHeaderProviderTests",
+    "testMethod": "TimestampLookup_PreservesTheNativeUtcInstantAndMilliseconds"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "primitive-map-overwrite-preserves-native-neighbors",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.PrimitiveMapHeadersTests",
+    "testMethod": "Set_ChangesOnlyThePermittedNativeProperty"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "primitive-map-string-replacement-and-removal",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.PrimitiveMapHeadersTests",
+    "testMethod": "SetString_ReplacesAndRemovesWithoutChangingOtherProperties"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "primitive-map-readers-preserve-zero-false-and-text",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.PrimitiveMapHeadersTests",
+    "testMethod": "Readers_AgreeOnNonNullNativeValuesAcrossAllEnumerationForms"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "primitive-map-invalid-writes-preserve-state",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.PrimitiveMapHeadersTests",
+    "testMethod": "InvalidKeys_RejectBothWriteOverloadsWithoutMutatingTheMap"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "primitive-map-typed-retrieval-fails-explicitly",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.PrimitiveMapHeadersTests",
+    "testMethod": "TypedRetrieval_RejectsReferenceAndValueTypesDespiteExistingValues"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "native-request-reply-address-ignores-same-name-topic",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TemporaryDestinationOwnershipTests",
+    "testMethod": "RequestSend_UsesTheReplyQueueDespiteASameNameTopicAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "native-reply-destination-cannot-change-during-body-materialization",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TemporaryDestinationOwnershipTests",
+    "testMethod": "RequestSend_RejectsNativeDestinationChangedWhileCreatingBodyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "same-name-temporary-queue-and-topic-have-independent-ownership",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TemporaryDestinationOwnershipTests",
+    "testMethod": "SameNameQueueAndTopic_KeepIndependentIdentityAndCleanupAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "concurrent-temporary-resolution-creates-one-native-entity",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TemporaryDestinationOwnershipTests",
+    "testMethod": "ConcurrentCreators_ShareOneOwnedDestinationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "temporary-send-and-consume-share-one-native-destination",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TemporaryDestinationOwnershipTests",
+    "testMethod": "SendAndConsume_ResolveTheSameTemporaryDestinationRegardlessOfStartupOrderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "connection-factory-rejects-null-host",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ConnectionListenerFailureTests",
+    "testMethod": "Constructor_RejectsNullHost"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "listener-accessor-failure-preserves-owned-cleanup",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ConnectionListenerFailureTests",
+    "testMethod": "ListenerFailure_RetiresConnectionThroughItsOwnerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "connection-failure-preserves-primary-cause-through-cleanup",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ConnectionCreationFailureTests",
+    "testMethod": "CreateContext_PreservesFailureClassificationAndDisposesOnlyAnAcquiredConnectionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "dependency-injection-projects-selected-provider",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "RegisteredOptions_ProjectTheSelectedProtocolIntoTheBusAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE",
+    "variantKey": "interrupt-observed-state-contract",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests",
+    "testMethod": "Interrupt_RequiresObservedStoppedOrAbsentState"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE",
+    "variantKey": "restore-failure-is-propagated",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests",
+    "testMethod": "RestoreFailure_IsReportedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE",
+    "variantKey": "unanswered-request-times-out",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests",
+    "testMethod": "UnansweredRequest_TimesOutAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE",
+    "variantKey": "rejected-interrupt-is-propagated",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests",
+    "testMethod": "RejectedInterrupt_IsReportedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE",
+    "variantKey": "response-matches-request-and-action",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests",
+    "testMethod": "Response_MatchesTheExactRequest"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE",
+    "variantKey": "malformed-or-mismatched-answer-rejected",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests",
+    "testMethod": "Protocol_RejectsUnconfirmedOrMismatchedResponses"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-OUTAGE",
+    "variantKey": "operation-completes-after-observed-effect",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Brokers.BrokerOutageControlClientTests",
+    "testMethod": "Interrupt_ReturnsOnlyAfterTheObservedEffectAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "no-implicit-host-or-credentials",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "TransportOptions_DoNotInventAHostOrCredentials"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "options-project-explicit-protocol-and-port",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "TransportOptions_ProjectTheSelectedProtocolAndPort"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "options-require-explicit-protocol",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "TransportOptions_RejectAHostWithoutAProtocol"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "options-require-explicit-port",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "TransportOptions_RejectAMissingOrZeroPort"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "options-require-explicit-host",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "TransportOptions_RejectAProtocolAndPortWithoutAHost"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "options-reject-unknown-protocol",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "TransportOptions_RejectAnUnknownProtocolValue"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "host-must-be-explicit",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "BusConfiguration_RejectsAnUnconfiguredHost"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "explicit-host-satisfies-validation",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "BusConfiguration_AcceptsAnExplicitProtocolHostAndPort"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "protocol-less-host-overload-is-not-public-api",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "HostApi_ExposesNoProtocolLessHostAndPortOverload"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "dead-connection-hook-removed",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "ReceiveEndpointApi_ExposesOnlyTheEffectiveSessionHook"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CONFIGURATION",
+    "variantKey": "product-test-harness-removed",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Configuration.ActiveMqConfigurationTests",
+    "testMethod": "ProductAssembly_DoesNotShipTheLegacyActiveMqTestHarness"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "consumer-contract-identity",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "EntityComparer_IncludesTopicQueueSelectorConsumerAndSharedIdentity"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "named-topic-consumers-coexist",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "NameComparer_PreservesDistinctTopicSubscriptionIdentity"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "conflicting-shared-contract-rejected",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "BrokerTopology_RejectsAConflictingSharedContractForTheSameNamedConsumer"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "artemis-topic-subscription-is-not-an-anycast-queue",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ArtemisTopologyTests",
+    "testMethod": "ArtemisCompatibility_UsesANamedSharedTopicSubscriptionWithoutAnAnycastQueue"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TIME",
+    "variantKey": "artemis-delay-uses-context-time-provider",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests",
+    "testMethod": "ArtemisScheduledDelivery_UsesTheContextTimeProvider"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TIME",
+    "variantKey": "classic-delay-uses-provider-property",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests",
+    "testMethod": "ClassicScheduledDelivery_UsesTheExactProviderDelayProperty"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TIME",
+    "variantKey": "nonpositive-delay-does-not-write-provider-state",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests",
+    "testMethod": "AbsentOrNonPositiveDelay_DoesNotWriteProviderState"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TIME",
+    "variantKey": "positive-ttl-preserved-exactly",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests",
+    "testMethod": "PositiveTimeToLive_IsAppliedWithoutClamping"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TIME",
+    "variantKey": "absent-ttl-retains-openwire-default",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests",
+    "testMethod": "MissingTimeToLive_UsesOnlyTheOpenWireNoExpiryDefault"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TIME",
+    "variantKey": "expired-ttl-cannot-be-serialized",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests",
+    "testMethod": "ExpiredTimeToLive_CannotReachTransportSerialization"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TIME",
+    "variantKey": "generic-expired-send-marked-before-transport",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests",
+    "testMethod": "GenericTimeToLive_IsMarkedExpiredBeforeTransport"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TIME",
+    "variantKey": "inherited-expiry-uses-explicit-time-provider",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendTimingTests",
+    "testMethod": "InheritedExpiration_UsesTheExplicitTimeProvider"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "manual-auto-delete-is-provider-capability",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "ManualAutoDelete_IsInstalledOnlyForTheProviderThatSupportsDestinationDeletion"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "connection-disposed-after-close-failure",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "ConnectionDispose_AttemptsEveryCleanupStageAfterCloseFailsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "connection-cleanup-aggregates-in-stage-order",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "ConnectionDispose_AggregatesMultipleFailuresInStageOrderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "single-aggregate-cleanup-failure-preserves-identity",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "ConnectionDispose_PreservesASoleAggregateFailureAsTheOriginalStageExceptionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "session-disposed-after-close-failure",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "SessionDispose_AttemptsDisposeAfterCloseFailsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "session-cleanup-aggregates-in-stage-order",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "SessionDispose_AggregatesMultipleFailuresInStageOrderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CANCELLATION",
+    "variantKey": "delete-admission-observes-caller-token",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "DestinationDelete_CancelsWhileWaitingForBoundedExecutorCapacityAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-CANCELLATION",
+    "variantKey": "caller-token-propagates-through-session-executor",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "SessionOperation_CancelsWhileWaitingForBoundedExecutorCapacityAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "auto-delete-cleanup-acquires-live-session-at-stop",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "AutoDeleteCleanup_AcquiresALiveSessionWhenTheEndpointStopsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "auto-delete-cleanup-attempts-every-entity-after-failure",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "AutoDeleteCleanup_AggregatesFailuresInStableOrderAndAttemptsEveryDistinctEntityAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "temporary-entity-removed-after-delete",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "TemporaryEntityDelete_RemovesTheSuccessfulRegistrationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "failed-temporary-delete-remains-retryable",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "TemporaryEntityDelete_RestoresTheRegistrationWhenTheBrokerDeleteFailsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "temporary-topic-registration-reused-by-publisher",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "AmqpTemporaryTopicRegistration_IsReusedOnlyForTopicDestinationsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "openwire-virtual-topic-keeps-canonical-publish-name",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "OpenWireVirtualTopicPublication_DoesNotUseATemporaryTopicRegistrationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "retained-send-session-retires-with-connection",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqLifecycleTests",
+    "testMethod": "SharedSendSession_RetiresWhenItsConnectionFaultsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "producer-cache-single-flight-and-stop-release",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests",
+    "testMethod": "ConcurrentRequests_ShareOneProducerAndStoppingTheCacheReleasesItExactlyOnceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "producer-cache-faulted-creation-is-retryable",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests",
+    "testMethod": "FaultedProducerCreation_DoesNotPoisonTheDestinationKeyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "canceled-producer-waiter-preserves-shared-creation",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests",
+    "testMethod": "CanceledWaiter_DoesNotCancelAnotherSendersProducerCreationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "independent-destinations-create-and-release-independent-producers",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests",
+    "testMethod": "DifferentDestinations_CreateConcurrentlyAndReleaseTheirOwnProducersAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "first-sender-cancellation-does-not-abort-shared-producer-creation",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSessionProducerCancellationTests",
+    "testMethod": "CanceledFirstSender_DoesNotAbortAnotherSendersQueuedProducerCreationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "cached-producer-operations-refresh-resource-usage",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests",
+    "testMethod": "ProducerOperations_RefreshUsageAndDelegateToTheOwnedProducerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "native-message-factory-shapes-preserve-arguments-result-and-usage",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.CachedMessageProducerContractTests",
+    "testMethod": "NativeMessageFactory_PreservesEachShapeResultAndUsageOrderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "native-send-shapes-preserve-delivery-options-and-async-completion",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.CachedMessageProducerContractTests",
+    "testMethod": "NativeSend_PreservesEveryDestinationAndDeliverySettingsShapeAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "native-close-and-dispose-preserve-lifecycle-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.CachedMessageProducerContractTests",
+    "testMethod": "NativeCloseAndDispose_ForwardExactlyOnceWithOnlyAsyncCloseReportingUsageAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "native-producer-properties-forward-both-directions-without-usage",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.CachedMessageProducerContractTests",
+    "testMethod": "NativeProperties_ForwardGetterAndSetterWithoutReportingUsage"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS",
+    "variantKey": "full-address-canonical-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests",
+    "testMethod": "FullAddresses_ParseAndRenderCanonically"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS",
+    "variantKey": "full-address-host-must-match-configuration",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests",
+    "testMethod": "FullAddresses_CannotRedirectTheConfiguredConnection"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS",
+    "variantKey": "short-address-symmetric-resolution",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests",
+    "testMethod": "ShortAddresses_DecodeNamesAndResolveAgainstTheHost"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-OPTIONS",
+    "variantKey": "complete-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests",
+    "testMethod": "EndpointOptions_RoundTripWithoutLosingFlags"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-OPTIONS",
+    "variantKey": "invalid-or-ambiguous-input-fails-fast",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests",
+    "testMethod": "InvalidOrAmbiguousEndpointInputs_AreRejected"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS",
+    "variantKey": "direct-name-is-data-not-uri-control",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests",
+    "testMethod": "DirectConstruction_RejectsNamesThatCouldBecomeUriControl"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS",
+    "variantKey": "topology-name-is-data-not-uri-control",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests",
+    "testMethod": "BusTopology_RejectsANameThatAttemptsToInjectTemporarySemantics"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS",
+    "variantKey": "temporary-generated-name-is-broker-safe",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests",
+    "testMethod": "TemporaryEntityName_UsesBrokerSafeCanonicalForm"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "supported-schemes-ports-and-scope",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "SupportedAddresses_RoundTripCanonically"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "secrets-and-options-never-live-in-uri",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "CredentialsAndTransportOptions_AreRejectedInHostUris"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "typed-protocol-construction",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "ExplicitConstruction_RequiresAndProjectsTheTypedProtocol"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "unknown-typed-protocol-fails-fast",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "ExplicitConstruction_RejectsAnUnknownTypedProtocol"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "uri-invalid-explicit-host-fails-at-construction",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "ExplicitConstruction_RejectsUriInvalidHostsAtConstruction"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "protocol-less-constructor-is-not-public-api",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "PublicApi_ExposesNoProtocolLessHostConstructor"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "default-value-fails-through-configuration-boundary",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "DefaultValue_CannotEscapeAsAnInvalidUri"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "unsupported-scheme-fails-fast",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "UnsupportedSchemes_AreRejected"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "port-must-be-explicit",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "HostUris_RequireAnExplicitPort"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "relative-uri-fails-at-domain-boundary",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "RelativeUri_IsRejectedByTheConfigurationBoundary"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "invalid-explicit-host",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "ExplicitConstruction_RejectsInvalidHosts"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-ADDRESS",
+    "variantKey": "invalid-explicit-port",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqHostAddressTests",
+    "testMethod": "ExplicitConstruction_RejectsInvalidPorts"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION",
+    "variantKey": "failover-uri-canonical-and-ipv6-safe",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests",
+    "testMethod": "FailoverUri_HasCanonicalPrecedenceForOpenWireAndAmqp"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION",
+    "variantKey": "failover-protocol-must-match",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests",
+    "testMethod": "FailoverEndpoint_RejectsAProtocolThatCannotBeUsedByTheSelectedProvider"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION",
+    "variantKey": "failover-port-must-be-explicit",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests",
+    "testMethod": "FailoverEndpoint_RejectsAnAddressWithoutAnExplicitPort"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION",
+    "variantKey": "tls-does-not-rewrite-explicit-port",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests",
+    "testMethod": "UseSsl_DoesNotRewriteTheExplicitPort"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION",
+    "variantKey": "duplicate-option-fails-fast",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests",
+    "testMethod": "TransportOptions_RejectDuplicateKeysInsteadOfSilentlyOverwriting"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION",
+    "variantKey": "bus-owns-immutable-settings-snapshot",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests",
+    "testMethod": "BusConfiguration_OwnsAnImmutableSnapshotOfMutableInputSettings"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HOST-CONFIGURATION",
+    "variantKey": "host-comparer-hash-matches-case-insensitive-equality",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.Configuration.ActiveMqHostSettingsTests",
+    "testMethod": "HostComparer_UsesTheSameCaseInsensitiveIdentityForEqualityAndHashing"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-CONFIGURATION",
+    "variantKey": "prefetch-and-concurrency-precedence",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointConfigurationTests",
+    "testMethod": "ConcurrencyAndPrefetch_ResolveFromEndpointAndBusSettings"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-MESSAGE-BODY",
+    "variantKey": "all-access-orders-and-unsupported-provider-types",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqMessageBodyTests",
+    "testMethod": "AllAccessOrders_UseOwnedSnapshotsAndExternalByteOracles"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-RECOVERY",
+    "variantKey": "fault-before-ready-current-watch-and-target-endpoint",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqRecoveryObserverTests",
+    "testMethod": "RecoveryStateMachine_RejectsStaleForeignAndOutOfOrderSignalsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-REQUIREMENT-PROJECTION",
+    "variantKey": "compiled-metadata-matches-projection",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Requirements.RequirementCoverageProjectionTests",
+    "testMethod": "ActiveMqRequirements_MatchCompiledRequirementMetadata"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-SEND-FAILURE",
+    "variantKey": "typed-chain-and-permanent-precedence",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqSendFailureClassifierTests",
+    "testMethod": "TypedFailures_UseTheCompleteExceptionChainWithPermanentPrecedence"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-SEND-FAILURE",
+    "variantKey": "registration-is-singleton-and-idempotent",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqSendFailureClassifierTests",
+    "testMethod": "BusRegistration_AddsExactlyOneClassifierDescriptor"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-MESSAGE-BODY",
+    "variantKey": "required-native-message-boundary",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqMessageBodyTests",
+    "testMethod": "Constructor_RejectsMissingNativeMessageImmediately"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-MESSAGE-BODY",
+    "variantKey": "provider-interface-buffer-is-copied",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqMessageBodyTests",
+    "testMethod": "Constructor_CopiesAProviderOwnedByteBuffer"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "native-and-provider-owned-values-have-precedence",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests",
+    "testMethod": "SetHeaders_PreservesNativeValuesAndSkipsProviderOwnedOrUnsupportedHeaders"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "temporal-values-preserve-their-instants",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests",
+    "testMethod": "SetHeaders_ProjectsEveryDateTimeKindAsUnixMilliseconds"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "scalar-values-have-provider-safe-wire-representations",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests",
+    "testMethod": "SetHeaders_ProjectsSupportedScalarWireRepresentations"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "shared-provider-native-types-survive-openwire-marshalling",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests",
+    "testMethod": "SetHeaders_PreservesTheSharedOpenWireAndAmqpNativeTypes"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "reference-formattables-use-invariant-culture",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests",
+    "testMethod": "SetHeaders_FormatsReferenceFormattablesInvariantly"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "scheduled-delay-is-transferred-once",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests",
+    "testMethod": "SetHeaders_TransfersAndConsumesTheClassicScheduledDelayHeader"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-HEADERS",
+    "variantKey": "nonconforming-null-values-remove-native-properties",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.TransportHeaderExtensionsTests",
+    "testMethod": "SetHeaders_ContainsNullValuesFromExternalImplementations"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-SEND-CONTEXT",
+    "variantKey": "complete-transport-property-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendContextContractTests",
+    "testMethod": "TransportProperties_RoundTripEveryExplicitActiveMqValue"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-SEND-CONTEXT",
+    "variantKey": "absent-values-remain-absent",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSendContextContractTests",
+    "testMethod": "TransportProperties_OmitAndRestoreAbsentActiveMqValues"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "queue-contract-identity",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "QueueEntityComparer_UsesExactTypeNameAndLifecycleSettings"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "queue-name-identity",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "QueueNameComparer_UsesExactTypeAndNameOnly"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "queue-diagnostic-lifecycle",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "QueueDiagnostics_IncludeOnlyEnabledLifecycleFlags"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "topic-contract-identity",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "TopicEntityComparer_UsesExactTypeNameAndLifecycleSettings"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "topic-name-identity",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "TopicNameComparer_UsesExactTypeAndNameOnly"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "topic-diagnostic-lifecycle",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "TopicDiagnostics_IncludeOnlyEnabledLifecycleFlags"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "consumer-identity-includes-every-broker-setting",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "EntityComparer_DetectsEveryBrokerRelevantConsumerDifference"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "consumer-name-identity",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "NameComparer_DistinguishesQueueAndDirectTopicConsumers"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "consumer-diagnostics-omit-absent-values",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.Topology.ConsumerEntityTests",
+    "testMethod": "ConsumerDiagnostics_OmitAbsentOptionalValues"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-TOPOLOGY",
+    "variantKey": "runtime-message-type-preserves-lifecycle-semantics",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests",
+    "testMethod": "BusTopology_ResolvesRuntimeMessageTypesAndAppliesLifecycleOverrides"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "t79-cached-producer-rejects-missing-owners",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests",
+    "testMethod": "CachedProducer_RejectsMissingDestinationAndNativeProducerAtConstruction"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "t79-null-producer-factory-does-not-poison-cache-key",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests",
+    "testMethod": "NullProducerFactory_DoesNotPoisonTheDestinationAndHealthyRetryOwnsItsDisposalAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "t79-explicit-send-settings-and-async-failure-preserve-ownership",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests",
+    "testMethod": "ExplicitSendSettings_ReachTheNativeProducerAndFailedAsyncSendReportsOneUsageAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "t79-synchronous-native-async-throw-reports-usage-first",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.MessageProducerCacheTests",
+    "testMethod": "NativeAsyncSendThrow_ReportsOneUsageBeforePropagatingTheExactSynchronousFailure"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS",
+    "variantKey": "active-entity-name-rejects-final-lf-crlf-nul",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqEndpointAddressTests",
+    "testMethod": "EntityNameValidation_RejectsUnsupportedTrailingCharacters"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "connection-own-debug-preserves-cleanup-and-native-close-primary",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqConnectionDisposeDiagnosticsTests",
+    "testMethod": "ConnectionDispose_OwnDebugPreservesCleanupAndCloseFailureAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "session-delete-own-debug-preserves-native-outcome",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSessionDeleteDiagnosticsTests",
+    "testMethod": "SessionDelete_OwnDiagnosticPreservesNativeOutcomeAndCancellationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "ensure-topic-preserves-producer-close-dispose-outcomes",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqEnsureTopicProducerOutcomeTests",
+    "testMethod": "EnsureTopic_PreservesProducerCleanupOutcomesAndCancellationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "connect-endpoint-own-debug-preserves-real-start",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqPublicContinuationDiagnosticsTests",
+    "testMethod": "ConnectReceiveEndpoint_OwnDebugPreservesRegisteredEndpointStartAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "create-send-own-debug-preserves-parent-adoption",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqPublicContinuationDiagnosticsTests",
+    "testMethod": "CreateSendTransport_OwnDebugPreservesBothActualParentAdmissionsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+    "variantKey": "topology-own-debug-preserves-native-resolution-and-next",
+    "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+    "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqPublicContinuationDiagnosticsTests",
+    "testMethod": "Topology_OwnDebugPreservesNativeResolutionAndDownstreamAsync"
+  }
 ]

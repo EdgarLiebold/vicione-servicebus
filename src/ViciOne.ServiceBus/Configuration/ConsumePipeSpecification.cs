@@ -112,7 +112,7 @@ public class ConsumePipeSpecification :
     /// <summary>Gets or sets the auto start.</summary>
     public bool AutoStart { get; set; }
 
-    /// <summary>Consumes r configured.</summary>
+    /// <summary>Forwards consumer configuration to the registered consumer configuration observers.</summary>
     /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     public void ConsumerConfigured<TConsumer>(IConsumerConfigurator<TConsumer> configurator)
@@ -121,7 +121,7 @@ public class ConsumePipeSpecification :
         _consumerObservers.ConsumerConfigured(configurator);
     }
 
-    /// <summary>Consumes r message configured.</summary>
+    /// <summary>Forwards consumer message configuration to the registered consumer configuration observers.</summary>
     /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="configurator">The configurator to update.</param>

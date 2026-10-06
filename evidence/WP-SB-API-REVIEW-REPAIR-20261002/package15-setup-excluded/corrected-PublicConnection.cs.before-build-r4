@@ -1,0 +1,72 @@
+using System.Buffers;
+using System.IO.Pipelines;
+using System.Threading.Channels;
+using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR.Protocol;
+using Microsoft.Extensions.Logging.Abstractions;
+
+namespace ViciOneReview.SignalRLifetime;
+
+public sealed class PublicHub : Hub;
+
+public sealed class PublicConnection : HubConnectionContext, IAsyncDisposable
+{
+    readonly DefaultConnectionContext _connection;
+    readonly Channel<InvocationMessage> _writes = Channel.CreateUnbounded<InvocationMessage>();
+    readonly JsonHubProtocol _protocol = new();
+    readonly List<Task<InvocationMessage>> _reads = [];
+    public PublicConnection(string id) : this(new DefaultConnectionContext(id, new Duplex(), new Duplex())) { }
+    PublicConnection(DefaultConnectionContext connection) : base(connection, new HubConnectionContextOptions(), NullLoggerFactory.Instance)
+    {
+        _connection = connection; Protocol = _protocol; UserIdentifier = "public-user";
+    }
+    public override ValueTask WriteAsync(HubMessage message, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (message is not InvocationMessage invocation) throw new InvalidDataException("Expected actual SignalR invocation.");
+        return _writes.Writer.WriteAsync(invocation, cancellationToken);
+    }
+    public override ValueTask WriteAsync(SerializedHubMessage message, CancellationToken cancellationToken = default)
+    {
+        var input = new ReadOnlySequence<byte>(message.GetSerializedMessage(_protocol));
+        if (!_protocol.TryParseMessage(ref input, new Binder(), out HubMessage? parsed) || parsed is null || !input.IsEmpty)
+            throw new InvalidDataException("Expected one real backplane protocol frame.");
+        return WriteAsync(parsed, cancellationToken);
+    }
+    public Task<InvocationMessage> ReadAsync(TimeSpan timeout, CancellationToken token)
+    {
+        Task<InvocationMessage> read = _writes.Reader.ReadAsync(token).AsTask(); _reads.Add(read);
+        return read.WaitAsync(timeout, token);
+    }
+    public async ValueTask DisposeAsync()
+    {
+        _writes.Writer.TryComplete();
+        var cleanup = new List<Func<Task>>();
+        foreach (Task<InvocationMessage> read in _reads) cleanup.Add(async () =>
+        {
+            try { await read; }
+            catch (ChannelClosedException) { /* Closing the owned channel terminates a pending read. */ }
+            catch (OperationCanceledException) when (read.IsCanceled) { }
+        });
+        cleanup.AddRange([
+            () => _connection.Transport.Input.CompleteAsync().AsTask(),
+            () => _connection.Transport.Output.CompleteAsync().AsTask(),
+            () => _connection.Application.Input.CompleteAsync().AsTask(),
+            () => _connection.Application.Output.CompleteAsync().AsTask(),
+            () => _connection.DisposeAsync().AsTask()]);
+        await OwnedLifetime.RunAsync(() => Task.CompletedTask, cleanup.ToArray());
+    }
+    sealed class Duplex : IDuplexPipe
+    {
+        readonly System.IO.Pipelines.Pipe _pipe = new();
+        public PipeReader Input => _pipe.Reader;
+        public PipeWriter Output => _pipe.Writer;
+    }
+    sealed class Binder : IInvocationBinder
+    {
+        public IReadOnlyList<Type> GetParameterTypes(string methodName) => [typeof(string)];
+        public Type GetReturnType(string invocationId) => typeof(object);
+        public Type GetStreamItemType(string streamId) => typeof(object);
+    }
+}

@@ -59,18 +59,24 @@ public sealed class ServiceBusTopologyTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-NAME", "entity-and-optional-scope-compose-before-shortening")]
-    public void GeneratedSubscriptionNames_ComposeTheOptionalScopeBeforeApplyingTheLimit()
+    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-NAME", "full-destination-and-namespace-identity-is-bounded-and-case-normalized")]
+    public void GeneratedSubscriptionNames_IncludeTheFullDestinationAndNamespace()
     {
         var topology = new ServiceBusPublishTopology(AzureBusFactory.CreateMessageTopology());
         string entityName = new('e', 45);
 
-        Assert.Equal(entityName, topology.GenerateSubscriptionName(entityName));
-        Assert.Equal(entityName, topology.GenerateSubscriptionName(entityName, "   "));
-
+        string unscoped = topology.GenerateSubscriptionName(entityName);
         string scoped = topology.GenerateSubscriptionName(entityName, "tenant");
-        Assert.Equal(50, scoped.Length);
-        Assert.StartsWith(new string('e', 36) + "-", scoped, StringComparison.Ordinal);
+        Assert.Matches("^auto-[0-9a-f]{40}$", unscoped);
+        Assert.Matches("^auto-[0-9a-f]{40}$", scoped);
+        Assert.NotEqual(unscoped, scoped);
+        Assert.Equal(scoped, topology.GenerateSubscriptionName(entityName.ToUpperInvariant(), "TENANT"));
+        Assert.Equal(scoped, topology.GenerateSubscriptionName(entityName, "tenant"));
+        Assert.NotEqual(topology.GenerateSubscriptionName("north/orders", "tenant"),
+            topology.GenerateSubscriptionName("south/orders", "tenant"));
+        Assert.NotEqual(topology.GenerateSubscriptionName("bc", "a"),
+            topology.GenerateSubscriptionName("c", "ab"));
+        Assert.Equal("manual-orders", topology.FormatSubscriptionName("manual-orders"));
     }
 
     [Fact]

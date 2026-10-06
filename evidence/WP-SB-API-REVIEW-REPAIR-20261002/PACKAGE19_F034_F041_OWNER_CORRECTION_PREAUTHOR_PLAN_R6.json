@@ -1,0 +1,8 @@
+{
+  "status": "ROOT_QUALIFIED_FIXTURE_CORRECTION_BEFORE_AUTHORING",
+  "R5_actual": "39PASS2finiteEqualfails missingignored-fluent-execute in newtwoCompensationDefinitionmodes; no finding/mutkill credit",
+  "cause": "EndpointRegistration componentkey IExecuteActivity<SharedArguments> and genericalias are last-registration-based; newFAIL<SharedArgs> updates the standalone registration previously namedignored-fluent-execute. Concrete activity owner remainscorrect; source unchanged.",
+  "correction": "Onlynewdefinition&&compensate modes use public DefinitionFailActivity:IExecuteActivity<DistinctArguments> and matchingDistinctArguments payload. Preserve same6-name plan by independent argument-registration slot; old34SharedArgsFAIL andallordered business/terminal assertions unchanged.",
+  "adversarial": "adversarial_package_01 personallywhole registrationaliasroute verified and approved narrowdistinct-contract controlplan beforeauthor. Actualnewsourcewholepeer review required.",
+  "fresh_generation": "R/repair-consumers/package19-f034-r6; reuseimmutableR5packagefeeds, fresh own caches/locks. No product source deltas."
+}

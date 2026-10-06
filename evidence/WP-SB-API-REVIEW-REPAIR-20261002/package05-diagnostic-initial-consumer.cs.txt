@@ -1,0 +1,162 @@
+using System.Collections.Concurrent;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Observers;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using Xunit;
+
+namespace ViciOneReview.CorePackage05;
+
+public static class DiagnosticOwnerAssertions
+{
+    public static async Task RunAsync(bool typed, bool invalid, bool grouped, TimeSpan timeout, CancellationToken caller)
+    {
+        var observations = new Observations();
+        string queue = "shared-batch-" + Guid.NewGuid().ToString("N");
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddSingleton(observations);
+        TimeSpan interval = invalid ? TimeSpan.FromMilliseconds(uint.MaxValue) : TimeSpan.FromMinutes(1);
+        void Configure(IBusRegistrationConfigurator registration, string host)
+        {
+            registration.Limits(MessageLimits.Conservative);
+            registration.AddConsumer<Receiver>(consumer => consumer.Options<BatchOptions>(options =>
+            {
+                options.SetMessageLimit(2).SetTimeLimit(interval);
+                if (grouped) options.GroupBy<Item, string>(context => context.Message.Owner);
+            })).Endpoint(endpoint => endpoint.Name = queue);
+            registration.AddConfigureEndpointsCallback((_, endpoint) => endpoint.UseExecute(context =>
+            {
+                Assert.Same(TimeProvider.System, context.GetTimeProvider());
+                if (context.TryGetMessage<Item>(out var item))
+                    observations.Addresses[item.Message.Owner] = context.Advanced().ReceiveContext.InputAddress;
+            }));
+            registration.UsingInMemory((context, transport) =>
+            {
+                transport.Host(new Uri("loopback://" + host + "/"));
+                transport.ConfigureEndpoints(context);
+            });
+        }
+        if (typed)
+        {
+            services.AddViciOneServiceBus<IAlphaBus>(registration => Configure(registration, "alpha"));
+            services.AddViciOneServiceBus<IBetaBus>(registration => Configure(registration, "beta"));
+        }
+        else services.AddViciOneServiceBus(registration => Configure(registration, "default"));
+        ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        var ownedBuses = new List<IBusControl>();
+        var handles = new List<IDisposable>();
+        bool completed = false;
+        await OwnedLifetime.RunAsync(async () =>
+        {
+            (IBusControl Bus, Type Contract, string Owner)[] routes = typed
+                ? [((IBusControl)provider.GetRequiredService<IAlphaBus>(), typeof(IAlphaBus), "alpha"),
+                   ((IBusControl)provider.GetRequiredService<IBetaBus>(), typeof(IBetaBus), "beta")]
+                : [(provider.GetRequiredService<IBusControl>(), typeof(IBus), "default")];
+            foreach (var route in routes)
+            {
+                ownedBuses.Add(route.Bus);
+                handles.Add(route.Bus.ConnectConsumeObserver(observations));
+                await route.Bus.StartAsync(caller).WaitAsync(timeout, caller);
+            }
+            foreach (var route in routes)
+            {
+                Guid first = Guid.NewGuid(), second = Guid.NewGuid();
+                ISendEndpoint endpoint = await route.Bus.GetSendEndpointAsync(new Uri("queue:" + queue), caller);
+                await endpoint.SendAsync(new Item(route.Owner, 1, first), caller).WaitAsync(timeout, caller);
+                if (!invalid)
+                    await endpoint.SendAsync(new Item(route.Owner, 2, second), caller).WaitAsync(timeout, caller);
+                Receipt receipt = await observations.Receipt(route.Owner, 1).Task.WaitAsync(timeout, caller);
+                Assert.Equal(first, receipt.Identity);
+                if (invalid)
+                {
+                    Assert.NotNull(receipt.Failure);
+                    ConfigurationException configuration = Assert.Single(Flatten(receipt.Failure!).OfType<ConfigurationException>());
+                    ValidationResult result = Assert.Single(configuration.Results);
+                    Assert.Equal("Batch.TimeLimit", result.Key);
+                    Assert.Equal(ValidationResultDisposition.Failure, result.Disposition);
+                    string busKey = route.Contract == typeof(IBus) ? "default"
+                        : route.Contract.Assembly.GetName().Name + ":" + route.Contract.FullName;
+                    Assert.StartsWith("Batch timing for bus '" + busKey + "':", result.Message, StringComparison.Ordinal);
+                    Assert.Contains("endpoint '" + observations.Addresses[route.Owner] + "'", result.Message, StringComparison.Ordinal);
+                    Assert.Contains("Batch.TimeLimit", result.Message, StringComparison.Ordinal);
+                    Assert.Contains("4294967294 whole milliseconds", result.Message, StringComparison.Ordinal);
+                    Assert.Contains("Set Batch.TimeLimit", result.Message, StringComparison.Ordinal);
+                    Assert.Contains("attach a TimeProvider", result.Message, StringComparison.Ordinal);
+                    foreach (var other in routes.Where(x => x.Contract != route.Contract))
+                        Assert.DoesNotContain(other.Contract.FullName!, result.Message, StringComparison.Ordinal);
+                    Assert.False(observations.Batches.ContainsKey(route.Owner));
+                }
+                else
+                {
+                    Assert.Null(receipt.Failure);
+                    Receipt next = await observations.Receipt(route.Owner, 2).Task.WaitAsync(timeout, caller);
+                    Assert.Equal(second, next.Identity);
+                    Assert.Null(next.Failure);
+                    IMessageBatch<Item> batch = Assert.Single(observations.Batches[route.Owner]);
+                    Assert.Equal(BatchCompletionMode.Size, batch.Mode);
+                    Assert.Equal(new[] { first, second }, batch.Select(x => x.Message.Identity).ToArray());
+                    Assert.All(batch, item => Assert.Equal(route.Owner, item.Message.Owner));
+                }
+            }
+            completed = true;
+        }, async () =>
+        {
+            await OwnedLifetime.RunAsync(() => Task.CompletedTask,
+                ownedBuses.AsEnumerable().Reverse().Select<IBusControl, Func<Task>>(bus =>
+                    () => bus.StopAsync(CancellationToken.None).WaitAsync(timeout)).ToArray());
+            if (completed)
+            {
+                Assert.Equal((typed ? 2 : 1) * (invalid ? 1 : 2), observations.TerminalCount);
+                Assert.Equal(invalid ? 0 : (typed ? 2 : 1), observations.Batches.Sum(x => x.Value.Count));
+            }
+        }, () => { foreach (var handle in handles) handle.Dispose(); return Task.CompletedTask; },
+            () => provider.DisposeAsync().AsTask().WaitAsync(timeout));
+    }
+
+    private static IEnumerable<Exception> Flatten(Exception failure)
+    {
+        yield return failure;
+        if (failure is AggregateException aggregate)
+            foreach (Exception child in aggregate.InnerExceptions)
+                foreach (Exception entry in Flatten(child)) yield return entry;
+        else if (failure.InnerException is { } inner)
+            foreach (Exception entry in Flatten(inner)) yield return entry;
+    }
+    public interface IAlphaBus : IBus;
+    public interface IBetaBus : IBus;
+    public sealed record Item(string Owner, int Sequence, Guid Identity);
+    public sealed class Receiver(Observations observations) : IConsumer<IMessageBatch<Item>>
+    {
+        public Task ConsumeAsync(ConsumeContext<IMessageBatch<Item>> context)
+        {
+            string owner = context.Message[0].Message.Owner;
+            observations.Batches.GetOrAdd(owner, _ => new()).Enqueue(context.Message);
+            return Task.CompletedTask;
+        }
+    }
+    public sealed record Receipt(Guid Identity, Exception? Failure);
+    public sealed class Observations : IConsumeObserver
+    {
+        private readonly ConcurrentDictionary<(string, int), TaskCompletionSource<Receipt>> _receipts = new();
+        public ConcurrentDictionary<string, Uri> Addresses { get; } = new();
+        public ConcurrentDictionary<string, ConcurrentQueue<IMessageBatch<Item>>> Batches { get; } = new();
+        public int TerminalCount;
+        public TaskCompletionSource<Receipt> Receipt(string owner, int sequence) => _receipts.GetOrAdd((owner, sequence),
+            _ => new(TaskCreationOptions.RunContinuationsAsynchronously));
+        public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class => Record(context, null);
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception failure) where T : class => Record(context, failure);
+        private Task Record<T>(ConsumeContext<T> context, Exception? failure) where T : class
+        {
+            if (context.Message is Item item)
+            {
+                Interlocked.Increment(ref TerminalCount);
+                Receipt(item.Owner, item.Sequence).TrySetResult(new(item.Identity, failure));
+            }
+            return Task.CompletedTask;
+        }
+    }
+}

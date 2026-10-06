@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-06T01:17:38.024660+00:00",
+  "status": "CONFIRMED_ACTIVEMQ_CONNECTION_OWNING_DEBUG2_ORIGINAL6_REPAIR_PENDING",
+  "id": "F-SB-API-209",
+  "severity": "Medium",
+  "source_owner": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqConnectionContext.cs",
+  "title": "Optional ActiveMQ connection diagnostics prevent cleanup or mask actual native cleanup outcome",
+  "family_reconciliation": "One owningconnection Debug2 containment cause, three effects. Existing ordered cleanup capture/Warning identity repairs preserved; othertransport diagnostic families separateowners. No thirdsite or separate IDs percase.",
+  "actual_original6": {
+    "passed": 3,
+    "failed": 3,
+    "skipped": 0,
+    "boundary": "mode0nativeCloseadmission0Equal114; mode1Null127 postrawClose success/nativeDispose1; mode2Same122 rawNMSCloseprimary masked. Later assertions unreached."
+  },
+  "independent_original": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package290-activemq-original6-independent-qualification-r1/REPORT.json",
+    "sha256": "6783427ad68c03bc26a467a299245f10ca7d8b3ef96822603f1690946d722e96"
+  },
+  "root_whole_actual_and_product": "554433/d1c9bb",
+  "whole_API_closed": false
+}

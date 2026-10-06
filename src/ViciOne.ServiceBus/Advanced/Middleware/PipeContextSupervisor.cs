@@ -116,7 +116,7 @@ public class PipeContextSupervisor<TContext> :
         });
     }
 
-    /// <summary>Stops borrowed uses before stopping the owned contexts captured by the supervisor.</summary>
+    /// <summary>Initiates borrowed and captured owned context stops, then awaits both stop operations and lifecycle completion.</summary>
     /// <param name="context">The stop request and captured owned-context agents.</param>
     /// <returns>A task that completes when borrowed and owned context lifecycles have completed.</returns>
     protected override async Task StopSupervisorAsync(StopSupervisorContext context)
@@ -124,7 +124,21 @@ public class PipeContextSupervisor<TContext> :
         SetCompleted(ActiveAndActualAgentsCompletedAsync(context));
 
         Task stopBorrowedContexts = _activeSupervisor.StopAsync(context);
-        Task stopOwnedContexts = Task.WhenAll(context.Agents.Select(x => x.StopAsync(context)));
+        var ownedStopTasks = new Task[context.Agents.Count];
+        for (var i = 0; i < context.Agents.Count; i++)
+        {
+            try
+            {
+                ownedStopTasks[i] = context.Agents[i].StopAsync(context)
+                    ?? Task.FromException(new InvalidOperationException("The agent must expose a stop task."));
+            }
+            catch (Exception exception)
+            {
+                ownedStopTasks[i] = Task.FromException(exception);
+            }
+        }
+
+        Task stopOwnedContexts = Task.WhenAll(ownedStopTasks);
         await Task.WhenAll(stopBorrowedContexts, stopOwnedContexts).ConfigureAwait(false);
 
         await Completed.ConfigureAwait(false);

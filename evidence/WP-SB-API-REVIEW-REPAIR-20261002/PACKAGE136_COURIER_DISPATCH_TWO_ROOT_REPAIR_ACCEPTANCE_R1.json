@@ -1,0 +1,60 @@
+{
+  "utc": "2026-10-04T20:11:08.534508+00:00",
+  "decision": "ROOT_ACCEPT_F115_F116_TARGETED_REPAIRS_AFTER_UNCHANGED_NATIVE_AND_FRESH_CURRENT_PACKAGES_ADVERSARIAL_REVIEW",
+  "findings": [
+    "F-SB-API-115",
+    "F-SB-API-116"
+  ],
+  "accepted_known_before": 114,
+  "accepted_known_after": 116,
+  "independent_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package133-fixed-courier6-dispatch11-original-mediator54-independent-r1/REPORT.json",
+      "sha256": "d56229d1b2b15b0ced3c4d3818dd6bbd6fddedd21737a887a550f1214377d6ce"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fresh-core-courier-two-independent-r1/REPORT.json",
+      "sha256": "15b94fa74099b2e595bf878649c18b189e1075c6553d4c20d0c58144dc13bceb"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fresh-core-courier-two-independent-r1/133_TEXT_COUNT_ERRATUM.json",
+      "sha256": "7efe7e745f68814efd65434763570b5f87bcec66abfe5e537e327f5907010927"
+    }
+  ],
+  "original_native": {
+    "courier": {
+      "passed": 2,
+      "finite_failed": 4
+    },
+    "dispatcher": {
+      "passed": 9,
+      "finite_failed": 2
+    }
+  },
+  "fixed_native": {
+    "courier": {
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    "dispatcher": {
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "broader_native": {
+    "courier": 419,
+    "passed": 419,
+    "failed": 0,
+    "skipped": 0
+  },
+  "fresh_packages": 2,
+  "root_personal_review": "WholeSourcepeers f86fa5/e73b30 and exactthreeproductdeltas, wholeoriginalqual a5659f and fixedqual6bb31c; allactual6+11nativeouts f786d7/83bb64. Entire semantic134report/receipts/ZIPclaims5c57a7 with machinePEdocument/customdebug lists intentionally summarized. Truncated12d5ea not wholemetadata/readcredit. Actual419 tail observed only; mechanicallycompleteindependentparse, no full419human semanticclaim.",
+  "limits": [
+    "Bounded primary-plus-observed-secondary exception preservation; no new all-observer flattening or wire schema guarantee.",
+    "Logger containment only diagnostics inside zero-activity catch, genuine pipeline/settlement failures still retained.",
+    "F117 Mediator original54 remains separate pendingrepair; no final wholeUnit or wholeAPI A+."
+  ],
+  "whole_api_status": "PARTIAL"
+}

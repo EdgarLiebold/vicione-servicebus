@@ -1,0 +1,15 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE550_CURRENT546_PUBLIC_CANCELLATION_PROPERTY2_ROOT_SOURCE_ACCEPTANCE_R1.json",
+    "bytes": 13504,
+    "sha256": "c0d259371ef94545f26dc168aefb021f81a3460395dd77812dd6c2e574f577bc"
+  },
+  "master_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "bytes": 86412898,
+    "sha256": "8ccffb084c4a34372489a51bf7658bce398057e08b3ec6edacf0e3ffa9446345"
+  },
+  "old19431_unchanged": true,
+  "new2_exact_before_embedded_plus_root_status_and_references_only": true,
+  "STATE_PO_Product_Test_Req_unchanged": true
+}

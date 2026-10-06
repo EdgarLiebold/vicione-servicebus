@@ -18,7 +18,7 @@ public class TransportReadyFilter<T> :
         _context = context;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Notifies transport readiness, registers an agent, runs the continuation and awaits agent completion.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

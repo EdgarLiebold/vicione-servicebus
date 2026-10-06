@@ -1,0 +1,119 @@
+{
+  "utc": "2026-10-03T02:42:52.423898+00:00",
+  "status": "ACCEPTED_SCOPED_F030_RUNTIME_BUS_DIAGNOSTIC_SUPPLEMENT",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_F030_DIAGNOSTIC_FREEZE.json",
+    "sha256": "2b09f2d8d830f1e1de7f900109aeda58cde2b6918cde9bd23ab88d901087a21e",
+    "bytes": 15663
+  },
+  "blocking_findings": [],
+  "contracts": [
+    {
+      "source": "ConsumerRegistration.cs",
+      "conclusion": "Per-consumer configurator options capture canonical IBusRegistrationIdentity.BusKey before definition/actions and transfer through normal ConsumerKind endpoint context. ConsumerConfigurator owns a fresh ConsumerSpecification/OptionsSet per configuration; tag is not global, endpoint-shared, or a retained provider.",
+      "evidence": "Current registration/consumer specification/owner context and default+typed service collection factory fully read; same consumer type on two typed buses exercised."
+    },
+    {
+      "source": "BatchConsumerMessageConnector.cs",
+      "conclusion": "Reads options BusKey once, passes it through plain constructor and grouped reflection Activator fourth argument. Optional ctor argument keeps internal callers compatible; absent tag gives honest unknown rather than fabricating default or deriving host identity.",
+      "evidence": "Both grouped/plain eight-case execution and distinct handoff mutants; manual/custom/factory-without-normal-tag unknown fallback is statically reviewed only."
+    },
+    {
+      "source": "ConsumerBusIdentityOptions.cs",
+      "conclusion": "Internal sealed string-only tag; no public signature change or provider lifetime retention. Canonical default is default; typed key is assembly name plus full contract name, independent of equal queue names or differing host addresses.",
+      "evidence": "Public normal DI default/typed configuration plus beta-to-alpha substitution causal kill; no claim that distinct hosts themselves define bus key."
+    },
+    {
+      "source": "BatchCollector.cs",
+      "conclusion": "Stores owner string; existing System TimeProvider whole-millisecond timer guard/admission predicate is unchanged. ConfigurationMessages adds feature/bus/problem/fix to the actual endpoint, Batch.TimeLimit, 4294967294 and remediation. Result key/failure aggregation preserved. Both collector constructors use the same owner handoff.",
+      "evidence": "Complete prior package05 collector delta and source-PDB checksums; exact starts-with, results, endpoint and bound/fix assertions plus unchanged 42 regressions."
+    }
+  ],
+  "oracle": {
+    "public_surface": "No project references, internals access, reflection into product or canonical fixture infrastructure; SDK packages and public DI/transport APIs only.",
+    "eight_matrix": "default or two typed buses x invalid/valid x grouped/plain; two typed routes independently checked",
+    "checks": "Exact single ConfigurationException and Batch.TimeLimit failure, canonical prefix, observed endpoint, max bound/remediation and no other owner. Invalid has zero batch delivery; valid has exact owner, item IDs/order and batches. Completed routes check terminal counts after reverse stop.",
+    "cleanup": "OwnedLifetime body-first ExceptionDispatchInfo/AggregateException and per-stage cleanup; no native injected fault-path proof."
+  },
+  "native_evidence": {
+    "previous_final": {
+      "total": 8,
+      "causal_red": 4,
+      "positive": 4,
+      "phase": "package05-diagnostic-previous-eight-r2"
+    },
+    "corrected": {
+      "total": 8,
+      "pass_count": 8,
+      "phase": "package05-diagnostic-corrected-eight"
+    },
+    "regression": {
+      "total": 42,
+      "pass_count": 42,
+      "phase": "package05-diagnostic-regression-fortytwo"
+    },
+    "mutations": {
+      "strict_compiled": 6,
+      "causal_negative": 6,
+      "valid_positive": 6,
+      "baseline": 8,
+      "rollback": 8,
+      "negative_exception": "Xunit.Sdk.StartsWithException at DiagnosticOwnerAssertions.cs:94"
+    },
+    "excluded_initial": {
+      "total": 8,
+      "failures": 6,
+      "typed_setup_failures": 4,
+      "other_default_causal_red": 2,
+      "reason": "Typed configurator helper erased static TBus and selected default Limits registration; corrected final r2 keeps typed Limits/UsingInMemory in typed lambdas. Initial fixture/archive retained; no setup failure counted as mutation kill."
+    }
+  },
+  "proofs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/READ_CLOSURE.json",
+      "sha256": "e8786338b21da05d6dcef8897497597dbcf684d9fb759d3692b7648a4e100ad4",
+      "bytes": 69513
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/MECHANICAL_PROOFS.json",
+      "sha256": "13f7b28823ed9c44ea8793ac0f5533f542657995b368f322244c76b0f7c44a10",
+      "bytes": 121202
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/DELTA_PROOF.json",
+      "sha256": "d9b8a3933597706fc93a3f83ffe148c3695e9a588190184e1a23903178ab44cc",
+      "bytes": 15931
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/PACKAGE_BINDING_INDEPENDENT.json",
+      "sha256": "3cd8a9f053983a5912059282399735f9078e8c02c12ad48db89a4fcbeeff87d1",
+      "bytes": 68729
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/MUTATION_REVIEW.json",
+      "sha256": "338de00bb614df21c1709d1cf2373a4114d2a82fadfebea734e5991d9a843127",
+      "bytes": 73825
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/ROLLBACK_INDEPENDENT.json",
+      "sha256": "f7dd8cce9a046ea3358b5ee92a17f67a4f2a048b18a6d785c9e618cc309bcfba",
+      "bytes": 1839406
+    }
+  ],
+  "limits": [
+    "F030 startup validation remains PO_PENDING; this review accepts only bounded runtime owner diagnostic propagation. The provider-dependent oversized System timer guard runs at batch admission, not newly at startup.",
+    "Eight new and forty-two regression cases are actual public NuGet console cases, not an unfiltered canonical Core owner suite or Core 766 FULL closure/grade.",
+    "Two typed buses exercise the same consumer type and same queue string with distinct configured hosts, native valid/invalid and grouped/plain routes. Multi-consumer same-endpoint registrations, manual constructor/configurator, custom registration SPI and factory-only routes have static reasoning, no new native controls.",
+    "Diagnostics assert the observed actual endpoint address; they do not independently assert an expected host-authority routing contract.",
+    "OwnedLifetime preserves original body stack, aggregates body first and attempts independent cleanup stages. Buses are tracked before Start and stopped in reverse; ordinary completed cases verify terminal/delivery counts. No injected Stop/Disconnect/Dispose failure, second-route construction failure or active-load teardown race is exercised. A loop of handle.Dispose actions can skip later handles if one throws; provider cleanup still runs. This is an untested harness fault boundary, not a demonstrated product defect.",
+    "Cancellation/Timeout from body or cleanup explicitly fails guard checks, not a causal diagnostic pass. Cleanup uses bounded waits with CancellationToken.None for stopping owned buses; no claim about all external SDK cooperative cancellation.",
+    "Actual runtime is .NET 10.0.10 X64 with NuGet Microsoft.Extensions 10.0.12 and xunit.v3.assert 4.0.0. In-memory transport only; no broker/cloud/ARM or custom TimeProvider active-load closure.",
+    "Six compiled mutants replace runtime DLLs in a NuGet-only compiled consumer; no per-mutant nupkg pack claim. Corrected fresh package/runtime binaries and mutation-frame path-dependent binaries are separate hash frames.",
+    "All twenty lock nodes have separately recorded cache raw ZIP/sidecar SHA512. Only the six selected unsigned ViciOne archive chains were independently equated to lock SHA512; external raw archives differ from lock contentHash and their normalization is outside this review.",
+    "Original rollback 6209 hashes independently checked at this timestamp and new identity source removed; root reading closure and other findings do not transfer."
+  ],
+  "whole_api_status": "PARTIAL",
+  "symbols_closed": 0,
+  "native_operations_by_reviewer": 0,
+  "product_writes_by_reviewer": 0
+}

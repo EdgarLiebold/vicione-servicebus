@@ -6,6 +6,25 @@ namespace ViciOne.ServiceBus.AmazonSqs.Tests;
 
 public sealed class AmazonSqsEntityNameTests
 {
+    [Theory]
+    [InlineData(false, "\n")]
+    [InlineData(false, "\r\n")]
+    [InlineData(false, "\0")]
+    [InlineData(true, "\n")]
+    [InlineData(true, "\r\n")]
+    [InlineData(true, "\0")]
+    [RequirementCoverage("REQ-VSB-AWS-ENTITY-NAME", "queue-topic-entity-name-rejects-final-lf-crlf-nul")]
+    public void QueueAndTopicNameValidation_RejectsUnsupportedTrailingCharacters(bool topic, string suffix)
+    {
+        var validator = topic ? AmazonSnsTopicNameValidator.Validator : AmazonSqsEntityNameValidator.Validator;
+        Assert.True(validator.IsValidEntityName("orders"));
+        validator.ThrowIfInvalidEntityName("orders");
+
+        string invalid = "orders" + suffix;
+        Assert.False(validator.IsValidEntityName(invalid));
+        Assert.Throws<AmazonSqsTransportConfigurationException>(() => validator.ThrowIfInvalidEntityName(invalid));
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-ENTITY-NAME", "queue-service-limit")]
     public void QueueNameBeyondTheServiceLimit_IsRejected()

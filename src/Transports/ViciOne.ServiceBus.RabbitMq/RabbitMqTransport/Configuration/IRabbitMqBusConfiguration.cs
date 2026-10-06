@@ -15,7 +15,7 @@ public interface IRabbitMqBusConfiguration :
     /// <summary>Gets the bus-wide RabbitMQ send, publish, and consume topology.</summary>
     new IRabbitMqTopologyConfiguration Topology { get; }
 
-    /// <summary>Creates an isolated endpoint configuration that shares the bus topology.</summary>
+    /// <summary>Creates an endpoint configuration; the built-in implementation shares message, send, and publish topology and creates new consume topology.</summary>
     /// <param name="isBusEndpoint">Whether the configuration belongs to the bus endpoint.</param>
     /// <returns>The new RabbitMQ endpoint configuration.</returns>
     IRabbitMqEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint = false);

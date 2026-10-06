@@ -1,0 +1,93 @@
+{
+  "utc": "2026-10-05T09:47:41.521685+00:00",
+  "actor": "/root",
+  "status": "FOUR_EXISTING_FINDING_FAMILIES_CURRENT_REPAIR_ROOT_ACCEPTED_BOUNDED",
+  "ids": [
+    "F-SB-API-001",
+    "F-SB-API-152",
+    "F-SB-API-163",
+    "F-SB-API-164"
+  ],
+  "before": {
+    "known_unique": 164,
+    "accepted": 160
+  },
+  "after": {
+    "known_unique": 164,
+    "accepted": 164
+  },
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package175-host-consumer-saga-fixed-xml5-fresh7-independent-r1/REPORT.json",
+    "sha256": "0eb4c443f3933e523362c4239439d983526b86cc64c4a1e5c0052d7ae1c3be8f",
+    "manifest_sha256": "f3dd598c5ca7ef5af0d1d62801ce5b98ebc99c32223edca1b764452473c138f6",
+    "freeze_sha256": "2c5615a2eee168f3aa3a5d39e2da8030f5d89831dd16a780f91e2ac1c70bcdfc"
+  },
+  "root_independent_verification": "Actual all3740MAN, all3723 frozen+currentorigin bytes, all3532PDB-document CSchecksums, all17actualreceipt/logSHA,6disjoint2677caseIDs and0F0S, all4runtimecopies and7physicalZIPCRC+exactDLL/XML; Root personally read actualfixed8, XML5 andSource6 delta dossiers. No all3532 human whole-source or whole2677 assertion-body claim.",
+  "repair_scopes": {
+    "F-SB-API-001": "Exact four runtime-Type Initializers returns and one typedMediator response return, actual currentpublishedXML+freshZIP proof; original completion-policy family extended, Native0 added.",
+    "F-SB-API-152": "All14 reviewed owning optional diagnostics: Saga5,Azure3,Dynamo2,EF2,ConfigSaga2. Last two real public registration routes now pass healthy/hostile controls plus genuine send/persistence/consume. Earlier12 fixed under independent prior receipts and current retained case sets. Public direct Log helpers retain their own propagation contract.",
+    "F-SB-API-163": "Real Host stop reaches started rider and ownedagent despite selected initialDebug failure; both original controls and later token/completion assertions pass. Real sequential provider-failure policy is unchanged.",
+    "F-SB-API-164": "Real manual consumer stop completes actual consume task and agent despite selected initialDebug failure; both originalcontrols and later stopped/token/graceful assertions pass. Automatic-loop warning/fault branches separate."
+  },
+  "actual_native": {
+    "total": 2677,
+    "passed": 2677,
+    "failed": 0,
+    "skipped": 0
+  },
+  "native_runs": [
+    {
+      "total": 203,
+      "passed": 203,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "total": 39,
+      "passed": 39,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "total": 36,
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "total": 19,
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "total": 117,
+      "passed": 117,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "total": 2263,
+      "passed": 2263,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "strict_builds": 4,
+  "current_PE_PDB": 16,
+  "current_physical_CS": 3532,
+  "embedded_source_bodies": 109,
+  "fresh_packages": 7,
+  "requirements": "Core4658/Azure44/Dynamo27/EF276 exactold174 physicalJSON +exactonceactualManagedResources",
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "final_23Unit_31Package_18Journey_4Consumers_pending": true,
+  "limits": [
+    "Selected2677/whole strict builds do not provide wholeUnit/API A+ or fresh compiler-inventory evidence.",
+    "Only four actual strict runs and six native runs; no additional native count from XML5 or accessor sidecars.",
+    "Selected runtime copies equal current frames; all loaded external dependency behavior is not proved.",
+    "Dynamo actual offline SDK adapter and EF actual SQLite scopes retain provider boundaries; no cloud/universal provider claim.",
+    "Four managed JSON payloads exactonce; resource names notdecoded.",
+    "No SDK/repo/Master mutation or automatic Root findings/grade/count/acceptance."
+  ]
+}

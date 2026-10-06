@@ -1,0 +1,114 @@
+{
+  "utc": "2026-10-06T09:18:45.163933+00:00",
+  "status": "ROOT_F152_BASIC8_REPAIR_ACCEPTED_BOUNDED_SOURCE6_OWNER4_REBOUND",
+  "product_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE394_F152_BASIC_EXTRA2_PRODUCT1_ROOT_APPLICATION_R1.json",
+    "sha256": "e885a4bcd72409bdd20b99d9c838ebf2374be75f731458f128b27d9b0249d97a"
+  },
+  "source_norm_author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package394-basic-source6-owner4-current265-proposed-r1/REPORT.json",
+    "sha256": "045f548c6294e83d089787bd1dd5c223e047ba093ea293459494c1397c196ed8"
+  },
+  "different_source_norm_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package394-basic6-owner4-independent-runtime-norm-peer-r1/REPORT.json",
+    "sha256": "30411fa021a3e5c3378df8ee8ff84caccc5b8fa4665e230e9b23346e8f420d3b"
+  },
+  "actual_focused_extra4": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package394-extra4-fixed-independent-qualification-r1/REPORT.json",
+    "sha256": "95cdea5fc55528aa471596d12238b76c1d8f3f52ca0410809f9579c4feb19823"
+  },
+  "actual_focused_prior12": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package394-prior12-fixed-independent-qualification-r1/REPORT.json",
+    "sha256": "030f798118ee9311d415bd2ab05db38be5ef33a158b2099888a6e833c5fb5bd7"
+  },
+  "different_actual_focused_and_publication_qualifier": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package394-rabbit-publication-independent-qualification-r1/REPORT.json",
+    "sha256": "de5c99891ac532c7417f86cb2ed8f2801a0b77a087e3ffe12a86df1f676da139"
+  },
+  "Root_whole_focused_peer_reports_read": "8db606",
+  "Root_whole_current265_read": "151654",
+  "Root_current_norm6_owner4_read": "7acbb9",
+  "Root_current_norm_peer_read": "00ccf0",
+  "fixed16_disjoint_sameOriginalIDs": true,
+  "Rabbit595_PASS0FAIL0SKIP_mechanical": true,
+  "strict0W0E_and_freshNuGet_CRC_DLL_XML_equal": true,
+  "compiled_source6_bindings": [
+    {
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.ActiveAndActualAgentsCompletedAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext)",
+      "PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqBasicConsumer.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "38a1d55e8d1c2d185fde76ed07ae08b557b3977d21f0bae9b9e68f5c024ba62c",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.ActiveAndActualAgentsCompletedAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext)\">\n            <summary>Cancels the RabbitMQ consumer during graceful shutdown, then completes base agent shutdown.</summary>\n            <param name=\"context\">The stop context and cancellation deadline.</param>\n            <returns>A task that completes after consumer and base-agent shutdown.</returns>\n        </member>\n        "
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicCancelAsync(System.String,System.Threading.CancellationToken)",
+      "PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqBasicConsumer.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "38a1d55e8d1c2d185fde76ed07ae08b557b3977d21f0bae9b9e68f5c024ba62c",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicCancelAsync(System.String,System.Threading.CancellationToken)\">\n            <summary>Invalidates declared topology and marks the consumer canceled after an unsolicited broker cancellation.</summary>\n            <param name=\"consumerTag\">The consumer tag canceled by RabbitMQ.</param>\n            <param name=\"cancellationToken\">The cancellation associated with the callback.</param>\n            <returns>A task completed after consumer state is updated.</returns>\n        </member>\n        "
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicCancelOkAsync(System.String,System.Threading.CancellationToken)",
+      "PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqBasicConsumer.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "38a1d55e8d1c2d185fde76ed07ae08b557b3977d21f0bae9b9e68f5c024ba62c",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicCancelOkAsync(System.String,System.Threading.CancellationToken)\">\n            <summary>Marks the consumer complete after RabbitMQ confirms cancellation.</summary>\n            <param name=\"consumerTag\">The canceled consumer tag.</param>\n            <param name=\"cancellationToken\">Cancellation checked before updating consumer state.</param>\n            <returns>A task completed after the consumer is marked complete.</returns>\n        </member>\n        "
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicConsumeOkAsync(System.String,System.Threading.CancellationToken)",
+      "PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqBasicConsumer.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "38a1d55e8d1c2d185fde76ed07ae08b557b3977d21f0bae9b9e68f5c024ba62c",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicConsumeOkAsync(System.String,System.Threading.CancellationToken)\">\n            <summary>Records the broker-assigned consumer tag and marks the consumer ready.</summary>\n            <param name=\"consumerTag\">The consumer tag assigned by RabbitMQ.</param>\n            <param name=\"cancellationToken\">Cancellation checked before updating consumer state.</param>\n            <returns>A task completed after the consumer is marked ready.</returns>\n        </member>\n        "
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicDeliverAsync(System.String,System.UInt64,System.Boolean,System.String,System.String,RabbitMQ.Client.IReadOnlyBasicProperties,System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)",
+      "PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqBasicConsumer.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "38a1d55e8d1c2d185fde76ed07ae08b557b3977d21f0bae9b9e68f5c024ba62c",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicDeliverAsync(System.String,System.UInt64,System.Boolean,System.String,System.String,RabbitMQ.Client.IReadOnlyBasicProperties,System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)\">\n            <summary>Builds a receive context for one broker delivery and dispatches it with manual acknowledgement when required.</summary>\n            <param name=\"consumerTag\">The consumer tag that received the delivery.</param>\n            <param name=\"deliveryTag\">The channel-scoped delivery tag.</param>\n            <param name=\"redelivered\">Whether RabbitMQ previously delivered this message.</param>\n            <param name=\"exchange\">The source exchange.</param>\n            <param name=\"routingKey\">The delivery routing key.</param>\n            <param name=\"properties\">The immutable AMQP message properties.</param>\n            <param name=\"body\">The message body.</param>\n            <param name=\"cancellationToken\">Cancellation supplied by RabbitMQ.Client for this callback.</param>\n            <returns>A task that completes after the delivery leaves the receive pipeline.</returns>\n        </member>\n        "
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleChannelShutdownAsync(System.Object,RabbitMQ.Client.Events.ShutdownEventArgs)",
+      "PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqBasicConsumer.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "38a1d55e8d1c2d185fde76ed07ae08b557b3977d21f0bae9b9e68f5c024ba62c",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "XML": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleChannelShutdownAsync(System.Object,RabbitMQ.Client.Events.ShutdownEventArgs)\">\n            <summary>Marks the consumer canceled after its channel shuts down.</summary>\n            <param name=\"channel\">The RabbitMQ channel that shut down.</param>\n            <param name=\"reason\">The broker or library shutdown reason.</param>\n            <returns>A task completed after consumer state is updated.</returns>\n        </member>\n        "
+    }
+  ],
+  "canonical_added": 6,
+  "existing_owner_rows_rebound": 4,
+  "whole_prior_owner_rows_retained": true,
+  "known_findings": 220,
+  "accepted_findings": 220,
+  "new_Finding_ID": null,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": [
+    "Only eight optional owning diagnostic expressions; mandatory state/SDK/base work and general transportfault helper policy unchanged.",
+    "Native public lifecycle and event removal evidence finite16; private worker/drain, broker/network, arbitrary replay/concurrent SPI remain separate."
+  ],
+  "master_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "9279139c6e8478059978c7a78de5154d173583c2324d8949bffc37f09d63d5b7"
+  }
+}

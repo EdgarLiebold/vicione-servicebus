@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Internals;
@@ -17,7 +18,7 @@ internal sealed class ExecuteActivityRegistration<TActivity, TArguments> :
     readonly List<Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>> _configureActions;
     readonly Lock _definitionLock = new();
     readonly IContainerSelector _selector;
-    IExecuteActivityDefinition<TActivity, TArguments> _definition = null!;
+    readonly ConditionalWeakTable<IServiceProvider, IExecuteActivityDefinition<TActivity, TArguments>> _definitions = new();
 
     /// <summary>Creates registration metadata for an execute-only activity.</summary>
     /// <param name="selector">The container integration used to resolve definitions and endpoint settings.</param>
@@ -81,19 +82,32 @@ internal sealed class ExecuteActivityRegistration<TActivity, TArguments> :
 
         lock (_definitionLock)
         {
-            if (_definition != null)
-                return _definition;
+            if (_definitions.TryGetValue(provider, out IExecuteActivityDefinition<TActivity, TArguments>? definition))
+                return definition;
 
-            IExecuteActivityDefinition<TActivity, TArguments> definition =
+            definition =
                 _selector.GetDefinition<IExecuteActivityDefinition<TActivity, TArguments>>(provider)
                 ?? new DefaultExecuteActivityDefinition<TActivity, TArguments>();
 
             IEndpointDefinition<IExecuteActivity<TArguments>>? executeEndpointDefinition =
-                _selector.GetEndpointDefinition<IExecuteActivity<TArguments>>(provider);
+                _selector.GetDefinition<ExecuteActivityEndpointDefinition<TActivity, TArguments>>(provider);
+            if (executeEndpointDefinition == null)
+            {
+                executeEndpointDefinition = _selector.GetEndpointDefinition<IExecuteActivity<TArguments>>(provider);
+                if (executeEndpointDefinition != null)
+                {
+                    Type endpointType = executeEndpointDefinition.GetType();
+                    // Shared contract aliases can point at another activity's generated settings.
+                    if (endpointType.IsConstructedGenericType
+                        && endpointType.GetGenericTypeDefinition() == typeof(ExecuteActivityEndpointDefinition<,>)
+                        && endpointType != typeof(ExecuteActivityEndpointDefinition<TActivity, TArguments>))
+                        executeEndpointDefinition = null;
+                }
+            }
             if (executeEndpointDefinition != null)
                 definition.ExecuteEndpointDefinition = executeEndpointDefinition;
 
-            _definition = definition;
+            _definitions.Add(provider, definition);
             return definition;
         }
     }

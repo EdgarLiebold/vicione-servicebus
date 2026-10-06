@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-05T03:01:00.969500+00:00",
+  "actor": "/root",
+  "source": "https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.whenall?view=net-10.0",
+  "root_actual_browse_receipt": "turn211view0",
+  "checked_section": "Remarks lines256..268 for IEnumerable<Task>; signature overload used by actualproduct List<Task>.",
+  "bounded_contract": "WhenAll waits supplied tasks; faults dominate cancellation and aggregate task failures. A canceled join occurs only without task faults; empty set succeeds immediately.",
+  "inference_for_local_product": "A synchronous admission exception prevents reaching the original join; catch now completes the actual captured task join first. The new combined path preserves actual fault aggregate nodes or canceled-join OCE token; mixed fault/cancel retains framework fault precedence. This rationale supplements independent source/oracle/native evidence; it does not provide additional native credit.",
+  "native_credit": 0,
+  "CLOSED": false
+}

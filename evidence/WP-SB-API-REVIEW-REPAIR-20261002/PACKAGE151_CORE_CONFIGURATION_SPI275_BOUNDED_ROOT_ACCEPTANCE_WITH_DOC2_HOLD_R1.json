@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-04T22:27:19.495179+00:00",
+  "decision": "ACCEPT275_INDIVIDUAL_ABSTRACT_CONFIGURATION_CONTRACTS_HOLD2_ACTUAL_XML_CONTRADICTIONS",
+  "api_before": 2955,
+  "api_after": 3230,
+  "semantic_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-core-configuration-spi277-research-r1/REPORT.json",
+    "sha256": "1e3fb5897b4aba66fc66c891d246ff6642a4b07a919e223cd0803b6655427cb0"
+  },
+  "semantic_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-core-configuration-spi277-research-r1/PER_SYMBOL277_CONTEXT_AND_RECOMMENDATIONS.json",
+    "sha256": "36fcb5d229dd11da82659d04db5fcbf4e805914e7c86cf63616681ae1bdd38b8"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-core-configuration-spi277-research-r1/MANIFEST.json",
+    "sha256": "6394d09fec1419246940760c45dffe8c7a9491915ace502ee0da945c8848f7b6"
+  },
+  "epoch_supplement": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-core-configuration-spi277-research-r1/EPOCH_PROVENANCE_SUPPLEMENT_R1.json",
+    "sha256": "09f5e0b9b68e5b86f1f4748ebf30559cfab25eda446f3ef8a6fafe918d2dbdae"
+  },
+  "held_overlay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-core-configuration-spi277-research-r1/SETTER_DOC2_HOLD_OVERLAY_R1.json",
+    "sha256": "889940f3187749ab71c7051155aed1544a33505d100c4a83dfc198f67261ce0a"
+  },
+  "root_personal_norms": [
+    "Whole report eaf84c; all70 family clauses0c3032/1a5d2f/f34628; every277 individual clausesca24e7/504d07/a45a9c/3cac37",
+    "All66 nonempty parameter profiles plus empty profile, exact rowassignment/default/null/ref/out/attrs1d6ab8/b864fe; all77 interface constraints/variance/inheritance d038cc; all103 method signatures/results58afef with truncated114..119 recovered204cee; all97 accessor shapes/nullable/types204cee/06e92a",
+    "All8 ownership profiles and rowassignments06e92a, exact2 error profilesa294bd, exact4 abstract method/interface/getter/setter NA profiles137a80; implementation obligation70 scopes previously f34628 and738313. Three NotNullWhen(true) actual conditional outs40/70/75; all absence of CancellationToken scoped to declaration."
+  ],
+  "source_evidence": "Genuine independent qualifier personally whole70 owners1527L, bound actual149 PE/PDB/XML. Root reviewed norms and exact member metadata, not own whole70 Source. All70 current physical checksums unchanged at this receipt. Root own whole two cache Source803956 confirms actual IEnumerable<T>, interface covariance out T separate; Roslyn display IEnumerable<out T> is display metadata, not literal legal source syntax.",
+  "held_ids": [
+    "P:ViciOne.ServiceBus.Configuration.ILatestConfigurator`1.Created",
+    "P:ViciOne.ServiceBus.Configuration.IOutboxConfigurator.ConcurrentMessageDelivery"
+  ],
+  "limits": [
+    "No concrete execution/default/atomicity/disposal/pipe/task guarantee transferred; custom/inherited contracts and concrete runtime remain independently obligated.",
+    "No new native assertion or full API grade; F124/F125 implementations repaired and qualified separately.",
+    "275 accepted declarations plus2 held documentation contradictions exhaust original277. No historical package becomes current by source hash equality alone."
+  ],
+  "whole_api_status": "PARTIAL"
+}

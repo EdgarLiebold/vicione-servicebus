@@ -1,0 +1,11 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE265_CORE504_SQS433_SOURCE937_EXACT166_HELD_COLLECTIVE_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "9bb94236d44420c20e2438fd9cc89c0a377d9aba31ccd9d381b3cd671dd4b528"
+  },
+  "master_after_sha256": "7be79dffcc271d714fd53b1be495e987255efc1ab73e2d4f8e2cc023fec1101e",
+  "accepted_count": 18212,
+  "original_accepted": 17350,
+  "original_remaining": 1219,
+  "old17275_row_objects_exact_preserved": true
+}

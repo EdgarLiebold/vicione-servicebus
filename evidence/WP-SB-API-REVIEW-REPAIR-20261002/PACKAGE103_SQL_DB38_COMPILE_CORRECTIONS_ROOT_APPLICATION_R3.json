@@ -1,0 +1,29 @@
+{
+  "utc": "2026-10-04T17:30:01.219045+00:00",
+  "decision": "EXACT_FOUR_TEST_COMPILE_ONLY_CORRECTIONS_REVIEWED_APPLIED",
+  "files": [
+    {
+      "path": "repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerDatabaseBoundaryContractTests.cs",
+      "before_sha256": "189b3684be94045efa22734a30b2fa8aa33f7d78748323fb9bd92ce9846136a3",
+      "after_sha256": "e3d241c578215793441ffe7ceac959aab9098f55062084e6f68d8e5e37b7f177"
+    },
+    {
+      "path": "repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlDatabaseBoundaryContractTests.cs",
+      "before_sha256": "8e05a211f906d53c449bd72646874b16c7920b2af9db3340263e3444de2d97d8",
+      "after_sha256": "2e9ca4123448dced865c6fa0202d5b3f2781cb6c6ef8852acc73e946f4ac978d"
+    }
+  ],
+  "independent_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package79-sql-seven-db-oracles-independent-r3/REPORT.json",
+    "sha256": "51f9250c4a92e8d7a2b5ccdd2cba82f761ae6954543e7a06e6e866fd669f260f"
+  },
+  "root_reads": [
+    "625156 wholeactual4editdiff",
+    "082c2b independentwholeReport",
+    "whole actualDictionarySendHeaders+BinaryMessageBody"
+  ],
+  "methods": 7,
+  "cases": 38,
+  "requirements": "unchanged",
+  "limits": "Preserved R2 finitecompileerrors no productfinding/no native outcome. Strict/native pending."
+}

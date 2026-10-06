@@ -1,0 +1,490 @@
+{
+  "status": "RESEARCH_PLAN_BEFORE_ROOT_AUTHORSHIP",
+  "utc": "2026-10-03T06:32:18.800452+00:00",
+  "finding": "F-SB-API-029",
+  "root_product_public_route_FULL": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs",
+      "sha256": "9a46e174c4a7bd38c2294b31e615fd82d829fc10a60a0fe579e96e186a032650",
+      "bytes": 3293,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs",
+      "sha256": "53e53c4cbc614df6105a29a05f06c9c87c0ca868cc8667e1ccd1434f68e7a616",
+      "bytes": 759,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+      "sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+      "bytes": 1893,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+      "sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+      "bytes": 15567,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumerFactory.cs",
+      "sha256": "99f2ea1869fcc2511c1067613f71000be1da8732b1f55c045c29ca1aca1d8f85",
+      "bytes": 3509,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+      "sha256": "55f86c6399c0f9ee6f971853a7f05ef58a04f3cd714817ea64c9eef223ed0e29",
+      "bytes": 1680,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Contexts/BatchConsumeContext.cs",
+      "sha256": "6acd9e1abd902551261330f514973b1df13badf3555dcb6e327a0e176c820cb6",
+      "bytes": 4915,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/IBatchCollector.cs",
+      "sha256": "dfbd70e1b072f34500e2417577a5e394614e3498116592f849df1d220ee2a761",
+      "bytes": 1329,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollectorLifetime.cs",
+      "sha256": "72b10a945b35c07bef46b770e74745564e209b4464c669aa90d2bdcc011d4df9",
+      "bytes": 4172,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Registration/BatchConsumerExtensions.cs",
+      "sha256": "2c72eb0fab1c4db6664b0013ad4e046898fa12752aadf6b911938b8d19f803d0",
+      "bytes": 3644,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BatchConsumerConnectHandle.cs",
+      "sha256": "139e4e25f926f5c02cc5d875e6dd2e3e4862be13f86e42a06d231452fb0ad0b5",
+      "bytes": 3621,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "bytes": 5099,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageSpecification.cs",
+      "sha256": "7b36337876b2b3bbbfb9385311baeeab406bb4ed67e13b8690814de017afcecf",
+      "bytes": 8580,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BatchConfigurator.cs",
+      "sha256": "b4f080f432047e5aa9eeeb4d3a963624bfbdb67876860934390e45d62f1a217b",
+      "bytes": 2741,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/BatchEndpointExtensions.cs",
+      "sha256": "0841653d0dce1370dbe1f3e5089139e81848b6c2e851e95da113afd66e387005",
+      "bytes": 25561,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/BatchCompletionMode.cs",
+      "sha256": "bfbcb66d3fe6c038befb0feae2aa2e5b9b23d5d44b6d0bd32be96d25fd56436e",
+      "bytes": 481,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchTimeLimitStart.cs",
+      "sha256": "957dac24033d35f759a12da82d5e6a9d202b7f4121dc6f4b3229d689d333b935",
+      "bytes": 401,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/IBatchConfigurator.cs",
+      "sha256": "c692ec0e7ec5ee8f862f0ab8f4a3fcac7f008bc692cb60d4ec063b4e4adb9614",
+      "bytes": 1500,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/TaskExecutor.cs",
+      "sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "bytes": 14849,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BatchMessageConnectorFactory.cs",
+      "sha256": "12f262e63f5fb594e3f712fbf4ddf2fec1dc36c0189303d6b2634ce32b9d7405",
+      "bytes": 2131,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/Conventions/BatchConsumerMessageConvention.cs",
+      "sha256": "0494366a9e799ad8aa000d3ae3df2a4844972efda965e50c0b17af496c64e1be",
+      "bytes": 2313,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/IBus.cs",
+      "sha256": "f569a53e4e4d71df4b38a5a425ac5e5e4e1ff1a933b1138f82c6c81c39bbb9a7",
+      "bytes": 728,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/IConsumePipeConfigurator.cs",
+      "sha256": "e15bdb9ded6a59de7ca79cbc42329bf3b2a44032b38d8604800cf8c59af7e8cc",
+      "bytes": 1364,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/FilterConfigurationExtensions.cs",
+      "sha256": "fd96119847fbebc00ad51023502222c8626bdae28a483d0e778d7a6c97a43a54",
+      "bytes": 6590,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InlineFilterConfigurationExtensions.cs",
+      "sha256": "36674be7b0b8009f033c99f8a0cda88a455270ebbf72570de25ea355b79830bd",
+      "bytes": 965,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Registration/ConsumerExtensions.cs",
+      "sha256": "586d717f324529529ef51acc6790eca7ea8138afdd3cbd1474ad3872c836c2cd",
+      "bytes": 10904,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerConnector.cs",
+      "sha256": "7c95e39e3546fde71b099762b32f54b935ad6b51b8fd2119991b6a73b36287fe",
+      "bytes": 3501,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerConnectorCache.cs",
+      "sha256": "8c3149e1c6426e138983f0daa2b4d4cc62cfa96013f833662c8a0547e02a3c4d",
+      "bytes": 3741,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Util/MultipleConnectHandle.cs",
+      "sha256": "e99a3b654940bb637e0b5e17658309c8b970a28a50cce42e6ecbe1aa1ab86b34",
+      "bytes": 3015,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161",
+      "bytes": 776,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/RegistrationConfiguratorExtensions.cs",
+      "sha256": "cb3e4b87b4d31500a5945e04470650229b0fd8411e599db913abf770d9c335a6",
+      "bytes": 4369,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerConfigurator.cs",
+      "sha256": "26fa69cfc869a3e8ad7212cc0e9ad276eecfed23064d9d618e7801f90094aa85",
+      "bytes": 6999,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/OptionsSet.cs",
+      "sha256": "7074f6865b74205f0fb309008f4dd7b1e4ef5e98f7df23532025c2ae4619723a",
+      "bytes": 2471,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/IOptionsSet.cs",
+      "sha256": "d29a0a4e18180dab6e8ae99eb9481a2085e63a045309e67b09398273e901d0b5",
+      "bytes": 1884,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Observers/IConsumeObserver.cs",
+      "sha256": "4ba5645146700dac63d55721a2144c7faa294e35e78addef7a47df24385f7dd9",
+      "bytes": 1608,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Observers/IConsumeObserverConnector.cs",
+      "sha256": "bddefbc16888be0c35ad21464965e7f48760fcdca4a062bfec54856d5eb587af",
+      "bytes": 421,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs",
+      "sha256": "50d4a5dcbf726ef643bfc20113541cbcc12feb9f50f62c9094f17f21e1d00c3d",
+      "bytes": 6199,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Context/Consumption/ConsumeContextProxy.cs",
+      "sha256": "8597758ccda665fd6def683861bfdaf5cd0716da441be9c10cdc54d27f744bc7",
+      "bytes": 6684,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Context/Consumption/ConsumeContextScope.cs",
+      "sha256": "4c2bb79d4e6b198f14f481699a07bbd1b91a2d9e9c9ba3d0376552b221509541",
+      "bytes": 5228,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/Conventions/BatchConsumerConvention.cs",
+      "sha256": "d7880a74b8240f8a9de5b9eac01d9b7c8725e219c33bf20bb2006044f658e596",
+      "bytes": 402,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/Conventions/BatchConsumerInterfaceType.cs",
+      "sha256": "d29c3135340cbd75fd275dda733628d6befabc60c290d03d1c243c53b0adce1b",
+      "bytes": 2441,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionReceiveEndpointExtensions.cs",
+      "sha256": "da40240e3c66fb389437a1d929e20f958fc8923178cb0df8d4a4624d2e1d225b",
+      "bytes": 4016,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/RegistrationContext.cs",
+      "sha256": "15d83d7a43f2b7926fa3dc6d365ff1b58c9ad2638cdd2851f97523f0e0481fdf",
+      "bytes": 16180,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+      "bytes": 18371,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "bytes": 16239,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "bytes": 10520,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/RegistrationConfigurator.cs",
+      "sha256": "bb3885fb29e6422b646ac87544efa635d678370c4ae501d1317392e35647ff93",
+      "bytes": 11283,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationConfigurator.cs",
+      "sha256": "fc8f3860fa1062e0166ce6e511cc9f5db37d22407fcbac2b010d344c43bc5c28",
+      "bytes": 4116,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "bytes": 3639,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d",
+      "bytes": 7359,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "sha256": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0",
+      "bytes": 5015,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryHostConfiguration.cs",
+      "sha256": "414c32cae0345b670e5a9799eb5e2105c8569adb38b0b219f6660d77b08c6f9c",
+      "bytes": 9052,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusFactoryConfigurator.cs",
+      "sha256": "667c1f8c0b1d1bdd293ae3dc1b45c54f44dabf7388f2ccf925c56513c52a7e5a",
+      "bytes": 7333,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusFactoryExtensions.cs",
+      "sha256": "ddec027a6a8ed8d05619e702442ce1e54db622182b33095561d63644f576d846",
+      "bytes": 3879,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+      "bytes": 12780,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/BusInstanceBuilder.cs",
+      "sha256": "77eab248cef0a73d09b9d0721839cb6a49beb420e1f753b9f0a7150488bf8e17",
+      "bytes": 1529,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/IBusInstanceBuilder.cs",
+      "sha256": "d246ef7b75251210230a0d0225cd2e8f16d91e4c7c76dd0ae805f4e466f355f3",
+      "bytes": 600,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/IBusInstanceBuilderCallback.cs",
+      "sha256": "660d6626e0c17d53d663b0ecc1ebba85a70f3d4bbd9479dada0548b59c801535",
+      "bytes": 615,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Runtime/ServiceBusRuntime.cs",
+      "sha256": "fdb8a75d182886d32468204ea0413a430fb1f66038e8c25af8cd606515889c56",
+      "bytes": 9495,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Runtime/ServiceBusRuntime.Lifecycle.cs",
+      "sha256": "bb28c551abcd04bb211d6da7a7982987da1b7da3136551a92f7994afe1e9c99c",
+      "bytes": 7326,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveTransport.cs",
+      "sha256": "5d76e1daa329a55db0241457806d6eea12ea088b6e10d1cc7d3f39fe772ae5bc",
+      "bytes": 7444,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/BusInstance.cs",
+      "sha256": "5fb875c34fae3f68b078f89f12ec9cd174c68f1404d728e30e22054b532787c8",
+      "bytes": 17147,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/IBusControl.cs",
+      "sha256": "0282bd4b936cb3d1c5d06623cb857c76ef1bc3e74c3afa77355cb3b28c3d49b7",
+      "bytes": 1113,
+      "root_read_status": "PERSONAL_FULL",
+      "basis": "Own fresh complete bodies THISturn or exactSHA own47Pkg16/sourcePkg05closure; no agent transfer"
+    }
+  ],
+  "research_manifest_sha256": "8cbbcf47104fad314062400e5b45d6f84f3451b830c292d0a536e6518efb0b2e",
+  "product_plan": [
+    "Remove only last<first UTCchronologyguard from MessageBatch",
+    "Document rawwallclock first/last maydecrease; no elapsed subtractionpromise"
+  ],
+  "public_owner_plan": {
+    "fresh_owner": "package17-f029",
+    "cases": "12 default/typed Size/TimeFirst/TimeLast backward/forward;2 publichandleForced;equal/System/providerSnapshot/dedup/cancel/schedulecleanupcontrols",
+    "configuration": "actual normalDI pluspublic typed middleware contextTimeProvider payload; limits concrete typed lambda",
+    "clock": "owned manual publicTimeProvider/ITimer, separatewallUTC and elapsed; positive deadline/callback/change/disposal witnesses; noFakeSDK sourceclaims",
+    "completion": "actualapplicationbatch plusactual originalPost/Faultterminal observer; callerSendcompletion notreceipt",
+    "mutants": [
+      "restoredchrono guard",
+      "lastUTCclamped",
+      "firstUTCoverwritten"
+    ],
+    "cleanup": "independentownedfinallycleanup;actualstop/drain,releasegates/joinalltasks;timeoutalwaysfail"
+  },
+  "canonical_tests": "Root NOTwholeCore766; nocanonicaledit/grade; staleBackwardUTC canonicalexpectation retainedvisiblependingRootownownerclosure",
+  "native": "UNEXECUTED",
+  "whole_API_CLOSED": false
+}

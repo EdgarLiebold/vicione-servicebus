@@ -21,7 +21,7 @@ public class FutureResultPipe<T> :
         _requestId = requestId;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Assigns request metadata before invoking an available send pipe.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(SendContext<T> context)

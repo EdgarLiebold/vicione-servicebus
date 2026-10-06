@@ -1,0 +1,183 @@
+{
+  "utc": "2026-10-06T03:35:06.530787+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_LOCAL_SOURCE12_ONLY",
+  "master_before_sha256": "5fc254f9ac653db688bd2386f7f3b91260d5dd8de4125774d23974b98dc92d61",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-observer-constructor6-bounded-local-source-contracts-proposed-r1",
+      "manifest_sha256": "3437871fcd672472e9b0225035554a03d3171061b82d5751fe72555c4939ef69"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-constructor6-direct-call-reentry-precision-overlay-r1",
+      "manifest_sha256": "e661037cd94df0a3af41503b3ad6528e19344b851916ed5610ca5de7c89a5182"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-constructor6-independent-runtime-source-peer-r1",
+      "manifest_sha256": "1a33732cb54de81f18d8818571e57b0f4534b329ce793885d409193a9c5d4358"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-consumer-factory4-bounded-local-source-contracts-proposed-r1",
+      "manifest_sha256": "3629b4baa50969d12ab0d7d89111c2e9f228194e2e2b65d9faa1a01f2dd54eb5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-factory4-independent-source-norm-peer-r1",
+      "manifest_sha256": "a9a99569d2f328c077c9e9b74b8d15d5ca84c1d96e10ea54ead6604aa026bd82"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package326-azure-blob-get-put2-local-source-root-proposed-r1",
+      "manifest_sha256": "eab5070797ddef6ee4556858680ac16cfa0083add562cdbf9c4102f136f8af58"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package326-azure-blob2-independent-source-norm-peer-r1",
+      "manifest_sha256": "5d528d36302b46fa7e2e61df8f4e78e0bfefba050488b2c6f79cd8642e4155fd"
+    }
+  ],
+  "fresh_binding": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/SYMBOL_SOURCE_BINDING.json",
+    "sha256": "fa4cf8615cd7b0010f2aa284111e8321125a0291c0955e0dae66ddf557f202b1"
+  },
+  "actual_selected_source_XML_checks": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.ConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator)",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConfigurationObserver.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "5f4d7ec1d59b8453772c482fb6836e9e71e0976fd23d259a3857a5df5c3d4b58",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Configuration.ConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator)\">\n            <summary>Connects the observer to every component family supported by the consume pipeline.</summary>\n            <param name=\"configurator\">The consume pipeline whose message types are observed.</param>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.DelayedRedeliveryConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IRedeliveryConfigurator})",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/Redelivery/DelayedRedeliveryConfigurationObserver.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "e6eb3f75722b3dfbe5155c3b9abf9ffc370f70629a42d22fc3a3b3a7ade7b214",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Configuration.DelayedRedeliveryConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IRedeliveryConfigurator})\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"configurator\">The configurator to update.</param>\n            <param name=\"configure\">The callback used to configure the component.</param>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IOutboxConfigurator})",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InMemoryOutbox/InMemoryOutboxConfigurationObserver.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "6d0943a4748ebf53d88e9fe30239887e315a9ebd12cc91f6d5f0b2c47219b438",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IRegistrationContext,ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IOutboxConfigurator})\">\n            <summary>Creates an observer that obtains the scoped consume-context accessor from a registration context.</summary>\n            <param name=\"context\">The registration context that supplies the scoped consume-context accessor.</param>\n            <param name=\"configurator\">The consume pipeline whose configurations are observed.</param>\n            <param name=\"configure\">The optional callback applied to each outbox specification.</param>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext,ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IOutboxConfigurator})",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InMemoryOutbox/InMemoryOutboxConfigurationObserver.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "6d0943a4748ebf53d88e9fe30239887e315a9ebd12cc91f6d5f0b2c47219b438",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Configuration.InMemoryOutboxConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext,ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IOutboxConfigurator})\">\n            <summary>Creates an observer with an optional scoped consume-context accessor.</summary>\n            <param name=\"setter\">The accessor used to expose the active context inside a dependency-injection scope.</param>\n            <param name=\"configurator\">The consume pipeline whose configurations are observed.</param>\n            <param name=\"configure\">The optional callback applied to each outbox specification.</param>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguration.#ctor(ViciOne.ServiceBus.Configuration.IHostConfiguration,ViciOne.ServiceBus.Configuration.IEndpointConfiguration)",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReceiveEndpointConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "dcbded2ca0473ba5e59515199c4a658d5230b24633e3b1de520c820d31857d52",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguration.#ctor(ViciOne.ServiceBus.Configuration.IHostConfiguration,ViciOne.ServiceBus.Configuration.IEndpointConfiguration)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"hostConfiguration\">The host configuration.</param>\n            <param name=\"endpointConfiguration\">The endpoint configuration.</param>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.ScheduledRedeliveryConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IRedeliveryConfigurator})",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/Redelivery/ScheduledRedeliveryConfigurationObserver.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "859490c97465b7abe91786145961f954656a5e0f2f01855fb0023b6fcf248ff0",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Configuration.ScheduledRedeliveryConfigurationObserver.#ctor(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IRedeliveryConfigurator})\">\n            <summary>Creates an observer for a consume pipeline and a shared redelivery policy callback.</summary>\n            <param name=\"configurator\">The consume pipeline whose configurations are observed.</param>\n            <param name=\"configure\">The callback applied to each redelivery policy.</param>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Consumers.DefaultConstructorConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/DefaultConstructorConsumerFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c14902d8eecb48803d6bd7ff3c99f96114634e2701c8d74e1d991c1c7a917de2",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Consumers.DefaultConstructorConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})\">\n            <summary>Creates a consumer, invokes its message pipeline, and releases the consumer instance.</summary>\n            <typeparam name=\"TMessage\">The consumed message contract.</typeparam>\n            <param name=\"context\">The received message and its consume context.</param>\n            <param name=\"next\">The consumer pipeline to invoke with the created instance.</param>\n            <returns>A task that completes after the consumer pipeline and consumer lifetime have finished.</returns>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Consumers.DelegateConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/DelegateConsumerFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2643508a41495a9260e9bde38c8de6f58762be43bf16023b5cb53e753285e187",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Consumers.DelegateConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})\">\n            <summary>Creates a consumer, invokes its message pipeline, and releases the consumer instance.</summary>\n            <typeparam name=\"TMessage\">The consumed message contract.</typeparam>\n            <param name=\"context\">The received message and its consume context.</param>\n            <param name=\"next\">The consumer pipeline to invoke with the created instance.</param>\n            <returns>A task that completes after the consumer pipeline and consumer lifetime have finished.</returns>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Consumers.InstanceConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/InstanceConsumerFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "df49be82479362429529eea1703895b63cf15672e6266289e732b3c11295bcf9",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Consumers.InstanceConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})\">\n            <summary>Invokes the message pipeline with the caller-owned consumer instance.</summary>\n            <typeparam name=\"TMessage\">The consumed message contract.</typeparam>\n            <param name=\"context\">The received message and its consume context.</param>\n            <param name=\"next\">The consumer pipeline to invoke with the supplied instance.</param>\n            <returns>A task that completes after the consumer pipeline finishes.</returns>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Consumers.ObjectConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/ObjectConsumerFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "099dc639fc0b98f8f69a963828ee1381a73b422160ed3879fa2c1a4e70b35b2c",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Consumers.ObjectConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})\">\n            <summary>Invokes the message pipeline with a consumer created by the object factory.</summary>\n            <typeparam name=\"TMessage\">The consumed message contract.</typeparam>\n            <param name=\"context\">The received message and its consume context.</param>\n            <param name=\"next\">The consumer pipeline to invoke with the created instance.</param>\n            <returns>A task that completes after the consumer pipeline and consumer lifetime have finished.</returns>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Azure.Storage",
+      "id": "M:ViciOne.ServiceBus.Azure.Storage.MessageData.AzureBlobMessageDataRepository.GetAsync(System.Uri,System.Threading.CancellationToken)",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.Azure.Storage/MessageData/AzureBlobMessageDataRepository.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2384e9b330245971cf5fa0907300eb0966f5add101639c7f9e0045b8c5cef3e6",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Azure.Storage.MessageData.AzureBlobMessageDataRepository.GetAsync(System.Uri,System.Threading.CancellationToken)\">\n            <summary>Opens the blob identified by an address previously returned by this repository.</summary>\n            <param name=\"address\">The absolute URI of a blob in the configured container.</param>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task whose result is the readable, transparently decompressed payload stream.</returns>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Azure.Storage",
+      "id": "M:ViciOne.ServiceBus.Azure.Storage.MessageData.AzureBlobMessageDataRepository.PutAsync(System.IO.Stream,System.Nullable{System.TimeSpan},System.Threading.CancellationToken)",
+      "document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.Azure.Storage/MessageData/AzureBlobMessageDataRepository.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2384e9b330245971cf5fa0907300eb0966f5add101639c7f9e0045b8c5cef3e6",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Azure.Storage.MessageData.AzureBlobMessageDataRepository.PutAsync(System.IO.Stream,System.Nullable{System.TimeSpan},System.Threading.CancellationToken)\">\n            <summary>Uploads a readable payload under a generated blob name and optionally records its expiration.</summary>\n            <param name=\"stream\">The readable payload stream to upload.</param>\n            <param name=\"timeToLive\">An optional relative lifetime stored as UTC expiration metadata.</param>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task whose result is the URI of the uploaded blob.</returns>\n        </member>\n        "
+    }
+  ],
+  "root_norms_and_peer_authority": "Full current6norms619e02/current4norms94ee87/Root2 authored0ac921. All3 independent peers fullb78b58; current7+12sourcechecks, Source2helper checks and actual emitted frozen325 selected PDB/XML/whole owner DLL-to-frozenXML frame association. 325 actualgreen outcome is a separate mechanical global check, does not grant 12 native workflows.",
+  "Original_before": 18121,
+  "Original_after": 18133,
+  "remaining_before": 448,
+  "remaining_after": 436,
+  "master_before": 18983,
+  "master_after": 18995,
+  "Native_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

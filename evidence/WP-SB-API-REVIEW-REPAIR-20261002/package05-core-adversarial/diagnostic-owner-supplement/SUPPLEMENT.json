@@ -1,0 +1,17 @@
+{
+  "status": "OPEN_TECHNICAL_DIAGNOSTIC_OBLIGATION",
+  "F030_startup_policy": "OPEN_PENDING_EXPLICIT_PO_DECISION",
+  "F027": "SCOPED_ACCEPT_UNCHANGED",
+  "F028": "SCOPED_ACCEPT_UNCHANGED",
+  "existing_owner_capture": "ConsumerRegistration<T>.IConsumerRegistration.Configure(IReceiveEndpointConfigurator, IRegistrationContext), context as IBusRegistrationIdentity",
+  "existing_owner_source": "BusRegistrationContext => BusRegistrationIdentity.GetKey(busType)",
+  "existing_handoff_spi": "ConsumerConfigurator.Options<T>/ConsumerSpecification.OptionsSet => BatchConsumerMessageConnector specification",
+  "proposed_internal_plumbing_not_existing_public_api": true,
+  "existing_runtime_BusOwner_payload_proven": false,
+  "source_files_personally_full": 17,
+  "no_native_operations": true,
+  "no_product_writes": true,
+  "no_patch_acceptance": true,
+  "no_closed_claim": true,
+  "document": "SUPPLEMENT.txt"
+}

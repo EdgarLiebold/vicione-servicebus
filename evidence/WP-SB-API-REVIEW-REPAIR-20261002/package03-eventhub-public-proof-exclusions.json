@@ -1,0 +1,6 @@
+{
+  "initial_run70": "All70 public assertions native0, but initial abstractionsDll label pointed to Core.MessageLimits; not final Abstractions binding.",
+  "build_r2": "Metadata-label correction accidentally used generic IMessageData; strict CS0308 compile failure, no test executed, excluded from contract failures.",
+  "final": "Bind Abstractions directly to its actual runtime filename, verified independently against nupkg/cache/runtime byte hashes. Complete native build/run-r4 required. Other contract bodies unchanged.",
+  "build_run_r3": "Strict r3build and70 assertion cases native0; actual IMessageData resides in Core assembly, so abstractionsDll label is not a valid Abstractions hash. No final binding claim for that field."
+}

@@ -170,7 +170,7 @@ public abstract class ReceiveEndpointConfiguration :
         return _consumePipe.Value;
     }
 
-    /// <summary>Changes d.</summary>
+    /// <summary>Records the configuration key when the endpoint has already been configured.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
     protected void Changed(string key)
     {

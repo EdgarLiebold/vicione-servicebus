@@ -42,7 +42,13 @@ public class EventHubConsumerFilter :
 
             await _context.TransportObservers.NotifyCompletedAsync(_context.InputAddress, metrics).ConfigureAwait(false);
 
-            _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.MaxConcurrentDeliveryCount);
+            try
+            {
+                _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.MaxConcurrentDeliveryCount);
+            }
+            catch (System.Exception)
+            {
+            }
         }
 
         await next.SendAsync(context).ConfigureAwait(false);

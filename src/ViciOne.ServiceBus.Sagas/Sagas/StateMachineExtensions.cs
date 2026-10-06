@@ -31,6 +31,13 @@ public static class StateMachineExtensions
         IStateMachineActivity<TSaga> activity = new TransitionActivity<TSaga>(toState, accessor);
         IBehavior<TSaga> behavior = new LastBehavior<TSaga>(activity);
 
-        return behavior.ExecuteAsync(context.CreateProxy(toState.Enter));
+        IBehaviorContext<TSaga> transitionContext = context.CreateProxy(toState.Enter);
+        if (cancellationToken.CanBeCanceled && transitionContext is { } selectedContext
+            && cancellationToken != selectedContext.CancellationToken)
+        {
+            transitionContext = new ViciOneServiceBusStateMachine<TSaga>.BehaviorContextProxy(selectedContext, cancellationToken);
+        }
+
+        return behavior.ExecuteAsync(transitionContext);
     }
 }

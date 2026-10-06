@@ -1,0 +1,703 @@
+{
+  "status": "ROOT_PERSONAL_FULL_ALL43_CONTEXT_DISPLAY_PACKS_NO_CORE_OWNER766_FULL_CREDIT",
+  "actor": "/root",
+  "utc": "2026-10-04T01:06:24.974519+00:00",
+  "pack_rows": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0000.txt",
+      "sha256": "ec18cb6f4f751b6f8b7c1c1afc6aead5a5b94c9c4ca39c800afe0b18e3483df4",
+      "bytes": 586,
+      "relative": ".editorconfig",
+      "source_byte_start": 0,
+      "source_byte_length": 451
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0001.txt",
+      "sha256": "19759bbb98559b6631fc6917cd613ce8a3593d13a6446acbab7026a5ea5f4f3d",
+      "bytes": 2109,
+      "relative": ".gitattributes",
+      "source_byte_start": 0,
+      "source_byte_length": 1973
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0002.txt",
+      "sha256": "63d3b80e6cc3f7dcc3714b174d412b4442a3a28959d05856fb029d7340e2d5ad",
+      "bytes": 9946,
+      "relative": ".github/workflows/native-tests.yml",
+      "source_byte_start": 0,
+      "source_byte_length": 9790
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0003.txt",
+      "sha256": "2bafb65863bc35ec3a648d02901a1afb7d2a9f199c0ad8d1f6a168f800b780a4",
+      "bytes": 5440,
+      "relative": "README.md",
+      "source_byte_start": 0,
+      "source_byte_length": 5309
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0004.txt",
+      "sha256": "9d95eac2b9664841848c3061fd415ba54f2c924c5994aa03c0859f639467fb65",
+      "bytes": 9738,
+      "relative": "ViciOne.ServiceBus.Engineering.slnx",
+      "source_byte_start": 0,
+      "source_byte_length": 9581
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0005.txt",
+      "sha256": "34430a8835757be3a9fd63c99c3e3b50fa3eaabea666982430dac92622590cba",
+      "bytes": 4051,
+      "relative": "ViciOne.ServiceBus.slnx",
+      "source_byte_start": 0,
+      "source_byte_length": 3906
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0006.txt",
+      "sha256": "eeefcdd08aa92ee85a7de8572cf3f164ad0238c88d57094e6bb630742e0712be",
+      "bytes": 237,
+      "relative": "src/ViciOne.ServiceBus.Abstractions/packages.lock.json",
+      "source_byte_start": 0,
+      "source_byte_length": 61
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0007.txt",
+      "sha256": "0ca7f3bf00624dcc75910228bc0fd3e998782da19b3c28be994d7ce564f937ed",
+      "bytes": 7057,
+      "relative": "src/ViciOne.ServiceBus.Courier/packages.lock.json",
+      "source_byte_start": 0,
+      "source_byte_length": 6886
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0008.txt",
+      "sha256": "685710dcffd30d4363c6b19e392340e1811a59c4a36a43c809306353ad740969",
+      "bytes": 7412,
+      "relative": "src/ViciOne.ServiceBus.Futures/packages.lock.json",
+      "source_byte_start": 0,
+      "source_byte_length": 7241
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0009.txt",
+      "sha256": "3e0f99d93b2a22312853269abe193ddf3d1825dfbbf93614881e6cb159228400",
+      "bytes": 720,
+      "relative": "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+      "source_byte_start": 0,
+      "source_byte_length": 524
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0010.txt",
+      "sha256": "efccde3600aa57c8a234a6b8049a0142cfa5faa5e50b6f7ba5ffd45ec3e73cf0",
+      "bytes": 7062,
+      "relative": "src/ViciOne.ServiceBus.Initializers/packages.lock.json",
+      "source_byte_start": 0,
+      "source_byte_length": 6886
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0011.txt",
+      "sha256": "bad83bb826eab7d8864b404657c4a9388ac7ab0fa375bd3abc86f487d6831124",
+      "bytes": 7261,
+      "relative": "src/ViciOne.ServiceBus.JobService/packages.lock.json",
+      "source_byte_start": 0,
+      "source_byte_length": 7087
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0012.txt",
+      "sha256": "2a195356c10f0a7fdd03e31ebb8249d8819f8ea1b5f12e8f84db45a1cdd7ce96",
+      "bytes": 7058,
+      "relative": "src/ViciOne.ServiceBus.Mediator/packages.lock.json",
+      "source_byte_start": 0,
+      "source_byte_length": 6886
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0013.txt",
+      "sha256": "759586c369a1b0eff683ec2c2330f128047cabe6a34541b97939ed41ef3d5697",
+      "bytes": 7044,
+      "relative": "src/ViciOne.ServiceBus.Sagas/packages.lock.json",
+      "source_byte_start": 0,
+      "source_byte_length": 6875
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0014.txt",
+      "sha256": "f1dca437b8ec837b15fa1f0465deafa7359263ad1c0ae5182f7718cdbe4177a7",
+      "bytes": 7781,
+      "relative": "src/ViciOne.ServiceBus.Testing/packages.lock.json",
+      "source_byte_start": 0,
+      "source_byte_length": 7610
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0015.txt",
+      "sha256": "a12ab662dbbcd29ea3514b2dad6e728d580607918c41272b096446bc53b98a4b",
+      "bytes": 6350,
+      "relative": "src/ViciOne.ServiceBus/packages.lock.json",
+      "source_byte_start": 0,
+      "source_byte_length": 6187
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0016.txt",
+      "sha256": "5a1718df947ddbb06bf85def6333c9b236e78190c0721a1b564c6e8a5993859e",
+      "bytes": 8276,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 8064
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0017.txt",
+      "sha256": "1e42e773a50ed716ce94e2cc9f85f2357caca9e78ee13b07f6af39169fdaf336",
+      "bytes": 3044,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 2826
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0018.txt",
+      "sha256": "b72d0dab586f12c3b244df4d4dd5097193962467cb845be2c8fe99f719f94120",
+      "bytes": 941,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 718
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0019.txt",
+      "sha256": "abb4894cb792f4ddc66b6c9489ff648f01428c69bd036400a9b01a2aa51a9067",
+      "bytes": 1569,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 1347
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0020.txt",
+      "sha256": "b0557b0e915362598abd319bf55946c3e0f84ee9f6711cecb7b8ec32b2085a70",
+      "bytes": 585,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 375
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0021.txt",
+      "sha256": "cb91ec08d73882d3e4b5804c30c184689e5f4a88434f294982c5aac14768a37a",
+      "bytes": 1592,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 1366
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0022.txt",
+      "sha256": "06b1947eaece117cea33c5b3f224f2c5f9e0f6c55297d82f66c2c290bb969c00",
+      "bytes": 1482,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 1251
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0023.txt",
+      "sha256": "e772ac27121365bd9bee2ecbc9f77991b2f9e2f3ba2896af3c994168e7af17a3",
+      "bytes": 1832,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 1608
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0024.txt",
+      "sha256": "500a35bf11a37bf5f5113637b85685295c7dbc109673cb9b09c7f49da544367a",
+      "bytes": 12115,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 11905
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0025.txt",
+      "sha256": "2eef12246156e66655d55aa4a3ee9c848bc67665d0ef9bde0e3fbc4a0e64eb39",
+      "bytes": 2486,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 2262
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0026.txt",
+      "sha256": "8953795dff248bf3dc7c0367ddb440e1c0586c3029acb6d66cc8a99758ed2939",
+      "bytes": 507,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 282
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0027.txt",
+      "sha256": "c6573b8570fb9abc213116825e4be8ac2c79c686713bb131927222dd97721cfd",
+      "bytes": 2097,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 1887
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0028.txt",
+      "sha256": "bafb9dabe6a4bb27bd9589f1cd4bd77623de30e0f5aac0180e18e77a905fb41b",
+      "bytes": 11000,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 10793
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0029.txt",
+      "sha256": "580e04cf9746fc26a4d4063adf77efcfbae27cb395591e333d29ab1cb3a86539",
+      "bytes": 7520,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 7297
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0030.txt",
+      "sha256": "44a2548851aab3359033faa693793fcfef04f20d521064e2dc6ce82f74c34aa7",
+      "bytes": 1269,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 1038
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0031.txt",
+      "sha256": "a1d5f1e101b976a133188388cbc74f16ae0c0f8cec2714d5641986e1c3d01dc2",
+      "bytes": 776,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 553
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0032.txt",
+      "sha256": "fa08ff6b402198eb7945243d69663dc0c984b4b1599f18f34f198e1ed855288c",
+      "bytes": 1653,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 1441
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0033.txt",
+      "sha256": "69a07530dc4616b6907cc5ad01f74c172dd39e37e38a35a9f9e580f8fce15a65",
+      "bytes": 928,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 705
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0034.txt",
+      "sha256": "25f4a90ef2cfcf97c02c3d871d424a720409c40b89335eed851e21f2c70f318f",
+      "bytes": 1356,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 1124
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0035.txt",
+      "sha256": "2ef97b7c81b42d37dcfbbe0255b54c50e70cd281cbe6033ed9e80ca330a10c00",
+      "bytes": 1241,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 1028
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0036.txt",
+      "sha256": "d7c58d83ad0398a1d76150dcc55f3e0baeb7ae0d63e2f3a77bb2968275f6d90d",
+      "bytes": 5667,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 5448
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0037.txt",
+      "sha256": "99d744c527ddd9ee6e8fc331d6af7373ec5ad8367f3db4e81a572d5c6b89a758",
+      "bytes": 1003,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 802
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0038.txt",
+      "sha256": "f207787293a5ae9c0609b7cba45aafec624c7db63315835f3f44430e6ef5b885",
+      "bytes": 4179,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 3956
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0039.txt",
+      "sha256": "38e6df693ff14159bc6c96fd2db866cd8a004e3704a0c83436ead9bb210f8939",
+      "bytes": 2724,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 2516
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0040.txt",
+      "sha256": "6121ec97da099bf746cd05f3ff38857d697ac0432af34774395d82663f65ba6b",
+      "bytes": 5593,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 5371
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0041.txt",
+      "sha256": "b163e441ff1d4d27fe7d848cdfd13ae8452aceadaef907b6eed27fb1642b2c71",
+      "bytes": 3468,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 3247
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/CONTEXT-0042.txt",
+      "sha256": "624d30ecfb6977b07d64a99626952df0e814a6e19b7a8927b640aa79d5e5919c",
+      "bytes": 5406,
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs",
+      "source_byte_start": 0,
+      "source_byte_length": 5191
+    }
+  ],
+  "personally_full_current_inputs": [
+    {
+      "relative": ".editorconfig",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.editorconfig",
+      "sha256": "620cf8f37fd9c45ae51dccf0ddadca145d1bb44daacd3b092e1a910444646f66",
+      "bytes": 451,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/.editorconfig",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": ".gitattributes",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.gitattributes",
+      "sha256": "c17b2e3401aac308943eefaffa5316a3110445858bf848917a7a774e232020aa",
+      "bytes": 1973,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/.gitattributes",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": ".github/workflows/native-tests.yml",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.github/workflows/native-tests.yml",
+      "sha256": "2cd77f10f95e87fea7c5bbefcae9908adadb5dd27f7add3e289898100a10406d",
+      "bytes": 9790,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/.github/workflows/native-tests.yml",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "README.md",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/README.md",
+      "sha256": "1a6fb626c4b2d2523298a62e8f2c148e969fc21df3d8a058d3a4a2dfe069a83a",
+      "bytes": 5309,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/README.md",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "ViciOne.ServiceBus.Engineering.slnx",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.Engineering.slnx",
+      "sha256": "bc11986b349179fc182a6cf8ef222f269d09d8f3361b27a72c2db675ec3fee72",
+      "bytes": 9581,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/ViciOne.ServiceBus.Engineering.slnx",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "ViciOne.ServiceBus.slnx",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.slnx",
+      "sha256": "1977742d6c335f003ea6d556a61b8c725993dae81abfe2b81432da9128d8f070",
+      "bytes": 3906,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/ViciOne.ServiceBus.slnx",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/packages.lock.json",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/packages.lock.json",
+      "sha256": "03eeadc5ef377c17f787ab65f41fb4c8a9c936bb7f7f4171111fdeec8a81cb46",
+      "bytes": 61,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/src/ViciOne.ServiceBus.Abstractions/packages.lock.json",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Courier/packages.lock.json",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/packages.lock.json",
+      "sha256": "86765fee52d3b678b0284dcb4e4b3ce29040f0f50ef2cbd06b34d1768396c1d0",
+      "bytes": 6886,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/src/ViciOne.ServiceBus.Courier/packages.lock.json",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Futures/packages.lock.json",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/packages.lock.json",
+      "sha256": "9f0d542ac05088157738f3a4e312168895e97f0b758b7998d2c11107280dad02",
+      "bytes": 7241,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/src/ViciOne.ServiceBus.Futures/packages.lock.json",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+      "sha256": "16d4e0c3ae2688b32231a0139ef2c6a47baefe670d260703054d73d83eb1d443",
+      "bytes": 524,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Initializers/packages.lock.json",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/packages.lock.json",
+      "sha256": "86765fee52d3b678b0284dcb4e4b3ce29040f0f50ef2cbd06b34d1768396c1d0",
+      "bytes": 6886,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/src/ViciOne.ServiceBus.Initializers/packages.lock.json",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.JobService/packages.lock.json",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/packages.lock.json",
+      "sha256": "af5e5dbd69748d534f399e6d87afb9285147054a8b3df4094015e9423d3dd239",
+      "bytes": 7087,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/src/ViciOne.ServiceBus.JobService/packages.lock.json",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Mediator/packages.lock.json",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/packages.lock.json",
+      "sha256": "86765fee52d3b678b0284dcb4e4b3ce29040f0f50ef2cbd06b34d1768396c1d0",
+      "bytes": 6886,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/src/ViciOne.ServiceBus.Mediator/packages.lock.json",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Sagas/packages.lock.json",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/packages.lock.json",
+      "sha256": "eae729ac7ee049d15a83ac5e54dbc26cc4c148b252db538609c1303c07f758ab",
+      "bytes": 6875,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/src/ViciOne.ServiceBus.Sagas/packages.lock.json",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Testing/packages.lock.json",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/packages.lock.json",
+      "sha256": "8e91f165afa3f9fdfd56e070b75a25061222765e992e9caf27d64713a1ab815b",
+      "bytes": 7610,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/src/ViciOne.ServiceBus.Testing/packages.lock.json",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/packages.lock.json",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/packages.lock.json",
+      "sha256": "9e662b8bebadccac8b2e96c2db3a2694e922596877fcb1de9b95e4721f6c61cd",
+      "bytes": 6187,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/src/ViciOne.ServiceBus/packages.lock.json",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs",
+      "sha256": "fcc2f6f41067c741561876cd1c7f21554397849303358de2907f9e3b0e2a1370",
+      "bytes": 8064,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs",
+      "sha256": "ab5934a4fb8e642f631ceb9f1c7cb5593565c5efca1131041e9a6dbcad744e02",
+      "bytes": 2826,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs",
+      "sha256": "d85c1411aa5107ffde60c9dced298e16c3ecc862d4c9aee96d3817f47900703d",
+      "bytes": 718,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs",
+      "sha256": "6a9919dae8a87bac8ba04e921d6dd504afa16712c8e20534d9cabf6c76e8229d",
+      "bytes": 1347,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs",
+      "sha256": "c19ec68977034c7fed3736c0ad3bbe7aa0c01a454b00f64537153a7f740f3c18",
+      "bytes": 375,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs",
+      "sha256": "2e4ae978decb1f63b3456a77f3c08d38e3e083b9cd40131b9f7c58001fff221d",
+      "bytes": 1366,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs",
+      "sha256": "4d44deb119926f67ca14b3ce7a944cea5cfaa6b9098078b80d51f87ff2878cb4",
+      "bytes": 1251,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs",
+      "sha256": "a23bbb90452db6f9a76b8e168b48bcafece435260daee7f1c2cb554659cbe6a7",
+      "bytes": 1608,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs",
+      "sha256": "06c55acde94dca39c78655175fd381f55488a348ae46ed9f3858be657a7d7960",
+      "bytes": 11905,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs",
+      "sha256": "789980d42226b6c1938dd5c0222ee1057d42bea3fabd6e7f98249515cef480bd",
+      "bytes": 2262,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs",
+      "sha256": "80587a0e121646e103d4700c6707919e748dd5d1635e90eac3ec98ba9d2d0c08",
+      "bytes": 282,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs",
+      "sha256": "672c8bd230b4f0ac01574f52e559a7dc4f93ef48c328301de0b26dec10b21b74",
+      "bytes": 1887,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs",
+      "sha256": "c230acd666687c6e70319de6aa581ce20add2c455e0f2c7e1761775d97509055",
+      "bytes": 10793,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs",
+      "sha256": "155a66607a8c85646bea342904e86fe7606dd8cea017b175328f93bc4391dee4",
+      "bytes": 7297,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs",
+      "sha256": "79f741e8b9fc718c86fda5c8a333c7da0ba55e507d0b2645d378b1aa9193d98f",
+      "bytes": 1038,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs",
+      "sha256": "ac92cde6bf4efc46451bb85f8ec514fca7afafbb982feaaac8aa8328f1625f22",
+      "bytes": 553,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs",
+      "sha256": "32db4639f1d698578cbe75bea5f94d43ccfe2927163290dc4dd33d4b9850f392",
+      "bytes": 1441,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs",
+      "sha256": "faa22502a108b193f1592ba1f1f9eda5320c254bc07da3007d9d943b265a94a4",
+      "bytes": 705,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs",
+      "sha256": "8e36b57dae4f54a9399f99827b9308414bc8a948a35c7db79966055dca9342c1",
+      "bytes": 1124,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs",
+      "sha256": "6e7f2318d2f2afbaa7acee1867842145db4f883751c8a6eb08939127f6ae218d",
+      "bytes": 1028,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs",
+      "sha256": "bad849fbe21adccb3bbc1a16bfa700ff90bf1203110f6650041e746f030db9b0",
+      "bytes": 5448,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs",
+      "sha256": "f689f18d739607feac64adf96c1ad112a33cdc167a5dc05f51a0b09d5fe89596",
+      "bytes": 802,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs",
+      "sha256": "29fe423859ac06922d90c0e4d00a186a0de7f123f279963361a674bfb2a4bddf",
+      "bytes": 3956,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs",
+      "sha256": "20ea61b512171cfc46f5858d822e5b7494575e9f4e2bca66a500394e051ba561",
+      "bytes": 2516,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+      "sha256": "2cbd0652ebc77f9defb1bad0fc9deb3c2a125f925e913748b53520366b99fe95",
+      "bytes": 5371,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs",
+      "sha256": "d36b449f057befd98796a4c361ec5d42ecbd6651ddfcf6baa069feb047fe6f64",
+      "bytes": 3247,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    },
+    {
+      "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs",
+      "sha256": "ea4d9d5fcb7451746683f6f4d924e12b249964bcdae23d99dbeb74442fb6db6c",
+      "bytes": 5191,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/context-snapshots/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs",
+      "root_read_provenance": "PENDING_ROOT_CONTEXT_FULL_READ"
+    }
+  ],
+  "personally_read_source_files": 43,
+  "context84_includes_prior39_root_exact_hash_reuses_and_core_csproj_still_pending_owner_layout": true,
+  "root_read_plan_sha256": "fecef8f6856709acf2c538aa9aec972fe20a0b16d5a5b7feaa9d1cc2b54aa06f",
+  "manifest_sha256": "7229b44c4bc91d017e16963c5844d42484f80bb0c1b28ea0dc3620796588c680",
+  "whole_owner766": false,
+  "ordinary_RAW_increment": 0
+}

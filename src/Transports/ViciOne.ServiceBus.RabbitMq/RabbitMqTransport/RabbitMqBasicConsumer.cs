@@ -44,7 +44,14 @@ public class RabbitMqBasicConsumer :
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); LogContext.Current = _context.LogContext;
 
-        LogContext.Debug?.Log("Consumer Ok: {InputAddress} - {ConsumerTag}", _context.InputAddress, consumerTag);
+        try
+        {
+            LogContext.Debug?.Log("Consumer Ok: {InputAddress} - {ConsumerTag}", _context.InputAddress, consumerTag);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics cannot prevent the owning callback or lifecycle transition.
+        }
 
         _channel.Channel.ChannelShutdownAsync += ObserveChannelShutdownAsync;
         Completed.GetAwaiter().OnCompleted(() =>
@@ -65,7 +72,14 @@ public class RabbitMqBasicConsumer :
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); LogContext.Current = _context.LogContext;
 
-        LogContext.Debug?.Log("Consumer Cancel Ok: {InputAddress} - {ConsumerTag}", _context.InputAddress, consumerTag);
+        try
+        {
+            LogContext.Debug?.Log("Consumer Cancel Ok: {InputAddress} - {ConsumerTag}", _context.InputAddress, consumerTag);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics cannot prevent the owning callback or lifecycle transition.
+        }
 
         TrySetConsumeCompleted();
 
@@ -80,7 +94,14 @@ public class RabbitMqBasicConsumer :
     {
         LogContext.Current = _context.LogContext;
 
-        LogContext.Debug?.Log("Consumer Canceled: {InputAddress} - {ConsumerTag}", _context.InputAddress, consumerTag);
+        try
+        {
+            LogContext.Debug?.Log("Consumer Canceled: {InputAddress} - {ConsumerTag}", _context.InputAddress, consumerTag);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics cannot prevent the owning callback or lifecycle transition.
+        }
 
         // An unsolicited broker cancel commonly means that a queue was deleted externally. Any
         // successful declaration/binding knowledge for this connection is now stale.
@@ -96,9 +117,16 @@ public class RabbitMqBasicConsumer :
     {
         LogContext.Current = _context.LogContext;
 
-        LogContext.Debug?.Log(
-            "Consumer Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}, {ReplyCode}-{ReplyText}",
-            _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount, reason.ReplyCode, reason.ReplyText);
+        try
+        {
+            LogContext.Debug?.Log(
+                "Consumer Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}, {ReplyCode}-{ReplyText}",
+                _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount, reason.ReplyCode, reason.ReplyText);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics cannot prevent the owning callback or lifecycle transition.
+        }
 
         TrySetConsumeCanceled();
 
@@ -135,9 +163,16 @@ public class RabbitMqBasicConsumer :
         }
         catch (OperationInterruptedException exception)
         {
-            LogContext.Error?.Log(exception,
-                "Consumer Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}",
-                _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount);
+            try
+            {
+                LogContext.Error?.Log(exception,
+                    "Consumer Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}",
+                    _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount);
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics cannot prevent the owning callback or lifecycle transition.
+            }
 
             _channel.NotifyFaulted(exception, _context.InputAddress);
 
@@ -145,9 +180,16 @@ public class RabbitMqBasicConsumer :
         }
         catch (EndOfStreamException exception)
         {
-            LogContext.Error?.Log(exception,
-                "Consumer Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}",
-                _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount);
+            try
+            {
+                LogContext.Error?.Log(exception,
+                    "Consumer Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}",
+                    _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount);
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics cannot prevent the owning callback or lifecycle transition.
+            }
 
             _channel.NotifyFaulted(exception, _context.InputAddress);
 
@@ -188,7 +230,14 @@ public class RabbitMqBasicConsumer :
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, "BasicCancel faulted: {InputAddress} - {ConsumerTag}", _context.InputAddress, _consumerTag);
+            try
+            {
+                LogContext.Warning?.Log(exception, "BasicCancel faulted: {InputAddress} - {ConsumerTag}", _context.InputAddress, _consumerTag);
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics cannot prevent the owning callback or lifecycle transition.
+            }
         }
 
         await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
@@ -198,9 +247,16 @@ public class RabbitMqBasicConsumer :
     {
         LogContext.Current = _context.LogContext;
 
-        LogContext.Debug?.Log(
-            "Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}, {ReplyCode}-{ReplyText}",
-            _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount, reason.ReplyCode, reason.ReplyText);
+        try
+        {
+            LogContext.Debug?.Log(
+                "Channel Shutdown: {InputAddress} - {ConsumerTag}, Concurrent Peak: {MaxConcurrentDeliveryCount}, {ReplyCode}-{ReplyText}",
+                _context.InputAddress, _consumerTag, MaxConcurrentDeliveryCount, reason.ReplyCode, reason.ReplyText);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics cannot prevent the owning callback or lifecycle transition.
+        }
 
         TrySetConsumeCanceled();
 

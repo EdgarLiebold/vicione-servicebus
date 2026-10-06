@@ -1,0 +1,66 @@
+[
+  {
+    "stage": "corrected",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package17-f029-binaries/corrected/ViciOne.ServiceBus.dll",
+      "sha256": "cb1d03ffe4d5b37dbf33288c139c94d158a56991d03a796b2533c14e30554b32"
+    },
+    "proof_phases": [
+      "package17-f029-mut-corrected-twentysix"
+    ],
+    "failure_headers": []
+  },
+  {
+    "stage": "rollback",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package17-f029-binaries/rollback/ViciOne.ServiceBus.dll",
+      "sha256": "cb1d03ffe4d5b37dbf33288c139c94d158a56991d03a796b2533c14e30554b32"
+    },
+    "proof_phases": [
+      "package17-f029-mut-rollback-twentysix"
+    ],
+    "failure_headers": []
+  },
+  {
+    "stage": "RestoreUtcChronologyGuard",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package17-f029-binaries/RestoreUtcChronologyGuard/ViciOne.ServiceBus.dll",
+      "sha256": "89f7c2c96a6973aaa46f8cb82828b8c1297c63f21c849b0f53f911af84f1af9d"
+    },
+    "proof_phases": [
+      "package17-f029-mut-RestoreUtcChronologyGuard-default-size-backward",
+      "package17-f029-mut-RestoreUtcChronologyGuard-default-size-forward"
+    ],
+    "failure_headers": [
+      "default-size-backward Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null"
+    ]
+  },
+  {
+    "stage": "ClampRawLastUtc",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package17-f029-binaries/ClampRawLastUtc/ViciOne.ServiceBus.dll",
+      "sha256": "10a6148935b40842d3abcd0b169faa3ae07d056c43a2258fd1b5ee90a165a6fe"
+    },
+    "proof_phases": [
+      "package17-f029-mut-ClampRawLastUtc-default-size-backward",
+      "package17-f029-mut-ClampRawLastUtc-default-size-forward"
+    ],
+    "failure_headers": [
+      "default-size-backward Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ"
+    ]
+  },
+  {
+    "stage": "OverwriteRawFirstUtc",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package17-f029-binaries/OverwriteRawFirstUtc/ViciOne.ServiceBus.dll",
+      "sha256": "fa6f5a330fc8fbbb18943368069aaf8b37d075a541c7887a36e5c297f2add629"
+    },
+    "proof_phases": [
+      "package17-f029-mut-OverwriteRawFirstUtc-default-size-forward",
+      "package17-f029-mut-OverwriteRawFirstUtc-default-size-equal"
+    ],
+    "failure_headers": [
+      "default-size-forward Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ"
+    ]
+  }
+]

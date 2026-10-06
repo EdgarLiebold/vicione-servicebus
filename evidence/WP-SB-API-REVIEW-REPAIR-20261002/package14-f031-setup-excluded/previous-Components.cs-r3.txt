@@ -1,0 +1,109 @@
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Sagas;
+using ViciOne.ServiceBus.Advanced.Observers;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using Xunit;
+
+namespace ViciOneReview.SharedEndpoint;
+
+public sealed record PlainMessage(int Index);
+public sealed record OtherMessage(int Index);
+public sealed record StateMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
+
+public sealed class Probe(string mode) : IConsumeObserver
+{
+    public const string Endpoint = "shared-kind-review";
+    public static readonly Guid Correlation = new("00006209-1856-4900-8000-000000000041");
+    public string Mode { get; } = mode;
+    public bool SameKind => Mode.StartsWith("same-kind", StringComparison.Ordinal);
+    public int Materializations, Terminals, Faults, BusinessCalls;
+    public List<string> Callbacks { get; } = [];
+    public TaskCompletionSource PlainTerminal { get; } = Signal();
+    public TaskCompletionSource OtherTerminal { get; } = Signal();
+    public TaskCompletionSource StateTerminal { get; } = Signal();
+    static TaskCompletionSource Signal() => new(TaskCreationOptions.RunContinuationsAsynchronously);
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class
+    {
+        var terminal = Terminal<T>();
+        if (terminal is not null) { Interlocked.Increment(ref Terminals); terminal.TrySetResult(); }
+        return Task.CompletedTask;
+    }
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception) where T : class
+    {
+        Interlocked.Increment(ref Faults); Terminal<T>()?.TrySetException(exception); return Task.CompletedTask;
+    }
+    TaskCompletionSource? Terminal<T>() => typeof(T) == typeof(PlainMessage) ? PlainTerminal
+        : typeof(T) == typeof(OtherMessage) ? OtherTerminal : typeof(T) == typeof(StateMessage) ? StateTerminal : null;
+}
+
+public sealed class PlainConsumer(Probe probe) : IConsumer<PlainMessage>
+{
+    public Task ConsumeAsync(ConsumeContext<PlainMessage> context)
+    {
+        Assert.Equal(1, context.Message.Index); Assert.EndsWith('/' + Probe.Endpoint, context.ReceiveContext.InputAddress.AbsoluteUri);
+        Interlocked.Increment(ref probe.BusinessCalls); return Task.CompletedTask;
+    }
+}
+public sealed class OtherConsumer(Probe probe) : IConsumer<OtherMessage>
+{
+    public Task ConsumeAsync(ConsumeContext<OtherMessage> context)
+    {
+        Assert.Equal(2, context.Message.Index); Interlocked.Increment(ref probe.BusinessCalls); return Task.CompletedTask;
+    }
+}
+public sealed class State : ISaga, IInitiatedByOrOrchestrates<StateMessage>
+{
+    public static Probe? Probe { get; set; }
+    public Guid CorrelationId { get; set; }
+    public Task ConsumeAsync(ConsumeContext<StateMessage> context)
+    {
+        Assert.Equal(global::ViciOneReview.SharedEndpoint.Probe.Correlation, CorrelationId);
+        Assert.Equal(CorrelationId, context.Message.CorrelationId);
+        Interlocked.Increment(ref (Probe ?? throw new InvalidOperationException("Missing caller-owned saga probe")).BusinessCalls);
+        return Task.CompletedTask;
+    }
+}
+public sealed class PlainDefinition : ConsumerDefinition<PlainConsumer>
+{
+    public PlainDefinition(Probe probe) => Endpoint(endpoint =>
+    {
+        endpoint.Name = Probe.Endpoint;
+        if (probe.Mode is "same-kind-qos" or "mixed-consumer-qos") endpoint.PrefetchCount = 8;
+        if (probe.Mode == "mixed-concurrency-consumer") endpoint.ConcurrentMessageLimit = 3;
+        endpoint.AddConfigureEndpointCallback(_ => probe.Callbacks.Add("consumer"));
+    });
+}
+public sealed class OtherDefinition : ConsumerDefinition<OtherConsumer>
+{
+    public OtherDefinition(Probe probe) => Endpoint(endpoint =>
+    {
+        endpoint.Name = Probe.Endpoint; endpoint.AddConfigureEndpointCallback(_ => probe.Callbacks.Add("other"));
+    });
+}
+public sealed class StateDefinition : SagaDefinition<State>
+{
+    public StateDefinition(Probe probe) => Endpoint(endpoint =>
+    {
+        endpoint.Name = Probe.Endpoint;
+        if (probe.Mode is "dedicated-saga" or "mixed-saga-qos") endpoint.PrefetchCount = 16;
+        if (probe.Mode == "mixed-concurrency-saga") endpoint.ConcurrentMessageLimit = 3;
+        if (probe.Mode == "mixed-topology-conflict") endpoint.ConfigureConsumeTopology = false;
+        endpoint.AddConfigureEndpointCallback(_ => probe.Callbacks.Add("saga"));
+    });
+}
+public sealed class GlobalOwner;
+public sealed class GlobalDefinition(Probe probe) : IEndpointDefinition<GlobalOwner>
+{
+    public bool IsTemporary => false;
+    public int? PrefetchCount => 21;
+    public int? ConcurrentMessageLimit => 4;
+    public bool ConfigureConsumeTopology => true;
+    public string GetEndpointName(IEndpointNameFormatter formatter) => Probe.Endpoint;
+    public void Configure<T>(T configurator, IRegistrationContext? context = null) where T : IReceiveEndpointConfigurator
+    {
+        Assert.NotNull(configurator); Assert.NotNull(context); probe.Callbacks.Add("global");
+    }
+}

@@ -61,7 +61,7 @@ public class ActiveMqBusFactoryConfigurator :
         configureTopology?.Invoke(configurator);
     }
 
-    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <summary>Configures publish topology for a runtime message type.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="configure">An optional callback that configures the message's publish topology.</param>
     public void Publish(Type messageType, Action<IActiveMqMessagePublishTopologyConfigurator>? configure = null)

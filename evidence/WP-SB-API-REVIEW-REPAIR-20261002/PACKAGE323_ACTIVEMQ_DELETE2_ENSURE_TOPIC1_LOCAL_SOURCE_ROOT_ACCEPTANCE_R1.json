@@ -1,0 +1,45 @@
+{
+  "utc": "2026-10-06T03:15:11.231094+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_LOCAL_SOURCE3_ONLY",
+  "master_before_sha256": "1abedc3436b34b834c410a9e129c2717ff7b05232746cae276e03ea250656c1b",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package306-activemq-session-delete2-current-fixed-local-contracts-proposed-r1",
+      "manifest_sha256": "6bd63c611641788f4a4cf2333a79ca9c221ee2feacb3ca0486b545caba26def4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package306-activemq-delete2-current322-pdb314-provenance-overlay-r2",
+      "manifest_sha256": "2f375d8d6d922d2e3dcf3256c33abee8196b6167676ed0d9cf45847a0030ef87"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package306-delete2-current322-independent-runtime-norm-peer-r2",
+      "manifest_sha256": "2f55cea6dffb5bd1280c4f9ea9cdbbe3f20c3f772689aaaaeb279be2b8100a82"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package314-activemq-ensure-topic1-current322-local-contract-proposed-r1",
+      "manifest_sha256": "4a68f192e3a751e9330d1ef8c6e418a82ab6027d91edbad558bc89eff931ced0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package314-ensure-topic1-public-task-outcome-precision-overlay-r2",
+      "manifest_sha256": "5fe311e1a51c7754ff5ca806f5007b01e9b642d12cfd4a1f1f1c0bd7c4b41ab6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package314-ensure-topic1-independent-scanner-source-norm-peer-r1",
+      "manifest_sha256": "59e241268f26097938200d891f067d9d93d9e14e35ef94e6604b116d8e98b3e6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package314-activemq-source3-composition-index-r1",
+      "manifest_sha256": "be8666ac6a85527f32868c1916a031a9fc480770eaba6bef620e9d104481006a"
+    }
+  ],
+  "root_authority": "Full exact current3 norms and limitations e028f3. Retained whole Product322dd703a/Collector2655f6bb4 and prior executor source; independent whole322/265/363 source/norm peers6e27a3. Own approved P36 actualcurrent frozen318 Product157, selectedsourceSHA/XML3exact/fullOriginalindices534535537,currentdisjoint. Ordinary10/6 native proofs retained separately, not transferred to arbitrary providers or OCE.",
+  "Original_before": 18118,
+  "Original_after": 18121,
+  "remaining_before": 451,
+  "remaining_after": 448,
+  "master_before": 18980,
+  "master_after": 18983,
+  "Native_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

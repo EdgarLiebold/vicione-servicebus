@@ -1,0 +1,86 @@
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-latency-corrected-build.log
+  ViciOne.ServiceBus.Abstractions -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Mediator -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.SqlTransport -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll
+  ViciOne.ServiceBus.ActiveMq -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq/release/ViciOne.ServiceBus.ActiveMq.dll
+  ViciOne.ServiceBus.EntityFrameworkCore -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll
+  ViciOne.ServiceBus.Courier -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll
+  ViciOne.ServiceBus.AmazonSqs -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll
+  ViciOne.ServiceBus.RabbitMq -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Sagas -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.Futures -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll
+  ViciOne.ServiceBus.AzureServiceBus -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll
+  ViciOne.ServiceBus.JobService -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.Testing -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll
+  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll
+  ViciOne.ServiceBus.Benchmark -> /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:39.43
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-oracle-build-r2.log
+  CompiledBenchmarkContracts -> /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/CompiledBenchmarkContracts.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:03.49
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-oracle-locked-final.log
+  Wiederherzustellende Projekte werden ermittelt...
+  "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj" wiederhergestellt (in 253 ms.).
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-concurrent-duplicate.log
+{"mode":"concurrent-duplicate","passed":true,"checks":2,"benchmarkDll":"5c76aec0a591f3ee5b958b085d3b6be9c15648a294ced974771a668f380f03bf","consoleDll":"b13e61e40f81c445b2a279c0df5febcab153390dde954b36d8236d81ca3f407b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-concurrent-unique.log
+{"mode":"concurrent-unique","passed":true,"checks":32,"benchmarkDll":"5c76aec0a591f3ee5b958b085d3b6be9c15648a294ced974771a668f380f03bf","consoleDll":"b13e61e40f81c445b2a279c0df5febcab153390dde954b36d8236d81ca3f407b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-deserialization.log
+{"mode":"deserialization","passed":true,"checks":6,"benchmarkDll":"5c76aec0a591f3ee5b958b085d3b6be9c15648a294ced974771a668f380f03bf","consoleDll":"b13e61e40f81c445b2a279c0df5febcab153390dde954b36d8236d81ca3f407b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-duplicate-send-observer.log
+{"mode":"duplicate-send-observer","passed":true,"checks":2,"benchmarkDll":"5c76aec0a591f3ee5b958b085d3b6be9c15648a294ced974771a668f380f03bf","consoleDll":"b13e61e40f81c445b2a279c0df5febcab153390dde954b36d8236d81ca3f407b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-duplicate.log
+{"mode":"duplicate","passed":true,"checks":2,"benchmarkDll":"5c76aec0a591f3ee5b958b085d3b6be9c15648a294ced974771a668f380f03bf","consoleDll":"b13e61e40f81c445b2a279c0df5febcab153390dde954b36d8236d81ca3f407b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-mediator-batches.log
+{"mode":"mediator-batches","passed":true,"checks":6,"benchmarkDll":"5c76aec0a591f3ee5b958b085d3b6be9c15648a294ced974771a668f380f03bf","consoleDll":"b13e61e40f81c445b2a279c0df5febcab153390dde954b36d8236d81ca3f407b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-unique.log
+{"mode":"unique","passed":true,"checks":2,"benchmarkDll":"5c76aec0a591f3ee5b958b085d3b6be9c15648a294ced974771a668f380f03bf","consoleDll":"b13e61e40f81c445b2a279c0df5febcab153390dde954b36d8236d81ca3f407b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-mutant-consume-counter-lost-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Courier -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll
+  ViciOne.ServiceBus.ActiveMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq/release/ViciOne.ServiceBus.ActiveMq.dll
+  ViciOne.ServiceBus.AmazonSqs -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll
+  ViciOne.ServiceBus.RabbitMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.SqlTransport -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Futures -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.AzureServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll
+  ViciOne.ServiceBus.Testing -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll
+  ViciOne.ServiceBus.EntityFrameworkCore -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll
+  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll
+/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/benchmarks/ViciOne.ServiceBus.Benchmark/Latency/MessageMetricCapture.cs(35,10): error CS0649: Dem Feld "MessageMetricCapture._consumed" wird nie etwas zugewiesen, und es hat immer seinen Standardwert von "0". [/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj]
+
+Fehler beim Buildvorgang.
+
+/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/benchmarks/ViciOne.ServiceBus.Benchmark/Latency/MessageMetricCapture.cs(35,10): error CS0649: Dem Feld "MessageMetricCapture._consumed" wird nie etwas zugewiesen, und es hat immer seinen Standardwert von "0". [/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj]
+    0 Warnung(en)
+    1 Fehler
+
+Verstrichene Zeit 00:00:01.80

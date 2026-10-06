@@ -1,0 +1,826 @@
+{
+  "review_id": "PACKAGE02-S3-INTERNAL-ADVERSARIAL-20261003",
+  "status": "PATCH_REVIEW_PASS_WITH_STATED_PROOF_LIMITS",
+  "role": "Internal read-only adversarial delta reviewer; no external-product-team, whole-API or release authority",
+  "author_history_received": false,
+  "native_processes_started_by_reviewer": false,
+  "product_writes_by_reviewer": false,
+  "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE02_S3_FREEZE.json",
+  "freeze_sha256": "4bd24d58a2d13c7141d249d8b4b687e31537fd1f9753edc4918ad08e61436ab1",
+  "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "reviewed_utc": "2026-10-02T22:03:47.971337+00:00",
+  "findings": [],
+  "coverage": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.AmazonS3/MessageData/AmazonS3MessageDataRepositoryOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/00-AmazonS3MessageDataRepositoryOptions.cs",
+      "bytes": 4254,
+      "sha256": "626fcf9425596e2a6cd1b124169e546c492dfa4b20677869a34e8f28a5517cce",
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.AmazonS3/MessageData/AmazonS3MessageDataRepositoryOptions.cs",
+      "baseline_sha256": "23768697a5539c0f11296f2f51d450babb6eb653db523cde0e2257977cafb57c",
+      "live_and_snapshot_verified": true,
+      "baseline_verified": true,
+      "all_delta_lines_reviewed": true,
+      "whole_new_runner_reviewed": false,
+      "delta_path": "delta-01.patch",
+      "delta_sha256": "ac4ea25b9613d2cddd242454818a9608fe7e5c494cb9153624c691a67f2e1dc0",
+      "hunks": [
+        "@@ -86,7 +86,7 @@"
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataConfigurationTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/01-AmazonS3MessageDataConfigurationTests.cs",
+      "bytes": 15472,
+      "sha256": "409df3f58f3db3540b979239fbf2b6c8f601fdfd70704505bb92db6977ba47f9",
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataConfigurationTests.cs",
+      "baseline_sha256": "c1e72d626044f19e633cfbc66eaa62ed5b5da5ef0a42799fa68cfa825ed64466",
+      "live_and_snapshot_verified": true,
+      "baseline_verified": true,
+      "all_delta_lines_reviewed": true,
+      "whole_new_runner_reviewed": false,
+      "delta_path": "delta-02.patch",
+      "delta_sha256": "084e9076060cd049a6b354a97a0d30aed080750e58c5fa9e5a2d367e59bfd86c",
+      "hunks": [
+        "@@ -113,6 +113,7 @@",
+        "@@ -122,8 +123,8 @@",
+        "@@ -140,7 +141,7 @@"
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/02-product-fixes.md",
+      "bytes": 27465,
+      "sha256": "493aeb989e4dd837161eec53eed01c6d523478209659323af15bbc85a5df4995",
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/freeze/docs/changelog/product-fixes.md",
+      "baseline_sha256": "c2bc141a0fc9b3ae3c805529659d27993c17f6a10ffebbaa28bf9271143c610e",
+      "live_and_snapshot_verified": true,
+      "baseline_verified": true,
+      "all_delta_lines_reviewed": true,
+      "whole_new_runner_reviewed": false,
+      "delta_path": "delta-03.patch",
+      "delta_sha256": "93baa1d13f45e0dacb7e03f0bc7fd8855c3288d40d42ca43344a73a418ae63ce",
+      "hunks": [
+        "@@ -331,3 +331,5 @@"
+      ]
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package02_s3_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/03-package02_s3_mutations.py",
+      "bytes": 4468,
+      "sha256": "41bc5702d52cab38cccd11afdda66c90df0c02bf5f552ceda804788bfe8462d6",
+      "comparison_baseline": null,
+      "baseline_sha256": null,
+      "live_and_snapshot_verified": true,
+      "baseline_verified": true,
+      "all_delta_lines_reviewed": true,
+      "whole_new_runner_reviewed": true,
+      "delta_path": "delta-04.patch",
+      "delta_sha256": "9044501f938fb7cc9e6beb736652d39f1c1d871ab7db11ae9c4a5f79d21cfbcb",
+      "hunks": [
+        "@@ -0,0 +1,81 @@"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/04-Program.cs",
+      "bytes": 9151,
+      "sha256": "31837f60f8a57552315f648084c18a3c653cc2162149962dbfa9a8ed59ce3891",
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/reproductions/eventhub-public/Program.cs",
+      "baseline_sha256": "f1817068a7436323383aa36654603a7b82877acb6b496ec1085efc1005c03b14",
+      "live_and_snapshot_verified": true,
+      "baseline_verified": true,
+      "all_delta_lines_reviewed": true,
+      "whole_new_runner_reviewed": false,
+      "delta_path": "delta-05.patch",
+      "delta_sha256": "7f3c844febddfc57387465d6dbc766758d3a1ab76978d914ce714fd59b76dc4d",
+      "hunks": [
+        "@@ -42,12 +42,29 @@"
+      ]
+    }
+  ],
+  "contract_review": {
+    "F-SB-API-006": "The exact reserved prefix at the beginning of the name is rejected in the existing immutable Options constructor before any client/provider use. The earlier underscore string remains rejected by character syntax. Two nearby accepted names prove no substring or shorter-prefix overrejection. No API, signature, message wire, schema or client ownership change.",
+    "aws_primary_source": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html",
+    "aws_rule_verified": "Names must not begin with amzn-s3-demo-; retrieved during review 2026-10-03. This verdict concerns that exact F006 rule, not all present/future AWS naming policies.",
+    "lifecycle_cancellation_concurrency_applicability": "Pure deterministic constructor validation creates no new work, clients, timers or mutable state. Existing retention and repository/selector/client lifetimes are unchanged and owner tests remain green. Provider runtime cancellation/restart claims are outside this patch."
+  },
+  "mutation_review": {
+    "status": "ALL_THREE_CAUSAL_NATIVE_KILLS_AND_CORRECTED_ROLLBACK_VERIFIED",
+    "source_sha256": "626fcf9425596e2a6cd1b124169e546c492dfa4b20677869a34e8f28a5517cce",
+    "test_sha256": "409df3f58f3db3540b979239fbf2b6c8f601fdfd70704505bb92db6977ba47f9",
+    "mutants": [
+      {
+        "name": "wrong-reserved-prefix",
+        "status": "KILLED_BY_CONTRACT_ASSERTION",
+        "source_sha256": "23768697a5539c0f11296f2f51d450babb6eb653db523cde0e2257977cafb57c",
+        "test_sha256": "409df3f58f3db3540b979239fbf2b6c8f601fdfd70704505bb92db6977ba47f9",
+        "replacement": {
+          "before": "\"amzn-s3-demo-\"",
+          "after": "\"amzn_s3_demo_\""
+        },
+        "native_receipt": {
+          "phase": "package02-s3-mutant-wrong-reserved-prefix",
+          "command": [
+            "dotnet",
+            "test",
+            "--project",
+            "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "--filter-class",
+            "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+            "--filter-method",
+            "*.Options_EnforceBucketAndRetentionBoundaries",
+            "--minimum-expected-tests",
+            "1",
+            "--max-parallel-test-modules",
+            "1"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 2,
+          "started_utc": "2026-10-02T21:54:15.453188+00:00",
+          "completed_utc": "2026-10-02T21:54:18.730568+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-mutant-wrong-reserved-prefix.log",
+          "log_sha256": "80a03a4433bdb118c5a32fe6dc9f6f21422861166bd46d2fc33ffc4e0a7410e4"
+        },
+        "exact_single_replacement_verified": true,
+        "unchanged_regression_hash_verified": true,
+        "causal_control": "Only invalid[11] amzn-s3-demo-reserved fails due to missing ArgumentException; other 17 invalid controls pass",
+        "delta_file": "mutant-wrong-reserved-prefix.patch"
+      },
+      {
+        "name": "substring-overrejection",
+        "status": "KILLED_BY_CONTRACT_ASSERTION",
+        "source_sha256": "ce2cb02e346044c43e3e3a5c4c350501990d765df064ebf4b7437e412a39f254",
+        "test_sha256": "409df3f58f3db3540b979239fbf2b6c8f601fdfd70704505bb92db6977ba47f9",
+        "replacement": {
+          "before": "bucketName.StartsWith(\"amzn-s3-demo-\", StringComparison.Ordinal)",
+          "after": "bucketName.Contains(\"amzn-s3-demo-\", StringComparison.Ordinal)"
+        },
+        "native_receipt": {
+          "phase": "package02-s3-mutant-substring-overrejection",
+          "command": [
+            "dotnet",
+            "test",
+            "--project",
+            "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "--filter-class",
+            "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+            "--filter-method",
+            "*.Options_EnforceBucketAndRetentionBoundaries",
+            "--minimum-expected-tests",
+            "1",
+            "--max-parallel-test-modules",
+            "1"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 2,
+          "started_utc": "2026-10-02T21:54:18.862132+00:00",
+          "completed_utc": "2026-10-02T21:54:23.719967+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-mutant-substring-overrejection.log",
+          "log_sha256": "82c52ad67cc0c32b14dd0f9bc3fd41b63b0974b7a491620f866b746b094f74c9"
+        },
+        "exact_single_replacement_verified": true,
+        "unchanged_regression_hash_verified": true,
+        "causal_control": "Only valid[4] xamzn-s3-demo-review fails due to overrejection; other 4 accepted-name controls pass",
+        "delta_file": "mutant-substring-overrejection.patch"
+      },
+      {
+        "name": "prefix-boundary-overrejection",
+        "status": "KILLED_BY_CONTRACT_ASSERTION",
+        "source_sha256": "b43ccdc5236bc5db39fc220b6c6ca25d95d5abdea378586bcaa698e794344e8e",
+        "test_sha256": "409df3f58f3db3540b979239fbf2b6c8f601fdfd70704505bb92db6977ba47f9",
+        "replacement": {
+          "before": "\"amzn-s3-demo-\"",
+          "after": "\"amzn-s3-demo\""
+        },
+        "native_receipt": {
+          "phase": "package02-s3-mutant-prefix-boundary-overrejection",
+          "command": [
+            "dotnet",
+            "test",
+            "--project",
+            "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "--filter-class",
+            "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+            "--filter-method",
+            "*.Options_EnforceBucketAndRetentionBoundaries",
+            "--minimum-expected-tests",
+            "1",
+            "--max-parallel-test-modules",
+            "1"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 2,
+          "started_utc": "2026-10-02T21:54:23.880482+00:00",
+          "completed_utc": "2026-10-02T21:54:27.784383+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-mutant-prefix-boundary-overrejection.log",
+          "log_sha256": "fea56b6147fcc69adedf4365cc3d62aae19bedf19593e9dd46f4158523ed91fa"
+        },
+        "exact_single_replacement_verified": true,
+        "unchanged_regression_hash_verified": true,
+        "causal_control": "Only valid[3] amzn-s3-demo fails due to overrejection; other 4 accepted-name controls pass",
+        "delta_file": "mutant-prefix-boundary-overrejection.patch"
+      }
+    ],
+    "corrected_native_cases": 1,
+    "corrected_rollback_native_cases": 1,
+    "original_native_cases": 1,
+    "complete_owner_cases": 26,
+    "skips": 0,
+    "test_gap_calibration": "3/3 selected logical causes killed by actual native tests; not a project-wide mutation score. No unverified survivor reported."
+  },
+  "native_evidence": [
+    {
+      "phase": "package01-consumer-eventhub-diagnostic-run",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "EventHubPublic.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "sas-probe"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub",
+      "exit_code": 134,
+      "started_utc": "2026-10-02T21:50:50.830532+00:00",
+      "completed_utc": "2026-10-02T21:50:53.019396+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-consumer-eventhub-diagnostic-run.log",
+      "log_sha256": "84ee657e20337bf4e31a65a1f4645c897b4f747a1e6ab3a8b46e8aa4e3a68e36",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {},
+      "included_in_pass_proof": false
+    },
+    {
+      "phase": "package01-consumer-eventhub-identity-build",
+      "command": [
+        "dotnet",
+        "build",
+        "EventHubPublic.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:51:57.382021+00:00",
+      "completed_utc": "2026-10-02T21:52:00.909195+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-consumer-eventhub-identity-build.log",
+      "log_sha256": "5c7d03fd3dbb16c320d2e9c91265db00c9b545ef4215e0d940b52676a94d75f3",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {},
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package01-consumer-eventhub-identity-run",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "EventHubPublic.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "sas-probe"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:52:00.999674+00:00",
+      "completed_utc": "2026-10-02T21:52:03.042959+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-consumer-eventhub-identity-run.log",
+      "log_sha256": "60049d9beb8d3b902673c8962c199ec0a4e5aba1a3bcf6c7ffa6899f159859eb",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {},
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "--locked-mode",
+        "--disable-parallel"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:52:03.125038+00:00",
+      "completed_utc": "2026-10-02T21:52:05.836636+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-restore.log",
+      "log_sha256": "586bf277aa6b0cade4071b859a7d2b787107232912d02cfee122c7b28371bba4",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {},
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-original-prefix",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+        "--filter-method",
+        "*.Options_EnforceBucketAndRetentionBoundaries",
+        "--minimum-expected-tests",
+        "1",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 2,
+      "started_utc": "2026-10-02T21:52:05.924413+00:00",
+      "completed_utc": "2026-10-02T21:52:11.756796+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-original-prefix.log",
+      "log_sha256": "e2e3dd4b2fc71a9e026d21ae41f8b9cc424d6a961f1c42ed4c258365d53e135d",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {
+        "total": 1,
+        "failed": 1,
+        "passed": 0,
+        "skipped": 0
+      },
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-build",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:52:49.570092+00:00",
+      "completed_utc": "2026-10-02T21:52:54.870109+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-build.log",
+      "log_sha256": "eac952dff7ad1f4b9c2fd36b90f50d1ac3bf33e7f33219fcaba660c0ac3da73c",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {},
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-complete-owner",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--minimum-expected-tests",
+        "1",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:52:54.954420+00:00",
+      "completed_utc": "2026-10-02T21:52:56.592348+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-complete-owner.log",
+      "log_sha256": "bbc1409b6870e5ebe42d13c92d8b878965d2d267239f71ba5b0f93ca1d9f7e2d",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {
+        "total": 26,
+        "failed": 0,
+        "passed": 26,
+        "skipped": 0
+      },
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-isolated-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "--locked-mode",
+        "--disable-parallel"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:54:05.876679+00:00",
+      "completed_utc": "2026-10-02T21:54:08.253634+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-isolated-restore.log",
+      "log_sha256": "65d50de034d8e12f7c651b9ced626235329e7b02ede57b89eafdacdfdc8f975a",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {},
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-isolated-corrected",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+        "--filter-method",
+        "*.Options_EnforceBucketAndRetentionBoundaries",
+        "--minimum-expected-tests",
+        "1",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:54:08.337469+00:00",
+      "completed_utc": "2026-10-02T21:54:15.355450+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-isolated-corrected.log",
+      "log_sha256": "5440061ad918c98b8b0643b35dd59bb665da05dc767fd2588e123bb7ca53ee57",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {
+        "total": 1,
+        "failed": 0,
+        "passed": 1,
+        "skipped": 0
+      },
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-mutant-wrong-reserved-prefix",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+        "--filter-method",
+        "*.Options_EnforceBucketAndRetentionBoundaries",
+        "--minimum-expected-tests",
+        "1",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 2,
+      "started_utc": "2026-10-02T21:54:15.453188+00:00",
+      "completed_utc": "2026-10-02T21:54:18.730568+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-mutant-wrong-reserved-prefix.log",
+      "log_sha256": "80a03a4433bdb118c5a32fe6dc9f6f21422861166bd46d2fc33ffc4e0a7410e4",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {
+        "total": 1,
+        "failed": 1,
+        "passed": 0,
+        "skipped": 0
+      },
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-mutant-substring-overrejection",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+        "--filter-method",
+        "*.Options_EnforceBucketAndRetentionBoundaries",
+        "--minimum-expected-tests",
+        "1",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 2,
+      "started_utc": "2026-10-02T21:54:18.862132+00:00",
+      "completed_utc": "2026-10-02T21:54:23.719967+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-mutant-substring-overrejection.log",
+      "log_sha256": "82c52ad67cc0c32b14dd0f9bc3fd41b63b0974b7a491620f866b746b094f74c9",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {
+        "total": 1,
+        "failed": 1,
+        "passed": 0,
+        "skipped": 0
+      },
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-mutant-prefix-boundary-overrejection",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+        "--filter-method",
+        "*.Options_EnforceBucketAndRetentionBoundaries",
+        "--minimum-expected-tests",
+        "1",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 2,
+      "started_utc": "2026-10-02T21:54:23.880482+00:00",
+      "completed_utc": "2026-10-02T21:54:27.784383+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-mutant-prefix-boundary-overrejection.log",
+      "log_sha256": "fea56b6147fcc69adedf4365cc3d62aae19bedf19593e9dd46f4158523ed91fa",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {
+        "total": 1,
+        "failed": 1,
+        "passed": 0,
+        "skipped": 0
+      },
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-isolated-rollback-green",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AmazonS3.Tests.MessageData.AmazonS3MessageDataConfigurationTests",
+        "--filter-method",
+        "*.Options_EnforceBucketAndRetentionBoundaries",
+        "--minimum-expected-tests",
+        "1",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:54:27.918864+00:00",
+      "completed_utc": "2026-10-02T21:54:30.874183+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-isolated-rollback-green.log",
+      "log_sha256": "5fa70c89037e4359bc5af12e17fe7ad6f0fe51daa64513aabbe4444368bf953f",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {
+        "total": 1,
+        "failed": 0,
+        "passed": 1,
+        "skipped": 0
+      },
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-pack",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-o",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-s3"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:56:09.210367+00:00",
+      "completed_utc": "2026-10-02T21:56:11.312437+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-pack.log",
+      "log_sha256": "456a67512f970a4faf22e807b765be261a5c0013b362bb096707144a67cf3370",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {},
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-consumer-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "PublicContracts.csproj",
+        "--disable-parallel"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:56:11.393506+00:00",
+      "completed_utc": "2026-10-02T21:56:13.353466+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-consumer-restore.log",
+      "log_sha256": "c49971fa2539757b6049f65e0d39880da4a43995ffe6ab5ce732901aa408a9e4",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {},
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-consumer-locked",
+      "command": [
+        "dotnet",
+        "restore",
+        "PublicContracts.csproj",
+        "--locked-mode",
+        "--disable-parallel"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:56:13.438946+00:00",
+      "completed_utc": "2026-10-02T21:56:14.910371+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-consumer-locked.log",
+      "log_sha256": "76ecaead43c97d8731676189622dec23b674eecaca506cefb0db94985ee86806",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {},
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-consumer-build",
+      "command": [
+        "dotnet",
+        "build",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:56:14.994160+00:00",
+      "completed_utc": "2026-10-02T21:56:18.547521+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-consumer-build.log",
+      "log_sha256": "f688c85d6e44f5ed8904c8f6b79b154b50c025884502dedef4f48c0f74f230a8",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {},
+      "included_in_pass_proof": true
+    },
+    {
+      "phase": "package02-s3-consumer-contract",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "s3-prefix"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T21:56:18.700290+00:00",
+      "completed_utc": "2026-10-02T21:56:20.357787+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3-consumer-contract.log",
+      "log_sha256": "1b2ea5af891c4787954b535912339534e3b08d5fe062539b2f24b441b3b3876f",
+      "log_hash_verified": true,
+      "independently_parsed_counts": {},
+      "included_in_pass_proof": true
+    }
+  ],
+  "fresh_consumer_sources": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3/PublicContracts.csproj",
+      "bytes": 576,
+      "sha256": "26e40f70f2b07e1c92d744c355968c3729d31b9109781906db26b90c903d6c12",
+      "hash_verified": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3/Program.cs",
+      "bytes": 6900,
+      "sha256": "9fc72b38056c7ce37a0bea5131eb774c6d4fcc73b32c6416d3ba1e06714a52b9",
+      "hash_verified": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3/NuGet.config",
+      "bytes": 571,
+      "sha256": "72fadffe27eb371d1411fae93a1f787ce9f1bcb3440b71d00a6554658873e3a3",
+      "hash_verified": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3/packages.lock.json",
+      "bytes": 8177,
+      "sha256": "5d50fb7b8c346fbec5221ae8b0cba6ed73f01463b62902d2d53ee087791263bd",
+      "hash_verified": true
+    }
+  ],
+  "fresh_package_binary_binding": [
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-s3/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "e481ab840ffae084e0d2ea669a669f491ec55817a3abe4b0565ba1c081826890",
+      "consumed_dll_sha256": "10ff70760164fb0eb3da7ea5402c9a943117fb494ff8fd9c7844d8baf0103737",
+      "consumed_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "package_entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+      "package_and_consumer_byte_binding_verified": true
+    },
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-s3/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "95d44491e8b9f1b0a1e1e7b5a146768ac38f88d1fff69173c9b1e84364ed54b2",
+      "consumed_dll_sha256": "d4ba239445e875e72ede259e195c4b0c6737e1b831b7dc9643dff292e53ac117",
+      "consumed_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "package_entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "package_and_consumer_byte_binding_verified": true
+    },
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-s3/ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg",
+      "sha256": "b46d8d5a46e4d19b1b09a5ac813422db256004bc89a29a70440cb83a1040768a",
+      "consumed_dll_sha256": "eaa7b41130da3595741bb5e6aad57638f3fbdf422dc3ec3768e63965d3233747",
+      "consumed_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3/bin/Release/net10.0/ViciOne.ServiceBus.AmazonS3.dll",
+      "package_entry": "lib/net10.0/ViciOne.ServiceBus.AmazonS3.dll",
+      "package_and_consumer_byte_binding_verified": true
+    }
+  ],
+  "runner_review": [
+    "All 81 new runner lines inspected: isolated temp source only, exact unique textual replacement, unchanged test bytes asserted before each mutant, explicit filtered native project/method with minimum expected count, expected exit2 plus Assert.All/native failure evidence, corrected source restoration after each mutant, final two-file original restoration in finally.",
+    "The run-operation wrapper preserves actual command, exit and append-only log hash; reviewed previously and unchanged.",
+    "Runner count guard uses substrings such as gesamt: 1; this review independently parses anchored numeric fields and verifies exactly 1 actual case for all five single-test phases. No evidence relies on substring counting; no observed false run acceptance.",
+    "Runner stamps source/test hashes before native execution and final receipt. It does not attest identity or hidden context and is not a whole-tree execution-time attestation. The complete original tracked baseline was independently verified after execution."
+  ],
+  "eventhub_oracle_review": {
+    "scope": "Separate temporary public consumer Program.cs; Package01 product sources unchanged",
+    "verdict": "PASS_ORACLE_IDENTITY_CORRECTION",
+    "details": [
+      "The previous substring failed on the truthful URI https://owned-review.blob.core.windows.net:443/owned-container; the diagnostic failure log is retained and excluded from green evidence.",
+      "Parsed scheme/host/port/path accurately accepts equivalent implicit/explicit HTTPS default port without accepting another scheme, host, port or container.",
+      "Exact configureTopology scope and container Name checked; actual serialized canary, complete query/fragment/userinfo and retained SDK SAS query inspected. This strengthens the old substring oracle instead of hiding the credential failure.",
+      "Only sas-probe mode runs for this correction. Unchanged callback-fault/invalid-config modes and other public contracts are not declared closed by this receipt."
+    ],
+    "passing_native_phase": "package01-consumer-eventhub-identity-run",
+    "exit": 0
+  },
+  "assertion_quality": {
+    "scope": "Affected S3 Options_EnforceBucketAndRetentionBoundaries method; full enclosing changed test file read",
+    "test_methods_changed": 1,
+    "new_test_methods": 0,
+    "lexical_assertion_references": 12,
+    "categories": [
+      "Exception",
+      "Equality",
+      "Collection",
+      "Negative/Boolean immutability"
+    ],
+    "assertion_free": false,
+    "trivial_only": false,
+    "self_referential": false,
+    "explanation": "18 independent invalid names with exact exception ParamName; 5 accepted names with preserved value. Accepted-input equality verifies construction/safe admission; it is not a tautology because the two overrejection mutants actually make it fail. Null/whitespace/retention/immutable-property assertions remain meaningful."
+  },
+  "rollback": {
+    "original_tracked_files_independently_verified": 6209,
+    "differences": 0,
+    "mutation_receipt_restores_original_source_and_test": true
+  },
+  "proof_limits": [
+    "No AWS cloud request, upload, IAM permissions, bucket ownership/availability or resource measurement executed. Early local name validation and fresh package constructor behavior are proven.",
+    "The S3 fresh consumer has one ordinary valid name and one reserved-prefix case; the native frozen Options test carries both additional positive overrejection controls.",
+    "Internal exact patch verdict only. Other API findings, current shared/full provider profiles and release/external-review gates remain independently owned."
+  ],
+  "skills_applied": [
+    "Pinned test-gap-analysis",
+    "Pinned assertion-quality",
+    "Pinned test-analysis-extensions/extensions/dotnet.md"
+  ],
+  "evidence_bindings": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE02_S3_FREEZE.json",
+      "sha256": "4bd24d58a2d13c7141d249d8b4b687e31537fd1f9753edc4918ad08e61436ab1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE02_S3_MUTATIONS.json",
+      "sha256": "098ec0476c709462f25a6930365a8651379fd1d1a45e8da3579d43bfb9d265fd"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE02_S3_TEST_READ_CLOSURE.json",
+      "sha256": "ec3d5e65923179d5c7356fbc38600566040fa72f4ba88163bde726485f3d28d8"
+    }
+  ]
+}

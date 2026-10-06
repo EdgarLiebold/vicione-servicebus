@@ -1,0 +1,578 @@
+{
+  "utc": "2026-10-06T03:48:19.941709+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_LOCAL_DI_REGISTRATION_SOURCE5_ONLY",
+  "master_before_sha256": "f6bacb5837cf9858730e456649780ebfdc107eb40f2627a20682070bfe91b777",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-di-registration5-bounded-local-source-contracts-proposed-r1/MANIFEST.json",
+      "sha256": "913f2d7a3c9ca037fd4010111e9a6af6c87facb602fafc5f482d9192f996b370"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-di5-low-level-scheduler-dependency-precision-overlay-r1/MANIFEST.json",
+      "sha256": "83ac7f3553c58ff375b3b5eedcd9c52dc80f98e51d2944775f8cdaea11b936e6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-di5-support2-and-research-count-precision-supplement-r1/MANIFEST.json",
+      "sha256": "efec39fc93a5c1ca6dd43bb6f2f608ea0124f3e4cceb7ca084c0510895a63d63"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-di5-independent-runtime-source-peer-r1/MANIFEST.json",
+      "sha256": "adf81b3f8d1e61140ff4c34d2230f72c5228f6c34e5336729e31d49f0c9f01ec"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-di5-independent-frozen325-source-pdb-xml-rejoin-r1/MANIFEST.json",
+      "sha256": "f793a5abbe62ab8d506a71be812776c22f228d08e229f3267b2547aa7710bbbd"
+    }
+  ],
+  "fresh_binding": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/SYMBOL_SOURCE_BINDING.json",
+    "sha256": "fa4cf8615cd7b0010f2aa284111e8321125a0291c0955e0dae66ddf557f202b1"
+  },
+  "actual_selected_source13_checks": [
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/MessageContractServiceCollectionExtensions.cs",
+      "sha256": "7d960a48bd2a9829bf7ff090ccbfd6f5e054608ce323230dcc38fd25369d3547",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/MessageContractServiceCollectionExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "7d960a48bd2a9829bf7ff090ccbfd6f5e054608ce323230dcc38fd25369d3547",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/MessageContractServiceCollectionExtensions.cs",
+        "bytes": 2797,
+        "sha256": "7d960a48bd2a9829bf7ff090ccbfd6f5e054608ce323230dcc38fd25369d3547",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/DependencyInjection/MessageContractServiceCollectionExtensions.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+      "sha256": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+        "bytes": 3934,
+        "sha256": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+      "sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+        "bytes": 6222,
+        "sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+        "bytes": 12780,
+        "sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableSchedulerRegistration.cs",
+      "sha256": "89b81bc67ec2cbe062a116bde6c90fb8f9302c8db917b2cba13fa377b25e3e53",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableSchedulerRegistration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "89b81bc67ec2cbe062a116bde6c90fb8f9302c8db917b2cba13fa377b25e3e53",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableSchedulerRegistration.cs",
+        "bytes": 5088,
+        "sha256": "89b81bc67ec2cbe062a116bde6c90fb8f9302c8db917b2cba13fa377b25e3e53",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableSchedulerRegistration.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/MessageContractCatalogBuilder.cs",
+      "sha256": "6c2f205c1e0ead532602c223898b9a390878df6393dbf1fc65352602012fc993",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/MessageContractCatalogBuilder.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "6c2f205c1e0ead532602c223898b9a390878df6393dbf1fc65352602012fc993",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/MessageContractCatalogBuilder.cs",
+        "bytes": 7615,
+        "sha256": "6c2f205c1e0ead532602c223898b9a390878df6393dbf1fc65352602012fc993",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/Advanced/MessageContractCatalogBuilder.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingConfigurator.cs",
+      "sha256": "cefe6a5190cf6fa4d57d01e19baacf951790fbf299f9cfef7586a97470153147",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingConfigurator.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "cefe6a5190cf6fa4d57d01e19baacf951790fbf299f9cfef7586a97470153147",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingConfigurator.cs",
+        "bytes": 7352,
+        "sha256": "cefe6a5190cf6fa4d57d01e19baacf951790fbf299f9cfef7586a97470153147",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingConfigurator.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
+      "sha256": "a9c4b474245702ae4fcc537cbf6581b1bd0e55f4b10f7d75dd4477d7c18f93c1",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "a9c4b474245702ae4fcc537cbf6581b1bd0e55f4b10f7d75dd4477d7c18f93c1",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
+        "bytes": 1790,
+        "sha256": "a9c4b474245702ae4fcc537cbf6581b1bd0e55f4b10f7d75dd4477d7c18f93c1",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+      "sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+        "bytes": 8779,
+        "sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingRegistration.cs",
+      "sha256": "ba7f8942aa78f1b319957496d51355e85d437ce19d05de57492d7ddf72aac223",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingRegistration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "ba7f8942aa78f1b319957496d51355e85d437ce19d05de57492d7ddf72aac223",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingRegistration.cs",
+        "bytes": 133,
+        "sha256": "ba7f8942aa78f1b319957496d51355e85d437ce19d05de57492d7ddf72aac223",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingRegistration.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableSchedulerSelection.cs",
+      "sha256": "474b6310310e29182e20b085caca22345354b6adfcb29c2eb5f7c264aed4b7e6",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableSchedulerSelection.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "474b6310310e29182e20b085caca22345354b6adfcb29c2eb5f7c264aed4b7e6",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableSchedulerSelection.cs",
+        "bytes": 649,
+        "sha256": "474b6310310e29182e20b085caca22345354b6adfcb29c2eb5f7c264aed4b7e6",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableSchedulerSelection.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "sha256": "929d35ea91140e697b985c050623fb5c7446e37f87f0199c944cac38bfa7b519",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "929d35ea91140e697b985c050623fb5c7446e37f87f0199c944cac38bfa7b519",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+        "bytes": 504,
+        "sha256": "929d35ea91140e697b985c050623fb5c7446e37f87f0199c944cac38bfa7b519",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs"
+      }
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableSchedulerEndpointConfiguration.cs",
+      "sha256": "7f3729493a64ef301820e1b8f4cfe345130a1d48f2e0b44168d3f411d3131f64",
+      "actual_emitted_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableSchedulerEndpointConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "7f3729493a64ef301820e1b8f4cfe345130a1d48f2e0b44168d3f411d3131f64",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "frozen_source": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableSchedulerEndpointConfiguration.cs",
+        "bytes": 2061,
+        "sha256": "7f3729493a64ef301820e1b8f4cfe345130a1d48f2e0b44168d3f411d3131f64",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package325-all23-unit-source-bound-capture-r1/inputs/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableSchedulerEndpointConfiguration.cs"
+      }
+    }
+  ],
+  "actual_selected5_source_XML_checks": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:Microsoft.Extensions.DependencyInjection.MessageContractServiceCollectionExtensions.AddViciOneMessageContracts(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Advanced.MessageContractCatalogBuilder})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/MessageContractServiceCollectionExtensions.cs",
+      "source_sha256": "7d960a48bd2a9829bf7ff090ccbfd6f5e054608ce323230dcc38fd25369d3547",
+      "member_contract": "Nonasync AddViciOneMessageContracts first rejects null services then null configure. It enumerates ServiceType to detect the exact private ownership-marker descriptor; without that marker, any IMessageContractCatalog descriptor selects ConfigurationException before registration. When the marker is absent and no conflicting catalog exists, it registers the private owner singleton then one IMessageContractCatalog singleton factory. On every successful local call it registers a new MessageContractCatalogRegistration instance retaining the caller configure delegate and returns the exact same services reference. Local method has no direct configure invocation or provider resolution. The registered factory creates a fresh actual MessageContractCatalogBuilder, enumerates actual provider.GetServices<MessageContractCatalogRegistration>, invokes each retained Configure on that builder in enumeration order, then calls Build. A callback/enumeration/Build error stops this factory; no local continue-on-error, rollback or separate resource drain. Actual builder Build commits its built flag and creates bidirectional FrozenDictionary snapshots. DI singleton timing/cardinality per provider, arbitrary custom collection/provider reentry and catalog registration semantics outside this factory remain unqualified; an external collection can execute arbitrary work during descriptor addition.",
+      "actual_current_PDB_source_binding": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/MessageContractServiceCollectionExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "7d960a48bd2a9829bf7ff090ccbfd6f5e054608ce323230dcc38fd25369d3547",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_current_XML_node_serialized": "<member name=\"M:Microsoft.Extensions.DependencyInjection.MessageContractServiceCollectionExtensions.AddViciOneMessageContracts(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Advanced.MessageContractCatalogBuilder})\">\n            <summary>\n            Adds stable contract declarations to the one immutable catalog. Separate bus/feature configuration blocks may\n            contribute declarations; the catalog is built exactly once when the container materializes it.\n            </summary>\n            <param name=\"services\">The dependency-injection service collection.</param>\n            <param name=\"configure\">The bootstrap callback that contributes stable message contract identities.</param>\n            <returns>The same service collection for fluent composition.</returns>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null,
+      "runtime_obligations_not_native_proven": [
+        "Microsoft DI/Options library execution and arbitrary custom IServiceCollection/Services/provider enumeration/getter/reentry effects remain delegated. Container materialization/validation/startup, unique runtime ownership, bus isolation, provider disposal/concurrency and callbacks that mutate or throw are not closed. No public Original/fixed Native proof or A+ grade imported; source describes partial mutations without imposing an unsupported rollback policy."
+      ],
+      "selected_original_inventory": {
+        "index": 6139,
+        "full_original_row": {
+          "symbol_id": "M:Microsoft.Extensions.DependencyInjection.MessageContractServiceCollectionExtensions.AddViciOneMessageContracts(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Advanced.MessageContractCatalogBuilder})",
+          "assembly": "ViciOne.ServiceBus",
+          "source_path": "./vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/MessageContractServiceCollectionExtensions.cs",
+          "source_line": "17",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        }
+      },
+      "historical_prior_held_record": {
+        "selected_ordinal_zero_based": 0,
+        "original_csv_zero_based_index": 6139,
+        "assembly": "ViciOne.ServiceBus",
+        "id": "M:Microsoft.Extensions.DependencyInjection.MessageContractServiceCollectionExtensions.AddViciOneMessageContracts(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Advanced.MessageContractCatalogBuilder})",
+        "prior_draft_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/CORE630_CURRENT260_COMPOSED_MATRIX.json",
+        "prior_draft_sha256": "a770a8370e4b60951c5276b248caaf0ac9eda8e6846e5fbca13b1567339d4291",
+        "prior_matrix_ordinal": 1,
+        "prior_draft_whole_source_authority": "Other-author prior630 norms retained as draft references ONLY; not transferred as our human source proof. Own historical Source721/600 may be reused only exact ownedSHA receipts per future selected group.",
+        "historical_individual_contract_norm": "AddViciOneMessageContracts returns sameIServiceCollection; guardservices thenconfigure, marker scan exactServiceType grantsownership else anycatalog registration rejectsConfigurationException. On firstcall addSingleton owner then deferredcatalogfactory; factory newbuilder andeachGetServices registration callback sequentially thenBuild. Always AddSingleton registrationinstance capturingborrowedconfigure. No immediatecallback/immutablecatalogcreation, no atomicrollback ifDIregistration/providercallback fails, no providerlifetime transfer. Containerfactory materialization/uniquecatalogidentity runtime obligation.",
+        "historical_hold": {
+          "category": "PUBLIC_REGISTRATION_AND_PARTIAL_CONSTRUCTION",
+          "reason": "AddViciOneMessageContracts returns sameIServiceCollection; guardservices thenconfigure, marker scan exactServiceType grantsownership else anycatalog registration rejectsConfigurationException. On firstcall addSingleton owner then deferredcatalogfactory; factory newbuilder andeachGetServices registration callback sequentially thenBuild. Always AddSingleton registrationinstance capturingborrowedconfigure. No immediatecallback/immutablecatalogcreation, no atomicrollback ifDIregistration/providercallback fails, no providerlifetime transfer. Containerfactory materialization/uniquecatalogidentity runtime obligation.",
+          "public_original_obligation": "Use the exact supported public configurator/provider to prove admitted-registration/factory failure and partial-construction ownership boundaries before closing this obligation. Local source ordering is recorded; no defect is inferred solely from missing rollback."
+        },
+        "historical_recommendation": "HELD_PUBLIC_REGISTRATION_AND_PARTIAL_CONSTRUCTION",
+        "historical_runtime_obligation": "Use the exact supported public configurator/provider to prove admitted-registration/factory failure and partial-construction ownership boundaries before closing this obligation. Local source ordering is recorded; no defect is inferred solely from missing rollback.",
+        "current_recommendation": "HELD_PENDING_OWN_BOUNDED_CURRENT_REVIEW",
+        "native_count": 0,
+        "grade": null,
+        "closed": false,
+        "source_relative": "src/ViciOne.ServiceBus/DependencyInjection/MessageContractServiceCollectionExtensions.cs",
+        "historical_source_sha256": "7d960a48bd2a9829bf7ff090ccbfd6f5e054608ce323230dcc38fd25369d3547",
+        "actual_research_source_sha256": "7d960a48bd2a9829bf7ff090ccbfd6f5e054608ce323230dcc38fd25369d3547",
+        "same_source_bytes": true
+      }
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:Microsoft.Extensions.DependencyInjection.PayloadAdmissionServiceCollectionExtensions.AddViciOnePayloadAdmission``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.PayloadAdmissionOptions{``0}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+      "source_sha256": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08",
+      "member_contract": "AddViciOnePayloadAdmission<TBus> requires class,IBus, rejects null services, calls AddMetrics, then local AddFeature<TBus>(services,\"Payload admission\") in that order. AddFeature validates/inspects feature metadata and appends a BusFeatureRegistration under its default allowMultipleDeclarations=false behavior, even if a matching feature already exists; any uniqueness/startup failure is later validation, not suppressed here. It adds Options<PayloadAdmissionOptions<TBus>>, passes configure to OptionsBuilder.Configure only when nonnull (no direct invocation), calls ValidateOnStart, TryAddEnumerable singleton validator, then TryAddSingleton instrumentation, policy provider, evaluator factory, instrumented evaluator and runtime, and TryAddEnumerable runtime registration. Returns exact services. Evaluator factory resolves policy provider only when external DI invokes it. Validator requires both hard limits before Freeze and translates caught ArgumentException into validation failure; policy provider reads actual IOptions.Value then Freeze on construction. This local registration does not run a host, guarantee a usable bus policy, override all existing user descriptors or perform atomic rollback; options/DI execution and custom collection reentry remain separate.",
+      "actual_current_PDB_source_binding": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_current_XML_node_serialized": "<member name=\"M:Microsoft.Extensions.DependencyInjection.PayloadAdmissionServiceCollectionExtensions.AddViciOnePayloadAdmission``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.PayloadAdmissionOptions{``0}})\">\n            <summary>\n            Adds bounded application-body and final-envelope admission to <typeparamref name=\"TBus\" />.\n            Both hard limits are required and validated during host startup.\n            </summary>\n            <typeparam name=\"TBus\">The bus type.</typeparam>\n            <param name=\"services\">The dependency-injection service collection.</param>\n            <param name=\"configure\">An optional callback that configures the admission thresholds.</param>\n            <returns><paramref name=\"services\" />.</returns>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null,
+      "runtime_obligations_not_native_proven": [
+        "Microsoft DI/Options library execution and arbitrary custom IServiceCollection/Services/provider enumeration/getter/reentry effects remain delegated. Container materialization/validation/startup, unique runtime ownership, bus isolation, provider disposal/concurrency and callbacks that mutate or throw are not closed. No public Original/fixed Native proof or A+ grade imported; source describes partial mutations without imposing an unsupported rollback policy."
+      ],
+      "selected_original_inventory": {
+        "index": 6141,
+        "full_original_row": {
+          "symbol_id": "M:Microsoft.Extensions.DependencyInjection.PayloadAdmissionServiceCollectionExtensions.AddViciOnePayloadAdmission``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.PayloadAdmissionOptions{``0}})",
+          "assembly": "ViciOne.ServiceBus",
+          "source_path": "./vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+          "source_line": "22",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        }
+      },
+      "historical_prior_held_record": {
+        "selected_ordinal_zero_based": 1,
+        "original_csv_zero_based_index": 6141,
+        "assembly": "ViciOne.ServiceBus",
+        "id": "M:Microsoft.Extensions.DependencyInjection.PayloadAdmissionServiceCollectionExtensions.AddViciOnePayloadAdmission``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.PayloadAdmissionOptions{``0}})",
+        "prior_draft_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/CORE630_CURRENT260_COMPOSED_MATRIX.json",
+        "prior_draft_sha256": "a770a8370e4b60951c5276b248caaf0ac9eda8e6846e5fbca13b1567339d4291",
+        "prior_matrix_ordinal": 3,
+        "prior_draft_whole_source_authority": "Other-author prior630 norms retained as draft references ONLY; not transferred as our human source proof. Own historical Source721/600 may be reused only exact ownedSHA receipts per future selected group.",
+        "historical_individual_contract_norm": "AddViciOnePayloadAdmission<TBus:class,IBus>(services,configure=null) guardsservices thenAddMetrics/AddFeature before OptionsConfigureoptional andValidateOnStart/validator registration. Add typed instrumentation/policy/evaluator/instrumented-interface/runtime+enumerableregistration withTryAdd; evaluatorfactory borrowsrequiredpolicyProvider. ReturnsameServices, configurationdeferred andhardlimitsvalidator later; partialregistration/error ordering matters, no actualbody/envelopeadmission ornativepolicy credit.",
+        "historical_hold": {
+          "category": "PUBLIC_REGISTRATION_AND_PARTIAL_CONSTRUCTION",
+          "reason": "AddViciOnePayloadAdmission<TBus:class,IBus>(services,configure=null) guardsservices thenAddMetrics/AddFeature before OptionsConfigureoptional andValidateOnStart/validator registration. Add typed instrumentation/policy/evaluator/instrumented-interface/runtime+enumerableregistration withTryAdd; evaluatorfactory borrowsrequiredpolicyProvider. ReturnsameServices, configurationdeferred andhardlimitsvalidator later; partialregistration/error ordering matters, no actualbody/envelopeadmission ornativepolicy credit.",
+          "public_original_obligation": "Use the exact supported public configurator/provider to prove admitted-registration/factory failure and partial-construction ownership boundaries before closing this obligation. Local source ordering is recorded; no defect is inferred solely from missing rollback."
+        },
+        "historical_recommendation": "HELD_PUBLIC_REGISTRATION_AND_PARTIAL_CONSTRUCTION",
+        "historical_runtime_obligation": "Use the exact supported public configurator/provider to prove admitted-registration/factory failure and partial-construction ownership boundaries before closing this obligation. Local source ordering is recorded; no defect is inferred solely from missing rollback.",
+        "current_recommendation": "HELD_PENDING_OWN_BOUNDED_CURRENT_REVIEW",
+        "native_count": 0,
+        "grade": null,
+        "closed": false,
+        "source_relative": "src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+        "historical_source_sha256": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08",
+        "actual_research_source_sha256": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08",
+        "same_source_bytes": true
+      }
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.AddViciOneReliableMessaging``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.ReliableMessagingOptions{``0}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+      "source_sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+      "member_contract": "AddViciOneReliableMessaging<TBus> requires class,IBus, rejects null services, adds metrics then Options<ReliableMessagingOptions<TBus>>. If a low-level configure is supplied it registers an options callback that first invokes configure(value); only after it returns normally sets StoreLimitsConfigured/DeliveryConfigured/RetentionConfigured=true and replaces default zero Retention with seven days. Null configure contributes no such callback. Local registration has no direct user configure invocation. It requests ValidateOnStart and enumerable options validator, then TryAddSingleton system TimeProvider, instrumentation, deferred reliable policy factory (IOptions.Value.ValidateAndFreeze), durable admission, and scoped durable sender factory (resolves actual bus/catalog/admission plus optional payload runtime). AddStored scheduler registration follows, then operations singleton and enumerable hosted delivery service. AddStored selects default-bus IMessageScheduler versus typed Bind<TBus,IMessageScheduler> scoped descriptor and always adds an endpoint-configuration singleton factory retaining resolved scheduler selection later. Returns same services; it adds no complete-configuration marker, feature or ReliableSchedulerSelection<TBus> itself. The registered endpoint-configuration factory later requests that selection; the full UseReliableMessaging path supplies it before invoking this low-level method. Materializing that descriptor from a low-level-only registration requires a separately established selection dependency and remains a concrete unqualified public composition boundary, not an observed runtime finding. Option validation/freezing, service/provider/callback behavior, scheduler/host lifetime and duplicate collection/endpoint descriptor effects remain later obligations. Failure leaves previously admitted mutations intact.",
+      "actual_current_PDB_source_binding": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_current_XML_node_serialized": "<member name=\"M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.AddViciOneReliableMessaging``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.ReliableMessagingOptions{``0}})\">\n            <summary>\n            Registers the reliable-messaging runtime directly for provider composition and custom hosts. Applications should use\n            <see cref=\"M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.UseReliableMessaging(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator{ViciOne.ServiceBus.IBus}})\" />.\n            </summary>\n            <typeparam name=\"TBus\">The bus that owns the reliable-messaging runtime.</typeparam>\n            <param name=\"services\">The owning dependency-injection service collection.</param>\n            <param name=\"configure\">An optional complete low-level options configuration.</param>\n            <returns><paramref name=\"services\" /> for continued registration.</returns>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null,
+      "runtime_obligations_not_native_proven": [
+        "Microsoft DI/Options library execution and arbitrary custom IServiceCollection/Services/provider enumeration/getter/reentry effects remain delegated. Container materialization/validation/startup, unique runtime ownership, bus isolation, provider disposal/concurrency and callbacks that mutate or throw are not closed. No public Original/fixed Native proof or A+ grade imported; source describes partial mutations without imposing an unsupported rollback policy."
+      ],
+      "selected_original_inventory": {
+        "index": 6142,
+        "full_original_row": {
+          "symbol_id": "M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.AddViciOneReliableMessaging``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.ReliableMessagingOptions{``0}})",
+          "assembly": "ViciOne.ServiceBus",
+          "source_path": "./vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+          "source_line": "52",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        }
+      },
+      "historical_prior_held_record": {
+        "selected_ordinal_zero_based": 2,
+        "original_csv_zero_based_index": 6142,
+        "assembly": "ViciOne.ServiceBus",
+        "id": "M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.AddViciOneReliableMessaging``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.ReliableMessagingOptions{``0}})",
+        "prior_draft_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/CORE630_CURRENT260_COMPOSED_MATRIX.json",
+        "prior_draft_sha256": "a770a8370e4b60951c5276b248caaf0ac9eda8e6846e5fbca13b1567339d4291",
+        "prior_matrix_ordinal": 4,
+        "prior_draft_whole_source_authority": "Other-author prior630 norms retained as draft references ONLY; not transferred as our human source proof. Own historical Source721/600 may be reused only exact ownedSHA receipts per future selected group.",
+        "historical_individual_contract_norm": "AddViciOneReliableMessaging<TBus:class,IBus> guardsservices thenAddMetrics/AddOptions, optional deferredcallback setsStore/Delivery/Retentionflags onlyaftersuccess anddefaultsRetention7d iffdefault. ValidateOnStart plusvalidator, TryAddSystemclock/instrumentation/policy ValidateAndFreeze, typedSenderfactory/deps, storedscheduler,operations, hostedDelivery enumerable. Returnsamecollection; no storeconnect/workerstart/send or immediateoptionsvalidation, sequentialfailurepartialregistration noatomicrollback.",
+        "historical_hold": {
+          "category": "PUBLIC_REGISTRATION_AND_PARTIAL_CONSTRUCTION",
+          "reason": "AddViciOneReliableMessaging<TBus:class,IBus> guardsservices thenAddMetrics/AddOptions, optional deferredcallback setsStore/Delivery/Retentionflags onlyaftersuccess anddefaultsRetention7d iffdefault. ValidateOnStart plusvalidator, TryAddSystemclock/instrumentation/policy ValidateAndFreeze, typedSenderfactory/deps, storedscheduler,operations, hostedDelivery enumerable. Returnsamecollection; no storeconnect/workerstart/send or immediateoptionsvalidation, sequentialfailurepartialregistration noatomicrollback.",
+          "public_original_obligation": "Use the exact supported public configurator/provider to prove admitted-registration/factory failure and partial-construction ownership boundaries before closing this obligation. Local source ordering is recorded; no defect is inferred solely from missing rollback."
+        },
+        "historical_recommendation": "HELD_PUBLIC_REGISTRATION_AND_PARTIAL_CONSTRUCTION",
+        "historical_runtime_obligation": "Use the exact supported public configurator/provider to prove admitted-registration/factory failure and partial-construction ownership boundaries before closing this obligation. Local source ordering is recorded; no defect is inferred solely from missing rollback.",
+        "current_recommendation": "HELD_PENDING_OWN_BOUNDED_CURRENT_REVIEW",
+        "native_count": 0,
+        "grade": null,
+        "closed": false,
+        "source_relative": "src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+        "historical_source_sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+        "actual_research_source_sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+        "same_source_bytes": true
+      }
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.UseReliableMessaging(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator{ViciOne.ServiceBus.IBus}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+      "source_sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+      "member_contract": "Default-bus nonasync UseReliableMessaging rejects null configurator, delegates to actual ConfigureReliableMessaging<IBus> with the same configurator and configure Action, then returns the identical configurator only on normal completion. No wrapper catches user/provider/collection errors. ConfigureReliableMessaging rechecks registrationConfigurator then configure for null, reads actual Services, scans exact ReliableMessagingRegistration<TBus> descriptor type and rejects any existing marker with ConfigurationException before adding further local descriptors. Otherwise it adds that bus marker, constructs/stores a ReliableSchedulerSelection<TBus> initialized to Store/null endpoint, registers feature metadata, invokes low-level AddViciOneReliableMessaging<TBus> with null options callback, constructs a local ReliableMessagingConfigurator retaining the same registrationConfigurator/selection, then synchronously invokes the supplied complete configure callback once. Callback or earlier registration failure leaves already admitted collection mutations unchanged; no local rollback or callback suppression. The callback can subsequently register store/delivery/retention/catalog/scheduler policy, but those arbitrary operations and future provider/host materialization are separate.",
+      "actual_current_PDB_source_binding": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_current_XML_node_serialized": "<member name=\"M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.UseReliableMessaging(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator{ViciOne.ServiceBus.IBus}})\">\n            <summary>Adds and configures reliable messaging within the default bus configuration flow.</summary>\n            <param name=\"configurator\">The default bus registration configurator.</param>\n            <param name=\"configure\">The complete reliable-messaging configuration.</param>\n            <returns><paramref name=\"configurator\" /> for continued bus configuration.</returns>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null,
+      "runtime_obligations_not_native_proven": [
+        "Microsoft DI/Options library execution and arbitrary custom IServiceCollection/Services/provider enumeration/getter/reentry effects remain delegated. Container materialization/validation/startup, unique runtime ownership, bus isolation, provider disposal/concurrency and callbacks that mutate or throw are not closed. No public Original/fixed Native proof or A+ grade imported; source describes partial mutations without imposing an unsupported rollback policy."
+      ],
+      "selected_original_inventory": {
+        "index": 6143,
+        "full_original_row": {
+          "symbol_id": "M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.UseReliableMessaging(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator{ViciOne.ServiceBus.IBus}})",
+          "assembly": "ViciOne.ServiceBus",
+          "source_path": "./vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+          "source_line": "20",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        }
+      },
+      "historical_prior_held_record": {
+        "selected_ordinal_zero_based": 3,
+        "original_csv_zero_based_index": 6143,
+        "assembly": "ViciOne.ServiceBus",
+        "id": "M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.UseReliableMessaging(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator{ViciOne.ServiceBus.IBus}})",
+        "prior_draft_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/CORE630_CURRENT260_COMPOSED_MATRIX.json",
+        "prior_draft_sha256": "a770a8370e4b60951c5276b248caaf0ac9eda8e6846e5fbca13b1567339d4291",
+        "prior_matrix_ordinal": 5,
+        "prior_draft_whole_source_authority": "Other-author prior630 norms retained as draft references ONLY; not transferred as our human source proof. Own historical Source721/600 may be reused only exact ownedSHA receipts per future selected group.",
+        "historical_individual_contract_norm": "UseReliableMessaging defaultIBusconfig guardsconfig, helperguardsconfigure then exactmarkerduplicate rejection. Addregistrationmarker/schedulerselection/feature/runtime registrations BEFOREconfigure(newReliableMessagingConfigurator<IBus>), thenreturnsameconfig. Callbackcanthrowafterdescriptorcommits; no rolled-backstore/dispose/implicitnewbus. Concrete provider/store/workers lifecycle explicit held.",
+        "historical_hold": {
+          "category": "PUBLIC_REGISTRATION_AND_PARTIAL_CONSTRUCTION",
+          "reason": "UseReliableMessaging defaultIBusconfig guardsconfig, helperguardsconfigure then exactmarkerduplicate rejection. Addregistrationmarker/schedulerselection/feature/runtime registrations BEFOREconfigure(newReliableMessagingConfigurator<IBus>), thenreturnsameconfig. Callbackcanthrowafterdescriptorcommits; no rolled-backstore/dispose/implicitnewbus. Concrete provider/store/workers lifecycle explicit held.",
+          "public_original_obligation": "Use the exact supported public configurator/provider to prove admitted-registration/factory failure and partial-construction ownership boundaries before closing this obligation. Local source ordering is recorded; no defect is inferred solely from missing rollback."
+        },
+        "historical_recommendation": "HELD_PUBLIC_REGISTRATION_AND_PARTIAL_CONSTRUCTION",
+        "historical_runtime_obligation": "Use the exact supported public configurator/provider to prove admitted-registration/factory failure and partial-construction ownership boundaries before closing this obligation. Local source ordering is recorded; no defect is inferred solely from missing rollback.",
+        "current_recommendation": "HELD_PENDING_OWN_BOUNDED_CURRENT_REVIEW",
+        "native_count": 0,
+        "grade": null,
+        "closed": false,
+        "source_relative": "src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+        "historical_source_sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+        "actual_research_source_sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+        "same_source_bytes": true
+      }
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.UseReliableMessaging``1(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0},System.Action{ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator{``0}})",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+      "source_sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+      "member_contract": "Typed nonasync UseReliableMessaging<TBus:class,IBus> rejects null typed configurator, delegates to actual ConfigureReliableMessaging<TBus> with that same object and configure Action, and returns the identical typed configurator only on normal completion. Typed bus marker/options/scheduler descriptors remain distinct via their closed TBus types; arbitrary collection/registration/host behavior is not proved isolated merely by this generic signature. ConfigureReliableMessaging rechecks registrationConfigurator then configure for null, reads actual Services, scans exact ReliableMessagingRegistration<TBus> descriptor type and rejects any existing marker with ConfigurationException before adding further local descriptors. Otherwise it adds that bus marker, constructs/stores a ReliableSchedulerSelection<TBus> initialized to Store/null endpoint, registers feature metadata, invokes low-level AddViciOneReliableMessaging<TBus> with null options callback, constructs a local ReliableMessagingConfigurator retaining the same registrationConfigurator/selection, then synchronously invokes the supplied complete configure callback once. Callback or earlier registration failure leaves already admitted collection mutations unchanged; no local rollback or callback suppression. The callback can subsequently register store/delivery/retention/catalog/scheduler policy, but those arbitrary operations and future provider/host materialization are separate.",
+      "actual_current_PDB_source_binding": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_current_XML_node_serialized": "<member name=\"M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.UseReliableMessaging``1(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0},System.Action{ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator{``0}})\">\n            <summary>Adds and configures reliable messaging within its owning typed bus configuration flow.</summary>\n            <typeparam name=\"TBus\">The bus that owns the reliable-messaging runtime.</typeparam>\n            <param name=\"configurator\">The typed bus registration configurator.</param>\n            <param name=\"configure\">The complete reliable-messaging configuration.</param>\n            <returns><paramref name=\"configurator\" /> for continued bus configuration.</returns>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null,
+      "runtime_obligations_not_native_proven": [
+        "Microsoft DI/Options library execution and arbitrary custom IServiceCollection/Services/provider enumeration/getter/reentry effects remain delegated. Container materialization/validation/startup, unique runtime ownership, bus isolation, provider disposal/concurrency and callbacks that mutate or throw are not closed. No public Original/fixed Native proof or A+ grade imported; source describes partial mutations without imposing an unsupported rollback policy."
+      ],
+      "selected_original_inventory": {
+        "index": 6144,
+        "full_original_row": {
+          "symbol_id": "M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.UseReliableMessaging``1(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0},System.Action{ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator{``0}})",
+          "assembly": "ViciOne.ServiceBus",
+          "source_path": "./vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+          "source_line": "34",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        }
+      },
+      "historical_prior_held_record": {
+        "selected_ordinal_zero_based": 4,
+        "original_csv_zero_based_index": 6144,
+        "assembly": "ViciOne.ServiceBus",
+        "id": "M:Microsoft.Extensions.DependencyInjection.ReliableMessagingServiceCollectionExtensions.UseReliableMessaging``1(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0},System.Action{ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator{``0}})",
+        "prior_draft_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/CORE630_CURRENT260_COMPOSED_MATRIX.json",
+        "prior_draft_sha256": "a770a8370e4b60951c5276b248caaf0ac9eda8e6846e5fbca13b1567339d4291",
+        "prior_matrix_ordinal": 6,
+        "prior_draft_whole_source_authority": "Other-author prior630 norms retained as draft references ONLY; not transferred as our human source proof. Own historical Source721/600 may be reused only exact ownedSHA receipts per future selected group.",
+        "historical_individual_contract_norm": "UseReliableMessaging<TBus:class,IBus> sameowner-specificregistration flow: guardsconfigthenconfigure, duplicateTypedmarkercheck, typedselectionSingleton/feature/runtime additions precedeconfigure. Sameconfigreturn, immediateconfigcallback/deferredruntimeoptions distinguished, independentbusidentity dictionaryscan notglobaltransaction. Failureleavespartialregistration; actualownedworker/store lifetime held.",
+        "historical_hold": {
+          "category": "PUBLIC_REGISTRATION_AND_PARTIAL_CONSTRUCTION",
+          "reason": "UseReliableMessaging<TBus:class,IBus> sameowner-specificregistration flow: guardsconfigthenconfigure, duplicateTypedmarkercheck, typedselectionSingleton/feature/runtime additions precedeconfigure. Sameconfigreturn, immediateconfigcallback/deferredruntimeoptions distinguished, independentbusidentity dictionaryscan notglobaltransaction. Failureleavespartialregistration; actualownedworker/store lifetime held.",
+          "public_original_obligation": "Use the exact supported public configurator/provider to prove admitted-registration/factory failure and partial-construction ownership boundaries before closing this obligation. Local source ordering is recorded; no defect is inferred solely from missing rollback."
+        },
+        "historical_recommendation": "HELD_PUBLIC_REGISTRATION_AND_PARTIAL_CONSTRUCTION",
+        "historical_runtime_obligation": "Use the exact supported public configurator/provider to prove admitted-registration/factory failure and partial-construction ownership boundaries before closing this obligation. Local source ordering is recorded; no defect is inferred solely from missing rollback.",
+        "current_recommendation": "HELD_PENDING_OWN_BOUNDED_CURRENT_REVIEW",
+        "native_count": 0,
+        "grade": null,
+        "closed": false,
+        "source_relative": "src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+        "historical_source_sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+        "actual_research_source_sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+        "same_source_bytes": true
+      }
+    }
+  ],
+  "root_authority": "Root compact5 norms and entire independent semantic peer ab306b; entire direct selected3/266 source afdab6; entire independent frozen325 peer f796d5; own approved P36 full metadata and selected13 checksum/source join. Independent authored source13/1280 authority is retained separately; no whole1340 human source or Native workflow credit.",
+  "Original_before": 18133,
+  "Original_after": 18138,
+  "remaining_before": 436,
+  "remaining_after": 431,
+  "master_before": 18995,
+  "master_after": 19000,
+  "Native_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

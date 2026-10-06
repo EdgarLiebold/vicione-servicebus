@@ -1,0 +1,31 @@
+{
+  "status": "ROOT_XML_ONLY_EXTENSION_BEFORE_ADVERSARIAL_NATIVE",
+  "utc": "2026-10-03T17:11:40.379165+00:00",
+  "inputs": [
+    {
+      "relative": "src/ViciOne.ServiceBus.JobService/Advanced/IJobContext.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/Advanced/IJobContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-job-docs-source-r1/src/ViciOne.ServiceBus.JobService/Advanced/IJobContext.cs",
+      "sha256": "48fbf0bc8ccce4203b14c2238be75ad75c1e04f4634ad026d224d7d822f411a0",
+      "original_sha256": "a23f4c7e6eb1689c04839edc294f048400c030a163cf48345d47d0ec3923a321",
+      "runtime_and_signatures_identical": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.JobService/JobService/ConsumeJobContext.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/JobService/ConsumeJobContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-job-docs-source-r1/src/ViciOne.ServiceBus.JobService/JobService/ConsumeJobContext.cs",
+      "sha256": "336e2df9830fecb6043cc173e5fff9fa0e9188ef539b3956e832098e0dd7978e",
+      "original_sha256": "4e126150de05e498137de3d84f09d7dc2b9619a565c66f2e9713a832f98a8df9",
+      "runtime_and_signatures_identical": true
+    }
+  ],
+  "root_full_read_sources": [
+    "src/ViciOne.ServiceBus.JobService/Advanced/IJobContext.cs",
+    "src/ViciOne.ServiceBus.JobService/JobService/ConsumeJobContext.cs",
+    "src/ViciOne.ServiceBus.JobService/JobService/JobProgressBuffer.cs",
+    "src/ViciOne.ServiceBus.JobService/JobService/JobStateMachine.cs"
+  ],
+  "causal_finding": "F001 completion promises",
+  "product_runtime_changed": false,
+  "adversarial_and_package_xml_gate_pending": true
+}

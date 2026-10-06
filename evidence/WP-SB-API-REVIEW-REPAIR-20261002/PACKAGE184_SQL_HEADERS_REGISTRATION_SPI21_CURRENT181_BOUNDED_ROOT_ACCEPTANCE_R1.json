@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-05T12:37:41.442872+00:00",
+  "actor": "/root",
+  "scope": "21original SQLheaders/addresses/registration/SPI boundeddeclarationlocalcontracts",
+  "before": {
+    "raw": 9180,
+    "original": 8318
+  },
+  "after": {
+    "raw": 9201,
+    "original": 8339,
+    "sidecars": 833,
+    "original_remaining": 10230
+  },
+  "author_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package198-sql-headers-registration-spi21-contract-context-r2/REPORT.json",
+  "author_sha256": "9421cd052fc498655282daafa23ee1b2463d7f961665b093c9b53b1a32d0113c",
+  "independent_peer_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package213-sql-headers-registration-spi21-independent-current181-runtime-peer-r2/REPORT.json",
+  "independent_peer_sha256": "5d534130f5342f035cfd14458f1c64e0e1ab405f34d21af92e8b75ad0b0a3fcd",
+  "root_personal": "All21individualnorms personallyc099c8 retainedexactbyR2peer; wholepeerReportfcd588 andexact3actualdeclarationbody associationcorrectons9f29cd. Peer genuine11whole1066L+7test825L authority attributed; Rootno newwhole11/testclaim. Allauthor/peerMAN21CSVdisjoint/currentSourceSHA/181selectedPDB/currentXML21/Fresh3CRC individually checked here.",
+  "native_cases_added": 0,
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "limits": [
+    "Native0/gradeNull/closedfalse, noDB/migrator/customcallback/universalnativecase/cancellation guarantee.",
+    "OnlyhostconfigurationXMLholdcleared; threewrongcallersnippets/artifactarithmeticcorrected beforeRootpromotion, noProductFinding."
+  ]
+}

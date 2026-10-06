@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Transports;
@@ -51,7 +52,22 @@ public sealed class JsonTransportHeaders :
         where T : class
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
-        return ServiceBusMetadataJson.ObjectDeserializer.GetValue(_provider, key, defaultValue);
+        if (!_provider.TryGetHeader(key, out object? value) || value is null)
+            return defaultValue;
+
+        object? preparedValue = HeaderValueConversion.PrepareHeaderValue<T>(value, out bool incompatible, out bool useBuiltInFallback,
+            preserveEncodedNull: true);
+        if (incompatible)
+            return defaultValue;
+
+        try
+        {
+            return ServiceBusMetadataJson.ObjectDeserializer.DeserializeObject(preparedValue, defaultValue);
+        }
+        catch (JsonException) when (useBuiltInFallback)
+        {
+            return defaultValue;
+        }
     }
 
     /// <summary>Gets a value-type header after applying JSON-aware conversion.</summary>
@@ -63,7 +79,22 @@ public sealed class JsonTransportHeaders :
         where T : struct
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
-        return ServiceBusMetadataJson.ObjectDeserializer.GetValue(_provider, key, defaultValue);
+        if (!_provider.TryGetHeader(key, out object? value) || value is null)
+            return defaultValue;
+
+        object? preparedValue = HeaderValueConversion.PrepareHeaderValue<T>(value, out bool incompatible, out bool useBuiltInFallback,
+            preserveEncodedNull: true);
+        if (incompatible)
+            return defaultValue;
+
+        try
+        {
+            return ServiceBusMetadataJson.ObjectDeserializer.DeserializeObject(preparedValue, defaultValue);
+        }
+        catch (JsonException) when (useBuiltInFallback)
+        {
+            return defaultValue;
+        }
     }
 
     /// <summary>Returns an enumerator over the transport headers.</summary>

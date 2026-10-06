@@ -4,7 +4,7 @@ using ViciOne.ServiceBus.Contracts.JobService;
 
 namespace ViciOne.ServiceBus.JobService.Messages;
 
-/// <summary>Provides the serializable durable state snapshot returned for a job.</summary>
+/// <summary>Represents a job state snapshot; persistence depends on the configured saga repository.</summary>
 internal sealed class JobStateResponse :
     IJobState
 {

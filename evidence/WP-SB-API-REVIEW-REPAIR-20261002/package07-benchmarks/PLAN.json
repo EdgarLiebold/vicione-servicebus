@@ -1,0 +1,45 @@
+{
+  "status": "RESEARCH_PLAN_BEFORE_PRODUCT_AND_ORACLE_EDITS",
+  "findings": [
+    "F024",
+    "F025",
+    "F026"
+  ],
+  "skills": [
+    "microbenchmarking",
+    "code-testing-agent",
+    "run-tests",
+    "test-gap-analysis",
+    "assertion-quality"
+  ],
+  "scope": "Three nonpackable benchmark source corrections; standalone public compiled-tool oracle, no canonical test-owner edits. Existing Benchmark.Tests unchanged; no full owner grading claim.",
+  "production": [
+    {
+      "path": "benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorBatchBenchmark.cs",
+      "change": "Add explicit Conservative Limits to both independently created mediators; preserve API guards."
+    },
+    {
+      "path": "benchmarks/ViciOne.ServiceBus.BenchmarkConsole/DeserializationBenchmark.cs",
+      "change": "Pass EmptyHeaders.Instance to JSON deserializer, as the MessagePack path already does."
+    },
+    {
+      "path": "benchmarks/ViciOne.ServiceBus.Benchmark/Latency/MessageMetricCapture.cs",
+      "change": "Atomic unique-ID consume dictionary, first timestamp retained, increment only successful TryAdd, join dictionary Values."
+    }
+  ],
+  "oracles": [
+    "Actual rebuilt BenchmarkConsole DLL with real BDN Dry, four BatchSize cases + six deserialize cases + two mediator controls; native aggregate report exit must be zero and every raw workload case present. Dry is execution correctness, no statistical performance acceptance.",
+    "Actual rebuilt tool DLL with standalone public calls; assert early ConsumeCompleted remains pending after duplicate ID, exact unique final metric rows, original first timestamp, concurrent duplicate callbacks and duplicate send-observer control. No copied MessageMetricCapture source in oracle.",
+    "Directly call actual compiled benchmark methods to require true materialized message result for all six serializer/size tuples, beyond BDN workload-success alone."
+  ],
+  "mutants": [
+    "One independently omitted mediator Limits at a time",
+    "JSON EmptyHeaders reverted to null",
+    "Consume bag original restored; duplicate counter guard removed; metric join duplicated; first timestamp overwritten"
+  ],
+  "exclusions": [
+    "No cloud broker/redelivery path or ARM512MiB performance qualification claimed.",
+    "Historical evidence supplementary, fresh exact end-source receipts required."
+  ],
+  "adversarial": "Separate reviewer on all three exact source patches, authored oracles, runner and native/BDN bindings before closure."
+}

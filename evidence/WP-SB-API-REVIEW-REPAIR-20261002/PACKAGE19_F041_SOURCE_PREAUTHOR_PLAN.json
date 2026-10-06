@@ -1,0 +1,30 @@
+{
+  "status": "ROOT_FULL_RESEARCH_AND_ADVERSARIAL_PLAN_BEFORE_SOURCE_AUTHORING",
+  "finding": "F-SB-API-041",
+  "source_inputs": [
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+      "root_personal_full": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/RegistrationContextEndpointDefinition.cs",
+      "sha256": "25ad4f2ec914e6a8f2a665c4e7275f86d2a16e16fd46963ddd1a039609480c87",
+      "root_personal_full": true
+    }
+  ],
+  "contract": "Public IConsumerKindEndpointContext endpointName is unique companion identity; endpointDefinition optional settings. IConsumerKindRegistration.CompanionEndpointNames advertises exact materialized identity. ActivityDefinition literal name wins over lower fluent-definition name.",
+  "actual_evidence": {
+    "phase": "package19-f034-public-corrected-thirtyfour",
+    "log_sha256": "26443b4400762df5485670a083e063c2737837f52819aaf8d05640cbcab2d67e",
+    "finite_failure": "definition-full Assert.Null at RuntimeOwner109 captures actual duplicate receive endpoint ignored-fluent-compensate"
+  },
+  "planned_delta": "Internal wrapper optional nullable plannedEndpointName, readonly capture; GetEndpointName returns capture ?? delegated name preserving formatter null guard. Pass planned name only at companion call, all primary/service instance twoarg callsites unchanged. All Configure/context/settings/topology/temporary delegation unchanged.",
+  "guard_policy": "No added whitespace validation or mutable definition changes. Names already selected by real planning contract.",
+  "owner_oracle": "Fresh R4 strict five-name callback multiset includes actual intentionally independent fluent endpoints; literal endpoint must carry activitybusiness. Existing full/execute/default/typed/callercontrols retained. Definition-full still needs correctedfixedactual validation. No automatically attributed F034kill.",
+  "mutants": [
+    "Remove third argument only",
+    "Ignore captured planned name only"
+  ],
+  "adversarial": "adversarial_package_01 read-only sourceplan provided exact twofile contract; final ownedcode diff review required"
+}

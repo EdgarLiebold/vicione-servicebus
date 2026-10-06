@@ -81,7 +81,13 @@ internal sealed class DbContextSagaRepositoryContext<TSaga, TMessage> :
         {
             await _dbContext.SaveChangesAsync(operationCancellationToken).ConfigureAwait(false);
 
-            _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
+            try
+            {
+                _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
+            }
+            catch (Exception)
+            {
+            }
 
             return await _factory.CreateSagaConsumeContextAsync(_dbContext, _consumeContext, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
         }
@@ -111,7 +117,13 @@ internal sealed class DbContextSagaRepositoryContext<TSaga, TMessage> :
             if (existing == null)
                 throw;
 
-            _consumeContext.LogInsertFault<TSaga, TMessage>(exception, instance.CorrelationId);
+            try
+            {
+                _consumeContext.LogInsertFault<TSaga, TMessage>(exception, instance.CorrelationId);
+            }
+            catch (Exception)
+            {
+            }
 
             return default;
         }

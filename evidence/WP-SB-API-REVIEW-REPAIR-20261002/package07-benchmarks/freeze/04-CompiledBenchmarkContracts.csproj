@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+ <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings><RestorePackagesWithLockFile>true</RestorePackagesWithLockFile><RestorePackagesPath>$(MSBuildThisFileDirectory)restored-packages</RestorePackagesPath></PropertyGroup>
+ <ItemGroup>
+  <PackageReference Include="ViciOne.ServiceBus" Version="1.0.0"/>
+  <PackageReference Include="ViciOne.ServiceBus.MessagePack" Version="1.0.0"/>
+  <PackageReference Include="ViciOne.ServiceBus.Mediator" Version="1.0.0"/>
+  <PackageReference Include="ViciOne.ServiceBus.JobService" Version="1.0.0"/>
+  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12"/>
+  <PackageReference Include="BenchmarkDotNet" Version="0.15.8"/>
+  <Reference Include="vicione-servicebus-benchmark"><HintPath>compiled-tools/vicione-servicebus-benchmark.dll</HintPath><Private>true</Private></Reference>
+  <Reference Include="ViciOne.ServiceBus.BenchmarkConsole"><HintPath>compiled-tools/ViciOne.ServiceBus.BenchmarkConsole.dll</HintPath><Private>true</Private></Reference>
+ </ItemGroup>
+</Project>

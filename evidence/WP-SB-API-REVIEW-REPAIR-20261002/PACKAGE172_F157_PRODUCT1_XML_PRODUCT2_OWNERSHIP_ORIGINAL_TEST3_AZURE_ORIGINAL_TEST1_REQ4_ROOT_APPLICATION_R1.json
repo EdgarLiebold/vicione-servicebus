@@ -1,0 +1,132 @@
+{
+  "utc": "2026-10-05T07:48:30.010497+00:00",
+  "actor": "/root",
+  "status": "ROOT_PRE_REVIEWED_CURRENT172_SOURCE9_APPLIED_NATIVE_PENDING",
+  "source_plan": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-root-application-preflight-r1/SOURCE_PLAN.json",
+    "sha256": "d8e6c5c95a3caf15686f2f92d0bb0e507d55ade26415807538c88ba1ad722242"
+  },
+  "qualified_original171": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package171-added-ctor-fixed-add-insert-original142-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+    "sha256": "ef7c470246a1e375a437dcda17407854ea754479623e92e323e43c7f7a9865ed",
+    "freeze_sha256": "0083ee482cc19f1c4e3c17fe0ed7ae031120b0ab3b6dcc4771309a3cd7923af5"
+  },
+  "files": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorShutdownTests.cs",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package178-transport-ownership6-oracles-proposed-r1/proposed/tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorShutdownTests.cs",
+      "before_sha256": "89c8e31eb4cef5959b6eae18dc844e0daa80d12f3abc361f5dad0ea09338b5a1",
+      "after_sha256": "b5b988b4b9ba669c6253423d93b64aed3291e7c62ff598a915b3030d8b029f5c",
+      "before_lines": 164,
+      "after_lines": 295,
+      "literal_reconstruction_exact": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/SendTransportTests.cs",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package178-transport-ownership6-oracles-proposed-r1/proposed/tests/ViciOne.ServiceBus.Tests/Transports/SendTransportTests.cs",
+      "before_sha256": "0a05ab1fd1f7ad2c073257b612040b64bb3b30324a122cb47bf63e065b37d890",
+      "after_sha256": "2dcb59821771c39122a3a4050afc1385826e4a5894bf64f89d1552130a5798f1",
+      "before_lines": 285,
+      "after_lines": 384,
+      "literal_reconstruction_exact": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ReceiveEndpointDispatcherTests.cs",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package178-transport-ownership6-oracles-proposed-r1/proposed/tests/ViciOne.ServiceBus.Tests/Transports/ReceiveEndpointDispatcherTests.cs",
+      "before_sha256": "f7cbcbe1fb2f9ac02b00c4b5bf00a048a8ffaa6fc2a780ea5fdcbb4219a74585",
+      "after_sha256": "fd619062c91316407b0bb43c2366c047b1a543b2bc1c80c4cab3dc86fc0e4ab4",
+      "before_lines": 333,
+      "after_lines": 441,
+      "literal_reconstruction_exact": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Saga/InMemoryRepository/InMemorySagaRepositoryContext.cs",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package179-inmemory-add-insert-operation-view-product-candidate-r2/proposed/src/ViciOne.ServiceBus.Sagas/Saga/InMemoryRepository/InMemorySagaRepositoryContext.cs",
+      "before_sha256": "6f79b6947368e64ce1f837cbd08b37aa33d900dc382e16033ee74c3a8e6938ad",
+      "after_sha256": "9acb7e59d57a843c57416bc6e5c0597563fc46473e70c3dd5854cb4637adf57e",
+      "before_lines": 412,
+      "after_lines": 417,
+      "literal_reconstruction_exact": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpoint.cs",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package180-core-transport-observer-reset-xml3-proposed-r1/proposed/src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpoint.cs",
+      "before_sha256": "c1ea8e62ab253071289acd2c139b5cdc331c4de8c29556df897b3910f0077304",
+      "after_sha256": "d78d7cb4eb85b16b428ec50e31912611dd28a76cead5b9d92316ca7dd9167587",
+      "before_lines": 567,
+      "after_lines": 567,
+      "literal_reconstruction_exact": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/BaseReceiveEndpointContext.cs",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package180-core-transport-observer-reset-xml3-proposed-r1/proposed/src/ViciOne.ServiceBus/Transports/Receiving/BaseReceiveEndpointContext.cs",
+      "before_sha256": "5b6ed52649ef4d734d055d50848f190b945e569ae72bf0900415683927b160ff",
+      "after_sha256": "eb9c132706f6f4a0b47ace530704717a08e6ecbbaa2b5027df37887c3eadea79",
+      "before_lines": 322,
+      "after_lines": 322,
+      "literal_reconstruction_exact": true
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/AzureTableSagaRepositoryBoundaryTests.cs",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package180-azure-insert-diagnostic6-oracles-proposed-r2/proposed/tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/AzureTableSagaRepositoryBoundaryTests.cs",
+      "before_sha256": "4c9049235334f66d28ae21d35a6dd06ef380904a5d0843fd764aaa41fe15cc3e",
+      "after_sha256": "bd2ffed882c5a783745787f09444422afe95b8923339da6905fc4ef54eb99db2",
+      "before_lines": 665,
+      "after_lines": 817,
+      "literal_reconstruction_exact": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "29d28bb62eb672b4ce6e591f20ee513efca38523262523acb596f055dce7fc5b",
+      "after_sha256": "bb83bf2578a49ca756607038d7cea1d14bd03641d1339ea5713d6effda9abb09",
+      "before_rows": 4651,
+      "after_rows": 4654,
+      "ADD_only": [
+        {
+          "requirementId": "REQ-VSB-PIPE-CONTEXT-SHUTDOWN",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testMethod": "TransportChildStopFailure_DoesNotSkipSendAndOwnedContextsAsync",
+          "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorShutdownTests",
+          "variantKey": "transport-child-stop-failure-does-not-skip-send-and-owned"
+        },
+        {
+          "requirementId": "REQ-VSB-SEND-TRANSPORT-FAULT",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testMethod": "StopDiagnostic_DoesNotPreventOwnedAgentShutdownAsync",
+          "testType": "ViciOne.ServiceBus.Tests.Transports.SendTransportTests",
+          "variantKey": "stop-diagnostic-does-not-skip-owned-agents"
+        },
+        {
+          "requirementId": "REQ-VSB-RECEIVE-DISPATCHER",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testMethod": "DispatcherDispose_DiagnosticFailureDoesNotRetainCachedReceiversAsync",
+          "testType": "ViciOne.ServiceBus.Tests.Transports.ReceiveEndpointDispatcherTests",
+          "variantKey": "dispose-diagnostics-do-not-retain-cached-receivers"
+        }
+      ]
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/AzureTableRequirements.json",
+      "before_sha256": "5f763d9c768916463f8a8fb76e09a2df2a82b6d2ba18290dff5943f637586326",
+      "after_sha256": "3b1520a8958b590168a9ac533cc67df356c486f4a4ee599807389ab6eebc994b",
+      "before_rows": 43,
+      "after_rows": 44,
+      "ADD_only": [
+        {
+          "requirementId": "REQ-VSB-AZURE-TABLE-SAGA-INSERT",
+          "variantKey": "insert-diagnostics-preserve-context-conflict-and-primary-failure",
+          "testAssembly": "ViciOne.ServiceBus.Azure.Table.Tests",
+          "testType": "ViciOne.ServiceBus.Azure.Table.Tests.Saga.AzureTableSagaRepositoryBoundaryTests",
+          "testMethod": "Insert_DebugDiagnosticsPreserveStorageOutcomeAsync"
+        }
+      ]
+    }
+  ],
+  "root_human_scope": "All exact product/test patches personally read6a8b78/cbfd82; literal entireSource7 reconstructed and all author/peer MAN8 validatedafacf0. Independent AddInsertSOURCE_NO_BLOCK e442362b, OwnershipSOURCE_NO_BLOCK0d76b02d, AzureOriginalSOURCE_NO_BLOCKc75acbfc and XMLSOURCE_NO_BLOCKfe6a6cc8. Actual Root originalF157 registered33bdd355 and documentary158/159 dacc801c before this application. Current171 freezecaptured/independentlyqualified and allSDKclosed. OriginalCore6/Azure6 prospective, no runtime cause claimed before compiler/native.",
+  "preservation": "All old source/test bytes match qualified/current before pins; actual seven literal proposed images. Sole CoreReq4651 orderedprefix plus3 ->4654; sole AzureReq43 orderedprefix plus1 ->44. No Source/Req rollback snapshot copied wholesale.",
+  "limits": [
+    "F157 repair awaits strict/native/independentfreshpack validation; two XML defects await exact new emitted3nodes.",
+    "Six Core ownership and six Azure provider controls are still prospective Original, not registered product causes.",
+    "No wholeAPI/CLOSED/A+ grade."
+  ]
+}

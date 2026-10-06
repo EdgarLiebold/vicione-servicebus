@@ -1,0 +1,446 @@
+{
+  "status": "LEAD_OWNER_AND_SHARED_TEXT_READ_COMPLETE",
+  "files": [
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "ecd805162a2970979ebb8080228bfe22493418b176f19595cb97d916b129fb47",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/AssemblyInfo.cs",
+      "sha256": "297bf6453797f1140a21672bec2004e52adebb472b3c2528cbb708b5ac0ce3d5",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/BatchCheckpointBehaviorTests.cs",
+      "sha256": "b7441ebd5153f5c4cc268b21bd221cf15fab154686c736c4212faf0ddbc1fb4c",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBatchAndReliabilityTests.cs",
+      "sha256": "31f72e7ddeaea70340cac431a45d51e06cb9c3a39ad01be91d04765597f9fd52",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubCheckpointStorageTests.cs",
+      "sha256": "050dd5f8e4894cfdd779ec24baa26eac19517d68a94b99a831aacb03b71579be",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubConfigurationOwnershipTests.cs",
+      "sha256": "456b4fb513c9b9258dd177c21c3939c4be63f59c078886aa3ba052b4471e74d5",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredProducerTests.cs",
+      "sha256": "071ed4022007916a9cfaa071fda8c1b1635a9c09b56f184cf6b4ecc24fe1fe03",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubEndpointAndBusBoundaryTests.cs",
+      "sha256": "d51664a440ac6a8e3e0e6bb982d18f06fd619d933b9262a88252b9f5353fc0d3",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubHeaderProviderTests.cs",
+      "sha256": "4ef3ecd80c3ac680fd47b4c0f8ebe1a1b4dd6ade913b16d9782f17ed363e27cb",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubInteropAndContextTests.cs",
+      "sha256": "1d6366afc6998cf43fc7c10acbadc7c1c24667d972a319f5cc9de4621200c234",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubObserverAdmissionTests.cs",
+      "sha256": "987e0c998bfd9ade78800f694fd0d7504226d7aa45945fcbf9d15201902a388d",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProcessorContextTests.cs",
+      "sha256": "3c3b204017506c4e4a9730c56e43779a286378c67a3ca94ea6df2771b88237cc",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerBatchSenderTests.cs",
+      "sha256": "f727f7c995924225a8654e192dfde0e957593e0f67e274e7022ff62fb90bacc3",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerCacheTests.cs",
+      "sha256": "d57b741effae2b7ca5472d2604fc63d619d0c7eec58a550d714ab7809164f4bf",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerDeliveryTests.cs",
+      "sha256": "e34a4e464b4ebd729c509371eae681c0a2fb06c7ba1d10a925bde1521dcebe11",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerOutcomeTests.cs",
+      "sha256": "b9d402166843f9dd37c79f1e6bccf46772c888ca5281fa4cd202e9b1d908a3bf",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerResolutionTests.cs",
+      "sha256": "e185391a3fe4be3e78f8e17f61239d88e7a9629512acdd253db6d9b085466eaf",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceiveAdmissionTests.cs",
+      "sha256": "420acf2343de8d2ebe3f012a97a1fa3b5b009e6acb2dc27b9b78495230a1c8ce",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubSagaAndLifecycleTests.cs",
+      "sha256": "fa05b9a6bf47ee4a196821dd35ba1e711893be7dd90dcf2a3a675e55ed6c1bc2",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/PendingConfirmationCancellationTests.cs",
+      "sha256": "5dc028d22fa36cae6b5ef462a13ca7b4312d25d1c38f06cdc9b2d3021a3288b2",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/ProcessorCheckpointLifecycleTests.cs",
+      "sha256": "3b48a18526d22c7ff0f19d0a5fea973c4c455e4bc4c34a95d15922d08b3c02d5",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Infrastructure/EventHubLocalFixture.cs",
+      "sha256": "2f76967e5ed15630307250200a229784011f0ad37991b211e2c821660c32b2b8",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "sha256": "b861de7665883089a93ad927cf01c8c0f50858d834389424e330c36f2999bc5c",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_PLUS_ROOT_AUTHORED_PROJECTION_DELTA"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "9a77e000d6c694fdd8488c0113f70ae6f940b793c85607d6ed83393b2bfcb2fe",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+      "sha256": "827aab2eb3c7f3c08497c504a20f3ad17cb5ac1109df1d0497d6dd0703f12be6",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "ddca799ea3d91af9c6447df3f3e766d78be38b7586d660c7f58c45e7a30ed361",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": ".github/workflows/native-tests.yml",
+      "sha256": "2041926c8fc20c6f73cb1ea4fbee766b1be1eaaad5a18da47fd5a5ee27e75a6c",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "Directory.Build.props",
+      "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "Directory.Build.targets",
+      "sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "Directory.Packages.props",
+      "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "NuGet.config",
+      "sha256": "3f6cda87abdfbc3e7f7a80906f21b11009ac811c70834dfdbc4840db01a9ce93",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "sha256": "ac102688f92ab8ee214af159e05703a6d0bc43dde268efe78c4ca41e82f45091",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "ViciOne.ServiceBus.snk",
+      "sha256": "d8556825164fad48714aa53b243a704787add3646fcaef42c1740eba37e9f303",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "global.json",
+      "sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "signing.props",
+      "sha256": "71a2cc9a5b04a60ea4093aa41824f275ad7cf5d87f4a8866a09990450ec2e411",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "src/Directory.Build.props",
+      "sha256": "be8359cbeaf46760b90b3755da645aeb7b4a786af8f0fd6db9396d21f6e67911",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ViciOne.ServiceBus.ActiveMq.csproj",
+      "sha256": "fcca3b4eaca3e1d5b4978b6aa46330fb3d3574edbbb132e005b5967f7a5fd883",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj",
+      "sha256": "3ad12d318872e121d8e3be1661c0d72182cb0158452667d45e264cc0bf1d9597",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj",
+      "sha256": "7d09a90d76b1b2a0cb203e25a5679008c9040292041fc7b5d71cd66255c8df2a",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "sha256": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+      "sha256": "3f04063a3393b887bc0d1b666c73e7f4375e73860b8d6b7640960d559913adad",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+      "sha256": "8fe3e90f79ab15806ba2fd38e37e717f02a75eafa5b4c05f08b9ee63dd57ea18",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+      "sha256": "5594cd1825e0998de96fa6d78a5995ad36e949fa54cdcd75cf02de181877d023",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+      "sha256": "a6d0faa1c1f4065a2a95f49d92ff643cab6de89f9b5c62bb30980b60009e7a77",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+      "sha256": "1e90e8eedf73e374ffb0a4bb145fd4d1cf4a94cdd05b65c29d440a41f8b90603",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Directory.Build.props",
+      "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Directory.Build.targets",
+      "sha256": "3a866a9a26434dcca1aaf6d61a8d2afc84960f21ceee810b5b825f1ecdd7fdb1",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+      "sha256": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+      "sha256": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+      "sha256": "d78d054d54468692e35500dca6c90e706e6a77bfcbb7d1878bcb4bc97fba4e9e",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs",
+      "sha256": "130f488a8ff8ddc7d43561f77f6188e5d3088de109aef1ba588c454e73180c66",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+      "sha256": "954d1e414f5ad15239213b69d4d6e0dd7bb71fff95d8ce81616f49f991d11656",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json",
+      "sha256": "aef4c037696049b2f689024c6407dab31fe6d8d65594580bde74917261ac7d76",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ApiSurfaceGlobalUsings.cs",
+      "sha256": "35832a2f279237fbe0e7adc762bbeb566d3f5b1b998389ceb04e3d0b9777c8e1",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+      "sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+      "sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+      "sha256": "f79459b8d6dc2fd119935f425fa0284caa4592a8cb04fb79fd2e732d8db76f2d",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json",
+      "sha256": "43949251eee801841536031e9d9f8405b562e4db8d409b84bb73e217e54226ef",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/testconfig.json",
+      "sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "tests/testsettings.json",
+      "sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7",
+      "read_by": "/root",
+      "status": "PRIOR_PERSONAL_FULL_READ_HASH_EQUAL"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Tests.LocalIntegration.slnx",
+      "sha256": "8de6c55fe3e2c96491a658773f1d3d8a2241387ba605dcd6b898b0411db9d276",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    },
+    {
+      "path": "tools/ci/run_broker_category.py",
+      "sha256": "03cdb64a2f8d3f32136d59da5f437d12b89b9b5bb362cc0e22fae489ee2d8969",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    },
+    {
+      "path": "build/test-infrastructure/eventhubs/config.json",
+      "sha256": "8e45b8d2d316f6cfe613f4cd6844988024707471c9231e4392acd0c311e37a53",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/ViciOne.ServiceBus.EventHubs.csproj",
+      "sha256": "aecf00bf5b18a933639150282451b8f7c2934c2cf04510203e5f9c697a9a31e5",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs.Testing/ViciOne.ServiceBus.EventHubs.Testing.csproj",
+      "sha256": "9c5890f9872e474d61e020ed0d4b55749fa46b4b78b08147b185f11475002c43",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs",
+      "sha256": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    },
+    {
+      "path": "tools/ci/fixtures/__init__.py",
+      "sha256": "279e14b15b46cf04d45664922571fc5e4a243c955243d7ad440b7b0f84e89f7b",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    },
+    {
+      "path": "tools/ci/fixtures/broker_logs.py",
+      "sha256": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    },
+    {
+      "path": "tools/ci/fixtures/run_scope.py",
+      "sha256": "1ef7d3cb955828937ec1adb31fcbd4a0a6bcbbc16fbb354388b582e30005f095",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    },
+    {
+      "path": "tools/ci/fixtures/outage_protocol.py",
+      "sha256": "f269955b6b7b5f0e2f9c3dec4d0e0fcc8123ab23513c2dbad3f12e40f7263e3b",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    },
+    {
+      "path": "tools/ci/fixtures/compose_fixture.py",
+      "sha256": "cc2b92ddc68377c2af3cf398c6a5ec041f858cdba42c30a886af51a413e3fe6d",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    },
+    {
+      "path": "build/test-infrastructure/compose.yaml",
+      "sha256": "b7e3fff89ac0bb6c3cedd63d31cce72690ddb991aa631e9afd8cb5d2be645ab8",
+      "read_by": "/root",
+      "status": "PERSONALLY_FULL_READ_SUPPLEMENT_CURRENT_PHASE"
+    }
+  ],
+  "foreign_read_reuse": false,
+  "total": 73,
+  "proof_limit": "Read closure, not whole API acceptance or test grading."
+}

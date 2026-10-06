@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// A saga definition defines the configuration for a saga, which can be used by the automatic registration code to
-/// configure the consumer on a receive endpoint.
+/// configure the saga on a receive endpoint.
 /// </summary>
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 public class SagaDefinition<TSaga> :
@@ -78,7 +78,7 @@ public class SagaDefinition<TSaga> :
     /// Called when configuring the saga on the endpoint. Configuration only applies to this saga, and does not apply to
     /// the endpoint.
     /// </summary>
-    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer.</param>
+    /// <param name="endpointConfigurator">The receive endpoint configurator for the saga.</param>
     /// <param name="sagaConfigurator">The saga configurator.</param>
     /// <param name="context">The context associated with the operation.</param>
     protected virtual void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<TSaga> sagaConfigurator,

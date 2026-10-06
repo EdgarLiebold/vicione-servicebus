@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-04T14:56:01.546579+00:00",
+  "decision": "ROOT_ACCEPTED_21_BOUNDED_GENERATED_DECLARATION_AND_INITIALIZATION_CONTRACTS",
+  "input": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package62-activemq-implicit21-semantic-r3/PER_ID21_CURRENT_CONTRACTS.json",
+    "sha256": "296c377d72d8bb4cebd680f30a991303210c6ccf01445eb4bfa1959027b3e74a"
+  },
+  "root_actual_reads": [
+    "b4f44f firsthalfmeaningfulownercontexts plus1typedrow",
+    "cb9f96 remaining11contexts andall21typeddeclaredsignatures/details",
+    "0cf481 whole actualenum/options owner andRootdiscoveryofneighboringsemanticcopy",
+    "4a7030 completeR3 correctioncompact + exactall20unchangedproof"
+  ],
+  "members": 21,
+  "source_owners": 13,
+  "current_source_hashes_match": true,
+  "typed_source_packed_detail_match": "Exact exceptretainedraw compiler-emittedNullableAttribute normalization; nobehaviorclaim fromsignatures",
+  "package_binding": "Previously qualified historicalSourcePDB checksum exactcurrentrawowner; thisacceptance doesnot claim latestActiveMQcompiledDLL/package/runtimeconsumer. Finalgate stillrequired.",
+  "scope": "Compiler-generated delegate/member declarations, defaultzero struct/enum projections, statelessconstructor/localbaseinitialization only; nativebroker/cache/topology/format/classifier/explicitaddress operations remainseparate.",
+  "R3_correction": "ActiveMqTransportProtocol enum defaultOpenWire0, Amqp1; nullableoptions.Protocolnull. SyntheticenumConstructor notphysicalcallablepromise.",
+  "runtime_scope_NA": "No redundant mirrortests for compiler declarations/localinitialization; externaldelegateTarget cancellation/disposal/invocation/failures notownedhere. No APM execution/support claim.",
+  "whole_API_review_closed": false
+}

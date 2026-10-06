@@ -36,7 +36,7 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
         _output.Probe(scope);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Dispatches a compatible typed consume context with an awaited continuation, or forwards an incompatible context to the continuation.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -90,7 +90,7 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
 
         try
         {
-            var typedNext = Pipe.Execute<ConsumeContext<TMessage>>(messageContext => next.SendAsync(messageContext.Advanced()));
+            var typedNext = Pipe.ExecuteAwaited<ConsumeContext<TMessage>>(messageContext => next.SendAsync(messageContext.Advanced()));
 
             await _output.SendAsync(pipeContext, typedNext).ConfigureAwait(false);
 

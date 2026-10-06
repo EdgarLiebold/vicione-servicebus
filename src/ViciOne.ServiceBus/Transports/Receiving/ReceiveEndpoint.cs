@@ -243,8 +243,8 @@ public sealed class ReceiveEndpoint :
         return _context.PublishEndpointProvider.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken);
     }
 
-    /// <summary>Subscribes an observer to receive transport notifications.</summary>
-    /// <param name="observer">The observer that receives transport notifications.</param>
+    /// <summary>Subscribes an observer to the endpoint receive pipeline notifications.</summary>
+    /// <param name="observer">The observer that receives endpoint receive pipeline notifications.</param>
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
     {

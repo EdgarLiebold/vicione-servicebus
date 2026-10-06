@@ -1,0 +1,205 @@
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Courier;
+using ViciOne.ServiceBus.Transports;
+using Xunit;
+
+namespace ActivityOwnership;
+public sealed class RuntimeOwner
+{
+    readonly OwnedLifetime _life;
+    readonly Probe _probe;
+    readonly string _name;
+    readonly bool _full, _typed, _single, _compensate;
+    readonly ServiceProvider _provider;
+    readonly List<ConnectHandle> _observers = [];
+    readonly Dictionary<IBusControl, Task> _stop = [];
+    readonly List<(string ExecuteA, string ExecuteB, string CompensateA, string CompensateB, string Fail, string Terminal)> _plans = [];
+    public readonly List<IBusControl> Buses = [];
+    public RuntimeOwner(OwnedLifetime life, Probe probe, string name, bool full, bool typed, bool single, bool compensate)
+    {
+        _life = life; _probe = probe; _name = name; _full = full; _typed = typed; _single = single; _compensate = compensate;
+        var services = new ServiceCollection(); services.AddLogging(); services.AddSingleton(probe);
+        void Register(IBusRegistrationConfigurator bus, string prefix)
+        {
+            var c = name.StartsWith("custom-selector-", StringComparison.Ordinal) || name.StartsWith("custom-own-", StringComparison.Ordinal)
+                ? (IRegistrationConfigurator)new CustomConfigurator(services, new NullDefinitionRegistrar(services, probe)) : bus;
+            bool mixed = name.Contains("-mixed-", StringComparison.Ordinal), conventional = name.StartsWith("conventional-", StringComparison.Ordinal);
+            bool caller = name.StartsWith("caller-fallback-", StringComparison.Ordinal) || name.StartsWith("custom-selector-", StringComparison.Ordinal);
+            bool definition = name.Contains("definition-", StringComparison.Ordinal), repeated = name.StartsWith("repeated-", StringComparison.Ordinal);
+            bool literalOnly = name.Contains("-literal-", StringComparison.Ordinal), aligned = name.Contains("-aligned-", StringComparison.Ordinal);
+            string a = prefix + "-a-execute", b = prefix + "-b-execute", ca = prefix + "-a-compensate", cb = prefix + "-b-compensate";
+            var fmt = DefaultEndpointNameFormatter.Instance;
+            string ConventionalA() => full ? fmt.ExecuteActivity<A<SharedArguments, SharedLog>, SharedArguments>() : fmt.ExecuteActivity<AExecute<SharedArguments>, SharedArguments>();
+            string ConventionalB() => full ? fmt.ExecuteActivity<B<SharedArguments, SharedLog>, SharedArguments>() : fmt.ExecuteActivity<BExecute<SharedArguments>, SharedArguments>();
+            if (conventional) { a = ConventionalA(); b = ConventionalB(); ca = fmt.CompensateActivity<A<SharedArguments, SharedLog>, SharedLog>(); cb = fmt.CompensateActivity<B<SharedArguments, SharedLog>, SharedLog>(); }
+            if (mixed) { b = ConventionalB(); cb = fmt.CompensateActivity<B<SharedArguments, SharedLog>, SharedLog>(); }
+            if (definition) { a = "definition-execute"; ca = "definition-compensate"; }
+            if (repeated) { a = prefix + "-a-final-execute"; ca = prefix + "-a-final-compensate"; }
+            if (caller)
+            {
+                if (name != "caller-fallback-compensate")
+                { a = prefix + "-caller-execute"; services.AddSingleton<IEndpointDefinition<IExecuteActivity<SharedArguments>>>(new CallerExecute(a)); }
+                else a = ConventionalA();
+                ca = prefix + "-caller-compensate";
+                if (full) services.AddSingleton<IEndpointDefinition<ICompensateActivity<SharedLog>>>(new CallerCompensate(ca));
+            }
+            void RegisterA()
+            {
+                if (full)
+                {
+                    var registration = definition ? c.AddActivity<A<SharedArguments, SharedLog>, SharedArguments, SharedLog, ActivityNames>() : c.AddActivity<A<SharedArguments, SharedLog>, SharedArguments, SharedLog>();
+                    if (!conventional && !caller && !(definition && literalOnly))
+                    {
+                        registration.ExecuteEndpoint(e => e.Name = definition && !aligned ? "ignored-fluent-execute" : repeated ? prefix + "-a-old-execute" : a);
+                        registration.CompensateEndpoint(e =>
+                        {
+                            e.Name = definition && !aligned ? "ignored-fluent-compensate" : repeated ? prefix + "-a-old-compensate" : ca;
+                            if (definition)
+                            {
+                                e.PrefetchCount = 13; e.ConcurrentMessageLimit = 3;
+                                e.AddConfigureEndpointCallback((context, cfg) =>
+                                {
+                                    Assert.Same(probe.BusContexts[prefix], context);
+                                    Assert.Same(probe, context.GetRequiredService<Probe>());
+                                    Assert.Equal(13, cfg.PrefetchCount); Assert.Equal(3, cfg.ConcurrentMessageLimit);
+                                    probe.LowerCallbacks.Enqueue((prefix, Uri.UnescapeDataString(cfg.InputAddress.Segments[^1].Trim('/')),
+                                        cfg.PrefetchCount, cfg.ConcurrentMessageLimit));
+                                });
+                            }
+                        });
+                    }
+                    if (repeated) { registration.ExecuteEndpoint(e => e.Name = a); registration.CompensateEndpoint(e => e.Name = ca); }
+                }
+                else
+                {
+                    var registration = definition ? c.AddExecuteActivity<AExecute<SharedArguments>, SharedArguments, ExecuteNames>() : c.AddExecuteActivity<AExecute<SharedArguments>, SharedArguments>();
+                    if (!conventional && !caller) registration.Endpoint(e => e.Name = definition ? "ignored-fluent-execute" : repeated ? prefix + "-a-old-execute" : a);
+                    if (repeated) registration.Endpoint(e => e.Name = a);
+                }
+            }
+            void RegisterB()
+            {
+                if (single) return;
+                bool argsDifferent = name is "execute-distinct" or "full-log" or "full-distinct";
+                bool logDifferent = name is "full-args" or "full-distinct";
+                if (full)
+                {
+                    if (argsDifferent && logDifferent) Endpoints(c.AddActivity<B<DistinctArguments, DistinctLog>, DistinctArguments, DistinctLog>());
+                    else if (argsDifferent) Endpoints(c.AddActivity<B<DistinctArguments, SharedLog>, DistinctArguments, SharedLog>());
+                    else if (logDifferent) Endpoints(c.AddActivity<B<SharedArguments, DistinctLog>, SharedArguments, DistinctLog>());
+                    else Endpoints(c.AddActivity<B<SharedArguments, SharedLog>, SharedArguments, SharedLog>());
+                    void Endpoints(IActivityRegistrationConfigurator r) { if (!mixed && !conventional) { r.ExecuteEndpoint(e => e.Name = b); r.CompensateEndpoint(e => e.Name = cb); } }
+                }
+                else
+                {
+                    IExecuteActivityRegistrationConfigurator registration = argsDifferent ? c.AddExecuteActivity<BExecute<DistinctArguments>, DistinctArguments>() : c.AddExecuteActivity<BExecute<SharedArguments>, SharedArguments>();
+                    if (!mixed && !conventional) registration.Endpoint(e => e.Name = b);
+                }
+            }
+            if (mixed && name.EndsWith("-last", StringComparison.Ordinal)) { RegisterB(); RegisterA(); }
+            else { RegisterA(); RegisterB(); }
+            string fail = prefix + "-fail", terminal = prefix + "-terminal";
+            if (compensate)
+            {
+                if (definition) bus.AddExecuteActivity<DefinitionFailActivity, DistinctArguments>().Endpoint(e => e.Name = fail);
+                else bus.AddExecuteActivity<FailActivity, SharedArguments>().Endpoint(e => e.Name = fail);
+            }
+            bus.AddConsumer<TerminalConsumer>().Endpoint(e => e.Name = terminal);
+            bus.AddConfigureEndpointsCallback((endpoint, _) => probe.Endpoints.Enqueue((prefix, endpoint!)));
+            _plans.Add((a, b, ca, cb, fail, terminal));
+        }
+        if (typed)
+        {
+            services.AddViciOneServiceBus<INamedBus>(c => { c.Limits(MessageLimits.Conservative); Register(c, "bus-a"); c.UsingInMemory((ctx, cfg) => { Assert.True(probe.BusContexts.TryAdd("bus-a", ctx)); cfg.ConfigureEndpoints(ctx); }); });
+            if (name.StartsWith("two-buses-", StringComparison.Ordinal))
+                services.AddViciOneServiceBus<ISecondBus>(c => { c.Limits(MessageLimits.Conservative); Register(c, "bus-b"); c.UsingInMemory((ctx, cfg) => { Assert.True(probe.BusContexts.TryAdd("bus-b", ctx)); cfg.ConfigureEndpoints(ctx); }); });
+        }
+        else services.AddViciOneServiceBus(c => { c.Limits(MessageLimits.Conservative); Register(c, "owner"); c.UsingInMemory((ctx, cfg) => { Assert.True(probe.BusContexts.TryAdd("owner", ctx)); cfg.ConfigureEndpoints(ctx); }); });
+        _provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        life.Own(Cleanup);
+    }
+    public async Task MaterializeAndStart()
+    {
+        for (int i = 0; i < _plans.Count; i++)
+        {
+            IBusControl? bus = null; Exception? failure = null;
+            try { bus = !_typed ? _provider.GetRequiredService<IBusControl>() : i == 0 ? _provider.GetRequiredService<IBusInstance<INamedBus>>().BusInstance.BusControl : _provider.GetRequiredService<IBusInstance<ISecondBus>>().BusInstance.BusControl; }
+            catch (ConfigurationException e) { failure = e; }
+            Assert.Null(failure);
+            var p = _plans[i]; string prefix = !_typed ? "owner" : i == 0 ? "bus-a" : "bus-b";
+            List<string> expected = [p.ExecuteA, p.Terminal];
+            if (!_single) expected.Add(p.ExecuteB);
+            if (_full) { expected.Add(p.CompensateA); if (!_single) expected.Add(p.CompensateB); }
+            if (_compensate) expected.Add(p.Fail);
+            if (_name.Contains("definition-", StringComparison.Ordinal)
+                && !_name.Contains("-literal-", StringComparison.Ordinal) && !_name.Contains("-aligned-", StringComparison.Ordinal))
+            {
+                expected.Add("ignored-fluent-execute");
+                if (_full) expected.Add("ignored-fluent-compensate");
+            }
+            string[] expectedNames = expected.Order(StringComparer.Ordinal).ToArray();
+            string[] actualNames = _probe.Endpoints.Where(x => x.Bus == prefix).Select(x => x.Name).Order(StringComparer.Ordinal).ToArray();
+            Console.WriteLine("ENDPOINT_PLAN " + prefix + " expected=" + System.Text.Json.JsonSerializer.Serialize(expectedNames)
+                + " actual=" + System.Text.Json.JsonSerializer.Serialize(actualNames));
+            Assert.Equal(expectedNames, actualNames);
+            if (_full && _name.Contains("definition-", StringComparison.Ordinal))
+            {
+                var actualLower = _probe.LowerCallbacks.Where(x => x.Bus == prefix).OrderBy(x => x.Name, StringComparer.Ordinal).ToArray();
+                if (_name.Contains("-literal-", StringComparison.Ordinal)) Assert.Empty(actualLower);
+                else
+                {
+                    Assert.NotEmpty(actualLower);
+                    List<(string Bus, string Name, int Prefetch, int? Concurrent)> expectedLower = [(prefix, p.CompensateA, 13, 3)];
+                    if (!_name.Contains("-aligned-", StringComparison.Ordinal)) expectedLower.Add((prefix, "ignored-fluent-compensate", 13, 3));
+                    Assert.Equal(expectedLower.OrderBy(x => x.Name, StringComparer.Ordinal).ToArray(), actualLower);
+                }
+            }
+            Assert.NotNull(bus); Buses.Add(bus); _observers.Add(bus.ConnectConsumeObserver(_probe)); await _life.Await(bus.StartAsync());
+        }
+    }
+    public RoutingSlipBuilder Builder(Guid tracking, int owner)
+    {
+        var p = _plans[owner]; var builder = new RoutingSlipBuilder(tracking);
+        builder.AddActivity("A", new Uri("loopback://localhost/" + p.ExecuteA), new SharedArguments(tracking, "A"));
+        if (!_single) builder.AddActivity("B", new Uri("loopback://localhost/" + p.ExecuteB), _name is "execute-distinct" or "full-log" or "full-distinct" ? new DistinctArguments(tracking, "B") : (object)new SharedArguments(tracking, "B"));
+        if (_compensate) builder.AddActivity("FAIL", new Uri("loopback://localhost/" + p.Fail),
+            _name.Contains("definition-", StringComparison.Ordinal) ? new DistinctArguments(tracking, "FAIL") : (object)new SharedArguments(tracking, "FAIL"));
+        return builder;
+    }
+    public async Task ExecuteAndCheck(int owner, bool compensate)
+    {
+        Guid tracking = Guid.NewGuid(); var terminalTask = _life.Track(_probe.Watch(tracking));
+        await _life.Await(Buses[owner].ExecuteAsync(Builder(tracking, owner).Build()));
+        Terminal terminal = await _life.Await(terminalTask);
+        Assert.Equal(tracking, terminal.Tracking); Assert.NotNull(terminal.MessageId); Assert.Null(terminal.Failure); Assert.Equal(compensate, terminal.Faulted);
+        Assert.Equal(new[] { (tracking, compensate) }, _probe.TerminalBusiness.Where(x => x.Tracking == tracking).ToArray());
+        Assert.Single(_probe.Receipts.Where(x => x.Tracking == tracking));
+        var p = _plans[owner]; List<(string Action, string Owner, string Endpoint)> expected = [("execute", "A", p.ExecuteA)];
+        if (!_single) expected.Add(("execute", "B", p.ExecuteB));
+        if (compensate) { expected.Add(("fail", "FAIL", p.Fail)); if (!_single) expected.Add(("compensate", "B", p.CompensateB)); expected.Add(("compensate", "A", p.CompensateA)); }
+        Assert.Equal(expected.ToArray(), _probe.Calls.Where(x => x.Tracking == tracking).Select(x => (x.Action, x.Owner, x.Endpoint)).ToArray());
+    }
+    public async Task Stop()
+    {
+        List<Exception> failures = [];
+        foreach (var bus in Buses)
+        {
+            try { if (!_stop.TryGetValue(bus, out var task)) { task = _life.Track(bus.StopAsync()); _stop.Add(bus, task); } await _life.Await(task); }
+            catch (Exception e) { failures.Add(e); }
+        }
+        if (failures.Count > 0) throw new AggregateException(failures);
+    }
+    async Task Cleanup()
+    {
+        List<Exception> failures = [];
+        async Task Attempt(Func<Task> action) { try { await _life.Await(action()); } catch (Exception e) { failures.Add(e); } }
+        await Attempt(Stop);
+        foreach (var observer in _observers) await Attempt(() => observer.DisposeAsync().AsTask());
+        await Attempt(() => _provider.DisposeAsync().AsTask());
+        if (failures.Count > 0) throw new AggregateException(failures);
+    }
+}

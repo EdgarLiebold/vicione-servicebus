@@ -15,7 +15,7 @@ public class SqlReceiveEndpointConfiguration :
     ISqlReceiveEndpointConfiguration,
     ISqlReceiveEndpointConfigurator
 {
-    static readonly Regex _regex = new Regex(@"^[A-Za-z0-9\-_\.:]+$", RegexOptions.Compiled);
+    static readonly Regex _regex = new Regex(@"^[A-Za-z0-9\-_\.:]+\z", RegexOptions.Compiled);
 
     readonly IBuildPipeConfigurator<ClientContext> _clientConfigurator;
     readonly ISqlEndpointConfiguration _endpointConfiguration;
@@ -154,7 +154,7 @@ public class SqlReceiveEndpointConfiguration :
             yield return this.Failure(_settings.QueueName, nameof(_settings.ReceiveMode), "Must be a defined SQL receive mode");
     }
 
-    /// <summary>Gets or sets the auto delete on idle.</summary>
+    /// <summary>Sets the receive queue idle removal interval.</summary>
     public TimeSpan? AutoDeleteOnIdle
     {
         set
@@ -165,43 +165,43 @@ public class SqlReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>Gets or sets the polling interval.</summary>
+    /// <summary>Sets the receive queue polling interval.</summary>
     public TimeSpan PollingInterval
     {
         set => _settings.PollingInterval = value;
     }
 
-    /// <summary>Gets or sets the lock duration.</summary>
+    /// <summary>Sets the receive message lock duration.</summary>
     public TimeSpan LockDuration
     {
         set => _settings.LockDuration = value;
     }
 
-    /// <summary>Gets or sets the max lock duration.</summary>
+    /// <summary>Sets the maximum receive message lock duration.</summary>
     public TimeSpan MaxLockDuration
     {
         set => _settings.MaxLockDuration = value;
     }
 
-    /// <summary>Gets or sets the max delivery count.</summary>
+    /// <summary>Sets the receive queue maximum number of delivery attempts.</summary>
     public int? MaxDeliveryCount
     {
         set => _settings.MaxDeliveryCount = value;
     }
 
-    /// <summary>Gets or sets the purge on startup.</summary>
+    /// <summary>Sets whether existing receive queue messages are purged at startup.</summary>
     public bool PurgeOnStartup
     {
         set => _settings.PurgeOnStartup = value;
     }
 
-    /// <summary>Gets or sets the maintenance batch size.</summary>
+    /// <summary>Sets the receive queue maintenance batch size.</summary>
     public int MaintenanceBatchSize
     {
         set => _settings.MaintenanceBatchSize = value;
     }
 
-    /// <summary>Gets or sets the dead letter expired messages.</summary>
+    /// <summary>Sets whether expired receive queue messages are moved to the dead-letter queue.</summary>
     public bool DeadLetterExpiredMessages
     {
         set => _settings.DeadLetterExpiredMessages = value;
@@ -218,13 +218,13 @@ public class SqlReceiveEndpointConfiguration :
         _endpointConfiguration.Topology.Consume.Subscribe(topicName, callback);
     }
 
-    /// <summary>Gets or sets the unlock delay.</summary>
+    /// <summary>Sets the delay before faulted messages are redelivered.</summary>
     public TimeSpan? UnlockDelay
     {
         set => _settings.UnlockDelay = value;
     }
 
-    /// <summary>Gets or sets the concurrent delivery limit.</summary>
+    /// <summary>Sets the configured concurrent delivery limit.</summary>
     public int ConcurrentDeliveryLimit
     {
         set => _settings.ConcurrentDeliveryLimit = value;

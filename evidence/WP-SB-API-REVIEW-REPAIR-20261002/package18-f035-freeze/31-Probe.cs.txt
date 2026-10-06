@@ -1,0 +1,66 @@
+using System.Collections.Concurrent;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced.Observers;
+using Xunit;
+
+namespace DefinitionLifetime;
+
+public sealed record Item(int Sequence, Guid Identity);
+public sealed record Terminal(Guid Identity, Guid? MessageId, Exception? Failure);
+public sealed class Probe : IConsumeObserver
+{
+    public readonly string Queue = "public-definition-" + Guid.NewGuid().ToString("N");
+    public readonly ConcurrentQueue<OwnedState> Values = new();
+    public readonly ConcurrentQueue<Dependency> Dependencies = new();
+    public readonly ConcurrentQueue<Terminal> Terminals = new();
+    readonly ConcurrentDictionary<int, TaskCompletionSource<Terminal>> _terminal = new();
+    public readonly TaskCompletionSource<OwnedState> DisposeEntered = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    public readonly TaskCompletionSource ConstructorEntered = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    public readonly TaskCompletionSource ConsumerEntered = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    public readonly TaskCompletionSource ReleaseCleanup = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    public readonly TaskCompletionSource ReleaseBusiness = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    public readonly ManualResetEventSlim ReleaseConstructor = new(false);
+    public bool GateCleanup, GateBusiness, GateConstructor, AllowDisposedDependency;
+    public Exception? CleanupFailure, ConstructorFailure;
+    public int Business, Configured, ActivationAttempts;
+    public Task<Terminal> Terminal(int sequence) => _terminal.GetOrAdd(sequence, _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).Task;
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class => Finish(context, null);
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception) where T : class => Finish(context, exception);
+    Task Finish<T>(ConsumeContext<T> context, Exception? failure) where T : class
+    {
+        if (context.Message is Item item)
+        {
+            var terminal = new Terminal(item.Identity, context.MessageId, failure);
+            Terminals.Enqueue(terminal);
+            _terminal.GetOrAdd(item.Sequence, _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).TrySetResult(terminal);
+        }
+        return Task.CompletedTask;
+    }
+    public void ReleaseAll()
+    {
+        ReleaseConstructor.Set(); ReleaseCleanup.TrySetResult(); ReleaseBusiness.TrySetResult();
+    }
+}
+public sealed class Dependency : IDisposable
+{
+    public readonly Probe Probe;
+    int _disposed, _invocations;
+    public int Disposed => Volatile.Read(ref _disposed);
+    public int Invocations => Volatile.Read(ref _invocations);
+    public Dependency(Probe probe) { Probe = probe; probe.Dependencies.Enqueue(this); }
+    public void Dispose() { Interlocked.Increment(ref _invocations); Interlocked.Exchange(ref _disposed, 1); }
+}
+public sealed class Receiver(Probe probe) : IConsumer<Item>
+{
+    public async Task ConsumeAsync(ConsumeContext<Item> context)
+    {
+        Assert.NotEmpty(probe.Values);
+        Assert.All(probe.Values, state => state.AssertAlive());
+        probe.ConsumerEntered.TrySetResult();
+        if (probe.GateBusiness) await probe.ReleaseBusiness.Task;
+        else await Task.Yield();
+        Assert.All(probe.Values, state => state.AssertAlive());
+        Interlocked.Increment(ref probe.Business);
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "finding": "F-SB-API-002",
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.github/workflows/native-tests.yml",
+      "sha256": "2cd77f10f95e87fea7c5bbefcae9908adadb5dd27f7add3e289898100a10406d",
+      "bytes": 9790,
+      "Root_personally_FULL_pre_and_exact_diff_post": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/build.md",
+      "sha256": "9be928a7d2fd835d614be489f7d3ba2f88d5a1689bfb31a4608dd5ce73b2c658",
+      "bytes": 8150,
+      "Root_personally_FULL_pre_and_exact_diff_post": true
+    }
+  ],
+  "source_tests_changed": false,
+  "canonical_owner_grade": false,
+  "native_pending": true
+}

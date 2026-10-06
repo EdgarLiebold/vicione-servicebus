@@ -11,7 +11,7 @@ public static class SqlPublishTopologyConfigurationExtensions
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="configure">The callback used to configure the component.</param>
-    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="filter">An optional predicate that selects valid message types from the matching namespace.</param>
     public static void AddPublishMessageTypesFromNamespaceContaining<T>(this ISqlBusFactoryConfigurator configurator,
         Action<ISqlMessagePublishTopologyConfigurator, Type>? configure = null, Func<Type, bool>? filter = null)
     {
@@ -22,7 +22,7 @@ public static class SqlPublishTopologyConfigurationExtensions
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="type">The type to use to identify the assembly and namespace to scan.</param>
     /// <param name="configure">The callback used to configure the component.</param>
-    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="filter">An optional predicate that selects valid message types from the matching namespace.</param>
     public static void AddPublishMessageTypesFromNamespaceContaining(this ISqlBusFactoryConfigurator configurator, Type type,
         Action<ISqlMessagePublishTopologyConfigurator, Type>? configure = null, Func<Type, bool>? filter = null)
     {

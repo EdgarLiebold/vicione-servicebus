@@ -1,0 +1,23 @@
+{
+  "status": "ROOT_INDEPENDENT_475_ACTUAL_XML_DOM_RECONSTRUCTION_AND_15_ACTUAL_RECEIPT_HASHES_VERIFIED",
+  "created_utc": "2026-10-03T19:21:58.705851+00:00",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f001-independent-source-emitted-qualification/FINAL_R6_SOURCE_ACTUAL_XML_SEMANTIC_QUALIFICATION.json",
+    "sha256": "473fb4025605952dd26c10ab1b65964b5e049cc7c7e8fa0942889bebb991d739"
+  },
+  "compiled_adversary": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f001-preservation-mutation-preflight/FINAL_ACTUAL_COMPILED_PRESERVATION_QUALIFICATION.json",
+    "sha256": "8ac80ebf519acad0559af57a7baab256b78ab72eb36168ffc7000d7777e75b37"
+  },
+  "semantic_members": 475,
+  "reused_root_personal_prior_DOM": 592,
+  "fresh_root_personal_DOM": 83,
+  "fresh_root_personal_member_mappings": 66,
+  "exact_current_source_freeze_inputs": 39,
+  "source_PDB_checksum_records": 38,
+  "actual_native_receipts": 15,
+  "invariant_inputs_verified": 88,
+  "distinct_original_runtime_restored": 2,
+  "root_all_3_exact_finite_fail_blocks_read": true,
+  "scope": "F001 targeted documentation and completion-preservation; no whole API grade or native XML assertion kill"
+}

@@ -1,0 +1,75 @@
+{
+  "utc": "2026-10-06T19:24:51.077073+00:00",
+  "status": "EXACT_EXISTING703_IDENTITY_HISTORY_APPLIED_BOUNDED_REMAINING133_CENSUS_SEPARATE",
+  "actor": "/root",
+  "before_master": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "bytes": 77540460,
+    "sha256": "e2d4067456fc4ebd9bf2579ea62261e57753f5e17ec847aaa46cd61db2d404ad"
+  },
+  "before_snapshot_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package548-703-identity-root-application-before-r1/MANIFEST.json",
+    "bytes": 790,
+    "sha256": "a32884aa06cdd9f02c5d53506a9a22b0665ed6dc45fd371ff15d55d0ed08cd41"
+  },
+  "author_and_different_peer": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-history703-current546-identity-migration-proposed-r1/REPORT.json",
+      "bytes": 8399,
+      "sha256": "ea9c51509d5a2fda27f72cd34c5a3f529c0463692ff2029611391367b261d6c5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-history703-current546-identity-migration-proposed-r1/MANIFEST.json",
+      "bytes": 1893,
+      "sha256": "537842b724ec2923163b9990de7be913cc1f32e092b3e73a110297a26d4b51b0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-history703-current546-identity-migration-proposed-r1/EXACT703_CURRENT546_PROPOSED_IDENTITY_ROWS.json",
+      "bytes": 11367763,
+      "sha256": "f037159360f716b9d885190b1a3d311f2cf706dbc972a1231f200d5c2daa6e47"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-migration703-independent-exact-source-pdb-xml-peer-r1/REPORT.json",
+      "bytes": 4367,
+      "sha256": "df46f5365f8fb006ecd955e6679f209edf5e25d060b0d5f1b895cfc2eaad4fc9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-migration703-independent-exact-source-pdb-xml-peer-r1/MANIFEST.json",
+      "bytes": 372,
+      "sha256": "c323241bd154b20e34a00111f4c0141d015b522f65ab10e0b71aae92bc41f5ad"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-migration703-XML-lookup-count-label-precision-r1/MANIFEST.json",
+      "bytes": 943,
+      "sha256": "204fa139b6af2cee81f4dea5212578294f51fc779bfa1e36a1919e2c1131e9d9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-migration703-whole-selected-binding-reference-precision-r1/MANIFEST.json",
+      "bytes": 217,
+      "sha256": "680149f7bcb304459646d02956abccc6105efc00ed6afe07e4f0a8805e6da00b"
+    }
+  ],
+  "root_reads": [
+    "b83c11 whole proposal",
+    "80d5aa entire common provenance and binding schema",
+    "43d5c9 all87 owner role/resolution/nullable contexts",
+    "e2e31b whole different peer and supplement"
+  ],
+  "rows": 703,
+  "original_canonical_rows": 669,
+  "accessor_rows": 34,
+  "owners": 87,
+  "XML_row_lookups_present": 699,
+  "distinct_XML_nodes": 665,
+  "XML_individual_bounded_absences": 4,
+  "per_row_selected_hash_scope": "whole703 physical payload4fbdbae9, not per-row hash; mandatory supplement preserved",
+  "entire_previous_rows_preserved": true,
+  "existing_norm_status_grade_native_other_metadata_unchanged": true,
+  "current_binding_resolver": "current_compiled_identity_binding_546 authoritative; all other old metadata fields remain explicit historical epoch",
+  "Source_Test_Requirement_Product_changes": 0,
+  "new_native_credit": 0,
+  "original_master_count_unchanged": 19431,
+  "SDK_actions": 0,
+  "all_confirmed_findings_closed": false,
+  "remaining_disjoint_primary_history_rows": 133
+}

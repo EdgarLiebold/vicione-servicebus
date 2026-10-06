@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T02:43:56.544343+00:00",
+  "finding": "F-SB-API-213",
+  "status": "ACTUAL_ORIGINAL6_INDEPENDENTLY_QUALIFIED_REGISTERED_REPAIR_PENDING",
+  "cause": "EnsureTopicExistsAsync producer.Close in try and producer.Dispose in finally loses the first cleanup failure when both native stages throw; public operation preserves only second type instead of both stage causes.",
+  "distinct_identity": "One short-lived EnsureTopic producer two-stage outcome loss; different from Connection/Session owningdiagnostic families F209/F211/F212.",
+  "original": {
+    "capture_MAN": "592f26c59c09746e47a50734ef0e96e2729464652a81233628ca8c99a869ca9d",
+    "independent_REPORT": "5230f6aa00888c70a8bb628b96745c2c4e4b0e27aa8ecc118c4f7bcf9f396259",
+    "independent_MAN": "5fbb209344568e42aa3395db45137abd86b720e5a575ae0dbb742b9baed8c725",
+    "counts": {
+      "total": 6,
+      "passed": 5,
+      "failed": 1,
+      "skipped": 0
+    },
+    "first_failure": "Mode3 firstIsType104 expectedAggregate actualInvalidOperation after nativeClose+Dispose attempts/order. Innercause105-108 not reached; no NativeSameDisposeFailure assertion. Finally164 sameassertion, notextraFinding.",
+    "compile_history": "FirstRoot309 CS0619 is ZERO native; corrected310 actualOriginal6 only."
+  },
+  "root_authority": "WholeTestR12944ee9de+oneActionR25f6bb4; wholeactual6f0e2bd, wholeactualpeer6eac06; exactoriginal326 body4c8cb6+retainedwhole326.",
+  "known_before": 212,
+  "known_after": 213,
+  "bounded_before": 211,
+  "bounded_after": 211,
+  "grade": null,
+  "whole_API_closed": false
+}

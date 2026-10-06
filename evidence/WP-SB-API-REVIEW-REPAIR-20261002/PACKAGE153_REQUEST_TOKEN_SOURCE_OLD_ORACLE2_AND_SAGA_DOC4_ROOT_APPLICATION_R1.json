@@ -1,0 +1,67 @@
+{
+  "utc": "2026-10-04T22:49:25.252609+00:00",
+  "status": "ROOT_APPLIED_ADVERSARIAL_NO_BLOCK_NATIVE_FIXED_AND_FRESH_PACKAGE_PENDING",
+  "changes": [
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestActivity.cs",
+      "before_sha256": "f76d79dcbddd19a7c542e7947a950ba1cb50a148e453880dd26195f3956b0b2a",
+      "after_sha256": "6cf5131a8af6625d158fbc0b2c9225d2d81b9908fca487c3f99a0ef26e295b9e",
+      "kind": "REQUEST_TOKEN_ADMISSION",
+      "author_package": "package153-request-token-admission-product-proposed-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestActivityImpl.cs",
+      "before_sha256": "fb26fecf2a5c64f5cd61fcd611cb666181c2d28d88fbe9cb2c7361c90e0efbd6",
+      "after_sha256": "4dffa21d136d19159dffa0ff4f73505a94d358f97d85f375c9a0b800b8d4d6f4",
+      "kind": "REQUEST_TOKEN_ADMISSION",
+      "author_package": "package153-request-token-admission-product-proposed-r1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineFaultedRequestScheduleActivitiesDeepContractTests.cs",
+      "before_sha256": "1360d0d41d52338fe0b6a7593ba2cd2cc294209e6c0c8ef6e4d4e9d72d6f9c5e",
+      "after_sha256": "4766dc43b7b8b463dcb75e815f8f9e7ad3723c50d0d7f24a64267774c845c2f4",
+      "kind": "REQUEST_TOKEN_ADMISSION",
+      "author_package": "package153-request-token-admission-product-proposed-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IEventCorrelationConfigurator.cs",
+      "before_sha256": "678d90ca8e2dfb356ea1817de0bb13ed5fa9b4e4c8f942d67aa2296ce548f41f",
+      "after_sha256": "ac7c1c98e0231385a4623c20c6154c83d4fc1bd473f65d415e6c252f7b833c10",
+      "kind": "XML_ONLY",
+      "author_package": "package151-preinsert-xml2-product-proposed-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/ISagaPolicy.cs",
+      "before_sha256": "477d438fb8fc5ca9ad43e66a05e6eff3e37ea451efb36a352aa384100e016c7a",
+      "after_sha256": "f770d755781e5cac25a4110f52b0ebd8f6456158452ded971ce9b82b6da16378",
+      "kind": "XML_ONLY",
+      "author_package": "package151-preinsert-xml2-product-proposed-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/IStateMachineActivitySelector.cs",
+      "before_sha256": "24aade5c2b0df7d50e06b88faecd28545cb164f7a2b8f630580fe9d8fd65dcf8",
+      "after_sha256": "7a527b05aa6ef5065e834b7869f9908414bb7ecae0d385d10a572f291b8eb042",
+      "kind": "XML_ONLY",
+      "author_package": "package151-untyped-activity-selector-xml2-product-proposed-r1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/IStateMachineFaultedActivitySelector.cs",
+      "before_sha256": "d026d8a0eed3032c08c39fbbde1c242b1890495e7ac81a35481078a20747f6cd",
+      "after_sha256": "894f2b09bdc0f182c793d42ad8e40ff0b27659e0c1438c7bb84638c3cd068df3",
+      "kind": "XML_ONLY",
+      "author_package": "package151-untyped-activity-selector-xml2-product-proposed-r1"
+    }
+  ],
+  "XML_nodes": 4,
+  "request_product_owners": 2,
+  "old_oracle_expectations_corrected": 2,
+  "new30_cases_unchanged": true,
+  "requirements_unchanged_4607": true,
+  "original85_frozen_qualification_pending": true,
+  "whole_API_closed": false,
+  "root_original_finite_failure_read": "879ffe",
+  "root_source_delta_read": "da3535",
+  "root_XML4_semantic_read": "18d016",
+  "author_and_peer_full_manifest_current_guard": "01ec39",
+  "original_freeze_sha256": "8bbf51778a9d9ec668e5c20a79d85b91bab99124f8ab313480a023f2ee6f70e5"
+}

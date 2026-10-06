@@ -1,0 +1,59 @@
+{
+  "status": "STRICT_PAIRED_RESTORE_ONLY_SAME_SOURCES_SAME_COMPILED_IMAGES",
+  "utc": "2026-10-03T11:56:27.391848+00:00",
+  "pre_frame": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE20_F002_COUNTERCASE_STRICT_PRE_ENGINEERING_FRAME_R1.json",
+  "pre_frame_sha256": "1984910b53eb8c57f2ed335faa51e68e7599caf93468a4860d6f596761fdb72c",
+  "pre_completed_before_restore_started": true,
+  "pre_capture_completed_utc": "2026-10-03T11:54:59.280778+00:00",
+  "restore_receipt": {
+    "phase": "package20-f002-countercase-engineering-restore-only",
+    "command": [
+      "dotnet",
+      "restore",
+      "ViciOne.ServiceBus.Engineering.slnx",
+      "--locked-mode"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T11:55:14.405498+00:00",
+    "completed_utc": "2026-10-03T11:55:25.626492+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-countercase-engineering-restore-only.log",
+    "log_sha256": "2867b165e42d83a4c4ac4eb3a11e03c2771249823c00fd8568d4b4c9595f417c"
+  },
+  "checked": [
+    {
+      "group": "original_sources",
+      "all_current_bytes_identical": true,
+      "count": 6209
+    },
+    {
+      "group": "built_files",
+      "all_current_bytes_identical": true,
+      "count": 4648
+    }
+  ],
+  "bin_path_set_unchanged": true,
+  "assets_before": 61,
+  "assets_after": 78,
+  "added_assets": [
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.EventHubs.Testing/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.EventHubs/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.OrderWorkflow/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.SuiteComposition/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/project.assets.json",
+    "artifacts/sdk/obj/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/project.assets.json"
+  ],
+  "existing_assets_hash_changes": [],
+  "next_operation": "same unchanged compiled portable rule new process no build no restore"
+}

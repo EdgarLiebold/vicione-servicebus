@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection;
@@ -13,8 +14,12 @@ internal sealed class FutureRegistration<TFuture> :
     IFutureRegistration
     where TFuture : class, ISagaStateMachine<FutureState>
 {
+    static readonly ConditionalWeakTable<IServiceProvider,
+        ConditionalWeakTable<TFuture, FutureRegistration<TFuture>>> StateMachineOwners = new();
+    readonly object _definitionLock = new();
     readonly IContainerSelector _selector;
-    IFutureDefinition<TFuture>? _definition;
+    readonly ConditionalWeakTable<IServiceProvider, IFutureDefinition<TFuture>> _definitions = new();
+    readonly ConditionalWeakTable<IFutureDefinition<TFuture>, TFuture> _stateMachines = new();
 
     /// <summary>Creates a registration that resolves future definitions from the selected container.</summary>
     /// <param name="selector">The container selector used to resolve definitions and endpoint settings.</param>
@@ -39,6 +44,12 @@ internal sealed class FutureRegistration<TFuture> :
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(context);
         var stateMachine = context.GetRequiredService<TFuture>();
+        if (typeof(TFuture).IsGenericType
+            && typeof(TFuture).GetGenericTypeDefinition() == typeof(RequestConsumerFuture<,>)
+            && StateMachineOwners.TryGetValue(GetProviderIdentity(context), out var owners)
+            && owners.TryGetValue(stateMachine, out var owner)
+            && !ReferenceEquals(owner, this))
+            stateMachine = GetStateMachine(context, GetFutureDefinition(context));
         ISagaRepository<FutureState> repository = new DependencyInjectionSagaRepository<FutureState>(context);
 
         var decoratorRegistration = context.GetService<ISagaRepositoryDecoratorRegistration<FutureState>>();
@@ -65,18 +76,49 @@ internal sealed class FutureRegistration<TFuture> :
         return GetFutureDefinition(context);
     }
 
+    // Only exact built-in companion futures use this cache. Their definition is
+    // container-owned; the machine itself has no disposable resource contract.
+    internal TFuture GetStateMachine(IServiceProvider provider, IFutureDefinition<TFuture> definition)
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(definition);
+
+        lock (_definitionLock)
+        {
+            if (!_stateMachines.TryGetValue(definition, out TFuture? stateMachine))
+            {
+                stateMachine = ActivatorUtilities.CreateInstance<TFuture>(provider, definition);
+                _stateMachines.Add(definition, stateMachine);
+            }
+
+            StateMachineOwners.GetValue(GetProviderIdentity(provider),
+                _ => new ConditionalWeakTable<TFuture, FutureRegistration<TFuture>>())
+                .GetValue(stateMachine, _ => this);
+            return stateMachine;
+        }
+    }
+
+    // Registration contexts delegate self-service lookup to their underlying DI
+    // provider, so explicit machines borrowed into another provider stay unmarked.
+    static IServiceProvider GetProviderIdentity(IServiceProvider provider) =>
+        provider.GetService(typeof(IServiceProvider)) as IServiceProvider ?? provider;
+
     IFutureDefinition<TFuture> GetFutureDefinition(IServiceProvider provider)
     {
         ArgumentNullException.ThrowIfNull(provider);
-        if (_definition != null)
-            return _definition;
+        lock (_definitionLock)
+        {
+            if (_definitions.TryGetValue(provider, out IFutureDefinition<TFuture>? definition))
+                return definition;
 
-        _definition = _selector.GetDefinition<IFutureDefinition<TFuture>>(provider) ?? new DefaultFutureDefinition<TFuture>();
+            definition = _selector.GetDefinition<IFutureDefinition<TFuture>>(provider) ?? new DefaultFutureDefinition<TFuture>();
 
-        IEndpointDefinition<TFuture>? endpointDefinition = _selector.GetEndpointDefinition<TFuture>(provider);
-        if (endpointDefinition != null)
-            _definition.EndpointDefinition = endpointDefinition;
+            IEndpointDefinition<TFuture>? endpointDefinition = _selector.GetEndpointDefinition<TFuture>(provider);
+            if (endpointDefinition != null)
+                definition.EndpointDefinition = endpointDefinition;
 
-        return _definition;
+            _definitions.Add(provider, definition);
+            return definition;
+        }
     }
 }

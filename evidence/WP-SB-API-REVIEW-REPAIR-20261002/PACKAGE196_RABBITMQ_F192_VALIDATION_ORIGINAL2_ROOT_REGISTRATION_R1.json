@@ -1,0 +1,35 @@
+{
+  "status": "ORIGINAL_SOURCE_BOUND_NATIVE2_CONFIRMED_DISTINCT_RABBIT_OWNER_VALIDATION_CAUSE",
+  "utc": "2026-10-05T17:22:59.746826+00:00",
+  "finding": {
+    "id": "F-SB-API-192",
+    "severity": "Medium",
+    "title": "RabbitMQ endpoint validation omits configured channel and connection pipe specification failures"
+  },
+  "source": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs",
+    "lines": 415,
+    "sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612"
+  },
+  "original_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package196-rabbit-original-validation2-independent-r1/REPORT.json",
+    "sha256": "fbc3343df0603c036f45bb9ef5b13768a01460a3c6fb913d39886a75611f7ab6",
+    "manifest_sha256": "ed0bf1e2a0684bf66d00f66e87611697cdc8097c523ebdaf3f76c8abb70d7890"
+  },
+  "actual_original": {
+    "total": 2,
+    "passed": 0,
+    "failed": 2,
+    "skipped": 0,
+    "first_failure": "Each selected configured validator called0 vs expected1; two cases of one owning omission cause. Native trace42 physical ToArray42 Assert43. Later failure marker/disposition/fullparent key/value are not reached."
+  },
+  "independent_original_result_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package196-rabbit-original2-independent-runtime-result-peer-r1/REPORT.json",
+    "sha256": "b0e001be22ab9999663b0e4a06d52e877c9fbd4454fdca67fbd3a8a832206810"
+  },
+  "known_finding_reconciliation": "F182 is distinct AmazonSqs owner; F037 Azure rule/filter and F084 Rabbit name LF distinct. No duplicate case IDs or connection-runtime-wiring/lifetime finding from these two validation tests.",
+  "root_personal_sources": "ActualTest77ef3b10/77-sourcepeerf99b88; wholeendpoint eaf71a and currentValidate409608; wholePipeConfigurator97d5c5 and ValidationResultExtensions926e9c; wholeactualNative2 f09646; wholequalifiedReport28f255.",
+  "root_accepted_repair": false,
+  "grade": null,
+  "whole_API_review_closed": false
+}

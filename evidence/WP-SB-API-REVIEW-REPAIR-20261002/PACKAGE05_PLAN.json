@@ -1,0 +1,13 @@
+{
+  "utc": "2026-10-03T01:12:45.741603+00:00",
+  "phase": "RESEARCH_TO_PLAN_BEFORE_AUTHOR",
+  "findings": [
+    "F027",
+    "F028",
+    "F030"
+  ],
+  "plan": "NuGet-only consumer original42 predicted10 causal reds32 controls; preserve6 input bytes. Strict current5 minimal source patch after baseline, freshCore/Abs packages corrected42 and17 actual source mutants; exact range truncation customTimeProvider compatibility, no whole Core native owner claim. Per input independent adversary final freeze.",
+  "draft_manifest_sha256": "18af92f73e5fc9a2662330af055b0a4781bb0780a1465fa85f081d342866f949",
+  "canonical_owner_edits": false,
+  "read_closure_sha256": "d700d5d8df85c7557ab0cfce971a2a34815404b68558da1860a4873accabf37e"
+}

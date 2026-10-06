@@ -1,0 +1,25 @@
+{
+  "utc": "2026-10-04T23:44:05.774138+00:00",
+  "decision": "REGISTER_TWO_INDEPENDENTLY_QUALIFIED_CORE_ORIGINAL_FINDINGS",
+  "confirmed_before": 130,
+  "confirmed_after": 132,
+  "accepted_unchanged": 130,
+  "original_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-original16-fixed-observer56-neighbors-fresh2-independent-r1/REPORT.json",
+    "sha256": "061b1d7165486d9a34b215a7b9c28d06bfd7f4e6f3a0045d8cec5589b55c0ec0"
+  },
+  "actual_finite_failures": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-original16-fixed-observer56-neighbors-fresh2-independent-r1/ACTUAL_ORIGINAL6_FINITE_CAUSES.json",
+    "sha256": "747a115edf8a408c53b735c37f432e33f48146927302c788caf88bc465bb644a"
+  },
+  "root_actual_causal_reads": [
+    "0f08c1",
+    "c53344",
+    "198170"
+  ],
+  "product_repair_applied_but_fixed_native_qualification_pending": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE157_CORE_SOURCE2_RESPOND_ORIGINAL5_REQUIREMENTS2_ROOT_APPLICATION_R1.json",
+    "sha256": "f8fd1cf967e43bbb04ecffd96b3557a31202539b477f53be4bc6f541e0a2c781"
+  },
+  "CLOSED": false
+}

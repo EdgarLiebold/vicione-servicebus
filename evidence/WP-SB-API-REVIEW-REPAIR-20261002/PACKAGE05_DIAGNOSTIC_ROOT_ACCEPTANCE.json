@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-03T02:44:21.329332+00:00",
+  "status": "SCOPED_DIAGNOSTIC_SUPPLEMENT_ACCEPTED_SHARED_FINAL_PENDING",
+  "root_personally_full_review": [
+    "REVIEW.txt",
+    "REVIEW.json"
+  ],
+  "review_sha256": "855918bbb1c3891319f763e6b265f8f515f8825e6c8f41cd3913f10ff4b3545d",
+  "manifest_sha256": "dec5aae0d95d6c199d4ebf00a677aa2231b6906609e2a56470ecd4c9aed19e38",
+  "manifest_artifacts_verified": 10,
+  "freeze_sha256": "2b09f2d8d830f1e1de7f900109aeda58cde2b6918cde9bd23ab88d901087a21e",
+  "owned_inputs_verified": 29,
+  "original_F030_startup": "PO_PENDING",
+  "whole_API": "PARTIAL"
+}

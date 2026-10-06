@@ -15,7 +15,23 @@ public static class ReceiveEndpointConfiguratorDependencyExtensions
         ArgumentNullException.ThrowIfNull(connector);
         ArgumentNullException.ThrowIfNull(dependency);
 
-        connector.AddDependency(new ReceiveEndpointDependency(dependency));
+        var endpointDependency = new ReceiveEndpointDependency(dependency);
+        try
+        {
+            connector.AddDependency(endpointDependency);
+        }
+        catch (Exception operationFailure)
+        {
+            try
+            {
+                endpointDependency.Disconnect();
+            }
+            catch (Exception cleanupFailure)
+            {
+                throw new AggregateException("Receive endpoint dependency admission and observer cleanup failed.", operationFailure, cleanupFailure);
+            }
+            throw;
+        }
         dependency.AddDependent(new ReceiveEndpointDependent(connector));
     }
 
@@ -38,6 +54,11 @@ public static class ReceiveEndpointConfiguratorDependencyExtensions
         }
 
         public Task Ready => _ready.Task;
+
+        public void Disconnect()
+        {
+            _handle.Disconnect();
+        }
 
         Task IReceiveEndpointObserver.ReadyAsync(ReceiveEndpointReady ready)
         {

@@ -399,10 +399,10 @@ public sealed class MessageJournalTelemetryTests
                 cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(3, store.Entries.Count);
-            MessageJournalTelemetry.Scope stoppedActivity = MessageJournalTelemetry.StartActivity(
+            MessageJournalTelemetry.Scope stoppedActivity = MessageJournalTelemetry.Process.StartActivity(
                 MessageJournalOperation.Send, MessageJournalOutcome.Succeeded);
             Assert.NotNull(stoppedActivity.Activity);
-            MessageJournalTelemetry.Stored(
+            MessageJournalTelemetry.Process.Stored(
                 stoppedActivity, MessageJournalOperation.Send, MessageJournalOutcome.Succeeded, TimeSpan.Zero);
             Assert.Same(stopParent, Activity.Current);
         }

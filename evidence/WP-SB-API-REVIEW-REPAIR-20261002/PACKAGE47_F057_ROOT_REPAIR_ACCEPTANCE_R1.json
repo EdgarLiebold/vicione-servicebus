@@ -1,0 +1,14 @@
+{
+  "finding": "F-SB-API-057",
+  "status": "FIXED_ADVERSARIAL_NATIVE_FRESH_PACK_ROOT_REPAIR_REVIEW_CLOSED",
+  "scope": "One handler outbox observer summary only; current2bdb source, actual compiled embeddedPDB/source and emitted XML, freshCoreZIP independently verified; Root whole source and report read.",
+  "final_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package47-f057-f058-native-independent-r1/REPORT.md",
+    "sha256": "7c0efbbd977692ac7d99a9d9b7fb8f2463096b977a96b4b8bdda28e98910237d"
+  },
+  "actual_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package47-f057-f058-native-independent-r1/ACTUAL_REVIEW.json",
+    "sha256": "862214a0d15243f16d0879a8f9351a0337568d84421f8a830a8e5df99077688f"
+  },
+  "limits": "Package47 frozen epoch; whole API/member and F058 separate."
+}

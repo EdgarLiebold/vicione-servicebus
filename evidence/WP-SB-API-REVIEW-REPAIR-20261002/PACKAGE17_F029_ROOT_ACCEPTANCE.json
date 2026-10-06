@@ -1,0 +1,44 @@
+{
+  "status": "ROOT_ACCEPTED_F029_TARGETED_SHARED_FINAL_PENDING",
+  "finding": "F-SB-API-029",
+  "freeze_sha256": "56c06d9e5de08732798bf5eca6db7cae442dfc96545ad8e1c37176fb97c0edf1",
+  "review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-f029-adversarial/REVIEW.json",
+  "review_sha256": "ef18fd97d9bc8a079d235f7d379d00ae68d928e32fa730a1365d54bd67299629",
+  "manifest_sha256": "c172874fe711661b495771556b016dcb02589a703523be5291ce7ecd7c3bcf26",
+  "owned_current_and_snapshot_verified": 47,
+  "review_artifacts_verified": 27,
+  "root_personally_FULL": [
+    "product old/new2 and66 source plan route inputs",
+    "whole26case public owner9 finalcurrentfiles incl3freshgate/queue delta beforeNative;pairedpreviousbody hashes bound",
+    "all7 current original causal assertionfailureblocks and3 mutant assertionblocks",
+    "final independent REVIEW.txt and REVIEW.json",
+    "Root pure130effect/32receipt/4packagechain/20actualMicrosoft binding helper authored/FULL before run"
+  ],
+  "original": {
+    "causal_reds": 7,
+    "assertion_reds": 7,
+    "positive_controls": 19,
+    "guards": 0
+  },
+  "corrected": {
+    "pass": 26,
+    "fail": 0
+  },
+  "compiled_mutants": {
+    "strictcompiled": 3,
+    "native_exactassertion_reds": 3,
+    "positive_pairs": 3,
+    "baseline_pass": 26,
+    "rollback_pass": 26
+  },
+  "original_M_restored": 6209,
+  "new_frame_deleted_count": 1,
+  "whole_API_CLOSED": false,
+  "limits": [
+    "Scoped rawUTC actualpublicdefault/typedDI Size/TimeFirst/TimeLast/defaultpublicForced;shared integrated final profiles/APIgate pending.",
+    "Dedup only finalmembership/schedule/actualterminalcounts;noisolatedretimestamppromise.",
+    "No whole canonicalCore766 semantic owner transfer;stale chronologyguardexpectation deliberatelypendingwholecanonownerreview.",
+    "No universal quiescence on cleanupguardfailure,heap/cloud/ARM or A+ claim."
+  ],
+  "utc": "2026-10-03T07:28:04.362931+00:00"
+}

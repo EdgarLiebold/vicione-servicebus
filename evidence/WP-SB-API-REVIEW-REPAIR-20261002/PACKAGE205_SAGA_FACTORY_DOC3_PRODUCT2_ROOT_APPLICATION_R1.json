@@ -1,0 +1,61 @@
+{
+  "status": "ROOT_APPLIED_REVIEWED_XML3_PRODUCT2_FRESH_PUBLICATION_PENDING",
+  "utc": "2026-10-05T18:04:28.351221+00:00",
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE205_SAGA_F198_F147_DOC3_ORIGINAL_ROOT_REGISTRATION_R1.json",
+    "sha256": "48c5aa53a9655f6e46c25bd30ffe671050b92da781462f3e77839e815b3987d6"
+  },
+  "author_report_sha256": "e499ec9d5ca490b20989bb298d115d60312733474ca574323b8fd5bfe9d1d228",
+  "author_manifest_sha256": "e16d2556d10a758d606f47eca82e93349b6640638256ab49b0147129d7e2bcdb",
+  "independent_source_peer_report_sha256": "11473ab24ab13ec2cc8f080478982021d362c9961e4a274ada744f691ab79286",
+  "independent_source_peer_manifest_sha256": "de357f3febabf32cb2be08fdfb3d2efba5aba68739ac511c447fd0eb5e796615",
+  "retained_whole121_peer_report_sha256": "ff6fd266d8d408d7b6efd68d8e4a2a530713d27e227cc64313a75d7aee277334",
+  "changes": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/DefaultSagaFactory.cs",
+      "relative": "src/ViciOne.ServiceBus.Sagas/Configuration/DefaultSagaFactory.cs",
+      "before_sha256": "da8fc3cc31c191543e45188e9f90b84a395c6bbc901e5f2116486e8dbef630a2",
+      "after_sha256": "b88ca7808258b923f634963e34017997ee4fb4ac77cb1834a5863920bdae7c7d",
+      "lines": 55,
+      "XML_elements_changed": 1,
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package205-saga-factory-purpose-doc3-product-proposed-r1/before/src/ViciOne.ServiceBus.Sagas/Configuration/DefaultSagaFactory.cs",
+      "proposed_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package205-saga-factory-purpose-doc3-product-proposed-r1/proposed/src/ViciOne.ServiceBus.Sagas/Configuration/DefaultSagaFactory.cs"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Saga/FactoryMethodSagaFactory.cs",
+      "relative": "src/ViciOne.ServiceBus.Sagas/Saga/FactoryMethodSagaFactory.cs",
+      "before_sha256": "d3089385353bc9eb9def5122159ec922091676966e6b999c081a8b25f3379ee8",
+      "after_sha256": "611a83b974582212431be8c2c87793c0008e0b76cb51f25b1cb6801712d7116e",
+      "lines": 66,
+      "XML_elements_changed": 2,
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package205-saga-factory-purpose-doc3-product-proposed-r1/before/src/ViciOne.ServiceBus.Sagas/Saga/FactoryMethodSagaFactory.cs",
+      "proposed_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package205-saga-factory-purpose-doc3-product-proposed-r1/proposed/src/ViciOne.ServiceBus.Sagas/Saga/FactoryMethodSagaFactory.cs"
+    }
+  ],
+  "XML_elements_changed": 3,
+  "emitted_members_changed": 3,
+  "source_owners": 2,
+  "source_lines": 121,
+  "all_nonXML_and_API_runtime_bytes_equal": true,
+  "tests_and_Req_unchanged": true,
+  "activeSDK202_completed_before_root_source_application": {
+    "phase": "package202-all23-unit-after-rabbit-validation-doc15-strict-build-r1",
+    "command": [
+      "dotnet",
+      "build",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T17:50:57.724447+00:00",
+    "completed_utc": "2026-10-05T17:52:38.720547+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package202-all23-unit-after-rabbit-validation-doc15-strict-build-r1.log",
+    "log_sha256": "6d087b3876e7cd6c09ea55ed0ae7295cc0818e7652840598a93ea0100d7d81f1"
+  },
+  "native_count": 0,
+  "root_accepted": false
+}

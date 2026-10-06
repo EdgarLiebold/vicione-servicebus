@@ -1,0 +1,190 @@
+{
+  "status": "BOUNDED_F018_CODE_AND_PUBLIC_PROOF_ACCEPTED_CANONICAL_OWNER_PENDING",
+  "finding": "F018",
+  "reviewer": "azure_test_scope",
+  "independence": "Readonly internal adversarial reviewer; authored neither product predicates nor fixtures or native runner; zero native operations, zero product writes.",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_FREEZE.json",
+    "sha256": "886a76ea04353b018937a3e8455954be58a9fb0b73f9fd941e699b900f668444"
+  },
+  "code_assessment": "The two marker-only shortcuts now require the actual saga DbContext CurrentTransaction plus exact TransactionId equality. Same-context current-owner callback skips nested execution/transaction ownership; independent context restores configured strategy and repository-owned transaction; explicit SetOptimisticConcurrency(false) preserves bypass. No public signature or ownership/finally change.",
+  "contracts": [
+    {
+      "member": "SendAsync",
+      "source": "EntityFrameworkSagaRepositoryContextFactory.cs",
+      "lines": [
+        104,
+        105,
+        106
+      ],
+      "semantic": "Only matching active owner may reuse callback directly; null inputs and pre-cancellation precede factory creation; release finally retained."
+    },
+    {
+      "member": "SendQueryAsync",
+      "source": "EntityFrameworkSagaRepositoryContextFactory.cs",
+      "lines": [
+        151,
+        152,
+        153
+      ],
+      "semantic": "Captures same ownership predicate once per operation; optimistic actual load inside WithinTransaction; callback/dispose/release unchanged."
+    }
+  ],
+  "oracle": {
+    "ordinary_cases": 12,
+    "public_SPI_identity_gate_cases": 4,
+    "original_historical_package_cases": 16,
+    "original_causal_assertion_failures": 6,
+    "original_positive_controls": 10,
+    "corrected_fresh_package_passed": 16,
+    "mutants": 6,
+    "mutant_positive_controls": 6,
+    "terminal_rollback_passed": 16,
+    "original_corrected_assertion_program_csproj_bytes_identical": true,
+    "assertion_details": [
+      "Actual saga/inbox DbContext reference, physical DbTransaction, TransactionId, Serializable isolation and SQL command transaction identities.",
+      "Exactly one selected saga update and one select; neighbor entity value/version unchanged; actual query predicate selects target.",
+      "Injected consumed-save exact primary exception and observable faults, same-context rollback versus distinct-context local commit persisted independently; Inbox.Consumed failure/success state checked.",
+      "Explicit own-transaction opt-out on both paths and success/fault controls; matching current-owner ID preserves outer transaction identity before/after.",
+      "Foreign local marker established through isolated public ConsumeContextScope without changing parent/current transaction; optimistic path records exact BeginTransactionAsync rejection, no saga commands/saves, durable state unchanged."
+    ],
+    "fresh_original_source_bound_package_cases": 16,
+    "fresh_original_causal_assertion_failures": 6,
+    "fresh_original_positive_controls": 10
+  },
+  "counterfactuals": {
+    "marker_only": "Send/Query separate-success→Assert.NotNull saga physical transaction at OwnershipAssertions176; other dispatch route remains green.",
+    "identity_lost": "Send/Query foreign marker→Assert.IsType(InvalidOperationException) at Identity117 sees null; matching-owner same route green.",
+    "valid_owner_rejected": "Send/Query matching owner→Assert.Null(GateFailure) at Identity127 sees actual EF nested transaction rejection; other matching route green."
+  },
+  "null_and_cancellation": {
+    "static": "Existing argument guards and cancellation.ThrowIfCancellationRequested order unchanged; no new inputs or signature. Transaction payload SPI true lookup contract nonnull; malformed custom SPI outside bounded proof.",
+    "runtime": "All16cases use live finite owned caller token and20s operation waits/60s caller deadline. No actually canceled delivery/null-input matrix claimed from these16. Deadline/cancellation exceptions marked failures and cannot count as mutation kills."
+  },
+  "cleanup": {
+    "static": "Container factory borrows DI context and Release no-op; delegate factory owns DisposeAsync. Operation callbacks using/await-using and final Release preserved. Rollback(None) best-effort original exception retention unchanged.",
+    "runtime": "Observer completed before Bus.Stop(None), awaited20s and provider await-disposal; assertions execute only after stop. Expected receive faults stored/referenced precisely; any teardown error prevents PASS. Directory cleanup follows provider/context disposal; normal16 and mutant counterexamples reached body assertions. Timeout-specific detached task drain not proved."
+  },
+  "package_binding": {
+    "selected_bindings": 32,
+    "consumers": 4,
+    "packages_per_consumer": 8,
+    "lock_packages": 40,
+    "managed_runtime_dlls": 37,
+    "status": "Independently exact raw nupkg SHA256/SHA512→Lock→own cache archive and DLL→runtime DLL. Fullnuspec dependencies read; all managed graph DLLs archive/cache/output compared. Signed thirdparty lock contentHash uses metadata normalized hash; raw archive SHA512 checked separately against .sha512 sidecar. No standalone signature trust validation.",
+    "historical_original_source_provenance": "Historical Package01 binary observation preserved, exact historical source binding not newly claimed. Current original regression conclusion instead uses fresh befc source-bound DLL5c0a3e supplement.",
+    "fresh_original_selected_bindings": 16
+  },
+  "canonical_owner": {
+    "status": "PENDING_ROOT_FULL_SCOPE_AND_FAKE_MARKER_TEST_REPAIR",
+    "actual_profile": "UnitArchitecture",
+    "receipt": "package04-f018-existing-native-owner-r2",
+    "log_sha256": "4e3fc55f89a49e73865c81f656885f72525ba125eb1cf9c3b617798c3a67f2ad",
+    "exit_code": 2,
+    "total": 410,
+    "passed": 409,
+    "failed": 1,
+    "skipped": 0,
+    "remaining_failure": "SendQuery_WithAnOuterTransaction_UsesOnlyTheProviderQueryExecutionAsync expected1 actual3; fake marker without active transaction. Original fixture untouched; not hidden/filtered.",
+    "read_precondition": "36canonical EF owner files and57shared/CI personal Root reading required before test author edits under §4.3; this bounded review does not substitute for it.",
+    "wrong_profile": "First Profile=Unit run410/407/3 had2 profile setup failures; excluded. Correct UnitArchitecture still fails1. No whole owner PASS or grade."
+  },
+  "open_obligations": [
+    "Canonical owner fake marker repair after author full closure, then valid complete owner rerun and independent review.",
+    "Pessimistic Query initial ID-SELECT executes during CreateLockContext before local Begin; optimistic no-SQL-on-foreign-ID gate does not close this existing strategy route.",
+    "Provider-specific retries, transient/commit/rollback/dispose fault combinations, multiple matching rows, cross-context explicit shared transaction enrollment, actually canceled delivery, custom transaction SPI and distributed atomicity not covered by16cases.",
+    "No ARM512MiB, external provider/cloud, wholeAPI CLOSED, wholeownerA+ or freshfinalpackageprofile claim."
+  ],
+  "blockers": [],
+  "confirmed_findings": [],
+  "proof_artifacts": [
+    "READ_CLOSURE.json",
+    "PACKAGE_BINDING_INDEPENDENT.json",
+    "MUTATION_REVIEW.json",
+    "ROLLBACK_INDEPENDENT.json",
+    "RECEIPTS_VERIFIED.json",
+    "LOG_LOSSLESS_MAP.json",
+    "LOG_JSON_EXACT_REUSE.json"
+  ],
+  "official_contract_context": [
+    {
+      "title": "Microsoft EF Core transactions",
+      "url": "https://learn.microsoft.com/en-us/ef/core/saving/transactions",
+      "inference": "Cross-context atomicity requires actual shared connection/transaction; marker identity check by itself does not create it."
+    },
+    {
+      "title": "Microsoft EF Core connection resiliency",
+      "url": "https://learn.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency",
+      "inference": "Actual provider retry/commit ambiguity requires additional runtime evidence beyond SQLite nonretry controls."
+    }
+  ],
+  "historical_review_preserved": {
+    "REVIEW.json": "924e9c6f5e6333a5b6827a2d88d8eaeb026303487c7915473518b488e3fe2ba1",
+    "REVIEW.txt": "690368a85d5e87be5864abf555ef12caefacf23ed48a01e595bde6286adab8fc",
+    "READ_CLOSURE.json": "ea64211645103d437d688edfafbfe61366640f83e3e0a719062340c60b99ccbd"
+  },
+  "no_native_operations": true,
+  "product_writes": 0,
+  "grade_or_whole_api_acceptance": false,
+  "original_provenance_supplement": {
+    "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_ORIGINAL_PROVENANCE_FREEZE.json",
+    "freeze_sha256": "d21f250036f840f4efe5909e8388be3d514b5f5c0205aa75f4a306f57ec3d143",
+    "owned_inputs": 11,
+    "main_owned_inputs": 13,
+    "binding_sha256": "7a767f70066b5dc73ba524cb73aa8c34fcc90fcc9d18d6f757f95e3eda7efbf5",
+    "native_receipts": 8,
+    "actual_cases": 16,
+    "causal_failures": 6,
+    "positive_controls": 10,
+    "guard_failures": 0,
+    "source_sha256": "befc6519928c8c7db1b6eb3bfb46938bbd4f902099f544da20d265c6cd30571a",
+    "tested_dll_sha256": "5c0a3eaff274c68b3e753db1ccf5f3fbafdfdcf4be03bd84210d6650396073f6",
+    "source_binding": "Exact embedded Portable PDB table48 factory document, SHA256 algorithm GUID and original checksum independently parsed from tested archive DLL.",
+    "selected_package_bindings": 16,
+    "consumers": 2,
+    "packages_per_consumer": 8,
+    "lock_packages": 40,
+    "managed_runtime_dlls": 37,
+    "unchanged_assertion_program_project_bytes": true,
+    "only_config_lock_inputs_new": true
+  },
+  "current_rollback_observation": {
+    "status": "ALL6209_ORIGINAL_TRACKED_BYTES_RESTORED_AFTER_SUPPLEMENT",
+    "coverage": "/private/tmp/vicione-servicebus-api-review-20261001/FILE_COVERAGE.csv",
+    "coverage_sha256": "4382dce390d5e8e0502b3cf6f0ab8c3668d34a4ec252de460550bcce84264769",
+    "files": 6209,
+    "mismatches": [],
+    "read_status": "HASH_CHECK_ONLY",
+    "limits": [
+      "Current read occurs after F018 original-provenance native checkpoint; Root reports independent later Package05 mutation process owns five possible differences. No historical-time state inferred from this current-state hash check."
+    ],
+    "temporal_note": "Earlier scan saw five active later Package05 mutation files (Root confirmed process53159); repeated full scan found6209 original. No historical-time state inferred; original F018 checkpoint separately Root-recorded."
+  },
+  "bounded_assessment": "No blocker found in the two frozen F018 transaction ownership predicates or sixteen public assertion routes. Original source-provenance obligation discharged by fresh original generation, embedded-PDB checksum, six actual original assertion failures, same-byte corrected oracles and six actual single-mutant counterexamples. Canonical owner repair/full review remains required before whole-owner completion.",
+  "supplement_proof_artifacts": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-adversarial/FINAL_READ_CLOSURE.json",
+      "sha256": "432f1ac926c18ccd39301e5541ea063556a65cf5abf9e5d59156cdb4b026067f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-adversarial/READ_CLOSURE_SUPPLEMENT.json",
+      "sha256": "8ffce4951f35fb141acf9b22efa27e04f0d063bc92fb08b6f2c5a1c4bbafe743"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-adversarial/SOURCE_PDB_BINDING_SUPPLEMENT.json",
+      "sha256": "f5ae571da635c8dd617f8d651f93eedc948a8035dc06b8f2f550230c4fdaeddd"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-adversarial/PACKAGE_BINDING_SUPPLEMENT_INDEPENDENT.json",
+      "sha256": "e730c9bb6e1c0bb38618650155652d3a6292c588ab438d6f7a8b0876d2c584a4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-adversarial/ROLLBACK_INDEPENDENT_SUPPLEMENT.json",
+      "sha256": "e92ecd1508d10a0385c94f6e70f9bfe0a0f79e545e8b0968e7a0630369cbbe8e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-adversarial/verify_original_supplement.py",
+      "sha256": "87c7c657b3085f5dbd816ef22493c3af1acf4166b109d6f66b99417d6f9c396d"
+    }
+  ]
+}

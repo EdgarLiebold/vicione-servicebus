@@ -1,0 +1,70 @@
+{
+  "utc": "2026-10-04T23:40:30.933516+00:00",
+  "decision": "APPLY_ADVERSARIALLY_REVIEWED_CORE_SOURCE2_AND_ORIGINAL_NORMAL_RESPOND5_ORACLES",
+  "after156freeze": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-original16-fixed-observer56-neighbors-fresh2-independent-r1/FREEZE.json",
+    "sha256": "2b9cab8f06ddabcfa283983ecc92c2a48ab4ead203c92f186a87c424dc3cd0ca"
+  },
+  "source_test_requirements": [
+    {
+      "path": "src/ViciOne.ServiceBus/Serialization/Headers/MessageIdHeaders.cs",
+      "before_sha256": "827e04a04cdbf107538f8a7609fe16e576bdcb1143cdbaad614a8b5483b85ad4",
+      "after_sha256": "471b1d31fa152067539be7ec457c9569df43ca8f1c51340c711f66d38ea5ceb6",
+      "role": "Core Source2"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Serialization/Contexts/BodyConsumeContext.cs",
+      "before_sha256": "04b0b92ff6f5ea3ed4dd53869f48ccd8606899e08ca2cb91abebd7cc471a948b",
+      "after_sha256": "e248ad1fc8042b7c8e3e9c9d58649009837d17ca873930553168824fc7287a00",
+      "role": "Core Source2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachinePublishSendRespondActivitiesDeepContractTests.cs",
+      "before_sha256": "546c202d3a485f499105ba8c73a806f66de9cf70717c136e250719de9f155644",
+      "after_sha256": "18b42a5192875c6097abcd57710d879b091ae9b5578a589d404a4da9dd7afc48",
+      "role": "Respond5 original oracles"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "794bbb1f675538de7af1eaff20c0d8b5c2cb319ee106145df3e3eaa04947e672",
+      "after_sha256": "352e8d5a52f00197fa15af881f354f53674a6e9618992e8912a85152b8907298",
+      "role": "Req2addonly"
+    }
+  ],
+  "manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-body-header-product-proposed-r1/MANIFEST.json",
+      "sha256": "039f85fed676376fb998777c74771f321a720253e722d7ef172de61eeae6e3ba"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-core-body-header-product-independent-runtime-r1/MANIFEST.json",
+      "sha256": "3446fd73b750678bda0cca902b4bd1e4ff9b0058d8870d34c215c4bbe338e8c6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package157-normal-respond-admission5-oracles-proposed-r1/MANIFEST.json",
+      "sha256": "1a26d513adb9c3dada83d6708b3fb82e557bc652bb8e3ddb84747a2050480b35"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package157-normal-respond-admission5-independent-scanner-r1/MANIFEST.json",
+      "sha256": "c5636f492c3b8f6af3a799f980ea015c1226da5f9c148540557d0ff53956acd0"
+    }
+  ],
+  "root_own_product_review": [
+    "2705d9",
+    "dd4e9d"
+  ],
+  "root_own_respond_oracles_helpers_cause_review": [
+    "adc6c6",
+    "69bed1",
+    "3067a0",
+    "b86607"
+  ],
+  "requirements_before": 4614,
+  "requirements_after": 4616,
+  "limits": [
+    "Core original native failures independently qualified from frozen156 next; current native GREEN not yet claimed.",
+    "Normal Respond product remains originalunchanged,5 added oracles expect1 finite RED+4 healthy/failure controls; actual SDK/native pending.",
+    "CoreSource changes include four intentional nullable annotations matching SPI; compile warnings are treated as errors."
+  ],
+  "CLOSED": false
+}

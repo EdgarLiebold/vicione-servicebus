@@ -1,0 +1,195 @@
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+using Xunit;
+
+namespace DefinitionLifetime;
+public interface INamedBus : IBus { }
+public interface ISecondBus : IBus { }
+
+public sealed class RuntimeOwner
+{
+    readonly OwnedLifetime _life;
+    readonly List<(IBusControl Bus, ConnectHandle Observer)> _buses = [];
+    bool _stopped, _disposeAttempted;
+    readonly Dictionary<IBusControl, Task> _stopTasks = [];
+    public Probe Probe { get; }
+    public ServiceProvider Provider { get; }
+    public Task? ProviderDisposal { get; private set; }
+    public RuntimeOwner(OwnedLifetime life, Probe probe, Action<ServiceCollection> register)
+    {
+        _life = life; Probe = probe;
+        var services = new ServiceCollection(); services.AddLogging(); services.AddSingleton(probe); services.AddTransient<Dependency>();
+        register(services);
+        Provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        life.Release(probe.ReleaseAll); life.Own(Cleanup);
+    }
+    public static RuntimeOwner Definition<TDefinition>(OwnedLifetime life, Probe probe, bool typed, int repeats = 1, Action<ServiceCollection>? final = null)
+        where TDefinition : class, IConsumerDefinition<Receiver>
+    {
+        return new(life, probe, services =>
+        {
+            void Register(IBusRegistrationConfigurator c)
+            {
+                c.AddConsumer<Receiver, TDefinition>();
+                for (int i = 1; i < repeats; i++) c.Advanced().Registrar.AddDefinition<IConsumerDefinition<Receiver>, TDefinition>();
+            }
+            if (typed) services.AddViciOneServiceBus<INamedBus>(c =>
+            {
+                c.Limits(MessageLimits.Conservative); Register(c); c.UsingInMemory((context, config) => config.ConfigureEndpoints(context));
+            });
+            else services.AddViciOneServiceBus(c =>
+            {
+                c.Limits(MessageLimits.Conservative); Register(c); c.UsingInMemory((context, config) => config.ConfigureEndpoints(context));
+            });
+            final?.Invoke(services);
+        });
+    }
+    public static RuntimeOwner Endpoint<TDefinition>(OwnedLifetime life, Probe probe, bool typed,
+        IEndpointSettings<IEndpointDefinition<Receiver>> provided, IEndpointSettings<IEndpointDefinition<Receiver>>? explicitSettings,
+        IEndpointSettings<IEndpointDefinition<Receiver>>? second = null, Action<ServiceCollection>? final = null)
+        where TDefinition : class, IEndpointDefinition<Receiver>
+    {
+        return new(life, probe, services =>
+        {
+            services.AddSingleton(provided);
+            void Register(IBusRegistrationConfigurator c)
+            {
+                c.AddConsumer<Receiver>();
+                var advanced = c.Advanced();
+                var registration = advanced.Registrar.GetOrAddRegistration<IConsumerRegistration>(typeof(Receiver));
+                advanced.AddEndpoint<TDefinition, Receiver>(registration, explicitSettings);
+                if (second != null) advanced.AddEndpoint<TDefinition, Receiver>(registration, second);
+            }
+            if (typed) services.AddViciOneServiceBus<INamedBus>(c =>
+            {
+                c.Limits(MessageLimits.Conservative); Register(c); c.UsingInMemory((context, config) => config.ConfigureEndpoints(context));
+            });
+            else services.AddViciOneServiceBus(c =>
+            {
+                c.Limits(MessageLimits.Conservative); Register(c); c.UsingInMemory((context, config) => config.ConfigureEndpoints(context));
+            });
+            final?.Invoke(services);
+        });
+    }
+    public static RuntimeOwner TwoBuses(OwnedLifetime life, Probe probe, bool endpoint,
+        IEndpointSettings<IEndpointDefinition<Receiver>>? first = null, IEndpointSettings<IEndpointDefinition<Receiver>>? second = null)
+    {
+        return new(life, probe, services =>
+        {
+            void Register(IBusRegistrationConfigurator c, IEndpointSettings<IEndpointDefinition<Receiver>>? settings)
+            {
+                if (!endpoint) c.AddConsumer<Receiver, DualDefinition>();
+                else
+                {
+                    c.AddConsumer<Receiver>(); var a = c.Advanced();
+                    a.AddEndpoint<DualEndpoint, Receiver>(a.Registrar.GetOrAddRegistration<IConsumerRegistration>(typeof(Receiver)), settings);
+                }
+            }
+            services.AddViciOneServiceBus<INamedBus>(c => { c.Limits(MessageLimits.Conservative); Register(c, first); c.UsingInMemory((ctx, cfg) => cfg.ConfigureEndpoints(ctx)); });
+            services.AddViciOneServiceBus<ISecondBus>(c => { c.Limits(MessageLimits.Conservative); Register(c, second); c.UsingInMemory((ctx, cfg) => cfg.ConfigureEndpoints(ctx)); });
+        });
+    }
+    public TDefinition DefinitionValue<TDefinition>(bool typed) where TDefinition : class => typed
+        ? Provider.GetRequiredService<Bind<INamedBus, TDefinition>>().Value : Provider.GetRequiredService<TDefinition>();
+    public TDefinition[] AllValues<TDefinition>(bool typed) where TDefinition : class => typed
+        ? Provider.GetServices<Bind<INamedBus, TDefinition>>().Select(b => b.Value).ToArray() : Provider.GetServices<TDefinition>().ToArray();
+    public void CheckDefinitionAliases<TDefinition>(bool typed, TDefinition last, int expectedAliases) where TDefinition : class, IConsumerDefinition<Receiver>
+    {
+        if (typed)
+        {
+            var concrete = Provider.GetRequiredService<Bind<INamedBus, TDefinition>>();
+            Assert.Equal(typeof(Bind<INamedBus, TDefinition>), concrete.GetType());
+            var same = Bind<INamedBus>.Create(last); Assert.True(concrete.Equals(same)); Assert.True(same.Equals(concrete)); Assert.Equal(same.GetHashCode(), concrete.GetHashCode());
+            var aliases = Provider.GetServices<Bind<INamedBus, IConsumerDefinition<Receiver>>>().ToArray();
+            Assert.Equal(expectedAliases, aliases.Length);
+            Assert.All(aliases, b => { Assert.Equal(typeof(Bind<INamedBus, IConsumerDefinition<Receiver>>), b.GetType()); Assert.Same(last, b.Value); });
+        }
+        else
+        {
+            var aliases = Provider.GetServices<IConsumerDefinition<Receiver>>().ToArray();
+            Assert.Equal(expectedAliases, aliases.Length); Assert.All(aliases, d => Assert.Same(last, d));
+        }
+    }
+    public void CheckEndpointAliases<TDefinition>(bool typed, TDefinition last, int expectedAliases) where TDefinition : class, IEndpointDefinition<Receiver>
+    {
+        if (typed)
+        {
+            var concrete = Provider.GetRequiredService<Bind<INamedBus, TDefinition>>();
+            Assert.Equal(typeof(Bind<INamedBus, TDefinition>), concrete.GetType());
+            var same = Bind<INamedBus>.Create(last); Assert.True(concrete.Equals(same)); Assert.True(same.Equals(concrete)); Assert.Equal(same.GetHashCode(), concrete.GetHashCode());
+            var aliases = Provider.GetServices<Bind<INamedBus, IEndpointDefinition<Receiver>>>().ToArray();
+            Assert.Equal(expectedAliases, aliases.Length);
+            Assert.All(aliases, b => { Assert.Equal(typeof(Bind<INamedBus, IEndpointDefinition<Receiver>>), b.GetType()); Assert.Same(last, b.Value); });
+        }
+        else
+        {
+            var aliases = Provider.GetServices<IEndpointDefinition<Receiver>>().ToArray();
+            Assert.Equal(expectedAliases, aliases.Length); Assert.All(aliases, d => Assert.Same(last, d));
+        }
+    }
+    public async Task<IBusControl> Start(bool typed, bool second = false)
+    {
+        var bus = second ? Provider.GetRequiredService<IBusInstance<ISecondBus>>().BusInstance.BusControl
+            : typed ? Provider.GetRequiredService<IBusInstance<INamedBus>>().BusInstance.BusControl : Provider.GetRequiredService<IBusControl>();
+        var observer = bus.ConnectConsumeObserver(Probe); _buses.Add((bus, observer));
+        await _life.Await(bus.StartAsync()); return bus;
+    }
+    public async Task Deliver(IBusControl bus, string queue, int firstSequence = 1)
+    {
+        var endpoint = await _life.Await(bus.GetSendEndpointAsync(new Uri("queue:" + queue)));
+        for (int i = firstSequence; i < firstSequence + 2; i++)
+        {
+            var item = new Item(i, Guid.NewGuid());
+            await _life.Await(endpoint.SendAsync(item, context => context.MessageId = item.Identity));
+            var terminal = await _life.Await(Probe.Terminal(i));
+            Assert.Equal(item.Identity, terminal.Identity); Assert.Equal(item.Identity, terminal.MessageId); Assert.Null(terminal.Failure);
+        }
+    }
+    public async Task Stop()
+    {
+        if (_stopped) return;
+        List<Exception> errors = [];
+        foreach (var (bus, _) in _buses)
+        {
+            try
+            {
+                if (!_stopTasks.TryGetValue(bus, out var task))
+                {
+                    try { task = _life.Track(bus.StopAsync()); }
+                    catch (Exception e) { task = _life.Track(Task.FromException(e)); }
+                    _stopTasks.Add(bus, task);
+                }
+                await _life.Await(task);
+            }
+            catch (Exception e) { errors.Add(e); }
+        }
+        if (errors.Count > 0) throw new AggregateException(errors);
+        _stopped = true;
+    }
+    public Task DisposeProviderAsync()
+    {
+        if (_disposeAttempted) return ProviderDisposal ?? Task.CompletedTask;
+        _disposeAttempted = true;
+        try { ProviderDisposal = _life.Track(Provider.DisposeAsync().AsTask()); }
+        catch (Exception e) { ProviderDisposal = _life.Track(Task.FromException(e)); }
+        return ProviderDisposal;
+    }
+    public void DisposeProviderSync()
+    {
+        if (_disposeAttempted) throw new InvalidOperationException("Provider disposal was already attempted");
+        _disposeAttempted = true; Provider.Dispose(); ProviderDisposal = Task.CompletedTask;
+    }
+    async Task Cleanup()
+    {
+        List<Exception> errors = [];
+        async Task Attempt(Func<Task> action) { try { await _life.Track(action()).WaitAsync(_life.Timeout); } catch (Exception e) { errors.Add(e); } }
+        await Attempt(Stop);
+        foreach (var (_, observer) in _buses) await Attempt(() => observer.DisposeAsync().AsTask());
+        if (!_disposeAttempted) await Attempt(DisposeProviderAsync);
+        if (errors.Count > 0) throw new AggregateException(errors);
+    }
+}

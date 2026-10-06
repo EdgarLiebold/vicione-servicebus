@@ -1,0 +1,85 @@
+{
+  "status": "ROOT_ADDITIONAL_FULL_ROUTE_READ_AND_TEST_PLAN_BEFORE_AUTHORING",
+  "sources": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+      "bytes": 5666,
+      "sha256": "9f608a94ef067bb73c4866567c24a9b191d8b8385cfffbbd750c6729ef26f9ef",
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_SOURCE_TEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+      "bytes": 9142,
+      "sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_SOURCE_TEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+      "bytes": 6222,
+      "sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_SOURCE_TEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingConfigurator.cs",
+      "bytes": 7352,
+      "sha256": "cefe6a5190cf6fa4d57d01e19baacf951790fbf299f9cfef7586a97470153147",
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_SOURCE_TEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/InMemoryDurableSendServiceCollectionExtensions.cs",
+      "bytes": 2857,
+      "sha256": "ba1a73be1c3544b0d455e792f18f0ec1b3ce3432b63f84012f7a53e786e6bbbb",
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_SOURCE_TEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "bytes": 3422,
+      "sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_SOURCE_TEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+      "bytes": 4618,
+      "sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_SOURCE_TEXT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDurableSendIntegrationTests.cs",
+      "bytes": 17430,
+      "sha256": "3018bf860d4a96c6e9f02c359e28249b2d6ca2ed5823301c172b8a7209e92c91",
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_SOURCE_TEXT"
+    }
+  ],
+  "history": "Rootpersonally FULL historical4mode consumer Program+two-catch patch; not transferring actual historical builds into current proof.",
+  "owned_consumer": "New standalone NuGet-only project+Program+ActivityAssertions+transparent StoreObservation+OwnedLifetime+Nugetconfig+freshlocks. NoCoretests edits.",
+  "cases": [
+    "admission-plain-sampled",
+    "admission-formatter-sampled",
+    "admission-no-listener",
+    "admission-unsampled",
+    "admission-capacity",
+    "admission-cancel",
+    "admission-stop-fault",
+    "delivery-plain-sampled",
+    "delivery-formatter-sampled",
+    "delivery-unsampled"
+  ],
+  "actual_delivery": [
+    "Public capturesoleIOutboxStore Descriptor.ImplementationFactory; preserve concreteDIowner; transparent11methodwrapper forwarding every token/result/failure.",
+    "Afteractualtruecompletion signal exactid+generationTCS; nofake storage/dispatcher/privateInvoke.",
+    "Actualnormalhostedservices startup after admittedrealintent; realInMemory endpoint payloadenvelope/handler exactIDbody; releasegatefinally; actualstore0 thenjoinallHosted+Bustasks.",
+    "UriSubtype armedoneShotonlyfrom sampled delivery ActivityStarted, neverbreakunsampledtransport.",
+    "CaptureandassertownedSpancompletion beforetestleakCleanup; cleanupfailurepreservedprimary+secondary."
+  ],
+  "bounds": "perawait20s/case60s configuredexplicitly, noTimeoutAsPASS",
+  "countermutants": "Independentrevertadmissioncatch/deliverycatch/both; wrongdisposetargetambient detection bysameactivity+callerRestored; sampledpositiveplain/unsampledcontrols; causalassertionnativeonly",
+  "adversarial": "Next independent internalreviewer exact source/ownedConsumer/compiledSourceEffects/publishedNuget/runtimebindings"
+}

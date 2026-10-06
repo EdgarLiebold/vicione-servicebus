@@ -1,0 +1,74 @@
+{
+  "utc": "2026-10-05T12:18:17.694935+00:00",
+  "actor": "/root",
+  "scope": "Two owning product owners, five Debug sites; actualpurge once state set after successfulproviderawait before optionaldiagnostic. Test459/263 andReq167 unchanged",
+  "plan": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Scheduling/SqlScheduleMessageProvider.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-sql-scheduler-purge-owned-diagnostics-product-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Scheduling/SqlScheduleMessageProvider.cs",
+      "before_sha256": "f334816aa15dbe1851135c655abb80b97c79033798f77669d474c56f8b099f92",
+      "after_sha256": "a599a803c22b949b4655190ce299193f685cac2640b1189db467ebdca83d205a",
+      "kind": "OWNING_DIAGNOSTIC_ONLY_PLUS_PURGE_SUCCESS_FLAG_ORDER",
+      "before_lines": 174,
+      "after_lines": 196,
+      "literal_inverse_and_original182_PDB": {
+        "snapshot": "source/src/Transports/ViciOne.ServiceBus.SqlTransport/Scheduling/SqlScheduleMessageProvider.cs",
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Scheduling/SqlScheduleMessageProvider.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "f334816aa15dbe1851135c655abb80b97c79033798f77669d474c56f8b099f92",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "dll_sha256": "9939bab1de6276cb35189e22ebff82e9605933bdf17bf0e937020e20c51e48b5",
+        "sha256": "f334816aa15dbe1851135c655abb80b97c79033798f77669d474c56f8b099f92"
+      }
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/PurgeOnStartupFilter.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-sql-scheduler-purge-owned-diagnostics-product-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/PurgeOnStartupFilter.cs",
+      "before_sha256": "fc00d95dce2b7480f6b53d420e69cf6785cf0215837cd7b65ebb1491ab3b5064",
+      "after_sha256": "cbf3dedb22b0569dc7eb52a7d1a15a0cfe7b8538d89a93e7eb9b662fe27f1713",
+      "kind": "OWNING_DIAGNOSTIC_ONLY_PLUS_PURGE_SUCCESS_FLAG_ORDER",
+      "before_lines": 60,
+      "after_lines": 72,
+      "literal_inverse_and_original182_PDB": {
+        "snapshot": "source/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/PurgeOnStartupFilter.cs",
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/PurgeOnStartupFilter.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "fc00d95dce2b7480f6b53d420e69cf6785cf0215837cd7b65ebb1491ab3b5064",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "dll_sha256": "9939bab1de6276cb35189e22ebff82e9605933bdf17bf0e937020e20c51e48b5",
+        "sha256": "fc00d95dce2b7480f6b53d420e69cf6785cf0215837cd7b65ebb1491ab3b5064"
+      }
+    }
+  ],
+  "tests_requirements_unchanged": [
+    {
+      "relative_path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Scheduling/SqlScheduleMessageProviderTests.cs",
+      "sha256": "0f56a6643944cae303cc1aa601ffa7318a77e89cd85389f16c3d59b0c3acbe83"
+    },
+    {
+      "relative_path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/PurgeOnStartupFilterTests.cs",
+      "sha256": "fffadd3215d08db29b1f792b5fe129ccf37ee6bef83c730c8da7ee53d1bc03a0"
+    },
+    {
+      "relative_path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/SqlTransportRequirements.json",
+      "sha256": "ef32164befb7b593f9dd41f81ec955d3d1ee1bdaec426f518205acd48e214f97"
+    }
+  ],
+  "source_preflight": "RootwholeProductonlypatch166a7c +all5literalinverses928603 +actualbeforewhole174+60dbea11 +independentPeer/report99e2fc; allauthorpeerMAN entries andcurrentSource/Original182PDB/literalinverse here. No new API/XML/Test changes. Genuine Original182qualifiedandRootacceptedcce225... precedes apply.",
+  "original_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package182-sql-consumer-xml1-scheduler-purge-original10-fresh3-independent-r1/REPORT.json",
+    "sha256": "b673879cdfbf0614a5c1c610798ff3aa332c6ff4c75ba3ef2f0fed276d75152a"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-sql-scheduler-purge-product-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "61207033cc71ad4405d61c9e198ea0f3b13c8cb5e37c83662ac9af0393def3f8",
+    "manifest_sha256": "4f2dee891fb1e44dc14902808a0b9970502ab8f96282627d2a28447513898d74"
+  },
+  "before_frames": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package183-root-before-r1/frames",
+  "native_and_fresh_after_pending": true,
+  "whole_API_closed": false
+}

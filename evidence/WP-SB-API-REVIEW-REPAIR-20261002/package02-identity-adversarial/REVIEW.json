@@ -1,0 +1,405 @@
+{
+  "status": "PATCH_REVIEW_PASS_WITH_STATED_PROOF_LIMITS",
+  "role": "independent internal context-separated adversarial reviewer; no external developer/red-team/release role",
+  "utc": "2026-10-02T22:23:11.945937+00:00",
+  "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE02_IDENTITY_FREEZE.json",
+  "freeze_sha256": "4ed7455cc1b1a7416fb906448fbdf01b0a5f96e3bba5b2b4b289992a12334d9c",
+  "target_findings": [
+    "F-SB-API-009",
+    "F-SB-API-023"
+  ],
+  "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "method": "Read-only review of every changed line, complete runner/executor/public consumer, additional complete SQLite consumer and relevant call/ownership/cancel boundaries. No reviewer native builds/tests or product writes. Parent-executed native receipts independently hashed and causally inspected.",
+  "skills": [
+    "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-gap-analysis/SKILL.md",
+    "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/assertion-quality/SKILL.md",
+    "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/SKILL.md",
+    "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/extensions/dotnet.md"
+  ],
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity/freeze/00-EncryptionKey.cs",
+      "sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93",
+      "bytes": 2163,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+      "baseline_sha256": "1a247eefbce695aa4e08a0f5efec2e2d2daf7ee6ab254bd75e89c4e06329ed41",
+      "review": "PASS: strict UTF8 byte counting rejects malformed UTF16 with exact keyId ArgumentException and retained EncoderFallbackException cause. Inclusive 65535 UTF8 bytes, existing 16/24/32-byte AES sizes and both copies remain intact; no normalization or signature change.",
+      "added_lines": 14,
+      "removed_lines": 3,
+      "review_delta": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-00-EncryptionKey.cs.patch"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity/freeze/01-MessageContractIdentity.cs",
+      "sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+      "bytes": 5363,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "baseline_sha256": "780c76084ef0c3568b27b6a16c5fc2ccb41256f411c1f884cd1c59a7929f0c7f",
+      "review": "PASS: bounds checked before indexed surrogate traversal; terminal/mispaired high and standalone low rejected. Valid pairs consume their low half. Existing control/whitespace/semicolon exclusions and inclusive 256 UTF16-unit/1..65535 version bounds remain intact; Parse/TryParse centralize constructor validation.",
+      "added_lines": 13,
+      "removed_lines": 2,
+      "review_delta": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-01-MessageContractIdentity.cs.patch"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity/freeze/02-product-fixes.md",
+      "sha256": "b008e8799dc0e93ee34c100c324a8516c416555b749623cc40fdb93acd8f252e",
+      "bytes": 27919,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/02-product-fixes.md",
+      "baseline_sha256": "493aeb989e4dd837161eec53eed01c6d523478209659323af15bbc85a5df4995",
+      "review": "PASS: both added changelog bullets accurately describe the new early rejection and retained valid Unicode limits; no unsupported migration or global acceptance promise.",
+      "added_lines": 4,
+      "removed_lines": 0,
+      "review_delta": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-02-product-fixes.md.patch"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package02_identity_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity/freeze/03-package02_identity_mutations.py",
+      "sha256": "1958277053648397aa1c90c6331a01113944ee59bae1a5370c0d6b09ac8161a9",
+      "bytes": 9094,
+      "comparison_baseline": null,
+      "baseline_sha256": null,
+      "review": "PASS: complete runner checked including bounded resume, original-red/corrected-green/rollback-green controls, strict builds, nine single replacements, unchanged oracle hash checks, actual binary injection and finally rollback. Compiler failure explicitly excluded; retained three logical mutants have identical reconstructed source hashes.",
+      "added_lines": 142,
+      "removed_lines": 0,
+      "review_delta": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-03-package02_identity_mutations.py.patch"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/run_operation.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity/freeze/04-run_operation.py",
+      "sha256": "e77b44c2d7c0aa92d0b00addcb182d479cfdf7302161b841a479a9c8f5e1b2ea",
+      "bytes": 1644,
+      "comparison_baseline": null,
+      "baseline_sha256": null,
+      "review": "PASS: complete unchanged executor records exact native command, cwd, exit, UTC timestamps and hashed stdout/stderr; append-only phase naming. Final frozen bytes bind review, without claiming a historical pre-execution runner freeze.",
+      "added_lines": 35,
+      "removed_lines": 0,
+      "review_delta": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-04-run_operation.py.patch"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity/freeze/05-Program.cs",
+      "sha256": "0bcc4cb7eac8f09e7839480a89b2cdc6e1a9ed9803e5c779ddd4628195470025",
+      "bytes": 14806,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/reproductions/public-contracts/Program.cs",
+      "baseline_sha256": "9fc72b38056c7ce37a0bea5131eb774c6d4fcc73b32c6416d3ba1e06714a52b9",
+      "review": "PASS: complete consumer and every added line checked. Exact exception classes/parameters/encoding cause; inclusive UTF8/UTF16 and real Unicode controls; envelope-byte inspection, actual encrypted readback, provider lookup, defensive-copy behavior, Parse/TryParse/Attribute/Catalog and retained pre-auth characterization. Help text still lists three original modes but actual five-mode dispatch/gates are correct.",
+      "added_lines": 115,
+      "removed_lines": 0,
+      "review_delta": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-05-Program.cs.patch"
+    }
+  ],
+  "findings": [],
+  "fresh_runtime_bindings": [
+    {
+      "profile": "identity-corrected",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "2ab522d3fd50e19f3335297fa3db606ba930c8063bb91c3450cf9716f00fa4b8",
+      "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "runtime_dll_sha256": "093a91303b3f0b885d1700603867f6dfd7a341d590cd5eb615f495020972139d",
+      "packaged_bytes_equal_actual_runtime": true
+    },
+    {
+      "profile": "identity-corrected",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "08ef2121e318bc0317f68e7f3e48dd59ff73ad5a2af364ddb1f72bd0807fa8ed",
+      "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "runtime_dll_sha256": "4306dd1124c409bcd75bb6130bbdd44a8e866b3e9c2a5c2a6fa9f3fbae8e1e46",
+      "packaged_bytes_equal_actual_runtime": true
+    },
+    {
+      "profile": "identity-corrected",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg",
+      "sha256": "b46d8d5a46e4d19b1b09a5ac813422db256004bc89a29a70440cb83a1040768a",
+      "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.AmazonS3.dll",
+      "runtime_dll_sha256": "eaa7b41130da3595741bb5e6aad57638f3fbdf422dc3ec3768e63965d3233747",
+      "packaged_bytes_equal_actual_runtime": true
+    },
+    {
+      "profile": "identity-sqlite",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "2ab522d3fd50e19f3335297fa3db606ba930c8063bb91c3450cf9716f00fa4b8",
+      "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-sqlite/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "runtime_dll_sha256": "093a91303b3f0b885d1700603867f6dfd7a341d590cd5eb615f495020972139d",
+      "packaged_bytes_equal_actual_runtime": true
+    },
+    {
+      "profile": "identity-sqlite",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "08ef2121e318bc0317f68e7f3e48dd59ff73ad5a2af364ddb1f72bd0807fa8ed",
+      "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-sqlite/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "runtime_dll_sha256": "4306dd1124c409bcd75bb6130bbdd44a8e866b3e9c2a5c2a6fa9f3fbae8e1e46",
+      "packaged_bytes_equal_actual_runtime": true
+    },
+    {
+      "profile": "identity-sqlite",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "sha256": "77edf5b845aac8cb83507f56ef917846d2ecbfd3e611def3d53891e07f8fbccc",
+      "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-sqlite/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "runtime_dll_sha256": "688c420f10c54deb79ce81fb0bdf42eee70c00863d79154dadc7f7123a78af30",
+      "packaged_bytes_equal_actual_runtime": true
+    }
+  ],
+  "consumer_profiles": [
+    {
+      "profile": "identity-corrected",
+      "owned_files": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/PublicContracts.csproj",
+          "sha256": "26e40f70f2b07e1c92d744c355968c3729d31b9109781906db26b90c903d6c12",
+          "bytes": 576
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/Program.cs",
+          "sha256": "0bcc4cb7eac8f09e7839480a89b2cdc6e1a9ed9803e5c779ddd4628195470025",
+          "bytes": 14806
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/NuGet.config",
+          "sha256": "15b4f175aedf825240b410e9d8a4fb02166fe3d6f395f079b5b967f567db9427",
+          "bytes": 577
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/packages.lock.json",
+          "sha256": "db396d990dbc7a44548178d0af75bce33021043826f396ee3539b862a2337367",
+          "bytes": 8177
+        }
+      ],
+      "fresh_binary_bindings": [
+        {
+          "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.1.0.0.nupkg",
+          "sha256": "2ab522d3fd50e19f3335297fa3db606ba930c8063bb91c3450cf9716f00fa4b8",
+          "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "runtime_dll_sha256": "093a91303b3f0b885d1700603867f6dfd7a341d590cd5eb615f495020972139d"
+        },
+        {
+          "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "sha256": "08ef2121e318bc0317f68e7f3e48dd59ff73ad5a2af364ddb1f72bd0807fa8ed",
+          "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime_dll_sha256": "4306dd1124c409bcd75bb6130bbdd44a8e866b3e9c2a5c2a6fa9f3fbae8e1e46"
+        },
+        {
+          "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg",
+          "sha256": "b46d8d5a46e4d19b1b09a5ac813422db256004bc89a29a70440cb83a1040768a",
+          "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.AmazonS3.dll",
+          "runtime_dll_sha256": "eaa7b41130da3595741bb5e6aad57638f3fbdf422dc3ec3768e63965d3233747"
+        }
+      ],
+      "actual_passed_modes": [
+        "key-boundaries",
+        "contract-boundaries",
+        "key-id",
+        "pre-auth",
+        "s3-prefix"
+      ]
+    },
+    {
+      "profile": "identity-sqlite",
+      "owned_files": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-sqlite/ContractRoundtrip.csproj",
+          "sha256": "f939406812458ec20d6292846ddd4e65411e42b54b5de0ea630fa65dc9edb71f",
+          "bytes": 554
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-sqlite/Program.cs",
+          "sha256": "70c766067c91f225d78383a79ccd0c93a8c11515e642e4e2663ed089eac1cfb8",
+          "bytes": 6409
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-sqlite/NuGet.config",
+          "sha256": "15b4f175aedf825240b410e9d8a4fb02166fe3d6f395f079b5b967f567db9427",
+          "bytes": 577
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-sqlite/packages.lock.json",
+          "sha256": "1a2dec7105411a38ea80a0832011021c565605bc77b14d3b505d7b5dd31a3189",
+          "bytes": 14025
+        }
+      ],
+      "fresh_binary_bindings": [
+        {
+          "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.1.0.0.nupkg",
+          "sha256": "2ab522d3fd50e19f3335297fa3db606ba930c8063bb91c3450cf9716f00fa4b8",
+          "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-sqlite/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "runtime_dll_sha256": "093a91303b3f0b885d1700603867f6dfd7a341d590cd5eb615f495020972139d"
+        },
+        {
+          "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "sha256": "08ef2121e318bc0317f68e7f3e48dd59ff73ad5a2af364ddb1f72bd0807fa8ed",
+          "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-sqlite/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime_dll_sha256": "4306dd1124c409bcd75bb6130bbdd44a8e866b3e9c2a5c2a6fa9f3fbae8e1e46"
+        },
+        {
+          "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-identity/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+          "sha256": "77edf5b845aac8cb83507f56ef917846d2ecbfd3e611def3d53891e07f8fbccc",
+          "runtime_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-sqlite/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "runtime_dll_sha256": "688c420f10c54deb79ce81fb0bdf42eee70c00863d79154dadc7f7123a78af30"
+        }
+      ],
+      "actual_passed_modes": [
+        "ascii",
+        "unicode",
+        "surrogate-pair",
+        "lone-high",
+        "lone-low"
+      ]
+    }
+  ],
+  "complete_unchanged_unit_owners": [
+    {
+      "owner": "abstraction",
+      "passed": 979,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": {
+        "phase": "package02-identity-abstraction-complete-owner",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--minimum-expected-tests",
+          "1",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exit_code": 0,
+        "started_utc": "2026-10-02T22:12:32.501954+00:00",
+        "completed_utc": "2026-10-02T22:12:36.066609+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-abstraction-complete-owner.log",
+        "log_sha256": "b061a82983083ded44051b912157cc86cabf3ce2d6a88955c94e5d0bb28c9dc8"
+      }
+    },
+    {
+      "owner": "core",
+      "passed": 7446,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": {
+        "phase": "package02-identity-core-complete-owner",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--minimum-expected-tests",
+          "1",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exit_code": 0,
+        "started_utc": "2026-10-02T22:13:29.175986+00:00",
+        "completed_utc": "2026-10-02T22:14:00.281856+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-core-complete-owner.log",
+        "log_sha256": "d98c6cab49dd65373f149880b2f27bf41f4f224b8cce8435cadda29b50f49354"
+      }
+    }
+  ],
+  "unchanged_owner_source_files": {
+    "Core": 766,
+    "Abstractions": 117
+  },
+  "mutation_controls": {
+    "valid_single_cause": 9,
+    "actual_native_killed": 9,
+    "excluded_compiler_attempt": 1,
+    "original_public_package_modes_red": 2,
+    "original_isolated_source_modes_red": 2,
+    "corrected_modes_green": 2,
+    "rollback_modes_green": 2,
+    "tracked_isolated_baseline_byte_equal": 6209,
+    "current_oracle_source_and_dll_still_match_receipt": true,
+    "historical_mutant_DLLs_attested_by_runner_receipts_not_retained_for_rehash": true
+  },
+  "verified_receipt_logs": 67,
+  "callpath_bindings": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Serialization/Encryption/AesGcmMessageDataEncryption.cs",
+      "sha256": "38665a9cdb418f2ec39431853b0815e55a50589e319573663da99c0f5de08359"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractAttribute.cs",
+      "sha256": "8398f1bcf8bee545d845d7141bcbab8704a17a6c8292dcb87915ab2299145167"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/MessageContractCatalogBuilder.cs",
+      "sha256": "6c2f205c1e0ead532602c223898b9a390878df6393dbf1fc65352602012fc993"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendAdmission.cs",
+      "sha256": "c16c5ed64e9ae5c0a9f197b81305ee8120acd77bea809d73083845137908b373"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ReliableMessaging/EntityFrameworkReliableStore.cs",
+      "sha256": "cdb343bd4fb52d5e75e55a5ceaeb3e09d15abe8ee804e82996fb38bd105822c2"
+    }
+  ],
+  "test_quality": [
+    {
+      "mode": "key-boundaries",
+      "categories": [
+        "equality",
+        "exception",
+        "negative",
+        "structural",
+        "state/side-effect",
+        "boundary"
+      ],
+      "strength": "8 actual encrypted Unicode roundtrips plus raw envelope UTF8 bytes and ordinal lookup; six malformed exact-type/param/cause checks; oversize, null/blank, AES sizes and caller-copy controls."
+    },
+    {
+      "mode": "contract-boundaries",
+      "categories": [
+        "equality",
+        "exception",
+        "negative",
+        "structural",
+        "state/side-effect",
+        "boundary"
+      ],
+      "strength": "8 positive route sets and six malformed route sets; constructor/Parse/TryParse(default output)/Attribute/public catalog; inclusive 256 UTF16 units and 65535 version."
+    },
+    {
+      "mode": "SQLite five modes",
+      "categories": [
+        "equality",
+        "negative",
+        "structural",
+        "state/side-effect"
+      ],
+      "strength": "Real relational admission, duplicate idempotency, count/byte accounting, claim and type resolution; two malformed modes reject with retained zero rows."
+    },
+    {
+      "mode": "pre-auth",
+      "categories": [
+        "exception",
+        "negative",
+        "state/side-effect"
+      ],
+      "strength": "Retained exact AuthenticationTagMismatch cause and manipulated lookup before auth, with no plaintext return; characterization only, untrusted identifiers remain provider responsibility."
+    }
+  ],
+  "assertion_free_or_trivial_only_reviewed_behavioral_modes": [],
+  "proof_limits": [
+    "This passes only the exact two validator repairs and associated frozen regression/evidence delta, not the whole API, whole canonical test-project quality, release, or a generic A+ grade.",
+    "No historical-data recovery is implemented or proved. Already replacement-corrupted key identifiers cannot be inverted; historical envelopes/SQLite rows require deliberate owner recovery or aliases.",
+    "The SQLite gate uses actual fresh databases/admission/claim, not restart, migration, background-delivery or historical-row recovery tests.",
+    "Nine selected native mutants establish their stated causes only; no repository-wide mutation score or unexecuted survivor claim.",
+    "The pre-auth provider lookup is explicitly untrusted and unchanged; characterization does not authenticate an identifier before lookup.",
+    "The frozen final runner is review-bound. It is not retroactively claimed to have been frozen before earlier executions."
+  ],
+  "compatibility": "Public signatures, valid identity values, inclusive bounds, AES sizes, defensive-copy ownership, canonical format and envelope version are retained. The intended behavior change rejects malformed UTF16 at constructor/bootstrap time. No new async lifecycle or cancellation boundary is introduced.",
+  "stale_freeze": false
+}

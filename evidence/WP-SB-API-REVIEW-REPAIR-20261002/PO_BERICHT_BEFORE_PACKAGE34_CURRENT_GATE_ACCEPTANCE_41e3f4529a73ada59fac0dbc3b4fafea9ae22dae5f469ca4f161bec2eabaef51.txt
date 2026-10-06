@@ -1,0 +1,13 @@
+ServiceBus – Bericht für den Product Owner
+Stand: 04.10.2026. Reparaturen und Abschlussreview laufen.
+
+- 42 bestätigte Fehler sind bearbeitet: 41 sind gezielt repariert und unabhängig adversarial geprüft. Bei einem Befund wurde das ursprüngliche Startprüfungsziel ausdrücklich durch eine dokumentierte Prüfung vor der ersten Batchaufnahme ersetzt.
+- Korrigiert sind unter anderem Abbruch und Aufräumen, Transaktionseigentum, Mehrbus-Endpunkte, Unicode-Prüfungen, Diagnose ohne Zugangsdaten und getrennte Dienstcontainer.
+- Die zuletzt behobene Outbox-Kombination verlor bei einem Sendefehler Nachrichten. Jetzt wird der tatsächliche Versand abgewartet, bevor die Nachricht als zugestellt vermerkt wird. Zwölf öffentliche Verhaltensfälle bestehen. Sechs gezielt wieder eingebaute Fehler werden erkannt; passende Kontrollfälle sowie der Korrektur- und Rückkehrlauf bestehen.
+- Die Prüfung schützt auch verschachtelte Nachrichtenpuffer, Zustellungsabbruch, Anfragekennung, Gültigkeitsdauer und das normale Puffern beziehungsweise Verwerfen. Die Grenzen zwischen dauerhaftem Datenbankspeicher und lokalem Prozessspeicher bleiben ausdrücklich beschrieben.
+- Für die übrigen Korrekturen liegen gezielte Gegenproben vor, darunter 159 öffentliche Filterfälle, 48 Send-/Publish-Fälle, 29 Datenbankmigrationstests und sechs Neustartabläufe über 14 getrennte Prozesse. Alle 448 Azure-Tests bestehen ohne übersprungene Tests.
+- Die Paketdokumentation ist ebenfalls korrigiert: 475 Send-/Publish-Verträge, 14 Outbox-Zusagen und zwei Saga-Zusagen sind geprüft.
+- Das aktuelle gemeinsame Paket-/API-Gate besteht: 31 frisch gebaute Pakete, 30 passende öffentliche Laufzeit-APIs, 18 kompilierte Nutzungsszenarien und vier ausgeführte getrennte Paketverbraucher. Die unabhängige Prüfung der gesicherten Pakete und tatsächlich geladenen Dateien wird abgeschlossen.
+- Noch offen ist der aktuelle Gesamttest. Dessen strenger Build meldet zwei veraltete statische Telemetrieaufrufe. Zusätzlich werden veraltete Erwartungen an rückwärts laufende UTC-Zeit und wiederholtes fehlerhaftes Aufräumen geprüft und fachlich korrigiert. Dafür wird der vollständige betroffene Testbestand gelesen; jede Änderung erhält einen adversarialen Reviewer.
+- Danach folgen der gemeinsame Testlauf und der Abschlussreview aller behobenen Fehler. Ein Gesamturteil A+ ist noch nicht vergeben.
+- Es wurde keine Produktionsdatenbank und kein bestehender Broker verändert.

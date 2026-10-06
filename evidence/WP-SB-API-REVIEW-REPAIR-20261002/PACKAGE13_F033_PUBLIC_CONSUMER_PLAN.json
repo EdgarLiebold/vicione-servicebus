@@ -1,0 +1,28 @@
+{
+  "entry_skill": "Microsoft code-testing-agent previously invoked FULL; bounded public owner Research->Plan->Implement",
+  "Root_personally_FULL_preimplementation": "11 Core owner/cleanup/error routing +7 public observers/sibling factories/context SPI + historical actual public console9463B; new test owner separate from canonicalCore766",
+  "historical_oracle": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/reproductions/consumer-scope-fault-preservation/Program.cs",
+    "sha256": "c4055e5179a2e928c9860e6343fa490921c4df28862eb4e93a65a368257a6920",
+    "use": "navigation only; replace nested finally preserving both body/harness failures, replace immediate async completion with gated genuine await; no historical package/native grade transfer"
+  },
+  "new_owner": "package13-f033/{previous,corrected}: csproj,Program,ConsumerCases,Probe,OwnedLifetime,NuGet.Config,lock",
+  "modes": [
+    "success-default",
+    "operation-only-default",
+    "cleanup-only-default",
+    "dual-default",
+    "dependency-cancel-only-default",
+    "dependency-cancel-dual-default",
+    "async-dual-default",
+    "success-typed",
+    "dual-typed",
+    "async-dual-typed"
+  ],
+  "actual_routes": "ordinary AddViciOneServiceBus/AddConsumer/UsingInMemory/ConfigureEndpoints real two sequential message deliveries + exact IConsumeObserver exception refs; no private Reflection/IVT",
+  "assertions": "exact P/C direct ordered aggregate2; sole P/C ref, ConsumerCanceled wrapper exact independentOCE/token; awaited body gate alive + actual genuine async cleanup gate count1/sync0 + exact second delivery success and terminal/draincounts; consumer actual DI-disposeinvocations once",
+  "explicit_scope": "Core transferred scope arbitration; SignalR sameFinding exposure pending; no acquisition-fault/borrowed-scope or wholeCoreOwner claim in this bounded10",
+  "previous_feed": "immutable package12-shared-graph/corrected (F033 original)",
+  "corrected_feed": "new package13-f033/corrected (F033fixed)",
+  "cleanup": "release all body/async disposal gates first; stop actual started bus, disconnect observer, providerDispose,restoreLogContext; attemptall with primary preservation; deadlines not PASS"
+}

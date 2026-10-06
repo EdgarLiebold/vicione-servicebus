@@ -1,0 +1,106 @@
+{
+  "utc": "2026-10-04T19:10:44.002416+00:00",
+  "decision": "ROOT_APPLY_XML16_AND_FSQ5_AFTER_INDEPENDENT_SOURCE_NO_BLOCK",
+  "finding": "F-SB-API-114",
+  "root_personal_source_review": "Root full XML14 proposal/deltas and four actual caller owners read in prior checkpoint; this turn two entire added XML16 summary deltas, complete two FSQ proposed test owners, author/independent reports read. No transfer of peer whole-owner credit.",
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IConsumeObserver.cs",
+      "before_sha256": "4ba5645146700dac63d55721a2144c7faa294e35e78addef7a47df24385f7dd9",
+      "after_sha256": "fde5f382c665c6c7b00ce5632f21bf59b7f7d09bf9267149cc993ed26da18f55"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "before_sha256": "104f0f39990ca08711f53c1c6f14070f9f56e0c710db9c9fbcbe03d3a9d4a176",
+      "after_sha256": "8baa1467502a5ded572532e27fe38feedd7e4647f1003d71d442185d4091b4aa"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "before_sha256": "6209ef0b4b8f35f29c4f6944a11707505e52c6dcd37d7c43d5324890a2e18fdd",
+      "after_sha256": "16c61f6aa3fa5a9e47fa6208734a3ea9d9a8ad34f5a805e98a648c7bb0846ee6"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IConsumeMessageObserver.cs",
+      "before_sha256": "09a29bcc1bf31e6adbbc7fe145fc94b18660a8a57a8d28a549a89883578f3228",
+      "after_sha256": "96e148d58bd7657ab09ec747f6943824c844669ed2b7e6671df040043bac252a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureSubscriberFanoutContractTests.cs",
+      "before_sha256": null,
+      "after_sha256": "4eb416593ca98b302ab029b604bf4d8890416825aecd784e574be2f68461ad24"
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/ReliableQuartzBorrowedFactoryContractTests.cs",
+      "before_sha256": null,
+      "after_sha256": "acb21f8f5cf564a010ea10cc48c5a6b7868c8c92328b08d2dd826c81e52bd212"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "a846b05734137757cfc0b5a997a8d6056dadf1a1134d524afdbfc019c0cec631",
+      "after_sha256": "67e799e0ae076fb4c56c5d620a3b359492ca42c8d43edbd1caa4931c78d5077b"
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/QuartzIntegrationRequirements.json",
+      "before_sha256": "eb520ca32b6678a66cb400c01c592dbe3c893093e3c616b62c28f263db7160fc",
+      "after_sha256": "2d808d8f65d3d0dec5b90e0af22ed4f1a6c260a10330205584a123b011d95046"
+    }
+  ],
+  "requirements_add_only": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_count": 4588,
+      "after_count": 4589,
+      "add": [
+        {
+          "requirementId": "REQ-VSB-FUTURE-SUBSCRIPTIONS",
+          "variantKey": "all-started-subscriber-sends-join-after-independent-failure",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Futures.FutureSubscriberFanoutContractTests",
+          "testMethod": "SubscriberFanout_JoinsBothSendsAndPreservesResultOrFailureIdentityAsync"
+        }
+      ]
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/QuartzIntegrationRequirements.json",
+      "before_count": 178,
+      "after_count": 179,
+      "add": [
+        {
+          "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API",
+          "variantKey": "explicit-reliable-factory-delivers-command-and-remains-caller-owned",
+          "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+          "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.ReliableQuartzBorrowedFactoryContractTests",
+          "testMethod": "ExplicitReliableFactory_CreatesTheTriggerAndSurvivesBusAndProviderDisposalAsync"
+        }
+      ]
+    }
+  ],
+  "adversarial": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package104-fsq5-independent-source-r1/REPORT.json",
+      "sha256": "200c784936e8c5a541f75dd80a252840fb2d1594135acdc270b27f1602b26145"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package112-xml16-two-added-nodes-independent-source-r1/REPORT.json",
+      "sha256": "5cce92ace72dc5bc6648e81ae815e230a8ee02365f9e5dafb986f26242e2c3fe"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package112-xml14-independent-scanner-r1/REPORT.json",
+      "sha256": "f2070d6cfbd77aa5000d028ac7a8ce291fc6eb2d093b4b48a7294746efc544a9"
+    }
+  ],
+  "preceding_runtime_freezes": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package118-sqlserver-fixed24-independent-r1/FREEZE.json",
+      "sha256": "c5bfb0f4e52729213ad53175f77e3d72ee5dc5f276621120070d07a8704bbbae"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package119-postgresql-r3-fixed28-independent-r1/FREEZE.json",
+      "sha256": "8536ea3aa54809242e890abdb2608a165cfdb21d65f22d400191f81235ca6641"
+    }
+  ],
+  "native_pending_cases": 5,
+  "emitted_xml16_and_fresh_package_pending": true,
+  "future_machine_R2_applied": false,
+  "whole_api_status": "PARTIAL"
+}

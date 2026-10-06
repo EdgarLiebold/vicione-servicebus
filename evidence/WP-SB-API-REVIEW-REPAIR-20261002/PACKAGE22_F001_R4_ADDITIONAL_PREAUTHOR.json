@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-03T12:48:18.472869+00:00",
+  "root_personally_full_inputs": [
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/RelativeMessageSchedulerContextExtensions.cs",
+      "sha256": "c5fedd504c1e1918038a1da0411a0083738234c7456a821ac53abddb377c1fb1",
+      "bytes": 12715
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedRelativeMessageSchedulerExtensions.cs",
+      "sha256": "7dcb23f11caee6f57a1d0f5087c7e5f758372848dece8edfc33834a30b68e3e6",
+      "bytes": 22264
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedMessageSchedulerExtensions.cs",
+      "sha256": "dfa8b69e82610ba2709796e36d67a1db15ca2492299c787e07f3150afa045700",
+      "bytes": 16198
+    }
+  ],
+  "scope": "F001 XML-only actual delegating convenience wrappers; Root FULL allthree actualbodies; 39 accepted/canceled returns contrary to underlying configured operation boundaries."
+}

@@ -1,0 +1,47 @@
+{
+  "utc": "2026-10-05T23:58:51.873185+00:00",
+  "status": "INDIVIDUAL_EF_SOURCE178_ROOT_ACCEPTED_EXACT18_HELD_WHOLE_API_OPEN",
+  "basis": "Root personalwhole29/1690+8/525, manually196norms and mandatory11precision+3currentDocrebases. Independent Runtime own29/1690+8/525+inherited6 and all196/manual11+3 individually, actual selected37PDBchecksums/188XMLstructural+8exactabsences. Wholepeerreport8084ba. BothSourceXMLchanges independentlyreviewed andactualpublicationRoot271closed.",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package266-ef196-current267-final-individual-root-author-r1/REPORT.json",
+    "sha256": "341b9801af26db6a9c4538d65253ff2af3d1b335a1146ebd938814d0ae8ef3e8"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package266-ef196-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "986f43cbecb118c25abeac912be3f707dc98ae172d114f5325b263d933876968"
+  },
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package266-ef196-current267-final-individual-root-author-r1/PER_ID196_CONTRACT_MATRIX.json",
+    "sha256": "5eb892147c0da5147f430df659bea51ef1df835c9fc27a0549f099887505877d"
+  },
+  "XML_representation": "Mandatory peer erratum: historical author field actual_current_XML_raw contains ElementTree serialization, not raw byte-window. Current Master uses explicit serialized-node label. Meaningful attributes/text/children/tails preserved; actual wholeXML279 two-summary byteinverse separately exact.",
+  "held_ordinals": [
+    17,
+    18,
+    19,
+    20,
+    25,
+    26,
+    30,
+    34,
+    54,
+    56,
+    57,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66
+  ],
+  "held_count": 18,
+  "before_master_sha256": "7be79dffcc271d714fd53b1be495e987255efc1ab73e2d4f8e2cc023fec1101e",
+  "before_count": 18212,
+  "appended_source_rows": 178,
+  "expected_after_count": 18390,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "Product_Test_Req_SDK_changes": false
+}

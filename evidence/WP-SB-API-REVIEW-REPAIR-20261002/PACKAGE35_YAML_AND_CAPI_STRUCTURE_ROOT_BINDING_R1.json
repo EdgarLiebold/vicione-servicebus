@@ -1,0 +1,27 @@
+{
+  "status": "YAML_COMPLETE_GRAMMAR_DUPLICATE_KEYS_CHECK_AND_CAPI_RSA_PRIVATE_KEY_STRUCTURE_PASS",
+  "utc": "2026-10-04T00:35:51.795307+00:00",
+  "yaml": {
+    "relative": ".github/workflows/native-tests.yml",
+    "bytes": 9790,
+    "sha256": "2cd77f10f95e87fea7c5bbefcae9908adadb5dd27f7add3e289898100a10406d",
+    "PyYamlVersion": "6.0.3",
+    "parser": "BaseLoader complete compose + every map scalar key uniqueness",
+    "counts": {
+      "mapping": 70,
+      "sequence": 9,
+      "scalar": 277
+    },
+    "github_runtime_or_workflow_execution_credit": false
+  },
+  "capi_key": {
+    "relative": "ViciOne.ServiceBus.snk",
+    "bytes": 596,
+    "sha256": "d8556825164fad48714aa53b243a704787add3646fcaef42c1740eba37e9f303",
+    "RSA_bits": 1024,
+    "complete_header_length_and_RSA_CRT_equations": true,
+    "private_key_material_not_printed": true
+  },
+  "configs_and_markdown_need_actual_semantic_read": true,
+  "whole_owner_read_credit": false
+}

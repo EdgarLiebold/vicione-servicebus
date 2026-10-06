@@ -1,0 +1,84 @@
+{
+  "utc": "2026-10-03T02:49:56.992520+00:00",
+  "root_full_read_current_owned_before_edit": true,
+  "changes": [
+    "Explicit Assert.False(callerActivity.IsStopped) before/after provider disposal",
+    "Actual consume callback count exactly one after successful bus+hosted stop",
+    "Accurate ActivityOwnership namespace and CLI usage"
+  ],
+  "reason": "Strengthen caller ownership and actual delivery-count controls before final freeze",
+  "prior_inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/ActivityAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/previous-ActivityAssertions.cs.txt",
+      "sha256": "0b02ad5967b0c70eedbb91a0b7006474482ec65504ee51dce48ac50041eeeda6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/ActivityOwnership.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/previous-ActivityOwnership.PublicConsumer.csproj.txt",
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/previous-NuGet.Config.txt",
+      "sha256": "d2c15752a15904c29d15c84eecb6592f6194c31a4281de551a647377c4433ead"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/previous-OwnedLifetime.cs.txt",
+      "sha256": "cd94fc8c143a9ce057002fda15e29ac76c684f2845dc264ad0dfe3a031a0ae6b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/previous-Program.cs.txt",
+      "sha256": "9305e567db45e3c15ed14949ba0e7fda4a2fc2030fe85fe4b59d3428b1102e95"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/StoreObservation.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/previous-StoreObservation.cs.txt",
+      "sha256": "c3afd30f5adb9b3df64e2581c6cff42c52625465203df4bcfad94fba58e4e60c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/previous-packages.lock.json.txt",
+      "sha256": "1da302e7f1cac1be5d98036df79212b1f4df541db9bd2f490ae5b9d4b6df3b69"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/corrected-ActivityAssertions.cs.txt",
+      "sha256": "0b02ad5967b0c70eedbb91a0b7006474482ec65504ee51dce48ac50041eeeda6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityOwnership.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/corrected-ActivityOwnership.PublicConsumer.csproj.txt",
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/corrected-NuGet.Config.txt",
+      "sha256": "cf0156fde59a1df2f8a3cf20cbaa7dabebd97c05e9132f397a37767f7bcc2b6c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/corrected-OwnedLifetime.cs.txt",
+      "sha256": "cd94fc8c143a9ce057002fda15e29ac76c684f2845dc264ad0dfe3a031a0ae6b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/corrected-Program.cs.txt",
+      "sha256": "9305e567db45e3c15ed14949ba0e7fda4a2fc2030fe85fe4b59d3428b1102e95"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/StoreObservation.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/corrected-StoreObservation.cs.txt",
+      "sha256": "c3afd30f5adb9b3df64e2581c6cff42c52625465203df4bcfad94fba58e4e60c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-oracle-r1/corrected-packages.lock.json.txt",
+      "sha256": "b783c9752438cbb0dc18cece099e4a1c2d41ebcce9e6bcd8e8c5570dcedf3ff4"
+    }
+  ],
+  "prior_native_evidence": "Valid historical first oracle; superseded by fresh r2 ten-case baselines and compiled mutants",
+  "guard_limits": "No guard/timeout path is a pass. General cancellation of noncooperative tasks is outside the demonstrated successful lifecycle scope."
+}

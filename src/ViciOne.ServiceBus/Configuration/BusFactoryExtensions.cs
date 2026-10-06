@@ -70,8 +70,15 @@ public static class BusFactoryExtensions
             }
             catch (Exception observerException)
             {
-                LogContext.Warning?.Log(observerException,
-                    "Bus creation-fault observation failed without replacing the construction failure");
+                try
+                {
+                    LogContext.Warning?.Log(observerException,
+                        "Bus creation-fault observation failed without replacing the construction failure");
+                }
+                catch
+                {
+                    // Diagnostic logging must not replace the original failure.
+                }
             }
 
             throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Bus Factory Extensions", "unknown", "An exception occurred during bus creation", "Correct the named configuration before starting the host"), ex);

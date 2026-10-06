@@ -1,0 +1,92 @@
+{
+  "utc": "2026-10-05T23:53:53.819471+00:00",
+  "status": "INDEPENDENT_SOURCE_REVIEWED_ORIGINAL_TEST2_APPLIED_NATIVE_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package264-sqs-public-purge-original2-oracles-proposed-r1/REPORT.json",
+    "sha256": "551804a93d99966172158706d9952b6b87bc198d5de88a66c5840831079cba55"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package264-sqs-purge2-independent-source-peer-r1/REPORT.json",
+    "sha256": "c54a7f9a3b23424c9ef95b367cff889c7ba78aff985bd777666f6de21b84bd3e"
+  },
+  "test_source": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsStartupPurgeDiagnosticsTests.cs",
+    "sha256": "e4f42543104326f6fdb59bf5aaf6c48f1f44b7d9266bb5790a3e7c9a5a0af974",
+    "whole_root214_read": "74788f"
+  },
+  "requirements": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+    "before_sha256": "5e2935b6ce5bb5b5908b19f55b85334fbc3e6b9c4390a90927a745c5a38e530a",
+    "after_sha256": "3b6e00d25239c9cebfa0c3aa4e17b1b7f6f3b2c854c0a433659a6f912da38ed9",
+    "add_only": 1,
+    "prefix186_exact_preserved": true
+  },
+  "Root_skills_whole_current": "code-testing-agent aecda3, generation ddadc4, dotnet extension cd1b99; run-tests retained whole prior plus current recovered31adb3; exactSDK10MTP style",
+  "Root_production_whole": "actualPurgeFilter35133b and actualClientContext78a10a; adjacent LifecyclePurge first test conventions only, no whole461 claim from truncatedcd9bea",
+  "source_guards": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/PurgeOnStartupFilter.cs",
+      "actual_current_sha256": "4ac90e2a8347ac3a2ffdaed5ddd6c513bf95adbc1d04e7317a1c7a6cbb90c076",
+      "research_snapshot_sha256": "4ac90e2a8347ac3a2ffdaed5ddd6c513bf95adbc1d04e7317a1c7a6cbb90c076",
+      "equal": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsClientContext.cs",
+      "actual_current_sha256": "0415590c0183290583dda76f844a5285cdd4f6994defd80a1ab531d158fddb15",
+      "research_snapshot_sha256": "0415590c0183290583dda76f844a5285cdd4f6994defd80a1ab531d158fddb15",
+      "equal": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueInfo.cs",
+      "actual_current_sha256": "3ea57707ac22b6755e42f69b7148b761abc67249484a87a4febf9db046934a81",
+      "research_snapshot_sha256": "3ea57707ac22b6755e42f69b7148b761abc67249484a87a4febf9db046934a81",
+      "equal": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+      "actual_current_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+      "research_snapshot_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+      "equal": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Logging/EnabledLogger.cs",
+      "actual_current_sha256": "ef5aa89d3cf563ec3af0cb6ac5e36cc6371afc8ccf85a57eb92589f69344ef17",
+      "research_snapshot_sha256": "ef5aa89d3cf563ec3af0cb6ac5e36cc6371afc8ccf85a57eb92589f69344ef17",
+      "equal": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Middleware/ScopePipeContext.cs",
+      "actual_current_sha256": "4432944f0e99e03e4f90806ca193c54e222723da3b33f0d438e13b0b8c83fcdd",
+      "research_snapshot_sha256": "4432944f0e99e03e4f90806ca193c54e222723da3b33f0d438e13b0b8c83fcdd",
+      "equal": true
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/TestDoubles/InterfaceProxy.cs",
+      "actual_current_sha256": "55a842f6dddc1ba37756a23f01159dc4adb64cf4a686cae6565e7ab8b44677d7",
+      "research_snapshot_sha256": "55a842f6dddc1ba37756a23f01159dc4adb64cf4a686cae6565e7ab8b44677d7",
+      "equal": true
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsLifecycleBoundaryTests.cs",
+      "actual_current_sha256": "ab7ef817a32bd235a6b755ed7f260cf6f04a2729f22d19eb314828dab45711ee",
+      "research_snapshot_sha256": "ab7ef817a32bd235a6b755ed7f260cf6f04a2729f22d19eb314828dab45711ee",
+      "equal": true
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "actual_current_sha256": "1fa6b10f5273864ee89a9059b9eb6d7d37762a86137744a82ac364dae3241b84",
+      "research_snapshot_sha256": "1fa6b10f5273864ee89a9059b9eb6d7d37762a86137744a82ac364dae3241b84",
+      "equal": true
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "actual_current_sha256": "5e2935b6ce5bb5b5908b19f55b85334fbc3e6b9c4390a90927a745c5a38e530a",
+      "research_snapshot_sha256": "5e2935b6ce5bb5b5908b19f55b85334fbc3e6b9c4390a90927a745c5a38e530a",
+      "equal": true
+    }
+  ],
+  "Product_changes": false,
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

@@ -98,6 +98,14 @@ internal sealed class SqlServerTransportConnection :
 
         if (!string.IsNullOrWhiteSpace(options.Host))
             builder.DataSource = FormatDataSource(options.Host, options.Port);
+        else if (options.Port.HasValue && !string.IsNullOrWhiteSpace(builder.DataSource))
+        {
+            string host = builder.DataSource;
+            int separator = host.LastIndexOf(',');
+            if (separator >= 0)
+                host = host[..separator];
+            builder.DataSource = FormatDataSource(host, options.Port);
+        }
 
         if (!string.IsNullOrWhiteSpace(options.Database))
             builder.InitialCatalog = options.Database;

@@ -1,0 +1,101 @@
+{
+  "role": "adversarial_package_01",
+  "independent_of_patch_author": true,
+  "scope": [
+    "F-SB-API-036",
+    "F-SB-API-037"
+  ],
+  "status": "ACCEPT_SCOPED_INTERNAL_REVIEW_NO_NEW_BLOCKERS",
+  "freeze_sha256": "0f52f76e6882ca9fff256b4aeca5f965727aea68402c30a90e3e292526955025",
+  "frozen_deltas_reviewed": 6,
+  "blocking_findings": [],
+  "test_anti_patterns": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "test_methods_reviewed": 4,
+    "cases_reviewed": 6
+  },
+  "actual_native_mutants_verified_from_receipts_logs_and_source_hashes": 4,
+  "actual_counter_mutants": 2,
+  "controls": {
+    "isolated_receipts": 10,
+    "original_targeted_cases": 5,
+    "corrected_targeted_cases": 5,
+    "rollback_targeted_cases": 5,
+    "all_receipt_logs_full_read": 19,
+    "all_receipts_exact_unique_ledger_matches": true
+  },
+  "full_owner_receipt": {
+    "total": 430,
+    "passed": 429,
+    "failed": 1,
+    "skipped": 0,
+    "exit_code": 2,
+    "failure": "F-SB-API-038; retained Assert.Equal 2/1 at fixture line131"
+  },
+  "rollback": {
+    "original_tracked_files_independently_hash_verified": 6209,
+    "mismatches": 0,
+    "new_fixture_removed": true,
+    "scope": "tracked source only"
+  },
+  "static_adjacent_controls_unexecuted_not_blockers": [
+    "default formatter change after one cached message type, then new type creation",
+    "named and typed subscription with both optional Rule/Filter absent"
+  ],
+  "reviewer_native_execution": false,
+  "reviewer_product_writes": false,
+  "reviewer_evidence_writes": "package09-azure-adversarial only",
+  "not_closed": [
+    "F-SB-API-038",
+    "whole owner pass",
+    "fresh NuGet consumer proof",
+    "final integrated profiles",
+    "whole API review"
+  ],
+  "files_at_review_end": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SessionIdSendTopologyConvention.cs",
+      "sha256": "d91a49c54b4134418fa566944c8625375cfbdae34433402fe85ab509092d4614",
+      "matches_freeze": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/Topology/SubscriptionConsumeTopologySpecification.cs",
+      "sha256": "226adc09363b07341bbaaf76a435f4a761afb3f0280e707e6996bb4f7230b092",
+      "matches_freeze": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusFamilyRegressionTests.cs",
+      "sha256": "fc71620d49be733688a2f4854b76ba69445c03effbeba7e1cee7807775815a60",
+      "matches_freeze": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "sha256": "a1ba8b05aa90849904a44572152e0489555591dcb5a448e3fb558f35ceb6ecc0",
+      "matches_freeze": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "sha256": "d79cef7bb2bf0ea8bf1cfb5aa98f39e95ee891019233f4500bab2da689199e43",
+      "matches_freeze": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package09_azure_mutations.py",
+      "sha256": "7e170660e8ead9fbaecb715f6eb849aa7e4409a66fe3559ea68be00ea5baeb4c",
+      "matches_freeze": true
+    }
+  ],
+  "freeze_bytes_current_at_review_end": true,
+  "artifacts": [
+    {
+      "path": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-adversarial/READ_MANIFEST.json",
+      "sha256": "21a14e9e2e7456ac753a18936fa48f4149608d696249072601599c596f8590c7"
+    },
+    {
+      "path": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure-adversarial/REVIEW.md",
+      "sha256": "f072cdc9d6bcaa7e5479a68cff0a5cdd59418b7754d596ed95a70c84f7021632"
+    }
+  ]
+}

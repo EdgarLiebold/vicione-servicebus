@@ -1,0 +1,54 @@
+{
+  "status": "IMMUTABLE_SCOPED_F033_SIGNALR_ADVERSARIAL_FINAL",
+  "read_by": "azure_test_scope",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_FREEZE.json",
+    "sha256": "23a798b6c06e282f661e13f005bacd71b8cd67d33b8cac39600aaf09f050e4d2",
+    "bytes": 27248
+  },
+  "artifacts": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-adversarial/REVIEW.txt",
+      "sha256": "713e1d7c4c0e5d587a34c8938e5168ed5b454220745ea5fdc8012df01d2a7a4b",
+      "bytes": 2624
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-adversarial/REVIEW.json",
+      "sha256": "1276d8c8ef2488c9b8845d2e39451bea846be740729dbb193e4b67dd2792be80",
+      "bytes": 33601
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-adversarial/READ_CLOSURE.json",
+      "sha256": "3bd5d279b4533465637c8ffe52ab8f815df866eae11c84ff032044359c255904",
+      "bytes": 233857
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-adversarial/BINDING_PROOF.json",
+      "sha256": "e7069923df6348540f3d9e1b3257351860a7e199a5fd4c781121e162ade63443",
+      "bytes": 193483
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-adversarial/verify_bindings.py",
+      "sha256": "32bf647b43df454255408760595018306a133d31a4e74d51f10247ea51188102",
+      "bytes": 12107
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-adversarial/PUBLIC_OWNER_CHECKPOINT001.json",
+      "sha256": "c032238e034604eab3256e45a5a02371a042cbd2b7422c21779c023e885050e9",
+      "bytes": 10321
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-adversarial/ACTUAL_LOGS_CHECKPOINT001.json",
+      "sha256": "75af932255dba505fe405cf6d2efffc238708a4cd03e37ee170fe0c69afc1bdf",
+      "bytes": 8242
+    }
+  ],
+  "limits": [
+    "Bounded public NuGet console with one normal InMemory bus and controlled public SPI collaborators; actual SignalR serialization/client delivery and normal remote-group request/ack control. No HTTP/TCP/cross-node deployment guarantee.",
+    "No universal completion for throwing enumerable/custom synchronous fanout SPI: separate candidate SIGNALR-FANOUT-SYNC-001 UNVERIFIED remains open.",
+    "No whole Core766 canonical test-owner reading, whole SignalR canonical suite, whole API/A+ grade, ARM/heap/cloud benchmark or CLOSED symbol.",
+    "The exact Microsoft framework runtime was10.0.10 X64; Core nuspec10.0.12 dependencies unchanged and SDK pruned. No assumed Microsoft NuGet10.0.12 runtime.",
+    "SignalR mutation runtime uses strictly compiled DLL substitutions with embedded PDB; no individual mutant NuGet-pack claim.",
+    "DI scope release may itself contain complex cleanup; F033 guarantees caught selected primary/request/scope failures, not universal best-effort disposal of unknown DI objects."
+  ]
+}

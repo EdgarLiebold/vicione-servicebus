@@ -5,6 +5,9 @@ namespace ViciOne.ServiceBus.Futures;
 /// <summary>Coordinates a durable request and response exchange with a companion consumer endpoint.</summary>
 /// <typeparam name="TRequest">The command and companion-consumer request contract.</typeparam>
 /// <typeparam name="TResponse">The successful future result contract.</typeparam>
+/// <remarks>The default request factory initializes a new <typeparamref name="TRequest"/> from the incoming command.
+/// Interface contracts use a generated implementation. A concrete request class must have a public parameterless
+/// constructor for this initializer.</remarks>
 public class RequestConsumerFuture<TRequest, TResponse> :
     Future<TRequest, TResponse>
     where TRequest : class
@@ -22,7 +25,7 @@ public class RequestConsumerFuture<TRequest, TResponse> :
                 nameof(definition));
         }
 
-        SendRequest<TRequest>(x => x.RequestAddress = settings.RequestAddress)
+        SendRequest<TRequest>(x => x.SetRequestAddressProvider(_ => settings.RequestAddress))
             .OnResponseReceived<TResponse>(x => x.SetResultFromInput());
     }
 }

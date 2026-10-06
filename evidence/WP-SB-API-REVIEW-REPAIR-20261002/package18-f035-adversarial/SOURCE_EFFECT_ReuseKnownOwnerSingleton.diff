@@ -1,0 +1,11 @@
+--- frozen-corrected-Registrar
++++ ReuseKnownOwnerSingleton
+@@ -389,7 +389,7 @@
+     {
+         EnsureConcreteDefinition<TDefinition>();
+ 
+-        Collection.TryAddTransient<DefinitionOwner<TDefinition>>(provider =>
++        Collection.TryAddSingleton<DefinitionOwner<TDefinition>>(provider =>
+         {
+             // Allocate the capability-correct owner before activation, then let DI capture it
+             // after the successfully created definition and its constructor dependencies.

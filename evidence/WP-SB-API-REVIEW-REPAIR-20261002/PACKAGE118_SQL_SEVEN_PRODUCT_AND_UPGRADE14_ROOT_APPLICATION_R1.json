@@ -1,0 +1,93 @@
+{
+  "utc": "2026-10-04T18:53:14.880590+00:00",
+  "decision": "ROOT_APPLY_SQL_SEVEN_CAUSAL_REPAIRS_AFTER_ADVERSARIAL_R2_NO_BLOCK",
+  "findings": [
+    "F-SB-API-106",
+    "F-SB-API-107",
+    "F-SB-API-108",
+    "F-SB-API-109",
+    "F-SB-API-110",
+    "F-SB-API-111",
+    "F-SB-API-112"
+  ],
+  "research_plan": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package113-sql-seven-product-proposed-r2/REPAIR_PLAN.json",
+    "sha256": "876596647fdf8b40f63cf779a2a7c1ce805d0d059dc10fab6de6620cb5c22bfe"
+  },
+  "author_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package113-sql-seven-product-proposed-r2/REPORT.json",
+    "sha256": "43d62b56195c9c52ef02b34b2834f29a2c94eedb6a05314ff1a90fc45ec1dd74"
+  },
+  "author_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package113-sql-seven-product-proposed-r2/MANIFEST.json",
+    "sha256": "67e727a12bd4f10d24cd763464605be983588d4ac6ef9224535b47dda877e7ac"
+  },
+  "adversarial": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package113-sql-seven-product-independent-source-r2/REPORT.json",
+    "sha256": "d54e058f6a5fb87c3301cca1a075581a1faad40931eb5811b2b355454ce9ca9e"
+  },
+  "root_reads": [
+    "da4784 complete originalSQL38 independent qualification and seven repairs researchplan",
+    "47752e whole MSSQL twoProductdeltas",
+    "109284 PGinitial180delta and PGCliententire one-line delta",
+    "e0ff0f PGfinal240delta includingACL/defaults/transaction, overlaps109284 and087337 initialretainedchunk",
+    "6d8708 complete R2 report and both entire test-addition deltas",
+    "205116 complete R2 independent SourceNoBlock report",
+    "bc98fa actualPGRolecreation owner context;dc795d actualwhole136fixture source"
+  ],
+  "files": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Database/PostgreSqlDatabaseMigrator.cs",
+      "before_sha256": "048bc2bd1090bec0670bfa639f599254f6cb085882ab68814ea7e40744de3d8f",
+      "after_sha256": "ee5a5e0bef0a77d46480e440cefee9e8d156b96719f58ecaa4903a57963f93fd",
+      "bytes": 81267
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Runtime/PostgreSqlClientContext.cs",
+      "before_sha256": "bd5277c68d2aaf16309e3f8e5e6321168dfa9dcf895acc837496068003f840ab",
+      "after_sha256": "548d38438422ff2cc3416407d6de4d7837553a8451914b98b06f45c9df8df738",
+      "bytes": 28190
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Database/SqlServerDatabaseMigrator.cs",
+      "before_sha256": "dd8a3ee483ed9b41ae5582fa7ce35548ccf0460a3232b7160b460690aadf16bb",
+      "after_sha256": "c5e744f203e1e629b6d15a3b322a2b9cc808062c5ff9f28772c6523cdd9624a5",
+      "bytes": 77943
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Runtime/SqlServerClientContext.cs",
+      "before_sha256": "2ae1b15691ca6af152c2546f914b97b14ba9ed6d83f9589fbe6fd0596ade8d76",
+      "after_sha256": "9681a3c651cc8ff6f3f87847a1d12360ce6f186dc5439f98e0b006fdb299b467",
+      "bytes": 24833
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlDatabaseBoundaryContractTests.cs",
+      "before_sha256": "2e9ca4123448dced865c6fa0202d5b3f2781cb6c6ef8852acc73e946f4ac978d",
+      "after_sha256": "8a0d6ac38885c7ac2c7fc6dfb604df3000baf3f30b989be2ab8a97388ab018c1",
+      "bytes": 36197
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Requirements/PostgreSqlTransportRequirements.json",
+      "before_sha256": "39d507c9b974311be9adbb83c9e0fe2646fbf7ed52d63d7045940e49641fe850",
+      "after_sha256": "62fdf7d97fa000dedf05ee48a96413e4b44bf89fa2f6a6bf53a170fb666a7058",
+      "bytes": 28154
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Requirements/SqlServerTransportRequirements.json",
+      "before_sha256": "df41798b87a69de212bf2e9670aa15e6abe7f13939b6850b5c5fee77ba4d8d60",
+      "after_sha256": "bd535c136200ec3e240650a9bc373bc3a1c1f2d15dc0ef3bda51c9b9f80c1bb4",
+      "bytes": 23268
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerDatabaseBoundaryContractTests.cs",
+      "before_sha256": "e3d241c578215793441ffe7ceac959aab9098f55062084e6f68d8e5e37b7f177",
+      "after_sha256": "a98535fa56442637d400aa693b8489de8562a171d0176f4458ea4a8fb4464925",
+      "bytes": 22077
+    }
+  ],
+  "additional_cases": 14,
+  "original_cases": 38,
+  "expected_cases": 52,
+  "new_native_build_pack_pending": true,
+  "whole_api_grade": "PARTIAL"
+}

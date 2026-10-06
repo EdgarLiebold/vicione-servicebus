@@ -1,0 +1,172 @@
+{
+  "role": "Internal independent readonly adversarial reviewer; no product role",
+  "scope": "Separate F030 diagnostic owner plumbing research, not patch acceptance or native validation",
+  "original_sources": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKindEndpointContext.cs",
+      "bytes": 1088,
+      "sha256": "6a0e6e67ed13ed4f7ce4aa56fc78de2606bf1fb34add4b4b9ae6360b0bb18913",
+      "original_path": "src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKindEndpointContext.cs",
+      "read_status": "FULL",
+      "input_manifest_match": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKindContext.cs",
+      "bytes": 921,
+      "sha256": "692a19b3b52e86f67b085f3f356b27375ab7a39f032bde967b79a062f194a065",
+      "original_path": "src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKindContext.cs",
+      "read_status": "FULL",
+      "input_manifest_match": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "bytes": 463,
+      "sha256": "7fa0fd503d34bf8b31fa89d44af32b8a0f5397ff270a3576e0d1b5a1736e5775",
+      "original_path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "read_status": "FULL",
+      "input_manifest_match": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ConfigurationMessages.cs",
+      "bytes": 2491,
+      "sha256": "a065264bf22b087fcb671d1165334f4f504b97109a379bf7c02bcc6966a01f31",
+      "original_path": "src/ViciOne.ServiceBus.Abstractions/Configuration/ConfigurationMessages.cs",
+      "read_status": "FULL",
+      "input_manifest_match": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerKind.cs",
+      "bytes": 4961,
+      "sha256": "a380102810512390083e300911f516317acd6507337157ec2a5547da62fe6bf2",
+      "original_path": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerKind.cs",
+      "read_status": "FULL",
+      "input_manifest_match": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "bytes": 4930,
+      "sha256": "3ae4735449c76fb29ca75718ef96f5babef34bd80cd11a3a51ccaea33d822942",
+      "original_path": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "read_status": "FULL",
+      "input_manifest_match": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "bytes": 18461,
+      "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825",
+      "original_path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "read_status": "FULL",
+      "input_manifest_match": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/InMemoryOutbox/OutboxConsumePipeSpecificationObserver.cs",
+      "original_path": "src/ViciOne.ServiceBus/Configuration/InMemoryOutbox/OutboxConsumePipeSpecificationObserver.cs",
+      "bytes": 9904,
+      "sha256": "e8ce214465493f57191f4de419ef597dce40fb541abb1d380099a34c4f16eb52",
+      "read_status": "FULL",
+      "input_manifest_match": true,
+      "artifact": "ADDITIONAL_FULL_01.txt",
+      "basis": "Personal untruncated full-source tool read; copy preserves exact original bytes."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "original_path": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "bytes": 4603,
+      "sha256": "d674136886bc706ef596fe3d2017c8608d0171e0a9a6c02f3d9d03ca74f46d5b",
+      "read_status": "FULL",
+      "input_manifest_match": true,
+      "artifact": "ADDITIONAL_FULL_02.txt",
+      "basis": "Personal untruncated full-source tool read; copy preserves exact original bytes."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/ConsumerConfigurator.cs",
+      "original_path": "src/ViciOne.ServiceBus/Configuration/ConsumerConfigurator.cs",
+      "bytes": 6999,
+      "sha256": "26fa69cfc869a3e8ad7212cc0e9ad276eecfed23064d9d618e7801f90094aa85",
+      "read_status": "FULL",
+      "input_manifest_match": true,
+      "artifact": "ADDITIONAL_FULL_03.txt",
+      "basis": "Personal untruncated full-source tool read; copy preserves exact original bytes."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/ConsumerSpecification.cs",
+      "original_path": "src/ViciOne.ServiceBus/Configuration/ConsumerSpecification.cs",
+      "bytes": 9833,
+      "sha256": "0588767c92b0bfb4df24d097dd4bce826abbe84b5e2bdba9d5258e901a9b9b89",
+      "read_status": "FULL",
+      "input_manifest_match": true,
+      "artifact": "ADDITIONAL_FULL_04.txt",
+      "basis": "Personal untruncated full-source tool read; copy preserves exact original bytes."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+      "original_path": "src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+      "bytes": 2022,
+      "sha256": "59bb94ea1dbc25064b7237e373708e7fc5e594721ded3dd3ac98b6542d0b696c",
+      "read_status": "FULL",
+      "input_manifest_match": true,
+      "artifact": "ADDITIONAL_FULL_05.txt",
+      "basis": "Personal untruncated full-source tool read; copy preserves exact original bytes."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "original_path": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "bytes": 6940,
+      "sha256": "c41fe496133493750337eec78ed3718157f9762072dff2c4a290316558ca9062",
+      "read_status": "FULL",
+      "input_manifest_match": true,
+      "artifact": "ADDITIONAL_FULL_06.txt",
+      "basis": "Personal untruncated full-source tool read; copy preserves exact original bytes."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/OptionsSet.cs",
+      "original_path": "src/ViciOne.ServiceBus.Abstractions/Configuration/OptionsSet.cs",
+      "bytes": 2471,
+      "sha256": "7074f6865b74205f0fb309008f4dd7b1e4ef5e98f7df23532025c2ae4619723a",
+      "read_status": "FULL",
+      "input_manifest_match": true,
+      "artifact": "ADDITIONAL_FULL_07.txt",
+      "basis": "Personal untruncated full-source tool read; copy preserves exact original bytes."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/IOptions.cs",
+      "original_path": "src/ViciOne.ServiceBus.Abstractions/Configuration/IOptions.cs",
+      "bytes": 151,
+      "sha256": "6ba80f56a3cb5b33f2f9e73466eb3e0195ed256938245c1383358f5f1263a926",
+      "read_status": "FULL",
+      "input_manifest_match": true,
+      "artifact": "ADDITIONAL_FULL_08.txt",
+      "basis": "Personal untruncated full-source tool read; copy preserves exact original bytes."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/IConsumerSpecification.cs",
+      "original_path": "src/ViciOne.ServiceBus/Configuration/IConsumerSpecification.cs",
+      "bytes": 1165,
+      "sha256": "1f09f4e24fb479b25ff5341a62fd7977fadb7b8040a8b6995105bc792849bc13",
+      "read_status": "FULL",
+      "input_manifest_match": true,
+      "artifact": "ADDITIONAL_FULL_09.txt",
+      "basis": "Personal untruncated full-source tool read; copy preserves exact original bytes."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/IConsumerConfigurator.cs",
+      "original_path": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/IConsumerConfigurator.cs",
+      "bytes": 2770,
+      "sha256": "2904ec06ec66bd2e111cb5440ec80ef26632d4b6b1031ea4bbe4cb21652f2bb4",
+      "read_status": "FULL",
+      "input_manifest_match": true,
+      "artifact": "ADDITIONAL_FULL_10.txt",
+      "basis": "Personal untruncated full-source tool read; copy preserves exact original bytes."
+    }
+  ],
+  "sources_count": 17,
+  "input_manifest_sha256": "59417cc469d142235956455fc669ab3b90dbc416e48fa55dfc7c2f5995a39d86",
+  "no_native_operations": true,
+  "no_product_writes": true,
+  "no_source_closure_claim": true,
+  "prior_package_review_unchanged": {
+    "REVIEW.txt": "2ce8d2fe50e5922ddece188b7cc7e0b5a5a459ab145a853dee6882e01bbeefec",
+    "REVIEW.json": "38c8059446c03668f874745b919760586234a39730dd0408684ac83ef4b257f2",
+    "READ_CLOSURE.json": "a03a34671a47086a2ffa12bf666be162d98b020f2fb67c5ed4c882131c3cac27"
+  }
+}

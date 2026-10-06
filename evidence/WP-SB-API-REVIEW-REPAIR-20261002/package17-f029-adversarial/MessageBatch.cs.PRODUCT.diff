@@ -1,0 +1,30 @@
+--- Frozen/src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs
++++ FrozenCorrected/src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs
+@@ -25,13 +25,6 @@
+             throw new ArgumentOutOfRangeException(nameof(mode), mode, "The batch completion mode must be defined.");
+         if (messages.Count == 0)
+             throw new ArgumentException("A delivered batch must contain at least one message context.", nameof(messages));
+-        if (lastMessageReceived < firstMessageReceived)
+-        {
+-            throw new ArgumentOutOfRangeException(
+-                nameof(lastMessageReceived),
+-                lastMessageReceived,
+-                "The last-message timestamp must not precede the first-message timestamp.");
+-        }
+         for (var index = 0; index < messages.Count; index++)
+         {
+             if (messages[index] is null)
+@@ -46,9 +39,11 @@
+ 
+     /// <summary>Gets the condition that completed the batch.</summary>
+     public BatchCompletionMode Mode { get; }
+-    /// <summary>Gets when collection for the batch began.</summary>
++    /// <summary>Gets the raw UTC timestamp recorded when collection began.</summary>
++    /// <remarks>Wall-clock corrections can make the last timestamp precede this value; collection time limits use relative timers.</remarks>
+     public DateTimeOffset FirstMessageReceived { get; }
+-    /// <summary>Gets when the most recent included message arrived.</summary>
++    /// <summary>Gets the raw UTC timestamp recorded when the most recent included message arrived.</summary>
++    /// <remarks>This value can precede the first timestamp after a wall-clock correction and does not measure elapsed collection time.</remarks>
+     public DateTimeOffset LastMessageReceived { get; }
+ 
+     /// <summary>Gets the message context at the specified zero-based index.</summary>

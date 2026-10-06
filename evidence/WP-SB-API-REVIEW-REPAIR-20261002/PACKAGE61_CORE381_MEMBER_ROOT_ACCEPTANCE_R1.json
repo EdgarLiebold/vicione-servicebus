@@ -1,0 +1,2328 @@
+{
+  "utc": "2026-10-04T13:12:59.707167+00:00",
+  "status": "ROOT_ACCEPTED_SPECIFIC381_CORE_CONTRACTS_SOURCE_AND_REVIEWED_ASSERTIONS_WITH_EXPLICIT_LIMITS",
+  "matrix": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core399-current-acceptance-preparation-r3/PER_ID399_CURRENT_DECISIONS.json",
+  "matrix_sha256": "d15fa605009fd10a5441b11fcdce814746e8db6f6aa7279ed93d037ae9e75c57",
+  "matrix_records": 399,
+  "accepted_selected": 381,
+  "retained_pending": 18,
+  "root_review_progress": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE61_CORE399_ROOT_REVIEW_PROGRESS_R1.json",
+  "root_r3_correction_reads": [
+    "efd247",
+    "e72d20"
+  ],
+  "live51owner_hash_guard": "800a95 all exact; hash match alone is not semantic read credit",
+  "root_basis": "Previously individually read compact399 contract+assertion/NA projection, whole97 forwarding owner and R3 corrected8 forwarding contracts+staticcontainer; peer independently whole51 owners and26 test owners. No root whole399JSON/whole51source claim.",
+  "native_boundary": "Historical qualified UnitR2 supports exact recorded assertions and source epoch; current whole native run remains pending. Current F068 doc overlay separately qualified by PACKAGE56_57_F061_F063_F068_ROOT_REPAIR_ACCEPTANCE_R1. Changed test epochs are retained in per-ID records, not implied rerun of every historical assertion.",
+  "excluded_indexes": [
+    7,
+    9,
+    12,
+    14,
+    135,
+    167,
+    174,
+    300,
+    329,
+    355,
+    356,
+    360,
+    362,
+    364,
+    366,
+    368,
+    369,
+    395
+  ],
+  "excluded_reason": "15 substantive behavioral oracle gaps and3 runtime-Type entrypoint contracts remain open",
+  "all_api_Aplus": false,
+  "members": [
+    {
+      "index": 0,
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PartitionedTaskExecutor`1.#ctor(ViciOne.ServiceBus.Advanced.Middleware.PartitionKeyProvider{`0},System.Int32,System.Int32,System.Nullable{System.Int32},ViciOne.ServiceBus.Advanced.Middleware.IPartitionHashGenerator)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "49b5490e5403e00c42bff802c79d74e055ffadc8f2672cb265ffc5f6446f42e4"
+    },
+    {
+      "index": 1,
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PartitionedTaskExecutor`1.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "49b5490e5403e00c42bff802c79d74e055ffadc8f2672cb265ffc5f6446f42e4"
+    },
+    {
+      "index": 2,
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PartitionedTaskExecutor`1.EnqueueAsync(`0,System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "49b5490e5403e00c42bff802c79d74e055ffadc8f2672cb265ffc5f6446f42e4"
+    },
+    {
+      "index": 3,
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PartitionedTaskExecutor`1.ExecuteAsync(`0,System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "49b5490e5403e00c42bff802c79d74e055ffadc8f2672cb265ffc5f6446f42e4"
+    },
+    {
+      "index": 4,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.ConsumerConcurrencyGate`1.#ctor(ViciOne.ServiceBus.Advanced.Registration.ConsumerConcurrencyPolicy)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "4655e105dcdc53f9d2ead2499acdc21def5cae8e61e09fe1ab1b526517d9d76f"
+    },
+    {
+      "index": 5,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.ConsumerConcurrencyGate`1.Dispose",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "4655e105dcdc53f9d2ead2499acdc21def5cae8e61e09fe1ab1b526517d9d76f"
+    },
+    {
+      "index": 6,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.PartitionedConsumerConcurrencyGate`2.#ctor(System.Int32,ViciOne.ServiceBus.Advanced.Registration.ConsumerPartitionKeySelector{`0,`1},System.Collections.Generic.IEqualityComparer{`1})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "eb5d6aed820e54ac06bb56e1d5d464e42220455c7fbe91eb34c748f6f5723f96"
+    },
+    {
+      "index": 8,
+      "id": "M:ViciOne.ServiceBus.Util.SingleThreadedDictionary`2.#ctor(System.Collections.Generic.IEqualityComparer{`0})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "dfe528b8550504e3859116692b8655c45b16628155f3145c6b17c2b36835a9aa"
+    },
+    {
+      "index": 10,
+      "id": "M:ViciOne.ServiceBus.Util.SingleThreadedDictionary`2.ContainsKey(`0)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "dfe528b8550504e3859116692b8655c45b16628155f3145c6b17c2b36835a9aa"
+    },
+    {
+      "index": 11,
+      "id": "M:ViciOne.ServiceBus.Util.SingleThreadedDictionary`2.GetEnumerator",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "dfe528b8550504e3859116692b8655c45b16628155f3145c6b17c2b36835a9aa"
+    },
+    {
+      "index": 13,
+      "id": "M:ViciOne.ServiceBus.Util.SingleThreadedDictionary`2.TryGetValue(`0,`1@)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "dfe528b8550504e3859116692b8655c45b16628155f3145c6b17c2b36835a9aa"
+    },
+    {
+      "index": 15,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.#ctor(System.Int32)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 16,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.#ctor(System.Int32,System.Int32)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 17,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 18,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.EnqueueAsync(System.Action,System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 19,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.EnqueueAsync(System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 20,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.EnqueueBlocking(System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 21,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.EnqueueValueTaskAsync(System.Func{System.Threading.Tasks.ValueTask},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 22,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteAsync(System.Action,System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 23,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteAsync(System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 24,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteAsync``1(System.Func{System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 25,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteAsync``1(System.Func{``0},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 26,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteValueTaskAsync(System.Func{System.Threading.Tasks.ValueTask},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 27,
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteValueTaskAsync``1(System.Func{System.Threading.Tasks.ValueTask{``0}},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 28,
+      "id": "M:ViciOne.ServiceBus.Util.TaskResults.CanceledAsync``1(System.Threading.CancellationToken)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "1faab1c4e508d7627540ccf28dcc4967460005de1359cded92b03317aeb6ceb7"
+    },
+    {
+      "index": 29,
+      "id": "M:ViciOne.ServiceBus.Util.TaskResults.DefaultAsync``1(System.Threading.CancellationToken)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "1faab1c4e508d7627540ccf28dcc4967460005de1359cded92b03317aeb6ceb7"
+    },
+    {
+      "index": 30,
+      "id": "M:ViciOne.ServiceBus.Util.TaskResults.FaultedAsync``1(System.Exception,System.Threading.CancellationToken)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "1faab1c4e508d7627540ccf28dcc4967460005de1359cded92b03317aeb6ceb7"
+    },
+    {
+      "index": 31,
+      "id": "P:ViciOne.ServiceBus.Util.SingleThreadedDictionary`2.Count",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "dfe528b8550504e3859116692b8655c45b16628155f3145c6b17c2b36835a9aa"
+    },
+    {
+      "index": 32,
+      "id": "P:ViciOne.ServiceBus.Util.SingleThreadedDictionary`2.Item(`0)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "dfe528b8550504e3859116692b8655c45b16628155f3145c6b17c2b36835a9aa"
+    },
+    {
+      "index": 33,
+      "id": "P:ViciOne.ServiceBus.Util.SingleThreadedDictionary`2.Keys",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "dfe528b8550504e3859116692b8655c45b16628155f3145c6b17c2b36835a9aa"
+    },
+    {
+      "index": 34,
+      "id": "P:ViciOne.ServiceBus.Util.SingleThreadedDictionary`2.Values",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "dfe528b8550504e3859116692b8655c45b16628155f3145c6b17c2b36835a9aa"
+    },
+    {
+      "index": 35,
+      "id": "P:ViciOne.ServiceBus.Util.TaskResults.Completed",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1faab1c4e508d7627540ccf28dcc4967460005de1359cded92b03317aeb6ceb7"
+    },
+    {
+      "index": 36,
+      "id": "P:ViciOne.ServiceBus.Util.TaskResults.False",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1faab1c4e508d7627540ccf28dcc4967460005de1359cded92b03317aeb6ceb7"
+    },
+    {
+      "index": 37,
+      "id": "P:ViciOne.ServiceBus.Util.TaskResults.True",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1faab1c4e508d7627540ccf28dcc4967460005de1359cded92b03317aeb6ceb7"
+    },
+    {
+      "index": 38,
+      "id": "T:ViciOne.ServiceBus.Advanced.Middleware.PartitionedTaskExecutor`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "49b5490e5403e00c42bff802c79d74e055ffadc8f2672cb265ffc5f6446f42e4"
+    },
+    {
+      "index": 39,
+      "id": "T:ViciOne.ServiceBus.Advanced.Registration.ConsumerConcurrencyGate`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "4655e105dcdc53f9d2ead2499acdc21def5cae8e61e09fe1ab1b526517d9d76f"
+    },
+    {
+      "index": 40,
+      "id": "T:ViciOne.ServiceBus.Advanced.Registration.PartitionedConsumerConcurrencyGate`2",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "eb5d6aed820e54ac06bb56e1d5d464e42220455c7fbe91eb34c748f6f5723f96"
+    },
+    {
+      "index": 41,
+      "id": "T:ViciOne.ServiceBus.Util.SingleThreadedDictionary`2",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "dfe528b8550504e3859116692b8655c45b16628155f3145c6b17c2b36835a9aa"
+    },
+    {
+      "index": 42,
+      "id": "T:ViciOne.ServiceBus.Util.TaskExecutor",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+    },
+    {
+      "index": 43,
+      "id": "T:ViciOne.ServiceBus.Util.TaskResults",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "1faab1c4e508d7627540ccf28dcc4967460005de1359cded92b03317aeb6ceb7"
+    },
+    {
+      "index": 44,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.ConsumerConcurrencyGate`1.ExecuteAsync``1(`0,``0,System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "4655e105dcdc53f9d2ead2499acdc21def5cae8e61e09fe1ab1b526517d9d76f"
+    },
+    {
+      "index": 45,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.PartitionedConsumerConcurrencyGate`2.ExecuteAsync``1(`0,``0,System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "eb5d6aed820e54ac06bb56e1d5d464e42220455c7fbe91eb34c748f6f5723f96"
+    },
+    {
+      "index": 46,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalDataClassification.Confidential",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "79232f64d8538c9057994937659ad94dd8c8aaeb73cc596435683f26cbdecce4"
+    },
+    {
+      "index": 47,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalDataClassification.Internal",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "79232f64d8538c9057994937659ad94dd8c8aaeb73cc596435683f26cbdecce4"
+    },
+    {
+      "index": 48,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalDataClassification.Public",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "79232f64d8538c9057994937659ad94dd8c8aaeb73cc596435683f26cbdecce4"
+    },
+    {
+      "index": 49,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalDataClassification.Restricted",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "79232f64d8538c9057994937659ad94dd8c8aaeb73cc596435683f26cbdecce4"
+    },
+    {
+      "index": 50,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.ConversationId",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 51,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.CorrelationId",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 52,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.DestinationAddress",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 53,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.ExpiresAt",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 54,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.FailureType",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 55,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.FaultAddress",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 56,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.InitiatorId",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 57,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.InputAddress",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 58,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.MessageId",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 59,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.RequestId",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 60,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.ResponseAddress",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 61,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.ScheduledMessageId",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 62,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.SentAt",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 63,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.SourceAddress",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 64,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys.TimeToLive",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 65,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalOperation.Consume",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3be217af5a48766f5d47aba9bbc55a89839154a4ccb556dada66997e9b6f2e80"
+    },
+    {
+      "index": 66,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalOperation.Publish",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3be217af5a48766f5d47aba9bbc55a89839154a4ccb556dada66997e9b6f2e80"
+    },
+    {
+      "index": 67,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalOperation.Send",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3be217af5a48766f5d47aba9bbc55a89839154a4ccb556dada66997e9b6f2e80"
+    },
+    {
+      "index": 68,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalOutcome.Faulted",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e8662df413357ec3c537dbd65840e6940531519584567609356da1898c0300bc"
+    },
+    {
+      "index": 69,
+      "id": "F:ViciOne.ServiceBus.MessageJournal.MessageJournalOutcome.Succeeded",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e8662df413357ec3c537dbd65840e6940531519584567609356da1898c0300bc"
+    },
+    {
+      "index": 70,
+      "id": "M:ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator.Options(ViciOne.ServiceBus.MessageJournal.MessageJournalOptions)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "c5521f8ec4bf3845f640e6fd19b25d4d954584d18056cac1a0518ade702b40d4"
+    },
+    {
+      "index": 71,
+      "id": "M:ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator.Policy(ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "c5521f8ec4bf3845f640e6fd19b25d4d954584d18056cac1a0518ade702b40d4"
+    },
+    {
+      "index": 72,
+      "id": "M:ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator.UseStore(ViciOne.ServiceBus.MessageJournal.IMessageJournalStore)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "c5521f8ec4bf3845f640e6fd19b25d4d954584d18056cac1a0518ade702b40d4"
+    },
+    {
+      "index": 73,
+      "id": "M:ViciOne.ServiceBus.Configuration.MessageJournalConfigurationExtensions.ConnectConsumeMessageJournal(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserverConnector,ViciOne.ServiceBus.MessageJournal.IMessageJournalStore,ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy,ViciOne.ServiceBus.MessageJournal.MessageJournalOptions)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "13a83802a709590af7ebfe1bd249ee0eb7525cc3f1b5889266e7f8125231296e"
+    },
+    {
+      "index": 74,
+      "id": "M:ViciOne.ServiceBus.Configuration.MessageJournalConfigurationExtensions.ConnectMessageJournal``1(``0,ViciOne.ServiceBus.MessageJournal.IMessageJournalStore,ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy,ViciOne.ServiceBus.MessageJournal.MessageJournalOptions)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "13a83802a709590af7ebfe1bd249ee0eb7525cc3f1b5889266e7f8125231296e"
+    },
+    {
+      "index": 75,
+      "id": "M:ViciOne.ServiceBus.Configuration.MessageJournalConfigurationExtensions.ConnectOutgoingMessageJournal``1(``0,ViciOne.ServiceBus.MessageJournal.IMessageJournalStore,ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy,ViciOne.ServiceBus.MessageJournal.MessageJournalOptions)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "13a83802a709590af7ebfe1bd249ee0eb7525cc3f1b5889266e7f8125231296e"
+    },
+    {
+      "index": 76,
+      "id": "M:ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy.ProjectAsync(ViciOne.ServiceBus.MessageJournal.MessageJournalCapture,System.Threading.CancellationToken)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "3c914063f808dede6291e54bb47d8780a63765e73e5cb80c17019d418053c07e"
+    },
+    {
+      "index": 77,
+      "id": "M:ViciOne.ServiceBus.MessageJournal.IMessageJournalStore.AppendAsync(ViciOne.ServiceBus.MessageJournal.MessageJournalEntry,System.Threading.CancellationToken)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "7ab76173607e94a3baedc57eac3742df5638ca6b3b154a641f8985f7ecf116c8"
+    },
+    {
+      "index": 78,
+      "id": "M:ViciOne.ServiceBus.MessageJournal.MessageJournalDataClassification.#ctor",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "79232f64d8538c9057994937659ad94dd8c8aaeb73cc596435683f26cbdecce4"
+    },
+    {
+      "index": 79,
+      "id": "M:ViciOne.ServiceBus.MessageJournal.MessageJournalOperation.#ctor",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "3be217af5a48766f5d47aba9bbc55a89839154a4ccb556dada66997e9b6f2e80"
+    },
+    {
+      "index": 80,
+      "id": "M:ViciOne.ServiceBus.MessageJournal.MessageJournalOptions.ContinueMessageFlow(System.TimeSpan,System.TimeProvider)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "983e9f226362c184e8e991e9f325484bfb268f3b3ede08eb5da776481c307972"
+    },
+    {
+      "index": 81,
+      "id": "M:ViciOne.ServiceBus.MessageJournal.MessageJournalOutcome.#ctor",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e8662df413357ec3c537dbd65840e6940531519584567609356da1898c0300bc"
+    },
+    {
+      "index": 82,
+      "id": "M:ViciOne.ServiceBus.MessageJournal.MessageJournalProjection.#ctor(ViciOne.ServiceBus.MessageJournal.MessageJournalDataClassification,System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IReadOnlyDictionary{System.String,System.String},System.Collections.Generic.IReadOnlyDictionary{System.String,System.String},System.ReadOnlyMemory{System.Byte})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5"
+    },
+    {
+      "index": 83,
+      "id": "M:ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits.#ctor(System.Int32,System.Int32,System.TimeSpan)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "16ad8b5c2a5a39ab428ab72202783a70c78263d293dead69df8c82c8293b1047"
+    },
+    {
+      "index": 84,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.IMessageJournalStore.Limits",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "7ab76173607e94a3baedc57eac3742df5638ca6b3b154a641f8985f7ecf116c8"
+    },
+    {
+      "index": 85,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalCapture.Body",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9"
+    },
+    {
+      "index": 86,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalCapture.ContentType",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9"
+    },
+    {
+      "index": 87,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalCapture.Headers",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9"
+    },
+    {
+      "index": 88,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalCapture.MessageTypes",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9"
+    },
+    {
+      "index": 89,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalCapture.Metadata",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9"
+    },
+    {
+      "index": 90,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalCapture.Operation",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9"
+    },
+    {
+      "index": 91,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalCapture.Outcome",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9"
+    },
+    {
+      "index": 92,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry.Body",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 93,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry.ContentSizeInBytes",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 94,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry.ContentType",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 95,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry.DataClassification",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 96,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry.EntryId",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 97,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry.Headers",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 98,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry.MessageTypes",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 99,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry.Metadata",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 100,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry.ObservedAt",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 101,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry.Operation",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 102,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry.Outcome",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 103,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalOptions.TimeProvider",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "983e9f226362c184e8e991e9f325484bfb268f3b3ede08eb5da776481c307972"
+    },
+    {
+      "index": 104,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalOptions.WriteTimeout",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "983e9f226362c184e8e991e9f325484bfb268f3b3ede08eb5da776481c307972"
+    },
+    {
+      "index": 105,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalProjection.Body",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5"
+    },
+    {
+      "index": 106,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalProjection.ContentType",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5"
+    },
+    {
+      "index": 107,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalProjection.DataClassification",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5"
+    },
+    {
+      "index": 108,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalProjection.Headers",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5"
+    },
+    {
+      "index": 109,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalProjection.MessageTypes",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5"
+    },
+    {
+      "index": 110,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalProjection.Metadata",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5"
+    },
+    {
+      "index": 111,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits.MaximumEntries",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "16ad8b5c2a5a39ab428ab72202783a70c78263d293dead69df8c82c8293b1047"
+    },
+    {
+      "index": 112,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits.MaximumEntryBytes",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "16ad8b5c2a5a39ab428ab72202783a70c78263d293dead69df8c82c8293b1047"
+    },
+    {
+      "index": 113,
+      "id": "P:ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits.RetentionPeriod",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "16ad8b5c2a5a39ab428ab72202783a70c78263d293dead69df8c82c8293b1047"
+    },
+    {
+      "index": 114,
+      "id": "T:ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "c5521f8ec4bf3845f640e6fd19b25d4d954584d18056cac1a0518ade702b40d4"
+    },
+    {
+      "index": 115,
+      "id": "T:ViciOne.ServiceBus.Configuration.MessageJournalConfigurationExtensions",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "13a83802a709590af7ebfe1bd249ee0eb7525cc3f1b5889266e7f8125231296e"
+    },
+    {
+      "index": 116,
+      "id": "T:ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "3c914063f808dede6291e54bb47d8780a63765e73e5cb80c17019d418053c07e"
+    },
+    {
+      "index": 117,
+      "id": "T:ViciOne.ServiceBus.MessageJournal.IMessageJournalStore",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "7ab76173607e94a3baedc57eac3742df5638ca6b3b154a641f8985f7ecf116c8"
+    },
+    {
+      "index": 118,
+      "id": "T:ViciOne.ServiceBus.MessageJournal.MessageJournalCapture",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9"
+    },
+    {
+      "index": 119,
+      "id": "T:ViciOne.ServiceBus.MessageJournal.MessageJournalDataClassification",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "79232f64d8538c9057994937659ad94dd8c8aaeb73cc596435683f26cbdecce4"
+    },
+    {
+      "index": 120,
+      "id": "T:ViciOne.ServiceBus.MessageJournal.MessageJournalEntry",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "index": 121,
+      "id": "T:ViciOne.ServiceBus.MessageJournal.MessageJournalMetadataKeys",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "46d7d4a87e2a9bc2aca042c735ffbd0b140ae30a201909da2afd8b6ee86cb710"
+    },
+    {
+      "index": 122,
+      "id": "T:ViciOne.ServiceBus.MessageJournal.MessageJournalOperation",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "3be217af5a48766f5d47aba9bbc55a89839154a4ccb556dada66997e9b6f2e80"
+    },
+    {
+      "index": 123,
+      "id": "T:ViciOne.ServiceBus.MessageJournal.MessageJournalOptions",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "983e9f226362c184e8e991e9f325484bfb268f3b3ede08eb5da776481c307972"
+    },
+    {
+      "index": 124,
+      "id": "T:ViciOne.ServiceBus.MessageJournal.MessageJournalOutcome",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e8662df413357ec3c537dbd65840e6940531519584567609356da1898c0300bc"
+    },
+    {
+      "index": 125,
+      "id": "T:ViciOne.ServiceBus.MessageJournal.MessageJournalProjection",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5"
+    },
+    {
+      "index": 126,
+      "id": "T:ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "16ad8b5c2a5a39ab428ab72202783a70c78263d293dead69df8c82c8293b1047"
+    },
+    {
+      "index": 127,
+      "id": "F:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.Collection",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 128,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 129,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.AddDefinition``2",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 130,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.AddEndpointDefinition``2(ViciOne.ServiceBus.Configuration.IEndpointSettings{ViciOne.ServiceBus.Configuration.IEndpointDefinition{``0}})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 131,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.AddRegistration``1(``0)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 132,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.EnsureConcreteDefinition``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 133,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.EnsureRequestClientRegistrationIsUnique``1(System.Type)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 134,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.GetBusConfigureReceiveEndpoints(System.IServiceProvider)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 136,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.GetDefinition``1(System.IServiceProvider)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 137,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.GetEndpointDefinition``1(System.IServiceProvider)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 138,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.GetEndpointNameFormatter(System.IServiceProvider)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 139,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.GetOrAddRegistration``1(System.Type,System.Func{System.Type,``0})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 140,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.GetRegistrations``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 141,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.GetRegistrations``1(System.IServiceProvider)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 142,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.GetScopedBusContext(System.IServiceProvider)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 143,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.RegisterEndpointNameFormatter(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 144,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.RegisterRequestClient``1(System.Uri,ViciOne.ServiceBus.Advanced.RequestTimeout)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 145,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.RegisterRequestClient``1(ViciOne.ServiceBus.Advanced.RequestTimeout)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 146,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.RegisterScopedClientFactory",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 147,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar.TryGetRegistration``1(System.IServiceProvider,System.Type,``0@)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 148,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 149,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.AddEndpointDefinition``2(ViciOne.ServiceBus.Configuration.IEndpointSettings{ViciOne.ServiceBus.Configuration.IEndpointDefinition{``0}})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 150,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.AddRegistration``1(``0)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 151,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.GetBusConfigureReceiveEndpoints(System.IServiceProvider)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 152,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.GetDefinition``1(System.IServiceProvider)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 153,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.GetEndpointDefinition``1(System.IServiceProvider)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 154,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.GetEndpointNameFormatter(System.IServiceProvider)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 155,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.GetRegistrations``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 156,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.GetRegistrations``1(System.IServiceProvider)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 157,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.GetScopedBusContext(System.IServiceProvider)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 158,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.RegisterEndpointNameFormatter(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 159,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.RegisterRequestClient``1(System.Uri,ViciOne.ServiceBus.Advanced.RequestTimeout)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 160,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.RegisterRequestClient``1(ViciOne.ServiceBus.Advanced.RequestTimeout)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 161,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.RegisterScopedClientFactory",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 162,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 163,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,ViciOne.ServiceBus.Configuration.IContainerRegistrar)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 164,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.AddConfigureEndpointsCallback(ViciOne.ServiceBus.Configuration.ConfigureEndpointsCallback)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 165,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.AddConfigureEndpointsCallback(ViciOne.ServiceBus.Configuration.ConfigureEndpointsProviderCallback)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 166,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.AddRider(System.Action{ViciOne.ServiceBus.Configuration.IRiderRegistrationConfigurator})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 168,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.SetRequestClientFactory(System.Func{ViciOne.ServiceBus.IBus,ViciOne.ServiceBus.Advanced.RequestTimeout,ViciOne.ServiceBus.Advanced.IClientFactory})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 169,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 170,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2.AddConfigureEndpointsCallback(ViciOne.ServiceBus.Configuration.ConfigureEndpointsCallback)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 171,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2.AddConfigureEndpointsCallback(ViciOne.ServiceBus.Configuration.ConfigureEndpointsProviderCallback)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 172,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2.AddRider(System.Action{ViciOne.ServiceBus.Configuration.IRiderRegistrationConfigurator{`0}})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 173,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2.AddRider(System.Action{ViciOne.ServiceBus.Configuration.IRiderRegistrationConfigurator})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 175,
+      "id": "P:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.CreateClientFactory",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 176,
+      "id": "P:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2.BusType",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 177,
+      "id": "T:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 178,
+      "id": "T:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 179,
+      "id": "T:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 180,
+      "id": "T:ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "index": 181,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionContainerRegistrar`1.AddDefinition``2",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+    },
+    {
+      "index": 182,
+      "id": "F:ViciOne.ServiceBus.DependencyInjection.BaseConsumeScopeProvider.SetScopedConsumeContext",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "c3b78593ce7d2d4b28939dedf9a76f992a3dcc627212e1c21e9e31c0c151c7b1"
+    },
+    {
+      "index": 183,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.BaseConsumeScopeProvider.#ctor(System.IServiceProvider,ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "c3b78593ce7d2d4b28939dedf9a76f992a3dcc627212e1c21e9e31c0c151c7b1"
+    },
+    {
+      "index": 184,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.BaseConsumeScopeProvider.#ctor(ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "c3b78593ce7d2d4b28939dedf9a76f992a3dcc627212e1c21e9e31c0c151c7b1"
+    },
+    {
+      "index": 185,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.BaseConsumeScopeProvider.GetScopeContextAsync``2(``1,System.Func{``1,Microsoft.Extensions.DependencyInjection.IServiceScope,System.IDisposable,``0},System.Func{``1,Microsoft.Extensions.DependencyInjection.IServiceScope,System.IDisposable,``0},System.Func{``1,Microsoft.Extensions.DependencyInjection.IServiceScope,System.IServiceProvider,``1})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "c3b78593ce7d2d4b28939dedf9a76f992a3dcc627212e1c21e9e31c0c151c7b1"
+    },
+    {
+      "index": 186,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CompensateScopeProvider`1.#ctor(System.IServiceProvider,ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "f7ebf33d566aaa425e5d7c895fdf4af018fedf74ca6473d5e4279e4771de90ba"
+    },
+    {
+      "index": 187,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CompensateScopeProvider`1.#ctor(ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "f7ebf33d566aaa425e5d7c895fdf4af018fedf74ca6473d5e4279e4771de90ba"
+    },
+    {
+      "index": 188,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CompensateScopeProvider`1.GetScopeAsync(ViciOne.ServiceBus.Advanced.CompensateContext{`0},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "f7ebf33d566aaa425e5d7c895fdf4af018fedf74ca6473d5e4279e4771de90ba"
+    },
+    {
+      "index": 189,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CompensateScopeProvider`1.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "f7ebf33d566aaa425e5d7c895fdf4af018fedf74ca6473d5e4279e4771de90ba"
+    },
+    {
+      "index": 190,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ConsumeScopeProvider.#ctor(System.IServiceProvider,ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3750b38ebbda662be62c63b589fbab1a06d9deb4e2dc58d8884c244dc49d31ce"
+    },
+    {
+      "index": 191,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ConsumeScopeProvider.#ctor(ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3750b38ebbda662be62c63b589fbab1a06d9deb4e2dc58d8884c244dc49d31ce"
+    },
+    {
+      "index": 192,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ConsumeScopeProvider.GetScopeAsync(ViciOne.ServiceBus.ConsumeContext,System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3750b38ebbda662be62c63b589fbab1a06d9deb4e2dc58d8884c244dc49d31ce"
+    },
+    {
+      "index": 193,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ConsumeScopeProvider.GetScopeAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3750b38ebbda662be62c63b589fbab1a06d9deb4e2dc58d8884c244dc49d31ce"
+    },
+    {
+      "index": 194,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ConsumeScopeProvider.GetScopeAsync``2(ViciOne.ServiceBus.ConsumeContext{``1},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3750b38ebbda662be62c63b589fbab1a06d9deb4e2dc58d8884c244dc49d31ce"
+    },
+    {
+      "index": 195,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ConsumeScopeProvider.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3750b38ebbda662be62c63b589fbab1a06d9deb4e2dc58d8884c244dc49d31ce"
+    },
+    {
+      "index": 196,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedCompensateScopeContext`1.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScope,ViciOne.ServiceBus.Advanced.CompensateContext{`0},System.IDisposable)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "ba5afcb473870f9b92ce2f8f5e2efabc7f40140fc8f378b41cd541855a7ed3c3"
+    },
+    {
+      "index": 197,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedCompensateScopeContext`1.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "ba5afcb473870f9b92ce2f8f5e2efabc7f40140fc8f378b41cd541855a7ed3c3"
+    },
+    {
+      "index": 198,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedConsumerConsumeScopeContext`2.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScope,ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1},System.IDisposable)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "5acb1230e873284bc83d80b6651f6562df4ddc59eb3e6ce7af06b38761031044"
+    },
+    {
+      "index": 199,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedConsumerConsumeScopeContext`2.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "5acb1230e873284bc83d80b6651f6562df4ddc59eb3e6ce7af06b38761031044"
+    },
+    {
+      "index": 200,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedExecuteScopeContext`1.#ctor(ViciOne.ServiceBus.Advanced.ExecuteContext{`0},Microsoft.Extensions.DependencyInjection.IServiceScope,System.IDisposable)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "90f3aee95fb2cbe554ed01b9df7fbebae1ff7e58688690ccc7d44d26e2cb7b84"
+    },
+    {
+      "index": 201,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedExecuteScopeContext`1.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "90f3aee95fb2cbe554ed01b9df7fbebae1ff7e58688690ccc7d44d26e2cb7b84"
+    },
+    {
+      "index": 202,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExecuteScopeProvider`1.#ctor(System.IServiceProvider,ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "5f468235a9c4a8f79c7652b7e3ecf38b370fd397dbf6f51ca583c10c60438569"
+    },
+    {
+      "index": 203,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExecuteScopeProvider`1.#ctor(ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "5f468235a9c4a8f79c7652b7e3ecf38b370fd397dbf6f51ca583c10c60438569"
+    },
+    {
+      "index": 204,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExecuteScopeProvider`1.GetScopeAsync(ViciOne.ServiceBus.Advanced.ExecuteContext{`0},System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "5f468235a9c4a8f79c7652b7e3ecf38b370fd397dbf6f51ca583c10c60438569"
+    },
+    {
+      "index": 205,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExecuteScopeProvider`1.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "5f468235a9c4a8f79c7652b7e3ecf38b370fd397dbf6f51ca583c10c60438569"
+    },
+    {
+      "index": 206,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingCompensateScopeContext`1.#ctor(ViciOne.ServiceBus.Advanced.CompensateContext{`0},Microsoft.Extensions.DependencyInjection.IServiceScope,System.IDisposable)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d4c2a5ed546eedd5882c0c4efc84a5d59469f45b9df74f8735941c5b4434a287"
+    },
+    {
+      "index": 207,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingCompensateScopeContext`1.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d4c2a5ed546eedd5882c0c4efc84a5d59469f45b9df74f8735941c5b4434a287"
+    },
+    {
+      "index": 208,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingConsumerConsumeScopeContext`2.#ctor(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1},System.IDisposable)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "10e23b41188c31f1d397a062b9cbe314e7be19042d7466246cf819d82e861d7c"
+    },
+    {
+      "index": 209,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingConsumerConsumeScopeContext`2.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "10e23b41188c31f1d397a062b9cbe314e7be19042d7466246cf819d82e861d7c"
+    },
+    {
+      "index": 210,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingExecuteScopeContext`1.#ctor(ViciOne.ServiceBus.Advanced.ExecuteContext{`0},Microsoft.Extensions.DependencyInjection.IServiceScope,System.IDisposable)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3318b1e19001be122c635f646c52fa37ab18b2f149363f2313665434e1f9e86d"
+    },
+    {
+      "index": 211,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingExecuteScopeContext`1.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3318b1e19001be122c635f646c52fa37ab18b2f149363f2313665434e1f9e86d"
+    },
+    {
+      "index": 212,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.FilterScopeProvider`2.#ctor(System.IServiceProvider)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "a9e243b844a43544b4563066051c01f38a1c8f2e8f6e4d1c887627185bbabcc7"
+    },
+    {
+      "index": 213,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.FilterScopeProvider`2.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "a9e243b844a43544b4563066051c01f38a1c8f2e8f6e4d1c887627185bbabcc7"
+    },
+    {
+      "index": 214,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ICompensateScopeContext`1.GetService``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6649d06b8e1dd2d4dce1674d7ecaca474cb22fe6760c61095447b3e1dd58dd97"
+    },
+    {
+      "index": 215,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.IConsumeScopeContext`1.CreateInstance``1(System.Object[])",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e87623ae4b021c2479f419d6a4c37eb1fc209f14ea4550348c4e36922b82548c"
+    },
+    {
+      "index": 216,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.IConsumeScopeContext`1.PushConsumeContext(ViciOne.ServiceBus.ConsumeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e87623ae4b021c2479f419d6a4c37eb1fc209f14ea4550348c4e36922b82548c"
+    },
+    {
+      "index": 217,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.IExecuteScopeContext`1.GetService``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "673dba25dd2437b20ca2225e084131816e109a27205f99b2e9e84746e3e1d7e6"
+    },
+    {
+      "index": 218,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.CreatedCompensateScopeContext`1.Context",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "ba5afcb473870f9b92ce2f8f5e2efabc7f40140fc8f378b41cd541855a7ed3c3"
+    },
+    {
+      "index": 219,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.CreatedConsumerConsumeScopeContext`2.Context",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "5acb1230e873284bc83d80b6651f6562df4ddc59eb3e6ce7af06b38761031044"
+    },
+    {
+      "index": 220,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.CreatedExecuteScopeContext`1.Context",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "90f3aee95fb2cbe554ed01b9df7fbebae1ff7e58688690ccc7d44d26e2cb7b84"
+    },
+    {
+      "index": 221,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.ExistingCompensateScopeContext`1.Context",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d4c2a5ed546eedd5882c0c4efc84a5d59469f45b9df74f8735941c5b4434a287"
+    },
+    {
+      "index": 222,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.ExistingConsumerConsumeScopeContext`2.Context",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "10e23b41188c31f1d397a062b9cbe314e7be19042d7466246cf819d82e861d7c"
+    },
+    {
+      "index": 223,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.ExistingExecuteScopeContext`1.Context",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3318b1e19001be122c635f646c52fa37ab18b2f149363f2313665434e1f9e86d"
+    },
+    {
+      "index": 224,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.ICompensateScopeContext`1.Context",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6649d06b8e1dd2d4dce1674d7ecaca474cb22fe6760c61095447b3e1dd58dd97"
+    },
+    {
+      "index": 225,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.IConsumeScopeContext.Context",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e87623ae4b021c2479f419d6a4c37eb1fc209f14ea4550348c4e36922b82548c"
+    },
+    {
+      "index": 226,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.IConsumeScopeContext`1.Context",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e87623ae4b021c2479f419d6a4c37eb1fc209f14ea4550348c4e36922b82548c"
+    },
+    {
+      "index": 227,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.IExecuteScopeContext`1.Context",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "673dba25dd2437b20ca2225e084131816e109a27205f99b2e9e84746e3e1d7e6"
+    },
+    {
+      "index": 228,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.BaseConsumeScopeProvider",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "c3b78593ce7d2d4b28939dedf9a76f992a3dcc627212e1c21e9e31c0c151c7b1"
+    },
+    {
+      "index": 229,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.CompensateScopeProvider`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "f7ebf33d566aaa425e5d7c895fdf4af018fedf74ca6473d5e4279e4771de90ba"
+    },
+    {
+      "index": 230,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.ConsumeScopeProvider",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "3750b38ebbda662be62c63b589fbab1a06d9deb4e2dc58d8884c244dc49d31ce"
+    },
+    {
+      "index": 231,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.CreatedCompensateScopeContext`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "ba5afcb473870f9b92ce2f8f5e2efabc7f40140fc8f378b41cd541855a7ed3c3"
+    },
+    {
+      "index": 232,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.CreatedConsumerConsumeScopeContext`2",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "5acb1230e873284bc83d80b6651f6562df4ddc59eb3e6ce7af06b38761031044"
+    },
+    {
+      "index": 233,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.CreatedExecuteScopeContext`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "90f3aee95fb2cbe554ed01b9df7fbebae1ff7e58688690ccc7d44d26e2cb7b84"
+    },
+    {
+      "index": 234,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.ExecuteScopeProvider`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "5f468235a9c4a8f79c7652b7e3ecf38b370fd397dbf6f51ca583c10c60438569"
+    },
+    {
+      "index": 235,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.ExistingCompensateScopeContext`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "d4c2a5ed546eedd5882c0c4efc84a5d59469f45b9df74f8735941c5b4434a287"
+    },
+    {
+      "index": 236,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.ExistingConsumerConsumeScopeContext`2",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "10e23b41188c31f1d397a062b9cbe314e7be19042d7466246cf819d82e861d7c"
+    },
+    {
+      "index": 237,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.ExistingExecuteScopeContext`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "3318b1e19001be122c635f646c52fa37ab18b2f149363f2313665434e1f9e86d"
+    },
+    {
+      "index": 238,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.FilterScopeProvider`2",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "a9e243b844a43544b4563066051c01f38a1c8f2e8f6e4d1c887627185bbabcc7"
+    },
+    {
+      "index": 239,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.ICompensateScopeContext`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "6649d06b8e1dd2d4dce1674d7ecaca474cb22fe6760c61095447b3e1dd58dd97"
+    },
+    {
+      "index": 240,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.IConsumeScopeContext",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e87623ae4b021c2479f419d6a4c37eb1fc209f14ea4550348c4e36922b82548c"
+    },
+    {
+      "index": 241,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.IConsumeScopeContext`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e87623ae4b021c2479f419d6a4c37eb1fc209f14ea4550348c4e36922b82548c"
+    },
+    {
+      "index": 242,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.IExecuteScopeContext`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "673dba25dd2437b20ca2225e084131816e109a27205f99b2e9e84746e3e1d7e6"
+    },
+    {
+      "index": 243,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedExecuteScopeContext`1.GetService``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "90f3aee95fb2cbe554ed01b9df7fbebae1ff7e58688690ccc7d44d26e2cb7b84"
+    },
+    {
+      "index": 244,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingExecuteScopeContext`1.GetService``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "3318b1e19001be122c635f646c52fa37ab18b2f149363f2313665434e1f9e86d"
+    },
+    {
+      "index": 245,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedCompensateScopeContext`1.GetService``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "ba5afcb473870f9b92ce2f8f5e2efabc7f40140fc8f378b41cd541855a7ed3c3"
+    },
+    {
+      "index": 246,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingCompensateScopeContext`1.GetService``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "d4c2a5ed546eedd5882c0c4efc84a5d59469f45b9df74f8735941c5b4434a287"
+    },
+    {
+      "index": 247,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.FilterScopeProvider`2.Create(`1)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "a9e243b844a43544b4563066051c01f38a1c8f2e8f6e4d1c887627185bbabcc7"
+    },
+    {
+      "index": 248,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.IFilterScopeContext`1.Filter",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9c76ac0a853728c6bed2c960f6ea3fc9f66ce62829b1dfce73c4ed017751df2e"
+    },
+    {
+      "index": 249,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.IConsumeScopeContext`1.GetService``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e87623ae4b021c2479f419d6a4c37eb1fc209f14ea4550348c4e36922b82548c"
+    },
+    {
+      "index": 250,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.Bind`1.Create``1(``0)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 251,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.Bind`2.#ctor(`1)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 252,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.Bind`2.Create``1(``0)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 253,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.Bind`2.Equals(System.Object)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 254,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.Bind`2.Equals(ViciOne.ServiceBus.Advanced.Registration.Bind{`0,`1})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 255,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.Bind`2.GetHashCode",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 256,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.Bind`3.#ctor(`2)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 257,
+      "id": "M:ViciOne.ServiceBus.Context.ConsumeContextScope.#ctor(ViciOne.ServiceBus.ConsumeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 258,
+      "id": "M:ViciOne.ServiceBus.Context.ConsumeContextScope.#ctor(ViciOne.ServiceBus.ConsumeContext,System.Object[])",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 259,
+      "id": "M:ViciOne.ServiceBus.Context.ConsumeContextScope.AddOrUpdatePayload``1(ViciOne.ServiceBus.Advanced.PayloadFactory{``0},ViciOne.ServiceBus.Advanced.UpdatePayloadFactory{``0})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 260,
+      "id": "M:ViciOne.ServiceBus.Context.ConsumeContextScope.GetOrAddPayload``1(ViciOne.ServiceBus.Advanced.PayloadFactory{``0})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 261,
+      "id": "M:ViciOne.ServiceBus.Context.ConsumeContextScope.HasPayloadType(System.Type)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 262,
+      "id": "M:ViciOne.ServiceBus.Context.ConsumeContextScope.TryGetPayload``1(``0@)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 263,
+      "id": "M:ViciOne.ServiceBus.Context.ConsumeContextScope`1.#ctor(ViciOne.ServiceBus.ConsumeContext{`0})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 264,
+      "id": "M:ViciOne.ServiceBus.Context.ConsumeContextScope`1.#ctor(ViciOne.ServiceBus.ConsumeContext{`0},System.Object[])",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 265,
+      "id": "M:ViciOne.ServiceBus.Context.ConsumeContextScope`1.NotifyConsumedAsync(System.TimeSpan,System.String,System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 266,
+      "id": "M:ViciOne.ServiceBus.Context.ConsumeContextScope`1.NotifyFaultedAsync(System.TimeSpan,System.String,System.Exception,System.Threading.CancellationToken)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 267,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedConsumeScopeContext.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScope,ViciOne.ServiceBus.ConsumeContext,System.IDisposable)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f"
+    },
+    {
+      "index": 268,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedConsumeScopeContext.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f"
+    },
+    {
+      "index": 269,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedConsumeScopeContext`1.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScope,ViciOne.ServiceBus.ConsumeContext{`0},System.IDisposable,ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f"
+    },
+    {
+      "index": 270,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedConsumeScopeContext`1.CreateInstance``1(System.Object[])",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f"
+    },
+    {
+      "index": 271,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedConsumeScopeContext`1.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f"
+    },
+    {
+      "index": 272,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedConsumeScopeContext`1.PushConsumeContext(ViciOne.ServiceBus.ConsumeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f"
+    },
+    {
+      "index": 273,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingConsumeScopeContext.#ctor(ViciOne.ServiceBus.ConsumeContext,System.IDisposable)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79"
+    },
+    {
+      "index": 274,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingConsumeScopeContext.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79"
+    },
+    {
+      "index": 275,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingConsumeScopeContext`1.#ctor(ViciOne.ServiceBus.ConsumeContext{`0},Microsoft.Extensions.DependencyInjection.IServiceScope,System.IDisposable,ViciOne.ServiceBus.Configuration.ISetScopedConsumeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79"
+    },
+    {
+      "index": 276,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingConsumeScopeContext`1.CreateInstance``1(System.Object[])",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79"
+    },
+    {
+      "index": 277,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingConsumeScopeContext`1.DisposeAsync",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79"
+    },
+    {
+      "index": 278,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingConsumeScopeContext`1.PushConsumeContext(ViciOne.ServiceBus.ConsumeContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79"
+    },
+    {
+      "index": 279,
+      "id": "P:ViciOne.ServiceBus.Advanced.Registration.Bind`2.Value",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 280,
+      "id": "P:ViciOne.ServiceBus.Advanced.Registration.Bind`3.Value",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 281,
+      "id": "P:ViciOne.ServiceBus.Context.ConsumeContextScope.CancellationToken",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 282,
+      "id": "P:ViciOne.ServiceBus.Context.ConsumeContextScope`1.Message",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 283,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.CreatedConsumeScopeContext.Context",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f"
+    },
+    {
+      "index": 284,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.CreatedConsumeScopeContext`1.Context",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f"
+    },
+    {
+      "index": 285,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.ExistingConsumeScopeContext.Context",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79"
+    },
+    {
+      "index": 286,
+      "id": "P:ViciOne.ServiceBus.DependencyInjection.ExistingConsumeScopeContext`1.Context",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79"
+    },
+    {
+      "index": 287,
+      "id": "T:ViciOne.ServiceBus.Advanced.Registration.Bind`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 288,
+      "id": "T:ViciOne.ServiceBus.Advanced.Registration.Bind`2",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 289,
+      "id": "T:ViciOne.ServiceBus.Advanced.Registration.Bind`3",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9"
+    },
+    {
+      "index": 290,
+      "id": "T:ViciOne.ServiceBus.Context.ConsumeContextScope",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 291,
+      "id": "T:ViciOne.ServiceBus.Context.ConsumeContextScope`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "6ea84bce5d4cc3247c8f913bdc7da8fe4ee412f157c93ed57f43c28d51027792"
+    },
+    {
+      "index": 292,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.CreatedConsumeScopeContext",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f"
+    },
+    {
+      "index": 293,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.CreatedConsumeScopeContext`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f"
+    },
+    {
+      "index": 294,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.ExistingConsumeScopeContext",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79"
+    },
+    {
+      "index": 295,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.ExistingConsumeScopeContext`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79"
+    },
+    {
+      "index": 296,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.CreatedConsumeScopeContext`1.GetService``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f"
+    },
+    {
+      "index": 297,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ExistingConsumeScopeContext`1.GetService``1",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79"
+    },
+    {
+      "index": 298,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.ConfigureCurrentLogContext(Microsoft.Extensions.Logging.ILogger)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 299,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.ConfigureCurrentLogContext(Microsoft.Extensions.Logging.ILoggerFactory)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 301,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.DefineMessage``2(Microsoft.Extensions.Logging.LogLevel,System.String)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 302,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.DefineMessage``3(Microsoft.Extensions.Logging.LogLevel,System.String)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 303,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.DefineMessage``4(Microsoft.Extensions.Logging.LogLevel,System.String)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 304,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.DefineMessage``5(Microsoft.Extensions.Logging.LogLevel,System.String)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 305,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.Define``1(Microsoft.Extensions.Logging.LogLevel,System.String)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 306,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.Define``2(Microsoft.Extensions.Logging.LogLevel,System.String)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 307,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.Define``3(Microsoft.Extensions.Logging.LogLevel,System.String)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 308,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.Define``4(Microsoft.Extensions.Logging.LogLevel,System.String)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 309,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.Define``5(Microsoft.Extensions.Logging.LogLevel,System.String)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 310,
+      "id": "M:ViciOne.ServiceBus.Advanced.LogContext.SetCurrentIfNull(ViciOne.ServiceBus.Logging.ILogContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 311,
+      "id": "M:ViciOne.ServiceBus.Logging.ILogContext.CreateLogContext(System.String)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca"
+    },
+    {
+      "index": 312,
+      "id": "P:ViciOne.ServiceBus.Advanced.LogContext.Critical",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 313,
+      "id": "P:ViciOne.ServiceBus.Advanced.LogContext.Debug",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 314,
+      "id": "P:ViciOne.ServiceBus.Advanced.LogContext.Error",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 315,
+      "id": "P:ViciOne.ServiceBus.Advanced.LogContext.Info",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 316,
+      "id": "P:ViciOne.ServiceBus.Advanced.LogContext.Trace",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 317,
+      "id": "P:ViciOne.ServiceBus.Advanced.LogContext.Warning",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 318,
+      "id": "P:ViciOne.ServiceBus.Logging.ILogContext.Critical",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca"
+    },
+    {
+      "index": 319,
+      "id": "P:ViciOne.ServiceBus.Logging.ILogContext.Debug",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca"
+    },
+    {
+      "index": 320,
+      "id": "P:ViciOne.ServiceBus.Logging.ILogContext.Error",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca"
+    },
+    {
+      "index": 321,
+      "id": "P:ViciOne.ServiceBus.Logging.ILogContext.Info",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca"
+    },
+    {
+      "index": 322,
+      "id": "P:ViciOne.ServiceBus.Logging.ILogContext.Logger",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca"
+    },
+    {
+      "index": 323,
+      "id": "P:ViciOne.ServiceBus.Logging.ILogContext.Messages",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca"
+    },
+    {
+      "index": 324,
+      "id": "P:ViciOne.ServiceBus.Logging.ILogContext.Trace",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca"
+    },
+    {
+      "index": 325,
+      "id": "P:ViciOne.ServiceBus.Logging.ILogContext.Warning",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca"
+    },
+    {
+      "index": 326,
+      "id": "T:ViciOne.ServiceBus.Advanced.LogContext",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 327,
+      "id": "T:ViciOne.ServiceBus.Logging.ILogContext",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca"
+    },
+    {
+      "index": 328,
+      "id": "P:ViciOne.ServiceBus.Advanced.LogContext.Current",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+    },
+    {
+      "index": 330,
+      "id": "M:Microsoft.Extensions.DependencyInjection.DependencyInjectionRegistrationExtensions.AddViciOneServiceBus(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+    },
+    {
+      "index": 331,
+      "id": "M:Microsoft.Extensions.DependencyInjection.DependencyInjectionRegistrationExtensions.AddViciOneServiceBus``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0}})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+    },
+    {
+      "index": 332,
+      "id": "M:Microsoft.Extensions.DependencyInjection.DependencyInjectionRegistrationExtensions.AddViciOneServiceBus``2(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0}})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+    },
+    {
+      "index": 333,
+      "id": "M:Microsoft.Extensions.DependencyInjection.DependencyInjectionRegistrationExtensions.AddViciOneServiceBus``2(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0}})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+    },
+    {
+      "index": 334,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions.AddConfigureEndpointsCallback(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,ViciOne.ServiceBus.Configuration.ConfigureEndpointsCallback)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 335,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions.AddConfigureEndpointsCallback(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,ViciOne.ServiceBus.Configuration.ConfigureEndpointsProviderCallback)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 336,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions.AddEndpoint``2(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,ViciOne.ServiceBus.Configuration.IRegistration,ViciOne.ServiceBus.Configuration.IEndpointSettings{ViciOne.ServiceBus.Configuration.IEndpointDefinition{``1}})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 337,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions.AddRider(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IRiderRegistrationConfigurator})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 338,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions.AddRider``1(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0},System.Action{ViciOne.ServiceBus.Configuration.IRiderRegistrationConfigurator{``0}})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 339,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions.Advanced(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 340,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions.Advanced(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 341,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions.Advanced``1(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 342,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions.GetOrAddRegistrationCompletionParticipant``1(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Func{``0})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 343,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions.SetBusFactory``1(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,``0)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 344,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions.SetRequestClientFactory(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,System.Func{ViciOne.ServiceBus.IBus,ViciOne.ServiceBus.Advanced.RequestTimeout,ViciOne.ServiceBus.Advanced.IClientFactory})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 345,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.IConsumerKind.ConfigureTestHarness(ViciOne.ServiceBus.Advanced.Registration.IConsumerKindTestHarnessContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "df1100d0b6473e0b3a9b861b0f1f4ce986c1b78d4f6e8e1176dae7734b08206b"
+    },
+    {
+      "index": 346,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.IConsumerKind.GetRegistrations(ViciOne.ServiceBus.Advanced.Registration.IConsumerKindContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "df1100d0b6473e0b3a9b861b0f1f4ce986c1b78d4f6e8e1176dae7734b08206b"
+    },
+    {
+      "index": 347,
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.IConsumerKindRegistration.Configure(ViciOne.ServiceBus.Advanced.Registration.IConsumerKindEndpointContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "790dec194cf2059ea19e7fa7f30dbdefa246c0b91bbd446df377bfd1eabe7b1f"
+    },
+    {
+      "index": 348,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionConsumerRegistrationExtensions.RegisterConsumer(Microsoft.Extensions.DependencyInjection.IServiceCollection,ViciOne.ServiceBus.Configuration.IContainerRegistrar,System.Type,System.Type)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "38db2fea1cf512c227a7ae15f723f4bc667d03794116c8c992062b18c67085a6"
+    },
+    {
+      "index": 349,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionConsumerRegistrationExtensions.RegisterConsumer``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "38db2fea1cf512c227a7ae15f723f4bc667d03794116c8c992062b18c67085a6"
+    },
+    {
+      "index": 350,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionConsumerRegistrationExtensions.RegisterConsumer``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Type)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "38db2fea1cf512c227a7ae15f723f4bc667d03794116c8c992062b18c67085a6"
+    },
+    {
+      "index": 351,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionConsumerRegistrationExtensions.RegisterConsumer``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,ViciOne.ServiceBus.Configuration.IContainerRegistrar)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "38db2fea1cf512c227a7ae15f723f4bc667d03794116c8c992062b18c67085a6"
+    },
+    {
+      "index": 352,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionConsumerRegistrationExtensions.RegisterConsumer``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,ViciOne.ServiceBus.Configuration.IContainerRegistrar,System.Type)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "38db2fea1cf512c227a7ae15f723f4bc667d03794116c8c992062b18c67085a6"
+    },
+    {
+      "index": 353,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionConsumerRegistrationExtensions.RegisterConsumer``2(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "38db2fea1cf512c227a7ae15f723f4bc667d03794116c8c992062b18c67085a6"
+    },
+    {
+      "index": 354,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionConsumerRegistrationExtensions.RegisterConsumer``2(Microsoft.Extensions.DependencyInjection.IServiceCollection,ViciOne.ServiceBus.Configuration.IContainerRegistrar)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "38db2fea1cf512c227a7ae15f723f4bc667d03794116c8c992062b18c67085a6"
+    },
+    {
+      "index": 357,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionEndpointRegistrationExtensions.RegisterEndpoint``2(Microsoft.Extensions.DependencyInjection.IServiceCollection,ViciOne.ServiceBus.Configuration.IContainerRegistrar,ViciOne.ServiceBus.Configuration.IRegistration,ViciOne.ServiceBus.Configuration.IEndpointSettings{ViciOne.ServiceBus.Configuration.IEndpointDefinition{``1}})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9b022ebc67803381f3e797db602e56651fea589c37330c62e255408cd14ca416"
+    },
+    {
+      "index": 358,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionEndpointRegistrationExtensions.RegisterEndpoint``2(Microsoft.Extensions.DependencyInjection.IServiceCollection,ViciOne.ServiceBus.Configuration.IRegistration,ViciOne.ServiceBus.Configuration.IEndpointSettings{ViciOne.ServiceBus.Configuration.IEndpointDefinition{``1}})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9b022ebc67803381f3e797db602e56651fea589c37330c62e255408cd14ca416"
+    },
+    {
+      "index": 359,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseCompensateActivityFilter(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Type,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86"
+    },
+    {
+      "index": 361,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseConsumeFilter(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Type,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86"
+    },
+    {
+      "index": 363,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseExecuteActivityFilter(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Type,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86"
+    },
+    {
+      "index": 365,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UsePublishFilter(ViciOne.ServiceBus.Configuration.IPublishPipelineConfigurator,System.Type,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86"
+    },
+    {
+      "index": 367,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseSendFilter(ViciOne.ServiceBus.Configuration.ISendPipelineConfigurator,System.Type,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86"
+    },
+    {
+      "index": 370,
+      "id": "M:ViciOne.ServiceBus.Configuration.RegistrationConfiguratorExtensions.AddConsumer``1(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IConsumerConfigurator{``0}})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "cb3e4b87b4d31500a5945e04470650229b0fd8411e599db913abf770d9c335a6"
+    },
+    {
+      "index": 371,
+      "id": "M:ViciOne.ServiceBus.Configuration.RegistrationConfiguratorExtensions.AddConsumer``1(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Type,System.Action{ViciOne.ServiceBus.Configuration.IConsumerConfigurator{``0}})",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "cb3e4b87b4d31500a5945e04470650229b0fd8411e599db913abf770d9c335a6"
+    },
+    {
+      "index": 372,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.Registration.ConsumerRegistrationConfigurator`1.#ctor(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,ViciOne.ServiceBus.Configuration.IConsumerRegistration)",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "43d8cec8f8810ba6b5c06fc0cb66ad9283a532ecd48e1be156e290311b6eb9e6"
+    },
+    {
+      "index": 373,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.Registration.ConsumerRegistrationConfigurator`1.Endpoint(System.Action{ViciOne.ServiceBus.Configuration.IEndpointRegistrationConfigurator})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "43d8cec8f8810ba6b5c06fc0cb66ad9283a532ecd48e1be156e290311b6eb9e6"
+    },
+    {
+      "index": 374,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.Registration.ConsumerRegistrationConfigurator`1.ExcludeFromConfigureEndpoints",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "43d8cec8f8810ba6b5c06fc0cb66ad9283a532ecd48e1be156e290311b6eb9e6"
+    },
+    {
+      "index": 375,
+      "id": "P:ViciOne.ServiceBus.Advanced.Registration.IConsumerKind.IsFallback",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "df1100d0b6473e0b3a9b861b0f1f4ce986c1b78d4f6e8e1176dae7734b08206b"
+    },
+    {
+      "index": 376,
+      "id": "P:ViciOne.ServiceBus.Advanced.Registration.IConsumerKind.Name",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "df1100d0b6473e0b3a9b861b0f1f4ce986c1b78d4f6e8e1176dae7734b08206b"
+    },
+    {
+      "index": 377,
+      "id": "P:ViciOne.ServiceBus.Advanced.Registration.IConsumerKindRegistration.CompanionEndpointNames",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "790dec194cf2059ea19e7fa7f30dbdefa246c0b91bbd446df377bfd1eabe7b1f"
+    },
+    {
+      "index": 378,
+      "id": "P:ViciOne.ServiceBus.Advanced.Registration.IConsumerKindRegistration.Definition",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "790dec194cf2059ea19e7fa7f30dbdefa246c0b91bbd446df377bfd1eabe7b1f"
+    },
+    {
+      "index": 379,
+      "id": "P:ViciOne.ServiceBus.Advanced.Registration.IConsumerKindRegistration.EndpointName",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "790dec194cf2059ea19e7fa7f30dbdefa246c0b91bbd446df377bfd1eabe7b1f"
+    },
+    {
+      "index": 380,
+      "id": "P:ViciOne.ServiceBus.Advanced.Registration.IConsumerKindRegistration.RegistrationType",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "790dec194cf2059ea19e7fa7f30dbdefa246c0b91bbd446df377bfd1eabe7b1f"
+    },
+    {
+      "index": 381,
+      "id": "P:ViciOne.ServiceBus.Advanced.Registration.IConsumerKindRegistration.RequiresServiceInstance",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "790dec194cf2059ea19e7fa7f30dbdefa246c0b91bbd446df377bfd1eabe7b1f"
+    },
+    {
+      "index": 382,
+      "id": "T:Microsoft.Extensions.DependencyInjection.DependencyInjectionRegistrationExtensions",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+    },
+    {
+      "index": 383,
+      "id": "T:ViciOne.ServiceBus.Advanced.Registration.AdvancedBusRegistrationConfiguratorExtensions",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1"
+    },
+    {
+      "index": 384,
+      "id": "T:ViciOne.ServiceBus.Advanced.Registration.IConsumerKind",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "df1100d0b6473e0b3a9b861b0f1f4ce986c1b78d4f6e8e1176dae7734b08206b"
+    },
+    {
+      "index": 385,
+      "id": "T:ViciOne.ServiceBus.Advanced.Registration.IConsumerKindRegistration",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "790dec194cf2059ea19e7fa7f30dbdefa246c0b91bbd446df377bfd1eabe7b1f"
+    },
+    {
+      "index": 386,
+      "id": "T:ViciOne.ServiceBus.Configuration.DependencyInjectionConsumerRegistrationExtensions",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "38db2fea1cf512c227a7ae15f723f4bc667d03794116c8c992062b18c67085a6"
+    },
+    {
+      "index": 387,
+      "id": "T:ViciOne.ServiceBus.Configuration.DependencyInjectionEndpointRegistrationExtensions",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "9b022ebc67803381f3e797db602e56651fea589c37330c62e255408cd14ca416"
+    },
+    {
+      "index": 388,
+      "id": "T:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86"
+    },
+    {
+      "index": 389,
+      "id": "T:ViciOne.ServiceBus.Configuration.RegistrationConfiguratorExtensions",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "cb3e4b87b4d31500a5945e04470650229b0fd8411e599db913abf770d9c335a6"
+    },
+    {
+      "index": 390,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.Registration.ConsumerRegistrationConfigurator`1",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "43d8cec8f8810ba6b5c06fc0cb66ad9283a532ecd48e1be156e290311b6eb9e6"
+    },
+    {
+      "index": 391,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseCompensateActivityFilter``1(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86"
+    },
+    {
+      "index": 392,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseConsumeFilter``1(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86"
+    },
+    {
+      "index": 393,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UseExecuteActivityFilter``1(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86"
+    },
+    {
+      "index": 394,
+      "id": "M:ViciOne.ServiceBus.Configuration.DependencyInjectionFilterExtensions.UsePublishFilter``1(ViciOne.ServiceBus.Configuration.IPublishPipelineConfigurator,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "9514429c2690e0ea70c88993b970a86a217bd0ef7e7bf0843a5a964a18903a86"
+    },
+    {
+      "index": 396,
+      "id": "P:ViciOne.ServiceBus.Advanced.Registration.IConsumerKind.Order",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "df1100d0b6473e0b3a9b861b0f1f4ce986c1b78d4f6e8e1176dae7734b08206b"
+    },
+    {
+      "index": 397,
+      "id": "P:ViciOne.ServiceBus.Advanced.Registration.IConsumerKindRegistration.EndpointDefinition",
+      "decision": "ASSERTIONS_AND_SOURCE_SUFFICIENT",
+      "source_sha256": "790dec194cf2059ea19e7fa7f30dbdefa246c0b91bbd446df377bfd1eabe7b1f"
+    },
+    {
+      "index": 398,
+      "id": "M:Microsoft.Extensions.DependencyInjection.DependencyInjectionRegistrationExtensions.AddViciOneServiceBus``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0}})",
+      "decision": "SOURCE_SUFFICIENT",
+      "source_sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+    }
+  ],
+  "new_unique_members": 284
+}

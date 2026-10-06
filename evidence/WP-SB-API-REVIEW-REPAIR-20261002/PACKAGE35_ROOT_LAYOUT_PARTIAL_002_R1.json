@@ -1,0 +1,45 @@
+{
+  "status": "ROOT_PERSONALLY_READ_FULL_LAYOUT_PACKS_0005_THROUGH_0010",
+  "previous": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE35_ROOT_LAYOUT_PARTIAL_001_R1.json",
+    "bytes": 1726,
+    "sha256": "29ec8ff97386796ca5b9b3acf07f686dabc6f7a0ca61152b07737263ef120cfc"
+  },
+  "packs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0005.txt",
+      "bytes": 13607,
+      "sha256": "dfa664ce2350ea0a8e0b00f6e5e2426285413925d51065160e880136f8455ca4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0006.txt",
+      "bytes": 12713,
+      "sha256": "aa6aa095c68d3f20e589deaadac6fe59315b2327efe22f708ad506cdd8c67a86"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0007.txt",
+      "bytes": 13822,
+      "sha256": "6c545bba73e79f7cd9ef5d557bcd9ff02d7cc9224ccf35352d7e315ad7b2f714"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0008.txt",
+      "bytes": 13207,
+      "sha256": "6782e0719f6eddf32033b1ca554681804fc54e257d1c346e94b7f9841a8e759c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0009.txt",
+      "bytes": 13872,
+      "sha256": "a332a2da8149c42034e68aa9a2810763a8aaee839cdf3d569f821d7c73f40c03"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0010.txt",
+      "bytes": 13992,
+      "sha256": "c688f995d2ba76126d986567605de795440e6ec1bf223d27ff182d42754c5ae6"
+    }
+  ],
+  "complete_file_ordinals_combined": "0..104",
+  "file105": "HEADER_ONLY_MAP_PENDING_NEXT_PACK",
+  "whole766_owner_full": false,
+  "ordinary_RAW_increment": 0,
+  "read_outputs": "All six complete packs, three paired outputs, untruncated."
+}

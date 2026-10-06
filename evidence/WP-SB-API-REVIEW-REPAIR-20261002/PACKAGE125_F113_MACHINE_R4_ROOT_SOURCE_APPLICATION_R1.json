@@ -1,0 +1,89 @@
+{
+  "utc": "2026-10-04T19:27:17.894421+00:00",
+  "decision": "ROOT_APPLY_F113_OWNER_SPECIFIC_GENERATED_MACHINE_WITH_INDEPENDENT_OVERRIDE_CONTROLS",
+  "finding": "F-SB-API-113",
+  "contract_decision": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE121_F113_GENERATED_FACTORY_OWNER_CONTRACT_DECISION_R1.json",
+    "sha256": "3b126ab5923e2d05fc00033239809a27e37925c191c88cc32d8830995232533a"
+  },
+  "author_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package115-same-future-machine-owner-product-proposal-r4/REPORT.json",
+    "sha256": "604ca73a1e175320856567abfc1bb1fe65f68f48d31853d64b83368d048f0d4c"
+  },
+  "author_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package115-same-future-machine-owner-product-proposal-r4/MANIFEST_R4.json",
+    "sha256": "e9a5cff68bd66c78ac795d3c02fde95a1f0bded645e786023f44b8e389b3ba37"
+  },
+  "adversarial": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package115-future-owner-r3-independent-scanner-r1/REPORT.json",
+      "sha256": "2962942370b044f6e2f8ea8e5b978632b84b0b4a99885f985b1bf76ecca10e2f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package115-future-owner-r4-independent-scanner-r1/REPORT.json",
+      "sha256": "4aff88e9ee3a3396f942fe933707d13d956d395d5057c83c4b0b3668fa56489d"
+    }
+  ],
+  "root_actual_reads": [
+    "Prior current full original FutureServiceCollectionExtensions and FutureRegistration, plus exact two runtime deltas and whole R2 FutureRegistration this turn.",
+    "8481ac entire245Ltest, public XML node, full R3 author report and both additive requirement rows; f98bea full current public FutureRegistrationExtensions owner.",
+    "7e050e complete R3 independent report; e6fc29 whole R4 author report and exact document delta; c10b60 whole R4 independent report."
+  ],
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+      "before_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a",
+      "after_sha256": "099fb83159a9101f94461b19a1144fb957750b96941933b2ea69aefb1f75782a"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/DependencyInjection/FutureRegistration.cs",
+      "before_sha256": "75dc8b72d1d1beb44e814b2d0f2dc9135613024f642f943c024417f8493e9f41",
+      "after_sha256": "fb13f0e9a122387f6c77e6963b748d4c0a0c897ade6b2c7fb6852847a837a619"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/DependencyInjection/FutureServiceCollectionExtensions.cs",
+      "before_sha256": "869b18a682cada0053006b88a7ee3b768c2ad2a67304b94435489624bd6e4885",
+      "after_sha256": "501a42e4f6859f6cb3dda2a03ea3339b594700f35a1131979a9a0e295e955768"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureMachineOverrideCompatibilityTests.cs",
+      "before_sha256": null,
+      "after_sha256": "259dd1ff66484ce76218ec449d63da43d43aa1938ec6c1c9d334b462812a5c4d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "67e799e0ae076fb4c56c5d620a3b359492ca42c8d43edbd1caa4931c78d5077b",
+      "after_sha256": "66676661f20721aa3c6424021535c10706e4728c1eaa667abcffd401c12ba32a"
+    }
+  ],
+  "requirements_before": 4589,
+  "requirements_after": 4591,
+  "requirements_add_only": [
+    {
+      "requirementId": "REQ-VSB-FUTURE-REGISTRATION",
+      "variantKey": "explicit-builtin-machine-instance-factory-and-provider-rebinding-preserved",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Futures.FutureMachineOverrideCompatibilityTests",
+      "testMethod": "ExplicitBuiltinOverrides_RemainTheConfiguredMachineAndServeTheirOwnCompanionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-FUTURE-REGISTRATION",
+      "variantKey": "wrapped-generated-machine-preserves-selected-bus-companion-ownership",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Futures.FutureMachineOverrideCompatibilityTests",
+      "testMethod": "SavedGeneratedFactoryWrapper_RetainsEachTypedBusCompanionOwnershipAsync"
+    }
+  ],
+  "new_cases": 4,
+  "existing_oracles_retained": true,
+  "expected_futures130_plus4": 134,
+  "expected_provider_definition26": 26,
+  "expected_focused_total": 160,
+  "count_correction": "Previous author156 expectation omitted Root120 independently added fanout4; original152 +4ownercontrols +4fanout =160. Actual discovery/native results must confirm.",
+  "native_and_fresh_core_futures_pack_pending": true,
+  "preceding_packages_freeze": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package123-fresh-abs-sql-four-independent-r1/FREEZE.json",
+    "sha256": "ac27fa6bfb7c3e3d8b07a9fb31bb410bde46ecd1556808930d6134b721ee6775"
+  },
+  "whole_api_status": "PARTIAL"
+}

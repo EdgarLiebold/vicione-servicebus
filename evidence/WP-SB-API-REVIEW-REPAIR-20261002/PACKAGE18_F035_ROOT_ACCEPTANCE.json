@@ -1,0 +1,42 @@
+{
+  "status": "ROOT_ACCEPTED_F035_TARGETED_SHARED_FINAL_PENDING",
+  "finding": "F-SB-API-035",
+  "freeze_sha256": "024d8c1da8184ebb7236e08270ec7fc3267589c13aa59247972077734aa74fda",
+  "review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/REVIEW.json",
+  "review_sha256": "861e7eb8f5e1666ed1c0bd74c557d42c6a05dedb1e17ce5c6b51e1e44fd4393e",
+  "manifest_sha256": "bb7e3df06586c1dc8e75f1a95f2e655d3cc28dc73aeee6e6f45868f8d00b87cd",
+  "owned_current_and_snapshot_verified": 48,
+  "review_artifacts_verified": 34,
+  "root_personally_FULL": [
+    "final product/whole paired46case owner priorNative",
+    "all27 original direct assertion blocks and12 mutant exact assertion blocks",
+    "final independent REVIEW.txt and REVIEW.json",
+    "Root independent binder whole before execution"
+  ],
+  "original": {
+    "causal_reds": 27,
+    "positive_controls": 19,
+    "guards": 0
+  },
+  "corrected": {
+    "pass_count": 46,
+    "fail_count": 0
+  },
+  "compiled_mutants": {
+    "strict_compiled": 12,
+    "native_exactassertion_reds": 12,
+    "positive_pairs": 12,
+    "baseline_pass": 46,
+    "rollback_pass": 46
+  },
+  "original_M_restored": 6209,
+  "new_frame_deleted_count": 1,
+  "whole_API_CLOSED": false,
+  "limits": [
+    "Typed AddDefinition plus named AddEndpointDefinition null/explicit same finding extension; Microsoft DI keyed service capability required for endpoint registration.",
+    "Default raw alias/disposal compatibility preserved; borrowed values remain caller owned.",
+    "No transfer of canonical Core766 owner; integrated final profiles and complete API closure remain pending.",
+    "No cloud/ARM/heap/universal cleanup quiescence or whole A+ claim."
+  ],
+  "utc": "2026-10-03T09:15:54.797230+00:00"
+}

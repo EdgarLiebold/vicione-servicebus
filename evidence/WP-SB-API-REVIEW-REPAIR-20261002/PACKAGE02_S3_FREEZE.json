@@ -1,0 +1,95 @@
+{
+  "status": "FROZEN_FOR_ADVERSARIAL_REVIEW",
+  "finding": "F-SB-API-006",
+  "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.AmazonS3/MessageData/AmazonS3MessageDataRepositoryOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/00-AmazonS3MessageDataRepositoryOptions.cs",
+      "bytes": 4254,
+      "sha256": "626fcf9425596e2a6cd1b124169e546c492dfa4b20677869a34e8f28a5517cce",
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.AmazonS3/MessageData/AmazonS3MessageDataRepositoryOptions.cs",
+      "baseline_sha256": "23768697a5539c0f11296f2f51d450babb6eb653db523cde0e2257977cafb57c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataConfigurationTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/01-AmazonS3MessageDataConfigurationTests.cs",
+      "bytes": 15472,
+      "sha256": "409df3f58f3db3540b979239fbf2b6c8f601fdfd70704505bb92db6977ba47f9",
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataConfigurationTests.cs",
+      "baseline_sha256": "c1e72d626044f19e633cfbc66eaa62ed5b5da5ef0a42799fa68cfa825ed64466"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/02-product-fixes.md",
+      "bytes": 27465,
+      "sha256": "493aeb989e4dd837161eec53eed01c6d523478209659323af15bbc85a5df4995",
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/freeze/docs/changelog/product-fixes.md",
+      "baseline_sha256": "c2bc141a0fc9b3ae3c805529659d27993c17f6a10ffebbaa28bf9271143c610e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package02_s3_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/03-package02_s3_mutations.py",
+      "bytes": 4468,
+      "sha256": "41bc5702d52cab38cccd11afdda66c90df0c02bf5f552ceda804788bfe8462d6",
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/04-Program.cs",
+      "bytes": 9151,
+      "sha256": "31837f60f8a57552315f648084c18a3c653cc2162149962dbfa9a8ed59ce3891",
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/reproductions/eventhub-public/Program.cs",
+      "baseline_sha256": "f1817068a7436323383aa36654603a7b82877acb6b496ec1085efc1005c03b14"
+    }
+  ],
+  "original_target_native_exit": 2,
+  "complete_owner_passed": 26,
+  "complete_owner_failed": 0,
+  "complete_owner_skipped": 0,
+  "mutants_killed": 3,
+  "mutations_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE02_S3_MUTATIONS.json",
+  "isolated_original_tracked_rollback_verified": 6209,
+  "fresh_consumer_files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3/PublicContracts.csproj",
+      "bytes": 576,
+      "sha256": "26e40f70f2b07e1c92d744c355968c3729d31b9109781906db26b90c903d6c12"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3/Program.cs",
+      "bytes": 6900,
+      "sha256": "9fc72b38056c7ce37a0bea5131eb774c6d4fcc73b32c6416d3ba1e06714a52b9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3/NuGet.config",
+      "bytes": 571,
+      "sha256": "72fadffe27eb371d1411fae93a1f787ce9f1bcb3440b71d00a6554658873e3a3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/s3/packages.lock.json",
+      "bytes": 8177,
+      "sha256": "5d50fb7b8c346fbec5221ae8b0cba6ed73f01463b62902d2d53ee087791263bd"
+    }
+  ],
+  "fresh_consumer_package_binding": [
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-s3/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "e481ab840ffae084e0d2ea669a669f491ec55817a3abe4b0565ba1c081826890",
+      "consumed_dll_sha256": "10ff70760164fb0eb3da7ea5402c9a943117fb494ff8fd9c7844d8baf0103737"
+    },
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-s3/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "95d44491e8b9f1b0a1e1e7b5a146768ac38f88d1fff69173c9b1e84364ed54b2",
+      "consumed_dll_sha256": "d4ba239445e875e72ede259e195c4b0c6737e1b831b7dc9643dff292e53ac117"
+    },
+    {
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package02-s3/ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg",
+      "sha256": "b46d8d5a46e4d19b1b09a5ac813422db256004bc89a29a70440cb83a1040768a",
+      "consumed_dll_sha256": "eaa7b41130da3595741bb5e6aad57638f3fbdf422dc3ec3768e63965d3233747"
+    }
+  ],
+  "fresh_consumer_contract_native_exit": 0,
+  "eventhub_oracle_delta": "Parsed URI identity instead of substring across implicit/explicit HTTPS port; preserve query-free probe and unchanged original SDK URI. Product patch unchanged."
+}

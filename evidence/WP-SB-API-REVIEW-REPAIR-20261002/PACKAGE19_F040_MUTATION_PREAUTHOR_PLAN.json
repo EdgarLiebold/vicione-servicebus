@@ -1,0 +1,28 @@
+{
+  "status": "ROOT_PLANNED_BEFORE_MUTATION_RUNNER_AUTHORING",
+  "source_sha256": "ad835878411a286f7463fe79d30d774fee603305293a66902e4ae764de9f3b94",
+  "frame": "Exact accepted package18 core/abstractions source frame plus F040 context. Courier source not part of Core project.",
+  "variants": [
+    {
+      "name": "RestoreEscapedTopologyName",
+      "negative": "default-backtick",
+      "positive": "default-ascii",
+      "effect": "Replace once-decoded raw entity with escaped GetEndpointName"
+    },
+    {
+      "name": "DecodeEntityTwice",
+      "negative": "default-percent",
+      "positive": "typed-ascii",
+      "effect": "Decode already decoded entity a second time"
+    },
+    {
+      "name": "UseSenderWildcardParser",
+      "negative": "default-wildcard",
+      "positive": "default-ascii",
+      "effect": "Use destination parser whose wildcard policy expands literal receive name"
+    }
+  ],
+  "controls": "Complete corrected14 and restored14; actual one-effect strict builds and direct Xunit finite assertion negatives only.",
+  "ownership": "Finally restore all original mutation sources (6209 hash verification), exact selected runtime DLL, oracle and dependencies; no Native concurrency.",
+  "baseline_corrected_log": "8276a876d57a8317aff8c8a590313823368618f8ba859e156cda1ed8d8e8ec31"
+}

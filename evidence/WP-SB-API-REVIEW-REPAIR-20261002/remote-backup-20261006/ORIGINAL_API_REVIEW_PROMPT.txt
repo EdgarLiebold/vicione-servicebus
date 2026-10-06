@@ -1,0 +1,563 @@
+PROMPT: Vollständiges, evidenzgebundenes Deep Review der ViciOne.ServiceBus API
+
+Vorbereitet am 01.10.2026. Dieses Dokument ist ein Review-Prompt, keine neue
+Produktnorm, kein Development Slice und keine Releasefreigabe.
+
+BEGINN DES KOPIERBAREN PROMPTS
+
+Du prüfst repositories/vicione-servicebus vollständig und adversarial aus Sicht
+eines .NET-Bibliotheksentwicklers, eines Anwendungsentwicklers, eines
+Provider-/Framework-Erweiterungsautors und eines Betreibers. Liefere ein tiefes
+Review der gesamten API einschließlich ihrer Implementierungs-, Paket-,
+Dokumentations- und Testverträge. Ziel ist eine einfache, konsistente und
+fachlich vollständige .NET-10-API, deren Zusagen auch unter Fehlern, Cancellation,
+Konkurrenz, Ressourcenknappheit und Wiederanlauf stimmen.
+
+„API“ bedeutet hier die gesamte öffentliche und geschützte .NET-Oberfläche,
+einschließlich geerbter Member, Extension Methods, Konstruktoren, Records,
+Delegates, Events, Optionen, generierter Member und Erweiterungsverträge.
+Behandle dieses Repository nicht pauschal als HTTP-Web-API.
+
+1. Auftrag, Grenzen und Wahrheitsquellen
+
+Arbeite im Zielrepository read-only. Ändere keinen Produktcode, Testbestand,
+API-Vertrag, Lockfile, Changelog, Governance- oder Architekturstand. Keine
+Commits, Tags, Pushes oder Veröffentlichungen. Reviewberichte, generierte
+Inventare und isolierte Reproduktionen dürfen in einem neuen temporären
+Reviewverzeichnis außerhalb der geprüften Repositories entstehen. Build- und
+Testausgaben dürfen dort oder in den vorgesehenen ignorierten Artefaktpfaden
+entstehen; verifiziere abschließend, dass getrackte Eingaben unverändert sind.
+Prüfe vor Skriptausführung, ob das Skript Quellen oder Baselines umschreibt.
+
+Dieser Prompt autorisiert Analyse, lokale Verifikation und isolierte
+Gegenbeispiele. Er autorisiert keine Produktkorrektur und keine Erstellung
+kostenpflichtiger Cloudressourcen. Verfügbare, bereits für den Review
+autorisierte Testressourcen darfst du gemäß deren Vorgaben verwenden.
+Fehlende externe Infrastruktur ist eine offene Beweisgrenze.
+
+Bezeichne dich nur dann als formales unabhängiges Red Team, wenn der separate,
+hashgebundene Rollenauftrag und die geforderte Sitzungs-/Kontexttrennung
+tatsächlich vorliegen. Sonst liefere eine technische Reviewanalyse ohne
+unabhängige Freigabe zu behaupten. CURRENT_ORDER.yaml ist Kontext für
+Scope und bereits getroffene Entscheidungen, keine Erlaubnis, diesen Auftrag
+zu verändern oder dich selbst einer Produktrolle zuzuweisen.
+
+Lies vor der fachlichen Arbeit vollständig:
+- AGENTS.md und CLAUDE.md im Workspace sowie alle anwendbaren Repo-Regeln;
+- vicione-architecture/governance/AI_WORKING_AGREEMENT.md;
+- vicione-architecture/governance/GLOSSARY.md;
+- vicione-architecture/governance/DECISIONS.md;
+- vicione-architecture/current/README.md;
+- vicione-architecture/work/CURRENT_ORDER.yaml, falls vorhanden;
+- vicione-architecture/governance/FINDINGS.md;
+- vicione-architecture/governance/SKILLS.lock.json.
+
+Folge der dort definierten Normenhierarchie. Löse die betroffenen aktiven
+Architekturabschnitte über current/README.md auf, insbesondere A00/A01,
+A02, A05, A07/A08, A09 und A13; A04 nur für tatsächlich betroffene
+Suite-Integrationsgrenzen. Lies bei offenen Spezifikationsfragen die
+klassifizierten Quellen. work/current/candidate und historische Reviews
+sind keine aktive Produktnorm. Legacy und Upstream liefern Verhaltensfälle,
+keine vorgeschriebene Bauform. vicione-legacy/** bleibt strikt read-only;
+abgeschlossene Historie wird nicht umgeschrieben.
+
+Berücksichtige ausdrücklich PO-2026-09-04-01, PO-2026-09-04-02 und
+PO-2026-09-08-01 sowie deren jüngere einschlägige Präzisierungen:
+Der ServiceBus ist ein universelles Vollsortiment für externe Nutzer.
+MassTransit-Aufrufformen müssen nicht kompatibel bleiben; erhaltene
+Fähigkeiten dürfen nicht verschwinden. Beurteile Suite-Composition und
+universelle Bibliotheksfläche getrennt nach ihrem tatsächlichen Owner.
+Hostseitige Autorisierung/Auditpolitik muss nicht in jeden mechanischen
+Bibliotheksvertrag eingebaut werden. Ein universeller Provider darf existieren,
+auch wenn die Suite ihn nicht auswählt. Keine neuen Obsolete-Brücken oder
+historischen Aliasflächen als Standardempfehlung.
+
+2. Unverzichtbare Microsoft-Skills: vor dem jeweiligen Prüfabschnitt
+
+Die Skill-Anwendung ist verbindlicher Teil des Reviews. „Skills berücksichtigt“
+als pauschale Behauptung genügt nicht. Ermittle zunächst den vollständigen
+verfügbaren Skillkatalog aus den offiziellen Quellen:
+https://github.com/dotnet/skills
+https://github.com/microsoft/skills
+
+Prüfe lokale Installation, Herkunft, Revision und Hashbindung gegen
+SKILLS.lock.json. Ein Cachepfad oder ein Skillname beweist keine Byteidentität.
+Verwende die genehmigten, geprüften Versionen; aktualisiere weder Plugins noch
+Lockregister stillschweigend. Ein nicht installierter offizieller Skill kann
+als revisionsgebundene, unveränderte Reviewquelle gelesen werden, soweit der
+Auftrag diese Quelle zulässt. Dokumentiere zusätzliche Quellen mit Commit,
+Pfad und SHA-256. Falls der genehmigte Stand einen benötigten Skill nicht
+enthält oder der Zugriff fehlt, markiere diese Skillpflicht als UNERFÜLLT
+und den betroffenen Prüfabschnitt als PARTIAL; prüfe andere Bereiche weiter.
+Erfinde keine Skillnamen oder erfolgreich ausgeführten Skillschritte.
+
+Lies jedes angewandte SKILL.md vollständig und alle für den konkreten
+Workflow benötigten Referenzen, Sprachdateien und Skriptanleitungen, bevor
+du diesen Abschnitt prüfst. Nutze die tatsächlichen Prüfschritte und
+Outputanforderungen. Dokumentiere Scopekonflikte offen. Dieser Auftrag und
+die Projektregeln gehen vor schreibenden Skilldefaults: keine Paketinstallation
+im Produkt, kein globales Toolsetup, keine Repositoryreparatur durch den Review.
+Skillbeispiele und allgemeine Empfehlungen sind auf die verwendete .NET-/SDK-
+Version zu prüfen; kein Beispiel ungeprüft als API-Wahrheit übernehmen.
+
+Erstelle SKILL_USAGE mit einer Zeile je relevantem Skill:
+Skill-ID | offizielle Quelle/Revision | lokaler Pfad/Hash | gelesenes Material |
+konkreter API-/Testscope | ausgeführte Schritte/Befehle | Ergebnisartefakt |
+Status APPLIED / UNERFÜLLT / NOT_APPLICABLE mit überprüfbarem Grund.
+Für bedingte Skills ist der Trigger ebenfalls einzutragen.
+
+Die folgenden installierten offiziellen .NET-Skills sind für diesen
+Gesamtreview verpflichtend in ihrem jeweils zutreffenden Umfang:
+
+- dotnet-diag:analyzing-dotnet-performance:
+  umfassende Prüfung der Messaging-, Pipeline-, Serializer-, Cache-,
+  Scheduling- und Persistenz-Hotpaths; Scan-Checkliste und tatsächliche
+  Trefferzahlen, Kontextvalidierung jeder Optimierungshypothese.
+- dotnet-diag:microbenchmarking:
+  Review der vorhandenen BenchmarkDotNet-Projekte und der Aussagekraft
+  etwaiger Performanceempfehlungen; keine erfundenen Messwerte.
+- dotnet-data:optimizing-ef-core-queries:
+  EF-Core-Sagas, Inbox/Outbox, Scheduler, MessageJournal und Operationsqueries;
+  Tracking, Projektion, Materialisierung, Pagination, Queryanzahl und SQL.
+  Korrektheit von Transaktionen und Concurrency hat Vorrang vor pauschalem
+  AsNoTracking oder Bulk-Update. SensitiveDataLogging nicht im Produkt aktivieren.
+- dotnet-aspnetcore:configuring-opentelemetry-dotnet:
+  öffentliche Telemetrieverträge und Hostintegration; bestehende
+  ActivitySource-/Meter-Instrumentierung prüfen, ohne ungefragt einen
+  Webhost, Exporter oder eine zweite Instrumentierung zu bauen.
+- dotnet-msbuild:msbuild-antipatterns;
+- dotnet-msbuild:directory-build-organization;
+- dotnet-msbuild:property-patterns;
+- dotnet-msbuild:item-management;
+- dotnet-msbuild:target-authoring;
+- dotnet-msbuild:copy-to-output-directory;
+- dotnet-msbuild:check-bin-obj-clash:
+  gemeinsame Buildregeln, Projektgraph, API-/XML-/Analyzer-Paketoutput,
+  Importreihenfolge, effektive Properties, Items und Gateausführung prüfen.
+  Geforderte fail-fast Imports nicht mit optionalen Imports verwechseln.
+- dotnet-test:run-tests:
+  alle Review-Testbefehle plattformgerecht für den ermittelten aktuellen
+  xUnit-/MTP-Stand ableiten; benötigte Plattformreferenzen lesen.
+- dotnet-test:assertion-quality;
+- dotnet-test:test-anti-patterns;
+- dotnet-test:test-smell-detection;
+- dotnet-test:test-gap-analysis:
+  alle API-tragenden Tests auf diskriminierende Orakel, falsche Sicherheit,
+  versteckte Kopplung und fehlende Verhaltensfälle prüfen. Gemeinsame
+  Befunde deduplizieren, die Prüfungen dennoch getrennt nachweisen.
+- dotnet-test:find-untested-sources:
+  vollständiges statisches Source-/Testinventar erstellen; Namens-/Pfadpaarung
+  ist Kandidatenbildung, kein Beweis semantischer Testdeckung.
+- dotnet-test:detect-static-dependencies:
+  Uhr-, IO-, Environment-, Netzwerk- und Prozessabhängigkeiten identifizieren
+  und auf Testbarkeit sowie korrekte Besitzgrenzen bewerten.
+- dotnet-test:coverage-analysis:
+  aktuell zuordenbare Line-/Branch-Coverage und methodische CRAP-Hotspots
+  auswerten. Bestehende Rohdaten bevorzugen, Provenienz vorher prüfen.
+  Fehlende oder veraltete Rohdaten als Nachweislücke ausweisen; keinen neuen
+  Coverageprovider ins Produkt aufnehmen und keine Prozentwerte schätzen.
+
+Die folgenden Microsoft-Azure-SDK-Skills sind für die enthaltenen Provider
+ebenfalls Pflicht. Sie sind im Workspace-Lock bislang nicht als installiert
+ausgewiesen; belege den tatsächlich verwendeten offiziellen Stand separat:
+- azure-servicebus-dotnet: Azure.Messaging.ServiceBus, Administration,
+  Sender/Receiver, Sessions, Settlement, Locks, Scheduling und Clientbesitz;
+- azure-eventhub-dotnet: Producer/Processor, Partitionierung, Ownership,
+  Checkpoints, Wiederanlauf und Batchgrenzen;
+- azure-identity-dotnet: TokenCredential-Integration, Credentialketten,
+  Entra-/SAS-Grenzen, Tokenrefresh und DI-Lebensdauer.
+
+Verifizierte Skill-Locators im offiziellen Microsoft-Repository:
+.github/plugins/azure-sdk-dotnet/skills/azure-servicebus-dotnet/SKILL.md
+.github/plugins/azure-sdk-dotnet/skills/azure-eventhub-dotnet/SKILL.md
+.github/plugins/azure-sdk-dotnet/skills/azure-identity-dotnet/SKILL.md
+Löse sie gegen den verwendeten Commit auf, nicht nur gegen veränderliches main.
+
+Bedingt verpflichtend, sobald der konkrete Trigger vorliegt:
+- dotnet-test:test-analysis-extensions plus extensions/dotnet.md über die
+  Analyse-Skills; für geprüfte Pythonwerkzeuge zusätzlich extensions/python.md.
+- dotnet-test:filter-syntax bei jedem gefilterten Test-/Reproduktionslauf;
+  gefilterte Diagnose ersetzt niemals einen verlangten unfiltrierten Abschluss.
+- dotnet-test:crap-score für zusätzliche gezielte CRAP-Analysen einzelner Member.
+- dotnet-test:grade-tests, falls einzelne Tests formal benotet werden.
+- dotnet-test:code-testing-agent und die von ihm verlangten Extensions VOR
+  jeder neuen Testdatei, auch für isolierte Review-Reproduktionen. Nutze die
+  vorgeschriebene Research-/Plan-/Implementierungsfolge im temporären Scope.
+- dotnet-msbuild:extension-points bei Imports/Hooks, NuGet-build/
+  buildTransitive-Regeln oder deren Empfehlungen.
+- dotnet-msbuild:including-generated-files bei tatsächlich generiertem Code,
+  insbesondere Proto-/Roslyn-Output und dessen Compile-/Paketaufnahme.
+- dotnet-msbuild:incremental-build bei wiederverwendetem API-/Paketoutput
+  oder der Prüfung von Inputs/Outputs und veraltetem Generatoroutput.
+- dotnet-msbuild:binlog-generation bei jedem erzeugten MSBuild-Binlog;
+  dotnet-msbuild:binlog-failure-analysis bei dessen Fehleranalyse.
+- dotnet-msbuild:build-perf-baseline, build-perf-diagnostics, eval-performance,
+  build-parallelism, resolve-project-references oder msbuild-server jeweils
+  nur, wenn deren tatsächlicher Builddiagnose-Trigger vorliegt.
+- dotnet-diag:dotnet-trace-collect bei Trace-Erhebung;
+  dotnet-diag:dump-collect bei Dump-Erhebung/-Konfigurationsberatung.
+- dotnet-advanced:dotnet-pinvoke bei tatsächlichen eigenen nativen Bindungen.
+- dotnet:setup-local-sdk nur, falls ein isolierter SDK-Setup erforderlich ist.
+- dotnet-aspnetcore:dotnet-webapi nur bei tatsächlich gefundenen HTTP-Endpunkten.
+- dotnet-advanced:nuget-trusted-publishing nur bei Prüfung eines vorhandenen
+  NuGet-Publishing-/OIDC-Pfads, ohne Veröffentlichung auszuführen.
+
+Durchsuche zusätzlich den vollständigen offiziellen Skillkatalog nach
+weiteren tatsächlich verwendeten Technologien. Gefundene passende Skills
+werden Pflicht, sobald ihr dokumentierter Trigger erfüllt ist. Für Azure
+Tables/Blob, SignalR, Roslyn, API-Design, DI, Async/Cancellation, Quartz,
+RabbitMQ, SQL und Kryptografie darfst du keine nichtexistierenden Microsoft-
+Skills erfinden. Wenn kein geeigneter offizieller Skill existiert, dokumentiere
+die Suchlücke und nutze die exakten Microsoft-Primärdokumentationen bzw. die
+offiziellen Quellen des jeweiligen Providers. Fremdsprachige Azure-Skills
+ersetzen keinen .NET-SDK-Vertrag. Blazor-, AI-, Scaffold-, Frameworkmigrations-
+und CPM-Konvertierungsskills sind ohne konkreten Trigger nicht anzuwenden.
+
+3. Prüfbasis und Vollständigkeit vor jedem Qualitätsurteil
+
+Erfasse HEAD, Tree-ID, src-Tree-ID, Arbeitsbaumänderungen und SHA-256 der
+relevanten Source-, Test-, Build-, Dokumentations- und Normdateien. Ein HEAD
+allein bindet keine uncommitteten Dateien. Bei vorhandenem Dirty State
+archiviere bzw. manifestiere die tatsächlich geprüften Bytes, ohne sie zu
+überschreiben. Änderungen während des Reviews invalidieren betroffene Urteile;
+friere die Prüfbasis erneut ein und prüfe den betroffenen Teil neu, ohne
+deine eigene Rolle hochzuklassifizieren.
+
+Ausgangshinweise, die du selbst gegen den aktuellen Stand prüfen musst:
+- Bei Vorbereitung dieses Prompts: HEAD
+  5afd0d077788f594b268a5ac441e788d54d57a70, src-Tree
+  0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4, sauberer Arbeitsbaum.
+- 33 src-Projekte und 4.141 nichtgenerierte C#-Dateien im lokalen Inventar.
+- Der Roslyn-Snapshot vom 01.10.2026 enthält für ServiceBus 18.569
+  öffentliche/geschützte Symbole; das ist eine Inventarzahl, kein Qualitätsbeweis.
+- Zero missing-own-XML beweist keine semantisch richtige Dokumentation.
+- CodeFixes hatte eine Workspace-Diagnose; das Analyzer-Packaging-Projekt
+  hatte nicht aufgelöste Referenzassemblies. Prüfe die aktuelle Ursache,
+  statt diese automatisch als Produktfehler oder als behoben einzustufen.
+
+Lies insbesondere folgende vorhandene Quellen:
+README.md, NuGet.README.md, CONTRIBUTING.md, TODO.md;
+docs/api-surface.md;
+docs/api/application-api.txt und docs/api/packed-public-api.txt;
+docs/api/roslyn-all-repos-api-2026-10-01.md;
+docs/api/roslyn-all-repos-api-2026-10-01-relative.tar.gz;
+docs/api-heritage-disposition.json;
+docs/build.md, docs/reliability.md, docs/observability.md;
+docs/provider-capabilities.json, docs/migrations/**;
+docs/quality-status.md, docs/quality/t176-aggregate.json und die Receipts;
+tools/api-conventions/RoslynApiCommentInventory.cs;
+tools/api-conventions/roslyn-api-projects.txt;
+tools/public-api-baseline/PublicApiBaseline.cs;
+tools/ci/verify_developer_journeys.sh;
+alle wirksamen csproj/props/targets, Lösungen, Lockfiles, NuGet.config,
+Editor-/Analyzerregeln, Testkonfiguration und CI-Auswahlregeln.
+
+Der Roslyn-Archivscope umfasst zehn Repositories: Filtere für das ServiceBus-
+Review auf ServiceBus; Geschwister nur für konkrete Consumer- oder
+Integrationskanten lesen, nicht stillschweigend mitbewerten. Extrahiere Archive
+nur in den neuen Reviewscope und validiere die enthaltenen Pfade.
+
+Erzeuge API_INVENTORY aus einem fehlerfrei aufgelösten aktuellen Roslyn-
+Projektgraphen und vergleiche ihn mit frisch gepackten Assemblies und deren
+XML-Dokumenten. Nutze vorhandene Inventarwerkzeuge, prüfe vorher ihre
+Erfassungslogik und Diagnosticbehandlung. Workspacefehler dürfen keine
+unvollständige Symbolmenge als vollständiges Inventar erscheinen lassen.
+
+Prüfe insbesondere Public/Protected/ProtectedInternal und tatsächlich extern
+erreichbare Protected-Member, verschachtelte Typen, Vererbungsclosure,
+explizite Interfaceimplementierungen, Operatoren, Enumwerte, generierte
+Recordmember, Attribute, Nullability, Generic Constraints, Defaults und
+Assembly-/Packagezuordnung. Ein nur im Sourcebaum vorhandenes Symbol und
+ein tatsächlich im NuGet-Paket exponiertes Symbol sind unterschiedliche Belege.
+Berücksichtige die drei netstandard2.0-Roslyn-/Packaging-Ausnahmen, statt
+pauschal net10.0 auf Compilerhostkomponenten zu verlangen.
+
+Lies jede getrackte produktive C#- und Projektdatei im Zusammenhang vollständig.
+Lies den vollständigen API-tragenden Testbestand samt transitive Fixtures,
+Hilfen, Testdaten, Requirements und Ausführungskonfiguration. Suche und
+automatische Parser priorisieren; sie ersetzen nicht das Verständnis.
+Verifiziere maschinell Git-Dateimenge = gelesene Dateimenge. Interne Dateien
+dürfen nicht entfallen, wenn sie ein öffentliches Verhalten bestimmen.
+
+Führe zwei fortlaufende Deckungsnachweise:
+FILE_COVERAGE: Pfad/Hash, gelesen, Owner, API-/Implementierungs-/Testzuordnung,
+  Findings oder begründetes Ergebnis, offener Rest;
+API_COVERAGE: stabile Symbol-ID, Paket/Namespace/Schicht, Vertragsprüfung,
+  Implementierungspfad, Test-/Consumer-Beleg, Status, Findings/offene Beweise.
+Identische Overloads dürfen gemeinsam analysiert werden, aber jedes Symbol
+muss genau zugeordnet sein; unterschiedliche Parameter, Defaults, Constraints
+oder Wirkungsgrenzen erhalten eine eigene Beurteilung. Keine rein generierte
+„reviewed“-Markierung ohne semantischen Befund.
+
+4. Inhaltliche Prüfung der gesamten Oberfläche
+
+Für jedes Symbol prüfst du mindestens: Zweck und notwendige Öffentlichkeit,
+Zielgruppe/Schicht, .NET-Namens- und Typkonventionen, gültige Eingaben,
+Default-/Null-/Grenzsemantik, Ergebnis und Completiongrenze, Fehler und
+Cancellation, Besitz/Lebensdauer/Threadsicherheit, XML-Vertrag,
+Paketverbrauchbarkeit und verhaltensunterscheidende Tests.
+
+A. Zuschnitt und Nutzbarkeit
+Prüfe Application API, Advanced SPI, Provider API, Operations API und
+Testing API. Der normale Einstieg muss ohne interne Binder/Fabriken/SPIs
+funktionieren. Prüfe AddViciOneServiceBus, Pflicht-Limits, exakt eine
+Transportwahl, Consumerregistrierung und die 18 Developer Journeys.
+Suche überflüssige öffentliche Implementierungsdetails, doppelte Wege,
+Namens-/Overloadkollisionen und versteckte Abhängigkeiten. Zeige für ein
+Ergonomieproblem den konkreten normalen Aufruf und die verständlichere
+Alternative. Öffentlichkeit allein ist kein Fehler; ein SPI braucht eine
+aktuelle Erweiterungsfähigkeit. Keine Capability entfernen, um Zahlen zu senken.
+
+B. Typen, Parameter und Konventionen
+Prüfe Namen in beide Richtungen: Awaitbares trägt Async, synchrones Verhalten
+trägt es nicht, vorgeschriebene Frameworkausnahmen sind einzeln begründet.
+Prüfe Tokenposition/-Optionalität, Callbacks mit bereits getragenem Token,
+Task/ValueTask, Mehrfachawait, versteckte sync-over-async-Aufrufe,
+IAsyncEnumerable-Cancellation, typed Options statt Overloadexplosion,
+Nullability und tatsächliche Guards. Prüfe alle öffentlichen Value Objects
+auch mit default(T), leeren IDs, ungültigen Enumwerten, with-Ausdrücken,
+Overflow, Zeitextremen und mutable Collections. required/init/read-only
+allein beweist keine tief unveränderliche oder gültige Laufzeitkonfiguration.
+
+C. DI, Konfiguration und Hoststart
+Prüfe Default-/Multi-Bus, named/keyed Registrierungen, Lebensdauern,
+Scopes, IRegistrationContext und busgebundene Consume-Kontexte.
+Prüfe Captive Dependencies, Container-/Scopebesitz und Disposeverhalten.
+Inventarisiere jede statische Optionsklasse und ihre invariantenbezogenen
+Starttests: fehlt/ungültig/konfliktär/unvollständig; gültig ausgewählt;
+nicht ausgewählte optionale Capability. Fehler müssen vor Receiverstart
+auftreten und Bus, Feature, Property und Korrektur erkennen lassen.
+Validierungsattribute oder ValidateOnStart in drei Providern beweisen
+keine Gesamtclosure. Prüfe Snapshotbildung gegen nachträgliche Mutation.
+
+D. Send, Publish, Request/Response und Kontexte
+Verfolge ISendEndpointProvider, ISendEndpoint, IPublishEndpoint,
+IRequestClient<T>, ConsumeContext und ihre Advanced-Varianten durch den
+vollständigen Pfad. Prüfe Routing, Topologie, Correlation/Conversation/RequestId,
+Headers, Response/Fault, Fristen, TTL, Weiterleitung, Serializerwahl und
+Batchkomposition. Besonders: Was bedeutet erfolgreiches await bei direktem
+Transport, Consume-Scope, In-Memory-Outbox, persistentem Outboxpfad und
+Mediator? Vergleiche XML-Aussagen „transport accepted“ mit jeder zulässigen
+Implementierung. Keine Consumer-Anwendung oder End-to-end-Exactly-once aus
+einer schwächeren Completiongrenze ableiten.
+
+E. Zuverlässigkeit und Operations
+Prüfe IDurableSender<TBus>, DurableSendOptions/Receipt, IOutboxStore,
+IInboxStore, IScheduleStore, Dispatcher, Leases und
+IReliableMessagingOperations<TBus> gemeinsam. Verfolge Outbox → Carrier →
+Inbox, Commit, ACK, Retry und Quarantäne; Identitätskonflikte,
+Deduplicationfenster, Fencing, Leaseverlust, Kapazitätsrechnung,
+Aufbewahrung, Crash-/Restartgrenzen und unabhängigen Partitionsfortschritt.
+Ein anwendungseigener Store, ein Deliveryowner und eine Operationssemantik
+dürfen nicht durch Adapter in mehrere Wahrheiten zerfallen.
+Prüfe Requeue/Discard/Abandon auf exakte Disposition, Idempotenz,
+konkurrierende Übergänge, payloadfreie bounded Pagination und Hostbesitz
+von Autorisierung/Audit. Prüfe Provider-Acceptance gegen
+docs/provider-capabilities.json; schwächere Kombinationen müssen sichtbar
+scheitern. Bekannte Payloadgrenzen müssen vor dauerhaftem Commit wirken.
+
+F. Scheduler, Sagas und optionale Fähigkeiten
+Prüfe IMessageScheduler, Advanced-Scheduler, Quartz, SQL/native/delayed
+Scheduling und IScheduleCancellationCapability. Unterscheide CallerSpecifiedToken,
+ProviderAssignedToken, WithoutCancellation, Unsupported und Unknown.
+Prüfe Schedule/Replace/Unschedule, Response-/Fault-Cancellation,
+Zeithorizont und echte Tokenidentität. Verfolge Saga-/State-Machine-
+Correlation, konkurrierende Repositoryzugriffe, fehlende Instanzen,
+Retries und gespeicherte Zustände. Prüfe Courier Execute/Compensate,
+Futures, JobService, Mediator und Initializers als eigene öffentliche
+Fähigkeiten einschließlich ihrer Fehler- und Lifecyclegrenzen.
+
+G. Provider- und Persistenzparität
+Prüfe vollständig InMemory, RabbitMQ, Azure Service Bus, Event Hubs,
+Amazon SQS/SNS, ActiveMQ/Artemis, SQL PostgreSQL/SQL Server und SignalR.
+Prüfe EF Core/EF Sagas, DynamoDB, Azure Tables, Azure Blob und Amazon S3
+MessageData. Decke SDKtyp-Leaks, Adress-/Topologieverträge,
+Clientlebensdauer, Locks/Sessions, Checkpointbesitz, Batch-/Payloadlimits,
+Entitätslöschung, Retry, Shutdown und sichere Credentials ab.
+EF/SQL: SQLite/PostgreSQL/SQL Server/Azure SQL, Transaktionen,
+ExecutionStrategy-Reentry, ChangeTracker, Isolation, Lock-SQL,
+Unique Constraints, Migration, Cancellation und geordnete Zustellung.
+Identifiziere jede zulässige Providerabweichung. Keine Abstraktion darf
+Fähigkeiten oder Garantien vortäuschen, die der Carrier nicht besitzt.
+Microsoft-Skills decken Nicht-Microsoft-Provider nicht vollständig;
+nutze zusätzlich deren versionsgenaue offizielle Dokumentation/Quellen.
+
+H. Serialisierung und Sicherheit
+Prüfe System.Text.Json, Raw JSON, MessagePack, Envelopes, MessageData,
+Header-/Metadatenprojektion und alle vorhandenen Kryptografieflächen.
+Prüfe Send- UND Receive-Limits, Envelope-/Body-/Depth-/Headergrenzen,
+Allocation vor Zulassung, manipulierte Typ-/Adress-/IDdaten,
+unbekannte Verträge und verlustfreie Metadatenparität.
+Prüfe externen Keybesitz, Fail-closed-Fehler, versionierte Formate und
+Tamper-/Wrong-Key-/Replay-/Noncegrenzen, sofern diese API existiert.
+Leite aus historischen F-SB-Einträgen keinen aktuellen Defekt ab, ohne
+gegen heutige Entscheidungen und Code zu verifizieren. Secrets/Payloads
+dürfen nicht durch Probe-, Exception-, Log-, Telemetrie- oder DLQpfade leaken.
+Generic Constraints sind keine In-Process-Sandbox für zugelassenen Modulcode.
+
+I. Fehler, Cancellation, Zeit, Konkurrenz und Ressourcen
+Unterscheide Caller-/Delivery-/Host-Cancellation von Dependency-Cancellation,
+Timeout und Businessfault; prüfe Originalexception, Aggregate-Reihenfolge,
+Observer-/Cleanupfolgefehler und Retry-/Rescue-Auswahl.
+Prüfe Cancellation vor Annahme, während Warteschlange/IO/Commit/ACK und
+nach irreversibler Wirkung: Abbruch darf eine erfolgte Wirkung nicht
+verschweigen und ein nacktes Task.WaitAsync darf keinen weiterlaufenden
+Owner unbemerkt zurücklassen. Prüfe TimeProvider-/Tokenpropagation über
+Adaptergrenzen, monotone Dauer gegen UTC, TTL-, Clockjump- und Overflowfälle.
+Prüfe Start/Stop/Fault/Dispose unter Konkurrenz, double dispose,
+reentrante/werfende/blockierende Callbacks, exactly-one Fehlerowner,
+Drain und deterministische Terminalzustände. Alle Queues, Caches, Pools,
+Retention- und Taskmengen brauchen belastbare Grenzen und Backpressure.
+Embedded/512 MiB ohne Swap ist Kontext für belegte Ressourcenrisiken;
+lokaler Desktop-Benchmark ist kein Hardwarefreigabenachweis.
+
+J. Telemetrie, MessageJournal, Testing und Analyzer
+Prüfe ActivitySource/Meter-Identität, Parent/Linksemantik, bounded
+Cardinality, Secretredaktion, Listenerfehler und Diagnostic-Isolation.
+MessageJournal ist optional und default-off; technische Beobachtung
+darf nicht als fachliche Auditgarantie ausgegeben werden oder ein bereits
+erfolgreiches/gefaultetes Messagingergebnis umdeuten.
+Prüfe öffentliche Harnesses, Fake-Time-/Idle-/Completionverträge,
+Callbackfehler, Cancellation, Listener-/Harnessbesitz und Provider-Testing-
+Pakete. Testrunner-Abhängigkeiten dürfen nicht in Runtimepakete fließen.
+Prüfe Analyzer-/CodeFix-API, Diagnose-IDs, False Positives/Negatives,
+symbolische Auflösung, generierten Code, Suppressions und Paketaufnahme.
+Ein Analyzerbefund ist erst nach Kontextprüfung ein API-Defekt.
+
+K. XML-Verträge, Paketqualität und Kompatibilität
+Vergleiche für JEDES exponierte Symbol Summary, params/typeparams,
+returns/value, exception, remarks, cref/paramref, Nullability und
+Inheritance mit dem aktuellen Verhalten. „Gets ...“ oder „Sends ...“
+ohne Wirkungs-/Fehlervertrag ist kein ausreichender Beleg.
+Prüfe Kommentare besonders auf falsche Completion-, Cancellation-,
+Threadsafety-, Lebensdauer- und Defaultzusagen. Fehlende Dokumentation und
+falsche Dokumentation getrennt werten. Keine Prozess-/Reviewhistorie in XML.
+Prüfe NuGet-Paketgraph, Dependencyclosure, XML-Mitlieferung, SourceLink,
+Compilerhost-/Runtimegrenze, Assemblyidentität, Analyzer-/CodeFix-Layout
+und abgesonderte capability packages. Packaged-Consumer-Compile ist Pflicht;
+ProjectReference-Compile allein genügt nicht. Vergleiche frühere
+ViciOne-API-Stände auf source-, binary-, Verhaltens-, Wire- und
+Persistenzkompatibilität; unterscheide beabsichtigte Greenfieldbereinigung
+von unbegründetem Fähigkeitsverlust. Upstream-Breaking allein ist kein Defekt.
+
+5. Beweismethode und Verifikation
+
+Arbeite in kohärenten API-/Paketgruppen. Ein Vertrag wird geschlossen über:
+öffentlicher Einstieg → Konfiguration/DI → Implementierung → Serializer/
+Transport/Store → Fehler/Cancellation/Lifecycle → Test → NuGet-Consumer.
+Führe danach einen eigenen Querschnittsdurchgang für Multi-Bus,
+Retry/Outbox/Scheduler, Serialisierung, Zeit, Ressourcen und Telemetrie aus.
+
+Wähle zur Diagnose fokussierte Läufe; führe die erforderlichen gemeinsamen
+Abschlussprofile anschließend unfiltriert aus. Befehle müssen aus dem
+aktuellen docs/build.md, Projektgraph, run-tests und der MTP-Help abgeleitet
+werden. Das Repository verwendet xunit.v3.mtp-v2 und Microsoft.Testing.Platform;
+keinen VSTest-/NUnit-/MSTest-Pfad daneben einführen. Kein Upgrade erzwingen.
+
+Verifiziere Release-Restore im locked mode, Build mit Warnungen als Fehler,
+Pack und Package-Consumer/Journey-Gate. Nutze für das Paketgate NICHT
+--update-public-api-contract; Baselineabweichungen sind Reviewevidence.
+Prüfe alle betroffenen Unit-/Architecture-/LocalIntegration-Profile sowie
+die erforderlichen RabbitMQ-/SQL-Server-/Azure-Emulatorprofile, soweit die
+Infrastruktur vorhanden ist. Keine fremden Builds/Container stoppen.
+Alle dotnet/MSBuild-Prozesse besitzt der zuständige Lead; keine parallelen
+Läufe auf denselben Output-/Providerressourcen. Builds ausführen nur, wenn
+die anwendbaren Rollenregeln dies dem ausführenden Reviewer gestatten;
+sonst vorhandene bytegebundene Evidence prüfen und Replay als offen ausweisen.
+
+Für jeden wichtigen Vertrag entwirf gezielte verhaltensunterscheidende
+Positiv-, Negativ-, Grenz-, Fault-, Cancellation-, Concurrency- und
+Restartfälle, soweit fachlich anwendbar. Vorhandene Tests zuerst bewerten.
+Fehlende Fälle als konkrete Szenarien liefern, nicht blind Tausende Tests
+generieren. Ein Gegenmutant verändert genau eine Ursache; führe ihn nur
+in einer isolierten Kopie aus. Halte Ausgangshash, Patch, tatsächliches
+rotes Orakel und bytegenaue Rückkehr zur Baseline fest. Pseudo-Mutation
+als Hypothese kennzeichnen; keine ausgeführte Mutation behaupten.
+
+Tests benötigen ein externes fachliches Orakel. Kein Sleep/Polling/
+„bis Timeout nicht beobachtet“ als Erfolgsbeweis, keine globale statische
+Fixture, kein geteiltes Providerobjekt, keine Catch-all-Erfolgsumdeutung,
+kein Skip oder Nulltests als PASS. Fail-fast-Zeitgrenzen sind Hängerschutz.
+Realservice und Emulator belegen unterschiedliche Grenzen.
+
+Prüfe die konkreten offenen Hinweise eigenständig:
+- TODO: Startupvalidation über alle behaltenen Fähigkeiten;
+- TODO: Cache-Indexprojektion gegenüber externen Observern;
+- TODO: verbleibende Zeitnormalisierung und echte Cloudnachweise;
+- docs/quality-status.md: SQL-Server-Publishfall mit 999 statt 1.000
+  eindeutigen Ankünften. Erfolgreicher Retry schließt die ungeklärte
+  fehlende Nachricht nicht. Trenne Routinganzahl beim Publish,
+  persistierte Zustellung, Subscription-/Topiczustand und Consumerwirkung;
+- Roslyn-Workspace-/Referenzauflösung der Analyzerprojekte.
+
+Übernimm diese Hinweise nicht ungeprüft als neue Findings. Bestätige aktuellen
+Stand und Ursache, kennzeichne bereits bekannte offene Punkte und neue
+Regressionen. Ältere Coveragewerte oder gleiche src-Tree-ID beweisen nicht
+die aktuelle Testtree-/Binär-/Paketidentität. Der T176-Checkpoint beschreibt
+einen datierten Lauf; verifiziere dessen Provenienz und nötige aktuelle Replays.
+
+Nutze keine pauschalen Prozentziele als Ersatz für fehlende Pflichtbeweise.
+Keine Deadline, Antwortlänge, Top-N-Liste oder Budgetgrenze macht ungelesene
+API zu geprüfter API. Bei Unterbrechung sichere Deckungsnachweise,
+Zwischenergebnisse und einen präzisen Fortsetzungsplan; Urteil bleibt PARTIAL.
+
+6. Befundformat und Ergebnis
+
+Jeder Befund enthält:
+- stabile ID, Severity Critical/High/Medium/Low, bestätigter Defekt /
+  nachweisbare Vertragslücke / Beweislücke / Designempfehlung;
+- exakte Symbol-ID, Paket, Pfad und Zeile im eingefrorenen Stand;
+- gültigen Vertrag samt Norm- oder versionsgenauer Primärquelle;
+- konkreten Trigger und beobachtetes Ist gegenüber erwartetem Soll;
+- vollständigen relevanten Wirkungs-/Fehlerpfad;
+- reproduzierbaren Befehl oder kleinstes Gegenbeispiel und Rohbeleg;
+- Nutzerfolge und tatsächlich betroffene Consumer/Provider;
+- vorhandene Tests, fehlendes diskriminierendes Orakel und Gegenmutant;
+- kleinste vollständige Empfehlung einschließlich Folgen für Capability,
+  source/binary/Wire/Schema und Migration;
+- Confidence und offene Voraussetzungen, wenn die Ursache nicht belegt ist.
+
+Für echte Produkt-/Sicherheits-/Kompatibilitätsalternativen liefere mindestens
+zwei tragfähige Optionen mit Pro/Contra und begründeter Empfehlung. Ein
+Stilwunsch wird nicht als Korrektheitsfehler ausgegeben. Pauschales Sealing,
+Span, ValueTask, AsNoTracking, Reflectionverbot oder Entfernen öffentlicher
+Typen ist keine belegte Verbesserung. Ordne jeden Befund einem Owner zu.
+Ein fehlendes Tool oder Cloudkonto ist kein nachgewiesener Produktdefekt.
+Liefere alle bestätigten Befunde, dedupliziert und nach Wirkung priorisiert;
+eine kurze PO-Zusammenfassung darf Details in Anhänge verlagern.
+
+Liefere auf Deutsch, mit englischen API-Bezeichnern und englischen
+Codebeispielen. Der erste Absatz sagt verständlich, ob und wo die API
+technisch tragfähig ist und welche konkreten Risiken offenbleiben.
+Keine A+-Gesamtnote aus einer Stichprobe oder einem globalen Coveragewert.
+
+Erforderliche Ergebnisartefakte im separaten Reviewverzeichnis:
+1. REVIEW_REPORT mit kurzem PO-Urteil, vollständigen Befunden,
+   positiven belegten Eigenschaften und priorisierter Korrekturreihenfolge;
+2. INPUT_MANIFEST mit Commit/Tree/Dirty-State und Inhaltshashes;
+3. API_INVENTORY und Source-/Paketabweichungen;
+4. FILE_COVERAGE und API_COVERAGE mit exakten Nennern;
+5. SKILL_USAGE mit jedem Pflichtskill, konkreter Anwendung und Lücken;
+6. CONTRACT_TEST_MATRIX je API-Familie für Success/Invalid/Boundary/Fault/
+   Cancellation/Concurrency/Lifecycle/Restart/Provider, jeweils Beleg oder
+   begründetes NOT_APPLICABLE;
+7. VERIFICATION_LOG mit exakten Befehlen, SDK-/Paket-/Providerversionen,
+   Prozess-Exitcodes, Discovery/Executed/Passed/Failed/Skipped und Loghashes;
+8. reproduzierbare Gegenbeispiele und isolierte Mutationsbelege;
+9. OPEN_EVIDENCE mit nicht gelesenen/auflösbaren oder nicht ausgeführten
+   Teilen und dem genauen nächsten Schritt.
+
+Vollständiger Abschluss nur, wenn alle Sourceprojekte und tatsächlich
+gelieferten Pakete erfasst sind, jede exponierte Symbol-ID semantisch
+zugeordnet ist, Dateimengen schließen, alle einschlägigen Skills nachweisbar
+angewandt sind und die beanspruchten Beweistiefen tatsächlich vorliegen.
+Bestätigte Defekte ergeben FAIL für die betroffenen Verträge; nicht
+durchführbare Prüfungen ergeben PARTIAL. Ein vollständiger Review mit
+Defekten ist ein zulässiges Reviewergebnis und keine Produktfreigabe.
+Wenn kein Defekt gefunden wurde, benenne trotzdem exakte geprüfte
+Vollständigkeit und verbleibende reale Beweisgrenzen.
+
+Beginne jetzt mit Scopefreeze, Skillinventar und Projekt-/API-Inventar;
+arbeite danach die API-Familien und Querschnittsverträge vollständig ab.
+
+ENDE DES KOPIERBAREN PROMPTS

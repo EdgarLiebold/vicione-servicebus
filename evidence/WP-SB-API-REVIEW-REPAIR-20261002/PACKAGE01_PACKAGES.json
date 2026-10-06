@@ -1,0 +1,142 @@
+{
+  "status": "FRESH_CURRENT_PRODUCT_SOLUTION_PACKAGES",
+  "count": 27,
+  "packages": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "e481ab840ffae084e0d2ea669a669f491ec55817a3abe4b0565ba1c081826890",
+      "bytes": 1494574
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "95d44491e8b9f1b0a1e1e7b5a146768ac38f88d1fff69173c9b1e84364ed54b2",
+      "bytes": 456091
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.ActiveMq.1.0.0.nupkg",
+      "sha256": "8de17ddf337b4a4ba568f5d421e0adef00c7d979574059e227d91c284c688a4a",
+      "bytes": 155942
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg",
+      "sha256": "008134f6851c5f3e60fe311f10264ffcc86c2e7c2e5fca8d042bf8eeb14288e0",
+      "bytes": 28885
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.AmazonSqs.1.0.0.nupkg",
+      "sha256": "ee26d3c4e37392b774b1fa44f3a150a3b08e5778fa7c79158a9577f290517067",
+      "bytes": 208966
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.Analyzers.1.0.0.nupkg",
+      "sha256": "689f5896eb2659fbeccfb0877cbe227bbaffb97929ba730e6704ef0ec5c3fc84",
+      "bytes": 72393
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.Azure.Storage.1.0.0.nupkg",
+      "sha256": "e01595b51acc6870ae1b9098f24e287e0020e1a6b465bdeb298cf37746bf9f4d",
+      "bytes": 29033
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.Azure.Table.1.0.0.nupkg",
+      "sha256": "29e548849657300b01e38f1fc0ae7140d53458ca35ef30ed9ba56961861d8202",
+      "bytes": 56980
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.AzureServiceBus.1.0.0.nupkg",
+      "sha256": "491e080ce6161b8d41b121c9776761324e668e7c68e32bfc02a243fdc43efdf1",
+      "bytes": 220081
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+      "bytes": 148002
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.DynamoDb.1.0.0.nupkg",
+      "sha256": "1639c287c15e92a1ab4cd15d95ce7a599c4ac6111e20705dcdc8ced1d701c14b",
+      "bytes": 36424
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "sha256": "77edf5b845aac8cb83507f56ef917846d2ecbfd3e611def3d53891e07f8fbccc",
+      "bytes": 189459
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+      "sha256": "b3fba9d2130a1a96435de7e07bf5ce74f967c2ddabe2e96f1d38e627fc43fc4a",
+      "bytes": 62807
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.EventHubs.1.0.0.nupkg",
+      "sha256": "28ef28f976a8c8226af1a9a8ce413e250974b3d2b4f3ccd1231523e9779636ad",
+      "bytes": 118924
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+      "sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+      "bytes": 101985
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.Initializers.1.0.0.nupkg",
+      "sha256": "74d67e95a7e4681632b04e535a0f453a867b83b493de5ac07228c7f8ea05effb",
+      "bytes": 21692
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+      "sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+      "bytes": 215924
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.Mediator.1.0.0.nupkg",
+      "sha256": "a3312b50d5f4e58bfb90f45d07cd8893e8117b9e824a9c2bb1ab9af7b701e565",
+      "bytes": 61743
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.MessagePack.1.0.0.nupkg",
+      "sha256": "62e78eee7b2964d872e6f3645276d525f0a16a30a196f960e30d36b60e1eb277",
+      "bytes": 43497
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.Quartz.1.0.0.nupkg",
+      "sha256": "79e2a88acf10c71a6200d30deaf297a6554b87caba5a2b07df8253c28288bfa8",
+      "bytes": 67742
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.RabbitMq.1.0.0.nupkg",
+      "sha256": "1b075078bbfe2d450d88594eab8c8f79210918312e8778fd7a367996bd34aa78",
+      "bytes": 252398
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+      "bytes": 449200
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.SignalR.1.0.0.nupkg",
+      "sha256": "aec2e40ec11092958078a4e8d185bb98e5f4929acd1e02a20586bfdee1af5faa",
+      "bytes": 55979
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.SqlTransport.1.0.0.nupkg",
+      "sha256": "329b219990292c75bc66d87273c7b3c2e1abd85bd340b053c5a90337eb22f50b",
+      "bytes": 145666
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.SqlTransport.PostgreSql.1.0.0.nupkg",
+      "sha256": "8dff662954cd64071b54eedfc51881b595858b773bac9bb1fe068072b4c3c36d",
+      "bytes": 91645
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.SqlTransport.SqlServer.1.0.0.nupkg",
+      "sha256": "4b1dec9837151e2e45f18c62f8a538d051d54190f9bd7214229d43fce22b8e97",
+      "bytes": 87017
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package01/ViciOne.ServiceBus.StateMachineVisualizer.1.0.0.nupkg",
+      "sha256": "6a06f6e394c663f05101bb9d574cb7b3cf03b9bb601e592f8036fc16b9546fd1",
+      "bytes": 20947
+    }
+  ],
+  "limits": "Targeted repaired runtime package consumer validation; full Engineering/testing package final gate remains pending."
+}

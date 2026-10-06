@@ -1,0 +1,141 @@
+{
+  "status": "READONLY_AST_FIFTEEN_SINGLE_SOURCE_EFFECTS_VERIFIED_NATIVE_UNEXECUTED",
+  "runner_sha256": "701cdb3d69f1a04bc4bb6f7a332b83b9bbf70c27db81907dcca1c40a6a0e52d6",
+  "checks": [
+    {
+      "name": "RestoreExecuteAlias",
+      "negative": "execute-shared",
+      "positive": "execute-single",
+      "finding": "F034",
+      "changed": [
+        "execute_registration"
+      ]
+    },
+    {
+      "name": "RestoreFullExecuteAlias",
+      "negative": "full-args",
+      "positive": "full-distinct",
+      "finding": "F034",
+      "changed": [
+        "activity_registration"
+      ]
+    },
+    {
+      "name": "RestoreFullCompensateAlias",
+      "negative": "full-log",
+      "positive": "full-distinct",
+      "finding": "F034",
+      "changed": [
+        "activity_registration"
+      ]
+    },
+    {
+      "name": "AcceptForeignExecute",
+      "negative": "default-mixed-execute-first",
+      "positive": "caller-fallback-execute",
+      "finding": "F034",
+      "changed": [
+        "execute_registration"
+      ]
+    },
+    {
+      "name": "AcceptForeignFullExecute",
+      "negative": "default-mixed-full-first",
+      "positive": "custom-selector-full",
+      "finding": "F034",
+      "changed": [
+        "activity_registration"
+      ]
+    },
+    {
+      "name": "AcceptForeignFullCompensate",
+      "negative": "default-mixed-full-first",
+      "positive": "custom-selector-full",
+      "finding": "F034",
+      "changed": [
+        "activity_registration"
+      ]
+    },
+    {
+      "name": "DropGenuineExecute",
+      "negative": "custom-selector-execute",
+      "positive": "custom-own-execute",
+      "finding": "F034",
+      "changed": [
+        "execute_registration"
+      ]
+    },
+    {
+      "name": "DropGenuineFullExecute",
+      "negative": "custom-selector-full",
+      "positive": "custom-own-full",
+      "finding": "F034",
+      "changed": [
+        "activity_registration"
+      ]
+    },
+    {
+      "name": "DropGenuineFullCompensate",
+      "negative": "custom-selector-full",
+      "positive": "custom-own-full",
+      "finding": "F034",
+      "changed": [
+        "activity_registration"
+      ]
+    },
+    {
+      "name": "RejectOwnExecute",
+      "negative": "custom-own-execute",
+      "positive": "custom-selector-execute",
+      "finding": "F034",
+      "changed": [
+        "execute_registration"
+      ]
+    },
+    {
+      "name": "RejectOwnFullExecute",
+      "negative": "custom-own-full",
+      "positive": "custom-selector-full",
+      "finding": "F034",
+      "changed": [
+        "activity_registration"
+      ]
+    },
+    {
+      "name": "RejectOwnFullCompensate",
+      "negative": "custom-own-full",
+      "positive": "custom-selector-full",
+      "finding": "F034",
+      "changed": [
+        "activity_registration"
+      ]
+    },
+    {
+      "name": "BypassTypedSelector",
+      "negative": "two-buses-full",
+      "positive": "execute-single",
+      "finding": "F034",
+      "changed": [
+        "activity_registration"
+      ]
+    },
+    {
+      "name": "DropPlannedCompanionName",
+      "negative": "definition-full",
+      "positive": "definition-aligned-full",
+      "finding": "F041",
+      "changed": [
+        "endpoint_context"
+      ]
+    },
+    {
+      "name": "IgnoreCapturedCompanionName",
+      "negative": "typed-definition-compensation-full",
+      "positive": "typed-definition-aligned-full",
+      "finding": "F041",
+      "changed": [
+        "context_definition"
+      ]
+    }
+  ]
+}

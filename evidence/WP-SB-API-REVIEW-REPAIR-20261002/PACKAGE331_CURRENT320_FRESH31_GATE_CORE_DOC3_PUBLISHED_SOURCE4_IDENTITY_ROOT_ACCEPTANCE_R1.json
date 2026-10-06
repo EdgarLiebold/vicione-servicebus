@@ -1,0 +1,183 @@
+{
+  "utc": "2026-10-06T04:03:38.466427+00:00",
+  "status": "ROOT_ACCEPTED_ACTUAL320_FRESH31_SHARED_GATE_AND_F147_DOC3_PUBLICATION",
+  "native_gate_receipt": {
+    "phase": "package320-current31-package18journey4consumer-gate-r1",
+    "command": [
+      "env",
+      "TMPDIR=/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package320-current31-journey18-consumer4-capture-proposed-r1/live-temp",
+      "bash",
+      "tools/ci/verify_developer_journeys.sh"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-06T03:32:16.808467+00:00",
+    "completed_utc": "2026-10-06T03:35:13.839244+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package320-current31-package18journey4consumer-gate-r1.log",
+    "log_sha256": "78e4d52899ac3df7c498ba0b3964930e4ff28d1fef95654aea3e31735b2d521b"
+  },
+  "qualified_result": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package320-current31-journey18-consumer4-capture-proposed-r1/qualification-r1/BOUNDED_RESULT.json",
+    "sha256": "5fa94e036ed0bd1b2182be7e37c8c83d75e6e833d16f409529882b9bdc75c763"
+  },
+  "independent_peer_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package320-independent-qualification-r1/REPORT.json",
+    "sha256": "2bf33bf5eb278ef14e45f2e3edfe967aa494a573838fa96c8903c3aee9b23d2f"
+  },
+  "independent_peer_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package320-independent-qualification-r1/MANIFEST.json",
+    "sha256": "7139a54d53559c1714ece6b6425e2bebb8fbeedb463bff3cfb63282b6c1770f3"
+  },
+  "actual_counts": {
+    "actual_receipt_sha256": "02a6d4adb699380f683833d1e309b4e89968ca40229ead8e05b993a057d8f6d1",
+    "gate_log_sha256": "78e4d52899ac3df7c498ba0b3964930e4ff28d1fef95654aea3e31735b2d521b",
+    "watch_final_sha256": "114da27ae68c0860b8e95fd6a4afe8a9e94a12f1e2a48f2e792840b9e4ba78c3",
+    "exit": 0,
+    "strict0W0E": 7,
+    "freshpackages": 31,
+    "runtime_API": 30,
+    "analyzers": 2,
+    "compiled_journeys": 18,
+    "isolated_executed_apps": 4,
+    "all18_executed": false
+  },
+  "product_app_binding": {
+    "parser_sha256": "eebf9d8fe35f0974a3a22dd311d5ec991a0942536889176854ae7088fe622450",
+    "assemblies": 39,
+    "products_analyzers": 32,
+    "product_documents": 4294,
+    "product_physical": 4152,
+    "product_generated_embedded": 142,
+    "apps": 7,
+    "app_documents": 47,
+    "source_all_checksum_equal": true,
+    "own_full_structural_metadata_preserved": true
+  },
+  "archives_restore": {
+    "CRC_unique_all31": true,
+    "allpayloadSHA": true,
+    "runtime30_archive_bytes_equal": true,
+    "cache90_metadata_SHA512_nuspec_records": true,
+    "lock_assets_deps_graphs": 6,
+    "project_references": 0,
+    "third_party_archive_claim": false
+  },
+  "source_integrity": {
+    "frozen_currentfiles": 6289,
+    "tracked": 6209,
+    "extra": 80,
+    "watchzerochanges": true
+  },
+  "public_API": {
+    "actual20118lines_byteequals_frozen_reviewed_baseline": true,
+    "sha256": "f21dbd840230b816b300ad227ad3de39322cf1bd544dcafbf1f2ecd326fe9bef",
+    "ABI_runtime_execution_claim": false
+  },
+  "F147_doc3": {
+    "freshCoreDLL": "304cf6e61d0c2dfe748dc19a5c8095c80a3db3a132ee4764dfc971b6a93c64f5",
+    "freshCoreXML": "37ce5828d545f288b05c69cdfbc240daae034380c9afb75b2b3e2a7dcb4132d8",
+    "member_count": 6873,
+    "actual3clauses_matchexpected": true,
+    "whole_XML_literal_inverse_equals_original": true,
+    "Source2_PDB": true,
+    "allotherXMLbytes_unchanged": true
+  },
+  "Doc3_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE319_F147_CORE_SCOPE_ADAPTER_DOC3_PRODUCT2_ROOT_APPLICATION_R1.json",
+    "sha256": "185ba63717ea3b27ff286b9dc9c4987c0096feef084d4acf4a71b9a073b177da"
+  },
+  "whole_XML_inverse_original_sha256": "42af9bd40374f0e9c094f3681f9a9e35b83b7cc51003388ba64d98a0dbfda0a9",
+  "actual_XML3": [
+    {
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})",
+      "node": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})\">\n            <summary>Acquires a consumer scope, awaits the next consumer stage, and releases the acquired scope.</summary>\n            <typeparam name=\"TMessage\">The message contract processed by the member.</typeparam>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        ",
+      "summary": "Acquires a consumer scope, awaits the next consumer stage, and releases the acquired scope."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedSendPipeAdapter`1.Send(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+      "node": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedSendPipeAdapter`1.Send(ViciOne.ServiceBus.Advanced.SendContext{`0})\">\n            <summary>Performs no additional work for this adapter's typed send context.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n        </member>\n        ",
+      "summary": "Performs no additional work for this adapter's typed send context."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedSendPipeAdapter`1.Send``1(ViciOne.ServiceBus.Advanced.SendContext{``0})",
+      "node": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedSendPipeAdapter`1.Send``1(ViciOne.ServiceBus.Advanced.SendContext{``0})\">\n            <summary>Supplies this adapter's service provider to the context's payload get-or-add operation.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n            <param name=\"context\">The context associated with the operation.</param>\n        </member>\n        ",
+      "summary": "Supplies this adapter's service provider to the context's payload get-or-add operation."
+    }
+  ],
+  "existing_Source4_identity_rebases": [
+    {
+      "master_index": 12745,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.#ctor(ViciOne.ServiceBus.DependencyInjection.IConsumeScopeProvider)",
+      "old_source_sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "new_source_sha256": "aedf858fa6a40d59ba1e33ccfdefac6f48dd61198684a69d0df4e8127ae9ce6d",
+      "actual_emitted_document_RID": 554,
+      "actual_emitted_document": {
+        "path": "/_/src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "aedf858fa6a40d59ba1e33ccfdefac6f48dd61198684a69d0df4e8127ae9ce6d"
+      },
+      "XML_unchanged": true,
+      "norm_status_native_history_unchanged": true
+    },
+    {
+      "master_index": 12746,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1",
+      "old_source_sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "new_source_sha256": "aedf858fa6a40d59ba1e33ccfdefac6f48dd61198684a69d0df4e8127ae9ce6d",
+      "actual_emitted_document_RID": 554,
+      "actual_emitted_document": {
+        "path": "/_/src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "aedf858fa6a40d59ba1e33ccfdefac6f48dd61198684a69d0df4e8127ae9ce6d"
+      },
+      "XML_unchanged": true,
+      "norm_status_native_history_unchanged": true
+    },
+    {
+      "master_index": 12767,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedSendPipeAdapter`1.#ctor(System.IServiceProvider,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+      "old_source_sha256": "d3e6a40602c2bd54eb1cdcec28ced25382df10f530791684adcaedb825518266",
+      "new_source_sha256": "0acea6997d7fb550d3551d58a920e63b63901fd559a45c6b7b21f23a878b8c19",
+      "actual_emitted_document_RID": 565,
+      "actual_emitted_document": {
+        "path": "/_/src/ViciOne.ServiceBus/DependencyInjection/ScopedSendPipeAdapter.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "0acea6997d7fb550d3551d58a920e63b63901fd559a45c6b7b21f23a878b8c19"
+      },
+      "XML_unchanged": true,
+      "norm_status_native_history_unchanged": true
+    },
+    {
+      "master_index": 12768,
+      "id": "T:ViciOne.ServiceBus.DependencyInjection.ScopedSendPipeAdapter`1",
+      "old_source_sha256": "d3e6a40602c2bd54eb1cdcec28ced25382df10f530791684adcaedb825518266",
+      "new_source_sha256": "0acea6997d7fb550d3551d58a920e63b63901fd559a45c6b7b21f23a878b8c19",
+      "actual_emitted_document_RID": 565,
+      "actual_emitted_document": {
+        "path": "/_/src/ViciOne.ServiceBus/DependencyInjection/ScopedSendPipeAdapter.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "0acea6997d7fb550d3551d58a920e63b63901fd559a45c6b7b21f23a878b8c19"
+      },
+      "XML_unchanged": true,
+      "norm_status_native_history_unchanged": true
+    }
+  ],
+  "master_before_sha256": "ad78696a1b4efe677d9f3b4341667c229ac2f1b6425d56bf7772e5207bcc90d1",
+  "master_rows_unchanged": 19040,
+  "Original_accepted_unchanged": 18178,
+  "Original_remaining_unchanged": 391,
+  "confirmed_findings_unchanged": 213,
+  "Doc3_is_existing_F147_extension": true,
+  "Native_added_for_XML": false,
+  "Source3_operative_promotion": false,
+  "root_authority": "Whole independent320 report40e7de; all48 manifest payload hashes/bytes reverified. Root approved qualifier actual39/source/ZIP/graphs result, own exact actualZIP CoreDLL/XML/3literalinverse/all6873IDs/Source2PDB plus existing4 unchangedXML join. No full semantic4341 sources/13230 tests inferred.",
+  "limits": [
+    "No arbitrary method/API/ABI/native grades or human whole7862/13230 test body credit.",
+    "4 isolated consumers executed;18 journeys compiled, not all executed.",
+    "No loaded runtime dependency telemetry.",
+    "30XML structures verified; only3 Doc3 clauses own semantic publication review here.",
+    "New Root/Master/STATE writes not performed."
+  ],
+  "whole_API_closed": false,
+  "global_Aplus": false
+}

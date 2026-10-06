@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Consumers;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Metadata;
 
@@ -21,17 +23,26 @@ public class ScopedConsumeFilter<T, TFilter> :
         _scopeProvider = scopeProvider;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Resolves and runs the configured filter in an acquired consume scope, then releases the owned scope.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
     {
-        await using IConsumeScopeContext<T> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);
+        IConsumeScopeContext<T> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);
 
-        var filter = scope.GetService<TFilter>();
+        Exception? operationFailure = null;
+        try
+        {
+            var filter = scope.GetService<TFilter>();
+            await filter.SendAsync(scope.Context, next).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
 
-        await filter.SendAsync(scope.Context, next).ConfigureAwait(false);
+        await OwnedConsumerLifetime.ReleaseAfterOperationAsync(scope, operationFailure).ConfigureAwait(false);
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>

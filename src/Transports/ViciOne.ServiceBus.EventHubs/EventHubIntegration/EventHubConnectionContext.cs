@@ -14,7 +14,7 @@ public class EventHubConnectionContext :
 {
     readonly Action<EventHubProducerClientOptions>? _configureOptions;
 
-    /// <summary>Creates a connection context from immutable rider settings.</summary>
+    /// <summary>Creates a connection context from the supplied rider settings.</summary>
     /// <param name="hostSettings">The Event Hubs namespace authentication settings.</param>
     /// <param name="storageSettings">The Blob Storage checkpoint settings exposed by this context.</param>
     /// <param name="configureOptions">The optional producer client options callback.</param>

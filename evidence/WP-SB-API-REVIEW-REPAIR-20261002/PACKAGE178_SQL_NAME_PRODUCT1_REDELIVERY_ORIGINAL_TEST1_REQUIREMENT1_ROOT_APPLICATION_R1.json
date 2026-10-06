@@ -1,0 +1,55 @@
+{
+  "utc": "2026-10-05T10:40:15.325483+00:00",
+  "actor": "/root",
+  "status": "THREE_ROOT_FILES_APPLIED_SQLNAME_F121_EXTENSION_PRODUCT1_REDELIVERY_ORIGINAL_TEST1_REQ1",
+  "plan": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlReceiveEndpointConfiguration.cs",
+      "before_sha256": "482cbcbd1e76e67b050847bb310a7bb050dcbfe41540a393cd53651e892c7af2",
+      "after_sha256": "501cd7a4c20d85658db94f60a0b2d234b524f3e16679428b56f394af3f717f83",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package201-sql-queue-full-name-product-proposed-r1/SqlReceiveEndpointConfiguration.proposed.cs"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlReceiveLockContextTests.cs",
+      "before_sha256": "1036753d99dcadc21eb566553ad4a2aaa179e00d6704b2a89b14b40428f87965",
+      "after_sha256": "864c1955b71d448f4da75f20702dc7610b912e34b2b0821297a7b46d2ed3ba06",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package200-sql-redelivery-debug-original2-oracles-proposed-r2/proposed/tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlReceiveLockContextTests.cs"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/SqlTransportRequirements.json",
+      "before_sha256": "5f3dc1fa67b6f6d7b28b76d6f5bb98213007814f10271a9f7e94c8678c56487d",
+      "after_sha256": "27612594e5037d1d8bb9455dc4c24f5a49414eb66df581a6918847a48c1c5d4b",
+      "requirements_before": 162,
+      "requirements_after": 163
+    }
+  ],
+  "independent_manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package201-sql-queue-full-name-product-proposed-r1/MANIFEST.json",
+      "sha256": "6fd0bed7bc1be32a7eebc14a4018928d1cfbbda36f037efee3c65f9ab1f0c101"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package200-sql-redelivery-debug-original2-oracles-proposed-r2/MANIFEST.json",
+      "sha256": "55159dfe19af7f2ed5201ed6f7299f6af53b544ec2962e554d792260e6c71503"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package201-sql-queue-full-name-independent-runtime-peer-r1/MANIFEST.json",
+      "sha256": "15675fde91cd90231ba4fe6f32e2b6c2f2384ae440fe7a97979bf3f0769727ad"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package200-sql-redelivery-debug-original2-independent-scanner-r2/MANIFEST.json",
+      "sha256": "ecef952147bfe9e428212ef15c6b854c950093fe8a76d7297782490dfffbb2a9"
+    }
+  ],
+  "root_personal_review": "Entire actual validator290 cb1447 and exactone-pattern inverse; entire proposed Test392 and current preserved220 through whole proposed79ccea + exact172netdelta; entire actual owningLock326 0f060b and both independent reportbounds71da77/aeedd6. CompleteQTest mainpublictask/provider hold/structuredlogger/originalcause/finally alwaysactualComplete(None) reviewed. R1fixturehold immutable and notapplied.",
+  "original_qualified177": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package177-rabbit-cleanup-fixed-sql-topology-xml2-name-original4-fresh4-independent-r1/REPORT.json",
+    "sha256": "adf2fe73069cd5649abeb6e96bd80d85ed47cbec63897ac1c44c6eb9f4cecc97"
+  },
+  "limits": [
+    "SQLName fixed-native pending.",
+    "Redelivery debug originalcase prediction not yet Finding or nativeproof.",
+    "No policy change to renewal warnings/cancellation callbacks/true lockloss.",
+    "No wholeAPI or compiler inventory closure."
+  ]
+}

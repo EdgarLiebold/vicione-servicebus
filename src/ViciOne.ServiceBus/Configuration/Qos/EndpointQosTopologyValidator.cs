@@ -14,7 +14,8 @@ public sealed class EndpointQosTopologyValidator
 {
     /// <summary>Validates the current configuration.</summary>
     /// <param name="declarations">The declarations.</param>
-    /// <returns>The validation failures.</returns>
+    /// <returns>The effective transport QoS for endpoints with specified QoS, keyed by endpoint name.</returns>
+    /// <exception cref="EndpointQosConfigurationException">The declarations contain conflicting QoS or ownership.</exception>
     public FrozenDictionary<string, EndpointTransportQos> Validate(IEnumerable<EndpointQosDeclaration> declarations)
     {
         ArgumentNullException.ThrowIfNull(declarations);

@@ -1,0 +1,74 @@
+{
+  "files": [
+    {
+      "name": "Program.cs",
+      "previous_sha256": "d416224a2e0d83dd025a8223fca16960b3e84df9bf8482108a8501c0a386c290",
+      "corrected_sha256": "d416224a2e0d83dd025a8223fca16960b3e84df9bf8482108a8501c0a386c290",
+      "root_read": "FULL",
+      "paired_equal": true
+    },
+    {
+      "name": "OwnedLifetime.cs",
+      "previous_sha256": "42f8f72d69881ad3373ac3941d83597a0798ef814ce0441939c92ded685da0eb",
+      "corrected_sha256": "42f8f72d69881ad3373ac3941d83597a0798ef814ce0441939c92ded685da0eb",
+      "root_read": "FULL",
+      "paired_equal": true
+    },
+    {
+      "name": "Probe.cs",
+      "previous_sha256": "c1be427c1f159a1c35c1b4ce9688011e1571ea7af456b793848f723ebbd6c591",
+      "corrected_sha256": "c1be427c1f159a1c35c1b4ce9688011e1571ea7af456b793848f723ebbd6c591",
+      "root_read": "FULL",
+      "paired_equal": true
+    },
+    {
+      "name": "Resources.cs",
+      "previous_sha256": "133c9257fc8a18f82469f897db3a9a89ce84a107f9516722ce1454124b5a9fa2",
+      "corrected_sha256": "133c9257fc8a18f82469f897db3a9a89ce84a107f9516722ce1454124b5a9fa2",
+      "root_read": "FULL",
+      "paired_equal": true
+    },
+    {
+      "name": "RuntimeOwner.cs",
+      "previous_sha256": "d479aab5e5844c3557f1b69558c8075e186e556db895d3083c5166c1717ef2a2",
+      "corrected_sha256": "d479aab5e5844c3557f1b69558c8075e186e556db895d3083c5166c1717ef2a2",
+      "root_read": "FULL",
+      "paired_equal": true
+    },
+    {
+      "name": "Cases.cs",
+      "previous_sha256": "f109cfab804fae687bb6fb95b36cca628e356210f792762fca88dc66910d8891",
+      "corrected_sha256": "f109cfab804fae687bb6fb95b36cca628e356210f792762fca88dc66910d8891",
+      "root_read": "FULL",
+      "paired_equal": true
+    },
+    {
+      "name": "DefinitionLifetime.PublicConsumer.csproj",
+      "previous_sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "corrected_sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "root_read": "FULL",
+      "paired_equal": true
+    },
+    {
+      "name": "NuGet.Config",
+      "previous_sha256": "8d60028f5f593cbca31bf984646d0b364a8bc4ebe4dabfc22eb8f50527cd5acf",
+      "corrected_sha256": "52ae547238b682611c915c61fb51b6e30c84661171956e426b4e16c0e4b39f0d",
+      "root_read": "FULL",
+      "paired_equal": false
+    },
+    {
+      "name": "packages.lock.json",
+      "previous_sha256": "50eaf67fedf39dd38cf44f053bca25ff971497e96a26799389ac88933b66d325",
+      "corrected_sha256": null,
+      "root_read": "FULL",
+      "paired_equal": null
+    }
+  ],
+  "whole_original_owner_read": true,
+  "independent_whole_preflight": "adversarial_package_01 live message confirms current whole9 + configs FULL no static blocker; immutable dossier pending",
+  "setup_final_build_phase": "package18-f035-public-previous-build-r3",
+  "setup_final_build_exit": 0,
+  "source_product_changes": 0,
+  "planned_behavior_cases": 46,
+  "behavior_evidence_before_run": false
+}

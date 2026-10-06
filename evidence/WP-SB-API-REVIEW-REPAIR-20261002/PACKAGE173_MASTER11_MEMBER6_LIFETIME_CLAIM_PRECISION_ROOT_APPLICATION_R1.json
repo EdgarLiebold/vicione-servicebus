@@ -1,0 +1,1246 @@
+{
+  "utc": "2026-10-05T08:22:12.114927+00:00",
+  "actor": "root",
+  "original_master_sha256": "968ff12a4609218ac9f56a2c603fdf99eadb5fab252f7999155c80dfd2846263",
+  "corrected_master_sha256": "7ce51ad8ce39a089d308b5b0df45c1b181f7aac9aee99a063807265db01d65b2",
+  "exact_owner_contexts_changed": 11,
+  "exact_member_contracts_changed": 6,
+  "root_whole_current_source_reads": "044ff0 helper64/container154 whole initial output; full compact before/after11 recovered5fdcca, preciseR2all11diff c479e3",
+  "author_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package183-container-master11-member-and-owner-precision-overlay-r2/REPORT.json",
+    "sha256": "b6d6020b16a1a13671cfb02cc5469d34d98e375f0e6c3125bcf8e1de2b263c7f"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package183-container-master11-independent-peer-r2/REPORT.json",
+    "sha256": "029d2fb4a282f172746ead8e9e1a7941034c577b1132f713cf1918f550446118"
+  },
+  "rows": [
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.#ctor",
+      "original_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.#ctor",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Implicit public parameterless constructor of this exact constrained closed owner; the compiler supplies no explicit argument-validation body or external operation. Per-instance fields/default initialization remain as shown in the whole-owner source.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; provider/context resolution and fallbackscope owns lifetime. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.ContainerFactoryActivity()",
+        "historical_typed_detail": {
+          "kind": "Constructor",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "void",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": []
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "NO_ADDITIONAL_MIRROR_ORACLE_PROPOSED",
+          "reason": "Constructor/getter/configuration/inspection or direct local forwarding is explained by actual source and typed/XML binding; a mirrored new test would not improve this bounded declaration/local contract claim."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "corrected_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.#ctor",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Implicit public parameterless constructor of this exact constrained closed owner; the compiler supplies no explicit argument-validation body or external operation. Per-instance fields/default initialization remain as shown in the whole-owner source.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.ContainerFactoryActivity()",
+        "historical_typed_detail": {
+          "kind": "Constructor",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "void",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": []
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "NO_ADDITIONAL_MIRROR_ORACLE_PROPOSED",
+          "reason": "Constructor/getter/configuration/inspection or direct local forwarding is explained by actual source and typed/XML binding; a mirrored new test would not improve this bounded declaration/local contract claim."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "only_change": "Root administrative source-norm precision only: corrected copied owner_scope sentence and six Execute/Fault member_contracts. Original ID/source/signature/evidence/status/acceptance/native fields preserved; originalR1 immutable."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.Accept(ViciOne.ServiceBus.Sagas.IStateMachineVisitor)",
+      "original_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.Accept(ViciOne.ServiceBus.Sagas.IStateMachineVisitor)",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Apply exactly this member’s visitor dispatch/traversal from its literal body. Nested forwarding owners visit their retained collaborator; leaf owners visit this wrapper. Any explicit null guard is recorded below; request-notification activities have no additional guard. This is inspection, with no execution or ownership transfer.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; provider/context resolution and fallbackscope owns lifetime. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public void global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.Accept(global::ViciOne.ServiceBus.Sagas.IStateMachineVisitor visitor)",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "void",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "visitor",
+              "type": "global::ViciOne.ServiceBus.Sagas.IStateMachineVisitor",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "NO_ADDITIONAL_MIRROR_ORACLE_PROPOSED",
+          "reason": "Constructor/getter/configuration/inspection or direct local forwarding is explained by actual source and typed/XML binding; a mirrored new test would not improve this bounded declaration/local contract claim."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "corrected_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.Accept(ViciOne.ServiceBus.Sagas.IStateMachineVisitor)",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Apply exactly this member’s visitor dispatch/traversal from its literal body. Nested forwarding owners visit their retained collaborator; leaf owners visit this wrapper. Any explicit null guard is recorded below; request-notification activities have no additional guard. This is inspection, with no execution or ownership transfer.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public void global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.Accept(global::ViciOne.ServiceBus.Sagas.IStateMachineVisitor visitor)",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "void",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "visitor",
+              "type": "global::ViciOne.ServiceBus.Sagas.IStateMachineVisitor",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "NO_ADDITIONAL_MIRROR_ORACLE_PROPOSED",
+          "reason": "Constructor/getter/configuration/inspection or direct local forwarding is explained by actual source and typed/XML binding; a mirrored new test would not improve this bounded declaration/local contract claim."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "only_change": "Root administrative source-norm precision only: corrected copied owner_scope sentence and six Execute/Fault member_contracts. Original ID/source/signature/evidence/status/acceptance/native fields preserved; originalR1 immutable."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.ExecuteAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0},ViciOne.ServiceBus.Sagas.IBehavior{`0})",
+      "original_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.ExecuteAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0},ViciOne.ServiceBus.Sagas.IBehavior{`0})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Resolve the activity through this invocation context GetServiceOrCreateInstance<TActivity> then return its ExecuteAsync Task for the same context and next. Registered activity lifetime belongs to DI/context; fallback ownership belongs to the context helper, not this wrapper. Null validation and exact generic route are the literal member body and typed signature, including any explicit missing-body error.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; provider/context resolution and fallbackscope owns lifetime. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.ExecuteAsync(global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next)",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "corrected_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.ExecuteAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0},ViciOne.ServiceBus.Sagas.IBehavior{`0})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Validate context then next with ArgumentNullException.ThrowIfNull. Resolve TActivity through this invocation context GetServiceOrCreateInstance<TActivity>, then directly return the selected activity ExecuteAsync task with the exact same context and next; no wrapper Task or activity disposal. Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Exact typed/untyped method route and constraints remain those of the original declared signature.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.ExecuteAsync(global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next)",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "only_change": "Root administrative source-norm precision only: corrected copied owner_scope sentence and six Execute/Fault member_contracts. Original ID/source/signature/evidence/status/acceptance/native fields preserved; originalR1 immutable.",
+      "r1_member_contract_before": "Resolve the activity through this invocation context GetServiceOrCreateInstance<TActivity> then return its ExecuteAsync Task for the same context and next. Registered activity lifetime belongs to DI/context; fallback ownership belongs to the context helper, not this wrapper. Null validation and exact generic route are the literal member body and typed signature, including any explicit missing-body error."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.ExecuteAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,``0},ViciOne.ServiceBus.Sagas.IBehavior{`0,``0})",
+      "original_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.ExecuteAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,``0},ViciOne.ServiceBus.Sagas.IBehavior{`0,``0})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Resolve the activity through this invocation context GetServiceOrCreateInstance<TActivity> then return its ExecuteAsync Task for the same context and next. Registered activity lifetime belongs to DI/context; fallback ownership belongs to the context helper, not this wrapper. Null validation and exact generic route are the literal member body and typed signature, including any explicit missing-body error.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; provider/context resolution and fallbackscope owns lifetime. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.ExecuteAsync<T>(global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga, T> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, T> next) where T : class",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga, T> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where T : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, T> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where T : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "corrected_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.ExecuteAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,``0},ViciOne.ServiceBus.Sagas.IBehavior{`0,``0})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Validate context then next with ArgumentNullException.ThrowIfNull. Resolve TActivity through this invocation context GetServiceOrCreateInstance<TActivity>, then directly return the selected activity ExecuteAsync task with the exact same context and next; no wrapper Task or activity disposal. Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Exact typed/untyped method route and constraints remain those of the original declared signature.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.ExecuteAsync<T>(global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga, T> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, T> next) where T : class",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga, T> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where T : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, T> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where T : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "only_change": "Root administrative source-norm precision only: corrected copied owner_scope sentence and six Execute/Fault member_contracts. Original ID/source/signature/evidence/status/acceptance/native fields preserved; originalR1 immutable.",
+      "r1_member_contract_before": "Resolve the activity through this invocation context GetServiceOrCreateInstance<TActivity> then return its ExecuteAsync Task for the same context and next. Registered activity lifetime belongs to DI/context; fallback ownership belongs to the context helper, not this wrapper. Null validation and exact generic route are the literal member body and typed signature, including any explicit missing-body error."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.FaultedAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext{`0,``0},ViciOne.ServiceBus.Sagas.IBehavior{`0})",
+      "original_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.FaultedAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext{`0,``0},ViciOne.ServiceBus.Sagas.IBehavior{`0})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Resolve activity through actual invocation context service/fallback helper, then return selected FaultedAsync Task for original context/next. Context/DI helper owns activation/lifetime.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; provider/context resolution and fallbackscope owns lifetime. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.FaultedAsync<TException>(global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, TException> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next) where TException : global::System.Exception",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, TException> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where TException : global::System.Exception",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "corrected_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.FaultedAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext{`0,``0},ViciOne.ServiceBus.Sagas.IBehavior{`0})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Validate context then next with ArgumentNullException.ThrowIfNull. Resolve TActivity through this invocation context GetServiceOrCreateInstance<TActivity>, then directly return the selected activity FaultedAsync task with the exact same exception context and next; no wrapper Task or activity disposal. Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Exact typed/untyped method route and TException:Exception constraints remain those of the original declared signature.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.FaultedAsync<TException>(global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, TException> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga> next) where TException : global::System.Exception",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, TException> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where TException : global::System.Exception",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "only_change": "Root administrative source-norm precision only: corrected copied owner_scope sentence and six Execute/Fault member_contracts. Original ID/source/signature/evidence/status/acceptance/native fields preserved; originalR1 immutable.",
+      "r1_member_contract_before": "Resolve activity through actual invocation context service/fallback helper, then return selected FaultedAsync Task for original context/next. Context/DI helper owns activation/lifetime."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.FaultedAsync``2(ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext{`0,``0,``1},ViciOne.ServiceBus.Sagas.IBehavior{`0,``0})",
+      "original_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.FaultedAsync``2(ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext{`0,``0,``1},ViciOne.ServiceBus.Sagas.IBehavior{`0,``0})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Resolve activity through actual invocation context service/fallback helper, then return selected FaultedAsync Task for original context/next. Context/DI helper owns activation/lifetime.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; provider/context resolution and fallbackscope owns lifetime. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.FaultedAsync<T, TException>(global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, T, TException> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, T> next) where T : class where TException : global::System.Exception",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, T, TException> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where T : class where TException : global::System.Exception",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, T> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where T : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "corrected_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.FaultedAsync``2(ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext{`0,``0,``1},ViciOne.ServiceBus.Sagas.IBehavior{`0,``0})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Validate context then next with ArgumentNullException.ThrowIfNull. Resolve TActivity through this invocation context GetServiceOrCreateInstance<TActivity>, then directly return the selected activity FaultedAsync task with the exact same exception context and next; no wrapper Task or activity disposal. Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Exact typed/untyped method route and TException:Exception constraints remain those of the original declared signature.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.FaultedAsync<T, TException>(global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, T, TException> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, T> next) where T : class where TException : global::System.Exception",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, T, TException> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where T : class where TException : global::System.Exception",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, T> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where T : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "only_change": "Root administrative source-norm precision only: corrected copied owner_scope sentence and six Execute/Fault member_contracts. Original ID/source/signature/evidence/status/acceptance/native fields preserved; originalR1 immutable.",
+      "r1_member_contract_before": "Resolve activity through actual invocation context service/fallback helper, then return selected FaultedAsync Task for original context/next. Context/DI helper owns activation/lifetime."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+      "original_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Apply exactly this member’s probe tree/keys/nested forwarding from its literal body and whole-owner notes. EmptyBehavior is a guarded no-op; request-notification activities do not add a null guard. Probe calls are inspection and do not execute activities or change lifetime; no numeric/key promise beyond the supplied body.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; provider/context resolution and fallbackscope owns lifetime. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public void global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.Probe(global::ViciOne.ServiceBus.Operations.ProbeContext context)",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "void",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Operations.ProbeContext",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "NO_ADDITIONAL_MIRROR_ORACLE_PROPOSED",
+          "reason": "Constructor/getter/configuration/inspection or direct local forwarding is explained by actual source and typed/XML binding; a mirrored new test would not improve this bounded declaration/local contract claim."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "corrected_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`2.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Apply exactly this member’s probe tree/keys/nested forwarding from its literal body and whole-owner notes. EmptyBehavior is a guarded no-op; request-notification activities do not add a null guard. Probe calls are inspection and do not execute activities or change lifetime; no numeric/key promise beyond the supplied body.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public void global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TActivity>.Probe(global::ViciOne.ServiceBus.Operations.ProbeContext context)",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "void",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Operations.ProbeContext",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "NO_ADDITIONAL_MIRROR_ORACLE_PROPOSED",
+          "reason": "Constructor/getter/configuration/inspection or direct local forwarding is explained by actual source and typed/XML binding; a mirrored new test would not improve this bounded declaration/local contract claim."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "only_change": "Root administrative source-norm precision only: corrected copied owner_scope sentence and six Execute/Fault member_contracts. Original ID/source/signature/evidence/status/acceptance/native fields preserved; originalR1 immutable."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.#ctor",
+      "original_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.#ctor",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Implicit public parameterless constructor of this exact constrained closed owner; the compiler supplies no explicit argument-validation body or external operation. Per-instance fields/default initialization remain as shown in the whole-owner source.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; provider/context resolution and fallbackscope owns lifetime. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TMessage, TActivity>.ContainerFactoryActivity()",
+        "historical_typed_detail": {
+          "kind": "Constructor",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "void",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": []
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "NO_ADDITIONAL_MIRROR_ORACLE_PROPOSED",
+          "reason": "Constructor/getter/configuration/inspection or direct local forwarding is explained by actual source and typed/XML binding; a mirrored new test would not improve this bounded declaration/local contract claim."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "corrected_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.#ctor",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Implicit public parameterless constructor of this exact constrained closed owner; the compiler supplies no explicit argument-validation body or external operation. Per-instance fields/default initialization remain as shown in the whole-owner source.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TMessage, TActivity>.ContainerFactoryActivity()",
+        "historical_typed_detail": {
+          "kind": "Constructor",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "void",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": []
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "NO_ADDITIONAL_MIRROR_ORACLE_PROPOSED",
+          "reason": "Constructor/getter/configuration/inspection or direct local forwarding is explained by actual source and typed/XML binding; a mirrored new test would not improve this bounded declaration/local contract claim."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "only_change": "Root administrative source-norm precision only: corrected copied owner_scope sentence and six Execute/Fault member_contracts. Original ID/source/signature/evidence/status/acceptance/native fields preserved; originalR1 immutable."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.Accept(ViciOne.ServiceBus.Sagas.IStateMachineVisitor)",
+      "original_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.Accept(ViciOne.ServiceBus.Sagas.IStateMachineVisitor)",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Apply exactly this member’s visitor dispatch/traversal from its literal body. Nested forwarding owners visit their retained collaborator; leaf owners visit this wrapper. Any explicit null guard is recorded below; request-notification activities have no additional guard. This is inspection, with no execution or ownership transfer.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; provider/context resolution and fallbackscope owns lifetime. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public void global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TMessage, TActivity>.Accept(global::ViciOne.ServiceBus.Sagas.IStateMachineVisitor visitor)",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "void",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "visitor",
+              "type": "global::ViciOne.ServiceBus.Sagas.IStateMachineVisitor",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "NO_ADDITIONAL_MIRROR_ORACLE_PROPOSED",
+          "reason": "Constructor/getter/configuration/inspection or direct local forwarding is explained by actual source and typed/XML binding; a mirrored new test would not improve this bounded declaration/local contract claim."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "corrected_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.Accept(ViciOne.ServiceBus.Sagas.IStateMachineVisitor)",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Apply exactly this member’s visitor dispatch/traversal from its literal body. Nested forwarding owners visit their retained collaborator; leaf owners visit this wrapper. Any explicit null guard is recorded below; request-notification activities have no additional guard. This is inspection, with no execution or ownership transfer.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public void global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TMessage, TActivity>.Accept(global::ViciOne.ServiceBus.Sagas.IStateMachineVisitor visitor)",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "void",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "visitor",
+              "type": "global::ViciOne.ServiceBus.Sagas.IStateMachineVisitor",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "NO_ADDITIONAL_MIRROR_ORACLE_PROPOSED",
+          "reason": "Constructor/getter/configuration/inspection or direct local forwarding is explained by actual source and typed/XML binding; a mirrored new test would not improve this bounded declaration/local contract claim."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "only_change": "Root administrative source-norm precision only: corrected copied owner_scope sentence and six Execute/Fault member_contracts. Original ID/source/signature/evidence/status/acceptance/native fields preserved; originalR1 immutable."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.ExecuteAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,`1},ViciOne.ServiceBus.Sagas.IBehavior{`0,`1})",
+      "original_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.ExecuteAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,`1},ViciOne.ServiceBus.Sagas.IBehavior{`0,`1})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Resolve the activity through this invocation context GetServiceOrCreateInstance<TActivity> then return its ExecuteAsync Task for the same context and next. Registered activity lifetime belongs to DI/context; fallback ownership belongs to the context helper, not this wrapper. Null validation and exact generic route are the literal member body and typed signature, including any explicit missing-body error.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; provider/context resolution and fallbackscope owns lifetime. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TMessage, TActivity>.ExecuteAsync(global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga, TMessage> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, TMessage> next)",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga, TMessage> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where TMessage : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, TMessage> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where TMessage : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "corrected_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.ExecuteAsync(ViciOne.ServiceBus.Sagas.IBehaviorContext{`0,`1},ViciOne.ServiceBus.Sagas.IBehavior{`0,`1})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Validate context then next with ArgumentNullException.ThrowIfNull. Resolve TActivity through this invocation context GetServiceOrCreateInstance<TActivity>, then directly return the selected activity ExecuteAsync task with the exact same context and next; no wrapper Task or activity disposal. Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Exact typed/untyped method route and constraints remain those of the original declared signature.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TMessage, TActivity>.ExecuteAsync(global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga, TMessage> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, TMessage> next)",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorContext<TSaga, TMessage> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where TMessage : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, TMessage> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where TMessage : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "only_change": "Root administrative source-norm precision only: corrected copied owner_scope sentence and six Execute/Fault member_contracts. Original ID/source/signature/evidence/status/acceptance/native fields preserved; originalR1 immutable.",
+      "r1_member_contract_before": "Resolve the activity through this invocation context GetServiceOrCreateInstance<TActivity> then return its ExecuteAsync Task for the same context and next. Registered activity lifetime belongs to DI/context; fallback ownership belongs to the context helper, not this wrapper. Null validation and exact generic route are the literal member body and typed signature, including any explicit missing-body error."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.FaultedAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext{`0,`1,``0},ViciOne.ServiceBus.Sagas.IBehavior{`0,`1})",
+      "original_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.FaultedAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext{`0,`1,``0},ViciOne.ServiceBus.Sagas.IBehavior{`0,`1})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Resolve activity through actual invocation context service/fallback helper, then return selected FaultedAsync Task for original context/next. Context/DI helper owns activation/lifetime.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; provider/context resolution and fallbackscope owns lifetime. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TMessage, TActivity>.FaultedAsync<TException>(global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, TMessage, TException> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, TMessage> next) where TException : global::System.Exception",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, TMessage, TException> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where TMessage : class where TException : global::System.Exception",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, TMessage> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where TMessage : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "corrected_entry": {
+        "id": "M:ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity`3.FaultedAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext{`0,`1,``0},ViciOne.ServiceBus.Sagas.IBehavior{`0,`1})",
+        "assembly": "ViciOne.ServiceBus.Sagas",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ContainerFactoryActivity.cs",
+        "source_sha256": "5c0ed71d069bc547a0e012cedc8d84c55df0417591f3076f9122fff2daa31ed5",
+        "member_contract": "Validate context then next with ArgumentNullException.ThrowIfNull. Resolve TActivity through this invocation context GetServiceOrCreateInstance<TActivity>, then directly return the selected activity FaultedAsync task with the exact same exception context and next; no wrapper Task or activity disposal. Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Exact typed/untyped method route and TException:Exception constraints remain those of the original declared signature.",
+        "owner_context": "Parameterless implicit constructors, actual TActivity class typedIStateMachineActivity constraints. Success/fault methods validate context/next then GetServiceOrCreateInstance<TActivity> on actualconsume context eachtime; samecontext/next delegateddirect andsameTaskreturned. Wrapper doesnotdispose selectedactivity itself; Registered-service lifetime follows the selected IServiceScope/IServiceProvider registration. ActivatorUtilities-created unregistered or Provider.Empty fallback instances are not tracked or disposed by this helper or wrapper; no fallback scope is created. Causal resolutionhelper obligations separate, no sameinstance/universalproviderclaim. TypedProbe is explicit IProbeSite, untypedpublicProbe; diagnosticcontainerActivityFactory/Acceptonly wrapperVisit nullguards.",
+        "historical_typed_signature": "public global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.SagaStateMachine.ContainerFactoryActivity<TSaga, TMessage, TActivity>.FaultedAsync<TException>(global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, TMessage, TException> context, global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, TMessage> next) where TException : global::System.Exception",
+        "historical_typed_detail": {
+          "kind": "Ordinary",
+          "IsExtensionMethod": false,
+          "IsAsync": false,
+          "IsReadOnly": false,
+          "returnType": "global::System.Threading.Tasks.Task",
+          "returnNullable": "NotAnnotated",
+          "returnsByRef": false,
+          "returnsByRefReadonly": false,
+          "returnAttributes": [],
+          "parameters": [
+            {
+              "Name": "context",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehaviorExceptionContext<TSaga, TMessage, TException> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where TMessage : class where TException : global::System.Exception",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            },
+            {
+              "Name": "next",
+              "type": "global::ViciOne.ServiceBus.Sagas.IBehavior<TSaga, TMessage> where TSaga : class, global::ViciOne.ServiceBus.Sagas.ISagaStateMachineInstance where TMessage : class",
+              "nullable": "NotAnnotated",
+              "IsOptional": false,
+              "HasExplicitDefaultValue": false,
+              "defaultValue": null,
+              "refKind": "None",
+              "IsParams": false,
+              "attributes": []
+            }
+          ]
+        },
+        "semantic_evidence": {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-activities-behaviors-binders366-contract-context-r1/PER_MEMBER366_TYPED_SOURCE_XML_CONTRACTS.json",
+          "sha256": "46b4538be11de4486047805dd8316f24cbc3f6fb2456696793ec9d12b52c2a85"
+        },
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_AND_MEMBER_CONTRACT",
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE166_SAGA366_BOUNDED_SOURCE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "41de2138a1b2798f330c27bbd3ff4c2db35cde05d811126a979a702193195fe3"
+        },
+        "execution_obligation": {
+          "kind": "CALLER_OR_COLLABORATOR_RUNTIME_BOUNDARY",
+          "reason": "The named actual local branch is source-reviewed; exact external factory/behavior/DI/publish/send/scheduler outcomes and cooperation require their own meaningful executed assertion. This packet assigns no whole-runtime closure."
+        },
+        "native_assertion_credit": 0,
+        "CLOSED": false,
+        "whole_implementation_runtime_closed": false
+      },
+      "only_change": "Root administrative source-norm precision only: corrected copied owner_scope sentence and six Execute/Fault member_contracts. Original ID/source/signature/evidence/status/acceptance/native fields preserved; originalR1 immutable.",
+      "r1_member_contract_before": "Resolve activity through actual invocation context service/fallback helper, then return selected FaultedAsync Task for original context/next. Context/DI helper owns activation/lifetime."
+    }
+  ],
+  "precision": "Withdraw erroneous automatic ownership/tracking of newly activated activity instances. Actual registered service lifetime follows selected DI registration; helper/wrapper creates no fallback scope and does not track/dispose newly activated instances. No confirmed ProductFinding, new IDs, acceptance status/count or Native promotion.",
+  "new_accepted_ids": 0,
+  "native_delta": 0,
+  "counts_before_after": 7948
+}

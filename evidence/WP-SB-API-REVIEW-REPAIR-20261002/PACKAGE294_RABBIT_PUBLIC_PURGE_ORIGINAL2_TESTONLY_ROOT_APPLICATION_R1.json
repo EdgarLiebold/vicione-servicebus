@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-06T01:19:00.243519+00:00",
+  "status": "INDEPENDENT_TEST_SOURCE_PEER_APPROVED_PUBLIC_ORIGINAL2_APPLIED_NATIVE_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package275-rabbit-public-purge-original2-oracles-proposed-r1/REPORT.json",
+    "sha256": "5d6645dbb0692d0c5be1f5994570f33bbfa59da58517b3c61429d46bf6a92fbd"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package275-rabbit-purge-original2-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "18a535c0b80873245a546205ea903671923916bbb114c8c93d2e01f8f452be53"
+  },
+  "test": {
+    "target": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqStartupPurgeDiagnosticsTests.cs",
+    "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package275-rabbit-public-purge-original2-oracles-proposed-r1/RabbitMqStartupPurgeDiagnosticsTests.proposed.cs",
+    "sha256": "e801529bd4008ccbfd585212bae746c31873acd34f0556acbf4b464e53b1f0cd",
+    "lines": 276,
+    "test_method": "StartupPurge_ContinuesAfterSdkSuccessAndSkipsRepeatedPurgeDespiteDebugAsync",
+    "cases": 2
+  },
+  "Req288to289_ADD1_prefix_preserved": true,
+  "Product_unchanged": true,
+  "first_causal_boundary": 69,
+  "skip_boundary_later_unreached_if_original_hostile_first_fails": true,
+  "native_credit": 0,
+  "grade": null
+}

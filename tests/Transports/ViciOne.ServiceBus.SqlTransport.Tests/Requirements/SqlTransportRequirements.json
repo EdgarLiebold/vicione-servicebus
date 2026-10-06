@@ -1,158 +1,1185 @@
 [
-  { "requirementId": "OBL-R0-SQL-0001", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "HostAddress_ParsesVirtualHost" },
-  { "requirementId": "OBL-R0-SQL-0002", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "HostAddress_ParsesVirtualHostAndArea" },
-  { "requirementId": "OBL-R0-SQL-0003", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "HostAddress_NormalizesTrailingSlashAfterArea" },
-  { "requirementId": "OBL-R0-SQL-0004", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "HostAddress_DropsTrailingEntitySegment" },
-  { "requirementId": "OBL-R0-SQL-0005", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "HostAddress_DefaultsBareAuthorityVirtualHost" },
-  { "requirementId": "OBL-R0-SQL-0006", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "HostAddress_DefaultsSlashOnlyVirtualHost" },
-  { "requirementId": "OBL-R0-SQL-0007", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "HostAddress_RejectsAreaStartingWithDigit" },
-  { "requirementId": "OBL-R0-SQL-0008", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "HostAddress_RejectsVirtualHostContainingHyphen" },
-  { "requirementId": "OBL-R0-SQL-0009", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "HostAddress_ParsesAndProjectsInstanceName" },
-  { "requirementId": "OBL-R0-SQL-0010", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_ParsesEntityWithinVirtualHost" },
-  { "requirementId": "OBL-R0-SQL-0011", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_ParsesVirtualHostAreaAndEntity" },
-  { "requirementId": "OBL-R0-SQL-0012", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_NormalizesTrailingSlashOnHost" },
-  { "requirementId": "OBL-R0-SQL-0013", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_ResolvesShortQueueAddress" },
-  { "requirementId": "OBL-R0-SQL-0014", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_ResolvesShortTopicAddress" },
-  { "requirementId": "OBL-R0-SQL-0015", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_PreservesIpv6HostAndPort" },
-  { "requirementId": "OBL-R0-SQL-0016", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_ProjectsSqlServerInstanceAsQueryOption" },
-  { "requirementId": "OBL-R0-SQL-0017", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_RejectsMissingEntityName" },
-  { "requirementId": "OBL-R0-SQL-0018", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_ParsesEntityWithDefaultVirtualHost" },
-  { "requirementId": "OBL-R0-SQL-0019", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_RejectsInvalidArea" },
-  { "requirementId": "OBL-R0-SQL-0020", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_RejectsInvalidVirtualHost" },
-  { "requirementId": "REQ-VSB-SQL-ADDRESS-VALIDATION", "variantKey": "host-components-reject-invalid-public-input", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "HostAddress_RejectsInvalidPublicComponents" },
-  { "requirementId": "REQ-VSB-SQL-ADDRESS-VALIDATION", "variantKey": "endpoint-components-reject-invalid-public-input", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_RejectsInvalidPublicComponents" },
-  { "requirementId": "REQ-VSB-SQL-ADDRESS-VALIDATION", "variantKey": "query-values-are-lossless-and-invalid-values-fail", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests", "testMethod": "EndpointAddress_RoundTripsValidQueryValuesAndRejectsInvalidOnes" },
-  { "requirementId": "OBL-R0-SQL-0021", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlConfigurationTests", "testMethod": "SqlServerOptions_BracketIpv6HostInBusAddress" },
-  { "requirementId": "OBL-R0-SQL-0022", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "NotifyChannel_UsesStableNamespaceHashAndQueueId" },
-  { "requirementId": "OBL-R0-SQL-0023", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "NotifyChannel_DistinguishesSchemasThatShareALongPrefix" },
-  { "requirementId": "OBL-R0-SQL-0024", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "NotifyChannel_DefaultsMissingSchema" },
-  { "requirementId": "OBL-R0-SQL-0026", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "ConnectionOptions_ParseAndProjectAdminConnectionAndAzurePrincipalAsync" },
-  { "requirementId": "OBL-R0-SQL-0027", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "HostSettings_PreserveMultipleHostsAndUseFirstBusHostAsync" },
-  { "requirementId": "OBL-R0-SQL-0028", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "HostSettings_ApplyExplicitPortToMultipleHostsAsync" },
-  { "requirementId": "OBL-R0-SQL-0029", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "HostSettings_PreservePerHostPortsAndProjectFirstHostAsync" },
-  { "requirementId": "OBL-R0-SQL-0030", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "HostSettings_SplitSingleColonQualifiedHostForBusAddress" },
-  { "requirementId": "OBL-R0-SQL-0031", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "ConnectionBuilder_IncludesExplicitPostgreSqlPort" },
-  { "requirementId": "OBL-R0-SQL-0032", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "ConnectionBuilder_OmitsImplicitPostgreSqlPort" },
-  { "requirementId": "OBL-R0-SQL-0039", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests", "testMethod": "ConnectionBuilder_IncludesInstanceName" },
-  { "requirementId": "OBL-R0-SQL-0042", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests", "testMethod": "ConnectionBuilder_FormatsPortWithComma" },
-  { "requirementId": "OBL-R0-SQL-0043", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests", "testMethod": "HostSettings_PreserveLocalDbDataSourceAndNormalizeBusHost" },
-  { "requirementId": "OBL-R0-SQL-0044", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests", "testMethod": "ConnectionBuilder_OmitsUnspecifiedSqlServerPort" },
-  { "requirementId": "OBL-R0-SQL-0126", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlConfigurationTests", "testMethod": "ReceiveEndpointValidation_CoversEntityMaintenanceUnlockAndPurgeBoundaries" },
-  { "requirementId": "OBL-R0-SQL-0128", "variantKey": "native-owner", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests", "testMethod": "ConnectionBuilder_MergesExplicitOptionsWithoutMutatingOptionsOrWeakeningCertificateValidation" },
-  { "requirementId": "REQ-VSB-SQL-REQUIREMENT-PROJECTION", "variantKey": "compiled-metadata-matches-projection", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Requirements.RequirementCoverageProjectionTests", "testMethod": "SqlTransportRequirementsMatchCompiledRequirementMetadata" },
-  { "requirementId": "REQ-VSB-POSTGRES-NOTIFY-CHANNEL", "variantKey": "utf8-identifier-budget", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "NotifyChannel_UsesAtMostSixtyThreeBytesForUnicodeSchemaAndAnyQueueId" },
-  { "requirementId": "REQ-VSB-SQL-RUN-SCOPED-DATABASE-IDENTITY", "variantKey": "runner-root-is-part-of-name", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Infrastructure.RunnerContractTests", "testMethod": "DatabaseName_IsStableWithinOneRunAndDifferentBetweenRuns" },
-  { "requirementId": "REQ-VSB-SQL-URI-MATERIALIZATION", "variantKey": "valid-absolute-and-relative-values", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.UriTypeHandlerTests", "testMethod": "Parse_PreservesValidAbsoluteAndRelativeValues" },
-  { "requirementId": "REQ-VSB-SQL-URI-MATERIALIZATION", "variantKey": "database-null-is-not-a-nonnullable-uri", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.UriTypeHandlerTests", "testMethod": "Parse_RejectsNullAndDatabaseNull" },
-  { "requirementId": "REQ-VSB-SQL-URI-MATERIALIZATION", "variantKey": "empty-whitespace-and-malformed-values", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.UriTypeHandlerTests", "testMethod": "Parse_RejectsInvalidText" },
-  { "requirementId": "REQ-VSB-SQL-URI-MATERIALIZATION", "variantKey": "non-string-values-are-rejected", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.UriTypeHandlerTests", "testMethod": "Parse_RejectsNonStringValues" },
-  { "requirementId": "REQ-VSB-SQL-TOPIC-ADDRESS", "variantKey": "topic-send-settings-preserve-entity-kind", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyInvariantTests", "testMethod": "TopicSendSettings_ProduceATopicAddress" },
-  { "requirementId": "REQ-VSB-SQL-TOPIC-ADDRESS", "variantKey": "publish-topology-uses-topic-settings", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyInvariantTests", "testMethod": "PublishTopology_ProducesTopicSendSettings" },
-  { "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY", "variantKey": "topic-subscription-destination-is-part-of-identity", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyInvariantTests", "testMethod": "BrokerTopology_PreservesSubscriptionsToDifferentDestinationTopics" },
-  { "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY", "variantKey": "queue-delivery-limit-is-part-of-identity", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyInvariantTests", "testMethod": "BrokerTopology_RejectsConflictingQueueDeliveryLimits" },
-  { "requirementId": "REQ-VSB-SQL-SCHEDULE-TOKEN", "variantKey": "generated-token-is-persisted-and-returned", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests", "testMethod": "ScheduleSendAsync_PersistsAndReturnsTheSameGeneratedTokenAsync" },
-  { "requirementId": "REQ-VSB-SQL-SCHEDULE-TOKEN", "variantKey": "cancellation-capability-uses-caller-token", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests", "testMethod": "CancellationCapability_UsesCallerSpecifiedToken" },
-  { "requirementId": "REQ-VSB-SQL-SCHEDULE-ARGUMENTS", "variantKey": "public-scheduling-boundary-rejects-invalid-input", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests", "testMethod": "PublicOperations_RejectInvalidArgumentsBeforeResolvingTransportStateAsync" },
-  { "requirementId": "REQ-VSB-SQL-MOVE-CANCELLATION", "variantKey": "dead-letter-move-forwards-caller-token", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMoveTransportTests", "testMethod": "DeadLetterMove_ForwardsCallerCancellationToTheDatabaseOperationAsync" },
-  { "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION", "variantKey": "failed-unlock-is-reported-as-lock-loss", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests", "testMethod": "ScheduleRedeliveryAsync_ReportsARejectedUnlockAsLockLossAsync" },
-  { "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION", "variantKey": "redelivery-callback-is-never-silently-ignored", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests", "testMethod": "ScheduleRedeliveryAsync_RejectsAnUnsupportedSendContextCallbackAsync" },
-  { "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION", "variantKey": "concurrent-terminal-operations-settle-exactly-once", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests", "testMethod": "ConcurrentTerminalOperations_SettleTheDeliveryExactlyOnceAsync" },
-  { "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION", "variantKey": "terminal-settlement-cancels-in-flight-renewal", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests", "testMethod": "CompleteAsync_CancelsAnInFlightProviderRenewalAsync" },
-  { "requirementId": "REQ-VSB-SQL-STARTUP-PURGE", "variantKey": "concurrent-pipelines-purge-exactly-once", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.PurgeOnStartupFilterTests", "testMethod": "ConcurrentPipelines_PurgeTheQueueExactlyOnceAsync" },
-  { "requirementId": "REQ-VSB-SQL-STARTUP-PURGE", "variantKey": "failed-purge-remains-retryable", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.PurgeOnStartupFilterTests", "testMethod": "FailedPurge_IsRetriedByTheNextPipelineAsync" },
-  { "requirementId": "REQ-VSB-SQL-SEND-LIFECYCLE", "variantKey": "queue-and-topic-own-their-client-supervisor", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlSendTransportContextLifecycleTests", "testMethod": "SendTransport_OwnsAndProbesItsClientSupervisor" },
-  { "requirementId": "REQ-VSB-SQL-SEND-CONTEXT", "variantKey": "priority-contract-validates-and-preserves-default", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlSendContextTests", "testMethod": "PriorityExtensions_ValidateTheContextAndPreserveTheTransportDefault" },
-  { "requirementId": "REQ-VSB-SQL-HEADER-MATERIALIZATION", "variantKey": "serialized-header-replacement-invalidates-cache", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportMessageTests", "testMethod": "ReplacingSerializedHeaders_InvalidatesBothMaterializedCaches" },
-  { "requirementId": "REQ-VSB-SQL-HEADER-MATERIALIZATION", "variantKey": "transport-headers-win-without-duplicates", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportMessageTests", "testMethod": "HeaderProvider_MergesDuplicateNamesWithTransportPrecedence" },
-  { "requirementId": "REQ-VSB-SQL-PARTITIONED-RECEIVE", "variantKey": "transport-neutral-capability-selects-sql-partitioning", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlConfigurationTests", "testMethod": "PartitionedReceiveCapability_SelectsSqlPartitionedMode" },
-  { "requirementId": "REQ-VSB-SQL-MIGRATION-LIFECYCLE", "variantKey": "constructor-rejects-missing-services-and-options", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlTransportOptionsStartupTests", "testMethod": "MigrationHostedService_RejectsMissingDependenciesAtConstruction" },
-  { "requirementId": "REQ-VSB-POSTGRES-DDL-IDENTIFIER", "variantKey": "safe-values-are-preserved", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlIdentifierTests", "testMethod": "Validate_PreservesSafeIdentifiers" },
-  { "requirementId": "REQ-VSB-POSTGRES-DDL-IDENTIFIER", "variantKey": "empty-quoted-and-control-values-are-rejected", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlIdentifierTests", "testMethod": "Validate_RejectsValuesThatCanEscapeMigratorTemplates" },
-  { "requirementId": "REQ-VSB-POSTGRES-DDL-IDENTIFIER", "variantKey": "postgresql-utf8-byte-limit", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlIdentifierTests", "testMethod": "Validate_EnforcesThePostgreSqlUtf8ByteLimit" },
-  { "requirementId": "REQ-VSB-POSTGRES-DDL-IDENTIFIER", "variantKey": "malformed-unicode-is-rejected", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlIdentifierTests", "testMethod": "Validate_RejectsMalformedUnicode" },
-  { "requirementId": "REQ-VSB-POSTGRES-ROUTINE-NAMES", "variantKey": "client-targets-only-unversioned-routines", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlCommandContractTests", "testMethod": "ClientCommands_TargetOnlyUnversionedTransportRoutines" },
-  { "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION", "variantKey": "ipv6-address-is-not-split-as-host-and-port", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "HostSettings_ProjectIpv6HostWithoutTreatingAddressSegmentsAsAPort" },
-  { "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION", "variantKey": "connection-string-replacement-clears-derived-state", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "ConnectionStringReplacement_ClearsPriorMultipleHostAndPortProjection" },
-  { "requirementId": "REQ-VSB-POSTGRES-PUBLIC-ARGUMENTS", "variantKey": "required-extension-arguments-fail-at-call-site", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlPublicArgumentValidationTests", "testMethod": "PublicExtensions_RejectEveryNullOrEmptyRequiredArgumentAtTheCallSite" },
-  { "requirementId": "REQ-VSB-SQLSERVER-HOST-PROJECTION", "variantKey": "current-settings-are-used-without-security-downgrade", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests", "testMethod": "HostSettings_RebuildConnectionStringFromCurrentValuesAndPreserveSecurityOptions" },
-  { "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER", "variantKey": "regular-identifiers-preserve-safe-values", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests", "testMethod": "ValidateRegular_PreservesSafeSchemaAndRoleNames" },
-  { "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER", "variantKey": "unsafe-regular-identifiers-are-rejected", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests", "testMethod": "ValidateRegular_RejectsValuesThatCanEscapeProvisioningTemplates" },
-  { "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER", "variantKey": "identifier-length-is-bounded", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests", "testMethod": "ValidateRegular_EnforcesTheSqlServerIdentifierLengthLimit" },
-  { "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER", "variantKey": "database-identifiers-preserve-safe-values", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests", "testMethod": "ValidateDatabase_PreservesSafeBracketDelimitedNames" },
-  { "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER", "variantKey": "principal-identifiers-preserve-safe-values", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests", "testMethod": "ValidatePrincipal_PreservesSupportedLoginAndUserNames" },
-  { "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER", "variantKey": "specialized-identifiers-reject-template-escapes", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests", "testMethod": "SpecializedValidators_RejectUnsupportedCharacters" },
-  { "requirementId": "REQ-VSB-SQLSERVER-PUBLIC-ARGUMENTS", "variantKey": "required-extension-arguments-fail-at-call-site", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerPublicArgumentValidationTests", "testMethod": "PublicExtensions_RejectEveryNullOrEmptyRequiredArgumentAtTheCallSite" },
-  { "requirementId": "REQ-VSB-SQL-BODY-STORAGE", "variantKey": "json-bodies-remain-queryable-text", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.SqlMessageBodyStorageTests", "testMethod": "Create_PreservesJsonAsQueryableText" },
-  { "requirementId": "REQ-VSB-SQL-BODY-STORAGE", "variantKey": "provider-storage-rejects-body-metadata-mutation", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.SqlMessageBodyStorageTests", "testMethod": "Create_RejectsBodyCallbacksThatChangeSqlMessageMetadata" },
-  { "requirementId": "REQ-VSB-SQL-BODY-STORAGE", "variantKey": "non-json-bodies-use-lossless-binary-storage", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.SqlMessageBodyStorageTests", "testMethod": "Create_PreservesNonJsonBytesWithoutUsingATextCarrier" },
-  { "requirementId": "REQ-VSB-SQL-BODY-STORAGE", "variantKey": "missing-body-and-content-type-boundaries", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.SqlMessageBodyStorageTests", "testMethod": "Create_RejectsAMissingBodyAndUsesBinaryStorageWithoutAContentType" },
-  { "requirementId": "REQ-VSB-SQL-BODY-STORAGE", "variantKey": "json-media-type-without-text-carrier-remains-binary", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.SqlMessageBodyStorageTests", "testMethod": "Create_DoesNotDecodeAnOpaqueBodySolelyBecauseItsMediaTypeIsJson" },
-  { "requirementId": "REQ-VSB-SQL-BODY-STORAGE", "variantKey": "receive-selects-text-binary-or-empty-without-loss", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveContextBodyTests", "testMethod": "CreateBody_SelectsTheSinglePersistedRepresentation" },
-  { "requirementId": "REQ-VSB-SQL-BODY-STORAGE", "variantKey": "receive-rejects-ambiguous-dual-representation", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveContextBodyTests", "testMethod": "CreateBody_RejectsMissingOrAmbiguousRecords" },
-  { "requirementId": "REQ-VSB-SQL-CONNECTION-OWNERSHIP", "variantKey": "successful-open-transfers-ownership", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportConnectionOpenTests", "testMethod": "OpenOwnedAsync_SuccessTransfersTheConnectionWithoutDisposingItAsync" },
-  { "requirementId": "REQ-VSB-SQL-CONNECTION-OWNERSHIP", "variantKey": "failed-open-releases-connection-and-preserves-failure", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportConnectionOpenTests", "testMethod": "OpenOwnedAsync_FailedOpenDisposesAndPreservesTheOriginalFailureAsync" },
-  { "requirementId": "REQ-VSB-SQL-CONNECTION-OWNERSHIP", "variantKey": "canceled-open-releases-connection-and-preserves-token", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportConnectionOpenTests", "testMethod": "OpenOwnedAsync_CanceledOpenDisposesAndPreservesTheCallerTokenAsync" },
-  { "requirementId": "REQ-VSB-SQL-CONNECTION-OWNERSHIP", "variantKey": "cleanup-failure-does-not-mask-open-failure", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportConnectionOpenTests", "testMethod": "OpenOwnedAsync_FailedCleanupDoesNotMaskTheOriginalOpenFailureAsync" },
-  { "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY", "variantKey": "queue-identity-includes-every-broker-setting", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyEntityContractTests", "testMethod": "QueueComparer_UsesExactTypeNameIdleTimeoutAndDeliveryLimit" },
-  { "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY", "variantKey": "entity-name-comparers-are-exact-and-type-safe", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyEntityContractTests", "testMethod": "NameComparers_UseExactTypeAndNameOnly" },
-  { "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY", "variantKey": "queue-subscription-uses-logical-entity-identity", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyEntityContractTests", "testMethod": "QueueSubscriptionComparer_UsesLogicalEntitiesTypeAndRoutingContract" },
-  { "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY", "variantKey": "topic-subscription-uses-logical-entity-identity", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyEntityContractTests", "testMethod": "TopicSubscriptionComparer_UsesLogicalEntitiesTypeAndRoutingContract" },
-  { "requirementId": "REQ-VSB-SQL-TOPOLOGY-DIAGNOSTICS", "variantKey": "all-entities-and-broker-settings-are-projected", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyEntityContractTests", "testMethod": "BrokerProbe_ProjectsEveryEntityAndBrokerSetting" },
-  { "requirementId": "REQ-VSB-SQL-PUBLISH-SCAN", "variantKey": "namespace-scan-filters-valid-contracts", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlPublishTopologyConfigurationExtensionsTests", "testMethod": "NamespaceScan_PublishesOnlyValidFilteredContractsAndInvokesCallbacks" },
-  { "requirementId": "REQ-VSB-SQL-PUBLISH-SCAN", "variantKey": "default-scan-rejects-invalid-contracts", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlPublishTopologyConfigurationExtensionsTests", "testMethod": "NamespaceScan_WithoutFilterStillRejectsInvalidContracts" },
-  { "requirementId": "REQ-VSB-SQL-PUBLISH-SCAN", "variantKey": "explicit-types-preserve-order-and-callback-identity", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlPublishTopologyConfigurationExtensionsTests", "testMethod": "ExplicitTypes_PreserveOrderAndCallbackIdentity" },
-  { "requirementId": "REQ-VSB-SQL-PUBLISH-SCAN", "variantKey": "required-inputs-fail-at-public-boundary", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlPublishTopologyConfigurationExtensionsTests", "testMethod": "Registration_RejectsEveryMissingRequiredInput" },
-  { "requirementId": "REQ-VSB-SQL-HOST-SETTINGS", "variantKey": "address-credentials-preserve-password-suffix", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests", "testMethod": "AddressConstructor_DecodesCredentialsWithoutLosingPasswordSuffix" },
-  { "requirementId": "REQ-VSB-SQL-HOST-SETTINGS", "variantKey": "operational-defaults", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests", "testMethod": "Defaults_ExposeTheOperationalContract" },
-  { "requirementId": "REQ-VSB-SQL-HOST-SETTINGS", "variantKey": "invalid-operational-boundaries", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests", "testMethod": "Validate_ReportsEveryInvalidOperationalBoundary" },
-  { "requirementId": "REQ-VSB-SQL-HOST-SETTINGS", "variantKey": "port-outside-tcp-range", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests", "testMethod": "Validate_RejectsPortsOutsideTheTcpRange" },
-  { "requirementId": "REQ-VSB-SQL-HOST-SETTINGS", "variantKey": "valid-operational-boundaries", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests", "testMethod": "Validate_AcceptsEveryValidOperationalBoundary" },
-  { "requirementId": "REQ-VSB-SQL-HOST-SETTINGS", "variantKey": "address-components-fail-during-validation", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests", "testMethod": "Validate_ReportsInvalidAddressComponentsBeforeHostAddressFormatting" },
-  { "requirementId": "REQ-VSB-SQL-HOST-SETTINGS", "variantKey": "area-requires-a-named-virtual-host", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests", "testMethod": "Validate_RejectsAnAreaWithoutANamedVirtualHost" },
-  { "requirementId": "REQ-VSB-SQL-HOST-SETTINGS", "variantKey": "unix-socket-hosts-cannot-bypass-validation", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests", "testMethod": "Validate_RejectsUnixSocketHostsSetThroughThePublicConfigurator" },
-  { "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION", "variantKey": "supported-single-ipv6-and-multiple-host-shapes", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "HostSettings_ProjectEverySupportedHostShape" },
-  { "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION", "variantKey": "malformed-host-segments-fail-at-configuration-boundary", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "HostSettings_RejectMalformedHostSegmentsBeforeRuntime" },
-  { "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION", "variantKey": "missing-host-remains-a-validation-failure", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "HostSettings_ReportMissingHostThroughConfigurationValidation" },
-  { "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION", "variantKey": "connection-string-inline-port-matches-data-source", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "ConnectionStringInlinePort_UsesTheSameBusAndDataSourceTargetAsync" },
-  { "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION", "variantKey": "options-inline-port-matches-data-source", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "OptionsInlinePort_UsesTheSameBusAndDataSourceTargetAsync" },
-  { "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION", "variantKey": "failed-connection-string-replacement-is-atomic", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "FailedConnectionStringReplacement_PreservesEveryPriorSettingAsync" },
-  { "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION", "variantKey": "current-settings-rebuild-data-source-without-security-downgrade", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "HostSettings_RebuildDataSourceFromCurrentValuesAndPreserveSecurityOptionsAsync" },
-  { "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION", "variantKey": "explicit-first-host-override-collapses-multiple-host-list", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests", "testMethod": "HostSettings_ExplicitFirstHostOverride_CollapsesPriorMultipleHostListAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVE-VALIDATION", "variantKey": "valid-boundaries-are-accepted", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlConfigurationTests", "testMethod": "ReceiveEndpointValidation_AcceptsEveryValidBoundary" },
-  { "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE", "variantKey": "cleanup-and-keepalive-boundaries", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests", "testMethod": "Schedule_EnforcesEveryMaintenanceAndKeepaliveBoundaryAsync" },
-  { "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE", "variantKey": "database-idle-duration-never-rounds-down", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests", "testMethod": "DatabaseAutoDeleteSeconds_NeverShortensConfiguredIdleLifetime" },
-  { "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE", "variantKey": "backlog-outcomes-control-retry-and-keepalive", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests", "testMethod": "BacklogOutcomes_ControlImmediateCleanupAndKeepaliveAsync" },
-  { "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE", "variantKey": "permanent-queue-is-never-touched", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests", "testMethod": "QueueWithoutAutoDelete_NeverReceivesKeepaliveTouchesAsync" },
-  { "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE", "variantKey": "expected-polling-interruptions-are-contained", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests", "testMethod": "ExpectedPollingInterruptions_AreContainedAsync" },
-  { "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE", "variantKey": "unexpected-lifecycle-failures-propagate", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests", "testMethod": "UnexpectedLifecycleExceptions_PropagateAsync" },
-  { "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE", "variantKey": "failed-keepalive-remains-due", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests", "testMethod": "FailedKeepalive_RemainsDueWithoutRepeatingCleanupAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "empty-poll-maintains-wakes-and-stops", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "EmptyPoll_MaintainsQueueWakesEarlyAndStopsThePendingRequestAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "completion-before-wait-is-not-lost", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "MessageHandledDuringMaintenance_SkipsTheStalePollingWaitAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "auto-delete-polling-is-bounded-by-keepalive", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "AutoDeleteQueue_PollsSoonEnoughToKeepTheActiveQueueAliveAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "active-message-dispatches-and-settles", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "ActiveMessage_IsDispatchedWithItsTransportIdentityAndSettledAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "expired-message-uses-configured-terminal-path", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "ExpiredMessage_UsesTheConfiguredTerminalPathAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "late-fetch-during-stop-releases-lock", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "MessageFetchedAfterStopStarted_IsReleasedForImmediateRedeliveryAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "failed-shutdown-release-is-contained", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "FailedShutdownRelease_DoesNotPreventReceiverCompletionAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "failed-batch-release-continues-with-other-locks", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "TimeoutReleasingFirstFetchedMessage_StillReleasesOtherBatchLocksAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "partitioned-mode-dispatches-keyed-and-unkeyed-records", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "PartitionedMode_DispatchesKeyedAndUnkeyedRecordsAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "dispatch-failure-is-settled-and-contained", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "DispatchFailure_IsSettledAndDoesNotTerminateTheReceiverAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "polling-without-queue-id-remains-interruptible", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "PollingWithoutQueueId_IsStillInterruptedWhenWorkCompletesAsync" },
-  { "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE", "variantKey": "receive-fault-terminates-owned-lifecycle", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests", "testMethod": "ReceiveFault_TerminatesTheOwnedReceiverLifecycleAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION", "variantKey": "renewal-timeout-retry-versus-terminal-loss", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlSettlementBoundaryTests", "testMethod": "RenewalOutcome_ControlsLockValidityAndStopsFurtherProviderWorkAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION", "variantKey": "terminal-provider-arguments-and-rejected-ownership", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlSettlementBoundaryTests", "testMethod": "TerminalSettlement_PreservesExactDeliveryHeadersAndReportsRejectedOwnershipAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULE-TOKEN", "variantKey": "empty-selector-token-rejected-before-sql-dispatch", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests", "testMethod": "EmptySelectedToken_CannotResolveSqlEndpoint_AndAValidTokenRecoversAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULER-REGISTRATION", "variantKey": "null-owner-rejected", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlSchedulerRegistrationTests", "testMethod": "Registration_RejectsMissingOwnerBeforeAccessingServices" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULER-REGISTRATION", "variantKey": "default-preserves-existing-and-rejects-wrong-transport", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlSchedulerRegistrationTests", "testMethod": "DefaultRegistration_PreservesExistingSchedulerAndRejectsWrongTransport" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULER-REGISTRATION", "variantKey": "default-scoped-clock", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlSchedulerRegistrationTests", "testMethod": "DefaultRegistration_UsesScopedInstancesAndConfiguredClock" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULER-REGISTRATION", "variantKey": "typed-owner-scope-and-transport", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlSchedulerRegistrationTests", "testMethod": "TypedRegistration_PreservesOwnerAndScopeAndRejectsWrongTransport" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION", "variantKey": "consume-context-uses-active-client-and-exact-token", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests", "testMethod": "ConsumeCancellation_UsesActiveClientAndExactTokenAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION", "variantKey": "cancelled-consume-request-never-looks-up-client", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests", "testMethod": "CancelledConsumeRequest_DoesNotTouchActiveClientAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION", "variantKey": "host-cancel-passes-client-and-request-token", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests", "testMethod": "HostCancellation_SendsThroughConnectionAndPreservesRequestTokenAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION", "variantKey": "host-delete-fault-propagates-without-resend", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests", "testMethod": "HostDeleteFailure_PropagatesWithoutAnotherDispatchAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION", "variantKey": "host-retry-reopens-client-with-exact-token", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests", "testMethod": "HostRetry_ReopensClientAndPreservesCancellationIdentityAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION", "variantKey": "missing-schedule-is-a-no-op-without-retry", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests", "testMethod": "MissingSchedule_CompletesWithoutRetryOrSecondDeletionAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION", "variantKey": "cancelled-host-request-never-enters-supervisor", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests", "testMethod": "CancelledHostRequest_DoesNotEnterConnectionSupervisorAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION", "variantKey": "stopping-host-never-enters-supervisor", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests", "testMethod": "StoppingHost_RejectsDeletionBeforeConnectionDispatchAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION", "variantKey": "caller-cancels-after-supervisor-entry-before-client-creation", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests", "testMethod": "CancellationAfterSupervisorEntry_StopsBeforeClientCreationAsync" }
-  ,{ "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION", "variantKey": "unsafe-base-lookup-still-unlocks-with-original-failure", "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests", "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests", "testMethod": "FaultedAsync_UnsafeBaseLookupStillUnlocksWithTheOriginalFailureAsync" }
+  {
+    "requirementId": "OBL-R0-SQL-0001",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "HostAddress_ParsesVirtualHost"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0002",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "HostAddress_ParsesVirtualHostAndArea"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0003",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "HostAddress_NormalizesTrailingSlashAfterArea"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0004",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "HostAddress_DropsTrailingEntitySegment"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0005",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "HostAddress_DefaultsBareAuthorityVirtualHost"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0006",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "HostAddress_DefaultsSlashOnlyVirtualHost"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0007",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "HostAddress_RejectsAreaStartingWithDigit"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0008",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "HostAddress_RejectsVirtualHostContainingHyphen"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0009",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "HostAddress_ParsesAndProjectsInstanceName"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0010",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_ParsesEntityWithinVirtualHost"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0011",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_ParsesVirtualHostAreaAndEntity"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0012",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_NormalizesTrailingSlashOnHost"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0013",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_ResolvesShortQueueAddress"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0014",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_ResolvesShortTopicAddress"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0015",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_PreservesIpv6HostAndPort"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0016",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_ProjectsSqlServerInstanceAsQueryOption"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0017",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_RejectsMissingEntityName"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0018",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_ParsesEntityWithDefaultVirtualHost"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0019",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_RejectsInvalidArea"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0020",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_RejectsInvalidVirtualHost"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-ADDRESS-VALIDATION",
+    "variantKey": "host-components-reject-invalid-public-input",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "HostAddress_RejectsInvalidPublicComponents"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-ADDRESS-VALIDATION",
+    "variantKey": "endpoint-components-reject-invalid-public-input",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_RejectsInvalidPublicComponents"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-ADDRESS-VALIDATION",
+    "variantKey": "query-values-are-lossless-and-invalid-values-fail",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Address.SqlAddressTests",
+    "testMethod": "EndpointAddress_RoundTripsValidQueryValuesAndRejectsInvalidOnes"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0021",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlConfigurationTests",
+    "testMethod": "SqlServerOptions_BracketIpv6HostInBusAddress"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0022",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "NotifyChannel_UsesStableNamespaceHashAndQueueId"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0023",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "NotifyChannel_DistinguishesSchemasThatShareALongPrefix"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0024",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "NotifyChannel_DefaultsMissingSchema"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0026",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "ConnectionOptions_ParseAndProjectAdminConnectionAndAzurePrincipalAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0027",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "HostSettings_PreserveMultipleHostsAndUseFirstBusHostAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0028",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "HostSettings_ApplyExplicitPortToMultipleHostsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0029",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "HostSettings_PreservePerHostPortsAndProjectFirstHostAsync"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0030",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "HostSettings_SplitSingleColonQualifiedHostForBusAddress"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0031",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "ConnectionBuilder_IncludesExplicitPostgreSqlPort"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0032",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "ConnectionBuilder_OmitsImplicitPostgreSqlPort"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0039",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests",
+    "testMethod": "ConnectionBuilder_IncludesInstanceName"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0042",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests",
+    "testMethod": "ConnectionBuilder_FormatsPortWithComma"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0043",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests",
+    "testMethod": "HostSettings_PreserveLocalDbDataSourceAndNormalizeBusHost"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0044",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests",
+    "testMethod": "ConnectionBuilder_OmitsUnspecifiedSqlServerPort"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0126",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlConfigurationTests",
+    "testMethod": "ReceiveEndpointValidation_CoversEntityMaintenanceUnlockAndPurgeBoundaries"
+  },
+  {
+    "requirementId": "OBL-R0-SQL-0128",
+    "variantKey": "native-owner",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests",
+    "testMethod": "ConnectionBuilder_MergesExplicitOptionsWithoutMutatingOptionsOrWeakeningCertificateValidation"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-REQUIREMENT-PROJECTION",
+    "variantKey": "compiled-metadata-matches-projection",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Requirements.RequirementCoverageProjectionTests",
+    "testMethod": "SqlTransportRequirementsMatchCompiledRequirementMetadata"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-NOTIFY-CHANNEL",
+    "variantKey": "utf8-identifier-budget",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "NotifyChannel_UsesAtMostSixtyThreeBytesForUnicodeSchemaAndAnyQueueId"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RUN-SCOPED-DATABASE-IDENTITY",
+    "variantKey": "runner-root-is-part-of-name",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Infrastructure.RunnerContractTests",
+    "testMethod": "DatabaseName_IsStableWithinOneRunAndDifferentBetweenRuns"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-URI-MATERIALIZATION",
+    "variantKey": "valid-absolute-and-relative-values",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.UriTypeHandlerTests",
+    "testMethod": "Parse_PreservesValidAbsoluteAndRelativeValues"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-URI-MATERIALIZATION",
+    "variantKey": "database-null-is-not-a-nonnullable-uri",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.UriTypeHandlerTests",
+    "testMethod": "Parse_RejectsNullAndDatabaseNull"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-URI-MATERIALIZATION",
+    "variantKey": "empty-whitespace-and-malformed-values",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.UriTypeHandlerTests",
+    "testMethod": "Parse_RejectsInvalidText"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-URI-MATERIALIZATION",
+    "variantKey": "non-string-values-are-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.UriTypeHandlerTests",
+    "testMethod": "Parse_RejectsNonStringValues"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-TOPIC-ADDRESS",
+    "variantKey": "topic-send-settings-preserve-entity-kind",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyInvariantTests",
+    "testMethod": "TopicSendSettings_ProduceATopicAddress"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-TOPIC-ADDRESS",
+    "variantKey": "publish-topology-uses-topic-settings",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyInvariantTests",
+    "testMethod": "PublishTopology_ProducesTopicSendSettings"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY",
+    "variantKey": "topic-subscription-destination-is-part-of-identity",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyInvariantTests",
+    "testMethod": "BrokerTopology_PreservesSubscriptionsToDifferentDestinationTopics"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY",
+    "variantKey": "queue-delivery-limit-is-part-of-identity",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyInvariantTests",
+    "testMethod": "BrokerTopology_RejectsConflictingQueueDeliveryLimits"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-TOKEN",
+    "variantKey": "generated-token-is-persisted-and-returned",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests",
+    "testMethod": "ScheduleSendAsync_PersistsAndReturnsTheSameGeneratedTokenAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-TOKEN",
+    "variantKey": "cancellation-capability-uses-caller-token",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests",
+    "testMethod": "CancellationCapability_UsesCallerSpecifiedToken"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-ARGUMENTS",
+    "variantKey": "public-scheduling-boundary-rejects-invalid-input",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests",
+    "testMethod": "PublicOperations_RejectInvalidArgumentsBeforeResolvingTransportStateAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-MOVE-CANCELLATION",
+    "variantKey": "dead-letter-move-forwards-caller-token",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMoveTransportTests",
+    "testMethod": "DeadLetterMove_ForwardsCallerCancellationToTheDatabaseOperationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION",
+    "variantKey": "failed-unlock-is-reported-as-lock-loss",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests",
+    "testMethod": "ScheduleRedeliveryAsync_ReportsARejectedUnlockAsLockLossAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION",
+    "variantKey": "redelivery-callback-is-never-silently-ignored",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests",
+    "testMethod": "ScheduleRedeliveryAsync_RejectsAnUnsupportedSendContextCallbackAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION",
+    "variantKey": "concurrent-terminal-operations-settle-exactly-once",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests",
+    "testMethod": "ConcurrentTerminalOperations_SettleTheDeliveryExactlyOnceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION",
+    "variantKey": "terminal-settlement-cancels-in-flight-renewal",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests",
+    "testMethod": "CompleteAsync_CancelsAnInFlightProviderRenewalAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-STARTUP-PURGE",
+    "variantKey": "concurrent-pipelines-purge-exactly-once",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.PurgeOnStartupFilterTests",
+    "testMethod": "ConcurrentPipelines_PurgeTheQueueExactlyOnceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-STARTUP-PURGE",
+    "variantKey": "failed-purge-remains-retryable",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.PurgeOnStartupFilterTests",
+    "testMethod": "FailedPurge_IsRetriedByTheNextPipelineAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SEND-LIFECYCLE",
+    "variantKey": "queue-and-topic-own-their-client-supervisor",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlSendTransportContextLifecycleTests",
+    "testMethod": "SendTransport_OwnsAndProbesItsClientSupervisor"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SEND-CONTEXT",
+    "variantKey": "priority-contract-validates-and-preserves-default",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlSendContextTests",
+    "testMethod": "PriorityExtensions_ValidateTheContextAndPreserveTheTransportDefault"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-HEADER-MATERIALIZATION",
+    "variantKey": "serialized-header-replacement-invalidates-cache",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportMessageTests",
+    "testMethod": "ReplacingSerializedHeaders_InvalidatesBothMaterializedCaches"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-HEADER-MATERIALIZATION",
+    "variantKey": "transport-headers-win-without-duplicates",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportMessageTests",
+    "testMethod": "HeaderProvider_MergesDuplicateNamesWithTransportPrecedence"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-PARTITIONED-RECEIVE",
+    "variantKey": "transport-neutral-capability-selects-sql-partitioning",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlConfigurationTests",
+    "testMethod": "PartitionedReceiveCapability_SelectsSqlPartitionedMode"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-MIGRATION-LIFECYCLE",
+    "variantKey": "constructor-rejects-missing-services-and-options",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlTransportOptionsStartupTests",
+    "testMethod": "MigrationHostedService_RejectsMissingDependenciesAtConstruction"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-DDL-IDENTIFIER",
+    "variantKey": "safe-values-are-preserved",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlIdentifierTests",
+    "testMethod": "Validate_PreservesSafeIdentifiers"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-DDL-IDENTIFIER",
+    "variantKey": "empty-quoted-and-control-values-are-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlIdentifierTests",
+    "testMethod": "Validate_RejectsValuesThatCanEscapeMigratorTemplates"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-DDL-IDENTIFIER",
+    "variantKey": "postgresql-utf8-byte-limit",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlIdentifierTests",
+    "testMethod": "Validate_EnforcesThePostgreSqlUtf8ByteLimit"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-DDL-IDENTIFIER",
+    "variantKey": "malformed-unicode-is-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlIdentifierTests",
+    "testMethod": "Validate_RejectsMalformedUnicode"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-ROUTINE-NAMES",
+    "variantKey": "client-targets-only-unversioned-routines",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlCommandContractTests",
+    "testMethod": "ClientCommands_TargetOnlyUnversionedTransportRoutines"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION",
+    "variantKey": "ipv6-address-is-not-split-as-host-and-port",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "HostSettings_ProjectIpv6HostWithoutTreatingAddressSegmentsAsAPort"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION",
+    "variantKey": "connection-string-replacement-clears-derived-state",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "ConnectionStringReplacement_ClearsPriorMultipleHostAndPortProjection"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-PUBLIC-ARGUMENTS",
+    "variantKey": "required-extension-arguments-fail-at-call-site",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlPublicArgumentValidationTests",
+    "testMethod": "PublicExtensions_RejectEveryNullOrEmptyRequiredArgumentAtTheCallSite"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-HOST-PROJECTION",
+    "variantKey": "current-settings-are-used-without-security-downgrade",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerConnectionConfigurationTests",
+    "testMethod": "HostSettings_RebuildConnectionStringFromCurrentValuesAndPreserveSecurityOptions"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER",
+    "variantKey": "regular-identifiers-preserve-safe-values",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests",
+    "testMethod": "ValidateRegular_PreservesSafeSchemaAndRoleNames"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER",
+    "variantKey": "unsafe-regular-identifiers-are-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests",
+    "testMethod": "ValidateRegular_RejectsValuesThatCanEscapeProvisioningTemplates"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER",
+    "variantKey": "identifier-length-is-bounded",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests",
+    "testMethod": "ValidateRegular_EnforcesTheSqlServerIdentifierLengthLimit"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER",
+    "variantKey": "database-identifiers-preserve-safe-values",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests",
+    "testMethod": "ValidateDatabase_PreservesSafeBracketDelimitedNames"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER",
+    "variantKey": "principal-identifiers-preserve-safe-values",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests",
+    "testMethod": "ValidatePrincipal_PreservesSupportedLoginAndUserNames"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-DDL-IDENTIFIER",
+    "variantKey": "specialized-identifiers-reject-template-escapes",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerIdentifierTests",
+    "testMethod": "SpecializedValidators_RejectUnsupportedCharacters"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-PUBLIC-ARGUMENTS",
+    "variantKey": "required-extension-arguments-fail-at-call-site",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.SqlServer.SqlServerPublicArgumentValidationTests",
+    "testMethod": "PublicExtensions_RejectEveryNullOrEmptyRequiredArgumentAtTheCallSite"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-BODY-STORAGE",
+    "variantKey": "json-bodies-remain-queryable-text",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.SqlMessageBodyStorageTests",
+    "testMethod": "Create_PreservesJsonAsQueryableText"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-BODY-STORAGE",
+    "variantKey": "provider-storage-rejects-body-metadata-mutation",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.SqlMessageBodyStorageTests",
+    "testMethod": "Create_RejectsBodyCallbacksThatChangeSqlMessageMetadata"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-BODY-STORAGE",
+    "variantKey": "non-json-bodies-use-lossless-binary-storage",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.SqlMessageBodyStorageTests",
+    "testMethod": "Create_PreservesNonJsonBytesWithoutUsingATextCarrier"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-BODY-STORAGE",
+    "variantKey": "missing-body-and-content-type-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.SqlMessageBodyStorageTests",
+    "testMethod": "Create_RejectsAMissingBodyAndUsesBinaryStorageWithoutAContentType"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-BODY-STORAGE",
+    "variantKey": "json-media-type-without-text-carrier-remains-binary",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Serialization.SqlMessageBodyStorageTests",
+    "testMethod": "Create_DoesNotDecodeAnOpaqueBodySolelyBecauseItsMediaTypeIsJson"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-BODY-STORAGE",
+    "variantKey": "receive-selects-text-binary-or-empty-without-loss",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveContextBodyTests",
+    "testMethod": "CreateBody_SelectsTheSinglePersistedRepresentation"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-BODY-STORAGE",
+    "variantKey": "receive-rejects-ambiguous-dual-representation",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveContextBodyTests",
+    "testMethod": "CreateBody_RejectsMissingOrAmbiguousRecords"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-CONNECTION-OWNERSHIP",
+    "variantKey": "successful-open-transfers-ownership",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportConnectionOpenTests",
+    "testMethod": "OpenOwnedAsync_SuccessTransfersTheConnectionWithoutDisposingItAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-CONNECTION-OWNERSHIP",
+    "variantKey": "failed-open-releases-connection-and-preserves-failure",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportConnectionOpenTests",
+    "testMethod": "OpenOwnedAsync_FailedOpenDisposesAndPreservesTheOriginalFailureAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-CONNECTION-OWNERSHIP",
+    "variantKey": "canceled-open-releases-connection-and-preserves-token",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportConnectionOpenTests",
+    "testMethod": "OpenOwnedAsync_CanceledOpenDisposesAndPreservesTheCallerTokenAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-CONNECTION-OWNERSHIP",
+    "variantKey": "cleanup-failure-does-not-mask-open-failure",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlTransportConnectionOpenTests",
+    "testMethod": "OpenOwnedAsync_FailedCleanupDoesNotMaskTheOriginalOpenFailureAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY",
+    "variantKey": "queue-identity-includes-every-broker-setting",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyEntityContractTests",
+    "testMethod": "QueueComparer_UsesExactTypeNameIdleTimeoutAndDeliveryLimit"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY",
+    "variantKey": "entity-name-comparers-are-exact-and-type-safe",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyEntityContractTests",
+    "testMethod": "NameComparers_UseExactTypeAndNameOnly"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY",
+    "variantKey": "queue-subscription-uses-logical-entity-identity",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyEntityContractTests",
+    "testMethod": "QueueSubscriptionComparer_UsesLogicalEntitiesTypeAndRoutingContract"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-TOPOLOGY-IDENTITY",
+    "variantKey": "topic-subscription-uses-logical-entity-identity",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyEntityContractTests",
+    "testMethod": "TopicSubscriptionComparer_UsesLogicalEntitiesTypeAndRoutingContract"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-TOPOLOGY-DIAGNOSTICS",
+    "variantKey": "all-entities-and-broker-settings-are-projected",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlTopologyEntityContractTests",
+    "testMethod": "BrokerProbe_ProjectsEveryEntityAndBrokerSetting"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-PUBLISH-SCAN",
+    "variantKey": "namespace-scan-filters-valid-contracts",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlPublishTopologyConfigurationExtensionsTests",
+    "testMethod": "NamespaceScan_PublishesOnlyValidFilteredContractsAndInvokesCallbacks"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-PUBLISH-SCAN",
+    "variantKey": "default-scan-rejects-invalid-contracts",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlPublishTopologyConfigurationExtensionsTests",
+    "testMethod": "NamespaceScan_WithoutFilterStillRejectsInvalidContracts"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-PUBLISH-SCAN",
+    "variantKey": "explicit-types-preserve-order-and-callback-identity",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlPublishTopologyConfigurationExtensionsTests",
+    "testMethod": "ExplicitTypes_PreserveOrderAndCallbackIdentity"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-PUBLISH-SCAN",
+    "variantKey": "required-inputs-fail-at-public-boundary",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Topology.SqlPublishTopologyConfigurationExtensionsTests",
+    "testMethod": "Registration_RejectsEveryMissingRequiredInput"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-HOST-SETTINGS",
+    "variantKey": "address-credentials-preserve-password-suffix",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests",
+    "testMethod": "AddressConstructor_DecodesCredentialsWithoutLosingPasswordSuffix"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-HOST-SETTINGS",
+    "variantKey": "operational-defaults",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests",
+    "testMethod": "Defaults_ExposeTheOperationalContract"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-HOST-SETTINGS",
+    "variantKey": "invalid-operational-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests",
+    "testMethod": "Validate_ReportsEveryInvalidOperationalBoundary"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-HOST-SETTINGS",
+    "variantKey": "port-outside-tcp-range",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests",
+    "testMethod": "Validate_RejectsPortsOutsideTheTcpRange"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-HOST-SETTINGS",
+    "variantKey": "valid-operational-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests",
+    "testMethod": "Validate_AcceptsEveryValidOperationalBoundary"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-HOST-SETTINGS",
+    "variantKey": "address-components-fail-during-validation",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests",
+    "testMethod": "Validate_ReportsInvalidAddressComponentsBeforeHostAddressFormatting"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-HOST-SETTINGS",
+    "variantKey": "area-requires-a-named-virtual-host",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests",
+    "testMethod": "Validate_RejectsAnAreaWithoutANamedVirtualHost"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-HOST-SETTINGS",
+    "variantKey": "unix-socket-hosts-cannot-bypass-validation",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlHostSettingsContractTests",
+    "testMethod": "Validate_RejectsUnixSocketHostsSetThroughThePublicConfigurator"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION",
+    "variantKey": "supported-single-ipv6-and-multiple-host-shapes",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "HostSettings_ProjectEverySupportedHostShape"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION",
+    "variantKey": "malformed-host-segments-fail-at-configuration-boundary",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "HostSettings_RejectMalformedHostSegmentsBeforeRuntime"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION",
+    "variantKey": "missing-host-remains-a-validation-failure",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "HostSettings_ReportMissingHostThroughConfigurationValidation"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION",
+    "variantKey": "connection-string-inline-port-matches-data-source",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "ConnectionStringInlinePort_UsesTheSameBusAndDataSourceTargetAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION",
+    "variantKey": "options-inline-port-matches-data-source",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "OptionsInlinePort_UsesTheSameBusAndDataSourceTargetAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION",
+    "variantKey": "failed-connection-string-replacement-is-atomic",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "FailedConnectionStringReplacement_PreservesEveryPriorSettingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION",
+    "variantKey": "current-settings-rebuild-data-source-without-security-downgrade",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "HostSettings_RebuildDataSourceFromCurrentValuesAndPreserveSecurityOptionsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-POSTGRES-HOST-PROJECTION",
+    "variantKey": "explicit-first-host-override-collapses-multiple-host-list",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.PostgreSql.PostgreSqlConnectionConfigurationTests",
+    "testMethod": "HostSettings_ExplicitFirstHostOverride_CollapsesPriorMultipleHostListAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVE-VALIDATION",
+    "variantKey": "valid-boundaries-are-accepted",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlConfigurationTests",
+    "testMethod": "ReceiveEndpointValidation_AcceptsEveryValidBoundary"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE",
+    "variantKey": "cleanup-and-keepalive-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests",
+    "testMethod": "Schedule_EnforcesEveryMaintenanceAndKeepaliveBoundaryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE",
+    "variantKey": "database-idle-duration-never-rounds-down",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests",
+    "testMethod": "DatabaseAutoDeleteSeconds_NeverShortensConfiguredIdleLifetime"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE",
+    "variantKey": "backlog-outcomes-control-retry-and-keepalive",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests",
+    "testMethod": "BacklogOutcomes_ControlImmediateCleanupAndKeepaliveAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE",
+    "variantKey": "permanent-queue-is-never-touched",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests",
+    "testMethod": "QueueWithoutAutoDelete_NeverReceivesKeepaliveTouchesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE",
+    "variantKey": "expected-polling-interruptions-are-contained",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests",
+    "testMethod": "ExpectedPollingInterruptions_AreContainedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE",
+    "variantKey": "unexpected-lifecycle-failures-propagate",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests",
+    "testMethod": "UnexpectedLifecycleExceptions_PropagateAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-QUEUE-MAINTENANCE",
+    "variantKey": "failed-keepalive-remains-due",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlQueueMaintenanceTests",
+    "testMethod": "FailedKeepalive_RemainsDueWithoutRepeatingCleanupAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "empty-poll-maintains-wakes-and-stops",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "EmptyPoll_MaintainsQueueWakesEarlyAndStopsThePendingRequestAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "completion-before-wait-is-not-lost",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "MessageHandledDuringMaintenance_SkipsTheStalePollingWaitAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "auto-delete-polling-is-bounded-by-keepalive",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "AutoDeleteQueue_PollsSoonEnoughToKeepTheActiveQueueAliveAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "active-message-dispatches-and-settles",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "ActiveMessage_IsDispatchedWithItsTransportIdentityAndSettledAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "expired-message-uses-configured-terminal-path",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "ExpiredMessage_UsesTheConfiguredTerminalPathAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "late-fetch-during-stop-releases-lock",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "MessageFetchedAfterStopStarted_IsReleasedForImmediateRedeliveryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "failed-shutdown-release-is-contained",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "FailedShutdownRelease_DoesNotPreventReceiverCompletionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "failed-batch-release-continues-with-other-locks",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "TimeoutReleasingFirstFetchedMessage_StillReleasesOtherBatchLocksAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "partitioned-mode-dispatches-keyed-and-unkeyed-records",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "PartitionedMode_DispatchesKeyedAndUnkeyedRecordsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "dispatch-failure-is-settled-and-contained",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "DispatchFailure_IsSettledAndDoesNotTerminateTheReceiverAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "polling-without-queue-id-remains-interruptible",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "PollingWithoutQueueId_IsStillInterruptedWhenWorkCompletesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVER-LIFECYCLE",
+    "variantKey": "receive-fault-terminates-owned-lifecycle",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "ReceiveFault_TerminatesTheOwnedReceiverLifecycleAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION",
+    "variantKey": "renewal-timeout-retry-versus-terminal-loss",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlSettlementBoundaryTests",
+    "testMethod": "RenewalOutcome_ControlsLockValidityAndStopsFurtherProviderWorkAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION",
+    "variantKey": "terminal-provider-arguments-and-rejected-ownership",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlSettlementBoundaryTests",
+    "testMethod": "TerminalSettlement_PreservesExactDeliveryHeadersAndReportsRejectedOwnershipAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-TOKEN",
+    "variantKey": "empty-selector-token-rejected-before-sql-dispatch",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests",
+    "testMethod": "EmptySelectedToken_CannotResolveSqlEndpoint_AndAValidTokenRecoversAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULER-REGISTRATION",
+    "variantKey": "null-owner-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlSchedulerRegistrationTests",
+    "testMethod": "Registration_RejectsMissingOwnerBeforeAccessingServices"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULER-REGISTRATION",
+    "variantKey": "default-preserves-existing-and-rejects-wrong-transport",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlSchedulerRegistrationTests",
+    "testMethod": "DefaultRegistration_PreservesExistingSchedulerAndRejectsWrongTransport"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULER-REGISTRATION",
+    "variantKey": "default-scoped-clock",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlSchedulerRegistrationTests",
+    "testMethod": "DefaultRegistration_UsesScopedInstancesAndConfiguredClock"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULER-REGISTRATION",
+    "variantKey": "typed-owner-scope-and-transport",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlSchedulerRegistrationTests",
+    "testMethod": "TypedRegistration_PreservesOwnerAndScopeAndRejectsWrongTransport"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION",
+    "variantKey": "consume-context-uses-active-client-and-exact-token",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests",
+    "testMethod": "ConsumeCancellation_UsesActiveClientAndExactTokenAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION",
+    "variantKey": "cancelled-consume-request-never-looks-up-client",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests",
+    "testMethod": "CancelledConsumeRequest_DoesNotTouchActiveClientAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION",
+    "variantKey": "host-cancel-passes-client-and-request-token",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests",
+    "testMethod": "HostCancellation_SendsThroughConnectionAndPreservesRequestTokenAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION",
+    "variantKey": "host-delete-fault-propagates-without-resend",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests",
+    "testMethod": "HostDeleteFailure_PropagatesWithoutAnotherDispatchAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION",
+    "variantKey": "host-retry-reopens-client-with-exact-token",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests",
+    "testMethod": "HostRetry_ReopensClientAndPreservesCancellationIdentityAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION",
+    "variantKey": "missing-schedule-is-a-no-op-without-retry",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests",
+    "testMethod": "MissingSchedule_CompletesWithoutRetryOrSecondDeletionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION",
+    "variantKey": "cancelled-host-request-never-enters-supervisor",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests",
+    "testMethod": "CancelledHostRequest_DoesNotEnterConnectionSupervisorAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION",
+    "variantKey": "stopping-host-never-enters-supervisor",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests",
+    "testMethod": "StoppingHost_RejectsDeletionBeforeConnectionDispatchAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-CANCELLATION",
+    "variantKey": "caller-cancels-after-supervisor-entry-before-client-creation",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleCancellationProviderTests",
+    "testMethod": "CancellationAfterSupervisorEntry_StopsBeforeClientCreationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION",
+    "variantKey": "unsafe-base-lookup-still-unlocks-with-original-failure",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests",
+    "testMethod": "FaultedAsync_UnsafeBaseLookupStillUnlocksWithTheOriginalFailureAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-CLIENT-LEASE-CANCELLATION",
+    "variantKey": "lease-and-caller-cancel-only-owned-operations",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlClientLeaseAndTimerContractTests",
+    "testMethod": "ClientWrappers_PropagateCancellationForEveryResultShapeWithoutCancelingSharedRootAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-LOCK-INITIAL-RENEWAL-TIMER",
+    "variantKey": "valid-db-duration-never-causes-late-system-lock-loss",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlClientLeaseAndTimerContractTests",
+    "testMethod": "ValidDatabaseLockDuration_RemainsValidWithSupportedInitialRenewalSchedulingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-HEADER-ENUMERATION",
+    "variantKey": "native-metadata-agrees-with-lookup-despite-serialized-spoof",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMetadataAndOptionsContractTests",
+    "testMethod": "HeaderEnumeration_PreservesAuthoritativeNativeValuesAndExplicitRedeliveryOverride"
+  },
+  {
+    "requirementId": "REQ-VSB-SQLSERVER-PORT-PRECEDENCE",
+    "variantKey": "explicit-port-alone-overrides-base-datasource-without-security-downgrade",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMetadataAndOptionsContractTests",
+    "testMethod": "ConnectionOptions_ExplicitPortWithoutHostOverridesConnectionStringDataSource"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-FIRST-DELIVERY",
+    "variantKey": "fetched-attempt-count-agrees-with-redelivery-metadata",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlMessageReceiverTests",
+    "testMethod": "FetchedDelivery_AttemptCountAgreesWithRedeliveredAndHeaderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-RECEIVE-VALIDATION",
+    "variantKey": "rejects-illegal-trailing-characters",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Configuration.SqlConfigurationTests",
+    "testMethod": "ReceiveEndpointValidation_RejectsIllegalTrailingCharacters"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION",
+    "variantKey": "successful-redelivery-unlock-survives-debug-failure",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests",
+    "testMethod": "ScheduleRedeliveryAsync_SuccessfulUnlockSurvivesDebugFailureAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION",
+    "variantKey": "admitted-settlement-survives-renewal-warning-failure",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests",
+    "testMethod": "CompleteAsync_AlreadyAdmittedSettlementSurvivesRenewalWarningFailureAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-LOCK-TRANSITION",
+    "variantKey": "callback-failure-does-not-abandon-owned-renewal",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlReceiveLockContextTests",
+    "testMethod": "CompleteAsync_CallbackFailureStillJoinsTheOwnedProviderRenewalAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SCHEDULE-TOKEN",
+    "variantKey": "owning-debug-cannot-replace-accepted-schedule-or-deletion",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Scheduling.SqlScheduleMessageProviderTests",
+    "testMethod": "AcceptedOperations_AreNotReplacedByTheirDebugLoggerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-STARTUP-PURGE",
+    "variantKey": "owning-debug-preserves-once-only-purge-and-pipeline-progress",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.PurgeOnStartupFilterTests",
+    "testMethod": "SuccessfulPurge_RemainsOnceOnlyDespiteItsDebugLoggerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-ENDPOINT-DIAGNOSTICS",
+    "variantKey": "connect-endpoint-own-debug-preserves-real-start",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlPublicContinuationDiagnosticsTests",
+    "testMethod": "ConnectReceiveEndpoint_OwnDebugPreservesRegisteredEndpointStartAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SQL-SEND-LIFECYCLE",
+    "variantKey": "create-send-publish-own-debug-preserves-distinct-owner-admissions",
+    "testAssembly": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "testType": "ViciOne.ServiceBus.SqlTransport.Tests.Runtime.SqlPublicContinuationDiagnosticsTests",
+    "testMethod": "CreateTransport_OwnDebugPreservesEarlyChildAndConnectionOwnershipAsync"
+  }
 ]

@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-05T02:50:09.498865+00:00",
+  "actor": "/root",
+  "status": "ORIGINAL_NATIVE_PARENT_CONVERSION_FANOUT_EARLY_COMPLETION_CONFIRMED",
+  "confirmed_before": 149,
+  "confirmed_after": 150,
+  "accepted_current": 149,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/REPORT.json",
+    "sha256": "b56750e89f523b997efdec5830b5dc41ab5e9872321bdeb83bb4b533f6633f03"
+  },
+  "actual_causal_context": {
+    "actual_failed_case": "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests.ParentFanout_LaterConversionOrPipeFailureKeepsStartedWorkOwnedAsync(conversionThrows: True)",
+    "first_actual_failure": "Source355 Assert.False(operation.IsCompleted) observes True while held actual first provider gate remains pending.",
+    "reached": [
+      "Actual conversion query order exactly first TestMessage then SecondFanoutMessage",
+      "First real connected typed pipe called1; exact first context/message identity",
+      "Synchronous second conversion throws unique IOException; second actual pipe admission0",
+      "Next continuation0",
+      "Real first gate.Task pending at354; public operation already terminal at355"
+    ],
+    "unreached": [
+      "Gate.SetResult normal-path line356",
+      "Public awaited observed exact primary IOException",
+      "Public IsFaulted and public aggregate exact unique primary",
+      "Normal-path next0 after join"
+    ],
+    "actual_positive_control": "conversionThrows:false second real typed pipe Task fault joins held first output; actual same primary/public fault/first gate success/no next/exact aggregate assertions all reached.",
+    "source_cause": "ConsumeContextOutputMessageTypeFilter calls source.TryGetMessage synchronously before returning SendToOutputAsync. Parent multi-output loop adds earlier pending Task, then later synchronous conversion exception leaves loop before Task.WhenAll; local async operation faults immediately and loses join ownership.",
+    "cleanup": "Test finally releases and observes actual held provider gate, optional second provider Task and public operation; internally-created first output adapter Task is not directly exposed by this original route.",
+    "native_cause_limit": "Actual first native failure is early public completion, not a measured missing callback, later unexecuted exact-cause assertion or timeout. Root alone registers new finding."
+  },
+  "root_read_authority": "Actual fullnative16 failure/control logb1d74f; whole currentparent168 source7e60d0 plusapprovedOriginal133/peer188788 and qual causalcontext b4ede1; no later unexecuted assertion credited.",
+  "CLOSED": false
+}

@@ -106,7 +106,7 @@ public class MessageTopology<TMessage> :
     /// <summary>Gets the formatter for this message contract.</summary>
     public IMessageEntityNameFormatter<TMessage> EntityNameFormatter { get; private set; }
 
-    /// <summary>Gets the entity name, evaluating the formatter at most once.</summary>
+    /// <summary>Gets the entity name, caching the first successful nonblank formatter result.</summary>
     public string EntityName
     {
         get
@@ -127,7 +127,7 @@ public class MessageTopology<TMessage> :
         }
     }
 
-    /// <summary>Replaces the formatter before the entity name is first evaluated.</summary>
+    /// <summary>Sets the formatter until a successful name is cached; afterward accepts an equal name without replacing the formatter and rejects a different name.</summary>
     /// <param name="entityNameFormatter">The replacement formatter.</param>
     public void SetEntityNameFormatter(IMessageEntityNameFormatter<TMessage> entityNameFormatter)
     {
@@ -148,7 +148,7 @@ public class MessageTopology<TMessage> :
         }
     }
 
-    /// <summary>Sets a fixed entity name before the current name is first evaluated.</summary>
+    /// <summary>Sets a nonblank fixed-name formatter while no successful name is cached; afterward accepts the cached name and rejects a different name.</summary>
     /// <param name="entityName">The non-empty entity name.</param>
     public void SetEntityName(string entityName)
     {

@@ -1,0 +1,1173 @@
+{
+  "utc": "2026-10-06T21:54:38.694774+00:00",
+  "status": "EXACT125_RAW_EVIDENCE_RULES_NO_BLOCKER_SELECTED_SOURCE6330_UNCHANGED",
+  "Root_receipt": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/RAW_EVIDENCE_ATTRIBUTES.json",
+    "sha256": "0d62b775257805c0c94327a5e6d58329765485bfa3884491b5afeebfbfcb7b08",
+    "bytes": 46288
+  },
+  "attributes": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/.gitattributes",
+    "sha256": "382bb8c13410fb7dda00e45d5c543988954c1576d42ae8ac77248f0942526f5e",
+    "bytes": 14576
+  },
+  "rules_count": 125,
+  "CRLF_preservation_rules": 3,
+  "whitespace_record_rules": 122,
+  "all_rules_exact_no_wildcard_directory_product_test_build_match": true,
+  "all125_archive_live_GitBlobSHA_equal": [
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/ANALYZERS_CODEFIX_LEDGER_BEFORE.csv",
+      "sha256": "b6e08ca2e4e17207892048c10ec95af971469cff1b3251a5e1ba0bf5a62b3fe5",
+      "git_blob": "938e21dc8e530d762b5c96b7eacabd5352d5fc3f",
+      "CRLF_count": 6210,
+      "attributes": [
+        "-text",
+        "whitespace=cr-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/TESTING_ARCHITECTURE_ABSTRACTIONS_LEDGER_BEFORE.csv",
+      "sha256": "e4ea3c9b1ad3487f867a5d6963663553af238f7d2f51a927c50a01f0ab6354d5",
+      "git_blob": "8b0c0e64ebc8e5a4e4de0d41ebef3394642ad47a",
+      "CRLF_count": 6210,
+      "attributes": [
+        "-text",
+        "whitespace=cr-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/TESTING_FAMILY_LEDGER_BEFORE.csv",
+      "sha256": "085920463e3514d6892de96642ccc4d16c94f574cad17cd059c64769a8559326",
+      "git_blob": "251335b7dffe483883c528730ee17a9751be0156",
+      "CRLF_count": 6210,
+      "attributes": [
+        "-text",
+        "whitespace=cr-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/changelog-maintenance-20261006-r1/CHANGELOG_ONLY.diff",
+      "sha256": "150246970e5863779cc365a5ee2c4ac3159fb462c357da4b0e6b4fc4170a31af",
+      "git_blob": "c84a11d311dbac6276805857c662d1b47367e77e",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/changelog-maintenance-20261006-r1/independent-review/CHANGELOG_ONLY.diff",
+      "sha256": "150246970e5863779cc365a5ee2c4ac3159fb462c357da4b0e6b4fc4170a31af",
+      "git_blob": "c84a11d311dbac6276805857c662d1b47367e77e",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/delta-03.patch",
+      "sha256": "27cdec178dfd86eb20ea6615ba641d40868d246ba46dc3153be66c531aed3326",
+      "git_blob": "e4842d0dc99d6e02d30fe6183717f6b314dbf547",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/delta-04.patch",
+      "sha256": "93cdb43fa869c7b35c25261c7b50843100eaf3172efef60c57b838f4219597de",
+      "git_blob": "31e47f920218b9c0c99bbd9f0d4db243dbaed711",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/delta-05.patch",
+      "sha256": "5e24f7564c4781037e60c9a26fed15bbdf1d2d6bcb9f1a2f888ebfb9b4a9fb34",
+      "git_blob": "c49ce3e6015e974d381c344a1536de57de95a19d",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/delta-06.patch",
+      "sha256": "e4297de96f94037046a4b0bc572e0952e4817d6ee8f208c8905fa79fbcabe8c9",
+      "git_blob": "5de4121956b12adef7b3a2009f0c7308f74a10cb",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/delta-07.patch",
+      "sha256": "85641e26f940446a60794fe30d9785d7bf067bcca9168c7eca28207b735beceb",
+      "git_blob": "fae4cf7c9e7149b24f79b45d0d67ff731fd5b75a",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/delta-08.patch",
+      "sha256": "56f0f6fa16ffddd22689ff561697fabc7311c6170f5a19ccd8e9de313363342c",
+      "git_blob": "52e121b2906c7e93344c418d0af51433f75bb2db",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/delta-09.patch",
+      "sha256": "b75349148cfbe0120f41d0c234c0c83f20b42c71c74bebce45cc3fef17fb9889",
+      "git_blob": "4c740b1a1003999211cafd7959ca0675b0b5250a",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/mutant-borrowed-client-owned.patch",
+      "sha256": "64d90d839b3f4137007d931914525bf748708a34ad2f43269c77a8b713718362",
+      "git_blob": "6e3ef9710c2b13ffe5e9d61f7af64d8e50ff7c61",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/mutant-container-name-leak.patch",
+      "sha256": "fcd78639febed9c836fa08f35e787835e6fa6c63b59f155297ce2ed57044cc7e",
+      "git_blob": "e803d3df00acf74337eb6d7d31718c049f25b3a0",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/mutant-created-client-borrowed.patch",
+      "sha256": "fe81bdbebd0e3bda0d2255750e880a94d9ace671a9c6e219f69ec2ddffab8824",
+      "git_blob": "e8645c54dedee524ee05d334baf77e1a811c6721",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/mutant-direct-constructor-borrowed.patch",
+      "sha256": "c77d727f4a6e8b99fae95bd240e881742f6359e3bcbc6ee63e6f169a5f074dd8",
+      "git_blob": "6da73868ed021326cc00dda574184a4ece76e0e4",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/mutant-dispose-unawaited.patch",
+      "sha256": "75562bfacd9a8adba123659f317caa35e701f4ef5ee04a0d9ef2151c969d0f16",
+      "git_blob": "9a36462d87adc30efca11092f370bdb04fc69673",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/mutant-message-lock.patch",
+      "sha256": "1e789456381900cd020691847bd5220d5eae5f821c63bd30a48259773414fd5b",
+      "git_blob": "45314d5aab62a906e94d81af1ee532eea66c1837",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/mutant-non-utc-session.patch",
+      "sha256": "d8a6f57967ccea504cb091073e0299d5f442731bd6be4ebdb957578b432698a8",
+      "git_blob": "f12257e4afcb8ffd585d01678a18c5ed3202ac16",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/mutant-session-snapshot.patch",
+      "sha256": "c0eaf636cd02da4b468810c858869083b00cf9bd12baa01d4d8f35844e683e11",
+      "git_blob": "6140319c5adb5fa16858f43957021031bf8ed8cd",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/borrowed-client-owned.patch",
+      "sha256": "19cb6cf04eb9a2c018f17f7ac328ceecd815142388835415dd49991e19b44b3d",
+      "git_blob": "a540670d94adc6c008b01a86893038aeb72cf7b0",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/container-name-leak.patch",
+      "sha256": "64dee8c61a038ce7443fee65fb45bcf4779a291355bb1aba311d4155817d4628",
+      "git_blob": "b1e3f0adffa83197f4d3c3838aac573d344a7c77",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/created-client-borrowed.patch",
+      "sha256": "715cb5e868ea82ce82bed042063a1b8a97ca44da3549b6f928dd7d23084d615e",
+      "git_blob": "b489630d98e53b47b93e13bb17eb7928e29f6875",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/direct-constructor-borrowed.patch",
+      "sha256": "098e076a4d8090640fc866ef2a1a4f77ad6ee983b2f20c5dcd549f0026b2ba2a",
+      "git_blob": "b76537092dd48cf0cb2974d1ea75971e753d5522",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/dispose-unawaited.patch",
+      "sha256": "58362571d49a4c204b3e60a64cf54fedb32f1f7615ca56ebf09888024a5a40dd",
+      "git_blob": "3f4d9519fc9de8ebea6214708afe39d2bcfaa77f",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/message-lock.patch",
+      "sha256": "b014d1796ba6c941497331bd96d5bea8e182c06b20200dfefd092067bdacf526",
+      "git_blob": "fde349fc6e5e6e2095a3e18ac215ed85db0fd7bd",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/non-utc-session.patch",
+      "sha256": "94e5a18cc7643dfdca01840b0da00f9313c2c1feb0cdf9fc0fc2cf38d31812ec",
+      "git_blob": "dd661c0593758e4daed158da315681323c22a0c4",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/mutants/session-snapshot.patch",
+      "sha256": "5ca2745303e6068010050aaeec2779b43191a1c549d50a6d9014cd4e8f7533f5",
+      "git_blob": "b9d7d940992d4af58fe3792a4de78b0d0f233256",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-00-EncryptionKey.cs.patch",
+      "sha256": "f5e62c0d98627ae885de5b3c5e6995e02e32ad47ec96ec30bb3a758f295ef137",
+      "git_blob": "9a7ff71524550d148f72d4d930a790fd82c276fa",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-01-MessageContractIdentity.cs.patch",
+      "sha256": "fb158592cb813923f06d73ad5e049e07e84745cb6213382655aeab915301a23a",
+      "git_blob": "53b9338fe7507e08711a66bef7c12c5edcebdde3",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/delta-05-Program.cs.patch",
+      "sha256": "1a37ef2c1e3b9678ad9f219b63e63f1da812b27e583b95b9425db48722bde381",
+      "git_blob": "f98bc3b3c1ebd4296ad76bb5642845a492ff03ba",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-contract-exclusive-length-bound.patch",
+      "sha256": "7efe23ab423715ca1dd993d81540b244245500b3c6a22d2ed86608763d33094b",
+      "git_blob": "19e45cc3393b7a4f4804d8d70563e1cfb6f80f08",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-contract-lost-low-surrogate-guard.patch",
+      "sha256": "1fdfea204bef125321c8878237ec22ccb3c2790ac4ba3ca49528103301ca7ff9",
+      "git_blob": "4dd2abe3ebb5c17ee12b55ef3c8195d11da3faf0",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-contract-replacement-character-overrejection.patch",
+      "sha256": "b1b7eac096cac8615c097ecba3232e64a0b460d656ec59f8bef76f0a526c1a6f",
+      "git_blob": "2cd4ee8defee6a6c72e0efe8db63d3f07d3f6c16",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-key-character-count-bound.patch",
+      "sha256": "acb6b2aee4406fb3c5cc774afaf2a87c809aa3205e875e6fcc4c0a8ef7b907fc",
+      "git_blob": "6d454340e165acb8dd9f0fff40c3916392a92cad",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-key-exclusive-upper-bound.patch",
+      "sha256": "8e7dbcb78d90a67a6b8310067e8e62beeb066c3f3b50733266b95cdfe2993c20",
+      "git_blob": "e070424d67a5271684861699683102a03dad7e34",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-adversarial/mutant-key-lost-encoding-cause.patch",
+      "sha256": "f43539e95daf1a14658abbb8149d260f95ecd94d8cdc20deeb9e1c2977679c67",
+      "git_blob": "50c38a26788e00cb4b6866f1b08566fa1cc3e400",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity/freeze/05-Program.cs",
+      "sha256": "0bcc4cb7eac8f09e7839480a89b2cdc6e1a9ed9803e5c779ddd4628195470025",
+      "git_blob": "5139a51ecb7acae92a3e946b50620450e9c73d8a",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/00-SharedConnectionContext.cs.patch",
+      "sha256": "f109526f3bb21e0bf6ed00735c490768d47d710db7698d3f66d72013038c8a91",
+      "git_blob": "010efeef9a901d19c4534ade72f5accedbb82496",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-final-inputs/RUNNER_DELTA.txt",
+      "sha256": "dd4693889a7fc18b903d71296478eba7bfac2b16bf9c1eaebe0862daa2e86bfc",
+      "git_blob": "2df1e1079f5925e8e636c859e8ef2f8a24136fa3",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public-consumer-delta.patch",
+      "sha256": "d3cdcd16cc4409d49e07c158b454044898a627e395587bf353de889471e9fd57",
+      "git_blob": "4f83d3473555035b5310ca8e95c23ea3bb2e5a09",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-adversarial/FIXTURE_DELTA.patch",
+      "sha256": "c7804b327fee9d54846844962c7c6cefc0a331fc8abfe9587c0fd21cbabb1792",
+      "git_blob": "c1e2d3d71d539a0ea6c13aa0646fafd1bad9d04f",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-product-delta.patch",
+      "sha256": "a9d0659b4b6a6e28e561f10e2211f655f03fef64987951c635aa6372caea5c13",
+      "git_blob": "9eef3cc05a175fe620c55101a17adbcd957bcc93",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_001.txt",
+      "sha256": "b3bb6906ec70f0ae849af1dda72a04b1687796e97a033d2ef55840640f1b49b3",
+      "git_blob": "85020f9e05c00a35cb5d8c824113c9b87fd8f85e",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_002.txt",
+      "sha256": "254b490a0f5ba5ceb93a7e699f9b2b399c4c7e2951bafc2b22a5fd0545d7cdc0",
+      "git_blob": "8c928539f5c53844b701518b67c055df08627e9c",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_003.txt",
+      "sha256": "9947c2477d25cef61692527b2dd1747c7c2853f71ef6a9e4a98295f93b11cb96",
+      "git_blob": "155542fa6246bebc75d4d2534cca487d60d3f936",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_004.txt",
+      "sha256": "52185ebff7f7e190bc402a6c4a138a9224117d1ccc9ff9ac363d5bb8dab34bce",
+      "git_blob": "368327387d45ed5e45d29fad2ee2e312df398036",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_005.txt",
+      "sha256": "f158abf1989d32bfc0bd941280be8e46a299c8bd3ccd0430afd906f169bea1e3",
+      "git_blob": "e0cbb08ef4ca06b3b1c9ad969ea093cb7bd46266",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_006.txt",
+      "sha256": "5c6a4b708bc5084555bbff4f951be3d6674b8e27a6d26ebc0e970348d5e2209b",
+      "git_blob": "4781a97a973f82285caad6ef62f9a99d884533bc",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_007.txt",
+      "sha256": "f2daf4530662d17e49a6a3d50d5cd841841da51805ffc21c06183d305b83a2c2",
+      "git_blob": "cf04d67680203c425a284ef8d42205f6f7eb24b4",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_008.txt",
+      "sha256": "c8139fe0d046c16d746fdb35109edb327343499622d6072bed9bca179b21489a",
+      "git_blob": "36aa56b0d1c08c32e16ba5622045dd6a52581607",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_009.txt",
+      "sha256": "dbf90c6877a51b6621fd4e3b5c0552a4aec57c82ba9f4e52247327b5d8844092",
+      "git_blob": "c4320bc17db362bc5ac12c4a8bda49f47d4282bd",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_010.txt",
+      "sha256": "dac98c461dbb9e4b716592655a82bd4a96abf5aaaad1a6b660c562e77a04b85c",
+      "git_blob": "cadd2fc31cb85255621380b08350ec415ceb4ec5",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_011.txt",
+      "sha256": "e526a027db0a563dbd4d5c7c921e32cca2f64c06ae091d4ec78df9d18d88cbc3",
+      "git_blob": "40a3f0a4f07506fd091e1230f6d45bbd324f2eb4",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_012.txt",
+      "sha256": "6f01d25bd526a677325cf0ee3e62e745bc52d6f0f00390e411e29693baec3356",
+      "git_blob": "f607735326aad2b59fd139427ca79dcd7acfcb2e",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_013.txt",
+      "sha256": "e4538032e5f602a8688043f286604eff8c3a8f17450f82a9569f3d59880820b8",
+      "git_blob": "27cad7c5fc699a4c009ac94fd55e3404d6cef1f6",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_014.txt",
+      "sha256": "9c9df4b826649ced7e051e0f467e87b6b6536f4dbd8d6deea0832d5e9c299615",
+      "git_blob": "9c42c08727cfd270976641ce8c0bad25c832ccfa",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_015.txt",
+      "sha256": "53489124e55ef8beaec5861e286a6e768aca12d2ed3ae4104442aa1066c28d6f",
+      "git_blob": "fe179829b7957cc7711d3f9c061d8516d2a0052d",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_016.txt",
+      "sha256": "ad445968028541ae1eb04d7bd257ba1d0dc94a5370cff4448587f2c4b6fbcf3c",
+      "git_blob": "c6d3df1bc8e27b348e62b24973d3d1455804fa19",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_017.txt",
+      "sha256": "7ddb847d3b0758637a71c0019591ec39cc5a77a95ca346e73dc2265fb64348a3",
+      "git_blob": "2690f82b06b939063d2d177e4b6c434631f0b4df",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_018.txt",
+      "sha256": "01b2d37692ab397ab4b58a4904fcc051febad56a1917fd11cc85dba383e31948",
+      "git_blob": "f883675272c85f300a3e7c7940395688fe6747f4",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_019.txt",
+      "sha256": "230c7b91f72337a513b0749f222d5ebd6a10b57423f98c2eb658c9f5c23462fc",
+      "git_blob": "8f9838437eabb6f1774256778edb398b1c6d406e",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_020.txt",
+      "sha256": "53cef5aa5a7a79b6ebf99f9af4e89335a1d80772869ad55d4bc9da9a4b0d0a21",
+      "git_blob": "27aafb4f70e6017b3127069ff9af709a437ff5c7",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_ADDITIONAL_021.txt",
+      "sha256": "29d93cd83948a95203c14e67040e6fe2d8dbf1b381e55c0214656ce5295bcd79",
+      "git_blob": "becf941b55a5e5323d713cc57aa1eda2fd5e9b38",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_001.txt",
+      "sha256": "3a53fcb6b089bc73b7f3ce9938022281cab0701a81be19ec9753abcb131db54e",
+      "git_blob": "fb55549ac242ab2d668d73e9a9f00e093894f33c",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_002.txt",
+      "sha256": "5ad2e6821a24306707827b4a2d315935fd71a96dfc3a6d9c9149f85b3627fa52",
+      "git_blob": "ee4ad0521051e9ebae0e8ad58a153de10f6274b7",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_003.txt",
+      "sha256": "a8fc034eaf8646a50ad2b1481a4d06a29021c2aaa4efc41d2c53e02183438f85",
+      "git_blob": "3de8e3b46a8b5081825accdee5e2162aa8738433",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_004.txt",
+      "sha256": "c9c9a739e8e77440817fd158e7cfa1c500ebfd09a88a81eeb0670b5be5fad6b0",
+      "git_blob": "9491f214ba3fc1403f501e6083e49cbe8cb635de",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_005.txt",
+      "sha256": "6793da841e25df3bac7309eb6d28fd5da4bfcdfc4188e04e2e5318f26b12bb44",
+      "git_blob": "f485007588b94077f042d86bb9b07312bdc4a5b6",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_006.txt",
+      "sha256": "36a7e14d85f713b2cc895887b463f0a0be53888973c0dc45e4f5a8944810835c",
+      "git_blob": "6e761ab9f60aa985e4822bddcabfda57adc0909b",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_007.txt",
+      "sha256": "d359257f5359d71b554a2056b4cd68462b038dab1333c06ff4dfb141e7d45c1a",
+      "git_blob": "0810b02c05de71cd67e7f86ee9c4ca4c8354dfe3",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_008.txt",
+      "sha256": "fbe3bdb2fba48db3426e6d68cdb099190a5ad7338630d16cf2f63c21ff54e4d1",
+      "git_blob": "c18b6d27f4de94d740d60e6a72035be3f5b57ee5",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_LOGS_009.txt",
+      "sha256": "b16fa0bdf6bf2219d8ce72a263b43a2d643019ca74751ec284f9f0cb5ac1a773",
+      "git_blob": "7eeca193f7e867d1b6f4e5f7fa1330fddc0419c3",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_PROVIDER_001.txt",
+      "sha256": "c21cec6de2e364e506f528fb8667b8129822866324604c59490d057594637bfa",
+      "git_blob": "d76b692e313fabf20957df5f4af73e1148ab9c27",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_PROVIDER_002.txt",
+      "sha256": "54de0b641a6bfd1f5d576f509bdfcc98b8c57bff3675f77acbfad37b198c6c6a",
+      "git_blob": "c627b176933acfd6e54a572dbfedb2c977907a77",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_PROVIDER_003.txt",
+      "sha256": "643bb17da4c563bfb80f79868172cb219da460dfa9885ce6df706d0d1e69a512",
+      "git_blob": "f717e94d98a104954d8288b29a28873c1f01cf0f",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_STARTUP_001.txt",
+      "sha256": "55c656d2b9c56d74756c61584c140c64198142e8593361da03986a1dcc29b9e1",
+      "git_blob": "26561ec7fcea642c2d499d35e75220e68dd49cec",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_STARTUP_002.txt",
+      "sha256": "3a27d042f293ffd4490317cbacc201d658ee90a57a596cce33f6b26f569c00b4",
+      "git_blob": "9e44f9df9afe9d6d8453578f37bf0bb6fc62a4c6",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_STARTUP_003.txt",
+      "sha256": "3313ebedd4d18cda8fa32a29f9b56502adbd5c4e03c8dcc84ed93ec6a9ea8b84",
+      "git_blob": "004d5d3884bc41d924da2eb7f180b883ec3431ab",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_STARTUP_004.txt",
+      "sha256": "d96e5c8ce1901c1ff4c744d07790ff633cc0d107fbabfa7d8326f0a84e3822bd",
+      "git_blob": "7dca66784abb44ff12f193f5b62bb36cd3a3fb29",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/diagnostic-owner-supplement/READ_001.txt",
+      "sha256": "73e17f0703801f15b555453ecaf456554a88349af325ef33f0e152e0c0c473e0",
+      "git_blob": "d0c92c97aee10db07fab0ac318f1021b09954974",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/diagnostic-owner-supplement/READ_002.txt",
+      "sha256": "00558ab7d2a77989ba274bcc2ec417eae13a80f67b0e5c8d0dc2b58216bb34b5",
+      "git_blob": "947adc3350df79d0bab545540202195958c9e4a6",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/diagnostic-owner-supplement/READ_003.txt",
+      "sha256": "e2b9f4fae55964d013bb92f73f74d8ba716a003f3eb2b0401f336c1574be39c6",
+      "git_blob": "eecbef931240c01a4753516c09b91c5b7800b209",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks-adversarial/ACTUAL_LOG_READ_01.txt",
+      "sha256": "a4e57dec80a066b27579180ba94c14080799b7078daf03a8075364a4acd651f9",
+      "git_blob": "072349bd8e886a881a4c91fe157993b400ae08cb",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/FINAL_DELTA.patch",
+      "sha256": "cc62ff418df287b0495db3dbeb27a7370960e6be863677eaa0cdfcd5e3a5d329",
+      "git_blob": "7ec96494d49115bf7ff60739806bb47dfd15fa6f",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/PRODUCT_DELTA.patch",
+      "sha256": "aaae1361702dc1781b87c5264adc6f58e3aa283675fb0d48ea55f649b4b02b12",
+      "git_blob": "065d5e03848b33e5eb7daefbe65215d809a031a8",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/00-SessionIdSendTopologyConvention.cs.patch",
+      "sha256": "70ae45d39d2edb798b88d598caddf1f2c98a96e1a8f2ef2a7b0a05a0957a6b9f",
+      "git_blob": "193d175d5b68f996b69e597b885077893548d87b",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/01-SubscriptionConsumeTopologySpecification.cs.patch",
+      "sha256": "4f72556e62fc3773668016993e06ad725867022f01b6cda4711f468b8afaab4f",
+      "git_blob": "42d4efef2354a990659010044215b081206bc3b5",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-adversarial/EXACT_PRODUCT_DELTA.txt",
+      "sha256": "fb395c13e2e5e43050cb98b569c03e8d98548a2d285c6340c777427507e9930c",
+      "git_blob": "48e846e41ba1752cad9c31c240a36de8b7b147ee",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-adversarial/LOG_FULL_READ_01.txt",
+      "sha256": "0b16fd04a557ebe7fce7a5529b30b2355bddc77938dc25782a0f2160d934c37e",
+      "git_blob": "37124538ef4fddc1b534afd13b2ceff7af0ab5c7",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-adversarial/LOG_FULL_READ_02.txt",
+      "sha256": "f1df20dba47228bd396df59e7b0b4be64cf4249d671fa58ca14a0fc217656813",
+      "git_blob": "417b01fb66b2dbe721bcf822f746c267bff58a02",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-adversarial/LOG_FULL_READ_03.txt",
+      "sha256": "4b34bd1effd254402e4601242d4637eb6b5e6db510cf9320c5579f20a675fa8c",
+      "git_blob": "122162db10db79f0598e624e85b3fc6733569952",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-adversarial/LOG_FULL_READ_04.txt",
+      "sha256": "531f883823a92a2107d187189c7c031a271eedd67a26fd487a986b27101c4d51",
+      "git_blob": "4a881e23c7d1fd2236b92e931fff7d1424b62dba",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-adversarial/LOG_FULL_READ_05.txt",
+      "sha256": "f2eefcbe2dcd5f0de6c441dcc6ac398c595097f5db5b08800fa01e49365a710c",
+      "git_blob": "5c89334d4adee5c8b9f0d189f8f7c95cf00f93c9",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-adversarial/LOG_FULL_READ_06.txt",
+      "sha256": "751256d7c07f612e69eb015259a0230d6c55eb9b5244c7d3884cdc02b3d72fa2",
+      "git_blob": "eed6140d2f784e98d3051dee833ebd078ae9c0fa",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/PRODUCT_F004_SOURCE_DELTA.diff",
+      "sha256": "75afab460189b02d2789b126abe8a86c8657d7e9f04b71d420a05a7fe195bb1f",
+      "git_blob": "a545af442758b3aac57580fcef98d19a48547a17",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/SOURCE_EFFECT_factory-failure-global-fallback.diff",
+      "sha256": "7f8a223ca883f210d782f6edf697c0ca556478a99d621eb0f4284c4b43bdb4b9",
+      "git_blob": "04e65dd63a9c61ba3e787aabafabb91fe8432c2f",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/SOURCE_EFFECT_owned-source-disposal-omitted.diff",
+      "sha256": "00fa4c0f82322ac320692cc98402c7a945b458762eeb250d354d6ba6d9be26ec",
+      "git_blob": "a3ceb830ab8a8aa9a873cf609d25bfc984aff334",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/SOURCE_EFFECT_registration-caches-first-telemetry.diff",
+      "sha256": "3656aa35efba7e08bad2f6c037f94fa2067889ed98e9b1cc9a1eab7e8fd71608",
+      "git_blob": "6bf159fab1015554e89cadce4baad551f8492168",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/SOURCE_EFFECT_shared-transport-graph-restored.diff",
+      "sha256": "aa61fb3c9e5fc9059ded476944e5101f47ae90202e99acb1e9075074a9ede3ff",
+      "git_blob": "1b9b7385163af7ea6ec1d653cd772bc3edc412a1",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-adversarial/SOURCE_EFFECT_AlwaysTreatSameFactoryAsDifferent.diff",
+      "sha256": "aeb3a7ab5d4e55c15d54c0ddaa56d6df4bae010214e738e0871d5257a996e393",
+      "git_blob": "ac2cc41da2df4a71de8224918b5b09528ac546dd",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-adversarial/SOURCE_EFFECT_LoseChildAutomaticOrigin.diff",
+      "sha256": "5c97d9aed7688ba38cf8edb0a24223b753d7b9159d5ff4c6c02fee4f22eaedff",
+      "git_blob": "baa426743a4969f8621222a3e9d65e90907993b3",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-adversarial/SOURCE_EFFECT_LoseMessagesAutomaticOrigin.diff",
+      "sha256": "a57c820f798334691adcd59c8d01335a67f7d78074b1b9de75601b7ffe9dce25",
+      "git_blob": "5d14cbc912a6279bffb5b1f1c96b311acd80b86b",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-adversarial/SOURCE_EFFECT_MarkExplicitAsAutomatic.diff",
+      "sha256": "21f3d669852bd8e33de15d43fc7cd18629984fde3c01ed39499bed2c6eca66d8",
+      "git_blob": "aa3df31a01ca7a754a459246404f7375611f3f32",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-adversarial/SOURCE_EFFECT_PrematureFactoryDispose.diff",
+      "sha256": "ae11fe2b26d9cf952d31fefdbccd6463c5418193f3ebf1cbb8df47e23e6703d6",
+      "git_blob": "0988fef41a73b0dcb7a0a92b0bcd26dc9d961ab8",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-adversarial/SOURCE_EFFECT_RemoveAutomaticRefresh.diff",
+      "sha256": "d87a385f44cb65e40123d8cd8becf66b20204f11e5326abd4efa761694c783ae",
+      "git_blob": "0ef8d8f84c1ce5145585c14bed77231f2ecff982",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-f029-adversarial/IMessageBatch.cs.PRODUCT.diff",
+      "sha256": "128c2f33c3d4053d07bf7131429638fe6eacde516843ba895ae5f6d2e2d9c62d",
+      "git_blob": "7ef59f9b95f7e93879fd37113bbd81e792cd727a",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-f029-adversarial/MessageBatch.cs.PRODUCT.diff",
+      "sha256": "0b2dca56bf0c587ec7b67f30d04bae7be07266258ff37bd40d4c4733df854edd",
+      "git_blob": "2c9df12e0e61f119fada0afdefeb82066fa1ac5a",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-f029-adversarial/SOURCE_EFFECT_ClampRawLastUtc.diff",
+      "sha256": "63f0576bebc650c86fd4f57acd8ce9f094e3ccba53a2d8d8005d4e7c54265b1b",
+      "git_blob": "d0ed11850d1ce7598e510dd9341a604c49584c93",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-f029-adversarial/SOURCE_EFFECT_OverwriteRawFirstUtc.diff",
+      "sha256": "326eae509c85a9f09fc81e9e24c73e5054e6f5eda0f7ac941b87f4890488eda6",
+      "git_blob": "d594519d3bdea35a1be8cebf9eac57c29a73c058",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/REGISTRAR_PRODUCT.diff",
+      "sha256": "dd7e3b69a8399ffa137d4fe9af3a71c7325a4f864dc1213798b7422f9cd4f73d",
+      "git_blob": "219e4ff3635ab45a369ca9c5cb0fd9d968140ea4",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/SOURCE_EFFECT_AsyncOnlyAdvertisesSync.diff",
+      "sha256": "22197518cdbf13c895d9ee06935e8bb87c778dfd0cc1066f9e9567bbf08cb7ae",
+      "git_blob": "ecd310e1de28bd74117e13adf9f8b58df9d0b7fb",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/SOURCE_EFFECT_CollapseEndpointAliases.diff",
+      "sha256": "c04dcee3df161e73eb5b4db04deaae2f9658abcfe5d20556b73e0da6559122ed",
+      "git_blob": "4be9076223b900e9e724df29684985d6bb705e23",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/SOURCE_EFFECT_CollapseKnownAliases.diff",
+      "sha256": "f63241d11e39515f73d39df64b2bb34417a1cf570fcc1d73c0c177bb75aa2013",
+      "git_blob": "5d965f4e0ccc16b5d5625cb3cea0b397f2c264b3",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/SOURCE_EFFECT_DropAsyncOnlyCleanup.diff",
+      "sha256": "3bc594d5063747b6418787e8c11ffb3e324531db853aa240d5220de7064edc39",
+      "git_blob": "0dae8b36c0aef3184dcab301a54c78e6221423f4",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/SOURCE_EFFECT_DropExplicitEndpointOwner.diff",
+      "sha256": "86068591802af3de7212daae377322ba4b90f02e6195926148fca52e9e5266a6",
+      "git_blob": "8cd629d0f3d222aca60e7d53ef3b79666d44c516",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/SOURCE_EFFECT_DropNullEndpointOwner.diff",
+      "sha256": "417e9f970e4c0974f54cb1ad914015a02212b34f127db5358baab97894a5403f",
+      "git_blob": "b04f7c214427dd3a15e9d87d9b4f09c83a26530b",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/SOURCE_EFFECT_IgnoreExplicitSettings.diff",
+      "sha256": "923262d6972e9a0c2a9efb7f19e53a0889b1835027380cf4e825d21364cec24f",
+      "git_blob": "aa63d953cb18dbe65ff7a7bee6d87ce7f91327df",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/SOURCE_EFFECT_PreferSyncForDual.diff",
+      "sha256": "10802d8870745fb3c9ddcd9f41b32b362092c94810da47c40646a6415fca35d9",
+      "git_blob": "2f6637bf642badc4bfcfc56d225a72f1f65886d9",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/SOURCE_EFFECT_ReuseKnownOwnerSingleton.diff",
+      "sha256": "bab2e11c6fc2ff13e8055bc002304f3819aaf2226d276c4f59dddb19250e9f0d",
+      "git_blob": "0cd1729ec6e9d9775d838bfb192f7a732d9a21f9",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package18-f035-adversarial/SOURCE_EFFECT_ShareEndpointKey.diff",
+      "sha256": "aba3b0b837a719bcae800f4fd0ba22da7db69856342af6b262709cc23c3dbaf0",
+      "git_blob": "f702752cfb279c6899a1cd608b80bdc6452be32a",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package20-f002-adversarial/001/two-current-source-delta.patch",
+      "sha256": "626a6560db59eeed9fa2a9678dcc8a376da599109587715950b2db817d51ac8c",
+      "git_blob": "a5e83dcfe93126b496415d11d613f1773e521748",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package24-f003-baseline-candidate-r1/DELTA.diff",
+      "sha256": "a4d251dac8b852a1543956c836d3444267ae3bcd7a27abc2038aa6f3652e7db4",
+      "git_blob": "c18006f4627f604e06443dc881cc7457aadb3abe",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package30-root-native-projection-parts/part-01.txt",
+      "sha256": "5e219dffbb357d0169d1bd7ad0bd67df8b0df2a2cf69b933b05f78436ed46c04",
+      "git_blob": "5c5a066c4de62f9bb0f0c9dd4e9f5b336e1cf65a",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol,-blank-at-eof"
+      ]
+    },
+    {
+      "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/package30-root-native-projection-parts/part-02.txt",
+      "sha256": "f5bdd5fc5c4f941eb1f22a9c6371f1b205c838d53cdb8503058e0b572fb8db11",
+      "git_blob": "9925eafaeee85fe33f23a9f425280eaab065a200",
+      "CRLF_count": 0,
+      "attributes": [
+        "whitespace=-blank-at-eol"
+      ]
+    }
+  ],
+  "all6330_previous_selected_indexOID_andMode_unchanged": true,
+  "selected6330_whitespace_exemptions": 0,
+  "effective_cached_attributes_checked": 6455,
+  "read_only_diff_checks": {
+    "whole_staged": {
+      "exit": 0,
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    "normal_source_tests_docs": {
+      "exit": 0,
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    }
+  },
+  "stage0_current_digest": "7fdbad4022bd610c2ca00bb9e4441e410ebee460748ee73895a3cf53e8ffeeb4",
+  "personal_reads": "bebd4d rule prefix plus b760ef complete suffix and 7008b5 final3CSV rules; full125rule syntax/semantics and receipt projection validated mechanically. No claim of all historical raw text semantic reread.",
+  "recovery": "718705 initially required -text alone while Root had already changed final3CSV rules to -text whitespace=cr-at-eol; assertion stopped before proof/report writes. This successful final proof explicitly verifies Parent final stated immutable hashes and cr-at-eol recognition. Earlier staged whitespace failures remain recorded as failures, no false credit.",
+  "SDK_O_Gitwrites": 0,
+  "grade": null,
+  "limits": [
+    "Only exact frozen archival evidence records have narrowly named whitespace preservation or CRLF -text/cr-at-eol recognition. Product/test/build inputs retain ordinary whitespace checking.",
+    "No archived evidence content rewritten, no new test/runtime/source claim, no repository-wide whitespace exception.",
+    "Commit/push/private remote verification remains Root next action."
+  ]
+}

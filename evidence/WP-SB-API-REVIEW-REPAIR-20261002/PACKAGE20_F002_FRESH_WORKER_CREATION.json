@@ -1,0 +1,24 @@
+{
+  "workers": [
+    {
+      "worker": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/previous",
+      "files": 6209,
+      "all_original_csv_sha256_verified": true,
+      "generated_directories_absent": true
+    },
+    {
+      "worker": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/corrected",
+      "files": 6209,
+      "all_original_csv_sha256_verified": true,
+      "generated_directories_absent": true
+    },
+    {
+      "worker": "/private/tmp/vicione-servicebus-api-review-20261001/ci-workers/package20-f002/countercase",
+      "files": 6209,
+      "all_original_csv_sha256_verified": true,
+      "generated_directories_absent": true
+    }
+  ],
+  "frozen_input_only": true,
+  "before_any_native": true
+}

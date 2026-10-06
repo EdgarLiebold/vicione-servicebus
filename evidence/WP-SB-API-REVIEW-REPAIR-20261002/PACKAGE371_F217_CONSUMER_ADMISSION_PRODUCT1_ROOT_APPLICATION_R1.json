@@ -1,0 +1,52 @@
+{
+  "utc": "2026-10-06T07:19:12.906463+00:00",
+  "status": "ROOT_APPLIED_INDEPENDENTLY_SOURCE_REVIEWED_F217_PRODUCT1_FIXED_NATIVE_PENDING",
+  "finding": "F-SB-API-217",
+  "source": {
+    "path": "src/ViciOne.ServiceBus/Configuration/ConsumerConnector.cs",
+    "before_sha256": "73d5c708d1f16f5fd1ff9f288d22f12f50a81a9043fad40727439656140e236f",
+    "after_sha256": "d4ea1007537305064b3f39ca66d4d4ca7097da5654014990b7b3f787079fd844",
+    "before_lines": 80,
+    "after_lines": 97,
+    "remove_literal": "        catch (Exception admissionFailure)\n        {\n            List<Exception>? cleanupFailures = null;\n            foreach (var handle in handles)\n            {\n                try\n                {\n                    handle.Dispose();\n                }\n                catch (Exception cleanupFailure)\n                {\n                    (cleanupFailures ??= []).Add(cleanupFailure);\n                }\n            }\n\n            if (cleanupFailures is not null)\n            {\n                cleanupFailures.Insert(0, admissionFailure);\n                throw new AggregateException(\"Consumer admission and registration cleanup failed.\", cleanupFailures);\n            }\n\n            throw;\n        }\n",
+    "restore_literal": "        catch (Exception)\n        {\n            foreach (var handle in handles)\n                handle.Dispose();\n            throw;\n        }\n",
+    "literal_inverse_exact": true
+  },
+  "inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package366-consumer-admission-cleanup-product1-proposed-r1/REPORT.json",
+      "sha256": "cab32094d0f9a2642daa0976983cc035805c4b08db0dc427efebe033ac55d0c4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package366-consumer-admission-cleanup-product1-proposed-r1/MANIFEST.json",
+      "sha256": "75b2f9a436c069a9bdb70ab14e6516068cb3b3061745ce8c8bc2aa08660480c2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package366-consumer-admission-product-independent-scanner-source-peer-r1/REPORT.json",
+      "sha256": "d2777980d2247da28301deaa53f096cae5b3ea92f129ddb2c56005e7ca447ac9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package366-consumer-admission-product-independent-scanner-source-peer-r1/MANIFEST.json",
+      "sha256": "53dd7a84aabdc43685821b4f3a15609cc19e125c149df98c36e9a135e433a9c4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package369-activity-fixed4-independent-qualification-r1/MANIFEST.json",
+      "sha256": "7b9d0a35aef2260d2c7da5af94f2359aa451b7e4c586e5b6a412c791722bbdf3"
+    }
+  ],
+  "independent_source_peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package366-consumer-admission-product-independent-scanner-source-peer-r1/REPORT.json",
+  "root_full_reads": [
+    "5a908d entire proposed97 and author report",
+    "67b46c entire before80/public extensions238",
+    "31ce0b entire independent peer",
+    "61a228 whole exact patch/inverse/guards",
+    "5ad8a0 whole final actual369 and product reports"
+  ],
+  "unchanged_test_sha256": "aba850dda884d7df652f5e4b09caee663ed90978a5d5d96dd58dd80d221d9ded",
+  "unchanged_requirement4669_sha256": "796ec0273897fca12920ab17eeea4ad750724d60033373bf9598ed866159cce5",
+  "master_unchanged_sha256": "a73ebb4fde240dd744806cea0c0cbe0831211d6483c3017eba997a8e4413be36",
+  "scope": "Only failed-admission synchronous catch; every returned acquired handle attempted independently; exact primary first, cleanup exceptions acquisition order, bare throw if none. No asynchronous/unreturned provider resource guarantee.",
+  "fixed_native_claim": false,
+  "module_strict_pack_claim": false,
+  "whole_API_closed": false
+}

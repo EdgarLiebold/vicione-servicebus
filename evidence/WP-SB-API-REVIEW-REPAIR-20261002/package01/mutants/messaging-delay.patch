@@ -1,0 +1,10 @@
+--- a/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs
++++ b/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs
+@@ -92,7 +92,6 @@
+             {
+                 MaxRetries = settings.RetryLimit,
+                 Mode = ServiceBusRetryMode.Exponential,
+-                Delay = settings.RetryMinBackoff,
+                 MaxDelay = settings.RetryMaxBackoff,
+             },
+             EnableCrossEntityTransactions = false,

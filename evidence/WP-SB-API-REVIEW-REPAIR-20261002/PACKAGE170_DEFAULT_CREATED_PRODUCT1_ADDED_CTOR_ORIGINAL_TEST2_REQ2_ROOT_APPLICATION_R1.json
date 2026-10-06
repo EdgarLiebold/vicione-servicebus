@@ -1,0 +1,68 @@
+{
+  "utc": "2026-10-05T06:39:50.541275+00:00",
+  "actor": "/root",
+  "status": "ROOT_APPLIED_PRE_REVIEWED_SOURCE_NATIVE_PENDING",
+  "freeze169": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package169-load-outbox-fixed-default-created-original118-prior117-neighbors2263-fresh2-independent-r1/FREEZE.json",
+    "sha256": "d1bde8c30a7c52c41f4a651a3a2e4a714301c19b98c8082329d57697adf7926e"
+  },
+  "author_peer_references": [
+    {
+      "author": "package175-default-saga-created-debug-product-proposed-r1",
+      "report_sha256": "8e88589f45bbe6ddea3804f4562f60cc2be5bb4da71ff9594688dda7d6bd0e5a",
+      "peer": "package175-default-saga-created-debug-independent-scanner-r1",
+      "peer_report_sha256": "6ca725bdb71ca8e0dbe2a5b9285694c428bee7d8a1a67c3926dae57b9bfe3c2a"
+    },
+    {
+      "author": "package173-missing-saga-added-debug2-oracles-proposed-r1",
+      "report_sha256": "4a176c8ab92b6648a9c99e1253c2040876f538a3eb55f528a7ddd5c627a71d73",
+      "peer": "package173-missing-saga-added-debug2-independent-scanner-r1",
+      "peer_report_sha256": "f3c4fa60499ad3cdf16e2fecc12fa9dfe787f37e8a58a499b426a94c18ce4f5b"
+    },
+    {
+      "author": "package174-saga-constructor-handle-rollback4-oracles-proposed-r2",
+      "report_sha256": "7e3b77ed7edf6c2530dafe079e4b7654756c3198ddec80a488599a0bee66b405",
+      "peer": "package174-saga-constructor-handle-rollback4-independent-scanner-r1",
+      "peer_report_sha256": "84fdc9be70f0fba6fa2edfc3f770331c1c7ce4902fd1eef5ec590c48e7a1cfb9"
+    }
+  ],
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/DefaultSagaFactory.cs",
+      "before_sha256": "26fec0e1987a890dfaf05dcf370f107f8e0a2d2fd2a67ebcf6782cdcf7cc13b8",
+      "after_sha256": "da8fc3cc31c191543e45188e9f90b84a395c6bbc901e5f2116486e8dbef630a2",
+      "before_lines": 49,
+      "after_lines": 55
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Middleware/SagaRepositoryLifecycleDeepContractTests.cs",
+      "before_sha256": "8fc600cfb6ff1e7fc64adedc2d99a0ccd35d4d0eb4679c6797c54db3438126d6",
+      "after_sha256": "01c7545e9c62841409ded32bf5005b5941e556207409856ff3fca4b947d12da2",
+      "before_lines": 1268,
+      "after_lines": 1341
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorSpecificationAdapterDeepContractTests.cs",
+      "before_sha256": "05913610ee2f7c7c8c7452799e9a0cac1e51f1cd33ee393b046d2653900c75f2",
+      "after_sha256": "97ce56e1c6885ba7b5794df1b8dcf608f00f945e46dd9ed00ca8c6f0ed89e411",
+      "before_lines": 684,
+      "after_lines": 840
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "e860435e762f4d6f936214b6925107c2a089ce082c531cec5ad2f2f838d1d49d",
+      "after_sha256": "8f9c19b6a4a72286f50f38d4df8f7728cc25a3b42d66c01e5bac2ead7c804f4f",
+      "before_lines": 32538,
+      "after_lines": 32552
+    }
+  ],
+  "requirement_count_before": 4648,
+  "requirement_count_after": 4650,
+  "original_requirement_prefix_preserved": true,
+  "root_read_scope": "Whole Default proposed55 read3e1653, actual Added73/Ctor156 literal patches59699f44326a, whole peerreports85bc23; all author/peer manifests and beforepins independently verified, whole proposed reconstructed from each literal patch.",
+  "limits": [
+    "DefaultCreatedOriginal169 qualification pending; no family acceptance until actual fixed native qualified.",
+    "Added2 and constructor rollback4 ORIGINAL controls only, product owners unchanged until finite qualified proof.",
+    "No whole API/A+ claim."
+  ]
+}

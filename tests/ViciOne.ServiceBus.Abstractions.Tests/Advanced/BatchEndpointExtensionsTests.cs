@@ -174,6 +174,104 @@ public sealed class BatchEndpointExtensionsTests
         AssertDispatch(proxy, messages, mode, cancellation.Token, "PublishAsync");
     }
 
+    public static IEnumerable<object[]> BatchFailureCases()
+    {
+        foreach (BatchDispatchMode mode in Enum.GetValues<BatchDispatchMode>())
+            foreach (bool publish in new[] { false, true })
+                for (int outcome = 0; outcome < 3; outcome++)
+                    yield return [mode, publish, outcome];
+    }
+
+    [Theory]
+    [MemberData(nameof(BatchFailureCases))]
+    [RequirementCoverage("REQ-VSB-BATCH-ENDPOINT", "every-overload-joins-started-operations-on-dispatch-failure")]
+    public async Task BatchOverloads_JoinStartedOperationsWhenLaterDispatchFailsAsync(
+        BatchDispatchMode mode, bool publish, int outcome)
+    {
+        var first = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var firstFailure = new InvalidOperationException("first asynchronous dispatch failed");
+        var secondFailure = new InvalidOperationException("second synchronous dispatch failed");
+        using var canceled = new CancellationTokenSource();
+        canceled.Cancel();
+        RecordingEndpointProxy proxy;
+        ISendEndpoint? send = null;
+        IPublishEndpoint? publication = null;
+        if (publish)
+            publication = CreateProxy<IAdvancedPublishEndpoint>(out proxy);
+        else
+            send = CreateProxy<IAdvancedSendEndpoint>(out proxy);
+        proxy.Dispatch = () => proxy.InvocationCount switch
+        {
+            1 => first.Task,
+            2 => outcome switch
+            {
+                0 => throw secondFailure,
+                1 => throw new OperationCanceledException(canceled.Token),
+                _ => null,
+            },
+            _ => Task.CompletedTask,
+        };
+        BatchMessage[] messages = [new("first"), new("second"), new("third")];
+        Task? batch = null;
+        try
+        {
+            Exception? synchronous = Record.Exception(() =>
+            {
+                batch = publish
+                    ? PublishAsync(publication!, messages, mode, CancellationToken.None)
+                    : SendAsync(send!, messages, mode, CancellationToken.None);
+            });
+            Assert.Null(synchronous);
+            Assert.NotNull(batch);
+            Assert.False(batch.IsCompleted);
+            Assert.Equal(3, proxy.InvocationCount);
+
+            if (outcome == 0)
+            {
+                first.SetException(firstFailure);
+                Exception? observed = await Record.ExceptionAsync(
+                    () => batch.WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken));
+                Assert.True(batch.IsFaulted);
+                var failures = batch.Exception!.Flatten().InnerExceptions;
+                Assert.Equal(2, failures.Count);
+                Assert.Contains(failures, error => ReferenceEquals(firstFailure, error));
+                Assert.Contains(failures, error => ReferenceEquals(secondFailure, error));
+                Assert.Contains(failures, error => ReferenceEquals(observed, error));
+            }
+            else
+            {
+                first.SetResult();
+                if (outcome == 1)
+                {
+                    OperationCanceledException error = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                        () => batch.WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken));
+                    Assert.Equal(canceled.Token, error.CancellationToken);
+                    Assert.True(batch.IsCanceled);
+                }
+                else
+                {
+                    InvalidOperationException error = await Assert.ThrowsAsync<InvalidOperationException>(
+                        () => batch.WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken));
+                    Assert.Equal("The batch endpoint returned no operation task.", error.Message);
+                    Assert.True(batch.IsFaulted);
+                }
+            }
+        }
+        finally
+        {
+            first.TrySetResult();
+            await ObserveSettledAsync(first.Task);
+            if (batch is not null)
+                await ObserveSettledAsync(batch);
+        }
+    }
+
+    static async Task ObserveSettledAsync(Task task)
+    {
+        try { await task.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None); }
+        catch (Exception) when (task.IsCompleted) { }
+    }
+
     static Task SendAsync(
         ISendEndpoint endpoint,
         BatchMessage[] messages,
@@ -293,6 +391,8 @@ public sealed class BatchEndpointExtensionsTests
 
     class RecordingEndpointProxy : DispatchProxy
     {
+        public Func<Task?>? Dispatch { get; set; }
+
         public int InvocationCount => Invocations.Count;
 
         public List<Invocation> Invocations { get; } = [];
@@ -307,7 +407,7 @@ public sealed class BatchEndpointExtensionsTests
                 throw new ArgumentNullException("message");
 
             if (targetMethod?.ReturnType == typeof(Task))
-                return Task.CompletedTask;
+                return Dispatch is null ? Task.CompletedTask : Dispatch();
 
             throw new NotSupportedException($"Unexpected endpoint member: {targetMethod?.Name}");
         }

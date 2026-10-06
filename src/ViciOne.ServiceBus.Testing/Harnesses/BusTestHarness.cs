@@ -298,7 +298,14 @@ public abstract class BusTestHarness :
         }
         catch (Exception ex)
         {
-            LogContext.Error?.Log(ex, "Stop bus faulted");
+            try
+            {
+                LogContext.Error?.Log(ex, "Stop bus faulted");
+            }
+            catch
+            {
+                // Optional diagnostics cannot replace the initiating harness lifecycle failure.
+            }
             throw;
         }
         finally
@@ -343,7 +350,14 @@ public abstract class BusTestHarness :
                 failures.Add(exception);
             }
 
-            DisposeObservers();
+            try
+            {
+                DisposeObservers();
+            }
+            catch (Exception exception)
+            {
+                failures.Add(exception);
+            }
         }
         finally
         {
@@ -592,7 +606,14 @@ public abstract class BusTestHarness :
         }
         catch (Exception exception)
         {
-            LogContext.Error?.Log(exception, "Stopping the bus after a failed harness start also faulted");
+            try
+            {
+                LogContext.Error?.Log(exception, "Stopping the bus after a failed harness start also faulted");
+            }
+            catch
+            {
+                // Optional diagnostics cannot replace the initiating harness lifecycle failure.
+            }
         }
     }
 
@@ -606,15 +627,30 @@ public abstract class BusTestHarness :
 
     void DisposeObservers()
     {
-        _consumed?.Dispose();
-        _published?.Dispose();
-        _received?.Dispose();
-        _sent?.Dispose();
-
+        IDisposable?[] observers = [_consumed, _published, _received, _sent];
         _consumed = null;
         _published = null;
         _received = null;
         _sent = null;
+
+        List<Exception>? failures = null;
+        foreach (IDisposable? observer in observers)
+        {
+            try
+            {
+                observer?.Dispose();
+            }
+            catch (Exception exception)
+            {
+                failures ??= new List<Exception>();
+                failures.Add(exception);
+            }
+        }
+
+        if (failures is { Count: 1 })
+            ExceptionDispatchInfo.Capture(failures[0]).Throw();
+        if (failures is { Count: > 1 })
+            throw new AggregateException("One or more bus test-harness observers could not be released.", failures);
     }
 
     sealed class Consumer<TMessage> :

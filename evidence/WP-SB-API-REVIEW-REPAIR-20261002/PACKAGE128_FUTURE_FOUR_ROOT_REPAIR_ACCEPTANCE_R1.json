@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-04T19:49:45.047716+00:00",
+  "decision": "ROOT_ACCEPT_FUTURE_FOUR_TARGETED_REPAIRS_AFTER_CURRENT_NATIVE160_AND_FRESH_TWO_PACK_ADVERSARIAL_REVIEW",
+  "findings": [
+    "F-SB-API-103",
+    "F-SB-API-104",
+    "F-SB-API-105",
+    "F-SB-API-113"
+  ],
+  "accepted_known_before": 110,
+  "accepted_known_after": 114,
+  "independent_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package125-future160-independent-r1/REPORT.json",
+      "sha256": "aa97cd3a0717764e0044816232413ca85a1b047ff93d1bef5a0ba6ea5bc3bff2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package125-future160-independent-r1/SOURCE_CONTRACT_REVIEW_AND_XML_COUNT_ERRATUM_R1.json",
+      "sha256": "9d4695022889b1dbc312d550ece8d88e1cdf6ca144d01815e332cc22bf4d9b38"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package126-fresh-core-futures-two-independent-r1/REPORT.json",
+      "sha256": "c55f1b5fe3f444eb514611fe4dcd9e9c8289be426e2fb9a61aeb5f77497e0ab6"
+    }
+  ],
+  "current_native": {
+    "passed": 160,
+    "failed": 0,
+    "skipped": 0,
+    "original_152_case_ids_retained": true,
+    "fanout": 4,
+    "new_override_controls": 4
+  },
+  "fresh_packages": 2,
+  "published_XML_nodes": 4,
+  "root_review": "Entire independent native125160 report and exact XML count erratum, published126 two-ZIP report personally read in d20d4c before later aggregate truncation. Prior whole source/control and Root121 precise normative decision preserved.",
+  "limits": [
+    "Targeted repair acceptance, no universal factory identity promise; immutable R1/R2 compatibility holds retain historical scope.",
+    "All whole API and final23module gates still PARTIAL; native160 not full unit suite."
+  ],
+  "whole_api_status": "PARTIAL"
+}

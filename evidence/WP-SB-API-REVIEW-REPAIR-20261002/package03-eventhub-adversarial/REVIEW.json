@@ -1,0 +1,73 @@
+{
+  "status": "ACCEPTED_BOUNDED_INTERNAL_ADVERSARIAL_REVIEW",
+  "reviewer": "azure_test_scope",
+  "independence": "No authored production patch, regression fixtures, native runs or mutation runner changes; internal helper, no external role.",
+  "scope": "F013/F014/F016/F017 Package03 EventHub twelve frozen deltas and every new fixture assertion, owner/shared closure, actual native original/corrected/mutation receipts and rollback evidence. Entire ServiceBus API review remains PARTIAL; zero symbols CLOSED.",
+  "freeze_sha256": "827aff14744d9383e0e18c584035ef729dfa820b1436c00a9870b882bd26d8a0",
+  "blocking_findings": [],
+  "new_confirmed_findings": [],
+  "contracts": [
+    {
+      "finding": "F013",
+      "source": "EventHubProcessorContext.cs",
+      "verdict": "ACCEPT",
+      "reason": "Composed closing always awaits internal close after application success, sync/async fault, OCE or canceled task. Single application failure rethrows exact captured exception; dual faults preserve application/internal identities and order. Existing initialization and lease release remain unchanged.",
+      "assertion_review": "Ten theory cases gate callback entry/completion, exact call counts, task pending/completion status, single exception identity/type/token and ordered double causes. Final teardown releases gate and observes join through Record.ExceptionAsync, preserving assertion failure. Six current-byte mutations fail causal predicates; first masked dual-fault attempt excluded."
+    },
+    {
+      "finding": "F014",
+      "source": "EventHubReceiveEndpointConfigurator.cs",
+      "verdict": "ACCEPT",
+      "reason": "Invalid count/limit zero, interval nonpositive or native whole-millisecond upper bound exceeded, delivery nonpositive and prefetch zero now reject through normal endpoint validation with actionable key and bus remediation. Base.Validate retained; inherited negative guards remain. Valid positive fractional timer values follow native truncation contract.",
+      "assertion_review": "Nine invalid, three inherited, five positive timer and two selected/unselected configuration cases use public topology/normal bus construction. Seven mutations killed, including positive fractional boundary over-rejection with SDK constructor control. Initial nine double receive setup failures excluded."
+    },
+    {
+      "finding": "F016",
+      "source": "EventHubReceiveEndpointBuilder.cs / EventHubReceiveEndpointConfigurator.cs",
+      "verdict": "ACCEPT",
+      "reason": "Nine completed receive policy values are copied into private getter-only snapshot before deferred use, reused as same receive-settings payload. Options callback delegate is captured at build, so replacement before lazy actual client construction does not affect built client. No public signature or arbitrary SPI deep-clone change.",
+      "assertion_review": "Normal DI public registration decorator captures exactly one actual context and exact selected MessageLimits payload. Policy values/identity remain fixed after configuration changes. Public supervisor SendAsync and GetClient create actual SDK client with expected namespace/entity/group; old callback runs once, replacement zero. SDK state and cleanup observed. Eleven current-fixture mutations killed.",
+      "boundary": "Snapshot before ApplySpecifications could matter for an unsupported custom specification mutating completed configuration; no demonstrated authorized consumer contract violation, not promoted to a finding. Null custom receive settings likewise not proven contract. Helper forwarding uses public MethodInfo.Invoke, unwraps invocation fault, and injects exact selected limits because the host internal interface is unavailable; it does not synthesize policy/client outcome."
+    },
+    {
+      "finding": "F017",
+      "source": "ConsumeContextEventHubProducerProvider.cs",
+      "verdict": "ACCEPT",
+      "reason": "Each of four deferred core methods uses WaitAsync(callerToken) on shared producer resolution and still awaits downstream delivery with caller token. Eight public routes delegate correctly. A canceled waiter leaves provider resolution and a live waiter intact. Ready producer path remains direct.",
+      "assertion_review": "Thirty-two cases exercise eight precancel routes, eight later cancellation routes, and sixteen ready/deferred positive delivery cases. Exact shared resolution call/address/token, task status, OCE token, payload generic input content, consume headers and custom pipe counts verified. Four wait-loss mutants each hit two matching public routes; delivery not awaited and downstream token loss killed. Later cancellation native green is not claimed as selected mutant runtime route."
+    }
+  ],
+  "causal_native_evidence": {
+    "original_closing": "6 failed / 10 total",
+    "original_producer": "8 failed / 24 total",
+    "original_validation": "9 failed / 19 causal total; initial other nine setup failures excluded",
+    "original_settings": "8 failed / 9 total plus 1 SDK positive",
+    "corrected_focused": "70 passed / 70, zero failed/skipped",
+    "corrected_whole_eventhub_owner": "182 passed / 182, zero failed/skipped, native exit0; canonical actual Azurite/EventHub fixture vicione-0b237e0402c9",
+    "mutants": "30 distinct causal native exit2 kills: fresh final-input R3 nineteen plus settings eleven",
+    "controls": "Fresh R3 three corrected family controls and three terminal rollback controls native exit0; F016 corrected and rollback9 green. Existing current byte receipts reviewed; reviewer ran no native operations."
+  },
+  "binds": {
+    "final_r3_inputs_sha256": "bcaecf5f89423153ffbaebac660cb4145007a0db3cfc56439e0f029fd3291728",
+    "read_closure_sha256": "2bd1f3d6ae4c3b3ab550088e4c10f64010c50b1caf08c35964cd90b4cd3134be",
+    "mutation_review_sha256": "7c800bf765e11db40b4cbeadde4a4ca77ea32baa222fb211da136e07888c6d13",
+    "native_receipt_index_sha256": "85b7a447547365b00dc165fd2e414d7ee95e4b7f08aa14a43d9d9de5d7369b71",
+    "assertion_index_sha256": "3838b4f826bb747ae6fd39374deb97539d9bc29f46ddcd8f76c9582fffa327a2",
+    "independent_rollback_sha256": "6fa2ece4f101e355cd5c2dae353598f165b409496cd7791a3882d3207b7450a7"
+  },
+  "rollback": "Independent read-only SHA256 comparison of all 6209 original tracked mutation files against current CSV abf8c9b6d08e5be399d517dad8dc57fae4b29db7342f59e9ad480d98911b4208: zero mismatches, four added fixture files absent. Hash-only evidence, no semantic FULL inference.",
+  "documentation_requirements": "Current requirements personally fully read: all 82 previous Package01 rows semantically preserved, ten added rows. Current documentation personally fully read: exact Package08 old text preserved plus four finding bullets. Formatting delta not represented as semantic removal.",
+  "receipt_limits": [
+    "Historical R2 policy 805ce311... lacks retained exact snapshot; excluded as final-byte proof. Fresh R3 binds all four exact final fixture hashes including policy 0d5329..., closes this particular gap.",
+    "Two classifier interruptions are current source bool-count/fraction-case logic plus unchanged metadata/native log continuations; historical interpreter-loaded bytes not retained, not independently claimed.",
+    "First reversed dual-fault attempt masked assertion with teardown: excluded. Final fixture observes joined failure after releasing gate and retains body assertions.",
+    "Full logs read losslessly as exact entire new lines plus references to exact previously personally FULL lines and complete order; no omitted frames. Thirty mutant sources reconstructed from complete personal FULL frozen base plus complete FULL delta and independently checked exact receipt SHA, not separately whole-file rendered."
+  ],
+  "limits": [
+    "No native builds/tests/restores or product writes by reviewer.",
+    "No public cloud, remote credentials, ARM/RAM limits, fresh final NuGet/package profile or global API correctness claim.",
+    "Canonical fixture endpoints, findings and actual broker startup logs checked plus runner teardown logic and exit0; no independent live Docker enumeration claimed.",
+    "Personal whole-project read supports Lead; it does not replace Lead necessary independent review readings.",
+    "Known adjacent custom SPI behaviors not proven in this bounded package; no symbol CLOSED."
+  ]
+}

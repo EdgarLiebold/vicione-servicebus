@@ -1,0 +1,19 @@
+{
+  "status": "TEAM_FULL_READ_PROGRESS_ONLY_RUNTIME_PARTIAL",
+  "utc": "2026-10-03T04:32:21.768905+00:00",
+  "manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/analyzers-codefix-family-review/FINAL_MANIFEST.json",
+  "manifest_sha256": "6854a8565cbfb47353ee495c4f256d4f5f36002a4bc37a4a462d1d45be53237b",
+  "all75_artifacts_hash_verified": true,
+  "all39_original_F_source_hashes_verified": true,
+  "new_FULL": 21,
+  "before_FULL": 4603,
+  "after_FULL": 4624,
+  "all4603_previous_rows_preserved": true,
+  "before_ledger": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/ANALYZERS_CODEFIX_LEDGER_BEFORE.csv",
+  "before_ledger_sha256": "b6e08ca2e4e17207892048c10ec95af971469cff1b3251a5e1ba0bf5a62b3fe5",
+  "after_ledger_sha256": "e4ea3c9b1ad3487f867a5d6963663553af238f7d2f51a927c50a01f0ab6354d5",
+  "Root_read_scope": "FULL SelfReview/FinalRefinements/LockHashComparison; all8semanticcandidate fields excluding source/API-anchor metadata; mechanical closure/proposal/artifact verification",
+  "CLOSED": 0,
+  "new_findings": 0,
+  "canonical_testowner_transfer": false
+}

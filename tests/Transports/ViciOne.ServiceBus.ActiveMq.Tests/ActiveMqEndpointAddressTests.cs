@@ -58,6 +58,22 @@ public sealed class ActiveMqEndpointAddressTests
             () => new ActiveMqEndpointAddress(new Uri(host), new Uri(source)));
     }
 
+    [Theory]
+    [InlineData("\n")]
+    [InlineData("\r\n")]
+    [InlineData("\0")]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-ENDPOINT-ADDRESS", "active-entity-name-rejects-final-lf-crlf-nul")]
+    public void EntityNameValidation_RejectsUnsupportedTrailingCharacters(string suffix)
+    {
+        var validator = global::ViciOne.ServiceBus.ActiveMq.Topology.ActiveMqEntityNameValidator.Validator;
+        Assert.True(validator.IsValidEntityName("orders"));
+        validator.ThrowIfInvalidEntityName("orders");
+
+        string invalid = "orders" + suffix;
+        Assert.False(validator.IsValidEntityName(invalid));
+        Assert.Throws<ActiveMqTransportConfigurationException>(() => validator.ThrowIfInvalidEntityName(invalid));
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-ENDPOINT-OPTIONS", "complete-roundtrip")]
     public void EndpointOptions_RoundTripWithoutLosingFlags()

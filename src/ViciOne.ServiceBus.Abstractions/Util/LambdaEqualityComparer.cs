@@ -39,7 +39,9 @@ public class LambdaEqualityComparer<T> :
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(T? x, T? y)
     {
-        if (x == null || y == null)
+        if (x is null)
+            return y is null;
+        if (y is null)
             return false;
 
         return _comparer(x, y);

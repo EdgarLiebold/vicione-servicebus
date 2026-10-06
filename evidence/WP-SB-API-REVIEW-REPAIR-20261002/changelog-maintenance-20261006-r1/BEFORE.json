@@ -1,0 +1,16 @@
+{
+  "files": [
+    {
+      "relative": "CHANGELOG.md",
+      "before_sha256": "2c20193151874c23b53eac5dec72e784724acd9ed385bbdace20d795058e7a37",
+      "before_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/changelog-maintenance-20261006-r1/before/CHANGELOG.md"
+    },
+    {
+      "relative": "docs/changelog/product-fixes.md",
+      "before_sha256": "77373cd27e36c2dc36a834fc646565d1cdab769ef567ba09be63beb9ae64773a",
+      "before_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/changelog-maintenance-20261006-r1/before/docs/changelog/product-fixes.md"
+    }
+  ],
+  "prior_source_snapshot_is_immutable": true,
+  "scope": "User-requested documentation maintenance only; no Source/Test/SDK/STATE/API-member changes."
+}

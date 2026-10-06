@@ -1,0 +1,9 @@
+{
+  "acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE305_RABBIT_EXISTING_TYPE1_ONE_CLAUSE_CURRENT296_ROOT_REVALIDATION_R1.json",
+    "sha256": "c369d8a76708144ad45c279acac7fd3f9f626366617948ad8b7d452537235f88"
+  },
+  "master_after_sha256": "ba15911c47f35fd5e9383039b15038c14022dffe408785cb573b01012a78ebbc",
+  "count": 18937,
+  "Original_remaining": 494
+}

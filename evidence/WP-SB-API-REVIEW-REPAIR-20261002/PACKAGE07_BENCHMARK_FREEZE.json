@@ -1,0 +1,342 @@
+{
+  "status": "THREE_CODE_FIXES_NATIVE_VERIFIED_FROZEN_ADVERSARIAL_PENDING",
+  "findings": [
+    "F024",
+    "F025",
+    "F026"
+  ],
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorBatchBenchmark.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/freeze/00-MediatorBatchBenchmark.cs",
+      "sha256": "db4e7d9804ab997fbf0f7fe4d95bdcb0427057c05dc57912b1512f8ad1d16461",
+      "bytes": 2147,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/benchmarks/ViciOne.ServiceBus.BenchmarkConsole/MediatorBatchBenchmark.cs",
+      "baseline_sha256": "19cbc6090440a0ae2e25b93e225411a362b275c92f0f70d960b1005444252673"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/benchmarks/ViciOne.ServiceBus.BenchmarkConsole/DeserializationBenchmark.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/freeze/01-DeserializationBenchmark.cs",
+      "sha256": "eb319c646bbc20c46ecf6366bc898e34988dbe7ca4747eec7b8acc701164049a",
+      "bytes": 2932,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/benchmarks/ViciOne.ServiceBus.BenchmarkConsole/DeserializationBenchmark.cs",
+      "baseline_sha256": "6063bd29196026d3d32528f2251d796eb0268cb8389146db0b87414222f56d81"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/benchmarks/ViciOne.ServiceBus.Benchmark/Latency/MessageMetricCapture.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/freeze/02-MessageMetricCapture.cs",
+      "sha256": "85390534e98ab443589af9f675e59cd4a997b8e25941549a6572fde683d27561",
+      "bytes": 8825,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/benchmarks/ViciOne.ServiceBus.Benchmark/Latency/MessageMetricCapture.cs",
+      "baseline_sha256": "fd5d7bb67e42cb3186fbb3b1d13a73489b54e1b64656bf15b6294988fdb021b2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/freeze/03-Program.cs",
+      "sha256": "0ca988cca90b34c906612a11ddb3ad0744345339c6029f004528b836841dcbe3",
+      "bytes": 5981,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/CompiledBenchmarkContracts.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/freeze/04-CompiledBenchmarkContracts.csproj",
+      "sha256": "4cce05881819d1552d12179417773c64d1b60a052e44c907aba0cec975dcc9d3",
+      "bytes": 1173,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/freeze/05-NuGet.Config",
+      "sha256": "4bb87123c45ea385d0d2f373d27a83a5730fa1d7a559c8da2d36026aefe6eaaa",
+      "bytes": 544,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/freeze/06-packages.lock.json",
+      "sha256": "c2dee460f845c6e2359efaa3fdce52153140d31c7db2660f4763732b13958d24",
+      "bytes": 16938,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package07_benchmark_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/freeze/07-package07_benchmark_mutations.py",
+      "sha256": "7640532058801203e982d8bf05b614393235cad3f8763526f48d1fd4563a0418",
+      "bytes": 10072,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/freeze/08-product-fixes.md",
+      "sha256": "d5f673cb05db52cd4711a62279c1d099e1e71c73fa0bd4e896f019616d3840ad",
+      "bytes": 30273,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/11-product-fixes.md",
+      "baseline_sha256": "0f853802bb9dea09fe1e3e65c115e53f39f7009b033736b96e514a61495b4f84"
+    }
+  ],
+  "native_receipts": [
+    {
+      "phase": "package07-console-corrected-build",
+      "command": [
+        "dotnet",
+        "build",
+        "benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ViciOne.ServiceBus.BenchmarkConsole.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--no-incremental",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:03:01.363214+00:00",
+      "completed_utc": "2026-10-03T00:03:27.356201+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-console-corrected-build.log",
+      "log_sha256": "f1aad939cbb47cd919a428c13101f755c6d48018b53e48370c5ad68195c47644"
+    },
+    {
+      "phase": "package07-latency-corrected-build",
+      "command": [
+        "dotnet",
+        "build",
+        "benchmarks/ViciOne.ServiceBus.Benchmark/ViciOne.ServiceBus.Benchmark.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--no-incremental",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:03:36.299687+00:00",
+      "completed_utc": "2026-10-03T00:04:16.114122+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-latency-corrected-build.log",
+      "log_sha256": "961ffb966fe33d1911a25368f470c185ccf5c0832aaf47c1e1f781dfcd9ab626"
+    },
+    {
+      "phase": "package07-public-oracle-build-r2",
+      "command": [
+        "dotnet",
+        "build",
+        "CompiledBenchmarkContracts.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--no-incremental",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:09:04.807162+00:00",
+      "completed_utc": "2026-10-03T00:09:08.567273+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-oracle-build-r2.log",
+      "log_sha256": "5397ce8fe9d8b8dda9cf12f3dda669a264cc52f961792392068557337bf45be8"
+    },
+    {
+      "phase": "package07-public-oracle-locked-final",
+      "command": [
+        "dotnet",
+        "restore",
+        "CompiledBenchmarkContracts.csproj",
+        "--locked-mode"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:39:15.393416+00:00",
+      "completed_utc": "2026-10-03T00:39:17.538321+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-oracle-locked-final.log",
+      "log_sha256": "85240544d9d207d5334dfd6354ace991d873b1172e7366fe04ec20a393bd4820"
+    },
+    {
+      "phase": "package07-benchmark-complete-native-owner",
+      "command": [
+        "env",
+        "VICIONE_TESTS__Profile=Unit",
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ViciOne.ServiceBus.Benchmark.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--minimum-expected-tests",
+        "1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:39:17.626083+00:00",
+      "completed_utc": "2026-10-03T00:39:33.367663+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmark-complete-native-owner.log",
+      "log_sha256": "611254a7be0ffd30c745a81058a572e0a2c51beb88dc16082a3d34b38029b7c3"
+    },
+    {
+      "phase": "package07-corrected-bdn-dry12",
+      "command": [
+        "dotnet",
+        "artifacts/sdk/bin/ViciOne.ServiceBus.BenchmarkConsole/release/ViciOne.ServiceBus.BenchmarkConsole.dll",
+        "--filter",
+        "*MediatorBatchBenchmark.*",
+        "*MediatorBenchmark.*",
+        "*DeserializationBenchmark.*",
+        "--job",
+        "Dry",
+        "--noOverwrite",
+        "--keepFiles",
+        "--exporters",
+        "json",
+        "--cli",
+        "/usr/local/share/dotnet/dotnet",
+        "--artifacts",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-benchmarks/package07/corrected"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:16:39.461408+00:00",
+      "completed_utc": "2026-10-03T00:17:32.109617+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-corrected-bdn-dry12.log",
+      "log_sha256": "666c0389d7066beeb02ede4e356085b33320307f6e76be7bf10a559d50b3f9ad"
+    },
+    {
+      "phase": "package07-public-r2-corrected-deserialization",
+      "command": [
+        "dotnet",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/CompiledBenchmarkContracts.dll",
+        "deserialization"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:10:30.890864+00:00",
+      "completed_utc": "2026-10-03T00:10:31.351823+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-deserialization.log",
+      "log_sha256": "9085215d638ab56ef4460581cee5801a8135169d4ac8376870fcd289f2102a68"
+    },
+    {
+      "phase": "package07-public-r2-corrected-mediator-batches",
+      "command": [
+        "dotnet",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/CompiledBenchmarkContracts.dll",
+        "mediator-batches"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:10:31.432721+00:00",
+      "completed_utc": "2026-10-03T00:10:31.887741+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-mediator-batches.log",
+      "log_sha256": "07210439fafd343c554945f4aa49cd2a1504d18378abd8fdfc2f92a8aec3c2c9"
+    },
+    {
+      "phase": "package07-public-r2-corrected-unique",
+      "command": [
+        "dotnet",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/CompiledBenchmarkContracts.dll",
+        "unique"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:10:31.966756+00:00",
+      "completed_utc": "2026-10-03T00:10:32.118409+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-unique.log",
+      "log_sha256": "fa3e8f2476fe7f173e2124cecb0720741d6962cae2c352ebf1cfe4836d6a8833"
+    },
+    {
+      "phase": "package07-public-r2-corrected-duplicate",
+      "command": [
+        "dotnet",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/CompiledBenchmarkContracts.dll",
+        "duplicate"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:10:32.200102+00:00",
+      "completed_utc": "2026-10-03T00:10:32.348135+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-duplicate.log",
+      "log_sha256": "230024674f45b5aae26177c1e728a7343c87ae37be2d5f507c25a1f692a635f5"
+    },
+    {
+      "phase": "package07-public-r2-corrected-concurrent-duplicate",
+      "command": [
+        "dotnet",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/CompiledBenchmarkContracts.dll",
+        "concurrent-duplicate"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:10:32.427384+00:00",
+      "completed_utc": "2026-10-03T00:10:32.587529+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-concurrent-duplicate.log",
+      "log_sha256": "352bf813fd68c1606d8a1912b34a05aeaa593dfc6e10a45c328e77ffca942f17"
+    },
+    {
+      "phase": "package07-public-r2-corrected-concurrent-unique",
+      "command": [
+        "dotnet",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/CompiledBenchmarkContracts.dll",
+        "concurrent-unique"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:10:32.668401+00:00",
+      "completed_utc": "2026-10-03T00:10:32.868699+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-concurrent-unique.log",
+      "log_sha256": "b3f6d28dde5120ed6fb0fe10580193d7a6e3f83c359bd9bbd8c658976b262712"
+    },
+    {
+      "phase": "package07-public-r2-corrected-duplicate-send-observer",
+      "command": [
+        "dotnet",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools/bin/Release/net10.0/CompiledBenchmarkContracts.dll",
+        "duplicate-send-observer"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package07/compiled-tools",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:10:32.958796+00:00",
+      "completed_utc": "2026-10-03T00:10:33.112280+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-public-r2-corrected-duplicate-send-observer.log",
+      "log_sha256": "65bd523937211a722e2ca69ea9a4a0b0b5894ceac6c98c6cfca4ff997d94cf7e"
+    }
+  ],
+  "proofs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE07_BENCHMARK_MUTATIONS.json",
+      "sha256": "d7205d19e0f205488702cc2c1aa7f28c326c2c0158f9ed91fdf393cb23c9513d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE07_INDEPENDENT_ROOT_BINDING.json",
+      "sha256": "f5f53b4ac4bb20dfb0759a385823be0eac0d9ba8ee0e608a1a504ef6d1402e47"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE07_PUBLIC_BINDING.json",
+      "sha256": "20ca2918dc0da91d0af69f6fff7f34f013a1dc23be491d459153c281a4865bcf"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE07_BDN_DRY.json",
+      "sha256": "0ad45fe56db49ff38dd2d69337cba5042a90bdc72553b710454afbd969c83b35"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/INITIAL_ORACLE_BUILD_EXCLUSION.json",
+      "sha256": "476d514fd12d68af950778c6fbcffd7d94b3c0ba258f039baa427596072d6eab"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/ATTEMPT1_EXCLUSION.json",
+      "sha256": "314ef9432012c031d1f27853e09f51f9a03fccd20541e5da38f45bf2740f6697"
+    }
+  ],
+  "mutants": 9,
+  "public_contract_modes": 7,
+  "unchanged_native_owner": {
+    "total": 96,
+    "passed": 96,
+    "failed": 0,
+    "skipped": 0
+  },
+  "bdn": {
+    "dry_cases": 12,
+    "claim": "Workload executes correctly; no performance qualification from Dry N1"
+  },
+  "limits": "No complete assertion grade for unchanged canonical benchmark owner; Root personally read owned bounded oracle and change. Historical coreDll diagnostic field actually identifies Abstractions; exact physical Core is bound separately in PACKAGE07_PUBLIC_BINDING.json. Whole API/profiles/fresh final package graph remain open."
+}

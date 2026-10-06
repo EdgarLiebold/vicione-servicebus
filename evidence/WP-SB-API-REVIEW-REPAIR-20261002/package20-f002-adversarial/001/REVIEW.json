@@ -1,0 +1,56 @@
+{
+  "status": "NO_BLOCKER_TARGETED_F002_SCOPED_ACCEPTANCE_SUPPORTED",
+  "finding": "F-SB-API-002",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE20_F002_FINAL_NATIVE_FREEZE_R1.json",
+    "sha256": "08578984be9546f919c2200dd966ca5f3b4ed267a796a5bebf3095c0530672cc"
+  },
+  "material_blockers": [],
+  "native_actuals": {
+    "original_unfiltered": {
+      "total": 12324,
+      "pass": 12323,
+      "direct_assertion_fail": 1,
+      "skips": 0,
+      "exit": 2
+    },
+    "corrected_unfiltered": {
+      "total": 12324,
+      "pass": 12324,
+      "fail": 0,
+      "skips": 0,
+      "exit": 0
+    },
+    "fresh_countercase": {
+      "negative": "1finiteEqual expectedtrue/actualempty at source67,exit2,noTimeout/setup/guardkill",
+      "unaffected_control": "unchanged IsClassifiedAsTestProject1PASS0skip exit0",
+      "Engineering_locked_restore_only": "exit0;17expectednewassets;no source/bin/oldasset change",
+      "same_rule_positive": "sameArchitectureDLL,newprocess,noBuild/noRestore,1PASS0skip exit0"
+    },
+    "actual_receipts_unique_bound": 15
+  },
+  "independent_binding_counts": {
+    "three_worker_original_source_byte_checks": 18627,
+    "counter_strict_frame_original_sources": 6209,
+    "counter_strict_frame_bin_files": 4648,
+    "existing_assets_unchanged": 61,
+    "assets_after": 78,
+    "added_expected_assets": 17,
+    "strict_pre_frame_completed_before_restore_seconds": 15.12472,
+    "PE_sidecar_PDB_contentID_images": 3,
+    "original_document_source_F_INPUT_GIT_checks": 117,
+    "physical_dependency_asset_checks": 216
+  },
+  "causal_assessment": "Original complete Unit MTPprofile fails the unchanged full-tree evaluation rule. On a fresh countercase, omitting only Engineeringrestore reproduces the same finite assertion while unrelated rule passes. Engineeringlockedrestore adds17generatedassets/imports while6209source and4648bin files remain exactly constant; the same selected assertion then passes in a fresh process. Independent fresh corrected order also passes all12324profile tests. These facts support adding prerequisite Engineeringlockedrestore in the isolated Unit CIjob.",
+  "minimal_patch": "Workflow inserts Engineeringlockedrestore before existing Unitlockedrestore; docs explain full-tree evaluation. Currenttwofiles exact ownFULLsource snapshots verified; no runtime/publicAPI/XML/test/filter/lock/graph edit.",
+  "compatibility": "Existing Unitrestore/build/noBuild-noRestore test order and thresholds remain, per-jobcheckout has required generatedNuGetstate. Newprocesscontrols avoid static evaluation cache reuse.",
+  "limits": [
+    "Physical executed SDK/runtimehost version retrospectively unbound; symbolic dotnet receipts, actual MTPnet10/x64 and selected projectDLL/sourcePDB/deps are bound.",
+    "Original Previous initial hashcapture4s overlap is historical qualification, not strict preRestore proof. Fresh countercase is strictly preRestore completed.",
+    "Three generated RegexGenerator document disk bodies absent (one/image); identical PDBexpectedSHA recorded. 46/47physical documents perimage match and39originaldocs perimage independently F/Input/Git bound.",
+    "Workers use original product/test baseline: Corrected includes only two F002 workflow/docs changes. This is not an integrated current-product all-repairs test run.",
+    "Local fresh generated directories with existing globalNuGetcache; no coldcache or actual remote GitHub UbuntuCI run claimed.",
+    "All12324green is execution coverage, not canonical suite/owner grade or wholeAPI/Core/A+/ARM/heap acceptance. No assertions, tests, graph or locks changed for this package."
+  ],
+  "review_role": "Internal read-only adversarial assistance; no reviewer native operations/product/test/globalledger writes or external productteam role."
+}

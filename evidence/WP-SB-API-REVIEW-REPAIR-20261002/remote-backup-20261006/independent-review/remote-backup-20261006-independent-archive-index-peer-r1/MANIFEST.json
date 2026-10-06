@@ -1,0 +1,25 @@
+{
+  "scope": "Immutable read-only backup archive/staged6330 peer; no self hash",
+  "files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/ARCHIVE_RESTORATION_PROOF.json",
+      "sha256": "72785836cb47f9af8e1065f2323b9565d4d4bf41de0998a8d962f03da008301d",
+      "bytes": 1585
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/INDEX6330_BINDINGS.json",
+      "sha256": "aed81ffbf529b57626d3da1db9843a9ace553e9f0db47289a4120be037f4a5d2",
+      "bytes": 1082706
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/INDEX_PROOF.json",
+      "sha256": "32199db9a748c6ab4fb2946a022d407221aa50467bcce3778dd2a2dfecceec19",
+      "bytes": 1381
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/REPORT.json",
+      "sha256": "3e8b7258b7aa45dc030e1bd747b098f688cbbae1cb417929f970b02be7fdea40",
+      "bytes": 9407
+    }
+  ]
+}

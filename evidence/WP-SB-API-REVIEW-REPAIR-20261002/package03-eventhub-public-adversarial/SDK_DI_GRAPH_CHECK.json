@@ -1,0 +1,741 @@
+{
+  "status": "LOCK_ASSETS_DEPS_CACHE_RUNTIME_MACHINE_BOUND",
+  "owned_root_input_count": 10,
+  "ancestor_configs": [],
+  "target": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "packages": [
+    {
+      "package": "Microsoft.Extensions.DependencyInjection",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.dependencyinjection/10.0.12/microsoft.extensions.dependencyinjection.10.0.12.nupkg",
+      "sha256": "b979c630191f6c48b548cad866d8224a0ed0e6e7be0aba87f454b57597b63779",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "ViciOne.ServiceBus.EventHubs",
+      "version": "1.0.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus.eventhubs/1.0.0/vicione.servicebus.eventhubs.1.0.0.nupkg",
+      "sha256": "b22c2820fe592ec6a5b63c1f78c4e0dad511d0ea9106c6916571a7b11fe07e1b",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": false,
+      "unsigned_contenthash_independently_raw_verified": true,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "xunit.v3.assert",
+      "version": "4.0.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/xunit.v3.assert/4.0.0/xunit.v3.assert.4.0.0.nupkg",
+      "sha256": "58e041a132ba8092aa78779616fe953ae2e5ec9102e2b480bf6776a9297d51d1",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Azure.Core",
+      "version": "1.55.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/azure.core/1.55.0/azure.core.1.55.0.nupkg",
+      "sha256": "ea53eaa3ea4d9f447524e8657e0ecac03df70e8e37cb67b58712b4817e9fbe15",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Azure.Core.Amqp",
+      "version": "1.3.1",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/azure.core.amqp/1.3.1/azure.core.amqp.1.3.1.nupkg",
+      "sha256": "4e70ef89fdc3810d71d91c392d59af94105651d65b0566564e61430f1101e2ee",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Azure.Messaging.EventHubs",
+      "version": "5.12.2",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/azure.messaging.eventhubs/5.12.2/azure.messaging.eventhubs.5.12.2.nupkg",
+      "sha256": "ba25e4d920621b392646fd028b5f348fb0e86299a8900b64608814b35f05584a",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Azure.Messaging.EventHubs.Processor",
+      "version": "5.12.2",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/azure.messaging.eventhubs.processor/5.12.2/azure.messaging.eventhubs.processor.5.12.2.nupkg",
+      "sha256": "e8e7fa653e851d5c78cdd3a90ed0134c3113ea0d0032f7ee54adca23ad0b2de3",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Azure.Storage.Blobs",
+      "version": "12.29.2",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/azure.storage.blobs/12.29.2/azure.storage.blobs.12.29.2.nupkg",
+      "sha256": "7b212eb97f028c97d4e450b3c5e75ce05de814c0007881dc2f6f2bbab6020dce",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Azure.Storage.Common",
+      "version": "12.28.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/azure.storage.common/12.28.0/azure.storage.common.12.28.0.nupkg",
+      "sha256": "2352db29175df4e2d76513f88eca770385a2238655ac403ae34c2a70faf2f357",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "FastExpressionCompiler",
+      "version": "5.4.1",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/fastexpressioncompiler/5.4.1/fastexpressioncompiler.5.4.1.nupkg",
+      "sha256": "1076ef1b02332739d97669a7edfd4e89fae58a9e117e9700d4aff19d34a29795",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Azure.Amqp",
+      "version": "2.7.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.azure.amqp/2.7.0/microsoft.azure.amqp.2.7.0.nupkg",
+      "sha256": "14e29d1caa0241419e145715d8ad5e15633fe5f0ec470afd859f661068d6c110",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Bcl.AsyncInterfaces",
+      "version": "10.0.3",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.bcl.asyncinterfaces/10.0.3/microsoft.bcl.asyncinterfaces.10.0.3.nupkg",
+      "sha256": "fb04dc99ccd40f5a929e7599d668a28ebeb6fe095c45b35646911987f3815368",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.configuration/10.0.12/microsoft.extensions.configuration.10.0.12.nupkg",
+      "sha256": "d06de9d376ee3d28b0fec645b396993a3eb7b04fbc1ef7091654a08d9e1e72cb",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration.Abstractions",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.configuration.abstractions/10.0.12/microsoft.extensions.configuration.abstractions.10.0.12.nupkg",
+      "sha256": "f7397df285cb2a34c88a6929710c0b8ed84913382e2ae708f734060bc091ce51",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration.Binder",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.configuration.binder/10.0.12/microsoft.extensions.configuration.binder.10.0.12.nupkg",
+      "sha256": "fe267b1321b7e183183ed3042071bcaf5e3ad244a83e1d27fb055071367eba48",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.DependencyInjection.Abstractions",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.dependencyinjection.abstractions/10.0.12/microsoft.extensions.dependencyinjection.abstractions.10.0.12.nupkg",
+      "sha256": "4664fab0ac4b56b8935333f59ee9e7801c8ab96de7c57cb3b6eb8192a5a61c55",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.diagnostics/10.0.12/microsoft.extensions.diagnostics.10.0.12.nupkg",
+      "sha256": "6edb9246a77906a0bb91bb63175c4f70cdf7b49328d3ceaae6e6c4c7bacf89ea",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics.Abstractions",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.diagnostics.abstractions/10.0.12/microsoft.extensions.diagnostics.abstractions.10.0.12.nupkg",
+      "sha256": "5ece1e660e3f707cb2d8bda190329406434b5faab45d5ee6ea8e51c93c744ec0",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics.HealthChecks",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.diagnostics.healthchecks/10.0.12/microsoft.extensions.diagnostics.healthchecks.10.0.12.nupkg",
+      "sha256": "8aa7164a9800fbc1bff7ef624093780a2a588d93bd066cd590b32ab08f4bb49c",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.diagnostics.healthchecks.abstractions/10.0.12/microsoft.extensions.diagnostics.healthchecks.abstractions.10.0.12.nupkg",
+      "sha256": "9f2f201db6ccc5cb6c2c2f724301652f8c59be4a12a900a9a20adf850e806771",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.FileProviders.Abstractions",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.fileproviders.abstractions/10.0.12/microsoft.extensions.fileproviders.abstractions.10.0.12.nupkg",
+      "sha256": "49dad2381a98e644f68b711106f06c01db62c7fc3b4b1e79799ba770d0d4d9e7",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Hosting.Abstractions",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.hosting.abstractions/10.0.12/microsoft.extensions.hosting.abstractions.10.0.12.nupkg",
+      "sha256": "535354f24c323122edbbc3a090f7c00e201effb88ab10db043e537a2023da70f",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Logging.Abstractions",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.logging.abstractions/10.0.12/microsoft.extensions.logging.abstractions.10.0.12.nupkg",
+      "sha256": "34eaaa60afb61ed3d86e2e2669eae0c690d0e237e8a7066ba5bdb45a386709e7",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Options",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.options/10.0.12/microsoft.extensions.options.10.0.12.nupkg",
+      "sha256": "eec90916f11d84ea41e942b59cbf82f1e32726d87e99be7ee2b2424e31570ff7",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Options.ConfigurationExtensions",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.options.configurationextensions/10.0.12/microsoft.extensions.options.configurationextensions.10.0.12.nupkg",
+      "sha256": "71cbb9b3b179ee51d5416b3b8602d7109bdfc61ae741c0c3903fe4959e2ed7e1",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Extensions.Primitives",
+      "version": "10.0.12",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.extensions.primitives/10.0.12/microsoft.extensions.primitives.10.0.12.nupkg",
+      "sha256": "97ee742afe0cb0634558262f925cc112b5882d09db8d169575e559031da63922",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Identity.Client",
+      "version": "4.83.1",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.identity.client/4.83.1/microsoft.identity.client.4.83.1.nupkg",
+      "sha256": "583b75c602b985dc52620e9c20ae705ed638fcf07e05a4f7f7780d2dac3313c0",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.Identity.Client.Extensions.Msal",
+      "version": "4.83.1",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.identity.client.extensions.msal/4.83.1/microsoft.identity.client.extensions.msal.4.83.1.nupkg",
+      "sha256": "b78846e4a4b37c17e17d9edd243052db0afbbf69e70f04633ecefc67388cfdbf",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "Microsoft.IdentityModel.Abstractions",
+      "version": "8.14.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/microsoft.identitymodel.abstractions/8.14.0/microsoft.identitymodel.abstractions.8.14.0.nupkg",
+      "sha256": "6e40aecf55a3e7a37e2c758bbc728b702b4846a04afb7939bc3daa7c1ef15ca9",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "System.ClientModel",
+      "version": "1.11.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/system.clientmodel/1.11.0/system.clientmodel.1.11.0.nupkg",
+      "sha256": "c0b6d99710173b32ad8eb770af3bc17414ee8edd50470c0695b01af89c783c27",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "System.IO.Hashing",
+      "version": "10.0.3",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/system.io.hashing/10.0.3/system.io.hashing.10.0.3.nupkg",
+      "sha256": "20ada1669690cac29802833401b115813c256b9861a9aa29ef7eb44dbdad6739",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "System.Memory.Data",
+      "version": "10.0.3",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/system.memory.data/10.0.3/system.memory.data.10.0.3.nupkg",
+      "sha256": "1de7cac82b8d27b6ce34e56a1a2d9649c1ba5c8a05c9f192c1340cf4e974ebe5",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "System.Reflection.TypeExtensions",
+      "version": "4.7.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/system.reflection.typeextensions/4.7.0/system.reflection.typeextensions.4.7.0.nupkg",
+      "sha256": "184b42197c2d3a79187a3495f937e5f83ab21aae634d4695c8bf5e32ea4c1c13",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": false
+    },
+    {
+      "package": "System.Security.Cryptography.ProtectedData",
+      "version": "4.5.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/system.security.cryptography.protecteddata/4.5.0/system.security.cryptography.protecteddata.4.5.0.nupkg",
+      "sha256": "67e5f5676944acb2fb627b768c5b3392eebf220ae780edd5d5b49f6530621487",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": true,
+      "unsigned_contenthash_independently_raw_verified": false,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "ViciOne.ServiceBus",
+      "version": "1.0.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg",
+      "sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": false,
+      "unsigned_contenthash_independently_raw_verified": true,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "ViciOne.ServiceBus.Abstractions",
+      "version": "1.0.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg",
+      "sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": false,
+      "unsigned_contenthash_independently_raw_verified": true,
+      "assets_package_only": true,
+      "deps_present": true
+    },
+    {
+      "package": "ViciOne.ServiceBus.Sagas",
+      "version": "1.0.0",
+      "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus.sagas/1.0.0/vicione.servicebus.sagas.1.0.0.nupkg",
+      "sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+      "raw_sha512_sidecar_verified": true,
+      "normalized_contenthash_metadata_matches_lock": true,
+      "archive_signed": false,
+      "unsigned_contenthash_independently_raw_verified": true,
+      "assets_package_only": true,
+      "deps_present": true
+    }
+  ],
+  "runtime_dll_bindings": [
+    {
+      "package": "Azure.Core/1.55.0",
+      "member": "lib/net10.0/Azure.Core.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Azure.Core.dll",
+      "sha256": "62f2ca72236d5b278eef85beada6f0d711944b128664f4cded9e570dbd586052",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Azure.Core.Amqp/1.3.1",
+      "member": "lib/netstandard2.0/Azure.Core.Amqp.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Azure.Core.Amqp.dll",
+      "sha256": "d53d832629b76fcae7f0e0352788c43c79e13480247dba11e37961b60e52c142",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Azure.Messaging.EventHubs/5.12.2",
+      "member": "lib/net8.0/Azure.Messaging.EventHubs.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Azure.Messaging.EventHubs.dll",
+      "sha256": "d358ab1c5ba8c95b72f5b3b483409422f1ebdcb0c2e03abfb1da0bfd1d0932bb",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Azure.Messaging.EventHubs.Processor/5.12.2",
+      "member": "lib/net8.0/Azure.Messaging.EventHubs.Processor.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Azure.Messaging.EventHubs.Processor.dll",
+      "sha256": "0ef1b76632d06cf1458da9b0d6f5aa6b2d1598495f3a915ca9e453351d6e1827",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Azure.Storage.Blobs/12.29.2",
+      "member": "lib/net10.0/Azure.Storage.Blobs.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Azure.Storage.Blobs.dll",
+      "sha256": "6e20e51b1164ae982828251466c57f0fcc08478a792b184bcc909530c506b15b",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Azure.Storage.Common/12.28.0",
+      "member": "lib/net10.0/Azure.Storage.Common.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Azure.Storage.Common.dll",
+      "sha256": "678d23c3df79e6c6b76c3bd46691dc55224e6d7f2acfe86232a42c9beec54353",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "FastExpressionCompiler/5.4.1",
+      "member": "lib/net9.0/FastExpressionCompiler.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/FastExpressionCompiler.dll",
+      "sha256": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Azure.Amqp/2.7.0",
+      "member": "lib/net8.0/Microsoft.Azure.Amqp.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Azure.Amqp.dll",
+      "sha256": "eb58a9058b6cde95081608e1921967cc704d6e411745436b20c68caa37389980",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Bcl.AsyncInterfaces/10.0.3",
+      "member": "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Bcl.AsyncInterfaces.dll",
+      "sha256": "f1e1d6e1a2990071b450bdf6c9618408ac0e3f24a3c7a3bef1f50508ba732ca5",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Configuration.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.dll",
+      "sha256": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+      "sha256": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+      "sha256": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.DependencyInjection/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+      "sha256": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+      "sha256": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.dll",
+      "sha256": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+      "sha256": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+      "sha256": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+      "sha256": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+      "sha256": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+      "sha256": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+      "sha256": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Options/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Options.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Options.dll",
+      "sha256": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+      "sha256": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Primitives/10.0.12",
+      "member": "lib/net10.0/Microsoft.Extensions.Primitives.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Extensions.Primitives.dll",
+      "sha256": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Identity.Client/4.83.1",
+      "member": "lib/net8.0/Microsoft.Identity.Client.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Identity.Client.dll",
+      "sha256": "5795027e9ae95eececb310a4fed3c502bb368039d186ab0884f64b7792b84717",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.Identity.Client.Extensions.Msal/4.83.1",
+      "member": "lib/net8.0/Microsoft.Identity.Client.Extensions.Msal.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.Identity.Client.Extensions.Msal.dll",
+      "sha256": "07109a2f30df782300077a567ade47cbd0a0502c75cd7c8a62192f7d64bb004e",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "Microsoft.IdentityModel.Abstractions/8.14.0",
+      "member": "lib/net9.0/Microsoft.IdentityModel.Abstractions.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/Microsoft.IdentityModel.Abstractions.dll",
+      "sha256": "24e97b54b6b5c234a124a336757e3116617ac6c30b655cdae74517dc2ecb5746",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "System.ClientModel/1.11.0",
+      "member": "lib/net10.0/System.ClientModel.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/System.ClientModel.dll",
+      "sha256": "cc5438113ef00af6731cc6d336efdaabd83378121b725794e5eb0a18733fbb90",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "System.IO.Hashing/10.0.3",
+      "member": "lib/net10.0/System.IO.Hashing.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/System.IO.Hashing.dll",
+      "sha256": "ea0be3bcef840a9da018e801f64aeaed01c22cd3b74c0273b4e874b098ee61f6",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "System.Memory.Data/10.0.3",
+      "member": "lib/net10.0/System.Memory.Data.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/System.Memory.Data.dll",
+      "sha256": "2c1035b0106dbb2de7913d151e06071ed617bb58bbb3d6cd46a2dd0f6a03617b",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "System.Security.Cryptography.ProtectedData/4.5.0",
+      "member": "lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/System.Security.Cryptography.ProtectedData.dll",
+      "sha256": "80566f0839ece5946e66bf9f00d723e59e371ba1341a18e00c7c7a7c49298e1d",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "ViciOne.ServiceBus/1.0.0",
+      "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "ViciOne.ServiceBus.Abstractions/1.0.0",
+      "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "ViciOne.ServiceBus.EventHubs/1.0.0",
+      "member": "lib/net10.0/ViciOne.ServiceBus.EventHubs.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EventHubs.dll",
+      "sha256": "e9ccaacdc6cdc36c1f3ebf1a9e5a5ca0ea2733855f05c5ba1d546db8e064b8ac",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "ViciOne.ServiceBus.Sagas/1.0.0",
+      "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+      "archive_extraction_runtime_identical": true
+    },
+    {
+      "package": "xunit.v3.assert/4.0.0",
+      "member": "lib/net8.0/xunit.v3.assert.dll",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/xunit.v3.assert.dll",
+      "sha256": "d14ea33253a7e289af5254617203b02f0643ba7ff618670de837d642ef22af11",
+      "archive_extraction_runtime_identical": true
+    }
+  ],
+  "deps_omissions": [
+    {
+      "package": "System.Reflection.TypeExtensions/4.7.0",
+      "reason": "compile/runtime placeholder _._ only; no DLL asset selected by net10.0"
+    }
+  ],
+  "generated_inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/obj/project.assets.json",
+      "sha256": "a6db55b912498b3ccba2fe3e66f292d536a6f943558d004bca2af33a50b75111",
+      "bytes": 95636,
+      "read_status": "MACHINE_STRUCTURAL_CHECK_ONLY"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/EventHubPublicContracts.deps.json",
+      "sha256": "c1f4be7cb395835cbca89ac4d143d0960ae18edd39a23d38c60111a7b1b8e44e",
+      "bytes": 28427,
+      "read_status": "MACHINE_STRUCTURAL_CHECK_ONLY"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/EventHubPublicContracts.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+      "bytes": 330,
+      "read_status": "READ_FULL"
+    }
+  ],
+  "limits": "Generated assets/deps JSON structurally checked, not personally full semantic-read. Third-party signed package normalized hash is metadata/lock checked; no fresh cryptographic signature verification or reconstructed unsigned-archive hash claimed. Actual selected runtime DLL bytes independently equal nupkg members and cache. Declared net10.0 graph and asset SdkAnalysisLevel10.0.300 only; actual SDK patch and ARM coverage not inferred. No native commands.",
+  "official_contenthash_reference": "https://github.com/NuGet/NuGet.Client/blob/dev/src/NuGet.Core/NuGet.Packaging/PackageArchiveReader.cs",
+  "review_checker_corrections": [
+    "Not every lock dependency has a runtime asset: System.Reflection.TypeExtensions selects _._ placeholders.",
+    "Signed NuGet contentHash excludes signature context; raw SHA512 differs by design. Selected four product packages unsigned: raw SHA512 equals lock."
+  ]
+}

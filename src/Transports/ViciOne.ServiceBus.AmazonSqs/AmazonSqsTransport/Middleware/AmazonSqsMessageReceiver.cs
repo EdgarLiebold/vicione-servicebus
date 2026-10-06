@@ -108,7 +108,14 @@ public sealed class AmazonSqsMessageReceiver :
             && int.TryParse(value, out var visibilityTimeout)
             && visibilityTimeout != _receiveSettings.VisibilityTimeout)
         {
-            LogContext.Debug?.Log("Using queue visibility timeout of {VisibilityTimeout}", TimeSpan.FromSeconds(visibilityTimeout).ToFriendlyString());
+            try
+            {
+                LogContext.Debug?.Log("Using queue visibility timeout of {VisibilityTimeout}", TimeSpan.FromSeconds(visibilityTimeout).ToFriendlyString());
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics cannot prevent the transport operation.
+            }
 
             _receiveSettings.VisibilityTimeout = visibilityTimeout;
         }

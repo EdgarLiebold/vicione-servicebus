@@ -1,0 +1,16 @@
+--- Frozen/src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs
++++ FrozenCorrected/src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs
+@@ -12,9 +12,11 @@
+     /// <summary>Gets the condition that completed the batch.</summary>
+     BatchCompletionMode Mode { get; }
+ 
+-    /// <summary>Gets when the first message entered the batch.</summary>
++    /// <summary>Gets the raw UTC timestamp recorded when the first message entered the batch.</summary>
++    /// <remarks>Wall-clock corrections can make the last timestamp precede this value; collection time limits use relative timers.</remarks>
+     DateTimeOffset FirstMessageReceived { get; }
+ 
+-    /// <summary>Gets when the last message entered the batch.</summary>
++    /// <summary>Gets the raw UTC timestamp recorded when the last message entered the batch.</summary>
++    /// <remarks>This value can precede the first timestamp after a wall-clock correction and does not measure elapsed collection time.</remarks>
+     DateTimeOffset LastMessageReceived { get; }
+ }

@@ -1,0 +1,190 @@
+{
+  "utc": "2026-10-05T20:41:49.489886+00:00",
+  "status": "ROOT_APPLIED_HEADER_PRODUCT3_AND_DOC13_PENDING_STRICT_FIXED26_F134_COMPATIBILITY_FRESH_XML_PDB_PACK",
+  "finding": "F-SB-API-203",
+  "documentation_family": "Existing F-SB-API-147 bounded extension, no new ID/count",
+  "authors": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package234-json-header-shared-conversion-product-proposed-r1",
+      "report_sha256": "50bf255319c5dd674dd9130fe3fe9fdaab17ae0938ba08b3d9c8cc2cadca0197",
+      "manifest_sha256": "835dd1c10c41fb018657d03cd6a5a1260df56c42293a911ff3ead79d13e43899"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package228-core-doc25-delayed-two-overlay-product-proposed-r1",
+      "report_sha256": "63de65d9df636175dea464d7f04b00422b5c2e4e54fbc7d94dfc4984a77bcd1a",
+      "manifest_sha256": "f0253eec4dc90fa8462695162f5e98ec767607b29d9a2bcfb4140f8d7094d208"
+    }
+  ],
+  "independent_source_peers": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package234-json-header-independent-source-peer-r1",
+      "report_sha256": "3211eed132a3d1ef7fd7e6c5450878df2312e8a74cbfbfe6bc33036389d2e101",
+      "manifest_sha256": "2680a45fa115f8b94ed08fd0bedb9bfd5ea63c7e430c7d9d535321b401271d02"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package228-core-doc25-independent-scanner-source-peer-r1",
+      "report_sha256": "3e44c7a539ff5db4fcc9ade4b75886057da85a82f3dfd8c0d0cb5e8e051dded3",
+      "manifest_sha256": "a791aa8b7742b9070bd102f2ccc673c0ce3bbaf9538ff81cda3ed09a1f6fc26d"
+    }
+  ],
+  "root_own_reads": {
+    "Header3": "631ced whole3/401; 27f883 whole actual Dictionary before274;4c479b whole HeaderProductPeer; b6c80d exact helper+Dictionary literal inverse+wholePatch",
+    "Doc13": "8bd8c3 first6, central Formatter/Delayed truncation recovered018c9d whole397;54def1 remaining7, exact whole13/1717after;780f4e whole independentREPORT;78fd52 allDoc25literalInverses and unchangedNonXML"
+  },
+  "changes": [
+    {
+      "relative": "src/ViciOne.ServiceBus/Serialization/Headers/DictionarySendHeaders.cs",
+      "before_sha256": "49127396dd7f0d0778f8a33fc08e56ad1cac1acda31ef064e39ccbca3b066010",
+      "sha256": "896c2c988bf6a37a3e805846a4b8f8f517227b14c4468c699645aa753ac837be",
+      "lines": 173,
+      "scope": "F203_HEADER_PRODUCT",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Serialization/Headers/DictionarySendHeaders.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Headers/JsonTransportHeaders.cs",
+      "before_sha256": "588d208eace6a2d1185f5514e508c202d4af1738e5d2ec873189bc6dfe2ab5b2",
+      "sha256": "316546d943bf0bb5640cfb29697dc0258d376c7a022197faa7526ea7ab07eb12",
+      "lines": 111,
+      "scope": "F203_HEADER_PRODUCT",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Transports/Headers/JsonTransportHeaders.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Serialization/Headers/HeaderValueConversion.cs",
+      "before_sha256": null,
+      "sha256": "b1fbc1b0d2ad7500df469d47984e472a47bec61bdcd17408f6bbfb55aa7b035e",
+      "lines": 117,
+      "scope": "F203_HEADER_PRODUCT",
+      "backup": null
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/ConsumePipeSpecification.cs",
+      "before_sha256": "ff760da46347c000652a442fdeaf2b80b59d78b1863f861da75c19747d741778",
+      "sha256": "210eed52de40f478379d24105fd8742da570c096d00a931a31067e63e0b516b1",
+      "lines": 290,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/ConsumePipeSpecification.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/DeadLetterExtensions.cs",
+      "before_sha256": "af216936350e568fae665686942d67e5a1b8e4d89138c549e4ef8d5d8bf1787a",
+      "sha256": "065e92c757b1056b81632ae8d8fbf3ef8435f8dd9f60a75fe97ea75900d7b486",
+      "lines": 21,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/DeadLetterExtensions.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/DefaultEndpointNameFormatter.cs",
+      "before_sha256": "604795b8f587856e653ec9c50e8e091494f589edda524e8224a4afbe4cca0b53",
+      "sha256": "a0a5728a255acc76e5e584d28d0eade124d46e22cb5fe41510cead78837df1bd",
+      "lines": 295,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/DefaultEndpointNameFormatter.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/DelayedRedeliveryExtensions.cs",
+      "before_sha256": "70b9dad815fe6282c18d886c834d1d226243736b2e7acc94e4a9388346c0f519",
+      "sha256": "c12fda71c100c6270c964f71a4d8a9895022604adbb8e70807d63616a58adeff",
+      "lines": 102,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/DelayedRedeliveryExtensions.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/InMemoryOutbox/OutboxConsumePipeSpecificationObserver.cs",
+      "before_sha256": "e8ce214465493f57191f4de419ef597dce40fb541abb1d380099a34c4f16eb52",
+      "sha256": "2449778ca5adf8af33b2133a6f71b2fbddd5fb66cba5748aaf3e58dea4902927",
+      "lines": 191,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/InMemoryOutbox/OutboxConsumePipeSpecificationObserver.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/JsonSerializerConfigurationExtensions.cs",
+      "before_sha256": "3c10b0fcc174a6aa63339843c0603c4b1dc7b0888774bf7625ebaada0d1f9476",
+      "sha256": "528fb9f94034810b1fd36035117e712f068cff0688f1e3f496937b91fd0dbf73",
+      "lines": 103,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/JsonSerializerConfigurationExtensions.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/ReceiveEndpointConfiguration.cs",
+      "before_sha256": "85a2fa03af1f7ea69178a1d9904d3e834f3252dcc3f576f8660a1a4fb2f94ae9",
+      "sha256": "dcbded2ca0473ba5e59515199c4a658d5230b24633e3b1de520c820d31857d52",
+      "lines": 187,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/ReceiveEndpointConfiguration.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/ReceiveEndpointConfigurationExtensions.cs",
+      "before_sha256": "95f86c43837d2a1d930323eb751f47a752b2b4115c44160f54c3cdebc4b9e859",
+      "sha256": "e8fd9151b2f4686c67203c15f65f5cc9439d6200ea57b95fc76c270745f3d336",
+      "lines": 25,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/ReceiveEndpointConfigurationExtensions.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/RegistrationExtensions.cs",
+      "before_sha256": "901f22b5335a628ab53c9004a45c8d2c983ce4a366354ea6f5703e31dcaf4869",
+      "sha256": "4b2f2922b172e3696a766556fe9fbf5afc3c4c5c0d49a9a7e84ece77b04f6fe4",
+      "lines": 148,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/RegistrationExtensions.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/ReliableSchedulerConfigurationExtensions.cs",
+      "before_sha256": "afee7e01e66fc3fd8d5ddced7b3a56afb3117235bbd643b1b49b0d80208d27c2",
+      "sha256": "2b4f897ee9f1746eff1da8963fe04abd8b7557114bf0da13a7c395956d01063c",
+      "lines": 30,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/ReliableSchedulerConfigurationExtensions.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/ScheduledRedeliveryConfigurationExtensions.cs",
+      "before_sha256": "c8b88b02859d224cbb8c92e5ff03e9082f542b88a5483e6b61b163c72a2d83d8",
+      "sha256": "ba68edd9ee56df13ba5ff98a285de6c39fc75f97db95cb95b8af757b53766305",
+      "lines": 101,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/ScheduledRedeliveryConfigurationExtensions.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/TransformConfigurationExtensions.cs",
+      "before_sha256": "dd5f25c8a78d1144ed75f3bc39bd45380b326ca343757225a2dd24924943a182",
+      "sha256": "7701a6dd21ac17b8c3446c3e988dcae14b2b461d465db4bdff8bd2a263822e78",
+      "lines": 94,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/TransformConfigurationExtensions.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/Transformation/TransformSpecification.cs",
+      "before_sha256": "a16e8b1a7a13b94164b4cb0a12686f7fd534611c2d40c44982393ed972457e25",
+      "sha256": "3e16726a36ae520f4c9835192bfc7058a83e4c18573eb4d7fed24a970e1d4ef8",
+      "lines": 130,
+      "scope": "F147_BOUNDED_DOC25_EXTENSION",
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package236-header-product3-core-doc13-root-before-r1/src/ViciOne.ServiceBus/Configuration/Transformation/TransformSpecification.cs"
+    }
+  ],
+  "original235_captures": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package235-header-original26-source-bound-capture-r1",
+      "after_sha256": "e0a527de017885fac995e6e31a8b40903f935c43ba39e2cd5ecd7de7e7101444"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package235-rabbit-fixed14-source-bound-capture-r1",
+      "after_sha256": "1a334be364c3672cc209afa880e1cf394d6134a38e4f835fa4fcc90790806382"
+    }
+  ],
+  "Header_current_Test_Req_delta_authority": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE235_HEADER_EXTRA14_RABBIT_CANCEL2_TESTONLY5_ROOT_APPLICATION_R1.json",
+    "sha256": "612fd49e752ba3ca322c78d64781e54861750026782187bce703ad65b0e7e928",
+    "only_reviewed_added14_and_ADD2": true
+  },
+  "source_freeze235_ended_and_independent_physical_ready": "Runtime45096f checked current6658 both captures before this mutation",
+  "product_sources_changed": 3,
+  "XML_only_sources_changed": 13,
+  "test_requirement_changes": false,
+  "public_declarations_and_existing_public_XML_preserved_for_Header": true,
+  "limits": [
+    "No compiled public ABI proof until fresh actual verification. New internal helper type only.",
+    "Original Header26 actual20P6F: new14 and oldhealthy6 reached, candidatefallback/raw assertions unreached untilFixed.",
+    "CoreDoc25 published fullXML composition must account for additional Header helper internal XML node, not apply a Doc25-only whole-file forecast.",
+    "No Master acceptance/count, finding closure or A+ inferred from application."
+  ]
+}

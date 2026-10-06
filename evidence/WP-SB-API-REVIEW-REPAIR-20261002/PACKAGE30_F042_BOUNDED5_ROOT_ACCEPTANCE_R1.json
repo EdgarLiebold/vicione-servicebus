@@ -1,0 +1,15 @@
+{
+  "status": "ROOT_ACCEPTED_BOUNDED_FIVE_NATIVE_REGRESSIONS_FULL_F042_BOUNDARIES_MUTATIONS_AND_SHARED_FINAL_PENDING",
+  "finding": "F-SB-API-042",
+  "source_candidate_sha256": "056020244335e9e1314333dcfdee78e74238ac631ac28603273909ea22b7bdf9",
+  "independent_native_manifest_sha256": "bf85833d06f9d2bebe6bfb84b6e7a2748305d198b2590efc2acbb7ff00084c16",
+  "root_peer_manifest_review_personal_full": true,
+  "root_all_peer_artifacts_sha_rechecked": true,
+  "root_native_full_semantic_read_receipt": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE30_NATIVE_R1_ROOT_COMPLETE_SEMANTIC_READ_R1.json",
+  "actual_cases": 5,
+  "finite_receives": 10,
+  "native_exit": 0,
+  "strict_core_ef_and_public_builds_zero_warnings_errors": true,
+  "full_F042_Aplus": false,
+  "canonical_core766_full": false
+}

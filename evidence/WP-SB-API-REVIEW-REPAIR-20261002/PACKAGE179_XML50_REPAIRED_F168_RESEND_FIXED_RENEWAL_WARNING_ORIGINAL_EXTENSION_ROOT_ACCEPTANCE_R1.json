@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-05T11:18:13.497280+00:00",
+  "actor": "/root",
+  "status": "XML50_F126_F167_F169_REPAIRED_F168_RESEND_FIXED_WARNING_SAME_FAMILY_ORIGINAL_EXTENSION_REGISTERED",
+  "before": {
+    "known_unique": 169,
+    "accepted": 165
+  },
+  "after": {
+    "known_unique": 169,
+    "accepted": 168
+  },
+  "accepted_ids": [
+    "F-SB-API-126",
+    "F-SB-API-167",
+    "F-SB-API-169"
+  ],
+  "existing_id_extended": "F-SB-API-168",
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package179-sql-resend-fixed-xml50-renewal-original4-fresh3-independent-r1/REPORT.json",
+    "sha256": "15f359b9ada226390bbee96056d3a75e8f6bb69e6f85b493b77303f5bc7c4083",
+    "manifest_sha256": "aeec5a45bb6fc408adb4b21ed8644b5a67846d8f6b30376fcfe35857e8f6af87",
+    "freeze_sha256": "0d2a4444380db3ba44fd7ebf244ffb234e82645016390327011c07922cf8d432"
+  },
+  "root_independent_verification": "Whole128 qualifier4395bb beforeGO; all2851frozen/live5de538 and all2869MAN/12reparsedPEPDB2744physicalCS84Embedded/5serialactualLogs/273uniqueIDs/old269allP/50XMLnodesallotherchildren unchanged/3CRCZIP 51868b. Wholeactual2firstfailureblocks personally bf4224; mainnew219/assertions00e565 and actualRenewSettle ecc2aa; no inheritedhumanwhole2744source/273assertion credit.",
+  "actual_native": {
+    "total": 273,
+    "passed": 271,
+    "failed": 2,
+    "skipped": 0
+  },
+  "repair_scope": {
+    "F126": "41SQLsetter-only summary nodes samefamilyextension emitted exactly; priornine repairs remain accepted.",
+    "F167": "5SQLtopology configuration purpose summaries samefamilyextension emitted exactly; priortwoGetter summaries unchanged.",
+    "F169": "Four requiredconfiguration-object param nodes emitted exactly; noAPI/runtimechange.",
+    "F168": "Single owning RESENDDebug now contained; identical Original2cases bothPASS/allold269P, fresh3 bound. NewtwoownWarning sites leave sameoptionaldiagnostic family open."
+  },
+  "original_extension_scope": {
+    "F168": "One SQL lock owning optional logging failure family: two actualhostile Warningcases after alreadyadmitted Complete renewal join finiteFIRSTEqualDeleteCalls306 expected1actual0; healthy2P. ExactproviderfalseorIOException/structuredWarning/uniqueLoggerIOExceptionidentity reached before306; Nullsuccess/Deleteargs/idempotencyafter306unreached. Loggerfailure inRenewLoop faultsownedrenewal and blocksSettle beforeDelete. No2newIDs/caseinflation."
+  },
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "final_23Unit_31Package_18Journey_4Consumers_pending": true,
+  "limits": [
+    "ActualproviderSPI/FakeTimeProvider, no liveDB/cloud.",
+    "No wholeSQLclean claim: two qualifiedOriginalwarningcasesremain.",
+    "Already-lost-beforeadmission semantics/cancellationcallbackfailure are separate obligations."
+  ]
+}

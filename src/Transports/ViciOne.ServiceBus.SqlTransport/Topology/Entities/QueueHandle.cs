@@ -2,7 +2,7 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-/// <summary>Controls the lifetime of queue.</summary>
+/// <summary>Identifies a queue within its owning SQL topology builder.</summary>
 public interface QueueHandle :
     EntityHandle
 {

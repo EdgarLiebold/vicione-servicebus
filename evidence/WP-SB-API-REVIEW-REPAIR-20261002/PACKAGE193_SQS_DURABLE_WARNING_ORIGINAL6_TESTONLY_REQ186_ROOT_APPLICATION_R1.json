@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-05T15:50:15.490672+00:00",
+  "status": "ADVERSARIALLY_REVIEWED_ORIGINAL6_TESTONLY_REQ186_APPLIED_NO_NEW_FINDING",
+  "test": {
+    "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/DurableResourceWarningOwnershipTests.cs",
+    "sha256": "0a04d34dd8f8daa2afd45a108080e64da686aceb38eacf98f2a5b741fc76c3c4",
+    "lines": 205,
+    "cases": 6
+  },
+  "requirements": {
+    "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+    "before_sha256": "d31916f03c00cbadb2a26c09c76fa40b28f54c9125393c1cb434fd55d22fdc1a",
+    "after_sha256": "5e2935b6ce5bb5b5908b19f55b85334fbc3e6b9c4390a90927a745c5a38e530a",
+    "before_rows": 184,
+    "after_rows": 186,
+    "unchanged_prefix184": true,
+    "additions": 2
+  },
+  "product_store_before": {
+    "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DurableResourceStore.cs",
+    "sha256": "66d327709126033ace4abaee0d56f4846b4346718403f87aea54d7563f158706",
+    "actual_190_qualified_PDB_checksum": "66d327709126033ace4abaee0d56f4846b4346718403f87aea54d7563f158706"
+  },
+  "proposal_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-sqs-durable-warning-original6-oracles-proposed-r1/MANIFEST.json",
+    "sha256": "4b78ab79b585f832244d37069b1f2e2bcf68dcbf42077bb2d8391d1d437a9fda"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-sqs-durable-warning6-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "2dbeb6849435837bd4cde42df0fad052b5749ad966ff06fa8e21790c212fbfb4"
+  },
+  "root_review": {
+    "whole205_test_and_ADD2": "41b2de",
+    "whole253_current_store": "11848b",
+    "whole_source_peer": "b2f5bf"
+  },
+  "product_code_changed": false,
+  "native_original_pending": true,
+  "finding_registration": null,
+  "global_Aplus": false
+}

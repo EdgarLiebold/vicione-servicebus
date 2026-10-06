@@ -274,18 +274,13 @@ public class RabbitMqTestHarness :
         CleanVirtualHostOnStart = false;
     }
 
-    /// <summary>
-    /// Drops the virtual host and creates it again, which is the only reset that is guaranteed to
-    /// be complete.
-    /// <para>
-    /// <see cref="CleanAsync" /> enumerates exchanges and queues and deletes them one by one. That
-    /// leaves behind anything a plugin keeps outside those two entity types — most notably the
-    /// scheduled message store of the delayed message exchange. Recreating the virtual host
-    /// removes that store with it, because the store belongs to the virtual host.
-    /// </para>
-    /// </summary>
+    /// <summary>Requests deletion and creation of the configured dedicated virtual host through the management API.</summary>
+    /// <remarks>
+    /// The requests run sequentially. A creation failure may leave the virtual host absent;
+    /// this method does not restore its previous configuration or verify plugin-owned state.
+    /// </remarks>
     /// <param name="cancellationToken">The token that cancels management API operations.</param>
-    /// <returns>A task that completes after the dedicated virtual host has been deleted and recreated.</returns>
+    /// <returns>A task that completes after the management API accepts deletion or reports absence, then accepts creation.</returns>
     public async Task RecreateVirtualHostAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();

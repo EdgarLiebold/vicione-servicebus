@@ -1,0 +1,86 @@
+{
+  "status": "CODE_AND_PUBLIC_CONSUMER_FROZEN",
+  "findings": [
+    "F-SB-API-005",
+    "F-SB-API-010",
+    "F-SB-API-020"
+  ],
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs/freeze/00-IMessageData.cs",
+      "sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca",
+      "bytes": 727,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+      "baseline_sha256": "c1e4aa43f1c3ed7dfc4cd7b667eced1cba86f7909706c857cf6e6b141341afb2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs/freeze/01-IEncryptionKeyProvider.cs",
+      "sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf",
+      "bytes": 1320,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+      "baseline_sha256": "fd78240543cd1f2b1e9334c5929177163ccb58d8f47d789e23ade834ac7a94e1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs/freeze/02-EntityFrameworkOutboxConfigurationExtensions.cs",
+      "sha256": "3c0fb87def3c20a1c16dc5449a444e5ab655a08ec36720c4ba7920a7d6c75c46",
+      "bytes": 14169,
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs",
+      "baseline_sha256": "5aa52bc69ffc894b36f8586238d175dfceccfb18f93f6afe7b097d87fc8a429b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs/freeze/03-Program.cs",
+      "sha256": "381ffbb85b07f19082be84080e3175093c029103b2b70d93a8ab85cc51c4f497",
+      "bytes": 10437,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/DocumentationContracts.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs/freeze/04-DocumentationContracts.csproj",
+      "sha256": "359e3645b901d7a67ffcf144455b2fdd228920a5ddc1abefae914a4a9d4c1b59",
+      "bytes": 469,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/NuGet.config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs/freeze/05-NuGet.config",
+      "sha256": "5dd5426f656f346f88cff960dc7e6de8b811b6dd0a444f97d13192afebda6948",
+      "bytes": 573,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs/freeze/06-packages.lock.json",
+      "sha256": "c7b797e1c55d473e6e01e517241e1465df6f7c8a697e9940aa3ed7fb17a42026",
+      "bytes": 11011,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package08_docs_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs/freeze/07-package08_docs_mutations.py",
+      "sha256": "f754b654903668f67563104ea8bb91e3a024a316e21068949418d5c45c82f2de",
+      "bytes": 5814,
+      "comparison_baseline": null,
+      "baseline_sha256": null
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs/freeze/08-product-fixes.md",
+      "sha256": "8dd2447fa408919ddd2a0698e0de4ed52abdf14207dc3789bc15432ce86df76f",
+      "bytes": 29037,
+      "comparison_baseline": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease/freeze/03-product-fixes.md",
+      "baseline_sha256": "237c517e0bd223e4dfd2966a42d15e6af0de32f30599297fcdb554363d712fb3"
+    }
+  ],
+  "mutation_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE08_DOCS_MUTATIONS.json",
+  "binary_binding": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE08_DOCS_BINARY_BINDING.json",
+  "proof_limit": "XML-only contract repair. Logical member counterreversions are documentation checks, not runtime implementation mutants. No database opened or bus started.",
+  "excluded_attempts": "Initial original consumer used inaccessible nested bus interfaces. Native exit134 is excluded; corrected public container rerun r2 supplies three causal red modes and two green controls."
+}

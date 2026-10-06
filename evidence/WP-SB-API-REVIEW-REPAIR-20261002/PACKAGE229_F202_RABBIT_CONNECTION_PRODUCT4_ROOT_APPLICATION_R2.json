@@ -1,0 +1,471 @@
+{
+  "utc": "2026-10-05T20:04:52.376642+00:00",
+  "status": "ROOT_APPLIED_INDEPENDENTLY_SOURCE_REVIEWED_PRODUCT4_NATIVE_VALIDATION_PENDING",
+  "finding": "F-SB-API-202",
+  "author_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-connection-continuation-product-proposed-r2/REPORT.json",
+    "sha256": "2a36cc346bfd44c3f25582e9500d9ca886f14c370aa0869a217f4ab88b6c93d1"
+  },
+  "author_manifest_sha256": "ed7e0915c993c0a445c58d8f57db268365e76f6966e183924509637a40e2846e",
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-connection-continuation-independent-runtime-source-peer-r2/REPORT.json",
+    "sha256": "ae310fa88d944aa626c0d0a5daeca9a093ae1e24f2ecef71ea413f2990b44dc4",
+    "manifest_sha256": "44ad5b392eff423698dee9e4f6fa623c4a321b70894b6cbe4bc4befa102882a1"
+  },
+  "mandatory_exact144_inverse": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-r2-facade144-inverse-precision-overlay-r1/EXACT_FACADE144_DELETE_INVERSE.json",
+    "sha256": "86e03d25ab01d317f71ad228511d63cf0628b94afe523dbcd73e986ba3707181"
+  },
+  "source_rows": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointBuilder.cs",
+      "before": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-connection-continuation-product-proposed-r1/before/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointBuilder.cs",
+      "before_sha256": "19c44f00d2db1824840a3f789be0f6f14e1314d14e4b92d2d30135b76442d921",
+      "after": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-connection-continuation-product-proposed-r2/proposed/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointBuilder.cs",
+      "after_sha256": "76139188376a4548c47505de87011e151cef8c1ff2e965f532f3f3f7b7240827",
+      "before_lines": 106,
+      "after_lines": 111,
+      "new_internal_owner": false,
+      "literal_inverse_exact": true,
+      "existing_XML_comment_lines_unchanged": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs",
+      "before": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-connection-continuation-product-proposed-r1/before/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs",
+      "before_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "after": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-connection-continuation-product-proposed-r2/proposed/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs",
+      "after_sha256": "1378483179b78ba2f8f0859f1262b82cc80adc3413596ab3096aadb2ddcacc45",
+      "before_lines": 421,
+      "after_lines": 421,
+      "new_internal_owner": false,
+      "literal_inverse_exact": true,
+      "existing_XML_comment_lines_unchanged": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ConfiguredConnectionContextSupervisor.cs",
+      "before": null,
+      "before_sha256": null,
+      "after": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-connection-continuation-product-proposed-r2/proposed/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ConfiguredConnectionContextSupervisor.cs",
+      "after_sha256": "d2fd7ce528f2e6fbb47a8ec4e6dc5f29cbb3a7ce26cd43d8c984d496dbec0bdf",
+      "before_lines": 0,
+      "after_lines": 144,
+      "new_internal_owner": true,
+      "literal_inverse_exact": true,
+      "existing_XML_comment_lines_unchanged": false
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqQueueReceiveEndpointContext.cs",
+      "before": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-connection-continuation-product-proposed-r1/before/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqQueueReceiveEndpointContext.cs",
+      "before_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "after": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-rabbit-connection-continuation-product-proposed-r2/proposed/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqQueueReceiveEndpointContext.cs",
+      "after_sha256": "688acda4893f9995fed5f636d0c37ea5e702afd8bc55c345aa76f973744e699b",
+      "before_lines": 102,
+      "after_lines": 114,
+      "new_internal_owner": false,
+      "literal_inverse_exact": true,
+      "existing_XML_comment_lines_unchanged": true
+    }
+  ],
+  "source_guards_before20": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs",
+      "sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointBuilder.cs",
+      "sha256": "19c44f00d2db1824840a3f789be0f6f14e1314d14e4b92d2d30135b76442d921"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqQueueReceiveEndpointContext.cs",
+      "sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ChannelContextFactory.cs",
+      "sha256": "3b15f6f39891727601f434aaf69dc657e150a2bee54137ce173bd8fae9cb02a2"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/SharedConnectionContext.cs",
+      "sha256": "5588ce5475e2b20ac2e6449e625ae55eaaf097574e40cc1315b5f80892b82100"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/IConnectionContextSupervisor.cs",
+      "sha256": "faf7e17366d98484f8614c49eb4fcce9e4ff691c1f28aea4b71ee15f17b14105"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ConnectionContextSupervisor.cs",
+      "sha256": "ae6ffd4edb19bf76ba412e488ce01ef47b7e66676773eed12c35f153dd3424c3"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ChannelContextSupervisor.cs",
+      "sha256": "5913415e5a5167dd9b2d703d1092a00d4a05519b19892666c231aa57fb20a25b"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqSendTransportProvider.cs",
+      "sha256": "0dce54510a084a1131affc4738945a95df21035a4d5bc6fbac4ee70c11c84dfd"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqPublishTransportProvider.cs",
+      "sha256": "d752028226833e9d47382553b2b974196b19fceda4a975552067e53a95334b3e"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Advanced/Middleware/SupervisorExtensions.cs",
+      "sha256": "330ee2e900ab2b6872aaf77fd5ac023a89bd3f2d186b6b0a2143b30d7a27699f"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+      "sha256": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Hosting/TransportPipeContextSupervisor.cs",
+      "sha256": "177ca94caa46399cc8f210138ecc24dfabf9635730dccca726e2b276590787cb"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/PipeConfigurator.cs",
+      "sha256": "3ceb5da4b84704720359cc99774160b5ead449a673fed41cd7ad4e88fab7eca3"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/SpecificationPipeBuilder.cs",
+      "sha256": "22acf3c7a064de9fdb0bfcadb207b6b7caa1d322cb02a97c16a3f5b1f24f5961"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Middleware/IPipeContextSource.cs",
+      "sha256": "a976df7f6777ebf0aa6567998e3c1873e8e102f9b00178fe6fc23f637b3365a0"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSupervisor.cs",
+      "sha256": "dc597dadc11cfa8f13fd8b4363a897dfafe0bf2cfca9d77b0ba07985cf01999f"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/ISupervisor.cs",
+      "sha256": "dcffb36474b726ad06aab4f6fa9805785665ff35dc6e14adc8945592f2081e9d"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/IAgent.cs",
+      "sha256": "fca17b77d5a2624f1f846753ecf02df42a43d723a8587d74840d39d3abe6c96e"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "sha256": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb"
+    }
+  ],
+  "root_personal_read": {
+    "whole4_R1": "b3f0ea",
+    "direct_helpers_whole5": "d619fd",
+    "exact_R1_to_R2_delta": "b4bc4c",
+    "whole_exact_R2_facade144_inverse": "70b826",
+    "whole_peer_report": "c09efa"
+  },
+  "existing_public_declarations_preserved_source_comparison": true,
+  "compiler_or_native_claim": false,
+  "native_credit": 0,
+  "whole_API_closed": false,
+  "affected_prior_master_contracts_revalidation_pending": [
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.AutoDelete",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.BindQueue",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.ConsumerPriority",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.DeadLetterExchange",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.Durable",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.ExchangeType",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.Exclusive",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.ExclusiveConsumer",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.HostAddress",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.InputAddress",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.Lazy",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.PurgeOnStartup",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.QueueExpiration",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.Settings",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.SingleActiveConsumer",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext.BrokerTopology",
+      "prior_source_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext.ChannelContextSupervisor",
+      "prior_source_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext.ExclusiveConsumer",
+      "prior_source_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext.IsNotReplyTo",
+      "prior_source_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "T:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointBuilder",
+      "prior_source_sha256": "19c44f00d2db1824840a3f789be0f6f14e1314d14e4b92d2d30135b76442d921",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "T:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration",
+      "prior_source_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "T:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext",
+      "prior_source_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointBuilder.#ctor(ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqHostConfiguration,ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqReceiveEndpointConfiguration)",
+      "prior_source_sha256": "19c44f00d2db1824840a3f789be0f6f14e1314d14e4b92d2d30135b76442d921",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointBuilder.ConnectConsumePipe``1(ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{``0}},ViciOne.ServiceBus.Advanced.Middleware.ConnectPipeOptions)",
+      "prior_source_sha256": "19c44f00d2db1824840a3f789be0f6f14e1314d14e4b92d2d30135b76442d921",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.#ctor(ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqHostConfiguration,ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveSettings,ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqEndpointConfiguration)",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.Bind(System.String,System.Action{ViciOne.ServiceBus.RabbitMq.IRabbitMqExchangeToExchangeBindingConfigurator})",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.BindDeadLetterQueue(System.String,System.String,System.Action{ViciOne.ServiceBus.RabbitMq.IRabbitMqQueueBindingConfigurator})",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.Bind``1(System.Action{ViciOne.ServiceBus.RabbitMq.IRabbitMqExchangeBindingConfigurator})",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.ConfigureChannel(System.Action{ViciOne.ServiceBus.Configuration.IPipeConfigurator{ViciOne.ServiceBus.RabbitMq.ChannelContext}})",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.ConfigureConnection(System.Action{ViciOne.ServiceBus.Configuration.IPipeConfigurator{ViciOne.ServiceBus.RabbitMq.ConnectionContext}})",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.CreateReceiveEndpointContext",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.EnablePriority(System.Byte)",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.IsAlreadyConfigured",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.OverrideConsumerTag(System.String)",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.SetDeliveryAcknowledgementTimeout(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.SetDeliveryAcknowledgementTimeout(System.TimeSpan)",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.SetExchangeArgument(System.String,System.Object)",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.SetExchangeArgument(System.String,System.TimeSpan)",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.SetQueueArgument(System.String,System.Object)",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.SetQueueArgument(System.String,System.TimeSpan)",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.SetQuorumQueue(System.Nullable{System.Int32})",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.Stream(System.Action{ViciOne.ServiceBus.RabbitMq.IRabbitMqStreamConfigurator})",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.Stream(System.String,System.Action{ViciOne.ServiceBus.RabbitMq.IRabbitMqStreamConfigurator})",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointConfiguration.Validate",
+      "prior_source_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext.AddConsumeAgent(ViciOne.ServiceBus.Advanced.Middleware.IAgent)",
+      "prior_source_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext.AddSendAgent(ViciOne.ServiceBus.Advanced.Middleware.IAgent)",
+      "prior_source_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext.ConvertException(System.Exception,System.String)",
+      "prior_source_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext.CreatePublishTransportProvider",
+      "prior_source_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext.CreateSendTransportProvider",
+      "prior_source_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+      "prior_source_sha256": "594b7520b6551349626e52778aba879024f8607fa99b0910298dd7ff902b0172",
+      "boundary": "Prior per-method acceptance is historical; changed public call routes must be reconciled against actual fix and regression before final whole-API closure."
+    }
+  ],
+  "required_next": "Strict actual Rabbit build; fresh compiled Source/runtime/Req capture; same valid Original213 pair; independently reviewed public negative/lifetime controls; full Rabbit regression; fresh package and affected-member re-review."
+}

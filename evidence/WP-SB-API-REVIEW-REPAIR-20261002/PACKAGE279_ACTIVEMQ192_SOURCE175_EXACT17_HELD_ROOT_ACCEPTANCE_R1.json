@@ -1,0 +1,52 @@
+{
+  "utc": "2026-10-06T00:30:50.992100+00:00",
+  "status": "ACTIVEMQ_SOURCE175_ROOT_ACCEPTED_EXACT17_HELD_WHOLE_API_OPEN",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package269-activemq192-current-source-contracts-r1/REPORT.json",
+    "sha256": "b59caaee2cde17546470948d77eea0353ce8a96f8c6e8dc069c1400a1f925e0c"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package269-activemq192-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "012a550d9bb5705b6a721ce0b6f68685ceab2a1a05350d52b401feb3a5673cd3"
+  },
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package269-activemq192-current-source-contracts-r1/PER_ID192_CONTRACT_MATRIX.json",
+    "sha256": "ea8bc6f85239edf597d0d91a66b0d9c9f455c806df265d55a2b92dc0a15c49e9"
+  },
+  "basis": "Scanner own whole48/4872 +9/1546 and hand192; Runtime independent own48/4872 +9/1546 +4/433 and all192/17 reasons. Root wholly read peer a5f46f and exact17 holds ecee07; collective authority, no borrowed Root whole48 claim.",
+  "before_master": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "9471a7abccd54f9fa9fe9e8c2333dd1940d81a28b70c14bb40545887a996267a"
+  },
+  "before_rows": 18394,
+  "appended_source_original": 175,
+  "expected_after_rows": 18569,
+  "held_ordinals": [
+    2,
+    4,
+    32,
+    46,
+    76,
+    77,
+    79,
+    84,
+    127,
+    128,
+    133,
+    136,
+    138,
+    165,
+    166,
+    167,
+    168
+  ],
+  "held_count": 17,
+  "actual_PDB157_all_current_physical_checksums": true,
+  "current_selected48_original192_XML192": true,
+  "XML_representation": "ElementTree serialization structurally bound to actual emitted XML839; no raw-window claim.",
+  "original_coordinate_precision": "Author field original_ordinal is actual ZERO-BASED CSV row index for all192. Initial 9eb5f5 one-based assumption failed closed before writes; actual d4ba4d inspected then all192 exact original row equality guarded here.",
+  "SDK_Product_Test_Req_changes": false,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

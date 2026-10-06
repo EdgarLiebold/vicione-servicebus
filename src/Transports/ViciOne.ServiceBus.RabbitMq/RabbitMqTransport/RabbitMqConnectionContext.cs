@@ -83,9 +83,16 @@ public class RabbitMqConnectionContext :
 
         var channel = await Connection.CreateChannelAsync(options, cancellationToken).ConfigureAwait(false);
 
-        channel.ContinuationTimeout = ContinuationTimeout;
-
-        return channel;
+        try
+        {
+            channel.ContinuationTimeout = ContinuationTimeout;
+            return channel;
+        }
+        catch
+        {
+            await channel.CleanupAsync(200, "Channel initialization failed").ConfigureAwait(false);
+            throw;
+        }
     }
 
     /// <summary>Creates a channel and wraps it in a lifetime-managed context.</summary>
@@ -106,11 +113,25 @@ public class RabbitMqConnectionContext :
     /// <returns>A task-like value that completes after in-flight leases finish and the connection is cleaned up.</returns>
     public async ValueTask DisposeAsync()
     {
-        TransportLogMessages.DisconnectHost(Description);
+        try
+        {
+            TransportLogMessages.DisconnectHost(Description);
+        }
+        catch (Exception)
+        {
+            // Diagnostics do not prevent owned connection cleanup.
+        }
 
         await _lifetime.DisposeAsync().ConfigureAwait(false);
 
-        TransportLogMessages.DisconnectedHost(Description);
+        try
+        {
+            TransportLogMessages.DisconnectedHost(Description);
+        }
+        catch (Exception)
+        {
+            // Diagnostics do not change the completed cleanup outcome.
+        }
     }
 
     /// <summary>Takes this connection's lease, or refuses with the reason the connection actually closed for.</summary>

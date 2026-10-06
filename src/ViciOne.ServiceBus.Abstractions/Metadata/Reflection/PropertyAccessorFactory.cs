@@ -148,6 +148,9 @@ internal static class PropertyAccessorFactory
         MethodInfo? setMethod = property.GetSetMethod(IncludeNonPublic(accessPolicy));
         if (setMethod == null)
             return (_, _) => throw MissingAccessor(property, "setter");
+        if (typeof(T).IsValueType)
+            return (_, _) => throw new InvalidOperationException(
+                $"Cannot write property {property.DeclaringType?.Name}.{property.Name} on a value type passed by value. Use an untyped accessor with an existing boxed instance.");
 
         Action<T, object?> setter;
         if (!CanCompile(setMethod))
@@ -182,6 +185,9 @@ internal static class PropertyAccessorFactory
         MethodInfo? setMethod = property.GetSetMethod(IncludeNonPublic(accessPolicy));
         if (setMethod == null)
             return (_, _) => throw MissingAccessor(property, "setter");
+        if (typeof(T).IsValueType)
+            return (_, _) => throw new InvalidOperationException(
+                $"Cannot write property {property.DeclaringType?.Name}.{property.Name} on a value type passed by value. Use an untyped accessor with an existing boxed instance.");
 
         if (!CanCompile(setMethod))
             return (instance, value) => InvokeSetter(setMethod, instance, value);

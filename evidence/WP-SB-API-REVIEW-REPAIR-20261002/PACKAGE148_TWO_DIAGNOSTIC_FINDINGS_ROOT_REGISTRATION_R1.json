@@ -1,0 +1,54 @@
+{
+  "utc": "2026-10-04T21:32:37.642166+00:00",
+  "status": "TWO_CAUSAL_NATIVE_SOURCE_BOUND_FINDINGS_REGISTERED_FIXED_ACCEPTANCE_PENDING",
+  "root_report_norm_receipt": "def968",
+  "root_consumer_whole_log_receipt": "2494fa",
+  "root_bus_original_five_focused_failure_chains_receipt": "eb2fcc",
+  "confirmed_before": 121,
+  "confirmed_after": 123,
+  "accepted_unchanged": 117,
+  "findings": [
+    {
+      "id": "F-SB-API-122",
+      "severity": "High",
+      "title": "In-memory startup observer diagnostic failure prevents owned executor cleanup",
+      "source_owner": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveTransport.cs",
+      "source_sha256": "5d76e1daa329a55db0241457806d6eea12ea088b6e10d1cc7d3f39fe772ae5bc",
+      "causal_boundary": "After SetNotReady(primary), NotifyFaulted observer throws and diagnostic warning throws. Startup task then faults; Stop waits that task and exits before awaiting owned executor.DisposeAsync. Actual held-executor stop is prematurely completed, finite Assert.False fails at534.",
+      "original_native_phase": "package147-bus-startup-original-two-classes-native-r1",
+      "proof_limit": "Original startup observer pair: healthy diagnostic passes; hostile diagnostic finite fails before later completion oracles. Whole Bus41=33P8F0S combines other F118/F119 causes. No universal observer isolation or hard cleanup deadline.",
+      "status": "CONFIRMED_ORIGINAL_NATIVE_SOURCE_BOUND_REPAIR_APPLIED_FIXED_NATIVE_PENDING",
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package147-core-originals-fixed-futures-independent-r1/REPORT.json",
+        "sha256": "be3f95c8a7e07e403cf69be14a2db7e74eb69ed89c1ce8e0f2e6a7a7a553cbae",
+        "arithmetic_erratum_sha256": "b529ebe2993077ca639dc5a55ab243016f97bf6af1629864d72e6bb37b86caa5"
+      },
+      "root_application_receipt": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE148_EIGHT_PRODUCT_OWNERS_HOST2_TEST_ROOT_APPLICATION_R1.json",
+        "sha256": "6e804e547a77ba67ae4946f74c0b5f1c4ddae55a25b2f0a2a7b1194e57f94b1a"
+      },
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-123",
+      "severity": "High",
+      "title": "Consumer shutdown diagnostic exceptions replace owned cancellation callback failures",
+      "source_owner": "src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "source_sha256": "58405e18c4d3fc11fa89a59c8e429a780acb076ccbe8626df0ba0bba9e714436",
+      "causal_boundary": "ActiveAndActualAgentsCompletedAsync captures cancellation callback errors, but warning throws at canceled-stop or consume-loop-fault path before final Aggregate. Exact Original two failure branches return ConsumerStopDiagnosticException instead of Aggregate at640.",
+      "original_native_phase": "package147-consumer-stop-diagnostics-original-class-native-r1",
+      "proof_limit": "Original23=21P2finiteF0S. New healthy2 pass and hostile2 fail. Existing F065 containment, awaits, registrationDispose retained. Third ObserveConsumeTask warning unproved and untouched.",
+      "status": "CONFIRMED_ORIGINAL_NATIVE_SOURCE_BOUND_REPAIR_APPLIED_FIXED_NATIVE_PENDING",
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package147-core-originals-fixed-futures-independent-r1/REPORT.json",
+        "sha256": "be3f95c8a7e07e403cf69be14a2db7e74eb69ed89c1ce8e0f2e6a7a7a553cbae",
+        "arithmetic_erratum_sha256": "b529ebe2993077ca639dc5a55ab243016f97bf6af1629864d72e6bb37b86caa5"
+      },
+      "root_application_receipt": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE148_EIGHT_PRODUCT_OWNERS_HOST2_TEST_ROOT_APPLICATION_R1.json",
+        "sha256": "6e804e547a77ba67ae4946f74c0b5f1c4ddae55a25b2f0a2a7b1194e57f94b1a"
+      },
+      "whole_API_member_review_closed": false
+    }
+  ]
+}

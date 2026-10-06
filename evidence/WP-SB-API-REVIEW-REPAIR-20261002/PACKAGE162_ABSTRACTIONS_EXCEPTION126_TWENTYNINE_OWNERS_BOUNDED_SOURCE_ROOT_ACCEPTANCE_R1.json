@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-05T02:15:21.902399+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED126_BOUNDED_CURRENT_SOURCE_DIAGNOSTIC_CONTRACTS",
+  "accepted_before": 6043,
+  "accepted_after": 6169,
+  "semantic_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package162-abstractions-exception126-contract-context-r1/PER_ORIGINAL126_CURRENT_CONTRACTS.json",
+    "sha256": "9f845d938f0cfc8e5d9504f42e1565d72114b340d97f6d9b793ca0d467e0494b"
+  },
+  "source_authority": "Root personally whole29 actualsource1029 via1bbb41/d3f63d; whole29 ownernorms add313; exact126 typed/body/parameter norms compact48cf2f recovered untruncated24..94 viafbce2c/d3f63d/819767, all other0..23/95..125 visible and matched actualsource. Child own29 independently documented. No Root whole supportTest claim; selected source assertions are context, Native credit0.",
+  "validation": {
+    "manifest_files": 45,
+    "current_source_owners": 29,
+    "current_source_lines": 1029,
+    "exact_original_declared_IDs": 126,
+    "compiled162_XML_direct_nodes": 103,
+    "associated_accessor_IDs": 23,
+    "current_source_sha_matches_qualified162": true
+  },
+  "qualified_current_source": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package162-header-fixed30-outbox-routing-schedule-original48-neighbors2304-fresh2-independent-r1/REPORT.json",
+    "sha256": "f7d50a7d072c499d4f5373e91a6acbbde3ab921b286198fb8194283a363af8f4"
+  },
+  "limits": [
+    "Simple constructor delegation/getter source contracts do not require126 mirror tests.",
+    "Argument guards, fixed-membership snapshots, mutable borrowed entries, optional defaults and inherited diagnostic causes explicitly reviewed per overload.",
+    "Arbitrary ExceptionInfo cycles/depth/hostile getters and invalid custom Fault collections remain explicit provider contract boundaries; no universal runtime resilience grade.",
+    "15 previously executed Payload cases are not credited to all126 Source contracts."
+  ],
+  "native_credit": 0,
+  "CLOSED": false
+}

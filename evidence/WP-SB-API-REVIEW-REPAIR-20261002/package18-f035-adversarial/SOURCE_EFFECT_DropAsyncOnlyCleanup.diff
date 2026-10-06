@@ -1,0 +1,11 @@
+--- frozen-corrected-Registrar
++++ DropAsyncOnlyCleanup
+@@ -448,7 +448,7 @@
+         int _disposed;
+ 
+         public ValueTask DisposeAsync() => Interlocked.Exchange(ref _disposed, 1) == 0
+-            ? ((IAsyncDisposable)Value).DisposeAsync()
++            ? ValueTask.CompletedTask
+             : ValueTask.CompletedTask;
+     }
+ 

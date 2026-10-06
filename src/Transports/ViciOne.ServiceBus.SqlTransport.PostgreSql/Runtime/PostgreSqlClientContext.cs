@@ -226,10 +226,10 @@ internal sealed class PostgreSqlClientContext :
         }
     }
 
-    /// <summary>Updates a queue's last-used timestamp.</summary>
+    /// <summary>Records activity for the specified primary queue with a zero-counter metric capture.</summary>
     /// <param name="queueName">The queue to mark as used.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>A task that completes after PostgreSQL updates the queue timestamp.</returns>
+    /// <returns>A task that completes after PostgreSQL records the queue activity.</returns>
     public override Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
@@ -238,7 +238,7 @@ internal sealed class PostgreSqlClientContext :
         {
             var command = new CommandDefinition(_touchQueueSql, new { queue_name = queueName }, transaction, cancellationToken: token);
 
-            return connection.ExecuteScalarAsync<int?>(command);
+            return connection.ExecuteScalarAsync<long?>(command);
         }, cancellationToken);
     }
 

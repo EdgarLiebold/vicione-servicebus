@@ -19,13 +19,13 @@ public interface ISqlBusFactoryConfigurator :
     void Send<T>(Action<ISqlMessageSendTopologyConfigurator<T>> configureTopology)
         where T : class;
 
-    /// <summary>Configure the send topology of the message type.</summary>
+    /// <summary>Configures SQL publish topology for the message contract.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="configureTopology">The configure topology.</param>
     void Publish<T>(Action<ISqlMessagePublishTopologyConfigurator<T>>? configureTopology = null)
         where T : class;
 
-    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <summary>Configures SQL publish topology for the supplied message contract type.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="configure">The callback used to configure the component.</param>
     void Publish(Type messageType, Action<ISqlMessagePublishTopologyConfigurator>? configure = null);

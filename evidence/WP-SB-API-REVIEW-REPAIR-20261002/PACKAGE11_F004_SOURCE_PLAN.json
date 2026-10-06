@@ -1,0 +1,55 @@
+{
+  "utc": "2026-10-03T02:55:12.721413+00:00",
+  "author": "Root",
+  "root_personally_FULL_before_author": [
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "bytes": 5197,
+      "sha256": "60e923caa37a2bc1c2b575f2b07df0decdb13580d07f3d0695cc784a285a91c1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "bytes": 4563,
+      "sha256": "672d5f6461fbe03e13ab7b25113cd88d24a2cc3b4bf446a3e395e7bcca97cd54"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "bytes": 10276,
+      "sha256": "f95f5d127c948345ea85bd6506415e8f97024b9ee5ae7f3c6def384dda27268b"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "bytes": 14552,
+      "sha256": "001a5f302aea41f3ff95804997c93644310ec45a41f571a508c15e529f5dc94f"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "bytes": 10520,
+      "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "bytes": 5633,
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4"
+    }
+  ],
+  "product_files": [
+    "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs"
+  ],
+  "plan": [
+    "Internal provider-local factory singleton only registered when journal selected",
+    "Use actual IMeterFactory ownership; never dispose factory-owned Meter/factory/store/policy",
+    "Own isolated ActivitySource/idempotent dispose; complete acquired scope even after disposal",
+    "Provider context passed to internal shared registration Connect; no provider cache on ImplementationInstance",
+    "Preserve three public connector signatures and writer three-argument path with lazy explicit process fallback",
+    "Failed DI activation stays inert, never global fallback; default-off never allocates journal telemetry"
+  ],
+  "public_API_change": false,
+  "canonical_Core_test_edit": false,
+  "proposed_controls": "Research case plan14 journal cases plus default-off and actual activity-source-disposal public witness; count/native results remain pending",
+  "microsoft_source": "https://learn.microsoft.com/en-us/dotnet/core/diagnostics/metrics-instrumentation",
+  "grade": "NOT_ASSIGNED"
+}

@@ -1,0 +1,226 @@
+{
+  "phase": "package18-f035-public-previous-fortysix",
+  "actual_exit": 1,
+  "log_sha256": "da260f56a2d8eaebfd93047f962fd631df62243e71e8c7756280ea429778edbb",
+  "actual_cases": 46,
+  "causal_assertion_reds": 27,
+  "known_and_capture_reds": 15,
+  "endpoint_sibling_reds": 12,
+  "positive_controls": [
+    "default-plain",
+    "default-sync",
+    "default-async",
+    "default-dual",
+    "typed-plain",
+    "borrowed-caller",
+    "constructor-failure",
+    "plain-unmaterialized",
+    "default-endpoint-null-plain",
+    "default-endpoint-null-sync",
+    "default-endpoint-null-async",
+    "default-endpoint-null-dual",
+    "default-endpoint-explicit-plain",
+    "default-endpoint-explicit-sync",
+    "default-endpoint-explicit-async",
+    "default-endpoint-explicit-dual",
+    "typed-endpoint-null-plain",
+    "typed-endpoint-explicit-plain",
+    "endpoint-borrowed-external"
+  ],
+  "negative_cases": [
+    {
+      "case": "typed-sync",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "typed-async",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "typed-dual",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "two-named-buses",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "repeat-materialized",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "repeat-lazy",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "dependency-order",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "async-gated",
+      "assertion": "Xunit.Sdk.TrueException: Actual definition cleanup did not enter",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "dual-gated",
+      "assertion": "Xunit.Sdk.TrueException: Actual definition cleanup did not enter",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "sync-sync",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "sync-dual",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "sync-asynconly-error",
+      "assertion": "Xunit.Sdk.IsTypeException: Assert.IsType() Failure: Value is null",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "async-solefailure",
+      "assertion": "Xunit.Sdk.SameException: Assert.Same() Failure: Values are not the same instance",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "operation-live",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "typed-endpoint-null-sync",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "typed-endpoint-null-async",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "typed-endpoint-null-dual",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "typed-endpoint-explicit-sync",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "typed-endpoint-explicit-async",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "typed-endpoint-explicit-dual",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "endpoint-two-settings-materialized",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "endpoint-lazy-settings",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "endpoint-dependency-gated",
+      "assertion": "Xunit.Sdk.TrueException: Actual definition cleanup did not enter",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "endpoint-sync-dual",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "endpoint-failure",
+      "assertion": "Xunit.Sdk.SameException: Assert.Same() Failure: Values are not the same instance",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "endpoint-two-named-buses",
+      "assertion": "Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ",
+      "scope": "ENDPOINT_SIBLING",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    },
+    {
+      "case": "async-only-disposed-capture",
+      "assertion": "Xunit.Sdk.IsTypeException: Assert.IsType() Failure: Value is null",
+      "scope": "KNOWN_DEFINITION_OR_CAPTURE_CONTROL",
+      "cause": "missing actual definition ownership after successful consumer/delivery/stop or positive constructor/disposed-provider boundary",
+      "guard": false
+    }
+  ],
+  "root_read": "All27 complete individual FAIL blocks personally read; all19 PASS names and final TOTAL read. Raw whole log FULL not claimed by Root.",
+  "setup_excluded": "Initial compiler import failure only; no timeout/binding/setup/teardown red in actual final run",
+  "source_plan": "PACKAGE18_F035_SOURCE_OWNER_PLAN.json",
+  "new_sibling_finding_status": "NATIVE_ROOT_QUALIFIED_PENDING_INDEPENDENT_CAUSAL_REVIEW_AND_REPAIR",
+  "whole_API_or_F035_closed": false
+}

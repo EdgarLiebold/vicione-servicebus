@@ -1,0 +1,120 @@
+{
+  "utc": "2026-10-04T21:53:42.522251+00:00",
+  "decision": "ACCEPT_SIX_BOUNDED_REPAIRS_AND_REGISTER_ORIGINAL_HOST_OBSERVER_HANDLE_LEAK",
+  "confirmed_before": 123,
+  "confirmed_after": 124,
+  "known_accepted_before": 117,
+  "known_accepted_after": 123,
+  "fixed_finding_ids": [
+    "F-SB-API-118",
+    "F-SB-API-119",
+    "F-SB-API-120",
+    "F-SB-API-121",
+    "F-SB-API-122",
+    "F-SB-API-123"
+  ],
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package148-diagnostics-validator-host-independent-r1/REPORT.json",
+    "sha256": "828ba887ca2da189db9e0e8f5627d8ac64c2f85af73bee4c57a1f95ad6fcebdf"
+  },
+  "qualification_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package148-diagnostics-validator-host-independent-r1",
+    "manifest_sha256": "7ad1833c6333f19b8f39aae43a2bb9c6b82a5667aaa96a90823172ad9090142a",
+    "verified_rows": 4114,
+    "report_sha256": "828ba887ca2da189db9e0e8f5627d8ac64c2f85af73bee4c57a1f95ad6fcebdf"
+  },
+  "source_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE148_EIGHT_PRODUCT_OWNERS_HOST2_TEST_ROOT_APPLICATION_R1.json",
+    "sha256": "6e804e547a77ba67ae4946f74c0b5f1c4ddae55a25b2f0a2a7b1194e57f94b1a"
+  },
+  "native": {
+    "core_mixed": {
+      "total": 72,
+      "passed": 71,
+      "failed": 1,
+      "skipped": 0
+    },
+    "activemq": {
+      "total": 30,
+      "passed": 30,
+      "failed": 0,
+      "skipped": 0
+    },
+    "azure": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    "aws": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    "future": {
+      "total": 162,
+      "passed": 162,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "fresh_packages": [
+    {
+      "snapshot": "packages/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "4551ec2b9e52df03b24b15b07ef47f2ecf91e3a4bd8e520415858e9065094f16",
+      "CRC_all_entries_checked": 7,
+      "dll_sha256": "e094edaf366bd0cdaf2af56ab7db86d1b33bbd7fa297ad92b89156a929d4f81b",
+      "xml_sha256": "71c3c0018d2bf293019160badd639b0aa5ddbbef61ccaebb07af3536bb087df6",
+      "actual_net10_DLL_XML_equal_frozen_frame": true,
+      "portable_PDB_binding": "embedded-portable",
+      "optional_external_PDB_entries": []
+    },
+    {
+      "snapshot": "packages/ViciOne.ServiceBus.ActiveMq.1.0.0.nupkg",
+      "sha256": "80e48acaca4101f52867bda1de803e7e00ebd2cad6c73ddb1dd2a0524cff0559",
+      "CRC_all_entries_checked": 7,
+      "dll_sha256": "1d72e16d86e29967c57bcb91c9169d5e763b43ed003a56e1dd993fca27964dd3",
+      "xml_sha256": "3fcf37f62e0680cc34755ee70224275fbe07c6f01a2103f6352f74e28807b344",
+      "actual_net10_DLL_XML_equal_frozen_frame": true,
+      "portable_PDB_binding": "embedded-portable",
+      "optional_external_PDB_entries": []
+    },
+    {
+      "snapshot": "packages/ViciOne.ServiceBus.AmazonSqs.1.0.0.nupkg",
+      "sha256": "f89d30cc6541335d2ec8523df14030be68e28f14da6ca74bf55b8f7182316519",
+      "CRC_all_entries_checked": 7,
+      "dll_sha256": "af94062142c8cf208bd7424b9706b964494f2a1368466cb2139281908ce42ba3",
+      "xml_sha256": "00f899edae65edca74a5897c30c230f368e7bc53202cdf8e8e28e08fb9e9fc1d",
+      "actual_net10_DLL_XML_equal_frozen_frame": true,
+      "portable_PDB_binding": "embedded-portable",
+      "optional_external_PDB_entries": []
+    },
+    {
+      "snapshot": "packages/ViciOne.ServiceBus.AzureServiceBus.1.0.0.nupkg",
+      "sha256": "35150013ac91f5a988cad48fc8820f97d6ee4af8a8bc5e426d461175be8fde75",
+      "CRC_all_entries_checked": 7,
+      "dll_sha256": "111dbd4e50aef9ebb9e3f356944e89ed1920ebcee1415edbaacb74556547491f",
+      "xml_sha256": "880f946d2757f517a603f44e64ff66912be166133daa2b4e3b62ebe04d2b458d",
+      "actual_net10_DLL_XML_equal_frozen_frame": true,
+      "portable_PDB_binding": "embedded-portable",
+      "optional_external_PDB_entries": []
+    },
+    {
+      "snapshot": "packages/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+      "sha256": "929682e74616593e95ce9c0849d562eccececdad83abcef70bc767e810a790f0",
+      "CRC_all_entries_checked": 7,
+      "dll_sha256": "f74fc55701c070baaf663304f859f64033ee42df294f32276ff54a20e072da1f",
+      "xml_sha256": "9e19a1ebde017b35cf0de392fe293da2bd5dac7e6e00f6bd665705c7336585ff",
+      "actual_net10_DLL_XML_equal_frozen_frame": true,
+      "portable_PDB_binding": "embedded-portable",
+      "optional_external_PDB_entries": []
+    }
+  ],
+  "root_personal_review": "Complete148 normative report fields97909f, actual Core72 and validators46 named outcomes08d697; exact Host primary failure f20525 previously; original cause and Source/test deltas in application receipt independently reviewed. Future162 exact unchanged147 case set with original timing proof and previously whole affected Source/test methods; no all162 new testbody reading claimed. Current Source and actual fresh5 ZIP CRC/DLL/XML individually rechecked.",
+  "limits": [
+    "Six bounded repair dispositions only; original/new Host leak stays open. No full Unit runtime pass or whole API grade.",
+    "No cloud/broker validator execution, arbitrary custom logger/handle cleanup guarantee or broader ownership callback behavior."
+  ],
+  "whole_api_status": "PARTIAL"
+}

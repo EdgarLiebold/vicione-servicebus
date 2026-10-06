@@ -1,0 +1,161 @@
+{
+  "utc": "2026-10-06T21:52:24.062162+00:00",
+  "status": "BACKUP_ARCHIVE_AND_STAGED_SOURCE6330_NO_BLOCKER_ROOT_COMMIT_PUSH_PENDING",
+  "role": "Independent read-only archive/restoration/index reviewer; Root sole archive author/O/Git/remote writer.",
+  "author_bundle": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/README.md",
+      "sha256": "5b327aa94f33446857382af81485df147f3168a4242db53e9e9a701822089c00",
+      "bytes": 1656
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/MANIFEST.json",
+      "sha256": "a956938156856b1ad9e8e16e033cf25d3a6d0deaf221fe00a6da901a45e04d50",
+      "bytes": 1707
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/ARCHIVE_INPUTS.json",
+      "sha256": "923188ff1079af7737704e2ed3a928d2e0199b4b7faaa6fa01e1ce5ac301e516",
+      "bytes": 3165275
+    }
+  ],
+  "archive_actual": {
+    "scope": "Complete actual regular-file archive reconstruction and restoration; no SDK/O/Git writes",
+    "archive_sha256": "1cb6ac2ad9af96e5c2b38e5bd758a1a5eadc40791a97bdb2da34707ec1cb998a",
+    "archive_bytes": 100800092,
+    "chunks": [
+      {
+        "file": "review-evidence.tar.gz.part-001",
+        "bytes": 41943040,
+        "sha256": "89d632a13590472771fe71e5935d20abe97e373d5181e9ba3b50d8eaef7cab70"
+      },
+      {
+        "file": "review-evidence.tar.gz.part-002",
+        "bytes": 41943040,
+        "sha256": "c1033e24e2b8fef7d9192355f3d91a4721297c879da4256d8a9f9081c69037c2"
+      },
+      {
+        "file": "review-evidence.tar.gz.part-003",
+        "bytes": 16914012,
+        "sha256": "0e0d9c5ddb503425c0fe494c7afb2dd9980e9b42d109c20bff7de3abd2c00839"
+      }
+    ],
+    "member_manifest_sha256": "923188ff1079af7737704e2ed3a928d2e0199b4b7faaa6fa01e1ce5ac301e516",
+    "regular_unique_safe_members": 11601,
+    "restored_bytes": 1220855711,
+    "per_root_counts": {
+      "repositories/vicione-servicebus/evidence": 4782,
+      "SERVICEBUS_API_REVIEW_AND_REPAIR": 6819
+    },
+    "all_member_stream_restored_live_SHA_equal": true,
+    "missing_manifest_members_from_live": [],
+    "live_regular_postcapture_additions_outside_bundle": [],
+    "restoration_directory": "/private/tmp/servicebus-backup-independent-restore-20261006-r1/restored",
+    "archive_reconstructed": "/private/tmp/servicebus-backup-independent-restore-20261006-r1/review-evidence.tar.gz",
+    "symlinks_special_files_in_archive": 0,
+    "other_sources": "Tracked implementation is stored normally in Git, not within this retained review/evidence archive."
+  },
+  "staged_actual": {
+    "branch": "backup/servicebus-api-review-20261006",
+    "HEAD_before_backup_commit": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "main_unchanged_baseline": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "stage0_records": 8848,
+    "stage0_records_sha256": "99f299c353d98f36078fd5679342e97912209a6676207d63d09c4aebe75a3210",
+    "selected_Source6330_in_index": 6330,
+    "unique_selected_git_blobs_read": 6305,
+    "all_selected_direct_Git_blob_SHA256_matches_frozen_input_or_approvedDocs2": true,
+    "all_selected_current_worktree_SHA256_matches_same_expected": true,
+    "only_Doc2_overrides": {
+      "CHANGELOG.md": "4d2377126b992bb25b59b895b96238bd189fdf209e9387cb4bad570efd68440f",
+      "docs/changelog/product-fixes.md": "63d7a6b78faf10309159e6b070beca158e989f155ccb63fe6ccb76b2bbfe3c9e"
+    },
+    "git_regular_file_modes_only_for6330": true,
+    "staged_changed_paths": 3207,
+    "staged_chunks": [
+      "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-001",
+      "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-002",
+      "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-003"
+    ],
+    "tracked_normal_source_test_docs_in_git_not_reliant_on_archive": true,
+    "scope": "Read-only stagedGit and archived durable audit snapshot, not new SDK/test/contract review"
+  },
+  "all6_bundle_payloads_direct_stagedGitBlobSHA_equal_live": {
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/ARCHIVE_INPUTS.json": {
+      "git_oid": "6ade29df8fa324bd1ae7342d14c9cc48086d772c",
+      "sha256": "923188ff1079af7737704e2ed3a928d2e0199b4b7faaa6fa01e1ce5ac301e516",
+      "bytes": 3165275
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/MANIFEST.json": {
+      "git_oid": "0ca55ce966fe5559680d7e519ecfbf4f0bf04267",
+      "sha256": "a956938156856b1ad9e8e16e033cf25d3a6d0deaf221fe00a6da901a45e04d50",
+      "bytes": 1707
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/RAW_EVIDENCE_ATTRIBUTES.json": {
+      "git_oid": "0b06c60a482cabe38b94240811ce671cc0d0a39e",
+      "sha256": "638a13186bdb3808f4f8d421e816128d885afe3e1013e7f04661dae079a8b6ea",
+      "bytes": 45944
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/README.md": {
+      "git_oid": "a492aa0bddf9bf162468d66e3b541fad583d0811",
+      "sha256": "5b327aa94f33446857382af81485df147f3168a4242db53e9e9a701822089c00",
+      "bytes": 1656
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/STAGED_REVIEWED_INPUTS.json": {
+      "git_oid": "1b237d3757b88504e7e0b718be45d10408f8fbb9",
+      "sha256": "84cf661dee991058e5cd1b27ab1a408235720ac2b4d53bb943dc71a3d1b5d6a9",
+      "bytes": 1944035
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-001": {
+      "git_oid": "bf9d82330d971f96f1573c2937030dc817a77510",
+      "sha256": "89d632a13590472771fe71e5935d20abe97e373d5181e9ba3b50d8eaef7cab70",
+      "bytes": 41943040
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-002": {
+      "git_oid": "a1c7ca7018c8e7100d2b2611780375e20ea19b5f",
+      "sha256": "c1033e24e2b8fef7d9192355f3d91a4721297c879da4256d8a9f9081c69037c2",
+      "bytes": 41943040
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-003": {
+      "git_oid": "5223925ad25e181836fb58a1a20603221d8dc716",
+      "sha256": "0e0d9c5ddb503425c0fe494c7afb2dd9980e9b42d109c20bff7de3abd2c00839",
+      "bytes": 16914012
+    }
+  },
+  "tracked_unstaged_paths": [],
+  "nonignored_untracked_paths": [],
+  "own_proofs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/ARCHIVE_RESTORATION_PROOF.json",
+      "sha256": "72785836cb47f9af8e1065f2323b9565d4d4bf41de0998a8d962f03da008301d",
+      "bytes": 1585
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/INDEX_PROOF.json",
+      "sha256": "32199db9a748c6ab4fb2946a022d407221aa50467bcce3778dd2a2dfecceec19",
+      "bytes": 1381
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/INDEX6330_BINDINGS.json",
+      "sha256": "aed81ffbf529b57626d3da1db9843a9ace553e9f0db47289a4120be037f4a5d2",
+      "bytes": 1082706
+    }
+  ],
+  "personal_reads": [
+    "e9761e complete README/MAN schemas and archive index schema",
+    "a2a5f5 successful complete3chunk reconstruction and every11601 member stream+restore+live hash match",
+    "d6d770 staged6330 directGitblob proof"
+  ],
+  "recovery": "Initial796eb8 unavailable hashlib.file_digest stopped before archive/proof writes after only empty temporary directories. Incremental SHA retry efb77d completed a2a5f5. No successful proof attributed to failed probe.",
+  "retention_limits": [
+    "Archive retains complete durable D reviewworkspace6819 files and prebundle O/evidence4782 files including ignored logs. Output bundle intentionally excluded to avoid recursive archive.",
+    "Temporary research Q and generated SDK/bin/obj caches are excluded as explicitly stated in README; preserved durable audit/evidence are complete, no claim all temporary working state archived.",
+    "Archive restores exact relative file hierarchy and bytes. Absolute historical provenance paths remain historical; future verification may use manifest relative paths.",
+    "Git source/test/document state is staged normally, all6330 audited inputs exact except individually approved Doc2maintenance. This does not add Native/code review or change frozen audit accounting.",
+    "PRIVATE destination is Parent-verified. This reviewer performed no network write and makes no remote durability claim before Root commit/push/server readback.",
+    "No main changes, forcepush or deployment authorized or performed by this reviewer. Branch/main records show prior baseline before new backup commit."
+  ],
+  "restore_observation": "README chunk-concatenation and tar restoration performed independently in separate /private/tmp; all11601 files content-verified afterward. Safe unique normalized relative regular paths only, no symlink/hardlink/special member.",
+  "SDK_calls": 0,
+  "O_Git_STATE_Master_writes": 0,
+  "grade": null
+}

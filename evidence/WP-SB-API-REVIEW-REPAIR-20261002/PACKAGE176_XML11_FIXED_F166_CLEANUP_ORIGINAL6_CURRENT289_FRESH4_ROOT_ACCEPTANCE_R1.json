@@ -1,0 +1,63 @@
+{
+  "utc": "2026-10-05T10:21:32.397904+00:00",
+  "actor": "/root",
+  "status": "XML11_CURRENT_REPAIR_ACCEPTED_TWO_ORIGINAL_CLEANUP_FAILURES_REGISTERED",
+  "before": {
+    "known_unique": 165,
+    "accepted": 163
+  },
+  "after": {
+    "known_unique": 166,
+    "accepted": 165
+  },
+  "accepted_ids": [
+    "F-SB-API-001",
+    "F-SB-API-165"
+  ],
+  "new_original_id": "F-SB-API-166",
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package176-sql-rabbit-xml11-cleanup-original6-regressions-fresh4-independent-r1/REPORT.json",
+    "sha256": "ba034a16c6b7111ba575da2596510fa92bdc63ffa383866bf43eb2a15f0235cd",
+    "manifest_sha256": "393e7867f6614900c0365910531e0af9f36d1716c457ff9a960736fb31ead9e0",
+    "freeze_sha256": "fb45766104355c1b0319afd43790626e9f8b4798867f6c980a923ea56c750873"
+  },
+  "root_independent_verification": "Completed before this bookkeeping: all3167MAN, all3152 frozen/current origin bytes, all3010 physical source checksums,9actual log receipts, disjoint289 native cases,2runtime sets and4CRCZIP DLL/XML/PDB pairs. Root personally read all11 exact XML nodes and full two actual original failure contexts. No all3010 whole-source or all289 assertion-body claim.",
+  "actual_native": {
+    "total": 289,
+    "passed": 287,
+    "failed": 2,
+    "skipped": 0
+  },
+  "native_disjoint": [
+    {
+      "total": 6,
+      "passed": 4,
+      "failed": 2,
+      "skipped": 0
+    },
+    {
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "total": 263,
+      "passed": 263,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "strict_builds": 2,
+  "fresh_packages": 4,
+  "documentation_scope": "F001 same task-completion family:3 Rabbit Nack returns; F165 single SQLTouchpurpose family:6 methods8nodes. Runtime behavior unchanged.",
+  "original_finding_scope": "One family, two owning optional Error diagnostics in actual IChannel cleanup. Hostile close-error logger prevents SDK Dispose (first assertion line62 expected1actual0); hostile disposal-error logger escapes best-effort cleanup (first assertion84 expectednull actualuniqueApplicationException). Four healthy controls pass. Later assertions in the two failed branches remain unreached.",
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "final_23Unit_31Package_18Journey_4Consumers_pending": true,
+  "limits": [
+    "Actual SDK interface proxy offline cleanup path; no real broker qualification.",
+    "Full shared SQL263 unit suite is not fresh database/provider migration proof.",
+    "Native original errors remain open until current repaired native rerun and fresh artifact qualification."
+  ]
+}

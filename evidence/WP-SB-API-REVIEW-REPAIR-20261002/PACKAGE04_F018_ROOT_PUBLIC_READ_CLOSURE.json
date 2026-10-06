@@ -1,0 +1,192 @@
+{
+  "status": "ROOT_PERSONAL_FULL_BEFORE_OWNED_CONSUMER_AUTHORING",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Context/Consumption/ConsumeContextProxy.cs",
+      "sha256": "8597758ccda665fd6def683861bfdaf5cd0716da441be9c10cdc54d27f744bc7",
+      "bytes": 6684,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Context/Consumption/ConsumeContextScope.cs",
+      "sha256": "4c2bb79d4e6b198f14f481699a07bbd1b91a2d9e9c9ba3d0376552b221509541",
+      "bytes": 5228,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/IConsumePipeConfigurator.cs",
+      "sha256": "e15bdb9ded6a59de7ca79cbc42329bf3b2a44032b38d8604800cf8c59af7e8cc",
+      "bytes": 1364,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContext.cs",
+      "sha256": "8e6f1feedef6aa7cfcd27b97ed30283e01def8e8bf98100f358150cb929ff952",
+      "bytes": 2188,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/BasePipeContext.cs",
+      "sha256": "2303156020d82484c5e11820816eeea2ba27d0699ce51ba56a38fdf93cbfc586",
+      "bytes": 6831,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/FilterConfigurationExtensions.cs",
+      "sha256": "fd96119847fbebc00ad51023502222c8626bdae28a483d0e778d7a6c97a43a54",
+      "bytes": 6590,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/IReceiveEndpointConfigurator.cs",
+      "sha256": "ed6a88334c88732a3895d6dcde062b56431dce880110f9075f1638e596894c38",
+      "bytes": 3891,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Sagas/ISagaRepository.cs",
+      "sha256": "cae62b96489eddcd9be616fff289415c6c8ce45d7fb1e8a9cc062ced78804d1a",
+      "bytes": 1723,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Saga/SagaRepository.cs",
+      "sha256": "c05b3048530236fc86a686775a03076719fb007da9d7424e1f96342bb8c219b0",
+      "bytes": 9560,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/DependencyInjectionSagaRepository.cs",
+      "sha256": "e0dc9ee83ea0d7fdc213b8d887766e9424147cd57d95cbf3226b63b893491a21",
+      "bytes": 3819,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaPipeConfiguratorExtensions.cs",
+      "sha256": "034faacf372235d81a4bb9b70788c60b8fca86f9569f7ba51be797e9f573d02d",
+      "bytes": 1049,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs",
+      "sha256": "3c0fb87def3c20a1c16dc5449a444e5ab655a08ec36720c4ba7920a7d6c75c46",
+      "bytes": 14169,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/DependencyInjectionSagaRepositoryContextFactory.cs",
+      "sha256": "2c8ea57384de49afdf3e206242de456d117cc4dc967657ef1cd6ba4ffad7a94e",
+      "bytes": 9197,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/ISagaConfigurator.cs",
+      "sha256": "ba58a3f8f96622d8ab288a6ed53b560bd9ae8ca9d7743112918f69b45fc418c6",
+      "bytes": 1263,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/ISagaMessageConfigurator.cs",
+      "sha256": "98c362801c7aebb71135bc1ca2989451a04a297a8a5bdc49fffc9135eda5b9c1",
+      "bytes": 1146,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaConfigurator.cs",
+      "sha256": "4bb737acc62d46207b6f192c39b4fc8e8a63bbb9b36f9b7b9e2682661dfb4637",
+      "bytes": 4910,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InMemoryOutbox/OutboxConsumePipeSpecificationObserver.cs",
+      "sha256": "e8ce214465493f57191f4de419ef597dce40fb541abb1d380099a34c4f16eb52",
+      "bytes": 9904,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaConnector.SagaMessageSpecification.cs",
+      "sha256": "08a1fe2448ea011f8a67e3eb5cdbc1bacbd95fe98c3a1845e7e535144fea790f",
+      "bytes": 8824,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaSpecification.cs",
+      "sha256": "723cc2ba6290163b1bb4d87d70df43601cecadc59c598e313d3cd1e58e8bd217",
+      "bytes": 5185,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/Registration/Sagas/SagaRegistration.cs",
+      "sha256": "e8e76678219e34786fdce69c67df251baf17b7d2b86be4f0cb7352331d68e30e",
+      "bytes": 3942,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/SagaConfigurationObservable.cs",
+      "sha256": "6fd2e8fd720d7ef7ccad1935fd9f4fb56f2aabe80c2be20026affeec5a3e45be",
+      "bytes": 2169,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxConsumeFilter.cs",
+      "sha256": "fd7593ccb8020ab0639baa265a9d5b6877933325bce91668f4233c105360bfe4",
+      "bytes": 2296,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/ISagaConfigurationObserver.cs",
+      "sha256": "7ab5d29efcd7e48cba5b1eddfea204f53ddb5f8ee8c3a1eddeaeac3aa3f4e5a6",
+      "bytes": 1858,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Util/Connectable.cs",
+      "sha256": "0d52a1b09abceec67844e2bd88992188ce1749cac9a6e77dd47cc0e2487e7536",
+      "bytes": 5969,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "sha256": "69df491d234a51e9b8722e65ae90fafcaa72e3518b03d5d3cb2c796a33226d2d",
+      "bytes": 6104,
+      "read_by": "Root personally complete text shown in bounded sequential reads; truncated BasePipeContext/Filter initial output fully reread"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/ef-saga-f018-regression/package-consumer/OwnershipAssertions.cs",
+      "sha256": "2c86c35df3eea44d49908e82c8325ba8c9921947397f45b61c3ee04d86e4c988",
+      "bytes": 17595,
+      "read_by": "Root personal FULL owned bounded public oracle and imports"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/ef-saga-f018-regression/package-consumer/Program.cs",
+      "sha256": "7fa84ce937741215dc387fbbf6037e3b5568072c0eb2bccc02d39cc856492e08",
+      "bytes": 2911,
+      "read_by": "Root personal FULL owned bounded public oracle and imports"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/ef-saga-f018-regression/package-consumer/F018.PublicConsumer.csproj",
+      "sha256": "769b70d0fabeb7f431a8880a5db33da8a35d0b41a3e80c4e8a4d3d2e68afc01a",
+      "bytes": 979,
+      "read_by": "Root personal FULL owned bounded public oracle and imports"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/ef-saga-f018-regression/identity-gate-consumer/IdentityGateAssertions.cs",
+      "sha256": "cf3a59cddcbea9dbb5d4973ecb4b31973490b33b6a020ec0e14faa32054c6cc1",
+      "bytes": 20175,
+      "read_by": "Root personal FULL owned bounded public oracle and imports"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/ef-saga-f018-regression/identity-gate-consumer/Program.cs",
+      "sha256": "b98bbf5094705aa844ea77f4622c48b0d61ef752be31b0c804f533f056823ced",
+      "bytes": 2256,
+      "read_by": "Root personal FULL owned bounded public oracle and imports"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/ef-saga-f018-regression/identity-gate-consumer/F018.IdentityGateConsumer.csproj",
+      "sha256": "769b70d0fabeb7f431a8880a5db33da8a35d0b41a3e80c4e8a4d3d2e68afc01a",
+      "bytes": 979,
+      "read_by": "Root personal FULL owned bounded public oracle and imports"
+    }
+  ],
+  "limits": "Only bounded independent consumers and their actual public routes; 36-file canonical EF unit test owner NOT Root FULL, untouched, no full grade claimed."
+}

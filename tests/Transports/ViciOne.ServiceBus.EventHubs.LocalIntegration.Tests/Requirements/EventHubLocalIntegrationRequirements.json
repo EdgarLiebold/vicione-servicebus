@@ -1,83 +1,688 @@
 [
-  { "requirementId": "REQ-VSB-EVENTHUB-DEFERRED-PRODUCER", "variantKey": "resolution-and-delivery-gates-preserve-envelope-and-overrides", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubDeferredProducerTests", "testMethod": "DeferredResolution_PreservesEnvelopeAndAwaitsDeliveryAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-DEFERRED-PRODUCER", "variantKey": "failed-or-canceled-resolution-has-no-pipe-effects", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubDeferredProducerTests", "testMethod": "DeferredFailure_PropagatesWithoutSendEffectsAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP", "variantKey": "consumer-group-identity-distinguishes-valid-and-duplicate-endpoints", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubConfigurationOwnershipTests", "testMethod": "ConsumerGroups_AreIndependentAndDuplicatePairsPreventBuildAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP", "variantKey": "rejected-replacements-preserve-effective-clients-and-delivery", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubConfigurationOwnershipTests", "testMethod": "RejectedReplacement_PreservesEffectiveClientsAndDeliveryAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP", "variantKey": "invalid-input-does-not-consume-configuration-before-valid-delivery", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubConfigurationOwnershipTests", "testMethod": "InvalidConfiguration_CanBeCompletedBeforeFirstBuildAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0143", "variantKey": "ten-item-produce-preserves-shared-envelope-and-exact-cardinality", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerDeliveryTests", "testMethod": "BatchProduce_DeliversEveryItemOnceWithTheSharedEnvelopeAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0144", "variantKey": "hundred-item-single-partition-batch-preserves-cardinality-and-order", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests", "testMethod": "BatchConsumer_ReceivesExactlyOneHundredOrderedItemsFromOnePartitionKeyAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0145", "variantKey": "event-produced-before-dynamic-endpoint-connect-is-delivered-with-complete-envelope", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubEndpointAndBusBoundaryTests", "testMethod": "DynamicEndpoint_ReceivesTheExactEventProducedBeforeItWasConnectedAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0146", "variantKey": "faulted-first-event-does-not-stop-same-partition-and-fault-is-observed", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests", "testMethod": "ConsumerFault_IsObservedAndTheNextSamePartitionEventStillCompletesAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0147", "variantKey": "immediate-three-retry-budget-exposes-exact-attempt-and-count-sequences", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests", "testMethod": "ConsumerRetry_ExecutesOneOriginalAndThreeImmediateRetriesWithExactMetadataAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0148", "variantKey": "health-transitions-from-unhealthy-to-healthy-after-partition-ownership", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests", "testMethod": "RiderHealth_IsUnhealthyBeforeStartAndHealthyAfterAllDeclaredPartitionsInitializeAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0149", "variantKey": "checkpoint-is-written-only-after-long-running-consumer-confirms", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests", "testMethod": "Checkpoint_DoesNotAdvancePastAnInFlightEventAndAdvancesAfterConfirmationAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0150", "variantKey": "two-bound-riders-route-first-consume-through-second-provider-without-cross-talk", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubEndpointAndBusBoundaryTests", "testMethod": "TwoBoundRiders_ConsumeOnTheFirstAndProduceThroughTheSecondWithoutCrossTalkAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0151", "variantKey": "eventhub-inbox-outbox-carries-identifiers-through-bus-default-serializer-once", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubEndpointAndBusBoundaryTests", "testMethod": "RiderInboxOutbox_PublishesOnceThroughTheBusSerializerWithIncomingIdentifiersAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0152", "variantKey": "send-filter-sees-typed-and-untyped-eventhub-payloads-and-continues-delivery", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubEndpointAndBusBoundaryTests", "testMethod": "SendFilter_SeesBothEventHubPayloadShapesAndContinuesTheProviderPipelineAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0153", "variantKey": "saga-transition-produces-state-derived-event-with-correlation-as-initiator", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubSagaAndLifecycleTests", "testMethod": "SagaTransition_ProducesStateDerivedEventWithTheSagaCorrelationAsInitiatorAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0156", "variantKey": "raw-sdk-event-is-consumed-and-published-to-bus-with-eventhub-source-and-initiator", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubInteropAndContextTests", "testMethod": "RawSdkEvent_IsConsumedAndPublishesOntoTheBusWithTransportConversationMetadataAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0157", "variantKey": "raw-sdk-envelope-without-content-type-uses-default-receive-serializer", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubInteropAndContextTests", "testMethod": "RawSdkEnvelope_WithoutContentType_UsesDefaultReceiveSerializerAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0158", "variantKey": "consume-context-exposes-the-eventhub-provider-payload", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubInteropAndContextTests", "testMethod": "RiderDelivery_ExposesTheEventHubConsumeContextPayloadAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0159", "variantKey": "consumer-reclaims-all-partitions-after-stop-start-and-delivers-once", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubSagaAndLifecycleTests", "testMethod": "ConsumerRecycle_ReleasesAndReclaimsEveryPartitionBeforeDeliveringExactlyOnceAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0160", "variantKey": "fresh-producer-scope-after-recycle-delivers-after-the-pre-recycle-producer", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubSagaAndLifecycleTests", "testMethod": "ProducerRecycle_DeliversFromFreshScopesOnBothSidesOfTheRestartAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0154", "variantKey": "single-produce-round-trips-full-envelope-structured-header-and-addresses", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerDeliveryTests", "testMethod": "SingleProduce_RoundTripsTheCompleteEnvelopeAndStructuredHeaderAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0155", "variantKey": "bus-send-observer-sees-rider-pre-and-post-around-provider-send", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerDeliveryTests", "testMethod": "BusSendObserver_SeesRiderProduceBeforeAndAfterTheProviderSendAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0259", "variantKey": "provider-context-reports-partition-offset-sequence-key-enqueued-time-and-properties", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubInteropAndContextTests", "testMethod": "EventHubConsumeContext_ReportsProviderAssignedFieldsForTwoSamePartitionEventsAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0260", "variantKey": "partition-initialize-precedes-delivery-and-clean-close-follows-for-every-partition", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubSagaAndLifecycleTests", "testMethod": "PartitionCallbacks_BracketDeliveryForEveryPartitionAndReportCleanShutdownAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0263", "variantKey": "both-faulted-produce-arities-carry-exception-data-and-saga-initiator", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubSagaAndLifecycleTests", "testMethod": "FaultedSagaActivities_BothProduceExceptionDerivedEventsWithTheSagaInitiatorAsync" },
-  { "requirementId": "OBL-R0-CLOUD-0264", "variantKey": "custom-checkpoint-container-and-producer-options-reach-provider-clients", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests", "testMethod": "CustomContainerAndProducerOptions_AreAppliedToTheRealProviderClientsAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-CACHE", "variantKey": "single-flight-preserves-key-identity", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerCacheTests", "testMethod": "ConcurrentRequests_ShareOneProducerForTheSameAddressAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-CACHE", "variantKey": "faulted-creation-is-retryable", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerCacheTests", "testMethod": "FaultedProducerCreation_DoesNotPoisonTheAddressAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-CACHE", "variantKey": "cached-operations-refresh-usage-and-delegate", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerCacheTests", "testMethod": "CachedOperations_RefreshUsageAndDelegateTheExactPayloadAndCancellationAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION", "variantKey": "pending-failure-releases-capacity-and-faults-confirmation", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceiveAdmissionTests", "testMethod": "PendingFailure_ReleasesCapacityAndFaultsAnyPartialConfirmationAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION", "variantKey": "executor-rejection-releases-capacity-and-faults-confirmation", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceiveAdmissionTests", "testMethod": "ExecutorRejection_ReleasesCapacityAndFaultsThePendingConfirmationAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION", "variantKey": "canceled-enqueue-releases-capacity-and-cancels-confirmation", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceiveAdmissionTests", "testMethod": "CanceledEnqueue_ReleasesCapacityAndCancelsThePendingConfirmationAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION", "variantKey": "accepted-work-survives-stop-cancellation-and-releases-capacity", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceiveAdmissionTests", "testMethod": "AcceptedWork_SurvivesLaterStopCancellationAndReleasesCapacityAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION", "variantKey": "faulted-work-still-releases-receive-capacity", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceiveAdmissionTests", "testMethod": "FaultedWork_StillReleasesReceiveCapacityAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "empty-input-rejected-before-provider-use", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "EmptyInput_IsRejectedBeforeProviderUseAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "mixed-routes-preserved-in-input-order", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "MixedRoutes_ArePreservedInInputOrderAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "uniform-route-tags-only-its-own-partition-dimension", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "UniformRoute_TagsOnlyTheActualPartitionDimensionAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "mixed-routes-do-not-advertise-a-false-single-route", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "MixedRoutes_DoNotTagTheActivityWithTheFirstRouteAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "unrecorded-activity-does-not-gain-route-tags", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "UnrecordedActivity_DoesNotGainRouteTagsAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "size-rollover-preserves-cardinality-and-disposes-batches", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "SizeRollover_PreservesCardinalityAndDisposesEveryBatchAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "oversized-event-rejected-without-empty-send-or-batch-leak", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "OversizedEvent_IsRejectedWithoutSendingAnEmptyBatchOrLeakingTheBatchAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "late-invalid-context-preflight-prevents-partial-send", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "InvalidLaterContext_IsRejectedBeforeAnyProviderOperationAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "serializer-cannot-change-partition-route-during-body-read", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "BodyCallbackChangingPartitionRoute_RejectsBeforeCreatingAProviderBatchAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "cached-body-cannot-be-batched-through-a-changed-partition-route", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "CachedBodyChangingPartitionRoute_RejectsBeforeCreatingAProviderBatchAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "provider-failure-disposes-current-batch", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "ProviderFailure_DisposesTheCurrentBatchAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND", "variantKey": "every-context-cancellation-governs-shared-provider-operation", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests", "testMethod": "EveryContextCancellation_GovernsTheSharedProviderOperationAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-CHECKPOINT-STORAGE", "variantKey": "container-uri-is-complete-for-every-uri-authentication-mode", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubCheckpointStorageTests", "testMethod": "ContainerUri_IsTheCompleteContainerAddressForEveryAuthenticationMode" },
-  { "requirementId": "REQ-VSB-EVENTHUB-CHECKPOINT-STORAGE", "variantKey": "existing-container-skips-create-and-forwards-cancellation", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubCheckpointStorageTests", "testMethod": "ExistingContainer_SkipsCreationAndForwardsCancellationAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-CHECKPOINT-STORAGE", "variantKey": "missing-container-is-created-and-forwards-cancellation", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubCheckpointStorageTests", "testMethod": "MissingContainer_IsCreatedAndForwardsCancellationAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-CHECKPOINT-STORAGE", "variantKey": "create-failure-propagates-and-remains-retryable", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubCheckpointStorageTests", "testMethod": "ContainerCreationFailure_PropagatesToPreventCachingFalseSuccessAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-LOCAL-REQUIREMENT-PROJECTION", "variantKey": "compiled-metadata-matches-projection", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.Requirements.RequirementCoverageProjectionTests", "testMethod": "EventHubLocalRequirements_MatchCompiledRequirementMetadata" },
-  { "requirementId": "REQ-VSB-EVENTHUB-PROCESSOR-LEASE", "variantKey": "callbacks-detach-before-client-is-leased-again", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProcessorContextTests", "testMethod": "ReleaseClient_DetachesCallbacksBeforeTheClientIsLeasedAgainAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-PROCESSOR-LEASE", "variantKey": "null-builder-and-overlapping-lease-are-rejected", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProcessorContextTests", "testMethod": "GetClient_RejectsNullAndAnOverlappingLease" },
-  { "requirementId": "REQ-VSB-EVENTHUB-PROCESSOR-LEASE", "variantKey": "constructor-rejects-missing-required-dependencies", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProcessorContextTests", "testMethod": "Constructor_RejectsMissingRequiredDependencies" },
-  { "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-RESOLUTION", "variantKey": "public-boundaries-reject-missing-required-input", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerResolutionTests", "testMethod": "ProducerResolution_RejectsMissingRequiredInputAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-RESOLUTION", "variantKey": "entity-name-and-cancellation-forwarded-to-provider", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerResolutionTests", "testMethod": "ProviderExtension_ForwardsEntityAddressAndCancellationAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-RESOLUTION", "variantKey": "harness-scope-resolves-provider-and-forwards-input", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerResolutionTests", "testMethod": "HarnessExtension_ResolvesProviderFromScopeAndForwardsInputAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-PAYLOAD-ADMISSION", "variantKey": "single-observer-content-type-mutation-is-rejected", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubObserverAdmissionTests", "testMethod": "SingleProduce_RejectsObserverContentTypeMutationAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-PAYLOAD-ADMISSION", "variantKey": "each-batch-observer-content-type-mutation-is-rejected", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubObserverAdmissionTests", "testMethod": "BatchProduce_RejectsEitherObserverContentTypeMutationAsync" },
-  { "requirementId": "REQ-VSB-EVENTHUB-HEADERS", "variantKey": "missing-event-is-rejected-at-construction", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubHeaderProviderTests", "testMethod": "Constructor_RejectsMissingEventAtTheBoundary" },
-  { "requirementId": "REQ-VSB-EVENTHUB-HEADERS", "variantKey": "enumeration-preserves-identifiers-and-non-null-properties", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubHeaderProviderTests", "testMethod": "GetAll_ProjectsPresentIdentifiersAndApplicationValuesWithoutNulls" },
-  { "requirementId": "REQ-VSB-EVENTHUB-HEADERS", "variantKey": "blank-identifiers-are-absent-in-both-read-apis", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubHeaderProviderTests", "testMethod": "BlankIdentifiers_AreAbsentFromEnumerationAndLookup" },
-  { "requirementId": "REQ-VSB-EVENTHUB-HEADERS", "variantKey": "mapped-lookup-ignores-case-but-application-lookup-is-exact", "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests", "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubHeaderProviderTests", "testMethod": "TryGetHeader_UsesCaseInsensitiveIdentifiersAndExactApplicationKeys" }
-  ,{"requirementId":"REQ-VSB-EVENTHUB-RECEIVE-ADMISSION","variantKey":"individual-cancellation-preserves-neighbors-and-replacement","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.PendingConfirmationCancellationTests","testMethod":"IndividualCancellation_PreservesOtherPartitionsOffsetsAndReplacementAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-RECEIVE-ADMISSION","variantKey":"processor-cancellation-preserves-terminal-results-and-rejects-new-events","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.PendingConfirmationCancellationTests","testMethod":"ProcessorCancellation_CancelsEveryOpenConfirmationAndPreservesTerminalResultsAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-CHECKPOINT-BATCH","variantKey":"newest-checkpoint-falls-back-in-order-without-redundant-writes","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.BatchCheckpointBehaviorTests","testMethod":"CompletedBatch_CheckpointsNewestAcceptedOffsetWithoutRedundantWritesAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-CHECKPOINT-BATCH","variantKey":"exhausted-provider-fallback-preserves-worker-for-next-batch","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.BatchCheckpointBehaviorTests","testMethod":"FailedCheckpointBatch_AllowsTheNextBatchToPersistAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-CHECKPOINT-BATCH","variantKey":"canceled-full-queue-admission-never-updates-provider","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.BatchCheckpointBehaviorTests","testMethod":"FullQueue_CancelsOnlyWaitingAdmissionAndDrainsAcceptedEventsAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-PROCESSOR-CHECKPOINT","variantKey":"canceled-event-drains-without-checkpoint-and-preserves-other-partition","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.ProcessorCheckpointLifecycleTests","testMethod":"CanceledEvent_AllowsShutdownWithoutCheckpointAndPreservesOtherPartitionAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-PROCESSOR-CHECKPOINT","variantKey":"shutdown-awaits-in-flight-checkpoint-before-releasing-partition","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.ProcessorCheckpointLifecycleTests","testMethod":"Shutdown_WaitsForInFlightCheckpointBeforeCompletingAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-PRODUCER-OUTCOME","variantKey":"post-observer-failure-preserves-confirmed-single-and-batch-send","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests","testMethod":"PostObserverFailure_DoesNotRetryConfirmedMessagesOrReportSendFaultAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-PRODUCER-OUTCOME","variantKey":"fault-observer-cannot-mask-single-or-batch-provider-failure","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests","testMethod":"ProviderFailure_RemainsTheExactFailureWhenFaultObserverAlsoFailsAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-PRODUCER-OUTCOME","variantKey":"throwing-logger-preserves-single-and-batch-provider-outcome","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests","testMethod":"ThrowingLogger_CannotTurnConfirmedSendIntoFailureOrMaskProviderFailureAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-PRODUCER-OUTCOME","variantKey":"partial-batch-retry-omits-confirmed-message-and-faults-only-pending-context","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests","testMethod":"PartialBatchFailure_RetriesOnlyPendingMessageAndPreservesObserverOutcomesAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-PRODUCER-OUTCOME","variantKey":"confirmed-partial-batch-span-remains-successful-when-later-context-fails","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests","testMethod":"PartialBatchFailure_DoesNotMarkConfirmedMessageActivityAsFailedAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-BATCH-SEND","variantKey":"confirmed-earlier-route-or-size-batch-survives-later-provider-failure","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests","testMethod":"LaterProviderFailure_PreservesOnlyEarlierConfirmedContextAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-PRODUCER-OUTCOME","variantKey":"terminal-partial-batch-retry-preserves-confirmed-context-and-final-failure","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests","testMethod":"TerminalRetryFailure_KeepsConfirmedMessageOutOfSecondAttemptAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-PRODUCER-OUTCOME","variantKey":"partial-batch-retry-survives-post-fault-and-logger-secondary-failures","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests","testMethod":"PartialRetry_SecondaryObserverAndLoggerFailuresCannotReplayConfirmedMessageAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-BATCH-SEND","variantKey":"cleanup-failure-after-confirmed-batch-does-not-abort-later-batch","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests","testMethod":"DisposeFailure_AfterConfirmedBatch_DoesNotResendOrAbortPendingBatchAsync"}
-  ,{"requirementId":"REQ-VSB-EVENTHUB-BATCH-SEND","variantKey":"cleanup-failure-cannot-mask-provider-batch-failure","testAssembly":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests","testType":"ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests","testMethod":"DisposeFailure_AfterProviderFailure_PreservesPrimaryExceptionAsync"}
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-DEFERRED-PRODUCER",
+    "variantKey": "resolution-and-delivery-gates-preserve-envelope-and-overrides",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubDeferredProducerTests",
+    "testMethod": "DeferredResolution_PreservesEnvelopeAndAwaitsDeliveryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-DEFERRED-PRODUCER",
+    "variantKey": "failed-or-canceled-resolution-has-no-pipe-effects",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubDeferredProducerTests",
+    "testMethod": "DeferredFailure_PropagatesWithoutSendEffectsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP",
+    "variantKey": "consumer-group-identity-distinguishes-valid-and-duplicate-endpoints",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubConfigurationOwnershipTests",
+    "testMethod": "ConsumerGroups_AreIndependentAndDuplicatePairsPreventBuildAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP",
+    "variantKey": "rejected-replacements-preserve-effective-clients-and-delivery",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubConfigurationOwnershipTests",
+    "testMethod": "RejectedReplacement_PreservesEffectiveClientsAndDeliveryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP",
+    "variantKey": "invalid-input-does-not-consume-configuration-before-valid-delivery",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubConfigurationOwnershipTests",
+    "testMethod": "InvalidConfiguration_CanBeCompletedBeforeFirstBuildAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0143",
+    "variantKey": "ten-item-produce-preserves-shared-envelope-and-exact-cardinality",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerDeliveryTests",
+    "testMethod": "BatchProduce_DeliversEveryItemOnceWithTheSharedEnvelopeAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0144",
+    "variantKey": "hundred-item-single-partition-batch-preserves-cardinality-and-order",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests",
+    "testMethod": "BatchConsumer_ReceivesExactlyOneHundredOrderedItemsFromOnePartitionKeyAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0145",
+    "variantKey": "event-produced-before-dynamic-endpoint-connect-is-delivered-with-complete-envelope",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubEndpointAndBusBoundaryTests",
+    "testMethod": "DynamicEndpoint_ReceivesTheExactEventProducedBeforeItWasConnectedAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0146",
+    "variantKey": "faulted-first-event-does-not-stop-same-partition-and-fault-is-observed",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests",
+    "testMethod": "ConsumerFault_IsObservedAndTheNextSamePartitionEventStillCompletesAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0147",
+    "variantKey": "immediate-three-retry-budget-exposes-exact-attempt-and-count-sequences",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests",
+    "testMethod": "ConsumerRetry_ExecutesOneOriginalAndThreeImmediateRetriesWithExactMetadataAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0148",
+    "variantKey": "health-transitions-from-unhealthy-to-healthy-after-partition-ownership",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests",
+    "testMethod": "RiderHealth_IsUnhealthyBeforeStartAndHealthyAfterAllDeclaredPartitionsInitializeAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0149",
+    "variantKey": "checkpoint-is-written-only-after-long-running-consumer-confirms",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests",
+    "testMethod": "Checkpoint_DoesNotAdvancePastAnInFlightEventAndAdvancesAfterConfirmationAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0150",
+    "variantKey": "two-bound-riders-route-first-consume-through-second-provider-without-cross-talk",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubEndpointAndBusBoundaryTests",
+    "testMethod": "TwoBoundRiders_ConsumeOnTheFirstAndProduceThroughTheSecondWithoutCrossTalkAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0151",
+    "variantKey": "eventhub-inbox-outbox-carries-identifiers-through-bus-default-serializer-once",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubEndpointAndBusBoundaryTests",
+    "testMethod": "RiderInboxOutbox_PublishesOnceThroughTheBusSerializerWithIncomingIdentifiersAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0152",
+    "variantKey": "send-filter-sees-typed-and-untyped-eventhub-payloads-and-continues-delivery",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubEndpointAndBusBoundaryTests",
+    "testMethod": "SendFilter_SeesBothEventHubPayloadShapesAndContinuesTheProviderPipelineAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0153",
+    "variantKey": "saga-transition-produces-state-derived-event-with-correlation-as-initiator",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubSagaAndLifecycleTests",
+    "testMethod": "SagaTransition_ProducesStateDerivedEventWithTheSagaCorrelationAsInitiatorAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0156",
+    "variantKey": "raw-sdk-event-is-consumed-and-published-to-bus-with-eventhub-source-and-initiator",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubInteropAndContextTests",
+    "testMethod": "RawSdkEvent_IsConsumedAndPublishesOntoTheBusWithTransportConversationMetadataAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0157",
+    "variantKey": "raw-sdk-envelope-without-content-type-uses-default-receive-serializer",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubInteropAndContextTests",
+    "testMethod": "RawSdkEnvelope_WithoutContentType_UsesDefaultReceiveSerializerAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0158",
+    "variantKey": "consume-context-exposes-the-eventhub-provider-payload",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubInteropAndContextTests",
+    "testMethod": "RiderDelivery_ExposesTheEventHubConsumeContextPayloadAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0159",
+    "variantKey": "consumer-reclaims-all-partitions-after-stop-start-and-delivers-once",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubSagaAndLifecycleTests",
+    "testMethod": "ConsumerRecycle_ReleasesAndReclaimsEveryPartitionBeforeDeliveringExactlyOnceAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0160",
+    "variantKey": "fresh-producer-scope-after-recycle-delivers-after-the-pre-recycle-producer",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubSagaAndLifecycleTests",
+    "testMethod": "ProducerRecycle_DeliversFromFreshScopesOnBothSidesOfTheRestartAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0154",
+    "variantKey": "single-produce-round-trips-full-envelope-structured-header-and-addresses",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerDeliveryTests",
+    "testMethod": "SingleProduce_RoundTripsTheCompleteEnvelopeAndStructuredHeaderAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0155",
+    "variantKey": "bus-send-observer-sees-rider-pre-and-post-around-provider-send",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerDeliveryTests",
+    "testMethod": "BusSendObserver_SeesRiderProduceBeforeAndAfterTheProviderSendAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0259",
+    "variantKey": "provider-context-reports-partition-offset-sequence-key-enqueued-time-and-properties",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubInteropAndContextTests",
+    "testMethod": "EventHubConsumeContext_ReportsProviderAssignedFieldsForTwoSamePartitionEventsAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0260",
+    "variantKey": "partition-initialize-precedes-delivery-and-clean-close-follows-for-every-partition",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubSagaAndLifecycleTests",
+    "testMethod": "PartitionCallbacks_BracketDeliveryForEveryPartitionAndReportCleanShutdownAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0263",
+    "variantKey": "both-faulted-produce-arities-carry-exception-data-and-saga-initiator",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubSagaAndLifecycleTests",
+    "testMethod": "FaultedSagaActivities_BothProduceExceptionDerivedEventsWithTheSagaInitiatorAsync"
+  },
+  {
+    "requirementId": "OBL-R0-CLOUD-0264",
+    "variantKey": "custom-checkpoint-container-and-producer-options-reach-provider-clients",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubBatchAndReliabilityTests",
+    "testMethod": "CustomContainerAndProducerOptions_AreAppliedToTheRealProviderClientsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-CACHE",
+    "variantKey": "single-flight-preserves-key-identity",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerCacheTests",
+    "testMethod": "ConcurrentRequests_ShareOneProducerForTheSameAddressAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-CACHE",
+    "variantKey": "faulted-creation-is-retryable",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerCacheTests",
+    "testMethod": "FaultedProducerCreation_DoesNotPoisonTheAddressAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-CACHE",
+    "variantKey": "cached-operations-refresh-usage-and-delegate",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerCacheTests",
+    "testMethod": "CachedOperations_RefreshUsageAndDelegateTheExactPayloadAndCancellationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION",
+    "variantKey": "pending-failure-releases-capacity-and-faults-confirmation",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceiveAdmissionTests",
+    "testMethod": "PendingFailure_ReleasesCapacityAndFaultsAnyPartialConfirmationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION",
+    "variantKey": "executor-rejection-releases-capacity-and-faults-confirmation",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceiveAdmissionTests",
+    "testMethod": "ExecutorRejection_ReleasesCapacityAndFaultsThePendingConfirmationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION",
+    "variantKey": "canceled-enqueue-releases-capacity-and-cancels-confirmation",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceiveAdmissionTests",
+    "testMethod": "CanceledEnqueue_ReleasesCapacityAndCancelsThePendingConfirmationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION",
+    "variantKey": "accepted-work-survives-stop-cancellation-and-releases-capacity",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceiveAdmissionTests",
+    "testMethod": "AcceptedWork_SurvivesLaterStopCancellationAndReleasesCapacityAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION",
+    "variantKey": "faulted-work-still-releases-receive-capacity",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceiveAdmissionTests",
+    "testMethod": "FaultedWork_StillReleasesReceiveCapacityAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "empty-input-rejected-before-provider-use",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "EmptyInput_IsRejectedBeforeProviderUseAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "mixed-routes-preserved-in-input-order",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "MixedRoutes_ArePreservedInInputOrderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "uniform-route-tags-only-its-own-partition-dimension",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "UniformRoute_TagsOnlyTheActualPartitionDimensionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "mixed-routes-do-not-advertise-a-false-single-route",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "MixedRoutes_DoNotTagTheActivityWithTheFirstRouteAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "unrecorded-activity-does-not-gain-route-tags",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "UnrecordedActivity_DoesNotGainRouteTagsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "size-rollover-preserves-cardinality-and-disposes-batches",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "SizeRollover_PreservesCardinalityAndDisposesEveryBatchAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "oversized-event-rejected-without-empty-send-or-batch-leak",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "OversizedEvent_IsRejectedWithoutSendingAnEmptyBatchOrLeakingTheBatchAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "late-invalid-context-preflight-prevents-partial-send",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "InvalidLaterContext_IsRejectedBeforeAnyProviderOperationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "serializer-cannot-change-partition-route-during-body-read",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "BodyCallbackChangingPartitionRoute_RejectsBeforeCreatingAProviderBatchAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "cached-body-cannot-be-batched-through-a-changed-partition-route",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "CachedBodyChangingPartitionRoute_RejectsBeforeCreatingAProviderBatchAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "provider-failure-disposes-current-batch",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "ProviderFailure_DisposesTheCurrentBatchAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "every-context-cancellation-governs-shared-provider-operation",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "EveryContextCancellation_GovernsTheSharedProviderOperationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CHECKPOINT-STORAGE",
+    "variantKey": "container-uri-is-complete-for-every-uri-authentication-mode",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubCheckpointStorageTests",
+    "testMethod": "ContainerUri_IsTheCompleteContainerAddressForEveryAuthenticationMode"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CHECKPOINT-STORAGE",
+    "variantKey": "existing-container-skips-create-and-forwards-cancellation",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubCheckpointStorageTests",
+    "testMethod": "ExistingContainer_SkipsCreationAndForwardsCancellationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CHECKPOINT-STORAGE",
+    "variantKey": "missing-container-is-created-and-forwards-cancellation",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubCheckpointStorageTests",
+    "testMethod": "MissingContainer_IsCreatedAndForwardsCancellationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CHECKPOINT-STORAGE",
+    "variantKey": "create-failure-propagates-and-remains-retryable",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubCheckpointStorageTests",
+    "testMethod": "ContainerCreationFailure_PropagatesToPreventCachingFalseSuccessAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-LOCAL-REQUIREMENT-PROJECTION",
+    "variantKey": "compiled-metadata-matches-projection",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.Requirements.RequirementCoverageProjectionTests",
+    "testMethod": "EventHubLocalRequirements_MatchCompiledRequirementMetadata"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PROCESSOR-LEASE",
+    "variantKey": "callbacks-detach-before-client-is-leased-again",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProcessorContextTests",
+    "testMethod": "ReleaseClient_DetachesCallbacksBeforeTheClientIsLeasedAgainAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PROCESSOR-LEASE",
+    "variantKey": "null-builder-and-overlapping-lease-are-rejected",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProcessorContextTests",
+    "testMethod": "GetClient_RejectsNullAndAnOverlappingLease"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PROCESSOR-LEASE",
+    "variantKey": "constructor-rejects-missing-required-dependencies",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProcessorContextTests",
+    "testMethod": "Constructor_RejectsMissingRequiredDependencies"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-RESOLUTION",
+    "variantKey": "public-boundaries-reject-missing-required-input",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerResolutionTests",
+    "testMethod": "ProducerResolution_RejectsMissingRequiredInputAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-RESOLUTION",
+    "variantKey": "entity-name-and-cancellation-forwarded-to-provider",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerResolutionTests",
+    "testMethod": "ProviderExtension_ForwardsEntityAddressAndCancellationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-RESOLUTION",
+    "variantKey": "harness-scope-resolves-provider-and-forwards-input",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerResolutionTests",
+    "testMethod": "HarnessExtension_ResolvesProviderFromScopeAndForwardsInputAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PAYLOAD-ADMISSION",
+    "variantKey": "single-observer-content-type-mutation-is-rejected",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubObserverAdmissionTests",
+    "testMethod": "SingleProduce_RejectsObserverContentTypeMutationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PAYLOAD-ADMISSION",
+    "variantKey": "each-batch-observer-content-type-mutation-is-rejected",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubObserverAdmissionTests",
+    "testMethod": "BatchProduce_RejectsEitherObserverContentTypeMutationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-HEADERS",
+    "variantKey": "missing-event-is-rejected-at-construction",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubHeaderProviderTests",
+    "testMethod": "Constructor_RejectsMissingEventAtTheBoundary"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-HEADERS",
+    "variantKey": "enumeration-preserves-identifiers-and-non-null-properties",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubHeaderProviderTests",
+    "testMethod": "GetAll_ProjectsPresentIdentifiersAndApplicationValuesWithoutNulls"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-HEADERS",
+    "variantKey": "blank-identifiers-are-absent-in-both-read-apis",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubHeaderProviderTests",
+    "testMethod": "BlankIdentifiers_AreAbsentFromEnumerationAndLookup"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-HEADERS",
+    "variantKey": "mapped-lookup-ignores-case-but-application-lookup-is-exact",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubHeaderProviderTests",
+    "testMethod": "TryGetHeader_UsesCaseInsensitiveIdentifiersAndExactApplicationKeys"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION",
+    "variantKey": "individual-cancellation-preserves-neighbors-and-replacement",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.PendingConfirmationCancellationTests",
+    "testMethod": "IndividualCancellation_PreservesOtherPartitionsOffsetsAndReplacementAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION",
+    "variantKey": "processor-cancellation-preserves-terminal-results-and-rejects-new-events",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.PendingConfirmationCancellationTests",
+    "testMethod": "ProcessorCancellation_CancelsEveryOpenConfirmationAndPreservesTerminalResultsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CHECKPOINT-BATCH",
+    "variantKey": "newest-checkpoint-falls-back-in-order-without-redundant-writes",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.BatchCheckpointBehaviorTests",
+    "testMethod": "CompletedBatch_CheckpointsNewestAcceptedOffsetWithoutRedundantWritesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CHECKPOINT-BATCH",
+    "variantKey": "exhausted-provider-fallback-preserves-worker-for-next-batch",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.BatchCheckpointBehaviorTests",
+    "testMethod": "FailedCheckpointBatch_AllowsTheNextBatchToPersistAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CHECKPOINT-BATCH",
+    "variantKey": "canceled-full-queue-admission-never-updates-provider",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.BatchCheckpointBehaviorTests",
+    "testMethod": "FullQueue_CancelsOnlyWaitingAdmissionAndDrainsAcceptedEventsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PROCESSOR-CHECKPOINT",
+    "variantKey": "canceled-event-drains-without-checkpoint-and-preserves-other-partition",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.ProcessorCheckpointLifecycleTests",
+    "testMethod": "CanceledEvent_AllowsShutdownWithoutCheckpointAndPreservesOtherPartitionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PROCESSOR-CHECKPOINT",
+    "variantKey": "shutdown-awaits-in-flight-checkpoint-before-releasing-partition",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.ProcessorCheckpointLifecycleTests",
+    "testMethod": "Shutdown_WaitsForInFlightCheckpointBeforeCompletingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-OUTCOME",
+    "variantKey": "post-observer-failure-preserves-confirmed-single-and-batch-send",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests",
+    "testMethod": "PostObserverFailure_DoesNotRetryConfirmedMessagesOrReportSendFaultAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-OUTCOME",
+    "variantKey": "fault-observer-cannot-mask-single-or-batch-provider-failure",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests",
+    "testMethod": "ProviderFailure_RemainsTheExactFailureWhenFaultObserverAlsoFailsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-OUTCOME",
+    "variantKey": "throwing-logger-preserves-single-and-batch-provider-outcome",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests",
+    "testMethod": "ThrowingLogger_CannotTurnConfirmedSendIntoFailureOrMaskProviderFailureAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-OUTCOME",
+    "variantKey": "partial-batch-retry-omits-confirmed-message-and-faults-only-pending-context",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests",
+    "testMethod": "PartialBatchFailure_RetriesOnlyPendingMessageAndPreservesObserverOutcomesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-OUTCOME",
+    "variantKey": "confirmed-partial-batch-span-remains-successful-when-later-context-fails",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests",
+    "testMethod": "PartialBatchFailure_DoesNotMarkConfirmedMessageActivityAsFailedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "confirmed-earlier-route-or-size-batch-survives-later-provider-failure",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "LaterProviderFailure_PreservesOnlyEarlierConfirmedContextAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-OUTCOME",
+    "variantKey": "terminal-partial-batch-retry-preserves-confirmed-context-and-final-failure",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests",
+    "testMethod": "TerminalRetryFailure_KeepsConfirmedMessageOutOfSecondAttemptAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-OUTCOME",
+    "variantKey": "partial-batch-retry-survives-post-fault-and-logger-secondary-failures",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerOutcomeTests",
+    "testMethod": "PartialRetry_SecondaryObserverAndLoggerFailuresCannotReplayConfirmedMessageAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "cleanup-failure-after-confirmed-batch-does-not-abort-later-batch",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "DisposeFailure_AfterConfirmedBatch_DoesNotResendOrAbortPendingBatchAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-BATCH-SEND",
+    "variantKey": "cleanup-failure-cannot-mask-provider-batch-failure",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubProducerBatchSenderTests",
+    "testMethod": "DisposeFailure_AfterProviderFailure_PreservesPrimaryExceptionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP",
+    "variantKey": "checkpoint-probe-removes-uri-credentials-and-retains-sdk-endpoint",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubCheckpointProbeSecurityTests",
+    "testMethod": "SerializedProbe_RemovesCredentialsWithoutChangingSdkUri"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PROCESSOR-LEASE",
+    "variantKey": "application-close-outcome-preserves-awaited-internal-close",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubClosingRegressionTests",
+    "testMethod": "Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-DEFERRED-PRODUCER",
+    "variantKey": "pre-canceled-caller-completes-synchronously-across-eight-routes",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubDeferredCallerCancellationRegressionTests",
+    "testMethod": "PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-DEFERRED-PRODUCER",
+    "variantKey": "later-canceled-caller-completes-before-shared-resolution-across-eight-routes",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubDeferredCallerCancellationRegressionTests",
+    "testMethod": "LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-DEFERRED-PRODUCER",
+    "variantKey": "ready-and-pending-positive-eight-routes-await-provider-delivery",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubDeferredCallerCancellationRegressionTests",
+    "testMethod": "PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP",
+    "variantKey": "invalid-receive-policy-fails-ordinary-build-before-sdk-start",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceivePolicyRegressionTests",
+    "testMethod": "InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP",
+    "variantKey": "provider-validation-preserves-inherited-negative-transport-guards",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceivePolicyRegressionTests",
+    "testMethod": "InheritedTransportGuards_StillRejectTheirInvalidLimitsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP",
+    "variantKey": "positive-interval-accepts-native-whole-millisecond-timer-boundary",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceivePolicyRegressionTests",
+    "testMethod": "ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP",
+    "variantKey": "valid-selected-and-unselected-provider-build-without-sdk-activation",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceivePolicyRegressionTests",
+    "testMethod": "ValidConfiguration_BuildsWithOrWithoutOptionalEventHubSelectionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP",
+    "variantKey": "built-generation-preserves-all-nine-settings-after-retained-configurator-mutation",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceivePolicyRegressionTests",
+    "testMethod": "BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP",
+    "variantKey": "built-generation-keeps-original-options-before-and-after-callback-replacement",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.EventHubReceivePolicyRegressionTests",
+    "testMethod": "BuiltClientFactory_UsesOriginalOptionsForCompletedGenerationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PRODUCER-RETIREMENT",
+    "variantKey": "observer-release-failure-does-not-skip-adopted-agent-stop",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.ProducerObserverRetirementTests",
+    "testMethod": "ProducerDispose_ObserverFailureDoesNotSkipAdoptedAgentStopAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PARTITION-LIFECYCLE",
+    "variantKey": "initialization-info-does-not-replace-retained-partition-admission",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.PartitionOwningInfoDiagnosticsTests",
+    "testMethod": "PartitionInitialization_OptionalInfoDoesNotReplaceActualAdmissionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PARTITION-LIFECYCLE",
+    "variantKey": "closure-info-does-not-skip-partition-owner-token-retirement",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.PartitionOwningInfoDiagnosticsTests",
+    "testMethod": "PartitionClose_OptionalInfoDoesNotSkipOwnerTokenRetirementAsync"
+  },
+{
+  "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION",
+  "variantKey": "completed-receiver-owning-debug-does-not-replace-processor-pipeline-continuation",
+  "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+  "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.ConsumerCompletedOwningDiagnosticsTests",
+  "testMethod": "SendAsync_OptionalCompletedDebugDoesNotReplaceActualReceiverShutdownAsync"
+},
+{
+  "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION",
+  "variantKey": "factory-build-retires-returned-send-observer-registration-after-later-configuration-rejection",
+  "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+  "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.FactoryBuildObserverRetirementTests",
+  "testMethod": "Build_LaterConfigurationRejectionRetiresItsActuallyReturnedObserverRegistrationAsync"
+},
+{
+  "requirementId": "REQ-VSB-EVENTHUB-RECEIVE-ADMISSION",
+  "variantKey": "sdk-stop-failure-preserves-cause-and-retires-acquired-processor-lease",
+  "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+  "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.ReceiverStopLeaseRetirementTests",
+  "testMethod": "StopAsync_SdkStopOutcomePreservesCauseAndRetiresItsAcquiredLeaseAsync"
+}
 ]

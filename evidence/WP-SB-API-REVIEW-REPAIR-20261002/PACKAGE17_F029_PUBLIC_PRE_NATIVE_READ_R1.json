@@ -1,0 +1,56 @@
+{
+  "utc": "2026-10-03T06:41:12.977199+00:00",
+  "owner_files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Clock.cs",
+      "sha256": "ee75a2cc45a15337e5645ff94937c1de00112d9f9ec9eccec793a9f1ec684424",
+      "bytes": 5166,
+      "root_read": "PERSONAL_FULL_COMPLETE_CURRENT_BODY_BEFORE_NATIVE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/NuGet.Config",
+      "sha256": "f9c0fc2a5c7a0b52e9d2f5b774277674877fd2c3ded01e3f6bc5353d66a33163",
+      "bytes": 573,
+      "root_read": "PERSONAL_FULL_COMPLETE_CURRENT_BODY_BEFORE_NATIVE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Cases.cs",
+      "sha256": "8ee18f8ce5f637b32f4aaee365bf167f5f6881b27e8d277fcc1e9a5ea50d8366",
+      "bytes": 13965,
+      "root_read": "PERSONAL_FULL_COMPLETE_CURRENT_BODY_BEFORE_NATIVE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/RuntimeOwner.cs",
+      "sha256": "57771ccb482d5b89ed887b4fd174344f0e6ee62c2cf2fe979d75dbc2c161872d",
+      "bytes": 3871,
+      "root_read": "PERSONAL_FULL_COMPLETE_CURRENT_BODY_BEFORE_NATIVE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Probes.cs",
+      "sha256": "e94016ea1edae70020079e5f4e613d4b998aeb4472a5cb9db9b5d590e57b88f1",
+      "bytes": 3904,
+      "root_read": "PERSONAL_FULL_COMPLETE_CURRENT_BODY_BEFORE_NATIVE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/OwnedLifetime.cs",
+      "sha256": "a4f0106bdd3eb7d6060c9cd1c8ddb6d937e4a99c60403c67da85aef7bb0c3505",
+      "bytes": 1577,
+      "root_read": "PERSONAL_FULL_COMPLETE_CURRENT_BODY_BEFORE_NATIVE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/BatchClock.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961,
+      "root_read": "PERSONAL_FULL_COMPLETE_CURRENT_BODY_BEFORE_NATIVE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Program.cs",
+      "sha256": "a3ee91bdb446fe76f8b56ac0cce664b06a232bb319f5fbcf9ef6e7a87a464bed",
+      "bytes": 2322,
+      "root_read": "PERSONAL_FULL_COMPLETE_CURRENT_BODY_BEFORE_NATIVE"
+    }
+  ],
+  "cases": 26,
+  "only8authoredowner_bodies": "no ancestor Directory.Build/Packages/global/NuGet imports; isolated restorecache",
+  "previous": "same7authorbodies;NuGetsourcechangedselectedpreviousfeed"
+}

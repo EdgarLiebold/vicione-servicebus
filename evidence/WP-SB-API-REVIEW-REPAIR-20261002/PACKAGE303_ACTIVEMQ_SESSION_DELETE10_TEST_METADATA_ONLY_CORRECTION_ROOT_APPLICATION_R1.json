@@ -1,0 +1,48 @@
+{
+  "utc": "2026-10-06T01:57:43.441108+00:00",
+  "status": "ROOT_TEST_ONLY_ONE_ATTRIBUTE_AND_NEW_CATALOG_ROW_CORRECTED_ORIGINAL_NATIVE_PENDING",
+  "author_MAN": "6cd5a7b8e77dc7177393656e313256cd972b5845dce1d41117504d303d5da2e0",
+  "independent_MAN": "51f1b977ee713eae97d0dbc610033ce21a0ff7ee612102550f19c9569ea2dbbe",
+  "delta": {
+    "test": {
+      "path": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSessionDeleteDiagnosticsTests.cs",
+      "before_sha256": "adc0545959960bcd9282df05366f67b4f25b6ff6eafca6342583f3842e4f1790",
+      "after_sha256": "1d3b5a0e23ba394cf1404e474fd0ee0fbcc843eb6e8862f602f95ca4167196f3",
+      "before_lines": 300,
+      "after_lines": 299,
+      "only_removed_line": "    [RequirementCoverage(\"REQ-VSB-ACTIVEMQ-CANCELLATION\", \"session-delete-pre-cancel-and-queued-cancel-preserve-admission\")]\n",
+      "inverse_insert_returns_all_original300": true,
+      "all10cases_oracles_and_cleanup_unchanged": true
+    },
+    "requirements": {
+      "path": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/Requirements/ActiveMqRequirements.json",
+      "failed_before_sha256": "fed9f4a10a90833eee5c41608ed095d36531ce183a0b09c5f9c73062917b10e0",
+      "corrected_after_sha256": "31bf0285b751cbad8d292650d36cfafbd1727ce4ee4f372d6e60189627dbf144",
+      "original132_sha256": "2b686d5d21eca2d913d76de3630354e5d8a56b89f4b437fe1b8d27a6d10f6782",
+      "failed_before_rows": 134,
+      "corrected_after_rows": 133,
+      "original_prefix132_objects_exact": true,
+      "only_failed_proposal_cancellation_variant_removed": {
+        "requirementId": "REQ-VSB-ACTIVEMQ-CANCELLATION",
+        "variantKey": "session-delete-pre-cancel-and-queued-cancel-preserve-admission",
+        "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+        "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSessionDeleteDiagnosticsTests",
+        "testMethod": "SessionDelete_OwnDiagnosticPreservesNativeOutcomeAndCancellationAsync"
+      },
+      "single_lifecycle_addition": {
+        "requirementId": "REQ-VSB-ACTIVEMQ-LIFECYCLE",
+        "variantKey": "session-delete-own-debug-preserves-native-outcome",
+        "testAssembly": "ViciOne.ServiceBus.ActiveMq.Tests",
+        "testType": "ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport.ActiveMqSessionDeleteDiagnosticsTests",
+        "testMethod": "SessionDelete_OwnDiagnosticPreservesNativeOutcomeAndCancellationAsync"
+      },
+      "latest_merge_required": true
+    },
+    "guidance": "Actual passive metadata supports exactly single attributed requirement variant per method; all cancellation controls stay in same coherent public lifecycle Theory but no separate cancellation metadata credit."
+  },
+  "root_authority": "Entire originalTest3004573d2 +exactone removedlinee6fea1 recoversall299; actualAttributewholecf7110 +wholeauthorerratum1ffebf and wholeindPeer in thiscall. All10 behavior/assertion/cleanup unchanged; one coherent lifecycle tag mapsone catalogADD1. No productAttribute/API/test assertion changes.",
+  "mandatory_zero_native_erratum": "Root300-r1 actualCS0579 buildfailed log95b7d98126f9016e331ef6dc29a478ca4dfbcea2fb41286072087bfc7b0a35a2 countsZERO native. Author2fab/inderratum2c44 qualifythemissedseam; currentOriginalr2 will beactualfirst execution only after SDK.",
+  "native_cases": 0,
+  "grade": null,
+  "closed": false
+}

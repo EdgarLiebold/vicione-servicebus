@@ -30,6 +30,11 @@ internal sealed class ConsumeSendEndpoint :
         _inheritRequestTimeToLive = inheritRequestTimeToLive;
     }
 
+    internal ConsumeSendEndpoint WithEndpoint(ISendEndpoint endpoint)
+    {
+        return new ConsumeSendEndpoint(endpoint, _context, _requestId, _inheritRequestTimeToLive);
+    }
+
     /// <inheritdoc />
     public override Task SendAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class

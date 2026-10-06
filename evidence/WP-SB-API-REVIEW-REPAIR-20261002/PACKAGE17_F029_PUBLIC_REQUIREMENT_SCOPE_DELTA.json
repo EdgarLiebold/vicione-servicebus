@@ -1,0 +1,8 @@
+{
+  "case_renamed": "dedup-preserves-members-and-schedule",
+  "assertions_unchanged": true,
+  "limit": "Scheduling + final membership + actual3terminals/1batch afterStop proved; no isolated duplicate Last-retimestamp statement; negativeUTC beforeduplicateSend has no admissionwitness",
+  "historical_valid_run": "package17-f029-public-corrected-twentysix-r2:26PASS; archived9owners+actualAPP/PDB",
+  "root_name_delta_FULL_beforebuild": true,
+  "final": "currentnamewhole26 reruns required"
+}

@@ -1,0 +1,25 @@
+{
+  "status": "BOUNDED_F050_F053_SOURCE_ADVERSARIAL_NATIVE_AND_FRESH_PACK_REPAIR_ACCEPTED",
+  "created_utc": "2026-10-04T10:46:49.425172+00:00",
+  "findings": [
+    "F-SB-API-050",
+    "F-SB-API-051",
+    "F-SB-API-052",
+    "F-SB-API-053"
+  ],
+  "root_read_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package43-current-green-pe-pdb-independent-r1/REPORT.md",
+      "sha256": "91d72c4540e6103ffaab55a5ea9049098c6277961c57bb5c67e78bc8ff5c2957",
+      "bytes": 3898
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package43-fresh-packed-repairs-independent-r1/REPORT.md",
+      "sha256": "699421ca7c201a461692a0056e22f25e40a11cf761dd0d304b96ba8cbb2737e7",
+      "bytes": 2017
+    }
+  ],
+  "evidence": "Actual complete122 Batch and221 Core owner controls green, strict0W/E, deterministic historical RED for runtime defects,5 PE/PDB frames3107 document checksums,8 changed sources exact;3 fresh NuGet CRC/DLL/XML/embeddedPDB match current compiled frames. F051 exactTask forwarding; F053 corrected repository-dependent durability XML.",
+  "whole_api_review_closed": false,
+  "remaining": "Azure options snapshot; sibling JobService and BusDepot joins; ongoing per-member human review."
+}

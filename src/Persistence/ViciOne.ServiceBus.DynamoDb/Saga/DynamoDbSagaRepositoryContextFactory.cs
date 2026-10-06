@@ -31,15 +31,21 @@ internal sealed class DynamoDbSagaRepositoryContextFactory<TSaga>(
         var providerContext = _contextFactory.Create();
 
         var store = new DynamoDbSagaStore<TSaga>(providerContext, _options);
+        Exception? operationFailure = null;
         try
         {
             var repositoryContext = new DynamoDbSagaLoadContext<TSaga>(store, cancellationToken);
 
             return await asyncMethod(repositoryContext).ConfigureAwait(false);
         }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+            throw;
+        }
         finally
         {
-            store.Dispose();
+            ReleaseStore(store, operationFailure);
         }
     }
 
@@ -57,15 +63,35 @@ internal sealed class DynamoDbSagaRepositoryContextFactory<TSaga>(
         var providerContext = _contextFactory.Create();
 
         var store = new DynamoDbSagaStore<TSaga>(providerContext, _options);
+        Exception? operationFailure = null;
         try
         {
             var repositoryContext = new DynamoDbSagaRepositoryContext<TSaga, T>(store, context, _consumeContextFactory);
 
             await next.SendAsync(repositoryContext).ConfigureAwait(false);
         }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+            throw;
+        }
         finally
         {
+            ReleaseStore(store, operationFailure);
+        }
+    }
+
+    static void ReleaseStore(DynamoDbSagaStore<TSaga> store, Exception? operationFailure)
+    {
+        try
+        {
             store.Dispose();
+        }
+        catch (Exception cleanupFailure)
+        {
+            if (operationFailure is not null)
+                throw new AggregateException(operationFailure, cleanupFailure);
+            throw;
         }
     }
 

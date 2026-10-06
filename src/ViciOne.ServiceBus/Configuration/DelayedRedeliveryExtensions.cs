@@ -29,7 +29,7 @@ public static class DelayedRedeliveryExtensions
         configurator.AddPipeSpecification(retrySpecification);
     }
 
-    /// <summary>Use the message scheduler to schedule redelivery of a specific message type based upon the retry policy.</summary>
+    /// <summary>Configures delayed redelivery of the consumed message type using the supplied retry policy.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="retryPolicy">The retry policy.</param>
@@ -72,7 +72,7 @@ public static class DelayedRedeliveryExtensions
         var observer = new DelayedRedeliveryConfigurationObserver(configurator, configureRetry);
     }
 
-    /// <summary>Configure scheduled redelivery for the consumer, regardless of message type.</summary>
+    /// <summary>Configures delayed redelivery for messages handled by the consumer.</summary>
     /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="configure">The callback used to configure the component.</param>
@@ -86,7 +86,7 @@ public static class DelayedRedeliveryExtensions
         configurator.ConnectConsumerConfigurationObserver(observer);
     }
 
-    /// <summary>Configures the message retry for the handler, regardless of message type.</summary>
+    /// <summary>Configures delayed redelivery for the message type handled by this handler.</summary>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="configure">The callback used to configure the component.</param>

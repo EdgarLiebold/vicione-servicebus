@@ -52,6 +52,8 @@ jobs:
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore complete graph required by architecture evaluation
+        run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
       - name: Restore locked dependency graph
         run: dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
       - name: Build release test binaries

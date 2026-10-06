@@ -1,0 +1,393 @@
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs", "bytes": 11978, "sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad", "start_line": 121, "end_line": 240}
+    public abstract IRetryPolicy ReceiveTransportRetryPolicy { get; }
+    /// <summary>Gets the send transport retry policy.</summary>
+    public virtual IRetryPolicy SendTransportRetryPolicy => ReceiveTransportRetryPolicy;
+    /// <summary>Gets or sets the consumer stop timeout.</summary>
+    public TimeSpan? ConsumerStopTimeout { get; set; }
+    /// <summary>Gets or sets the stop timeout.</summary>
+    public TimeSpan? StopTimeout { get; set; }
+
+    MessageLimits? IMessageLimitsHostConfiguration.MessageLimits => Volatile.Read(ref _messageLimits);
+
+    void IMessageLimitsHostConfiguration.SetMessageLimits(MessageLimits limits)
+    {
+        ArgumentNullException.ThrowIfNull(limits);
+        MessageLimits? existing = Interlocked.CompareExchange(ref _messageLimits, limits, null);
+        if (existing is not null && existing != limits)
+            throw new ConfigurationException("Message limits for bus 'unknown': Limits is already assigned. Configure exactly one limits owner per bus.");
+    }
+
+    IPayloadAdmissionRuntime? IPayloadAdmissionHostConfiguration.PayloadAdmissionRuntime
+        => Volatile.Read(ref _payloadAdmissionRuntime);
+
+    void IPayloadAdmissionHostConfiguration.SetPayloadAdmissionRuntime(IPayloadAdmissionRuntime runtime)
+    {
+        if (runtime == null)
+            throw new ArgumentNullException(nameof(runtime));
+
+        IPayloadAdmissionRuntime? existing = Interlocked.CompareExchange(ref _payloadAdmissionRuntime, runtime, null);
+        if (existing != null && !ReferenceEquals(existing, runtime))
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Base Host", "unknown", "Payload admission is already configured for this bus owner.", "Correct the named configuration before starting the host"));
+
+    }
+
+    /// <summary>Creates receive endpoint configuration.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">The callback used to configure the component.</param>
+    /// <returns>The created receive endpoint configuration.</returns>
+    public abstract IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName, Action<IReceiveEndpointConfigurator>? configure);
+
+    /// <summary>Builds the configured component.</summary>
+    /// <returns>The configured component.</returns>
+    public abstract IHost Build();
+
+    /// <summary>Connects receive observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
+    public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
+    {
+        return _receiveObservers.Connect(observer);
+    }
+
+    /// <summary>Connects consume observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
+    public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer)
+    {
+        return _consumeObservers.Connect(observer);
+    }
+
+    /// <summary>Connects publish observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
+    public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
+    {
+        return _publishObservers.Connect(observer);
+    }
+
+    /// <summary>Connects send observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
+    public ConnectHandle ConnectSendObserver(ISendObserver observer)
+    {
+        return _sendObservers.Connect(observer);
+    }
+
+    /// <summary>Applies the receive-endpoint configuration.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configureEndpoint">The configure endpoint.</param>
+    public void ReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint)
+    {
+        ReceiveEndpoint(queueName, (TConfigurator configuration) => configureEndpoint(configuration));
+    }
+
+    /// <summary>Applies the receive-endpoint configuration.</summary>
+    /// <param name="definition">The definition.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
+    /// <param name="configureEndpoint">The configure endpoint.</param>
+    public void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IReceiveEndpointConfigurator>? configureEndpoint)
+    {
+        ReceiveEndpoint(definition, endpointNameFormatter, (TConfigurator configuration) => configureEndpoint?.Invoke(configuration));
+    }
+
+    /// <summary>Applies the receive-endpoint configuration.</summary>
+    /// <param name="definition">The definition.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter.</param>
+    /// <param name="configureEndpoint">The configure endpoint.</param>
+    public abstract void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<TConfigurator>? configureEndpoint = null);
+
+    /// <summary>Applies the receive-endpoint configuration.</summary>
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configureEndpoint">The configure endpoint.</param>
+    public abstract void ReceiveEndpoint(string queueName, Action<TConfigurator> configureEndpoint);
+
+    /// <summary>Applies endpoint definition.</summary>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="definition">The definition.</param>
+    protected void ApplyEndpointDefinition(IReceiveEndpointConfigurator configurator, IEndpointDefinition definition)
+    {
+        configurator.ConfigureConsumeTopology = definition.ConfigureConsumeTopology;
+
+        configurator.ConcurrentMessageLimit = definition.ConcurrentMessageLimit;
+
+        if (definition.PrefetchCount.HasValue)
+            configurator.PrefetchCount = definition.PrefetchCount.Value;
+        else if (definition.ConcurrentMessageLimit.HasValue)
+        {
+            var concurrentMessageLimit = definition.ConcurrentMessageLimit.Value;
+
+            var calculatedPrefetchCount = (long)concurrentMessageLimit * 12 / 10;
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs", "bytes": 11978, "sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad", "start_line": 241, "end_line": 265}
+
+            configurator.PrefetchCount = (int)Math.Clamp(calculatedPrefetchCount, int.MinValue, int.MaxValue);
+        }
+
+        definition.Configure(configurator);
+    }
+
+    /// <summary>Gets configured endpoints.</summary>
+    /// <returns>The configured endpoints.</returns>
+    protected IEnumerable<TConfiguration> GetConfiguredEndpoints()
+    {
+        IList<TConfiguration> endpoints = _endpoints;
+
+        _endpoints = new List<TConfiguration>();
+
+        return endpoints;
+    }
+
+    /// <summary>Adds the supplied value to the current collection.</summary>
+    /// <param name="configuration">The callback used to configure the component.</param>
+    protected void Add(TConfiguration configuration)
+    {
+        _endpoints.Add(configuration);
+    }
+}
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/EndpointConfiguration.cs", "bytes": 14872, "sha256": "9823652a8666e8f8cddb0fb43ad11cf69d5c62a2ab0e8b3c00a67f5c6a4ba5e6", "start_line": 1, "end_line": 120}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mime;
+using System.Text.Json;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>Stores and validates endpoint configuration.</summary>
+public class EndpointConfiguration :
+    IEndpointConfiguration
+{
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="topology">The topology.</param>
+    protected EndpointConfiguration(ITopologyConfiguration topology)
+    {
+        Topology = topology;
+
+        Consume = new ConsumePipeConfiguration(topology.Consume);
+        Send = new SendPipeConfiguration(topology.Send);
+        Publish = new PublishPipeConfiguration(topology.Publish);
+        Receive = new ReceivePipeConfiguration();
+
+        Serialization = new SerializationConfiguration();
+        Transport = new TransportConfiguration();
+    }
+
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="parentConfiguration">The parent configuration.</param>
+    /// <param name="topology">The topology.</param>
+    /// <param name="isBusEndpoint">The is bus endpoint.</param>
+    protected EndpointConfiguration(IEndpointConfiguration parentConfiguration, ITopologyConfiguration topology, bool isBusEndpoint)
+    {
+        Topology = topology;
+
+        Consume = new ConsumePipeConfiguration(parentConfiguration.Consume.Specification);
+        Send = new SendPipeConfiguration(parentConfiguration.Send.Specification);
+        Publish = new PublishPipeConfiguration(parentConfiguration.Publish.Specification);
+        Receive = new ReceivePipeConfiguration();
+
+        Serialization = parentConfiguration.Serialization.CreateSerializationConfiguration();
+
+        Transport = new TransportConfiguration(parentConfiguration.Transport);
+
+        IsBusEndpoint = parentConfiguration.IsBusEndpoint || isBusEndpoint;
+    }
+
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="endpointConfiguration">The endpoint configuration.</param>
+    protected EndpointConfiguration(IEndpointConfiguration endpointConfiguration)
+    {
+        Topology = endpointConfiguration.Topology;
+
+        Consume = endpointConfiguration.Consume;
+        Send = endpointConfiguration.Send;
+        Publish = endpointConfiguration.Publish;
+        Receive = endpointConfiguration.Receive;
+
+        Serialization = endpointConfiguration.Serialization;
+
+        Transport = endpointConfiguration.Transport;
+
+        IsBusEndpoint = endpointConfiguration.IsBusEndpoint;
+    }
+
+    /// <summary>Gets or sets the concurrent message limit.</summary>
+    public int? ConcurrentMessageLimit
+    {
+        get => Transport.ConcurrentMessageLimit;
+        set => Transport.Configurator.ConcurrentMessageLimit = value;
+    }
+
+    /// <summary>Gets or sets the prefetch count.</summary>
+    public int PrefetchCount
+    {
+        get => Transport.PrefetchCount;
+        set => Transport.Configurator.PrefetchCount = value;
+    }
+
+    /// <summary>Gets or sets the default content type.</summary>
+    public ContentType DefaultContentType
+    {
+        set => Serialization.DefaultContentType = value;
+    }
+
+    /// <summary>Gets or sets the serializer content type.</summary>
+    public ContentType SerializerContentType
+    {
+        set => Serialization.SerializerContentType = value;
+    }
+
+    /// <summary>Gets a value indicating whether bus endpoint.</summary>
+    public bool IsBusEndpoint { get; }
+
+    /// <summary>Gets or sets the auto start.</summary>
+    public bool AutoStart
+    {
+        set => Consume.Configurator.AutoStart = value;
+    }
+
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
+    public void AddPipeSpecification(IPipeSpecification<ConsumeContext> specification)
+    {
+        Consume.Configurator.AddPipeSpecification(specification);
+    }
+
+    /// <summary>Adds pipe specification to the configuration.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="specification">The specification.</param>
+    public void AddPipeSpecification<T>(IPipeSpecification<ConsumeContext<T>> specification)
+        where T : class
+    {
+        Consume.Configurator.AddPipeSpecification(specification);
+    }
+
+    /// <summary>Adds pre pipe specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
+    public void AddPrePipeSpecification(IPipeSpecification<ConsumeContext> specification)
+    {
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/EndpointConfiguration.cs", "bytes": 14872, "sha256": "9823652a8666e8f8cddb0fb43ad11cf69d5c62a2ab0e8b3c00a67f5c6a4ba5e6", "start_line": 121, "end_line": 240}
+        Consume.Configurator.AddPrePipeSpecification(specification);
+    }
+
+    /// <summary>Connects consumer configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
+    public ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer)
+    {
+        return Consume.Configurator.ConnectConsumerConfigurationObserver(observer);
+    }
+
+    void IConsumerConfigurationObserver.ConsumerConfigured<TConsumer>(IConsumerConfigurator<TConsumer> configurator)
+    {
+        Consume.Configurator.ConsumerConfigured(configurator);
+    }
+
+    void IConsumerConfigurationObserver.ConsumerMessageConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, TMessage> configurator)
+    {
+        Consume.Configurator.ConsumerMessageConfigured(configurator);
+    }
+
+    /// <summary>Connects saga configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
+    public ConnectHandle ConnectSagaConfigurationObserver(ISagaConfigurationObserver observer)
+    {
+        return Consume.Configurator.ConnectSagaConfigurationObserver(observer);
+    }
+
+    /// <summary>Reports that saga has been configured.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
+        where TSaga : class
+    {
+        Consume.Configurator.SagaConfigured(configurator);
+    }
+
+    /// <summary>Reports that state machine saga has been configured.</summary>
+    /// <typeparam name="TInstance">The instance type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="stateMachine">The state machine.</param>
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
+        where TInstance : class
+    {
+        Consume.Configurator.StateMachineSagaConfigured(configurator, stateMachine);
+    }
+
+    /// <summary>Reports that saga message has been configured.</summary>
+    /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
+        where TSaga : class
+        where TMessage : class
+    {
+        Consume.Configurator.SagaMessageConfigured(configurator);
+    }
+
+    /// <summary>Connects handler configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
+    public ConnectHandle ConnectHandlerConfigurationObserver(IHandlerConfigurationObserver observer)
+    {
+        return Consume.Configurator.ConnectHandlerConfigurationObserver(observer);
+    }
+
+    /// <summary>Reports that handler has been configured.</summary>
+    /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    public void HandlerConfigured<TMessage>(IHandlerConfigurator<TMessage> configurator)
+        where TMessage : class
+    {
+        Consume.Configurator.HandlerConfigured(configurator);
+    }
+
+    /// <summary>Connects activity configuration observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
+    public ConnectHandle ConnectActivityConfigurationObserver(IActivityConfigurationObserver observer)
+    {
+        return Consume.Configurator.ConnectActivityConfigurationObserver(observer);
+    }
+
+    /// <summary>Reports that activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    /// <param name="compensateAddress">The compensate address.</param>
+    public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator,
+        Uri compensateAddress)
+        where TActivity : class
+        where TArguments : class
+    {
+        Consume.Configurator.ActivityConfigured(configurator, compensateAddress);
+    }
+
+    /// <summary>Reports that execute activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TArguments">The arguments type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
+        where TActivity : class
+        where TArguments : class
+    {
+        Consume.Configurator.ExecuteActivityConfigured(configurator);
+    }
+
+    /// <summary>Reports that compensate activity has been configured.</summary>
+    /// <typeparam name="TActivity">The activity type.</typeparam>
+    /// <typeparam name="TLog">The log type.</typeparam>
+    /// <param name="configurator">The configurator to update.</param>
+    public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
+        where TActivity : class
+        where TLog : class
+    {
+        Consume.Configurator.CompensateActivityConfigured(configurator);
+    }
+
+    /// <summary>Configures publish.</summary>
+

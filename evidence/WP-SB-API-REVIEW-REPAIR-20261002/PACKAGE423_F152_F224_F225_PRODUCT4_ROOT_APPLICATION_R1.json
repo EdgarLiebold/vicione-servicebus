@@ -1,0 +1,68 @@
+{
+  "utc": "2026-10-06T11:03:35.056515+00:00",
+  "status": "PRODUCT4_APPLIED_FIXED11_AND_SHARED_REGRESSIONS_PUBLICATION_PENDING",
+  "proposal": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package420-public-original11-four-owners-root-product-proposed-r1/REPORT.json",
+    "sha256": "e17e0ee4b0b9081e459617a4246405770665f787881332aba1e247250053b661"
+  },
+  "different_product_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package420-product4-independent-source-peer-r1/REPORT.json",
+    "sha256": "efae60eb793e8bf4b29575f82b31fece14cc07fee0ebcbb0f3180eb97af05ad6"
+  },
+  "mandatory_read_precision": "8dfdcc1e1e4ce5745364a3a7f85a31a0406dd79432bd709955d0ccf71423c5d2",
+  "different_actual_original": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-original11-independent-native-qualification-r1/REPORT.json",
+    "sha256": "11d7b3deb8a554ec5a40d21d8c9d2a71c1b49c77045a55467863b85a2dca0df0"
+  },
+  "root_peer_read": "85a26f whole",
+  "changes": [
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs",
+      "before_sha256": "c3c7992a6614d283a8b694f1e75a047bec273bfbbde3605e2cdd9cba8f05217e",
+      "after_sha256": "b16a8873c80786616168406f25604b285ad128b57169e6dab8c60959054549ab",
+      "before_lines": 304,
+      "after_lines": 318,
+      "literal_inverse_full_bytes_equal": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Sagas/DependencyInjection/Registration/Sagas/SagaStateMachineRegistration.cs",
+      "before_sha256": "0c606225ad699a0fed02660768cf7479f0326af21aeec96df62e4bc88b88dd66",
+      "after_sha256": "9a87521cf6cb9a947a9f6668b1865bf9d291c38da38c00782f8986de311e1570",
+      "before_lines": 137,
+      "after_lines": 144,
+      "literal_inverse_full_bytes_equal": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Testing/Harnesses/BusTestHarness.cs",
+      "before_sha256": "e0cf4cba9052e58ab914384e6716b972d2cd0c66aac1a2112ee67379367033fb",
+      "after_sha256": "eaa5b74233e96183781c2f4e935883d4119f5fdcd18921d1edbe445441802565",
+      "before_lines": 653,
+      "after_lines": 675,
+      "literal_inverse_full_bytes_equal": true
+    },
+    {
+      "relative": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs",
+      "before_sha256": "907c4a4017f82daa9f843ab7ba5d990aaef9456b827f1dec2f66d1c2c2ad11fe",
+      "after_sha256": "9f446ca009eea0316734cee21dd6081791d880f535abfba1a7a7a46f8db38388",
+      "before_lines": 316,
+      "after_lines": 332,
+      "literal_inverse_full_bytes_equal": true
+    }
+  ],
+  "non_changed_selected_inputs": 265,
+  "tests_requirement_bytes_unchanged": true,
+  "findings": [
+    "F-SB-API-152",
+    "F-SB-API-224",
+    "F-SB-API-225"
+  ],
+  "API_acceptance_unchanged": true,
+  "scope_limits": [
+    "Bus shared failed-start primary+observer cleanup combination remains separately unqualified; no claimed repair.",
+    "Unexposed inactivity CTS disposal and arbitrary/concurrent custom task drainage remain unqualified.",
+    "EF consumer returned handle rollback only; no unreturned second resource or DB transaction promise."
+  ],
+  "native_credit": 0,
+  "grade": null,
+  "script_precision": "Earlier ba1c4d syntax error occurred before any execution/write; this attempt applies once."
+}

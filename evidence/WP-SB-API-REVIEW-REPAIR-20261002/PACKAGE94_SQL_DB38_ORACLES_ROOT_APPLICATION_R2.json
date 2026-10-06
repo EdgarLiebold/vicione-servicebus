@@ -1,0 +1,81 @@
+{
+  "utc": "2026-10-04T16:58:14.228996+00:00",
+  "status": "SOURCE_TEST_ORACLES_APPLIED_STRICT_NATIVE_ORIGINAL_PENDING",
+  "actual_cases": 38,
+  "records": [
+    {
+      "provider": "SqlServer",
+      "test_path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerDatabaseBoundaryContractTests.cs",
+      "test_sha256": "189b3684be94045efa22734a30b2fa8aa33f7d78748323fb9bd92ce9846136a3",
+      "req_before": "9ea7caabad235e58daff8dfa286e446e6b1cecc032292a088b19fdcfbbb6c3f0",
+      "req_after": "df41798b87a69de212bf2e9670aa15e6abe7f13939b6850b5c5fee77ba4d8d60",
+      "req_before_rows": 51,
+      "req_after_rows": 55,
+      "add_only": [
+        {
+          "requirementId": "REQ-VSB-SQLSERVER-UNICODE",
+          "variantKey": "legacy-collation-fetch-and-routing-preserve-unicode",
+          "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+          "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDatabaseBoundaryContractTests",
+          "testMethod": "UnicodeMetadata_SurvivesNormalPartitionedFetchAndRoutingAsync"
+        },
+        {
+          "requirementId": "REQ-VSB-SQLSERVER-FRACTIONAL-DELAY",
+          "variantKey": "send-and-unlock-do-not-deliver-before-requested-delay",
+          "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+          "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDatabaseBoundaryContractTests",
+          "testMethod": "Delay_PersistsAtLeastTheRequestedIntervalForSendAndUnlockAsync"
+        },
+        {
+          "requirementId": "REQ-VSB-SQLSERVER-SCHEMA-INDEXES",
+          "variantKey": "every-schema-owns-subscription-and-fetch-indexes",
+          "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+          "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDatabaseBoundaryContractTests",
+          "testMethod": "SecondSchema_OwnsItsCompleteIndexSetAndReapplicationIsIdempotentAsync"
+        },
+        {
+          "requirementId": "REQ-VSB-SQLSERVER-BIGINT-DELIVERY",
+          "variantKey": "send-and-delete-complete-for-bigint-delivery-identities",
+          "testAssembly": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+          "testType": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer.SqlServerDatabaseBoundaryContractTests",
+          "testMethod": "BigintDelivery_SendAndDeleteCompleteWithPersistedIdentitiesAsync"
+        }
+      ]
+    },
+    {
+      "provider": "PostgreSql",
+      "test_path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlDatabaseBoundaryContractTests.cs",
+      "test_sha256": "8e05a211f906d53c449bd72646874b16c7920b2af9db3340263e3444de2d97d8",
+      "req_before": "09c76b83310c125d47fe544698a7184338e9d447002d6fb5e966467a4b8bb6f6",
+      "req_after": "39d507c9b974311be9adbb83c9e0fe2646fbf7ed52d63d7045940e49641fe850",
+      "req_before_rows": 63,
+      "req_after_rows": 66,
+      "add_only": [
+        {
+          "requirementId": "REQ-VSB-POSTGRES-UTC-INSTANTS",
+          "variantKey": "session-timezone-does-not-change-topology-send-or-lock-instants",
+          "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+          "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDatabaseBoundaryContractTests",
+          "testMethod": "Timezone_PreservesRealInstantsForTopologySendFetchAndRenewAsync"
+        },
+        {
+          "requirementId": "REQ-VSB-POSTGRES-BIGINT-TOPOLOGY",
+          "variantKey": "create-and-touch-complete-for-bigint-topology-identities",
+          "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+          "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDatabaseBoundaryContractTests",
+          "testMethod": "BigintTopology_CreateAndTouchReturnOrPersistTheRealIdentityAsync"
+        },
+        {
+          "requirementId": "REQ-VSB-POSTGRES-QUEUE-METRICS",
+          "variantKey": "backlog-does-not-multiply-consume-error-and-deadletter-counts",
+          "testAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+          "testType": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql.PostgreSqlDatabaseBoundaryContractTests",
+          "testMethod": "QueueMetrics_RemainExactWhenPendingDeliveryCountChangesAsync"
+        }
+      ]
+    }
+  ],
+  "independent_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package79-sql-seven-db-oracles-independent-r2/REPORT.json",
+  "independent_report_sha256": "ad5ecbee5e9c0eb2944040960ecdb9a2b90ccb6fce7411544b5fae728a5c72ed",
+  "root_review": "MSSQLfirst235prior62dbb2 +tail277fd3/full7c3027;PGwholead045b;R2exactd5de8a;fixture76d3f4/6c58bb,projects b4fe87;actualviewaff280;Req74d9a3;REPORT8fae30. No original/nativefinding inference."
+}

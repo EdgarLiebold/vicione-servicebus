@@ -1,0 +1,61 @@
+{
+  "utc": "2026-10-03T06:51:45.523806+00:00",
+  "files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/packages.lock.json",
+      "bytes": 16204,
+      "sha256": "50eaf67fedf39dd38cf44f053bca25ff971497e96a26799389ac88933b66d325",
+      "root_read": "PERSONAL_FULL previous9wholeowner currentbyteBody exceptnameDelta2alreadyFULL;lockFULLbeforefirstsuccessfulbuild"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Clock.cs",
+      "bytes": 5174,
+      "sha256": "f55322447d24846c5f0a445cb00d04be2c7997aa7bb039207b8915103db3aafb",
+      "root_read": "PERSONAL_FULL previous9wholeowner currentbyteBody exceptnameDelta2alreadyFULL;lockFULLbeforefirstsuccessfulbuild"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/NuGet.Config",
+      "bytes": 573,
+      "sha256": "f9c0fc2a5c7a0b52e9d2f5b774277674877fd2c3ded01e3f6bc5353d66a33163",
+      "root_read": "PERSONAL_FULL previous9wholeowner currentbyteBody exceptnameDelta2alreadyFULL;lockFULLbeforefirstsuccessfulbuild"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Cases.cs",
+      "bytes": 13985,
+      "sha256": "37ce6a3e75bca3bbe60533e9c7b2ed45b80e2ca01bbb2470ea12133d1ddf34df",
+      "root_read": "PERSONAL_FULL previous9wholeowner currentbyteBody exceptnameDelta2alreadyFULL;lockFULLbeforefirstsuccessfulbuild"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/RuntimeOwner.cs",
+      "bytes": 4079,
+      "sha256": "d00b5eb15dfe49162cccbce86b0b2a22a19bcbe10a72437c72414cb26b85f411",
+      "root_read": "PERSONAL_FULL previous9wholeowner currentbyteBody exceptnameDelta2alreadyFULL;lockFULLbeforefirstsuccessfulbuild"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Probes.cs",
+      "bytes": 3981,
+      "sha256": "b51e103062426595e5a36974a9baa7e1c8cc37b1a2da28494d0398128eed525b",
+      "root_read": "PERSONAL_FULL previous9wholeowner currentbyteBody exceptnameDelta2alreadyFULL;lockFULLbeforefirstsuccessfulbuild"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/OwnedLifetime.cs",
+      "bytes": 1686,
+      "sha256": "55083a58e962ed522a68d845d42eaf2809439462b28c06115d2e9d0b8d60a624",
+      "root_read": "PERSONAL_FULL previous9wholeowner currentbyteBody exceptnameDelta2alreadyFULL;lockFULLbeforefirstsuccessfulbuild"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/BatchClock.PublicConsumer.csproj",
+      "bytes": 961,
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "root_read": "PERSONAL_FULL previous9wholeowner currentbyteBody exceptnameDelta2alreadyFULL;lockFULLbeforefirstsuccessfulbuild"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package17-f029/corrected/Program.cs",
+      "bytes": 2322,
+      "sha256": "a3ee91bdb446fe76f8b56ac0cce664b06a232bb319f5fbcf9ef6e7a87a464bed",
+      "root_read": "PERSONAL_FULL previous9wholeowner currentbyteBody exceptnameDelta2alreadyFULL;lockFULLbeforefirstsuccessfulbuild"
+    }
+  ],
+  "cases": 26,
+  "dedup": "onlymembership/schedules/terminalcounts;noisolatedretimestampclaim"
+}

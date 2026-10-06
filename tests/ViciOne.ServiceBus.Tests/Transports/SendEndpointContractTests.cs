@@ -16,6 +16,49 @@ public sealed class SendEndpointContractTests
     static readonly Guid ExistingConversation = Guid.Parse("a280dc85-c66a-4385-8e25-cb04f2234d51");
     static readonly ContentType SerializerContentType = new("application/json");
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SEND-ENDPOINT-DISPATCH", "batch-joins-started-send-before-type-mismatch")]
+    public async Task ExplicitTypeBatch_JoinsValidSendBeforeLaterTypeMismatchAsync()
+    {
+        await using var fixture = new Fixture();
+        var dispatch = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var firstFailure = new InvalidOperationException("first transport dispatch failed");
+        fixture.Transport.DispatchTask = dispatch.Task;
+        object[] messages = [fixture.Message, new object()];
+        Task? batch = null;
+        try
+        {
+            Exception? synchronous = Record.Exception(() =>
+            {
+                batch = fixture.Endpoint.SendBatchAsync(messages, typeof(DispatchMessage), TestContext.Current.CancellationToken);
+            });
+            Assert.Null(synchronous);
+            Assert.NotNull(batch);
+            Assert.True(fixture.Transport.SendEntered.Task.IsCompletedSuccessfully);
+            Assert.False(batch.IsCompleted);
+            Assert.Same(fixture.Message, Assert.Single(fixture.Calls).Message);
+
+            dispatch.SetException(firstFailure);
+            Exception? observed = await Record.ExceptionAsync(
+                () => batch.WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken));
+            Assert.True(batch.IsFaulted);
+            var failures = batch.Exception!.Flatten().InnerExceptions;
+            Assert.Equal(2, failures.Count);
+            Assert.Contains(failures, error => ReferenceEquals(firstFailure, error));
+            Assert.Equal("message", Assert.Single(failures.OfType<ArgumentException>()).ParamName);
+            Assert.Contains(failures, error => ReferenceEquals(observed, error));
+        }
+        finally
+        {
+            dispatch.TrySetResult();
+            await ObserveCompletionAsync(dispatch.Task);
+            if (fixture.Transport.LastProvidedSendTask is { } send)
+                await ObserveCompletionAsync(send);
+            if (batch is not null)
+                await ObserveCompletionAsync(batch);
+        }
+    }
+
     public static TheoryData<int> SendForms => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     public static IEnumerable<object[]> FormsAndOutcomes()

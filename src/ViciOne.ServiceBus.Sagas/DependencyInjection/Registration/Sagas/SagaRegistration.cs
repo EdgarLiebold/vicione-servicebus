@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
@@ -13,13 +14,14 @@ namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 /// </summary>
 /// <typeparam name="TSaga">The saga type.</typeparam>
 public class SagaRegistration<TSaga> :
-    ISagaRegistration
+    ISagaRegistration,
+    IEndpointSagaRegistration<TSaga>
     where TSaga : class, ISaga
 {
     readonly List<Action<IRegistrationContext, ISagaConfigurator<TSaga>>> _configureActions;
     readonly object _definitionLock = new();
     readonly IContainerSelector _selector;
-    volatile ISagaDefinition<TSaga>? _definition;
+    readonly ConditionalWeakTable<IServiceProvider, ISagaDefinition<TSaga>> _definitions = new();
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="selector">The selector.</param>
@@ -48,6 +50,18 @@ public class SagaRegistration<TSaga> :
     }
 
     void ISagaRegistration.Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
+        => Configure(configurator, context, null);
+
+    void IEndpointSagaRegistration<TSaga>.Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context,
+        Action<ISagaConfigurator<TSaga>> configure)
+    {
+        EndpointRegistrationConfiguration.RequireDefaultDispatch(this, typeof(ISagaRegistration),
+            typeof(SagaRegistration<TSaga>), context, "Saga configuration");
+        Configure(configurator, context, configure);
+    }
+
+    void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context,
+        Action<ISagaConfigurator<TSaga>>? configure)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(context);
@@ -66,6 +80,8 @@ public class SagaRegistration<TSaga> :
         foreach (Action<IRegistrationContext, ISagaConfigurator<TSaga>> action in _configureActions)
             action(context, sagaConfigurator);
 
+        configure?.Invoke(sagaConfigurator);
+
         LogContext.Info?.Log("Configured endpoint {Endpoint}, Saga: {SagaType}", configurator.InputAddress.GetEndpointName(),
             TypeCache<TSaga>.ShortName);
 
@@ -83,22 +99,19 @@ public class SagaRegistration<TSaga> :
     {
         ArgumentNullException.ThrowIfNull(provider);
 
-        if (_definition != null)
-            return _definition;
-
         lock (_definitionLock)
         {
-            if (_definition != null)
-                return _definition;
+            if (_definitions.TryGetValue(provider, out ISagaDefinition<TSaga>? definition))
+                return definition;
 
-            ISagaDefinition<TSaga> definition =
+            definition =
                 _selector.GetDefinition<ISagaDefinition<TSaga>>(provider) ?? new DefaultSagaDefinition<TSaga>();
 
             IEndpointDefinition<TSaga>? endpointDefinition = _selector.GetEndpointDefinition<TSaga>(provider);
             if (endpointDefinition != null)
                 definition.EndpointDefinition = endpointDefinition;
 
-            _definition = definition;
+            _definitions.Add(provider, definition);
             return definition;
         }
     }

@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-06T07:06:25.723365+00:00",
+  "status": "ROOT_REGISTERED_F216_ACTUAL_ORIGINAL4_MESSAGE_ID_OPTION_DEFECT_REPAIR_SOURCE_PEER_PENDING",
+  "finding": "F-SB-API-216",
+  "independent_actual_original_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package364-activity-original4-independent-qualification-r1/REPORT.json",
+    "sha256": "19ea059fe0d4c95fb2094bfeb3394d651e742b06a5f81d9b5c93c86bee0d482e"
+  },
+  "independent_actual_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package364-activity-original4-independent-qualification-r1/MANIFEST.json",
+    "sha256": "1e729a28b881256ac0997edcf57e5b3c9d9f696553b00b2cd868dedae54d74d5"
+  },
+  "actual_original_log": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package364-activity-redelivery-identity-original4-native-r1.log",
+    "sha256": "dd9bb5fdd7a6a470a734c1980c5080ec13a7e69e7b0b2e85f5a35d38a63c7b35"
+  },
+  "Root_SDK_JOIN": "d6e76c/session18319 exit2",
+  "Root_complete_raw_receipt": "fde54e",
+  "Root_entire_independent_report": "888287",
+  "actual_original": {
+    "total": 4,
+    "passed": 2,
+    "failed": 2,
+    "skipped": 0
+  },
+  "first_finite_cause": "Both execute/compensate true requests reach actual public redelivery/business/event/Stop controls then same MessageId failsNotEqual177. Later true lineage180/182 remains unreached; false counterparts fullypass.",
+  "original_producer_req_rows": 4668,
+  "current_req_rows": 4669,
+  "historical_producer_not_relabeled": true,
+  "new_unique_findings": 1,
+  "known_total": 216,
+  "bounded_closed": 215,
+  "master_sha256_unchanged": "3ee50d01ce24a95d741188c9fccae42811fe5f574ce55f5164673b5766ecbfe4",
+  "whole_API_closed": false,
+  "different_agent_each_Product_Test_change_required": true
+}

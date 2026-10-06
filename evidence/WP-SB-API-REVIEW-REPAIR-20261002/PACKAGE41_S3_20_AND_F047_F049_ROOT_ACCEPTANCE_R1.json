@@ -1,0 +1,46 @@
+{
+  "status": "ROOT_ACCEPTED_S3_20_DECLARED_ADAPTER_CONTRACTS_AND_F047_F049_SCOPED_DOC_REPAIRS",
+  "accepted_utc": "2026-10-04T10:11:56.634735+00:00",
+  "root_review": "Source/test whole owners and current authored deltas read; adversarial findings resolved. Root native canonical44 andprivate18 logs fully read; independent human source/semantic/assertion/byte qualification full report read and sourcebound accepted.",
+  "canonical_tests": 44,
+  "package_consumer_tests": 18,
+  "package_tests_not_added_to_canonical_count": true,
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-s3-final-native-independent-qualification-r1/REPORT.md",
+      "bytes": 2719,
+      "sha256": "4abb9b923ac15873d1508a4f2e36ab3d2707bf8b23d4ae37ee5924a7211b773a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-s3-final-native-independent-qualification-r1/MANIFEST.json",
+      "bytes": 819225,
+      "sha256": "1fb53e3f1005fded5f1f083ddffa283eb72ec90c4848acfb398cafa8d0532ee7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-s3-final-native-independent-qualification-r1/FROZEN_BINDING.json",
+      "bytes": 5757091,
+      "sha256": "f3dd2d95a9c256dd791dca399d4c341851cd42025e11f26d003f20255300bf56"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-s3-final-native-independent-qualification-r1/PRIVATE_BINDING.json",
+      "bytes": 2668066,
+      "sha256": "93e3fbaf97c2db193a06f5d8b39f1c03e9a90b615dc01789f7fc52285e2aee2f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-s3-final-native-independent-qualification-r1/CURRENT20_INDIVIDUAL_SEMANTIC_ACCEPTANCE.json",
+      "bytes": 478317,
+      "sha256": "9bc06e912a66176dae1a23560a1e9b6bef92ac89a691d02426a5124b81f8a3b3"
+    }
+  ],
+  "closed_repairs": [
+    "F-SB-API-047",
+    "F-SB-API-048",
+    "F-SB-API-049"
+  ],
+  "limits": [
+    "S3 immutable source epoch only; no real AWSintegration",
+    "No global APIA+ or whole18598 semanticclosure",
+    "Historical Corecurrent freshdocpack epoch beforeF051 edits; current4 repaired DocSources unchanged; 5 exact nodes verified separately",
+    "NewF050/F051/F052 pending"
+  ]
+}

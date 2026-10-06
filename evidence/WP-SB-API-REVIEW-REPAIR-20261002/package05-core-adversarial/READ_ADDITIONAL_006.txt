@@ -1,0 +1,370 @@
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs", "start_line": 121, "end_line": 202, "kind": "relevant_frozen_source"}
+        return collection;
+    }
+
+    /// <summary>Registers a typed bus whose persistent features share an identity that remains stable across type renames.</summary>
+    /// <typeparam name="TBus">The application-facing bus contract.</typeparam>
+    /// <param name="collection">The service collection that will own the bus.</param>
+    /// <param name="persistenceIdentity">The stable identity used to partition all durable state owned by the bus.</param>
+    /// <param name="configure">The callback that configures the typed bus registration.</param>
+    /// <returns>The same service collection.</returns>
+    public static IServiceCollection AddViciOneServiceBus<TBus>(
+        this IServiceCollection collection,
+        string persistenceIdentity,
+        Action<IBusRegistrationConfigurator<TBus>> configure)
+        where TBus : class, IBus
+    {
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(configure);
+        BusPersistenceIdentity<TBus> identity = BusPersistenceIdentity<TBus>.Create(persistenceIdentity);
+        return collection.AddViciOneServiceBus<TBus>(configurator =>
+        {
+            collection.RemoveAll<BusPersistenceIdentity<TBus>>();
+            collection.AddSingleton(identity);
+            configure(configurator);
+        });
+    }
+
+    static void AddInstrumentation(IServiceCollection collection)
+    {
+        // The provider isolated metric path resolves its meter factory from the container. Registering the
+        // standard metric core here is idempotent and does not replace a factory an application registered
+        // itself, so the core does not silently expect the application bootstrap to do it.
+        collection.AddMetrics();
+    }
+
+    static void AddHostedService<TBus>(IServiceCollection collection)
+        where TBus : class, IBus
+    {
+        BusCompositionRegistrations.AddBus<TBus>(collection);
+        collection.AddOptions();
+        collection.AddHealthChecks();
+        collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<HealthCheckServiceOptions>, ConfigureBusHealthCheckServiceOptions>());
+
+        collection.AddOptions<ViciOneServiceBusHostOptions>()
+            .ValidateOnStart();
+        collection.TryAddSingleton<IValidateOptions<ViciOneServiceBusHostOptions>, ValidateViciOneServiceBusHostOptions>();
+
+        Type validatorType = typeof(BusCompositionStartupValidator<>).MakeGenericType(typeof(TBus));
+        if (!collection.Any(descriptor => descriptor.ServiceType == typeof(IHostedService)
+                && descriptor.ImplementationType == validatorType))
+        {
+            int runtimeIndex = collection.ToList().FindIndex(descriptor => descriptor.ServiceType == typeof(IHostedService)
+                && descriptor.ImplementationType == typeof(ServiceBusHostedService));
+            var validator = ServiceDescriptor.Singleton(typeof(IHostedService), validatorType);
+            if (runtimeIndex < 0)
+                collection.Add(validator);
+            else
+                collection.Insert(runtimeIndex, validator);
+        }
+
+        collection.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, ServiceBusHostedService>());
+    }
+
+    class Callback<TBus> :
+        IBusInstanceBuilderCallback<TBus, IServiceCollection>
+        where TBus : class, IBus
+    {
+        readonly Action<IBusRegistrationConfigurator<TBus>> _configure;
+        readonly IServiceCollection _services;
+
+        public Callback(IServiceCollection services, Action<IBusRegistrationConfigurator<TBus>> configure)
+        {
+            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _configure = configure ?? throw new ArgumentNullException(nameof(configure));
+        }
+
+        public IServiceCollection GetResult<TBusInstance>()
+            where TBusInstance : BusInstance<TBus>, TBus
+        {
+            return _services.AddViciOneServiceBus<TBus, TBusInstance>(_configure);
+        }
+    }
+}
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollectorLifetime.cs", "start_line": 1, "end_line": 112, "kind": "relevant_frozen_source"}
+using System;
+using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Batching.Runtime;
+
+/// <summary>Coordinates collector admissions, terminal batch flushing, and executor shutdown.</summary>
+internal sealed class BatchCollectorLifetime
+{
+    readonly object _lock = new();
+    int _activeOperationCount;
+    TaskCompletionSource? _operationDrain;
+    Task? _disposeTask;
+
+    /// <summary>Creates the serialized collection executor and bounded batch dispatcher.</summary>
+    /// <param name="dispatcherConcurrencyLimit">The number of batches that may be delivered concurrently.</param>
+    public BatchCollectorLifetime(int dispatcherConcurrencyLimit)
+    {
+        Collector = new TaskExecutor();
+        Dispatcher = new TaskExecutor(dispatcherConcurrencyLimit);
+    }
+
+    /// <summary>Gets the executor that serializes changes to active batches.</summary>
+    public TaskExecutor Collector { get; }
+
+    /// <summary>Gets the executor that bounds concurrent batch delivery.</summary>
+    public TaskExecutor Dispatcher { get; }
+
+    /// <summary>Attempts to admit an operation before terminal disposal begins.</summary>
+    /// <returns><see langword="true" /> when the operation is owned by this lifetime.</returns>
+    public bool TryBeginOperation()
+    {
+        lock (_lock)
+        {
+            if (_disposeTask != null)
+                return false;
+
+            _activeOperationCount++;
+            return true;
+        }
+    }
+
+    /// <summary>Releases one admitted operation and signals a pending terminal drain when it was the last.</summary>
+    public void CompleteOperation()
+    {
+        TaskCompletionSource? operationDrain = null;
+        lock (_lock)
+        {
+            _activeOperationCount--;
+            if (_activeOperationCount == 0)
+                operationDrain = _operationDrain;
+        }
+
+        operationDrain?.TrySetResult();
+    }
+
+    /// <summary>Stops admissions, flushes every active batch, and drains both executors exactly once.</summary>
+    /// <param name="flushActiveBatches">The serialized operation that closes all active batches.</param>
+    /// <returns>A value task that completes after all admitted work and deliveries have terminated.</returns>
+    public ValueTask DisposeAsync(Func<Task> flushActiveBatches)
+    {
+        ArgumentNullException.ThrowIfNull(flushActiveBatches);
+
+        lock (_lock)
+        {
+            if (_disposeTask != null)
+                return new ValueTask(_disposeTask);
+
+            _operationDrain = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            if (_activeOperationCount == 0)
+                _operationDrain.TrySetResult();
+
+            _disposeTask = DisposeCoreAsync(_operationDrain.Task, flushActiveBatches);
+            return new ValueTask(_disposeTask);
+        }
+    }
+
+    async Task DisposeCoreAsync(Task operationDrain, Func<Task> flushActiveBatches)
+    {
+        await operationDrain.ConfigureAwait(false);
+
+        List<Exception>? failures = null;
+        await CaptureFailureAsync(
+            () => Collector.ExecuteAsync(flushActiveBatches),
+            exception => (failures ??= []).Add(exception)).ConfigureAwait(false);
+        await CaptureFailureAsync(
+            () => Dispatcher.DisposeAsync().AsTask(),
+            exception => (failures ??= []).Add(exception)).ConfigureAwait(false);
+        await CaptureFailureAsync(
+            () => Collector.DisposeAsync().AsTask(),
+            exception => (failures ??= []).Add(exception)).ConfigureAwait(false);
+
+        if (failures is { Count: 1 })
+            ExceptionDispatchInfo.Capture(failures[0]).Throw();
+        if (failures is { Count: > 1 })
+            throw new AggregateException("Batch collector disposal encountered multiple failures.", failures);
+    }
+
+    static async Task CaptureFailureAsync(Func<Task> operation, Action<Exception> capture)
+    {
+        try
+        {
+            await operation().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            capture(exception);
+        }
+    }
+}
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs", "start_line": 1, "end_line": 48, "kind": "relevant_frozen_source"}
+using System;
+
+namespace ViciOne.ServiceBus.Advanced;
+
+/// <summary>
+/// Provides one context-scoped source of time for message-pipeline decisions. A context without an
+/// explicit provider uses <see cref="TimeProvider.System" />.
+/// </summary>
+public static class PipeContextTimeProviderExtensions
+{
+    /// <summary>Returns the provider attached to the context, or the system provider when none was attached.</summary>
+    /// <param name="context">The pipe context.</param>
+    /// <returns>The context-specific or system time provider.</returns>
+    public static TimeProvider GetTimeProvider(this PipeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        return context.TryGetPayload<TimeProvider>(out TimeProvider? timeProvider)
+            ? timeProvider
+            : TimeProvider.System;
+    }
+
+    /// <summary>
+    /// Returns the current UTC time from the provider attached to the context.
+    /// </summary>
+    /// <param name="context">The pipe context.</param>
+    /// <returns>The provider's current UTC time.</returns>
+    public static DateTimeOffset GetUtcNow(this PipeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        return context.GetTimeProvider().GetUtcNow();
+    }
+
+    /// <summary>
+    /// Sets the provider used by subsequent time-dependent decisions on this context, keeping all
+    /// context timing behind the standard .NET time abstraction.
+    /// </summary>
+    /// <param name="context">The pipe context.</param>
+    /// <param name="timeProvider">The time provider to attach.</param>
+    public static void SetTimeProvider(this PipeContext context, TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
+        context.AddOrUpdatePayload<TimeProvider>(() => timeProvider, _ => timeProvider);
+    }
+}
+
+READ {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json", "start_line": 1, "end_line": 120, "kind": "proof"}
+{
+  "status": "ALL_SEVENTEEN_MUTANTS_KILLED_AND_FORTYTWO_ROLLBACK_CASES_GREEN",
+  "oracle_hashes": {
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/packages.lock.json": "67b4ca31e0cd16ce001ed3a42122dfbfc76131e717a0ffc6cd4518216eb648d4",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/NuGet.Config": "eee60fab9218839e3754d13bae2fc98e755e6dd45a7711015f64de9fca80d3ac",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/BatchTimerAssertions.cs": "dc72e10b31f3ee1ecd5ae8b6a746d3185a3453fe876988588ca39899dfc98baa",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/HostTimeoutAssertions.cs": "10ab3e81f227587b50486e9052021c85638502e3b9fb03b17ebb7046483c6358",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/CorePackage05.PublicConsumer.csproj": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/OwnedLifetime.cs": "cd94fc8c143a9ce057002fda15e29ac76c684f2845dc264ad0dfe3a031a0ae6b",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/ResultsAssertions.cs": "9a75db2b72535847674eaa3314c59041ff8b71c0900bbea7a9a021cb8fa2e1f1",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/Program.cs": "dddba44e9f9e1376c612093ffe7f14ecc1b68875173b0fa49c30dd1e5a729df8",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/CorePackage05.PublicConsumer.dll": "f548e7504ca94d9df14f79d0ede18beaf199178ca8273acb3e19b171f993adc6"
+  },
+  "controls": [
+    {
+      "receipt": {
+        "phase": "package05-mut-r2-corrected-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/CorePackage05.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T01:26:00.612875+00:00",
+        "completed_utc": "2026-10-03T01:26:01.554129+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-corrected-all.log",
+        "log_sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1"
+      },
+      "actual": {
+        "cases": [
+          {
+            "case": "results-membership-plain",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-null-plain",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-membership-inner",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-null-inner",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-empty",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-maxvalue",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-zero",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-infinite",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-maxvalue",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-zero",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-infinite",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-fraction",
+            "assertions_passed": true
+

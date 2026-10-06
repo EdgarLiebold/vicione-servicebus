@@ -1,0 +1,83 @@
+{
+  "utc": "2026-10-05T13:58:37.348908+00:00",
+  "status": "BOUNDED_DECLARATION_AND_LOCAL_SOURCE_CONTRACTS_ACCEPTED",
+  "author_report_sha256": "834253078174ff2eade19341acafac13ab46a44f3f5928348b7160b084e9e233",
+  "independent_peer_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package215-azure518-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "78b210b0ec198c63527020254843ad9000edf716edc163d58f7de9af34edfd19"
+  },
+  "composed_norms": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package215-azure518-two-norm-precision-overlay-r1/PER_ID518_WITH_TWO_PRECISE_NORMS.json",
+    "sha256": "787f22e2f1910ca076561c46cc079dcf1769576fa60a98f509d2ad11ffa67cdf"
+  },
+  "root_actual_binding_check": "92cc7e",
+  "root_physical_checks": {
+    "current_sources": 109,
+    "PDB_documents": 223,
+    "selected_XML_nodes": 507,
+    "generated_XML_NA": 11
+  },
+  "semantic_review_authority": "Two separately documented whole109/current518 reviews; Root scopes and verifies physical evidence and exact-two correction. Root personally read norms0..44; no Root whole518 claim.",
+  "accepted_source_members": 509,
+  "held_contracts": [
+    {
+      "ordinal": 3,
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusBusConfiguration.CreateEndpointConfiguration(System.Boolean)",
+      "reason": "Child topology constructor retains parent Message/Send/Publish references and creates new Consume topology; isolated complete-copy promise is false. Source behavior and declaration facts remain documented, exact XML candidate needs parent decision."
+    },
+    {
+      "ordinal": 15,
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration.CreateEndpointConfiguration(System.Boolean)",
+      "reason": "Child topology constructor retains parent Message/Send/Publish references and creates new Consume topology; isolated complete-copy promise is false. Source behavior and declaration facts remain documented, exact XML candidate needs parent decision."
+    },
+    {
+      "ordinal": 17,
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+      "reason": "Actual Build registers transports/topology filter before inherited Build; concrete factory readiness/agent lifetime/failed-build ownership remains separate workflow obligation, not proven by the model/declaration packet."
+    },
+    {
+      "ordinal": 18,
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.CreateReceiveEndpointContext",
+      "reason": "Concrete context creation uses actual builder/deferred client-supervisor acquisition; no native actual start/stop/lifecycle closure from this packet."
+    },
+    {
+      "ordinal": 116,
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Topology.BrokerTopologyBuilder.BuildBrokerTopology",
+      "reason": "ToArray creates fresh arrays but each getter returns the stored caller-mutable array and original entity references; immutable snapshot/view promise is too broad. No remote topology/lifetime defect inferred."
+    },
+    {
+      "ordinal": 197,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceBusReceiveEndpointBuilder.CreateReceiveEndpointContext",
+      "reason": "Concrete queue context creation/deferred provider supervision has independent lifecycle/error ownership obligations; no native workflow claim here."
+    },
+    {
+      "ordinal": 199,
+      "id": "M:ViciOne.ServiceBus.Configuration.ServiceBusSubscriptionEndpointBuilder.CreateReceiveEndpointContext",
+      "reason": "Concrete subscription context creation/deferred provider supervision has independent lifecycle/error ownership obligations; no native workflow claim here."
+    },
+    {
+      "ordinal": 418,
+      "id": "T:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration",
+      "reason": "Child topology constructor retains parent Message/Send/Publish references and creates new Consume topology; isolated complete-copy promise is false. Source behavior and declaration facts remain documented, exact XML candidate needs parent decision."
+    },
+    {
+      "ordinal": 494,
+      "id": "T:ViciOne.ServiceBus.AzureServiceBus.Topology.ServiceBusBrokerTopology",
+      "reason": "ToArray creates fresh arrays but each getter returns the stored caller-mutable array and original entity references; immutable snapshot/view promise is too broad. No remote topology/lifetime defect inferred."
+    }
+  ],
+  "before": {
+    "raw": 9614,
+    "original": 8752,
+    "remaining": 9817
+  },
+  "after": {
+    "raw": 10123,
+    "original": 9261,
+    "remaining": 9308
+  },
+  "native_count": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": "Selected declaration/local-source facts only; nine held workflows/XML promises and all external runtime obligations retained. Historical metadata and selected148 source binding are not fresh whole-runtime186 evidence."
+}

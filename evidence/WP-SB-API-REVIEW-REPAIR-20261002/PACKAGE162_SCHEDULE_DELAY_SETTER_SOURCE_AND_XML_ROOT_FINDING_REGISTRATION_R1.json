@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-05T01:31:17.553367+00:00",
+  "actor": "/root",
+  "status": "CONFIRMED_LOW_XML_DOCUMENTATION_DEFECT",
+  "confirmed_before": 140,
+  "confirmed_after": 141,
+  "accepted_current": 138,
+  "source_sha256": "dc64bafe80ce874a038323f8f1928e63d7cf7a38a04315073ec3e6097551f22c",
+  "root_whole_source_read": "e307b2 whole39 actual setter only",
+  "actual_published": {
+    "pack": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package161-scope-fixed19-output-fixed14-dictionary-original25-neighbors-fresh2-independent-r1/packages/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+    "sha256": "98128dc9f1656484481511ec7029eecce237f36ebd904121952f022c1968f05d",
+    "XML_SHA": "22e3987d347f2917266b1cf8306efaa4a35713742c2d65a9a44e7e278a52808e",
+    "node_id": "P:ViciOne.ServiceBus.Configuration.StateMachineScheduleConfigurator`2.Delay",
+    "summary": "Gets or sets the delay.",
+    "ZIP_CRC_valid": true
+  },
+  "causal_norm": "Delay has only a setter which installs a provider returning captured TimeSpan; no getter exists. Published summary falsely promises a getter.",
+  "source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package163-schedule-delay-setter-xml1-independent-scanner-r1/REPORT.json",
+    "sha256": "91841b87d46a518fca9a6eca0ba8e1d6314875759e432f739897b0e97a34c614"
+  },
+  "limits": [
+    "No executable or API change in proposed correction; no mirror test required.",
+    "Fresh corrected XML/PDB qualification required after163application."
+  ]
+}

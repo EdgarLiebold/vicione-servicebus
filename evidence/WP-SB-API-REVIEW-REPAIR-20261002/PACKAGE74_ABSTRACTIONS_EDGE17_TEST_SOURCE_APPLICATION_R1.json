@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-04T14:51:53.376676+00:00",
+  "decision": "ROOT_INDEPENDENT_ADVERSARIAL_SOURCE_NO_BLOCK_ORIGINAL17_NATIVE_PENDING",
+  "source": {
+    "path": "tests/ViciOne.ServiceBus.Abstractions.Tests/AbstractionEdgeContractTests.cs",
+    "sha256": "95c900bc44e9b2909c9459d30a4c882d2ea144e09c11c29a6c35cc8750bdb23e"
+  },
+  "requirements": {
+    "path": "tests/ViciOne.ServiceBus.Abstractions.Tests/Requirements/AbstractionsRequirements.json",
+    "before": "effc63abfbf6d66a4cde59f53730e702d065a7666e6237b05343b81d9bc7f422",
+    "after": "c28038b7f50ffa16c37d5ea83f44019710188157861b817b5d009010ebe60df0",
+    "rows_before": 663,
+    "rows_after": 669,
+    "exact_add": 6,
+    "remove": 0
+  },
+  "root_source_review": "Whole196test cd558c; wholefactory+HostInfo and boundedNewIdTimestamp6de63f; actualHostCachewhole993551; Base32Formatter+Intrinsics actualwhole79bbd4; collection isolated/global cache alwaysrestored; golden bitindices and byvalueSetter contract positiveboxed/interface/reference/getter shapes meaningful.",
+  "limits": "No original/native/confirmedfinding claim. ActualAVX2-conditioned case can skip; no skippedbranch proof. TZ clamping must be exercised in independent process environments, not changing test-globalTZ."
+}

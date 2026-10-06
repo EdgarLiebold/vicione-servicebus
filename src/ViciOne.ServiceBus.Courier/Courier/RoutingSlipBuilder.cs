@@ -331,7 +331,7 @@ public sealed class RoutingSlipBuilder :
     }
 
     /// <summary>Builds the routing slip using the current state of the builder.</summary>
-    /// <returns>An immutable snapshot of the routing slip.</returns>
+    /// <returns>A routing-slip snapshot with copied, read-only collection containers; referenced values are retained.</returns>
     public IRoutingSlip Build()
     {
         return new RoutingSlipRoutingSlip(TrackingNumber, _createTimestamp, _itinerary, _activityLogs, _compensateLogs, _activityExceptions,

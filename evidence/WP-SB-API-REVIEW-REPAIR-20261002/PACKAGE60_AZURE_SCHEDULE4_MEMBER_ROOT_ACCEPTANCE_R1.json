@@ -1,0 +1,24 @@
+{
+  "created_utc": "2026-10-04T13:04:40.662108+00:00",
+  "accepted_ids": [
+    "M:ViciOne.ServiceBus.AzureServiceBus.MessageSendEndpointContext.ScheduleSendAsync(Azure.Messaging.ServiceBus.ServiceBusMessage,System.DateTimeOffset,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.MessageSendEndpointContext.CancelScheduledSendAsync(System.Int64,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.SharedSendEndpointContext.ScheduleSendAsync(Azure.Messaging.ServiceBus.ServiceBusMessage,System.DateTimeOffset,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.AzureServiceBus.SharedSendEndpointContext.CancelScheduledSendAsync(System.Int64,System.Threading.CancellationToken)"
+  ],
+  "decision": "ROOT_ACCEPTED_TWO_OFFLINE_ADAPTER_AND_TWO_DIRECT_DELEGATOR_SOURCE_CONTRACTS",
+  "semantic_matrix": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package60-azure-schedule-independent-r1/PER_SYMBOL4_CONTRACT_ACCEPTANCE_RECOMMENDATIONS.json",
+  "semantic_matrix_sha256": "8327f71d54e3a0be6c3db2544ebdb16be47194f36d75c644ae9a11ec8e697017",
+  "independent_report_sha256": "0afa935055893dd8ae294f2cf0f7b6de4230f794ef6ffdff4f03e48d90ac2418",
+  "root_reads": [
+    "c417c2 independentreport+fourcontracts WHOLE",
+    "c3fad5 actualnative8 WHOLE",
+    "4e18b6 proposedtest207 WHOLE",
+    "17fe44 twoowners WHOLE",
+    "ed5e8e adversarialsourceREPORT WHOLE"
+  ],
+  "limits": [
+    "No actual cloud/network SDK cancellation or mutation kills.",
+    "Direct task identity source-reviewed. No current fresh AzureZIP from these focused runs; final package gate pending."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "status": "ROOT_ACTUAL_TWO_CURRENT_SOURCE_BODIES_PERSONALLY_FULL_AFTER_EDIT",
+  "sources": [
+    {
+      "path": "repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "d9f43766424936456c0a5e419f858f61119f263c6aaf24daaf3f8b375a7ebdec",
+      "root_before_full": true,
+      "root_after_full": true
+    },
+    {
+      "path": "repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/RegistrationContextEndpointDefinition.cs",
+      "sha256": "08fe1f8affdd36b50a7899e8a8ffec57330feff87100623c16cd28d0509493ec",
+      "root_before_full": true,
+      "root_after_full": true
+    }
+  ],
+  "preauthor_plan": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F041_SOURCE_PREAUTHOR_PLAN.json",
+  "limits": "Native build/fixed/mutation/final-review pending. Separate F040 isolated suite captured old Core frame before these source edits."
+}

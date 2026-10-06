@@ -15,6 +15,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     {
         readonly SagaConsumeContext<TInstance> _context;
         readonly IEvent _event;
+        readonly CancellationToken? _operationCancellationToken;
+        readonly IBehaviorContext<TInstance>? _operationSourceContext;
 
         /// <summary>Associates a state machine and event with the selected saga consume context.</summary>
         /// <param name="machine">The state machine executing raised events.</param>
@@ -30,6 +32,16 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _context = context;
             _event = @event;
         }
+
+        internal BehaviorContextProxy(IBehaviorContext<TInstance> context, CancellationToken cancellationToken)
+            : this(context.StateMachine, context, context.Event)
+        {
+            _operationCancellationToken = cancellationToken;
+            _operationSourceContext = context;
+        }
+
+        /// <inheritdoc />
+        public override CancellationToken CancellationToken => _operationCancellationToken ?? base.CancellationToken;
 
         /// <summary>Gets the state machine executing events raised from this context.</summary>
         public IStateMachine<TInstance> StateMachine { get; }
@@ -91,6 +103,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public IBehaviorContext<TInstance> CreateProxy(IEvent @event)
         {
             ArgumentNullException.ThrowIfNull(@event, "event");
+            if (_operationCancellationToken is { } cancellationToken)
+            {
+                IBehaviorContext<TInstance> source = _operationSourceContext!.CreateProxy(@event);
+                return source is null ? source! : new BehaviorContextProxy(source, cancellationToken);
+            }
+
             return new BehaviorContextProxy(StateMachine, _context, @event);
         }
 
@@ -104,6 +122,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         {
             ArgumentNullException.ThrowIfNull(@event, "event");
             ArgumentNullException.ThrowIfNull(data);
+            if (_operationCancellationToken is { } cancellationToken)
+            {
+                IBehaviorContext<TInstance, T> source = _operationSourceContext!.CreateProxy(@event, data);
+                return source is null ? source! : new BehaviorContextProxy<T>(source, cancellationToken);
+            }
+
             return new BehaviorContextProxy<T>(StateMachine, _context, new MessageConsumeContext<T>(_context, data), @event);
         }
     }
@@ -118,6 +142,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
     {
         readonly SagaConsumeContext<TInstance> _context;
         readonly IEvent<TMessage> _event;
+        readonly CancellationToken? _operationCancellationToken;
+        readonly IBehaviorContext<TInstance, TMessage>? _operationSourceContext;
 
         /// <summary>Associates a state-machine event with its selected saga and message consume contexts.</summary>
         /// <param name="machine">The state machine executing raised events.</param>
@@ -136,6 +162,16 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _context = context;
             _event = @event;
         }
+
+        internal BehaviorContextProxy(IBehaviorContext<TInstance, TMessage> context, CancellationToken cancellationToken)
+            : this(context.StateMachine, context, context, context.Event)
+        {
+            _operationCancellationToken = cancellationToken;
+            _operationSourceContext = context;
+        }
+
+        /// <inheritdoc />
+        public override CancellationToken CancellationToken => _operationCancellationToken ?? base.CancellationToken;
 
         /// <summary>Gets the state machine executing events raised from this context.</summary>
         public IStateMachine<TInstance> StateMachine { get; }
@@ -205,6 +241,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         public IBehaviorContext<TInstance> CreateProxy(IEvent @event)
         {
             ArgumentNullException.ThrowIfNull(@event, "event");
+            if (_operationCancellationToken is { } cancellationToken)
+            {
+                IBehaviorContext<TInstance> source = _operationSourceContext!.CreateProxy(@event);
+                return source is null ? source! : new BehaviorContextProxy(source, cancellationToken);
+            }
+
             return new BehaviorContextProxy(StateMachine, _context, @event);
         }
 
@@ -218,6 +260,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         {
             ArgumentNullException.ThrowIfNull(@event, "event");
             ArgumentNullException.ThrowIfNull(data);
+            if (_operationCancellationToken is { } cancellationToken)
+            {
+                IBehaviorContext<TInstance, T> source = _operationSourceContext!.CreateProxy(@event, data);
+                return source is null ? source! : new BehaviorContextProxy<T>(source, cancellationToken);
+            }
+
             return new BehaviorContextProxy<T>(StateMachine, _context, new MessageConsumeContext<T>(_context, data), @event);
         }
     }

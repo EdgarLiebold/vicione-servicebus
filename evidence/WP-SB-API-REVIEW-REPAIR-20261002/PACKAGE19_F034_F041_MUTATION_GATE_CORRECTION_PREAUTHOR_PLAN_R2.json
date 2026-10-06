@@ -1,0 +1,26 @@
+{
+  "status": "ROOT_PEER_REQUESTED_FINITE_GATE_PRECISION_BEFORE_AUTHOR_AND_NATIVE",
+  "prior_runner": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F034_F041_MUTATION_RUNNER_R1_UNEXECUTED.txt",
+    "sha256": "701cdb3d69f1a04bc4bb6f7a332b83b9bbf70c27db81907dcca1c40a6a0e52d6"
+  },
+  "changes": [
+    "RestoreFullCompensateAlias exactNull132/owner-b-compensate",
+    "AcceptForeignFullCompensate exactNull132/owner-a-compensate",
+    "F041two exactNull132/ignored-fluent-compensate; allother11 exactEqual148+realEndpointPlan",
+    "AcceptForeign removeonlynull-assignment via discard; originalforeignconditional unchanged, no constantfalse",
+    "BypassTypedSelector positivefull-distinct exercises actualchangedActivityRegistration defaultbus"
+  ],
+  "guards_excluded": [
+    "Compiler",
+    "setup",
+    "TimeoutException",
+    "cleanupwrapper",
+    "wrongfiniteoracle"
+  ],
+  "counts": {
+    "F034": 13,
+    "F041": 2
+  },
+  "limits": "No previousmutantNativeexecuted. Existingpaired41immutableallassertions unchanged; same33frame andrestoreobligation."
+}

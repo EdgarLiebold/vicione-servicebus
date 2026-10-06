@@ -1,0 +1,46 @@
+{
+  "status": "ROOT_AUTHORED_CLASSIC_ONLY_IDENTITY_FOR_ADVERSARIAL_PREFLIGHT",
+  "utc": "2026-10-03T18:16:17.162522+00:00",
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f021-identity-source-r2/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "bytes": 504,
+      "sha256": "929d35ea91140e697b985c050623fb5c7446e37f87f0199c944cac38bfa7b519"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f021-identity-source-r2/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "bytes": 18755,
+      "sha256": "d95e5163da6daffec33f3088ee52d8e8fb4b44b5f47ec882c95245b1c8cdd178"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f021-identity-source-r2/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "bytes": 16603,
+      "sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/MessageReceiver.cs",
+      "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/MessageReceiver.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f021-identity-source-r2/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/MessageReceiver.cs",
+      "bytes": 11578,
+      "sha256": "5b7ef701431ab3dd223d2b140f1c1c8e9926ad03479be132c3e9222f84fd1f11"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs",
+      "relative": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f021-identity-source-r2/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs",
+      "bytes": 15071,
+      "sha256": "907c4a4017f82daa9f843ab7ba5d990aaef9456b827f1dec2f66d1c2c2ad11fe"
+    }
+  ],
+  "migration_helper_pending": true,
+  "native_pending": true,
+  "public_shared_observer_unchanged": true,
+  "supersedes": "220b033f4e0275deecde9b4585a9e540561891d0d5689816f8e7c845a1462c83",
+  "r2_compatibility": "Public manually constructed nonpersistentConfigurator has no newrequiredidentityservice. DefaultIBusknownDefault; typedoptionalGetService missing/unspecified remainsnull; Classic gatefailclosed."
+}

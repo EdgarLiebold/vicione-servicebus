@@ -14,7 +14,8 @@ public interface IMissingInstanceConfigurator<TSaga, TMessage>
     /// <returns>The pipe produced by the operation.</returns>
     IPipe<ConsumeContext<TMessage>> Discard();
 
-    /// <summary>Fault the saga consumer, which moves the message to the error queue.</summary>
+    /// <summary>Creates a pipeline that throws <see cref="SagaException" /> when no saga instance is found.</summary>
+    /// <remarks>The surrounding receive pipeline determines fault reporting and error-transport handling.</remarks>
     /// <returns>The pipe produced by the operation.</returns>
     IPipe<ConsumeContext<TMessage>> Fault();
 

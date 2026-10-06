@@ -18,14 +18,14 @@ public sealed class RabbitMqReceiveContext :
 {
     readonly MessageBody _body;
 
-    /// <summary>Creates a receive context from immutable AMQP delivery data.</summary>
+    /// <summary>Creates a receive context from AMQP delivery data.</summary>
     /// <param name="exchange">The source exchange.</param>
     /// <param name="routingKey">The delivery routing key.</param>
     /// <param name="consumerTag">The broker-assigned consumer tag.</param>
     /// <param name="deliveryTag">The channel-scoped delivery tag.</param>
     /// <param name="body">The serialized message body.</param>
     /// <param name="redelivered">Whether RabbitMQ previously delivered this message.</param>
-    /// <param name="properties">The immutable AMQP message properties.</param>
+    /// <param name="properties">The AMQP message properties supplied with the delivery.</param>
     /// <param name="receiveEndpointContext">The endpoint context and message limits.</param>
     /// <param name="payloads">Additional transport payloads.</param>
     public RabbitMqReceiveContext(string exchange, string routingKey, string consumerTag, ulong deliveryTag, ReadOnlyMemory<byte> body,
@@ -41,7 +41,7 @@ public sealed class RabbitMqReceiveContext :
         _body = new BinaryMessageBody(body);
     }
 
-    /// <summary>Gets a header provider over the immutable AMQP properties.</summary>
+    /// <summary>Gets a header provider over the supplied AMQP properties.</summary>
     protected override IHeaderProvider HeaderProvider => new RabbitMqHeaderProvider(this);
 
     /// <summary>Gets the body after enforcing configured transport message limits.</summary>
@@ -58,7 +58,7 @@ public sealed class RabbitMqReceiveContext :
     public string Exchange { get; }
     /// <summary>Gets the routing key attached to the delivery.</summary>
     public string RoutingKey { get; }
-    /// <summary>Gets the immutable AMQP message properties.</summary>
+    /// <summary>Gets the AMQP message properties supplied with the delivery.</summary>
     public IReadOnlyBasicProperties Properties { get; }
 
     /// <summary>Captures nonempty RabbitMQ routing and AMQP properties for later replay.</summary>

@@ -1,0 +1,102 @@
+import ast
+import base64
+import csv
+import hashlib
+import json
+import re
+import zipfile
+from pathlib import Path
+
+W = Path('/Users/edgar.liebold/Downloads/ViciOne Suite 2.0')
+O = W / 'repositories/vicione-servicebus'
+R = Path('/private/tmp/vicione-servicebus-api-review-20261001')
+E = O / 'evidence/WP-SB-API-REVIEW-REPAIR-20261002'
+D = W / 'SERVICEBUS_API_REVIEW_AND_REPAIR'
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+mutpath = E / 'PACKAGE17_F029_MUTATIONS.json'
+mut = json.loads(mutpath.read_text())
+assert mut['status'] == 'THREE_STRICT_COMPILED_SINGLE_EFFECT_MUTANTS_KILLED_WITH_GREEN_CONTROLS'
+assert len(mut['mutants']) == 3 and len(mut['controls']) == 2
+tree = ast.parse((D / 'package17_f029_mutations.py').read_text())
+body = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in ['replace_once', 'mutation']]
+paths = mut['frame']
+base = {key: (O / rel).read_text() for key, rel in paths.items()}
+env = dict(corrected=base)
+exec(compile(ast.Module(body=body, type_ignores=[]), '<Root-independent-pure-mutators>', 'exec'), env)
+effects = []
+for stage in mut['controls'] + mut['mutants']:
+    expected = base if stage['name'] in ['corrected', 'rollback'] else env['mutation'](stage['name'])
+    assert sha(stage['binary']['path']) == stage['binary']['sha256']
+    for item in stage['source_snapshots']:
+        digest = hashlib.sha256(expected[item['key']].encode()).hexdigest()
+        assert sha(item['path']) == digest == item['sha256'] == item['current_source_sha256']
+        effects.append(dict(stage=stage['name'], key=item['key'], snapshot=item['path'], sha256=digest, changed=expected[item['key']] != base[item['key']]))
+assert len(effects) == 130
+for path, digest in {**mut['oracle_hashes'], **mut['constant_dependencies']}.items():
+    assert sha(path) == digest
+assert sha(R / 'repair-consumers/package17-f029/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll') == '1a152ac238f1e1d5dbcfcd98b736bd39125aec89f7ba35824ba8654ed117e148'
+rows = list(csv.DictReader((R / 'FILE_COVERAGE.csv').open()))
+assert len(rows) == 6209 and all(sha(R / 'mutations/source-main' / row['path']) == row['sha256'] for row in rows)
+assert all(not (R / 'mutations/source-main' / rel).exists() for rel in paths.values() if not (R / 'frozen-repository' / rel).exists())
+receipts = [json.loads(line) for line in (E / 'VERIFICATION_LOG.jsonl').read_text().splitlines() if json.loads(line)['phase'].startswith('package17-f029-')]
+for receipt in receipts:
+    assert sha(receipt['log']) == receipt['log_sha256']
+    if receipt['exit_code'] == 0 and 'build' in receipt['command']:
+        text = Path(receipt['log']).read_text()
+        assert '0 Warnung(en)' in text and '0 Fehler' in text
+previous = next(x for x in receipts if x['phase'] == 'package17-f029-public-previous-twentysix-r2')
+corrected = next(x for x in receipts if x['phase'] == 'package17-f029-public-corrected-twentysix-r4')
+prevtext = Path(previous['log']).read_text()
+corrtext = Path(corrected['log']).read_text()
+assert previous['exit_code'] == 1 and corrected['exit_code'] == 0
+assert prevtext.count('\nFAIL ') == 7 and prevtext.count('\nPASS ') == 19 and 'TOTAL 19 PASS 7 FAIL' in prevtext
+assert corrtext.count('\nPASS ') == 26 and 'TOTAL 26 PASS 0 FAIL' in corrtext and '\nFAIL ' not in corrtext
+assert not any(s in prevtext + corrtext for s in ['TimeoutException', 'Case and cleanup failed'])
+assert prevtext.count('Xunit.Sdk.NullException') == 7 and "ParamName" not in corrtext
+package_chains = []
+microsoft_runtime = []
+for mode, logtext in [('previous', prevtext), ('corrected', corrtext)]:
+    consumer = R / 'repair-consumers/package17-f029' / mode
+    locked = json.loads((consumer / 'packages.lock.json').read_text())['dependencies']['net10.0']
+    loaded = {}
+    for line in logtext.splitlines():
+        if line.startswith('LOADED '):
+            name, version, path, digest = line[7:].split(' ', 3)
+            assert sha(path) == digest
+            loaded[name] = dict(name=name, version=version, path=path, sha256=digest)
+    for name in ['ViciOne.ServiceBus', 'ViciOne.ServiceBus.Abstractions']:
+        pkg = R / 'repair-packages/package17-f029' / mode / (name + '.1.0.0.nupkg')
+        assert base64.b64encode(hashlib.sha512(pkg.read_bytes()).digest()).decode() == locked[name]['contentHash']
+        with zipfile.ZipFile(pkg) as z:
+            binary = z.read('lib/net10.0/' + name + '.dll')
+        digest = hashlib.sha256(binary).hexdigest()
+        cached = consumer / 'restored-packages' / name.lower() / '1.0.0/lib/net10.0' / (name + '.dll')
+        assert sha(cached) == digest == loaded[name]['sha256']
+        package_chains.append(dict(consumer=mode, package=str(pkg), package_sha256=sha(pkg), locked_sha512=locked[name]['contentHash'], cache=str(cached), loaded=loaded[name]))
+    for name, item in loaded.items():
+        if name.startswith('Microsoft.Extensions.'):
+            assert locked[name]['resolved'] == '10.0.12'
+            folder = consumer / 'restored-packages' / name.lower() / '10.0.12'
+            candidates = [p for p in (folder / 'lib').glob('*/' + name + '.dll') if sha(p) == item['sha256']]
+            assert candidates, name
+            microsoft_runtime.append(dict(consumer=mode, package_version='10.0.12', cache=str(candidates[0]), **item))
+binding = dict(status='ROOT_INDEPENDENT_EFFECTS_RECEIPTS_PACKAGE_RUNTIME_RESTORATION_VERIFIED', source_effect_checks=effects, actual_receipts=receipts, selected_package_chains=package_chains, actual_Microsoft_runtime=microsoft_runtime, original_cases=dict(causal_reds=7, assertion_reds=7, positive=19, guards=0), corrected_cases=26, all6209_original_files_restored=True, oracle_and_runtime_restored=True, limits='PE/PDB source bindings independently required in final adversarial review. No exactSDKsource FULL/canonical766/heap/ARM/cloud/wholeAPI claim; noisolateddedupretimestampclaim.')
+bp = E / 'PACKAGE17_F029_ROOT_BINDING.json'
+assert not bp.exists()
+bp.write_text(json.dumps(binding, indent=2) + '\n')
+directory = E / 'package17-f029-freeze'
+directory.mkdir(exist_ok=False)
+owned = []
+inputs = [O / rel for rel in paths.values()]
+inputs += [p for mode in ['previous', 'corrected'] for p in sorted((R / 'repair-consumers/package17-f029' / mode).iterdir()) if p.is_file()]
+inputs += [D / 'run_operation.py', D / 'package17_f029_mutations.py', D / 'package17_f029_bind.py']
+for index, path in enumerate(inputs):
+    snapshot = directory / (str(index).zfill(2) + '-' + path.name + '.txt')
+    snapshot.write_bytes(path.read_bytes())
+    owned.append(dict(path=str(path), snapshot=str(snapshot), bytes=path.stat().st_size, sha256=sha(path)))
+plans = [dict(path=str(p), sha256=sha(p)) for p in sorted(E.glob('PACKAGE17_F029_*.json')) if p not in [bp, mutpath]]
+freeze = dict(status='FROZEN_SCOPED_F029_FINAL_ADVERSARIAL_PENDING', finding='F-SB-API-029', owned_inputs=owned, root_binding=dict(path=str(bp), sha256=sha(bp)), mutations=dict(path=str(mutpath), sha256=sha(mutpath)), plans_and_exclusions=plans, limits='26 fresh-process public cases; actual normal default/typed InMemory DI and public asyncfactory-handle Forced route; controlled custom TimeProvider/ITimer wall UTC independent of elapsed. Microsoft.Extensions10.0.12 actual copied/runtime hashes; CoreLib10.0.10. Dedup only finalmembership/schedules; noisolatedretimestampcontractclaim. No universal quiescence after guardfailure/heap/ARM/cloud/wholecanonical/API/A+ grade.')
+fp = E / 'PACKAGE17_F029_FREEZE.json'
+assert not fp.exists()
+fp.write_text(json.dumps(freeze, indent=2) + '\n')
+print(json.dumps(dict(freeze=str(fp), sha256=sha(fp), owned=len(owned), source_effects=len(effects), receipts=len(receipts), selected_package_chains=len(package_chains), Microsoft_runtime_bindings=len(microsoft_runtime))))

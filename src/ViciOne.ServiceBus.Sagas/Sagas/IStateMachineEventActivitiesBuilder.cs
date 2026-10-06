@@ -65,7 +65,7 @@ public interface IStateMachineEventActivitiesBuilder<TSaga> :
     IStateMachineEventActivitiesBuilder<TSaga> Ignore<TMessage>(IEvent<TMessage> @event, StateMachineCondition<TSaga, TMessage> filter)
         where TMessage : class;
 
-    /// <summary>Commits the routing-slip activity changes.</summary>
+    /// <summary>Commits the configured state-machine event activities.</summary>
     /// <returns>The state machine modifier produced by the operation.</returns>
     IStateMachineModifier<TSaga> CommitActivities();
 }

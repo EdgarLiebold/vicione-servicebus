@@ -155,7 +155,7 @@ public interface IStateMachineModifier<TSaga>
     /// <summary>Adds behavior that runs in any state.</summary>
     /// <returns>The state machine event activities builder produced by the operation.</returns>
     IStateMachineEventActivitiesBuilder<TSaga> DuringAny();
-    /// <summary>Adds behavior that always runs after the activity.</summary>
+    /// <summary>Configures activities for the final state's Enter event using the machine's any-state binding rules.</summary>
     /// <param name="activityCallback">The activity callback.</param>
     /// <returns>The state machine modifier produced by the operation.</returns>
     IStateMachineModifier<TSaga> Finally(Func<IEventActivityBinder<TSaga>, IEventActivityBinder<TSaga>> activityCallback);

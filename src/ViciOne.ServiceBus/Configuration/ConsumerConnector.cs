@@ -33,7 +33,7 @@ public sealed class ConsumerConnector<TConsumer> :
         }
     }
 
-    /// <summary>Gets an immutable view of the discovered message connectors.</summary>
+    /// <summary>Gets a read-only view of the discovered message connectors.</summary>
     public IReadOnlyList<IConsumerMessageConnector> Connectors => _connectors;
 
     ConnectHandle IConsumerConnector.ConnectConsumer<TRequestedConsumer>(IConsumePipeConnector consumePipe,
@@ -55,10 +55,27 @@ public sealed class ConsumerConnector<TConsumer> :
 
             return new MultipleConnectHandle(handles);
         }
-        catch (Exception)
+        catch (Exception admissionFailure)
         {
+            List<Exception>? cleanupFailures = null;
             foreach (var handle in handles)
-                handle.Dispose();
+            {
+                try
+                {
+                    handle.Dispose();
+                }
+                catch (Exception cleanupFailure)
+                {
+                    (cleanupFailures ??= []).Add(cleanupFailure);
+                }
+            }
+
+            if (cleanupFailures is not null)
+            {
+                cleanupFailures.Insert(0, admissionFailure);
+                throw new AggregateException("Consumer admission and registration cleanup failed.", cleanupFailures);
+            }
+
             throw;
         }
     }

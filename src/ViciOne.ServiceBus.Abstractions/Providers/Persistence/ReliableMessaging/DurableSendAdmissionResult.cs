@@ -43,5 +43,6 @@ public readonly record struct DurableSendAdmissionResult
     public long StoredBytes { get; }
 
     /// <summary>Gets whether this admission committed a new durable intent.</summary>
-    public bool IsNew => Disposition == DurableSendAdmissionDisposition.Accepted;
+    /// <remarks>The default, uninitialized result does not report success.</remarks>
+    public bool IsNew => Id.Value != Guid.Empty && Disposition == DurableSendAdmissionDisposition.Accepted;
 }

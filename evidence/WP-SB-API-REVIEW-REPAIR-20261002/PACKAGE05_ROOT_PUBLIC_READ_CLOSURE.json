@@ -1,0 +1,202 @@
+{
+  "utc": "2026-10-03T01:12:45.741603+00:00",
+  "owner_scope": "six owned console consumer inputs and22 public production route inputs; canonical Core test owner not closed",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "0ea2c6c187131d7d822c647d0a107377b87d8dc2d5483babfa4c299d4b9083a2",
+      "bytes": 2531,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "6c42108b365710a384e9376cb872b30eb85ae98801a2038f066d0fe249e24dcd",
+      "bytes": 2263,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "c41fe496133493750337eec78ed3718157f9762072dff2c4a290316558ca9062",
+      "bytes": 6940,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "d44c52e1c11fc61bc423fdbc35edcb84ddd57c2f25c81db8304c498060c19181",
+      "bytes": 1163,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+      "sha256": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214",
+      "bytes": 5882,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+      "sha256": "55f86c6399c0f9ee6f971853a7f05ef58a04f3cd714817ea64c9eef223ed0e29",
+      "bytes": 1680,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+      "sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+      "bytes": 15567,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "sha256": "970affb1ece8396d1ace98a194e88c8f13205abe692db61867ca106a8917e2fb",
+      "bytes": 11412,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResult.cs",
+      "sha256": "71e6b4437fd8adb48ab9efd30b166bb8880331b83669d0cc5acb5579b7998261",
+      "bytes": 695,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResultExtensions.cs",
+      "sha256": "54edcef773f15092f88e140bbdf9e27357943d9c74458302a095fa42fbecc357",
+      "bytes": 7767,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumerFactory.cs",
+      "sha256": "99f2ea1869fcc2511c1067613f71000be1da8732b1f55c045c29ca1aca1d8f85",
+      "bytes": 3509,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "bytes": 10520,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "a689b557031f8c9d08df3c09dfeff774f9dfa25e7b01c76c81e4daa5a7eea16c",
+      "bytes": 12579,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollectorLifetime.cs",
+      "sha256": "72b10a945b35c07bef46b770e74745564e209b4464c669aa90d2bdcc011d4df9",
+      "bytes": 4172,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Registration/HandlerExtensions.cs",
+      "sha256": "782ba5a2090dc3d105ef28cd4c5eb4936986cf21661b180bea49d5d58dfa346e",
+      "bytes": 3487,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+      "sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+      "bytes": 1893,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/IConsumerRegistrationConfigurator.cs",
+      "sha256": "e5e01046dd8ddb4cd49721fdd71d4f7fda9fc0b0708aa23b893239506d99ff07",
+      "bytes": 891,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/IEndpointRegistrationConfigurator.cs",
+      "sha256": "e7d76525cbac3365605d670ca21439cdde8caa0ae5e137a5091a8e60e4e12d7b",
+      "bytes": 1744,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/ConsumeContext.cs",
+      "sha256": "0293ff373678d391b8bf26d8bce9511147d7b12b21cbb7d6a3a222ea82ee6b0f",
+      "bytes": 11764,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Contexts/ReceiveContext.cs",
+      "sha256": "04de0378a42008a08adb8d74c721cf88d5673bfb02c1f055700951ef77687ddf",
+      "bytes": 4639,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/IBusInstance.cs",
+      "sha256": "3d6cbe937f0e13bce8695881e35b61289d4f8a101eee2c9f659b5ff6e1ec882f",
+      "bytes": 1863,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161",
+      "bytes": 776,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-package05-public-consumers/CorePackage05.PublicConsumer.csproj",
+      "sha256": "0dc5dff38d8ecdf71237f87f82975bd7dc8fcfac31fe2e734f3c3140bef8fc29",
+      "bytes": 703,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-package05-public-consumers/Program.cs",
+      "sha256": "22f1d3d28fef6fefe49059140521e7b0ef723867a544641c72d7a8bfcf304ef2",
+      "bytes": 3612,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-package05-public-consumers/OwnedLifetime.cs",
+      "sha256": "cd94fc8c143a9ce057002fda15e29ac76c684f2845dc264ad0dfe3a031a0ae6b",
+      "bytes": 799,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-package05-public-consumers/ResultsAssertions.cs",
+      "sha256": "9a75db2b72535847674eaa3314c59041ff8b71c0900bbea7a9a021cb8fa2e1f1",
+      "bytes": 3229,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-package05-public-consumers/HostTimeoutAssertions.cs",
+      "sha256": "10ab3e81f227587b50486e9052021c85638502e3b9fb03b17ebb7046483c6358",
+      "bytes": 10018,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-package05-public-consumers/BatchTimerAssertions.cs",
+      "sha256": "dc72e10b31f3ee1ecd5ae8b6a746d3185a3453fe876988588ca39899dfc98baa",
+      "bytes": 13993,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_TEXT_READ"
+    }
+  ]
+}

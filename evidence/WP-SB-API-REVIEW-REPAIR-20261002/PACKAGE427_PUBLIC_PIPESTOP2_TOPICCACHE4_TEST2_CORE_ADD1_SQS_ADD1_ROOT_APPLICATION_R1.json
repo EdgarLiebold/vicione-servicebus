@@ -1,0 +1,60 @@
+{
+  "utc": "2026-10-06T11:34:43.865355+00:00",
+  "status": "ROOT_TEST6_ONLY_APPLIED_ORIGINAL_NATIVE_PENDING",
+  "plan": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package427-public-original6-root-testonly-application-before-r1/PLAN.json",
+    "sha256": "886281a273e4c9450bac7a239187d43ff2738a954a83d85c13f4ab99c3c1e78d",
+    "manifest_sha256": "39f18e1b3156a9b19e8b246d0a0fab28f57731883d1ae8a3248dbceb9c2f92c6"
+  },
+  "changes": [
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorOwnedStopAdmissionTests.cs",
+      "kind": "new_test",
+      "before_sha256": null,
+      "after_sha256": "a007998a96b725719c904a660c3416530b6ce9569e42bf268f3489a96a06ab95",
+      "after_count": 315,
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package416-pipe-stop-original2-testonly-proposed-r1/proposed/tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorOwnedStopAdmissionTests.cs"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsTopicDiscoveryLifetimeTests.cs",
+      "kind": "new_test",
+      "before_sha256": null,
+      "after_sha256": "882c2d25d71f2e305d3b6ec54d4681780023df8ac0cbaa17aeaf6ae67adb2214",
+      "after_count": 203,
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-sqs-topic-cache-original4-testonly-proposed-r2/proposed/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsTopicDiscoveryLifetimeTests.cs"
+    },
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "kind": "literal_ADD1",
+      "before_sha256": "f7baccea0190603f6c9cdcbda4c25cf3b4e2c131cecee40f82966a27b09553ee",
+      "after_sha256": "6fa8bfb8f5f181452afc69b7bcf44865168b5df6863bc09d1bf2bd0a807ed240",
+      "after_count": 4681,
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package416-pipe-stop-original2-testonly-proposed-r1/proposed/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "kind": "literal_ADD1",
+      "before_sha256": "d0feb0ad7d145f960a3cfc5199e442a7c095c9f96c71cb8d398e22592d4e5586",
+      "after_sha256": "30825186c34dd81e03beab7a3d611c5ba74a7492930947aff01ec5ca8818c282",
+      "after_count": 189,
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package419-sqs-topic-cache-original4-testonly-proposed-r2/proposed/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json"
+    }
+  ],
+  "guarded_sources": 36,
+  "Root_authority": [
+    "15a888 entireTopic203",
+    "3a7138 entirePipe315",
+    "7c5803 pipeREPORTprefix throughboundaries",
+    "3833c1 completePipeREPORTtail",
+    "3e2190 completeTopicR1",
+    "459a9 wholebothdifferentTestpeers"
+  ],
+  "Product_sources_unchanged": true,
+  "master_unchanged": true,
+  "finding_counts_unchanged": true,
+  "actual_compiler_native_credit": 0,
+  "prior425_independent_epoch_ACK": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package425-strict-fresh4-independent-publication-peer-r1/CAPTURE_ACK.json",
+    "sha256": "ce49544c4567656d94ce6093f2ea80c239e2ad749787f83d2b3a8bda71fe45ae"
+  }
+}

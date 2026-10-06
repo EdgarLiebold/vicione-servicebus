@@ -34,7 +34,7 @@ public static class TaskResults
         return Task.FromException<T>(exception);
     }
 
-    /// <summary>Determines whether the current value can celed.</summary>
+    /// <summary>Returns a canceled task, preserving the supplied token when it is already canceled.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that produces the canceled outcome.</returns>

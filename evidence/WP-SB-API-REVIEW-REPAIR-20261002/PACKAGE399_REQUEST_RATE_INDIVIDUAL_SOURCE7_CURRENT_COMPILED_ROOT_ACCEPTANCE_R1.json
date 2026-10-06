@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-06T09:20:30.891279+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_INDIVIDUAL_SOURCE7_NO_NEW_NATIVE_GRADE",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package390-request-rate7-individual-local-contracts-proposed-r2/REPORT.json",
+    "sha256": "fa5091f2a4a2b35290499cde5a40f9dcb726758948af77489acbaa2510e80fd6"
+  },
+  "norms7": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package390-request-rate7-individual-local-contracts-proposed-r2/PER_ID7_HAND_AUTHORED_LOCAL_CONTRACTS.json",
+    "sha256": "2fb62a9305e840f0f648c09af58e751d52b26e5c6b82bcf38bdc672c5eb1bae0"
+  },
+  "different_adversarial_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package390-request-rate7-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "6beda48192c86391f730fc26755d00c4f14c7a1a2d6f0a2c1f382431e82587d5"
+  },
+  "Root_whole_sources670_25_147_reads": [
+    "d1fb73",
+    "3c642b",
+    "563487"
+  ],
+  "Root_whole_norm7_read": "7acbb9",
+  "Root_whole_source_peer_read": "00ccf0",
+  "Root_own_current_producer_P36": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package399-request-rate-source7-root-acceptance-before-r1/ROOT_ACTUAL_P36.json",
+    "sha256": "13687ba4be2d7a514ce2aa0a99ee09dc1e781530e815da9e6d428169da09e176"
+  },
+  "Source3_exact_current_PDB": true,
+  "XML7_unique": true,
+  "new_canonical_members": 7,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": [
+    "Individual local Source-only; existing39 publiccase references remain qualified388 contextual evidence, no Root new Native or wholecallback grade imported.",
+    "TimeProvider callback/replay races, disposal allattempt/drain, unsupported callback populations and fault arbitration remain explicit obligations."
+  ],
+  "master_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "15287e21b5dccfb1ca9bd10da313a7ffe86043428aa80b7557fb15b21e5e2318"
+  }
+}

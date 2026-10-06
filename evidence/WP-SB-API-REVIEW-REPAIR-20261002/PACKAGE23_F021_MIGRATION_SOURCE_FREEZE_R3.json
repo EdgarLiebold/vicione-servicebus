@@ -1,0 +1,37 @@
+{
+  "status": "ROOT_AUTHORED_FOR_ADVERSARIAL_PREFLIGHT",
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkInboxIdentityMigration.cs",
+      "relative": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkInboxIdentityMigration.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f021-migration-source-r3/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkInboxIdentityMigration.cs",
+      "bytes": 17518,
+      "sha256": "107639661614411decf44e9d6141ef016eecd7b0a35a213a218e407b0bef49f2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/migrations/classic-ef-inbox-identities.md",
+      "relative": "docs/migrations/classic-ef-inbox-identities.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f021-migration-source-r3/docs/migrations/classic-ef-inbox-identities.md",
+      "bytes": 3786,
+      "sha256": "6e74c40530139bb35577d5edb65cea8d60aa49e6ca21449344df0ce4fb00c5a5"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/migrations/README.md",
+      "relative": "docs/migrations/README.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package23-f021-migration-source-r3/docs/migrations/README.md",
+      "bytes": 1622,
+      "sha256": "2a25ffeabe244ddcc50c582a7b37b0a55d619415af543145f6ccc54b2699d4bc"
+    }
+  ],
+  "product_files": 1,
+  "new_public_types": 3,
+  "new_public_methods": 3,
+  "identity_source_r2": "b0eb9eb618d87418d65d7f83d338c18ce3333704d54d6e6bc117b3b9f2f3bc0b",
+  "native_pending": true,
+  "supersedes_r1_sha256": "22335a722f66b70f438a26056dd22ff72cbd45a99d6d2a0203decccf49aed8a0",
+  "utc": "2026-10-03T18:40:43.095024+00:00",
+  "revision": "R3",
+  "correction": "Adversarial: standard keys/relationships, copied progress save/generation, generated concurrency row-version guards before any SDK.",
+  "supersedes_r2_sha256": "c9ae875a8ee2ebddec3e620094dc51afe2d3bef3fbb4510dfdef5952c19171b9",
+  "r3_correction": "XML provider generation may yield null again on SQLite; no guarantee generated row-version bytes change. Runtime unchanged from R2."
+}

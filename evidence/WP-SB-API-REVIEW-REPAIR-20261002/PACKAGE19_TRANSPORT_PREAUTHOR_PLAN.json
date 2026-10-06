@@ -1,0 +1,21 @@
+{
+  "status": "UNVERIFIED_TRANSPORT_IDENTITY_PUBLIC_FINITE_PROBE_PLAN",
+  "finding": "CANDIDATE_NOT_YET_ASSIGNED",
+  "cases": [
+    "default-ascii",
+    "default-backtick",
+    "default-space",
+    "default-percent",
+    "default-unicode",
+    "typed-ascii",
+    "typed-backtick",
+    "typed-space",
+    "typed-percent",
+    "typed-unicode"
+  ],
+  "oracle": "After actual awaited bus Start public GetProbeResult must expose exactly one raw configured queue with actual receiver and exactly one raw exchange bound to that same queue. Distinct canonical/short-queue real sends and postconsume payload/MessageId/input identity checks follow only after finite topology assertions. Guard/setup never finding credit.",
+  "source_cause": "ConfigureTopology uses escaped GetEndpointName; receive queue and send exchange use raw decoded InMemoryEndpointAddress.Name.",
+  "minimal_repair": "Use existing same host-validating InMemoryEndpointAddress parser once to obtain declared entityName.",
+  "separate_F034": true,
+  "whole_API_closed": false
+}

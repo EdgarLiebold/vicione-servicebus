@@ -35,6 +35,10 @@ public static class FutureRegistrationExtensions
     /// <param name="configurator">The application registration configurator.</param>
     /// <param name="configure">The optional callback that configures the companion consumer.</param>
     /// <returns>A configurator for the registered future.</returns>
+    /// <remarks>For automatically created built-in RequestConsumerFuture instances, each bus registration uses a machine configured for its own
+    /// companion consumer. A machine obtained through the generated registration factory retains these ownership
+    /// semantics when returned by a wrapper factory. Independently constructed machines registered explicitly with
+    /// dependency injection, and instances transferred from another service provider, are used as supplied.</remarks>
     public static IFutureRegistrationConfigurator<TFuture> AddFutureRequestConsumer<TFuture, TConsumer, TRequest, TResponse>(
         this IRegistrationConfigurator configurator, Action<IConsumerConfigurator<TConsumer>>? configure = null)
         where TFuture : Future<TRequest, TResponse>

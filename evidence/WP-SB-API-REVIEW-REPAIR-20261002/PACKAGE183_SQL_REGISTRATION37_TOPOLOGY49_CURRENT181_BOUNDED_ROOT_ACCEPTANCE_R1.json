@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-05T12:22:59.723067+00:00",
+  "actor": "/root",
+  "scope": "86disjointoriginal SQL declaration/local topology/registration contracts;37+44+5 exact current181binding",
+  "before": {
+    "raw": 9094,
+    "original": 8232
+  },
+  "after": {
+    "raw": 9180,
+    "original": 8318,
+    "sidecars": 833,
+    "original_remaining": 10251
+  },
+  "source37": {
+    "author_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-sql-registration37-qualified181-current-contracts-r3/REPORT.json",
+    "author_sha256": "bc75a2cf76d13833b9f9b86c32acdc1dea76e89ba6f2e146a32e8f33aacca885",
+    "peer_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-sql-registration37-current181-independent-runtime-peer-r1/REPORT.json",
+    "peer_sha256": "f36d1954785c53ea102475fdca38c812cc6cc71626d4ac26fc7d2508ad4e3e84"
+  },
+  "source49": {
+    "base44_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package193-sql-topology44-current-per-member-contracts-r1/REPORT.json",
+    "base5_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package195-sql-topology-five-additional-contract-context-r1/REPORT.json",
+    "peer_current_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-sql-topology44-plus5-independent-runtime-peer-r1/REPORT.json",
+    "peer_current_sha256": "8e40f7fc12916ba5b8eb9dcc7d2ec3358c02f822406a2b753c8cd1fb81f46a0a",
+    "factory_two_norm_overlay": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package193-sql-topology44-local-factory-two-norm-precision-r1/REPORT.json",
+    "exactfive_final_overlays": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package212-sql-topology44-plus5-independent-runtime-peer-r1/EXACT_NORM_OVERLAYS.json"
+  },
+  "root_personal": "Whole37originalindividualnorms51d98f+recovered33–3638e506; exact7newcurrent181ac99e0 pluswholeindpeer/report e12e9f. Whole44norms ca6325/3f7ac8 plus factory2; all5additionalnorms229827; currentfiveoverlay550abe andactualwholeTopicSendSettings913dee verified. All6MAN plus86OriginalCSV/disjoint/currentOwnerSHA/current181PDB/XML81+5generatedNA/CRC/old30+44normretention checked here. No Rootwholeall10/25Sources newclaim; respectiveauthors genuinewholeSource authority explicit.",
+  "native_cases_added": 0,
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "limits": [
+    "Five generateddelegate/defaultconstructor originalinventory IDs not authoredXML/body/runtimepromises.",
+    "Synchronous topology describes entities only; noDBprovision/native/runtimeclosure inferred.",
+    "Current183productchangesinScheduleProvider/Purge outside86 owners, boundcurrentSource stillmatchesqualified181."
+  ]
+}

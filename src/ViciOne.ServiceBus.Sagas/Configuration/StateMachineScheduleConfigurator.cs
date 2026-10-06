@@ -11,7 +11,7 @@ public class StateMachineScheduleConfigurator<TInstance, TMessage> :
     where TInstance : class, ISagaStateMachineInstance
     where TMessage : class
 {
-    Action<IEventCorrelationConfigurator<TInstance, TMessage>> _received = null!;
+    Action<IEventCorrelationConfigurator<TInstance, TMessage>>? _received = null;
 
     /// <summary>Initializes a new instance.</summary>
     public StateMachineScheduleConfigurator()
@@ -22,7 +22,7 @@ public class StateMachineScheduleConfigurator<TInstance, TMessage> :
     /// <summary>Gets the settings.</summary>
     public IScheduleSettings<TInstance, TMessage> Settings => this;
 
-    /// <summary>Gets or sets the delay.</summary>
+    /// <summary>Sets a fixed delay provider for the schedule.</summary>
     public TimeSpan Delay
     {
         set { DelayProvider = _ => value; }
@@ -30,10 +30,10 @@ public class StateMachineScheduleConfigurator<TInstance, TMessage> :
 
     /// <summary>Gets or sets the delay provider.</summary>
     public ScheduleDelayProvider<TInstance> DelayProvider { get; set; } = null!;
-    Action<IEventCorrelationConfigurator<TInstance, TMessage>> IScheduleConfigurator<TInstance, TMessage>.Received
+    Action<IEventCorrelationConfigurator<TInstance, TMessage>>? IScheduleConfigurator<TInstance, TMessage>.Received
     {
         set => _received = value;
     }
 
-    Action<IEventCorrelationConfigurator<TInstance, TMessage>> IScheduleSettings<TInstance, TMessage>.Received => _received;
+    Action<IEventCorrelationConfigurator<TInstance, TMessage>>? IScheduleSettings<TInstance, TMessage>.Received => _received;
 }

@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-06T07:24:42.870479+00:00",
+  "status": "ROOT_ACCEPTED_13_INDIVIDUAL_BOUNDED_SOURCE_CONTRACTS",
+  "independent_root_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package372-rabbit-source13-root-independent-research-before-r1/MANIFEST.json",
+    "sha256": "799e59061e3b466074733342c79af49310a880602fb5b975f1d909ad11552564"
+  },
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package357-rabbit22-current334-local-source-contracts-proposed-r1/MANIFEST.json",
+    "sha256": "fb227df3d41f4c2effd0380ba6eb56ae921773958b9339979be910cff6c0a09f"
+  },
+  "original_before": 18357,
+  "original_after": 18370,
+  "original_remaining_after": 199,
+  "master_before": 19219,
+  "master_after": 19232,
+  "master_before_sha256": "a73ebb4fde240dd744806cea0c0cbe0831211d6483c3017eba997a8e4413be36",
+  "known_findings": 217,
+  "bounded_findings": 215,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

@@ -1,0 +1,18 @@
+{
+  "actor": "/root",
+  "status": "CONFIRMED_FINITE_CONSUMER_DEFINITION_PROVIDER_REUSE__INDEPENDENT_NATIVE_QUALIFICATION_AND_REPAIR_PENDING",
+  "capture": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package39-provider-probe-original-frame-r1/CAPTURE.json",
+    "sha256": "0220e8ae6546c5a9da3ecb19f07e783dc3610d0bfea0638f8a2c5705489cc710"
+  },
+  "native_cases": {
+    "shared_live": "same actual definition, wrong dependency marker; both callbacks entered once",
+    "shared_disposed": "same actual definition, wrong dependency marker, already disposed definition, first DisposeCount1; both callbacks entered once",
+    "independent_live": "different actual definition, correct provider dependency marker, definition alive",
+    "independent_disposed": "different actual definition, correct provider dependency marker, definition alive; first DisposeCount1"
+  },
+  "public_path": "AddViciOneServiceBus<IProbeBus> + AddConsumer<ProbeConsumer,ProbeDefinition> + ConfigureEndpoints(context), two providers from one ServiceCollection vs two independent collections",
+  "no_bus_start": true,
+  "whole_API_complete": false,
+  "A_plus_release_claim": false
+}

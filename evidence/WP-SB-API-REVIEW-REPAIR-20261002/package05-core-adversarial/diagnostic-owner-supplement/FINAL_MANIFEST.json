@@ -1,0 +1,90 @@
+{
+  "artifacts": [
+    {
+      "path": "ADDITIONAL_FULL_01.txt",
+      "bytes": 9904,
+      "sha256": "e8ce214465493f57191f4de419ef597dce40fb541abb1d380099a34c4f16eb52"
+    },
+    {
+      "path": "ADDITIONAL_FULL_02.txt",
+      "bytes": 4603,
+      "sha256": "d674136886bc706ef596fe3d2017c8608d0171e0a9a6c02f3d9d03ca74f46d5b"
+    },
+    {
+      "path": "ADDITIONAL_FULL_03.txt",
+      "bytes": 6999,
+      "sha256": "26fa69cfc869a3e8ad7212cc0e9ad276eecfed23064d9d618e7801f90094aa85"
+    },
+    {
+      "path": "ADDITIONAL_FULL_04.txt",
+      "bytes": 9833,
+      "sha256": "0588767c92b0bfb4df24d097dd4bce826abbe84b5e2bdba9d5258e901a9b9b89"
+    },
+    {
+      "path": "ADDITIONAL_FULL_05.txt",
+      "bytes": 2022,
+      "sha256": "59bb94ea1dbc25064b7237e373708e7fc5e594721ded3dd3ac98b6542d0b696c"
+    },
+    {
+      "path": "ADDITIONAL_FULL_06.txt",
+      "bytes": 6940,
+      "sha256": "c41fe496133493750337eec78ed3718157f9762072dff2c4a290316558ca9062"
+    },
+    {
+      "path": "ADDITIONAL_FULL_07.txt",
+      "bytes": 2471,
+      "sha256": "7074f6865b74205f0fb309008f4dd7b1e4ef5e98f7df23532025c2ae4619723a"
+    },
+    {
+      "path": "ADDITIONAL_FULL_08.txt",
+      "bytes": 151,
+      "sha256": "6ba80f56a3cb5b33f2f9e73466eb3e0195ed256938245c1383358f5f1263a926"
+    },
+    {
+      "path": "ADDITIONAL_FULL_09.txt",
+      "bytes": 1165,
+      "sha256": "1f09f4e24fb479b25ff5341a62fd7977fadb7b8040a8b6995105bc792849bc13"
+    },
+    {
+      "path": "ADDITIONAL_FULL_10.txt",
+      "bytes": 2770,
+      "sha256": "2904ec06ec66bd2e111cb5440ec80ef26632d4b6b1031ea4bbe4cb21652f2bb4"
+    },
+    {
+      "path": "READ_001.txt",
+      "bytes": 16607,
+      "sha256": "73e17f0703801f15b555453ecaf456554a88349af325ef33f0e152e0c0c473e0"
+    },
+    {
+      "path": "READ_002.txt",
+      "bytes": 18542,
+      "sha256": "00558ab7d2a77989ba274bcc2ec417eae13a80f67b0e5c8d0dc2b58216bb34b5"
+    },
+    {
+      "path": "READ_003.txt",
+      "bytes": 1129,
+      "sha256": "e2b9f4fae55964d013bb92f73f74d8ba716a003f3eb2b0401f336c1574be39c6"
+    },
+    {
+      "path": "READ_CLOSURE.json",
+      "bytes": 9693,
+      "sha256": "30a5f99909e29aa254cf89680ba70307c406ea9bb2a7aa4af226addf14aed10f"
+    },
+    {
+      "path": "READ_PLAN.json",
+      "bytes": 2905,
+      "sha256": "45d9c2459d2a42361c603ff60ecfef99dd7a51d335ae51d12a1921ccae6e56d5"
+    },
+    {
+      "path": "SUPPLEMENT.json",
+      "bytes": 908,
+      "sha256": "54941e6f60b3db6a9fa7d396fbd2090cef86dbd6f69fe1a2daee384b677c11de"
+    },
+    {
+      "path": "SUPPLEMENT.txt",
+      "bytes": 5979,
+      "sha256": "d3da32ad4e47c62d1121be47929672eb69b32c272bcae3b7f7229a663bce4174"
+    }
+  ],
+  "scope": "Independent F030 diagnostic owner supplement only"
+}

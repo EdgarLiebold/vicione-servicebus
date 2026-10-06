@@ -1,0 +1,64 @@
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Middleware;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOneReview.SignalRLifetime;
+
+public sealed class TrackingContext(ClientFactoryContext inner, Probe probe) : ClientFactoryContext
+{
+    public RequestTimeout DefaultTimeout => inner.DefaultTimeout;
+    public TimeProvider TimeProvider { get; } = new TrackingClock(inner.TimeProvider, probe);
+    public IMessageRouteTable MessageRoutes => inner.MessageRoutes;
+    public Uri ResponseAddress => inner.ResponseAddress;
+    public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe) where T : class => inner.ConnectConsumePipe(pipe);
+    public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options) where T : class => inner.ConnectConsumePipe(pipe, options);
+    public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe) where T : class => new TrackingConnector(inner.ConnectRequestPipe(requestId, pipe), probe);
+    public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default) where T : class => new TrackingSend<T>(inner.GetRequestEndpoint<T>(consumeContext), probe);
+    public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default) where T : class => new TrackingSend<T>(inner.GetRequestEndpoint<T>(destinationAddress, consumeContext), probe);
+}
+
+public sealed class TrackingSend<T>(IRequestSendEndpoint<T> inner, Probe probe) : IRequestSendEndpoint<T> where T : class
+{
+    public Task<T> SendAsync(Guid requestId, object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken) => throw probe.Unexpected();
+    public Task SendAsync(Guid requestId, T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    {
+        Task task = SendActualAsync(requestId, message, pipe, cancellationToken); probe.ActualSends.Enqueue(task); return task;
+    }
+    async Task SendActualAsync(Guid requestId, T message, IPipe<SendContext<T>> pipe, CancellationToken token)
+    {
+        probe.SendToken = token; probe.SendEntered.TrySetResult();
+        await probe.SendRelease.Task.WaitAsync(token);
+        if (probe.PrimaryFault) probe.FailPrimary();
+        await inner.SendAsync(requestId, message, pipe, token);
+    }
+}
+
+public sealed class TrackingConnector(ConnectHandle inner, Probe probe) : ConnectHandle
+{
+    public void Dispose() => Disconnect();
+    public void Disconnect()
+    {
+        inner.Disconnect();
+        if (probe.CleanupCallbacks) { Interlocked.Increment(ref probe.ConnectorFaults); throw new IOException("actual-request-connector-callback-failure"); }
+    }
+}
+
+public sealed class TrackingClock(TimeProvider inner, Probe probe) : TimeProvider
+{
+    public override DateTimeOffset GetUtcNow() => inner.GetUtcNow();
+    public override long GetTimestamp() => inner.GetTimestamp();
+    public override long TimestampFrequency => inner.TimestampFrequency;
+    public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period) => new TrackingTimer(inner.CreateTimer(callback, state, dueTime, period), probe);
+}
+
+public sealed class TrackingTimer(ITimer inner, Probe probe) : ITimer
+{
+    public bool Change(TimeSpan dueTime, TimeSpan period) => inner.Change(dueTime, period);
+    public void Dispose()
+    {
+        inner.Dispose();
+        if (probe.CleanupCallbacks) { Interlocked.Increment(ref probe.TimerFaults); throw new IOException("actual-request-timer-callback-failure"); }
+    }
+    public ValueTask DisposeAsync() => inner.DisposeAsync();
+}

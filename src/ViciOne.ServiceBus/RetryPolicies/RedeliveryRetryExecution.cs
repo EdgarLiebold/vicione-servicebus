@@ -89,15 +89,17 @@ internal static class RedeliveryRetryExecution
     /// <param name="exception">The original business failure retained when scheduling fails.</param>
     /// <param name="notifyConsumed">Acknowledges the delivery after scheduling succeeds.</param>
     /// <param name="cancellationToken">The combined source and selected-decision token that cancels both stages.</param>
+    /// <param name="callback">Optional outgoing-context customization applied by the redelivery provider.</param>
     /// <returns>A task that preserves scheduling or acknowledgment failure without scheduling again.</returns>
     public static async Task ScheduleAsync(ConsumeContext context, RetryContext retryContext,
-        Exception exception, Func<CancellationToken, Task> notifyConsumed, CancellationToken cancellationToken)
+        Exception exception, Func<CancellationToken, Task> notifyConsumed, CancellationToken cancellationToken,
+        Action<ConsumeContext, SendContext>? callback = null)
     {
         try
         {
             cancellationToken.ThrowIfCancellationRequested();
             MessageRedeliveryContext redeliveryContext = context.GetPayload<MessageRedeliveryContext>();
-            await redeliveryContext.ScheduleRedeliveryAsync(retryContext.Delay ?? TimeSpan.Zero,
+            await redeliveryContext.ScheduleRedeliveryAsync(retryContext.Delay ?? TimeSpan.Zero, callback,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)

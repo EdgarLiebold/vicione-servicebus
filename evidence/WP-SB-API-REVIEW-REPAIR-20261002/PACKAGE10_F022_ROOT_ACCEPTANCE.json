@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-03T03:11:05.341803+00:00",
+  "status": "SCOPED_F022_ACCEPTED_SHARED_FINAL_PENDING",
+  "root_personally_FULL_review": [
+    "REVIEW.txt",
+    "REVIEW.json"
+  ],
+  "review_sha256": "d1734e3fb5ea6109602a25835e0c549ef8e98832f5ffb141c0131fa50c81a1b2",
+  "manifest_sha256": "e5f848880a98251bd9d15ea68549b71082f565e072a5f201a2b28f89c64833fa",
+  "artifacts_verified": 19,
+  "freeze_sha256": "74225b35b438aaf9a6e4cee0100a9db52f2ba35d618871ae04836e6c692c5010",
+  "owned_inputs_verified": 25,
+  "whole_API": "PARTIAL"
+}

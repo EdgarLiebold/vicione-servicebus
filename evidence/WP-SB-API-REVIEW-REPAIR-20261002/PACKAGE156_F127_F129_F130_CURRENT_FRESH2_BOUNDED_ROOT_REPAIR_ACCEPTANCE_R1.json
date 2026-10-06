@@ -1,0 +1,59 @@
+{
+  "utc": "2026-10-04T23:44:05.774138+00:00",
+  "decision": "ACCEPT_F127_F129_F130_BOUNDED_CURRENT_REPAIRS",
+  "confirmed_before": 130,
+  "confirmed_after": 130,
+  "accepted_before": 127,
+  "accepted_after": 130,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-original16-fixed-observer56-neighbors-fresh2-independent-r1/REPORT.json",
+    "sha256": "061b1d7165486d9a34b215a7b9c28d06bfd7f4e6f3a0045d8cec5589b55c0ec0"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-original16-fixed-observer56-neighbors-fresh2-independent-r1/MANIFEST.json",
+    "sha256": "2a3db8ab1b0b0decd808a6c14766cb2d50fda7c4b83c7fb43eaf0e73591ee8aa"
+  },
+  "root_all_manifest_entries_verified": 3341,
+  "root_frozen_ZIP_CRC_DLL_XML_equal": "d6c445",
+  "root_personal_product_oracles": {
+    "F127": [
+      "3bd3ba",
+      "63ee55",
+      "981d8e"
+    ],
+    "F129": [
+      "5c6334",
+      "63ee55",
+      "053ecf",
+      "753c8e",
+      "99c999"
+    ],
+    "F130": [
+      "053ecf"
+    ]
+  },
+  "current_XML_proof": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package156-original16-fixed-observer56-neighbors-fresh2-independent-r1/ACTUAL_XML26_COMPILED_BINDINGS.json",
+    "sha256": "54f3ea79b12f7526310073e2d32eb872c5bf91316e48d5712da50d3459b1a19f"
+  },
+  "current_observer56": {
+    "total": 56,
+    "passed": 56,
+    "failed": 0,
+    "skipped": 0
+  },
+  "current_neighbors880": {
+    "total": 880,
+    "passed": 880,
+    "failed": 0,
+    "skipped": 0
+  },
+  "limits": [
+    "F12715 actual XML children across10interface methods and2SagaDefinition sibling members only; no runtimebehavior change. F1302method XML summaries only.",
+    "F129two typed/untyped catch branches preserve primary and independently failing observer; same-error-reference control and exact caller cancellation bypass tested. No universal multicast observer guarantee.",
+    "Old null-notification Oracle updated to require actual ordered two distinct wrapperguard errors; corrected56allpass, no muted test or changed10newcontrols.",
+    "Frozen currentCore Original16 deliberately contains6finite failures belonging to2 separate new findings; this receipt is not a clean entireCore or entireAPI declaration.",
+    "Final integrated whole repair gates still pending after later Sourcechanges."
+  ],
+  "CLOSED": false
+}

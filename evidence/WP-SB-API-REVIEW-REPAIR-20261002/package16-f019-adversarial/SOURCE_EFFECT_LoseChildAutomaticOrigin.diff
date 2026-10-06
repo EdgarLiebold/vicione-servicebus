@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs
++++ LoseChildAutomaticOrigin
+@@ -61,7 +61,7 @@
+     {
+         ArgumentException.ThrowIfNullOrWhiteSpace(categoryName);
+         ILogger logger = _loggerFactory.CreateLogger(categoryName);
+-        return new BusLogContext(_loggerFactory, _messageLogger, logger, IsAutomaticallyConfigured);
++        return new BusLogContext(_loggerFactory, _messageLogger, logger, false);
+     }
+ 
+     EnabledLogger? CreateEnabledLogger(LogLevel level) =>

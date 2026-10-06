@@ -1,0 +1,1125 @@
+[
+  {
+    "phase": "package16-f019-corrected-core-build",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T05:48:58.472889+00:00",
+    "completed_utc": "2026-10-03T05:49:11.421409+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-corrected-core-build.log",
+    "log_sha256": "c1dbdcbad5106ddf734d47dd4412533f0923481ce4a4a8002af139d4f15380d7",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-corrected-core-pack",
+    "command": [
+      "dotnet",
+      "pack",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "-o",
+      "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package16-f019/corrected"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T05:49:40.054319+00:00",
+    "completed_utc": "2026-10-03T05:49:41.976654+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-corrected-core-pack.log",
+    "log_sha256": "8bfc6e11649530cff09520b3b525466d4a55ccc1ba548309cc519e916fd996e7",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-corrected-restore",
+    "command": [
+      "dotnet",
+      "restore",
+      "LoggingLifetime.PublicConsumer.csproj",
+      "--configfile",
+      "NuGet.Config",
+      "--force",
+      "--no-http-cache"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T05:56:48.755862+00:00",
+    "completed_utc": "2026-10-03T05:56:50.649274+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-corrected-restore.log",
+    "log_sha256": "0dfd25f42b3580a1b36d24a4c99b55a5a5233455ca33e56b4ee4598fe957060c",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-corrected-build",
+    "command": [
+      "dotnet",
+      "build",
+      "LoggingLifetime.PublicConsumer.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T05:57:12.135998+00:00",
+    "completed_utc": "2026-10-03T05:57:15.339262+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-corrected-build.log",
+    "log_sha256": "3fe2b39bde6f7a2a03b75c62fbbcf425d8e00193acb52d4741df17a7815134ee",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-corrected-build-r2",
+    "command": [
+      "dotnet",
+      "build",
+      "LoggingLifetime.PublicConsumer.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T05:57:59.315734+00:00",
+    "completed_utc": "2026-10-03T05:58:02.841495+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-corrected-build-r2.log",
+    "log_sha256": "06ddf7afbf9cf76f58df0b962a61728827487a0bdc616e80d0480a907cdb689c",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-corrected-build-r3",
+    "command": [
+      "dotnet",
+      "build",
+      "LoggingLifetime.PublicConsumer.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T05:59:13.569556+00:00",
+    "completed_utc": "2026-10-03T05:59:19.815463+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-corrected-build-r3.log",
+    "log_sha256": "2df8e51896034fbac5bcc4493a54f0cb7a16178f9f94c56094fb666159d0a240",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-corrected-thirtytwo",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "all",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T05:59:41.265631+00:00",
+    "completed_utc": "2026-10-03T06:00:04.384558+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-corrected-thirtytwo.log",
+    "log_sha256": "aa3e79f956ff4745791210b9ee60ec446db386492793022e86dfc559552e6bac",
+    "pass_modes": [
+      "ordinarydisposedpredecessor",
+      "ordinaryalivepredecessorcontrol",
+      "publicresetcontrol",
+      "explicitlivefactorycontrol",
+      "automaticcategoryprovenance",
+      "automaticmessagesprovenance",
+      "automaticnestedcategoryprovenance",
+      "sameproviderrootidentity",
+      "sameprovidercategoryidentity",
+      "borrowedfactorysharedacrossproviders",
+      "explicitcustomcontextidentity",
+      "explicitcategoryidentity",
+      "explicitnullwithoutfactoryidentity",
+      "retireautomaticwhennofactory",
+      "automaticdefaultthenrealfactory",
+      "publicboundarycontrols",
+      "hostrestartfreshroot_default",
+      "hostrestartfreshroot_typed_dynamic",
+      "hostrestartfreshroot_typed_explicit",
+      "hostrestartfreshroot_default_plus_typed",
+      "concurrentinheritedautomaticcontexts",
+      "concurrentexplicitoverrides",
+      "siblingpreservesinheritedautomaticcategory",
+      "disposeawhilebremainsoperational",
+      "factoryresolutionfaultcontrol",
+      "precanceledlifecyclecontrol",
+      "faultymeterfactoryloggingcontrol",
+      "actualproviderownedfactorydisposal",
+      "actualcallbackfactoryownership",
+      "livebloggerrouteafteralivea",
+      "realmetricbindingafterautomaticrefresh"
+    ],
+    "failure_headers": [
+      "explicitiloggeridentity Xunit.Sdk.SingleException: Assert.Single() Failure: The collection was empty"
+    ],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-corrected-build-r4",
+    "command": [
+      "dotnet",
+      "build",
+      "LoggingLifetime.PublicConsumer.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:00:43.977795+00:00",
+    "completed_utc": "2026-10-03T06:00:50.004898+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-corrected-build-r4.log",
+    "log_sha256": "bf97c0729a1520a0bfea1e7712203a71a14f689174d5b549fedb10bda74d9dcd",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-corrected-thirtytwo-r2",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "all",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:01:27.349865+00:00",
+    "completed_utc": "2026-10-03T06:01:49.484454+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-corrected-thirtytwo-r2.log",
+    "log_sha256": "8ba34c2fccee1b337233b6670800b8205a1ebcb2ddff932aa5812b8623f5574e",
+    "pass_modes": [
+      "ordinarydisposedpredecessor",
+      "ordinaryalivepredecessorcontrol",
+      "publicresetcontrol",
+      "explicitlivefactorycontrol",
+      "automaticcategoryprovenance",
+      "automaticmessagesprovenance",
+      "automaticnestedcategoryprovenance",
+      "sameproviderrootidentity",
+      "sameprovidercategoryidentity",
+      "borrowedfactorysharedacrossproviders",
+      "explicitiloggeridentity",
+      "explicitcustomcontextidentity",
+      "explicitcategoryidentity",
+      "explicitnullwithoutfactoryidentity",
+      "retireautomaticwhennofactory",
+      "automaticdefaultthenrealfactory",
+      "publicboundarycontrols",
+      "hostrestartfreshroot_default",
+      "hostrestartfreshroot_typed_dynamic",
+      "hostrestartfreshroot_typed_explicit",
+      "hostrestartfreshroot_default_plus_typed",
+      "concurrentinheritedautomaticcontexts",
+      "concurrentexplicitoverrides",
+      "siblingpreservesinheritedautomaticcategory",
+      "disposeawhilebremainsoperational",
+      "factoryresolutionfaultcontrol",
+      "precanceledlifecyclecontrol",
+      "faultymeterfactoryloggingcontrol",
+      "actualproviderownedfactorydisposal",
+      "actualcallbackfactoryownership",
+      "livebloggerrouteafteralivea",
+      "realmetricbindingafterautomaticrefresh"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-previous-restore",
+    "command": [
+      "dotnet",
+      "restore",
+      "LoggingLifetime.PublicConsumer.csproj",
+      "--configfile",
+      "NuGet.Config",
+      "--force",
+      "--no-http-cache"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:03:05.886139+00:00",
+    "completed_utc": "2026-10-03T06:03:08.465278+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-previous-restore.log",
+    "log_sha256": "7d540573df0de3ab642054765a028db1a5e76bb32d4e18644a3e60992d9639c2",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-previous-build",
+    "command": [
+      "dotnet",
+      "build",
+      "LoggingLifetime.PublicConsumer.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:05:35.818379+00:00",
+    "completed_utc": "2026-10-03T06:05:39.930021+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-previous-build.log",
+    "log_sha256": "99c5bc259b26858add01a9cf2b4893afc81118577ff3d3719905fa95435678dc",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-previous-thirtytwo",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "all",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T06:06:42.693709+00:00",
+    "completed_utc": "2026-10-03T06:07:05.040656+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-previous-thirtytwo.log",
+    "log_sha256": "dc7cf2d4b4faa001ad68463d61f5f4509f4a1518f33d1c42d08f82c1aad80c19",
+    "pass_modes": [
+      "ordinaryalivepredecessorcontrol",
+      "publicresetcontrol",
+      "explicitlivefactorycontrol",
+      "sameproviderrootidentity",
+      "sameprovidercategoryidentity",
+      "borrowedfactorysharedacrossproviders",
+      "explicitiloggeridentity",
+      "explicitcustomcontextidentity",
+      "explicitcategoryidentity",
+      "explicitnullwithoutfactoryidentity",
+      "automaticdefaultthenrealfactory",
+      "publicboundarycontrols",
+      "concurrentexplicitoverrides",
+      "factoryresolutionfaultcontrol",
+      "precanceledlifecyclecontrol",
+      "faultymeterfactoryloggingcontrol",
+      "actualproviderownedfactorydisposal",
+      "actualcallbackfactoryownership",
+      "realmetricbindingafterautomaticrefresh"
+    ],
+    "failure_headers": [
+      "ordinarydisposedpredecessor Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "automaticcategoryprovenance Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "automaticmessagesprovenance Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "automaticnestedcategoryprovenance Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "retireautomaticwhennofactory Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "hostrestartfreshroot_default Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "hostrestartfreshroot_typed_dynamic Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "hostrestartfreshroot_typed_explicit Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "hostrestartfreshroot_default_plus_typed Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "concurrentinheritedautomaticcontexts Xunit.Sdk.NotSameException: Assert.NotSame() Failure: Values are the same instance",
+      "siblingpreservesinheritedautomaticcategory Xunit.Sdk.NotSameException: Assert.NotSame() Failure: Values are the same instance",
+      "disposeawhilebremainsoperational System.ObjectDisposedException: Cannot access a disposed object.",
+      "livebloggerrouteafteralivea Xunit.Sdk.SingleException: Assert.Single() Failure: The collection was empty"
+    ],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-corrected-build-r5",
+    "command": [
+      "dotnet",
+      "build",
+      "LoggingLifetime.PublicConsumer.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:08:55.443247+00:00",
+    "completed_utc": "2026-10-03T06:08:59.843889+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-corrected-build-r5.log",
+    "log_sha256": "47c8be4e8a71a0dfb331e747d385280d3d950bfa4249953d46fc29528d655e40",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-previous-build-r2",
+    "command": [
+      "dotnet",
+      "build",
+      "LoggingLifetime.PublicConsumer.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:10:08.705869+00:00",
+    "completed_utc": "2026-10-03T06:10:12.443610+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-previous-build-r2.log",
+    "log_sha256": "3ebf52c709a2c5e94f647072e7933346cd94d5c4a9dc6517154c54b609796f13",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-previous-thirtytwo-r2",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "all",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T06:11:02.227402+00:00",
+    "completed_utc": "2026-10-03T06:11:23.491120+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-previous-thirtytwo-r2.log",
+    "log_sha256": "2ccfc9601afb3116db896b9ada050ae6cedaeb8b82dc3d1329ba989bbb5a5455",
+    "pass_modes": [
+      "ordinaryalivepredecessorcontrol",
+      "publicresetcontrol",
+      "explicitlivefactorycontrol",
+      "sameproviderrootidentity",
+      "sameprovidercategoryidentity",
+      "borrowedfactorysharedacrossproviders",
+      "explicitiloggeridentity",
+      "explicitcustomcontextidentity",
+      "explicitcategoryidentity",
+      "explicitnullwithoutfactoryidentity",
+      "automaticdefaultthenrealfactory",
+      "publicboundarycontrols",
+      "concurrentexplicitoverrides",
+      "factoryresolutionfaultcontrol",
+      "precanceledlifecyclecontrol",
+      "faultymeterfactoryloggingcontrol",
+      "actualproviderownedfactorydisposal",
+      "actualcallbackfactoryownership",
+      "realmetricbindingafterautomaticrefresh"
+    ],
+    "failure_headers": [
+      "ordinarydisposedpredecessor Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "automaticcategoryprovenance Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "automaticmessagesprovenance Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "automaticnestedcategoryprovenance Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "retireautomaticwhennofactory Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "hostrestartfreshroot_default Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "hostrestartfreshroot_typed_dynamic Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "hostrestartfreshroot_typed_explicit Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "hostrestartfreshroot_default_plus_typed Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null",
+      "concurrentinheritedautomaticcontexts Xunit.Sdk.NotSameException: Assert.NotSame() Failure: Values are the same instance",
+      "siblingpreservesinheritedautomaticcategory Xunit.Sdk.NotSameException: Assert.NotSame() Failure: Values are the same instance",
+      "disposeawhilebremainsoperational System.ObjectDisposedException: Cannot access a disposed object.",
+      "livebloggerrouteafteralivea Xunit.Sdk.SingleException: Assert.Single() Failure: The collection was empty"
+    ],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-public-corrected-thirtytwo-r3",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "all",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:11:45.956848+00:00",
+    "completed_utc": "2026-10-03T06:12:08.204158+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-public-corrected-thirtytwo-r3.log",
+    "log_sha256": "8ba34c2fccee1b337233b6670800b8205a1ebcb2ddff932aa5812b8623f5574e",
+    "pass_modes": [
+      "ordinarydisposedpredecessor",
+      "ordinaryalivepredecessorcontrol",
+      "publicresetcontrol",
+      "explicitlivefactorycontrol",
+      "automaticcategoryprovenance",
+      "automaticmessagesprovenance",
+      "automaticnestedcategoryprovenance",
+      "sameproviderrootidentity",
+      "sameprovidercategoryidentity",
+      "borrowedfactorysharedacrossproviders",
+      "explicitiloggeridentity",
+      "explicitcustomcontextidentity",
+      "explicitcategoryidentity",
+      "explicitnullwithoutfactoryidentity",
+      "retireautomaticwhennofactory",
+      "automaticdefaultthenrealfactory",
+      "publicboundarycontrols",
+      "hostrestartfreshroot_default",
+      "hostrestartfreshroot_typed_dynamic",
+      "hostrestartfreshroot_typed_explicit",
+      "hostrestartfreshroot_default_plus_typed",
+      "concurrentinheritedautomaticcontexts",
+      "concurrentexplicitoverrides",
+      "siblingpreservesinheritedautomaticcategory",
+      "disposeawhilebremainsoperational",
+      "factoryresolutionfaultcontrol",
+      "precanceledlifecyclecontrol",
+      "faultymeterfactoryloggingcontrol",
+      "actualproviderownedfactorydisposal",
+      "actualcallbackfactoryownership",
+      "livebloggerrouteafteralivea",
+      "realmetricbindingafterautomaticrefresh"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-corrected-build",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:13:08.561262+00:00",
+    "completed_utc": "2026-10-03T06:13:24.694010+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-corrected-build.log",
+    "log_sha256": "255813242427d82c3b2fedea73683e8a0936d9f58fc216118e55e3210a7623f3",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-corrected-thirtytwo",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "all",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:13:24.925287+00:00",
+    "completed_utc": "2026-10-03T06:13:48.476025+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-corrected-thirtytwo.log",
+    "log_sha256": "85ab32e8021c7f8bf233a181c5f83b2dc64692ff8894d4730bbb53e49c4d8c72",
+    "pass_modes": [
+      "ordinarydisposedpredecessor",
+      "ordinaryalivepredecessorcontrol",
+      "publicresetcontrol",
+      "explicitlivefactorycontrol",
+      "automaticcategoryprovenance",
+      "automaticmessagesprovenance",
+      "automaticnestedcategoryprovenance",
+      "sameproviderrootidentity",
+      "sameprovidercategoryidentity",
+      "borrowedfactorysharedacrossproviders",
+      "explicitiloggeridentity",
+      "explicitcustomcontextidentity",
+      "explicitcategoryidentity",
+      "explicitnullwithoutfactoryidentity",
+      "retireautomaticwhennofactory",
+      "automaticdefaultthenrealfactory",
+      "publicboundarycontrols",
+      "hostrestartfreshroot_default",
+      "hostrestartfreshroot_typed_dynamic",
+      "hostrestartfreshroot_typed_explicit",
+      "hostrestartfreshroot_default_plus_typed",
+      "concurrentinheritedautomaticcontexts",
+      "concurrentexplicitoverrides",
+      "siblingpreservesinheritedautomaticcategory",
+      "disposeawhilebremainsoperational",
+      "factoryresolutionfaultcontrol",
+      "precanceledlifecyclecontrol",
+      "faultymeterfactoryloggingcontrol",
+      "actualproviderownedfactorydisposal",
+      "actualcallbackfactoryownership",
+      "livebloggerrouteafteralivea",
+      "realmetricbindingafterautomaticrefresh"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-RemoveAutomaticRefresh-build",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:13:48.604233+00:00",
+    "completed_utc": "2026-10-03T06:13:56.904677+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-RemoveAutomaticRefresh-build.log",
+    "log_sha256": "261cf7b51d6270e21a99c68d8b09edc5dfbe247a7052c8510bbd102e546bd150",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-RemoveAutomaticRefresh-ordinarydisposedpredecessor",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "ordinarydisposedpredecessor",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T06:13:57.079105+00:00",
+    "completed_utc": "2026-10-03T06:13:57.502245+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-RemoveAutomaticRefresh-ordinarydisposedpredecessor.log",
+    "log_sha256": "702fc0016efcd49b83722e265a1b4a6b8ac73b5098061329e3326bcebab9e1c7",
+    "pass_modes": [],
+    "failure_headers": [
+      "ordinarydisposedpredecessor Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null"
+    ],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-RemoveAutomaticRefresh-explicitlivefactorycontrol",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "explicitlivefactorycontrol",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:13:57.628904+00:00",
+    "completed_utc": "2026-10-03T06:13:58.231661+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-RemoveAutomaticRefresh-explicitlivefactorycontrol.log",
+    "log_sha256": "a841f17ca00fed0ff7a83b9dd12d5741c372f2398ffe40f3f7dfc4cea01949ec",
+    "pass_modes": [
+      "explicitlivefactorycontrol"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-LoseChildAutomaticOrigin-build",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:13:58.380826+00:00",
+    "completed_utc": "2026-10-03T06:14:05.050123+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-LoseChildAutomaticOrigin-build.log",
+    "log_sha256": "dec3c99a453ca150d319155151751a4fea45b05f429a1cc65e4ec3d1a639d665",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-LoseChildAutomaticOrigin-automaticcategoryprovenance",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "automaticcategoryprovenance",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T06:14:05.221477+00:00",
+    "completed_utc": "2026-10-03T06:14:05.654792+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-LoseChildAutomaticOrigin-automaticcategoryprovenance.log",
+    "log_sha256": "8677b06ea145eea5da38039629b9321072fffee07ba353f9ce16e7a8048c85ae",
+    "pass_modes": [],
+    "failure_headers": [
+      "automaticcategoryprovenance Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null"
+    ],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-LoseChildAutomaticOrigin-ordinarydisposedpredecessor",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "ordinarydisposedpredecessor",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:05.785738+00:00",
+    "completed_utc": "2026-10-03T06:14:06.211860+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-LoseChildAutomaticOrigin-ordinarydisposedpredecessor.log",
+    "log_sha256": "41f252ba7a0113d73b8847bf82b979cad342ff9a42d5f9ba7702547354801d5b",
+    "pass_modes": [
+      "ordinarydisposedpredecessor"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-LoseMessagesAutomaticOrigin-build",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:06.353957+00:00",
+    "completed_utc": "2026-10-03T06:14:12.741680+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-LoseMessagesAutomaticOrigin-build.log",
+    "log_sha256": "72c0f207afe5535eda84771cfc7c9a48b23152dfd53ef9bb3be6826065fd7e6c",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-LoseMessagesAutomaticOrigin-automaticmessagesprovenance",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "automaticmessagesprovenance",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T06:14:12.959471+00:00",
+    "completed_utc": "2026-10-03T06:14:13.415075+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-LoseMessagesAutomaticOrigin-automaticmessagesprovenance.log",
+    "log_sha256": "0c395acbe2b2f2a0e1fc7222c3e66c4a074c83b67f895176e51e670ce8f81303",
+    "pass_modes": [],
+    "failure_headers": [
+      "automaticmessagesprovenance Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null"
+    ],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-LoseMessagesAutomaticOrigin-ordinarydisposedpredecessor",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "ordinarydisposedpredecessor",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:13.544600+00:00",
+    "completed_utc": "2026-10-03T06:14:13.966006+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-LoseMessagesAutomaticOrigin-ordinarydisposedpredecessor.log",
+    "log_sha256": "1b243ab087d1c04a14261073324b64515f44da99e05f97df8c2dcca5f038cd13",
+    "pass_modes": [
+      "ordinarydisposedpredecessor"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-MarkExplicitAsAutomatic-build",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:14.106314+00:00",
+    "completed_utc": "2026-10-03T06:14:19.305277+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-MarkExplicitAsAutomatic-build.log",
+    "log_sha256": "36712766b9d9cef4078b565801472989d5e0706f01b7963fbfc9e50765d8d45f",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-MarkExplicitAsAutomatic-explicitlivefactorycontrol",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "explicitlivefactorycontrol",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T06:14:19.479904+00:00",
+    "completed_utc": "2026-10-03T06:14:19.953496+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-MarkExplicitAsAutomatic-explicitlivefactorycontrol.log",
+    "log_sha256": "44314c168908d61abfa89ccdc07796ff07c20fd76d58c5615937293f2a8ba4bc",
+    "pass_modes": [],
+    "failure_headers": [
+      "explicitlivefactorycontrol Xunit.Sdk.SameException: Assert.Same() Failure: Values are not the same instance"
+    ],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-MarkExplicitAsAutomatic-ordinarydisposedpredecessor",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "ordinarydisposedpredecessor",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:20.095635+00:00",
+    "completed_utc": "2026-10-03T06:14:20.536489+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-MarkExplicitAsAutomatic-ordinarydisposedpredecessor.log",
+    "log_sha256": "70d4c294eeaf6873c5de2656f81d45399555088b1c4f393cd538fe68ed9a4501",
+    "pass_modes": [
+      "ordinarydisposedpredecessor"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-AlwaysTreatSameFactoryAsDifferent-build",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:20.674884+00:00",
+    "completed_utc": "2026-10-03T06:14:27.033882+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-AlwaysTreatSameFactoryAsDifferent-build.log",
+    "log_sha256": "72c0f207afe5535eda84771cfc7c9a48b23152dfd53ef9bb3be6826065fd7e6c",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-AlwaysTreatSameFactoryAsDifferent-sameproviderrootidentity",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "sameproviderrootidentity",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T06:14:27.229237+00:00",
+    "completed_utc": "2026-10-03T06:14:27.521343+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-AlwaysTreatSameFactoryAsDifferent-sameproviderrootidentity.log",
+    "log_sha256": "79d6d52bab83d3a328994827bd995f575bcef7bc6fd3ba7770fe0cfda9f631a0",
+    "pass_modes": [],
+    "failure_headers": [
+      "sameproviderrootidentity Xunit.Sdk.SameException: Assert.Same() Failure: Values are not the same instance"
+    ],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-AlwaysTreatSameFactoryAsDifferent-ordinarydisposedpredecessor",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "ordinarydisposedpredecessor",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:27.652736+00:00",
+    "completed_utc": "2026-10-03T06:14:28.103284+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-AlwaysTreatSameFactoryAsDifferent-ordinarydisposedpredecessor.log",
+    "log_sha256": "c9ad6772418df2bfefde1e9133338595e38f6a5d87f159cb65342c69fb0ebe39",
+    "pass_modes": [
+      "ordinarydisposedpredecessor"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-FailRetireToNoFactory-build",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:28.239638+00:00",
+    "completed_utc": "2026-10-03T06:14:32.800262+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-FailRetireToNoFactory-build.log",
+    "log_sha256": "825d6b7ec89c147575609fb90e88f1a55e01d9fee37ea348ef0e1401a13fa05d",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-FailRetireToNoFactory-retireautomaticwhennofactory",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "retireautomaticwhennofactory",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T06:14:32.980812+00:00",
+    "completed_utc": "2026-10-03T06:14:33.270739+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-FailRetireToNoFactory-retireautomaticwhennofactory.log",
+    "log_sha256": "9743573512b125b53709fe3fcba9a8ebe6d6c0a797dcc66c9a0839e427a2bcb7",
+    "pass_modes": [],
+    "failure_headers": [
+      "retireautomaticwhennofactory Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null"
+    ],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-FailRetireToNoFactory-explicitnullwithoutfactoryidentity",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "explicitnullwithoutfactoryidentity",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:33.423450+00:00",
+    "completed_utc": "2026-10-03T06:14:33.599438+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-FailRetireToNoFactory-explicitnullwithoutfactoryidentity.log",
+    "log_sha256": "1b3d43b29fe12631ff10f87a3cf715ed1c1c1acd1cf2e03267389e72fbb34ed2",
+    "pass_modes": [
+      "explicitnullwithoutfactoryidentity"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-DiscardExplicitNullIdentity-build",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:33.754651+00:00",
+    "completed_utc": "2026-10-03T06:14:37.896295+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-DiscardExplicitNullIdentity-build.log",
+    "log_sha256": "3cb096c5d62181ea5a63124487ce9c55c862e4e5b3ef075aa4bd42e006c98460",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-DiscardExplicitNullIdentity-explicitnullwithoutfactoryidentity",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "explicitnullwithoutfactoryidentity",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T06:14:38.065232+00:00",
+    "completed_utc": "2026-10-03T06:14:38.281416+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-DiscardExplicitNullIdentity-explicitnullwithoutfactoryidentity.log",
+    "log_sha256": "26aa8ef67067d395a13d88208cfb052454c7c191c923200af846d3d5bd1b26ef",
+    "pass_modes": [],
+    "failure_headers": [
+      "explicitnullwithoutfactoryidentity Xunit.Sdk.SameException: Assert.Same() Failure: Values are not the same instance"
+    ],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-DiscardExplicitNullIdentity-ordinarydisposedpredecessor",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "ordinarydisposedpredecessor",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:38.435938+00:00",
+    "completed_utc": "2026-10-03T06:14:38.856690+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-DiscardExplicitNullIdentity-ordinarydisposedpredecessor.log",
+    "log_sha256": "a060c1387d45fe237fde60f5a4f55fdf6244b0b8985dbbc8d729c933375a4d98",
+    "pass_modes": [
+      "ordinarydisposedpredecessor"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-PrematureFactoryDispose-build",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:39.014382+00:00",
+    "completed_utc": "2026-10-03T06:14:43.487815+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-PrematureFactoryDispose-build.log",
+    "log_sha256": "6065488202fcbc09a9f7e3971a7924e1086e3e305ddbe682a6ef447769d19811",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-PrematureFactoryDispose-actualcallbackfactoryownership",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "actualcallbackfactoryownership",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T06:14:43.652208+00:00",
+    "completed_utc": "2026-10-03T06:14:43.944524+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-PrematureFactoryDispose-actualcallbackfactoryownership.log",
+    "log_sha256": "9646bcdff26650f965c797866004f5d39136e1c33a8f77fc71f39d6c740669ab",
+    "pass_modes": [],
+    "failure_headers": [
+      "actualcallbackfactoryownership Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ"
+    ],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-PrematureFactoryDispose-explicitlivefactorycontrol",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "explicitlivefactorycontrol",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:44.078516+00:00",
+    "completed_utc": "2026-10-03T06:14:44.523589+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-PrematureFactoryDispose-explicitlivefactorycontrol.log",
+    "log_sha256": "baf037a188e236c5b9993b22cc49287e42f5429233ac8e8e43a16983e099109b",
+    "pass_modes": [
+      "explicitlivefactorycontrol"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-rollback-build",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:44.675069+00:00",
+    "completed_utc": "2026-10-03T06:14:49.296134+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-rollback-build.log",
+    "log_sha256": "d0a1f85096071cfe1003848dc306ba24327122763e1d1d7be98d80574a70880c",
+    "pass_modes": [],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  },
+  {
+    "phase": "package16-f019-mut-rollback-thirtytwo",
+    "command": [
+      "dotnet",
+      "bin/Release/net10.0/LoggingLifetime.PublicConsumer.dll",
+      "all",
+      "00:00:12"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T06:14:49.499496+00:00",
+    "completed_utc": "2026-10-03T06:15:13.188904+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-mut-rollback-thirtytwo.log",
+    "log_sha256": "85ab32e8021c7f8bf233a181c5f83b2dc64692ff8894d4730bbb53e49c4d8c72",
+    "pass_modes": [
+      "ordinarydisposedpredecessor",
+      "ordinaryalivepredecessorcontrol",
+      "publicresetcontrol",
+      "explicitlivefactorycontrol",
+      "automaticcategoryprovenance",
+      "automaticmessagesprovenance",
+      "automaticnestedcategoryprovenance",
+      "sameproviderrootidentity",
+      "sameprovidercategoryidentity",
+      "borrowedfactorysharedacrossproviders",
+      "explicitiloggeridentity",
+      "explicitcustomcontextidentity",
+      "explicitcategoryidentity",
+      "explicitnullwithoutfactoryidentity",
+      "retireautomaticwhennofactory",
+      "automaticdefaultthenrealfactory",
+      "publicboundarycontrols",
+      "hostrestartfreshroot_default",
+      "hostrestartfreshroot_typed_dynamic",
+      "hostrestartfreshroot_typed_explicit",
+      "hostrestartfreshroot_default_plus_typed",
+      "concurrentinheritedautomaticcontexts",
+      "concurrentexplicitoverrides",
+      "siblingpreservesinheritedautomaticcategory",
+      "disposeawhilebremainsoperational",
+      "factoryresolutionfaultcontrol",
+      "precanceledlifecyclecontrol",
+      "faultymeterfactoryloggingcontrol",
+      "actualproviderownedfactorydisposal",
+      "actualcallbackfactoryownership",
+      "livebloggerrouteafteralivea",
+      "realmetricbindingafterautomaticrefresh"
+    ],
+    "failure_headers": [],
+    "guard_or_cleanup_fail": false
+  }
+]

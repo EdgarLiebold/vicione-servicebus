@@ -1,0 +1,30 @@
+--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataConfigurationTests.cs
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/01-AmazonS3MessageDataConfigurationTests.cs
+@@ -113,6 +113,7 @@
+             "xn--reserved",
+             "sthree-reserved",
+             "amzn_s3_demo_reserved",
++            "amzn-s3-demo-reserved",
+             "192.168.0.1",
+             "reserved-s3alias",
+             "reserved--ol-s3",
+@@ -122,8 +123,8 @@
+         ];
+         Assert.All(
+             invalidBucketNames,
+-            bucketName => Assert.Throws<ArgumentException>(
+-                () => new AmazonS3MessageDataRepositoryOptions(bucketName)));
++            bucketName => Assert.Equal("bucketName", Assert.Throws<ArgumentException>(
++                () => new AmazonS3MessageDataRepositoryOptions(bucketName)).ParamName));
+         Assert.Throws<ArgumentNullException>(() => new AmazonS3MessageDataRepositoryOptions(null!));
+         Assert.Throws<ArgumentException>(() => new AmazonS3MessageDataRepositoryOptions("   "));
+         Assert.Throws<ArgumentOutOfRangeException>(
+@@ -140,7 +141,7 @@
+             .GetProperty(nameof(AmazonS3MessageDataRepositoryOptions.BucketName))!
+             .CanWrite);
+         Assert.All(
+-            ["abc", "valid.bucket-name", new string('a', 63)],
++            ["abc", "valid.bucket-name", new string('a', 63), "amzn-s3-demo", "xamzn-s3-demo-review"],
+             bucketName => Assert.Equal(
+                 bucketName,
+                 new AmazonS3MessageDataRepositoryOptions(bucketName).BucketName));

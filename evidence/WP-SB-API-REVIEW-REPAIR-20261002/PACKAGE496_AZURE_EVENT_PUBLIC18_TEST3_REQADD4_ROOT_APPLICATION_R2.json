@@ -1,0 +1,44 @@
+{
+  "utc": "2026-10-06T15:20:51.937319+00:00",
+  "status": "ROOT_APPLIED_DIFFERENT_WHOLE_PUBLIC18_TEST3_REQADD4_PRODUCT_UNCHANGED_NATIVE_PENDING",
+  "author_REPORT": "291bd426a88123df9f1c0d55ea7d3a907b82e5279ee88dd7dafab974b7605a6c",
+  "different_REPORT": "11570dde9952aa48b4db52521362a5771beb640e8892a981389210b37b59c096",
+  "before_MAN": "15b9419a40a61530025d2420f3f6b2a7bd89ef8cd7379910102de2c8d9795302",
+  "Root_whole_tests": [
+    "dd304e Queue225",
+    "1de885 Producer178",
+    "29df90 Partition272"
+  ],
+  "Root_whole_final_peer": "7b558a",
+  "payload": [
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/QueueOwningWarningDiagnosticsTests.cs",
+      "sha256": "f969ce3fa2de08a661546b8c17a6c628171301b0f53dc22b4f9e7bdf14f9ee4c",
+      "lines": 225
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "sha256": "59ef086ae159cfbb524dcf3a877b500a10f3930a206177d92910f47409b8bf66",
+      "lines": 1549
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/PartitionOwningInfoDiagnosticsTests.cs",
+      "sha256": "54bb385f922368a6e3e1bf5827ba0cf64356d8937ec29d4e17fbc71eec787cfb",
+      "lines": 272
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/ProducerObserverRetirementTests.cs",
+      "sha256": "ff290afb429e17ce8ebd38066e3f9ae1ddcb68e9e825ceb314cdc25ae14227a3",
+      "lines": 178
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "sha256": "0c22c07dc150ddbba63a3ebd77fc6ed612724d3feabc5475b7111e71d3bd561e",
+      "lines": 667
+    }
+  ],
+  "Req_literal_inverse_exact": true,
+  "Product_changed": false,
+  "native_credit": 0,
+  "grade": null
+}

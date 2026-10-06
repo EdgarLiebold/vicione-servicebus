@@ -1,0 +1,11 @@
+--- frozen-corrected-Registrar
++++ ShareEndpointKey
+@@ -413,7 +413,7 @@
+ 
+         // A distinct transient registration owns each materialized concrete binding while
+         // preserving ordinary Bind values, lazy settings and last-concrete interface aliases.
+-        var definitionKey = new object();
++        var definitionKey = typeof(TDefinition);
+         Collection.AddKeyedTransient<TDefinition>(definitionKey, (provider, _) => settings == null
+             ? ActivatorUtilities.CreateInstance<TDefinition>(provider)
+             : ActivatorUtilities.CreateInstance<TDefinition>(provider, settings));

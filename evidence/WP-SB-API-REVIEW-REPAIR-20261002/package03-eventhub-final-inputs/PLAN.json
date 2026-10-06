@@ -1,0 +1,8 @@
+{
+  "reason": "Rebind all nineteen executed mutants to final byte-frozen regression inputs. Original r2 causal evidence remains immutable and limited to its captured input hash.",
+  "runner_sha256": "6915df46b9f372fac26065161caa94839b1aae097263587957d97da0551202f2",
+  "source_runner_sha256": "b5acd4462157e46deb5ed4cd794ba8dd3d739f83984211b2f0638ddd094efcfc",
+  "receipt_prefix": "package03-eh-r3-",
+  "expected_mutants": 19,
+  "product_change": false
+}

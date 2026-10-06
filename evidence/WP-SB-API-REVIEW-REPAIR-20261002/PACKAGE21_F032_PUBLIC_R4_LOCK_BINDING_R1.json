@@ -1,0 +1,530 @@
+{
+  "stage": "physical package/ZIP/extracted DLL+XML/source and lock-metadata binding; signed NuGet content hash not recomputed; no runtime",
+  "signed_content_hash_reference": "https://github.com/NuGet/Home/wiki/Nupkg-Metadata-File",
+  "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032",
+  "lock_sha256": "c2464d02742ed9e569113090ac63716afc0e36a7b7280510f8eee15f85d70675",
+  "assets_sha256": "0d4d9857eabe745bbd5a22e1dd7f56e23526b549fd1a60499e887bceaac037bc",
+  "peer_manifest_sha256": "19906de80aa2dd81af21418ce0d8fb54b1cc4b317632a78f9b088c9a7d76d4a0",
+  "packages": [
+    {
+      "name": "Microsoft.Extensions.DependencyInjection",
+      "version": "10.0.12",
+      "type": "Direct",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.dependencyinjection/10.0.12/microsoft.extensions.dependencyinjection.10.0.12.nupkg",
+      "sha256": "b979c630191f6c48b548cad866d8224a0ed0e6e7be0aba87f454b57597b63779",
+      "archive_sha512": "4bTS7TpB4aMRxegFpYgsp9HDI0TvFC6bt2n9SsyJ9xLy6ZEspW2ji7bQ7dKguG2w5LbsJtFiWz+wiPZgpmQ/KQ==",
+      "lock_content_hash": "lXyK2O5GoYvfxW8eCFcD16JFbcoSTM1sJkAM0UHS1jZyl9NYMW64Tqm6OQFT0IDBjZi+xHt95/Zg+nxZhGFhZg==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net10.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/net9.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net9.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.Logging",
+      "version": "10.0.12",
+      "type": "Direct",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.logging/10.0.12/microsoft.extensions.logging.10.0.12.nupkg",
+      "sha256": "539919dc90956d273ac67d24e99ae7d92a893848b6efd368c1d0e61e5bc955a9",
+      "archive_sha512": "7Dee3dIOa04MmZo+XN/FjjaVu2Q0ywIEYHJPhqve5hnu/XnXf9aed+8OBVGx93NeVZhLxDo+zeuemG7NlPHHjQ==",
+      "lock_content_hash": "6I46fTPfgYkrjRYfRXbho9WOvOelTnNjWuZws/hzGHDASH1LEJeA4VKK9k3wJvido8o7jJSB5WkMTonX7HM1bA==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Logging.dll",
+        "lib/net10.0/Microsoft.Extensions.Logging.xml",
+        "lib/net462/Microsoft.Extensions.Logging.dll",
+        "lib/net462/Microsoft.Extensions.Logging.xml",
+        "lib/net8.0/Microsoft.Extensions.Logging.dll",
+        "lib/net8.0/Microsoft.Extensions.Logging.xml",
+        "lib/net9.0/Microsoft.Extensions.Logging.dll",
+        "lib/net9.0/Microsoft.Extensions.Logging.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Logging.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Logging.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.Logging.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.Logging.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.DependencyInjection": "10.0.12",
+        "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Options": "10.0.12"
+      }
+    },
+    {
+      "name": "ViciOne.ServiceBus",
+      "version": "1.0.0",
+      "type": "Direct",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg",
+      "sha256": "a0752ed9e1999d8ca2bd19eeedc82cb011b7e6df35108b1dae0c146fc3b891a8",
+      "archive_sha512": "oYGdsndwyBOYUjv0hVXWhdBJtNGuNLyZGWxyV8k/Qhr6V/geerKRJTNDK4H+SEAGPkfdP/vfkFGw4Xrx76ntNg==",
+      "lock_content_hash": "oYGdsndwyBOYUjv0hVXWhdBJtNGuNLyZGWxyV8k/Qhr6V/geerKRJTNDK4H+SEAGPkfdP/vfkFGw4Xrx76ntNg==",
+      "signed": false,
+      "verified_extracted_entries": [
+        "lib/net10.0/ViciOne.ServiceBus.dll",
+        "lib/net10.0/ViciOne.ServiceBus.xml"
+      ],
+      "dependencies": {
+        "FastExpressionCompiler": "5.4.1",
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Diagnostics": "10.0.12",
+        "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.12",
+        "Microsoft.Extensions.Hosting.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Options": "10.0.12",
+        "ViciOne.ServiceBus.Abstractions": "1.0.0"
+      }
+    },
+    {
+      "name": "ViciOne.ServiceBus.Abstractions",
+      "version": "1.0.0",
+      "type": "Direct",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg",
+      "sha256": "287d0d419c1bd1da10de4df4d894f1da9e91f80cbdb77bcaab4907044574492d",
+      "archive_sha512": "qK67Os4AFvW8i8pRfgnvIIcWw/i1xbLmmrJPs1NzoHFIc4IneYoiKHQxiZ6e2BcIvbiPnkCQfN4+YzqdLH7oUA==",
+      "lock_content_hash": "qK67Os4AFvW8i8pRfgnvIIcWw/i1xbLmmrJPs1NzoHFIc4IneYoiKHQxiZ6e2BcIvbiPnkCQfN4+YzqdLH7oUA==",
+      "signed": false,
+      "verified_extracted_entries": [
+        "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Abstractions.xml"
+      ],
+      "dependencies": {}
+    },
+    {
+      "name": "ViciOne.ServiceBus.Courier",
+      "version": "1.0.0",
+      "type": "Direct",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/vicione.servicebus.courier/1.0.0/vicione.servicebus.courier.1.0.0.nupkg",
+      "sha256": "842a384ad99ca4ae4efa2fb5247b18e65d522f6506e151caa866f8f9a9c2fd34",
+      "archive_sha512": "0+RPGYcVCYBJgCAVznqv08a/TMmYv2z23q2bhJEMZHkHigxA823p5j0wOneKkZhHYLN5iPwBV03xTjP9V053TA==",
+      "lock_content_hash": "0+RPGYcVCYBJgCAVznqv08a/TMmYv2z23q2bhJEMZHkHigxA823p5j0wOneKkZhHYLN5iPwBV03xTjP9V053TA==",
+      "signed": false,
+      "verified_extracted_entries": [
+        "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Courier.xml"
+      ],
+      "dependencies": {
+        "FastExpressionCompiler": "5.4.1",
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Diagnostics": "10.0.12",
+        "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.12",
+        "Microsoft.Extensions.Hosting.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Options": "10.0.12",
+        "ViciOne.ServiceBus": "1.0.0"
+      }
+    },
+    {
+      "name": "xunit.v3.assert",
+      "version": "4.0.0",
+      "type": "Direct",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/xunit.v3.assert/4.0.0/xunit.v3.assert.4.0.0.nupkg",
+      "sha256": "58e041a132ba8092aa78779616fe953ae2e5ec9102e2b480bf6776a9297d51d1",
+      "archive_sha512": "5HS5G6TPk+jD77LDDTuWQ1MSBVpTEdYmlEJhmJdTpTjc7b7LBjUrFyDRN8wpqqXY/Gc5cDSZfdhSKF1JfsKNEA==",
+      "lock_content_hash": "QxYfC+98lCMe7Kl9iWDUeUn+gmiPJ2Sz/r+trSdp1mvKyDMXj8S1kYdfkFNJSHyUSQ6KWomenSDgfWhGpR8zEQ==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net8.0/xunit.v3.assert.dll",
+        "lib/net8.0/xunit.v3.assert.xml",
+        "lib/netstandard2.0/xunit.v3.assert.dll",
+        "lib/netstandard2.0/xunit.v3.assert.xml"
+      ],
+      "dependencies": {}
+    },
+    {
+      "name": "FastExpressionCompiler",
+      "version": "5.4.1",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/fastexpressioncompiler/5.4.1/fastexpressioncompiler.5.4.1.nupkg",
+      "sha256": "1076ef1b02332739d97669a7edfd4e89fae58a9e117e9700d4aff19d34a29795",
+      "archive_sha512": "Z7u90jdIwikzJq026AgvwgN1gnsP0HQW9CgkhwpvkKjSCIVl9jp4TGUTV976vyxM61LEcB/SS0S/MAfhfmQYNA==",
+      "lock_content_hash": "nqMykMspK5cQd35Y8ulQzAujxCcCwZVUne32pC5xNpXqrbPCuKOPMWkKHJ3LveAZPm6dsVvump0TJ1SZ9RzfTQ==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net472/FastExpressionCompiler.dll",
+        "lib/net472/FastExpressionCompiler.xml",
+        "lib/net6.0/FastExpressionCompiler.dll",
+        "lib/net6.0/FastExpressionCompiler.xml",
+        "lib/net8.0/FastExpressionCompiler.dll",
+        "lib/net8.0/FastExpressionCompiler.xml",
+        "lib/net9.0/FastExpressionCompiler.dll",
+        "lib/net9.0/FastExpressionCompiler.xml",
+        "lib/netstandard2.0/FastExpressionCompiler.dll",
+        "lib/netstandard2.0/FastExpressionCompiler.xml",
+        "lib/netstandard2.1/FastExpressionCompiler.dll",
+        "lib/netstandard2.1/FastExpressionCompiler.xml"
+      ],
+      "dependencies": {}
+    },
+    {
+      "name": "Microsoft.Extensions.Configuration",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.configuration/10.0.12/microsoft.extensions.configuration.10.0.12.nupkg",
+      "sha256": "d06de9d376ee3d28b0fec645b396993a3eb7b04fbc1ef7091654a08d9e1e72cb",
+      "archive_sha512": "2IfERnC6VSvQ4XyMfXMZMO334BCHD7ifkNN1KkyA7fdIXRjMQmPenR25EuRNj4dZ8h0wwtEtlFpr+ppKkiOUWw==",
+      "lock_content_hash": "e3IPP32CRNL031VZJAUTlCTG0YN7WFh4mN3fsSHTDQCJB+3+f0jGycv4fXk3rrftaY3B85XrQaj7sRthrOsavg==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Configuration.dll",
+        "lib/net10.0/Microsoft.Extensions.Configuration.xml",
+        "lib/net462/Microsoft.Extensions.Configuration.dll",
+        "lib/net462/Microsoft.Extensions.Configuration.xml",
+        "lib/net8.0/Microsoft.Extensions.Configuration.dll",
+        "lib/net8.0/Microsoft.Extensions.Configuration.xml",
+        "lib/net9.0/Microsoft.Extensions.Configuration.dll",
+        "lib/net9.0/Microsoft.Extensions.Configuration.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.Configuration.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Primitives": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.Configuration.Abstractions",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.configuration.abstractions/10.0.12/microsoft.extensions.configuration.abstractions.10.0.12.nupkg",
+      "sha256": "f7397df285cb2a34c88a6929710c0b8ed84913382e2ae708f734060bc091ce51",
+      "archive_sha512": "TZ4PJHUuUpM8ck2v6La2r23Hbvs5BAuWZKKn7/S10SBpHAAYXiRrfoBuOF3MCUH4ds7Tys7uScFCwK30a8crZg==",
+      "lock_content_hash": "8xaGcvS/qZ1otoxPQCEJkNva389CVL/plNcvIETZhQTETYdRkYDPEYhUMoAGONo4FU45ufdfE0j29AfWVVj0wA==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.xml",
+        "lib/net462/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Configuration.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.Configuration.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "lib/net9.0/Microsoft.Extensions.Configuration.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.Primitives": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.Configuration.Binder",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.configuration.binder/10.0.12/microsoft.extensions.configuration.binder.10.0.12.nupkg",
+      "sha256": "fe267b1321b7e183183ed3042071bcaf5e3ad244a83e1d27fb055071367eba48",
+      "archive_sha512": "hX7WQh+3+FYIhWq9Edz5hXgbpn+aQRRGXJpUQ4h9E6tZTdPkQ6dtDOyCssCXZlv/oq9PieQKFKdgUhsNEP8jpQ==",
+      "lock_content_hash": "dAgIf1TOr8KLs+aBRIbXUZBjHoSH4rDG8+XkX/Q6AZwkQdMA0+yPDKTHsieeXdZDfpOpZVHzOnuAb5Z2nX3KsA==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+        "lib/net10.0/Microsoft.Extensions.Configuration.Binder.xml",
+        "lib/net462/Microsoft.Extensions.Configuration.Binder.dll",
+        "lib/net462/Microsoft.Extensions.Configuration.Binder.xml",
+        "lib/net8.0/Microsoft.Extensions.Configuration.Binder.dll",
+        "lib/net8.0/Microsoft.Extensions.Configuration.Binder.xml",
+        "lib/net9.0/Microsoft.Extensions.Configuration.Binder.dll",
+        "lib/net9.0/Microsoft.Extensions.Configuration.Binder.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.Binder.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.Binder.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.Configuration": "10.0.12",
+        "Microsoft.Extensions.Configuration.Abstractions": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.dependencyinjection.abstractions/10.0.12/microsoft.extensions.dependencyinjection.abstractions.10.0.12.nupkg",
+      "sha256": "4664fab0ac4b56b8935333f59ee9e7801c8ab96de7c57cb3b6eb8192a5a61c55",
+      "archive_sha512": "kTf3x6w7DOuNj6kS0kL8oEGSSXJnqiPm3G+ddUfVB743EaO5Np8CX3r9pQp0ovBY7/J+KY0JLbwuhC02nFQO1g==",
+      "lock_content_hash": "9/qymSh7hVDMGTGwrLz8MRp5zRyXy9adGDOs4HwRdnLil3oZGYuWeZjbmHgCQ9BL1qBroVfgUK3U/nb61617Cw==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.xml"
+      ],
+      "dependencies": {}
+    },
+    {
+      "name": "Microsoft.Extensions.Diagnostics",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.diagnostics/10.0.12/microsoft.extensions.diagnostics.10.0.12.nupkg",
+      "sha256": "6edb9246a77906a0bb91bb63175c4f70cdf7b49328d3ceaae6e6c4c7bacf89ea",
+      "archive_sha512": "J15IKoJ6sYUgft34XsWdImt8EQrD9tdyOzwZDBJpIDkAqR119mNhAbbwAm2b8Ul5W6j3V94OptYWMOqLO+8+2A==",
+      "lock_content_hash": "amx0O/R4dReqKlC3T740+CHpX8D8tAIV0f5kAPfFi4XK9jYo9BSepGt9/rWfvvCoSMaZ1+XvnqPp/Vv2fmTdAg==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Diagnostics.dll",
+        "lib/net10.0/Microsoft.Extensions.Diagnostics.xml",
+        "lib/net462/Microsoft.Extensions.Diagnostics.dll",
+        "lib/net462/Microsoft.Extensions.Diagnostics.xml",
+        "lib/net8.0/Microsoft.Extensions.Diagnostics.dll",
+        "lib/net8.0/Microsoft.Extensions.Diagnostics.xml",
+        "lib/net9.0/Microsoft.Extensions.Diagnostics.dll",
+        "lib/net9.0/Microsoft.Extensions.Diagnostics.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Diagnostics.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Diagnostics.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.Configuration": "10.0.12",
+        "Microsoft.Extensions.Diagnostics.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.Diagnostics.Abstractions",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.diagnostics.abstractions/10.0.12/microsoft.extensions.diagnostics.abstractions.10.0.12.nupkg",
+      "sha256": "5ece1e660e3f707cb2d8bda190329406434b5faab45d5ee6ea8e51c93c744ec0",
+      "archive_sha512": "8i5OD/g0Xj8Q1TizgLzs6h/M7sF+CUT2JzgNuUnFBf5qHF0/jk84HCnk4mpG+t0QyFKdRB4aJ+/mLEpLhJ5sVg==",
+      "lock_content_hash": "fMp91qlRlMOuHfMyp7LuAnOS+MOeWTF1obJmyFcs4nZCXu6pr+QB1AbFJcl2qpBltBrqF/Y7+Rn9IuNcSuctig==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+        "lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.xml",
+        "lib/net462/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Diagnostics.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.Diagnostics.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+        "lib/net9.0/Microsoft.Extensions.Diagnostics.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Diagnostics.Abstractions.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Options": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.Diagnostics.HealthChecks",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.diagnostics.healthchecks/10.0.12/microsoft.extensions.diagnostics.healthchecks.10.0.12.nupkg",
+      "sha256": "8aa7164a9800fbc1bff7ef624093780a2a588d93bd066cd590b32ab08f4bb49c",
+      "archive_sha512": "cwawQoayFa162+os743171OgPp4QHue/R6W6HbhFGnvaPbQz2hE39Gt6nngLZopOVkauxNiRGfQge8OFDN6hIw==",
+      "lock_content_hash": "Ck8nkBxEYPOGtUCp0whKwfE4qAHBnsK0DY1kgZLKvzf7s9xyr4lASa4K4AKNN1VHy7r3Z1Z57U6C0TMzFjD8ig==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+        "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.xml",
+        "lib/net462/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+        "lib/net462/Microsoft.Extensions.Diagnostics.HealthChecks.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Diagnostics.HealthChecks.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Hosting.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Options": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.diagnostics.healthchecks.abstractions/10.0.12/microsoft.extensions.diagnostics.healthchecks.abstractions.10.0.12.nupkg",
+      "sha256": "9f2f201db6ccc5cb6c2c2f724301652f8c59be4a12a900a9a20adf850e806771",
+      "archive_sha512": "aRkha3TyZrBSBQBETqgCUXRU/LIgJQ+fS/GCgdaFGWrUEhFvkDAQyS0SK28zEjx5siE7qGhhbQb7ETbc4S2ptA==",
+      "lock_content_hash": "oN4AYFq+50m7a65GgRxRqjdynWS6kVQAH6gHKRTfsrLP/aH7RvxIQ7139fjbnrxBwzfZQtZRhlcjvEIiRzihrg==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+        "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.xml",
+        "lib/net462/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.xml"
+      ],
+      "dependencies": {}
+    },
+    {
+      "name": "Microsoft.Extensions.FileProviders.Abstractions",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.fileproviders.abstractions/10.0.12/microsoft.extensions.fileproviders.abstractions.10.0.12.nupkg",
+      "sha256": "49dad2381a98e644f68b711106f06c01db62c7fc3b4b1e79799ba770d0d4d9e7",
+      "archive_sha512": "uvXk5vVWju5qjSCOQCiuXi0bDoy7kI9Ds1XRpIPl0PTpgWA+sAanC6j3fR2H6lw9KHHdwdgp4oCUvN417a4Saw==",
+      "lock_content_hash": "iQseV6HixWzEYQH4i++84ToIroXnM5jC1TJF4EqBz3lWNG1HBTMYDLkRb6Wm3wk5V6WqSfl7NukO/LYsloGyfg==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.xml",
+        "lib/net462/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.FileProviders.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.FileProviders.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "lib/net9.0/Microsoft.Extensions.FileProviders.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.Primitives": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.Hosting.Abstractions",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.hosting.abstractions/10.0.12/microsoft.extensions.hosting.abstractions.10.0.12.nupkg",
+      "sha256": "535354f24c323122edbbc3a090f7c00e201effb88ab10db043e537a2023da70f",
+      "archive_sha512": "F31e9IMQm70ywZhUsXWzAx5x51989XK6CJ9FxPK5MpD/nxRzu6qAt8MT0ZfV7wl+38v60dx2GZny6cs0LJc+OQ==",
+      "lock_content_hash": "ZlIxIJtWmrph0Ikj0svSaTkZ+d+ZYpTAhazpf1b3aoFRmlNnNWwkcvqnqT9yKHjKvfBRthvUrkq11OxfItOhpg==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.xml",
+        "lib/net462/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Hosting.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.Hosting.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "lib/net9.0/Microsoft.Extensions.Hosting.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Hosting.Abstractions.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.Hosting.Abstractions.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.Configuration.Abstractions": "10.0.12",
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Diagnostics.Abstractions": "10.0.12",
+        "Microsoft.Extensions.FileProviders.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Logging.Abstractions": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.Logging.Abstractions",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.logging.abstractions/10.0.12/microsoft.extensions.logging.abstractions.10.0.12.nupkg",
+      "sha256": "34eaaa60afb61ed3d86e2e2669eae0c690d0e237e8a7066ba5bdb45a386709e7",
+      "archive_sha512": "6U8g6MRgR1JhFCr4XnlPJIjgKh9Fhh30wwUnuFvnaeJqpgx6c1J4BA5RnPNaMm7vE1zN/QOR+nTSTNswgInX2w==",
+      "lock_content_hash": "+24lC4plfbEDNfLAdTV/SWKS7dW+16X4HdydO3R++134kSNTzcbYA4KpR1Hdh6uWisB8Za3AzwyOn+K+NxWIug==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/net462/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.Options",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.options/10.0.12/microsoft.extensions.options.10.0.12.nupkg",
+      "sha256": "eec90916f11d84ea41e942b59cbf82f1e32726d87e99be7ee2b2424e31570ff7",
+      "archive_sha512": "AVPXba8q1GXeRiVr4SVu4YX0iBU+Tn59ObvD2uWkkWOwKoVPZ+HQMpen7TCiA9xpwHGMNqt381z1iWA6nokngQ==",
+      "lock_content_hash": "TDYD33TSRpXKZWlmTXNlj5kCihxatmv2Ec1u6C+bMYLphCS7PoSLE9Pjd/nunDoE7yETk+LLKjVJX78HYtWjpA==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Options.dll",
+        "lib/net10.0/Microsoft.Extensions.Options.xml",
+        "lib/net462/Microsoft.Extensions.Options.dll",
+        "lib/net462/Microsoft.Extensions.Options.xml",
+        "lib/net8.0/Microsoft.Extensions.Options.dll",
+        "lib/net8.0/Microsoft.Extensions.Options.xml",
+        "lib/net9.0/Microsoft.Extensions.Options.dll",
+        "lib/net9.0/Microsoft.Extensions.Options.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Options.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Options.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.Options.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.Options.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Primitives": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.options.configurationextensions/10.0.12/microsoft.extensions.options.configurationextensions.10.0.12.nupkg",
+      "sha256": "71cbb9b3b179ee51d5416b3b8602d7109bdfc61ae741c0c3903fe4959e2ed7e1",
+      "archive_sha512": "geP3An4Gv41CXftA64EmzzkZrUpqYAefpTcHBV0UvM28tydQAhMDNNmh4xYpp2KdHhpwsoZgbzug96QrolVzMQ==",
+      "lock_content_hash": "rqpu4qj5WE9x1IHGXSIgHBKi7IUlQaHyp4aXCYIanG2OghlUMFZpZTgExaXwcvmLAJHsxKQWMPpc7D2WIbCVtA==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+        "lib/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.xml",
+        "lib/net462/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+        "lib/net462/Microsoft.Extensions.Options.ConfigurationExtensions.xml",
+        "lib/net8.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+        "lib/net8.0/Microsoft.Extensions.Options.ConfigurationExtensions.xml",
+        "lib/net9.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+        "lib/net9.0/Microsoft.Extensions.Options.ConfigurationExtensions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Options.ConfigurationExtensions.xml"
+      ],
+      "dependencies": {
+        "Microsoft.Extensions.Configuration.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Configuration.Binder": "10.0.12",
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+        "Microsoft.Extensions.Options": "10.0.12",
+        "Microsoft.Extensions.Primitives": "10.0.12"
+      }
+    },
+    {
+      "name": "Microsoft.Extensions.Primitives",
+      "version": "10.0.12",
+      "type": "Transitive",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/restored-packages/microsoft.extensions.primitives/10.0.12/microsoft.extensions.primitives.10.0.12.nupkg",
+      "sha256": "97ee742afe0cb0634558262f925cc112b5882d09db8d169575e559031da63922",
+      "archive_sha512": "G4hMZ9wJv75ufnnBkHAHbqiywfMGfeyfz/aiBZoLeg5vVgEqZPPAT/nLFb/Pk+/mGCAIRi3i0WfGHTcVDN9lCg==",
+      "lock_content_hash": "dYfCLR52UA+3DL7C4I/pvSaRPkNqxrUAQmbFL2u0zvYKKzqgrFCJl08Df+F1aYc8leu9JvpC9bsURUdpExcBXQ==",
+      "signed": true,
+      "verified_extracted_entries": [
+        "lib/net10.0/Microsoft.Extensions.Primitives.dll",
+        "lib/net10.0/Microsoft.Extensions.Primitives.xml",
+        "lib/net462/Microsoft.Extensions.Primitives.dll",
+        "lib/net462/Microsoft.Extensions.Primitives.xml",
+        "lib/net8.0/Microsoft.Extensions.Primitives.dll",
+        "lib/net8.0/Microsoft.Extensions.Primitives.xml",
+        "lib/net9.0/Microsoft.Extensions.Primitives.dll",
+        "lib/net9.0/Microsoft.Extensions.Primitives.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.xml"
+      ],
+      "dependencies": {}
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "utc": "2026-10-06T14:08:53.915556+00:00",
+  "status": "ROOT_F152_SQS_3STATEMENTS4ROUTES_EXTENSION_PRODUCT3_APPLIED_FRESH_FIXED_PENDING",
+  "sources": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsHost.cs",
+      "before_sha256": "e1ac742f0dbec316cd64ad1d788412e5f257a9fa00f8d802ef4c84f65201b5d3",
+      "after_sha256": "1b3e9f668b6b0df6d62f071f2f4362e6a419909b36e9e561ea73ac7c0e5dc8df",
+      "before_lines": 110,
+      "after_lines": 117
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextSupervisor.cs",
+      "before_sha256": "48b277ed04c65d4b4f4e6325ca4fae00f53dab57505fdaca2c47ec5200e587f8",
+      "after_sha256": "46ec3e1312814557bfa9689d60c8301adefc81f16a1b3d1e06799d331f003c84",
+      "before_lines": 117,
+      "after_lines": 124
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
+      "before_sha256": "5e40ea9577abc141e94c4a3ac5c8c1ebc35d4369b055ced9f18e91111d9b18e1",
+      "after_sha256": "a3b7715b368f0f0c8718251cb81b70720b07758ad0b70184ef6cceb77ef4108b",
+      "before_lines": 223,
+      "after_lines": 230
+    }
+  ],
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package467-sqs-own-diagnostics3-root-product-proposed-r1/REPORT.json",
+    "sha256": "56cb1e59a1546fd04993e9c38b6714e00c04626817f7553b24dc67d09786c5ce"
+  },
+  "different_product_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package467-sqs-product3-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "d16d000d8e13e2386fc0b06bd1ba5774faba71d6028b59adae6e41742554cd4b"
+  },
+  "different_original8": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package466-sqs-original8-fixed16-independent-native-qualification-r1/REPORT.json",
+    "sha256": "0d4052ad1e5d0e6def92a0e9448c2a4c0d4ba076d535772dfc551f6e126a18ba"
+  },
+  "original8_counts": {
+    "total": 8,
+    "passed": 4,
+    "failed": 4,
+    "skipped": 0
+  },
+  "causal_bounds": "HostNull52/SendQueueTopicNull119/ReceiverGetAttributesSDKsuccessfulCompletedloggercauseCount196poll0; only3ownDiagstatements4routes, later hostile assertions unreached. No newFindingID.",
+  "before_backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package470-sqs-own-diagnostics3-f152-extension-root-application-before-r1",
+  "before_MAN": "df201e40c9aafe983ccc53ae4c98f4a17bf896022a3e48b9a1d1390aa887d500",
+  "root_personal_read": "Original8/Fixed16 independententire6082tokens1224a5 recovered priorcombinedcut; Productpeercompletef9a1b6; RootwholeSource3c9a0c2/b03aff",
+  "native_fixed_credit": 0,
+  "grade": null,
+  "limits": [
+    "Genuine config/Validate/Build/settings/addressparse/topology/adoptions/providerqueueattributeawait/setter/poll/algorithm outside diagnostic catch. InputAddress getter /typed addressconversion only diagnostic arguments inside catch; no universalSPI getter policy.",
+    "Independent unchangedTest8/fixed16 fresh andmodule/strictpublication still required; entirebeforeF152/master/state preserved."
+  ]
+}

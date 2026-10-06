@@ -18,7 +18,7 @@ public class SetPartitionKeyFilter<TMessage> :
         _routingKeyFormatter = routingKeyFormatter;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Applies the formatted partition key to an available transport payload before invoking the continuation.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

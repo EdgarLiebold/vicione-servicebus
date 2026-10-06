@@ -1,0 +1,82 @@
+{
+  "status": "STRICT_CURRENT_PUBLIC_OWNER_BUILT_NATIVE_PENDING",
+  "finding": "F-SB-API-042",
+  "created_utc": "2026-10-03T22:33:59.067142+00:00",
+  "scope": "Known volatile endpoint decorators are bypassed only for already-owned inline outbox delivery; known consume endpoint metadata and task tracking are rebound intact. Normal application sends retain volatile capture.",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "sha256": "c3d84e077590acec52e6e13323c6d356560f0d7ed035a8ae12db906fbeff4efc",
+      "bytes": 6923
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/ConsumeSendEndpoint.cs",
+      "sha256": "d7b8526ebbaae7c6244d337dac6db5e48eab6f82586c01b2b3db0589499ba49b",
+      "bytes": 2938
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/Composition.PublicConsumer.csproj",
+      "sha256": "65e944038765659fbd99a29043fe6692b2e3fad4e1df7e3542d523236e27205e",
+      "bytes": 1080
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/NuGet.Config",
+      "sha256": "cb5b91dbe139cb56c8d3fd4bc586bb46cc37896aa60c195b279dc0cd7acbef28",
+      "bytes": 576
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/OwnedDisposal.cs",
+      "sha256": "7b5638775cbc3dd898eccac52dc0f6b9a1dae5cb1300b54ccf31084de5598c95",
+      "bytes": 1013
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/OwnedLifetime.cs",
+      "sha256": "e01c009117ec2393a503eda5d2cad44d72e55ce9ef00309d51180fbd6ea5bad0",
+      "bytes": 1921
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/Program.cs",
+      "sha256": "5d40554cd6ca2dff29d7cbc86f93dec7fae30d590eea88b769c2e67812af50f4",
+      "bytes": 17899
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/global.json",
+      "sha256": "fcafdeab1b2af8c88b0aac365be7ec1f4fb8e8b2a2b700a01d2a3619687ce760",
+      "bytes": 135
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/packages.lock.json",
+      "sha256": "3ab12f88947840acebbdb86f89ba483581047708d488ea76c2504d4705cd2a16",
+      "bytes": 14388
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/obj/Release/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+      "sha256": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb",
+      "bytes": 196,
+      "prior_root_full_exact_generated_reuse": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/obj/Release/net10.0/Composition.PublicConsumer.AssemblyInfo.cs",
+      "sha256": "e0ada934ece682da66274a17f1517832bf600de5c4856e1a62b23ff896385fbb",
+      "bytes": 991,
+      "prior_root_full_exact_generated_reuse": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package30-outbox-composition-corrected/obj/Release/net10.0/Composition.PublicConsumer.GlobalUsings.g.cs",
+      "sha256": "8f86a2cbf00ff3eee0bda2bc0eb5e1fc19c8544d5dc650c53d0132325956b592",
+      "bytes": 231,
+      "prior_root_full_exact_generated_reuse": true
+    }
+  ],
+  "original_observation": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE28_ORIGINAL_R6_ROOT_FINITE_OBSERVATION_R1.json",
+  "canonical_core766_full_claimed": false,
+  "cases": [
+    "volatile-positive",
+    "volatile-fault",
+    "nested-volatile-positive",
+    "nested-volatile-fault",
+    "ef-fault"
+  ],
+  "native_executed": false,
+  "prior_candidate_sha256": "e126a982a7865016302fbe306adb3d402f994925c1829adc7b6ac6585193a4ff"
+}

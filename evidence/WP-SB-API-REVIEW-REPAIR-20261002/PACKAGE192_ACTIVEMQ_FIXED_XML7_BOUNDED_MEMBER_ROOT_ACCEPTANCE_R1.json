@@ -1,0 +1,228 @@
+{
+  "utc": "2026-10-05T15:56:11.009058+00:00",
+  "status": "SOURCE_BOUNDED_SEVEN_ORIGINAL_API_CONTRACTS_ROOT_ACCEPTED",
+  "added_original_canonical_members": 7,
+  "raw_before": 10754,
+  "raw_after": 10761,
+  "original_canonical_before": 9892,
+  "original_canonical_after": 9899,
+  "original_remaining": 8670,
+  "repair_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE192_F183_F184_F185_XML7_FRESH_PACKAGE_ROOT_REPAIR_ACCEPTANCE_R1.json",
+    "sha256": "6a0b8ba7bfa64e8becd434651909d8fc0cf6344f9d5a61573d9271ce7e8e1fb5"
+  },
+  "own_actual_counterproof": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-activemq-doc7-fresh-root-counterproof-r2/REPORT.json",
+    "sha256": "cbed6540fa2e71088ff7674b35d4fca35f1aa76761434ea43df5fac01702e6dc"
+  },
+  "independent_fresh_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-activemq-fresh-doc7-independent-scanner-peer-r1/REPORT.json",
+    "sha256": "40e9de8898c618a8cf13858601630f9057786d2bc2f73faa4ed58715c2a0bac1"
+  },
+  "root_whole_source_receipts": [
+    "41b551",
+    "fd6b0f"
+  ],
+  "new_rows": [
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.Configuration.ActiveMqBusFactoryConfigurator.Publish(System.Type,System.Action{ViciOne.ServiceBus.ActiveMq.IActiveMqMessagePublishTopologyConfigurator})",
+      "assembly": "ViciOne.ServiceBus.ActiveMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Configuration/ActiveMqBusFactoryConfigurator.cs",
+      "source_sha256": "c65797e6c4e38cf4f909dfda72c95f5f0e069e9889659b53c9b547c8b3f660e4",
+      "member_contract": "M:ViciOne.ServiceBus.ActiveMq.Configuration.ActiveMqBusFactoryConfigurator.Publish(System.Type,System.Action{ViciOne.ServiceBus.ActiveMq.IActiveMqMessagePublishTopologyConfigurator}): Gets the publish-topology configurator for the supplied runtime message type and synchronously invokes the optional callback when present. It configures topology; it performs no message send or consumer dispatch.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/topology/wrapper facts only; provider/caller/event failure and actual cloud lifetime remain separately scoped."
+      ],
+      "selected192_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Configuration/ActiveMqBusFactoryConfigurator.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "c65797e6c4e38cf4f909dfda72c95f5f0e069e9889659b53c9b547c8b3f660e4",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "mapped_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Configuration/ActiveMqBusFactoryConfigurator.cs",
+        "kind": "CURRENT_PHYSICAL_SOURCE",
+        "sha256": "c65797e6c4e38cf4f909dfda72c95f5f0e069e9889659b53c9b547c8b3f660e4"
+      },
+      "selected192_actual_XML": "<member name=\"M:ViciOne.ServiceBus.ActiveMq.Configuration.ActiveMqBusFactoryConfigurator.Publish(System.Type,System.Action{ViciOne.ServiceBus.ActiveMq.IActiveMqMessagePublishTopologyConfigurator})\">\n            <summary>Configures publish topology for a runtime message type.</summary>\n            <param name=\"messageType\">The runtime type of the message contract.</param>\n            <param name=\"configure\">An optional callback that configures the message's publish topology.</param>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.IActiveMqBusFactoryConfigurator.Publish(System.Type,System.Action{ViciOne.ServiceBus.ActiveMq.IActiveMqMessagePublishTopologyConfigurator})",
+      "assembly": "ViciOne.ServiceBus.ActiveMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/IActiveMqBusFactoryConfigurator.cs",
+      "source_sha256": "1b8de19ba586fff6cbd3a94d3ea6f50d2ffe19fea3bf628d83ad827f8f7abd69",
+      "member_contract": "M:ViciOne.ServiceBus.ActiveMq.IActiveMqBusFactoryConfigurator.Publish(System.Type,System.Action{ViciOne.ServiceBus.ActiveMq.IActiveMqMessagePublishTopologyConfigurator}): Declares runtime-type publish-topology configuration with an optional nullable callback defaulting to null. Actual built-in implementation obtains that type topology and invokes the callback; this declaration alone does not establish a custom implementation runtime.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/topology/wrapper facts only; provider/caller/event failure and actual cloud lifetime remain separately scoped."
+      ],
+      "selected192_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/IActiveMqBusFactoryConfigurator.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "1b8de19ba586fff6cbd3a94d3ea6f50d2ffe19fea3bf628d83ad827f8f7abd69",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "mapped_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/IActiveMqBusFactoryConfigurator.cs",
+        "kind": "CURRENT_PHYSICAL_SOURCE",
+        "sha256": "1b8de19ba586fff6cbd3a94d3ea6f50d2ffe19fea3bf628d83ad827f8f7abd69"
+      },
+      "selected192_actual_XML": "<member name=\"M:ViciOne.ServiceBus.ActiveMq.IActiveMqBusFactoryConfigurator.Publish(System.Type,System.Action{ViciOne.ServiceBus.ActiveMq.IActiveMqMessagePublishTopologyConfigurator})\">\n            <summary>Configures publish topology for a runtime message type.</summary>\n            <param name=\"messageType\">The runtime type of the message contract.</param>\n            <param name=\"configure\">An optional callback that configures the message's publish topology.</param>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.Topology.PublishEndpointBrokerTopologyBuilder.BuildBrokerTopology",
+      "assembly": "ViciOne.ServiceBus.ActiveMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/PublishEndpointBrokerTopologyBuilder.cs",
+      "source_sha256": "69475d561ce0b75036138aa6a9b998f243fed8e0df01d2d2878e420c5f60979f",
+      "member_contract": "M:ViciOne.ServiceBus.ActiveMq.Topology.PublishEndpointBrokerTopologyBuilder.BuildBrokerTopology: Passes collected topics, queues and consumers to ActiveMqBrokerTopology, which immediately materializes three array memberships and retains entity references. The returned array properties expose those stored arrays; no broker declaration or immutable state is established.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/topology/wrapper facts only; provider/caller/event failure and actual cloud lifetime remain separately scoped."
+      ],
+      "selected192_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/PublishEndpointBrokerTopologyBuilder.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "69475d561ce0b75036138aa6a9b998f243fed8e0df01d2d2878e420c5f60979f",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "mapped_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/PublishEndpointBrokerTopologyBuilder.cs",
+        "kind": "CURRENT_PHYSICAL_SOURCE",
+        "sha256": "69475d561ce0b75036138aa6a9b998f243fed8e0df01d2d2878e420c5f60979f"
+      },
+      "selected192_actual_XML": "<member name=\"M:ViciOne.ServiceBus.ActiveMq.Topology.PublishEndpointBrokerTopologyBuilder.BuildBrokerTopology\">\n            <summary>Creates array snapshots of the accumulated publish topology with retained entity references.</summary>\n            <returns>The configured ActiveMQ broker topology.</returns>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.Topology.ReceiveEndpointBrokerTopologyBuilder.BuildTopologyLayout",
+      "assembly": "ViciOne.ServiceBus.ActiveMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ReceiveEndpointBrokerTopologyBuilder.cs",
+      "source_sha256": "5bfcc7203a5abfd973c8452ed58fc01a79a67ff66b47e8b427e72783df092529",
+      "member_contract": "M:ViciOne.ServiceBus.ActiveMq.Topology.ReceiveEndpointBrokerTopologyBuilder.BuildTopologyLayout: Passes the current receive topics, queues and consumer bindings into the same three-array materialization constructor. Membership arrays are writable by callers and entity references are retained; no remote broker operation occurs.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/topology/wrapper facts only; provider/caller/event failure and actual cloud lifetime remain separately scoped."
+      ],
+      "selected192_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ReceiveEndpointBrokerTopologyBuilder.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "5bfcc7203a5abfd973c8452ed58fc01a79a67ff66b47e8b427e72783df092529",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "mapped_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ReceiveEndpointBrokerTopologyBuilder.cs",
+        "kind": "CURRENT_PHYSICAL_SOURCE",
+        "sha256": "5bfcc7203a5abfd973c8452ed58fc01a79a67ff66b47e8b427e72783df092529"
+      },
+      "selected192_actual_XML": "<member name=\"M:ViciOne.ServiceBus.ActiveMq.Topology.ReceiveEndpointBrokerTopologyBuilder.BuildTopologyLayout\">\n            <summary>Creates array snapshots of the accumulated receive topology with retained entity references.</summary>\n            <returns>The configured ActiveMQ broker topology.</returns>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.ActiveMq.CachedMessageProducer",
+      "assembly": "ViciOne.ServiceBus.ActiveMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/CachedMessageProducer.cs",
+      "source_sha256": "ea1822b1eb3065a253b92f453b9b1356d0db4b1e94c874341b58452bfa00f47c",
+      "member_contract": "T:ViciOne.ServiceBus.ActiveMq.CachedMessageProducer: Wraps a required native producer and destination. Send, message-creation and asynchronous-close methods invoke optional Used handlers before delegation; synchronous Close, Dispose and property accessors simply delegate without usage notification. Handler or provider exceptions remain observable.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/topology/wrapper facts only; provider/caller/event failure and actual cloud lifetime remain separately scoped."
+      ],
+      "selected192_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/CachedMessageProducer.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "ea1822b1eb3065a253b92f453b9b1356d0db4b1e94c874341b58452bfa00f47c",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "mapped_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/CachedMessageProducer.cs",
+        "kind": "CURRENT_PHYSICAL_SOURCE",
+        "sha256": "ea1822b1eb3065a253b92f453b9b1356d0db4b1e94c874341b58452bfa00f47c"
+      },
+      "selected192_actual_XML": "<member name=\"T:ViciOne.ServiceBus.ActiveMq.CachedMessageProducer\">\n            <summary>Decorates an Apache NMS producer and reports cache usage from send, message-creation, and asynchronous-close methods.</summary>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.ActiveMq.Topology.ActiveMqBrokerTopology",
+      "assembly": "ViciOne.ServiceBus.ActiveMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ActiveMqBrokerTopology.cs",
+      "source_sha256": "86d3bb01b3de74cbff4a613e0069f9c2c2f3e96e167364825c812eb9289213fc",
+      "member_contract": "T:ViciOne.ServiceBus.ActiveMq.Topology.ActiveMqBrokerTopology: Materializes supplied topic, queue and consumer enumerables with ToArray. Public getters return the three stored arrays directly while element references are retained. Probe enumerates those current arrays; neither deep immutability nor copy-on-access is provided.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/topology/wrapper facts only; provider/caller/event failure and actual cloud lifetime remain separately scoped."
+      ],
+      "selected192_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ActiveMqBrokerTopology.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "86d3bb01b3de74cbff4a613e0069f9c2c2f3e96e167364825c812eb9289213fc",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "mapped_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ActiveMqBrokerTopology.cs",
+        "kind": "CURRENT_PHYSICAL_SOURCE",
+        "sha256": "86d3bb01b3de74cbff4a613e0069f9c2c2f3e96e167364825c812eb9289213fc"
+      },
+      "selected192_actual_XML": "<member name=\"T:ViciOne.ServiceBus.ActiveMq.Topology.ActiveMqBrokerTopology\">\n            <summary>Stores array snapshots of ActiveMQ topics, queues, and consumer bindings with retained entity references.</summary>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "E:ViciOne.ServiceBus.ActiveMq.CachedMessageProducer.Used",
+      "assembly": "ViciOne.ServiceBus.ActiveMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/CachedMessageProducer.cs",
+      "source_sha256": "ea1822b1eb3065a253b92f453b9b1356d0db4b1e94c874341b58452bfa00f47c",
+      "member_contract": "E:ViciOne.ServiceBus.ActiveMq.CachedMessageProducer.Used: Declares an optional Action event. Only send, message-creation and asynchronous-close routes invoke it, before native producer delegation. Properties, synchronous Close and Dispose do not invoke it; a throwing event handler can stop delegation, so notification does not establish operation success.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/topology/wrapper facts only; provider/caller/event failure and actual cloud lifetime remain separately scoped."
+      ],
+      "selected192_actual_PDB_source_binding": {
+        "document": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/CachedMessageProducer.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "ea1822b1eb3065a253b92f453b9b1356d0db4b1e94c874341b58452bfa00f47c",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "mapped_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/CachedMessageProducer.cs",
+        "kind": "CURRENT_PHYSICAL_SOURCE",
+        "sha256": "ea1822b1eb3065a253b92f453b9b1356d0db4b1e94c874341b58452bfa00f47c"
+      },
+      "selected192_actual_XML": "<member name=\"E:ViciOne.ServiceBus.ActiveMq.CachedMessageProducer.Used\">\n            <summary>Occurs when a send, message-creation, or asynchronous-close method reports use of the wrapped producer.</summary>\n        </member>\n        ",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    }
+  ],
+  "limits": [
+    "Six formerly held contracts and same-owner Used event. Five concrete build/lifetime methods remain held.",
+    "No Native/API-wide grade, new accessor sidecar or baseline denominator change."
+  ]
+}

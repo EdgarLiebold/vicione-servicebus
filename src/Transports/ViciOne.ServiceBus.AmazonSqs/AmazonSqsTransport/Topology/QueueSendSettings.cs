@@ -21,7 +21,7 @@ public class QueueSendSettings :
     {
         var builder = new SendEndpointBrokerTopologyBuilder();
 
-        builder.Queue = builder.CreateQueue(EntityName, Durable, AutoDelete);
+        builder.Queue = builder.CreateQueue(EntityName, Durable, AutoDelete, QueueAttributes, QueueSubscriptionAttributes, Tags);
 
         return builder.BuildBrokerTopology();
     }

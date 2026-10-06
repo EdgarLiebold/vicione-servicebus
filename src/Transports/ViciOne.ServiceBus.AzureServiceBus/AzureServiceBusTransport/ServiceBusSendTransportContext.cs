@@ -148,7 +148,14 @@ public class ServiceBusSendTransportContext :
             ?? throw new InvalidOperationException("A scheduled enqueue time is required for a scheduled send.");
         if (enqueueTimeUtc < now)
         {
-            ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log("The scheduled time was in the past, sending: {DueAt}", context.ScheduledEnqueueTimeUtc);
+            try
+            {
+                ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log("The scheduled time was in the past, sending: {DueAt}", context.ScheduledEnqueueTimeUtc);
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics cannot replace the endpoint or broker operation.
+            }
 
             return false;
         }
@@ -163,13 +170,27 @@ public class ServiceBusSendTransportContext :
 
             context.SetScheduledMessageId(sequenceNumber);
 
-            context.LogScheduled(enqueueTimeUtc.UtcDateTime);
+            try
+            {
+                context.LogScheduled(enqueueTimeUtc.UtcDateTime);
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics cannot replace the endpoint or broker operation.
+            }
 
             return true;
         }
         catch (ArgumentOutOfRangeException)
         {
-            ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log("The scheduled time was rejected by the server, sending: {MessageId}", context.MessageId);
+            try
+            {
+                ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log("The scheduled time was rejected by the server, sending: {MessageId}", context.MessageId);
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics cannot replace the endpoint or broker operation.
+            }
 
             return false;
         }
@@ -181,15 +202,36 @@ public class ServiceBusSendTransportContext :
         {
             await clientContext.CancelScheduledSendAsync(sequenceNumber, cancellationToken).ConfigureAwait(false);
 
-            ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId}", EntityName, tokenId);
+            try
+            {
+                ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId}", EntityName, tokenId);
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics cannot replace the endpoint or broker operation.
+            }
         }
         catch (ServiceBusException exception) when (exception.Reason == ServiceBusFailureReason.MessageNotFound)
         {
-            ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId} message not found", EntityName, tokenId);
+            try
+            {
+                ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId} message not found", EntityName, tokenId);
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics cannot replace the endpoint or broker operation.
+            }
         }
         catch (InvalidOperationException exception) when (exception.Message.Contains("already being cancelled"))
         {
-            ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId} message already being canceled", EntityName, tokenId);
+            try
+            {
+                ViciOne.ServiceBus.Advanced.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId} message already being canceled", EntityName, tokenId);
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics cannot replace the endpoint or broker operation.
+            }
         }
     }
 

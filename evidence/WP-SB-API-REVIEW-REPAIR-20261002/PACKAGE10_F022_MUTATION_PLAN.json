@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-03T02:46:36.318734+00:00",
+  "corrected_source_sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+  "author": "Root",
+  "frame": "Eight current package05 diagnostic product inputs plus F022 instrumentation; all other mutation source files retain original frozen repository bytes",
+  "variants": [
+    {
+      "name": "admission-cleanup-omitted",
+      "negative": "admission-formatter-sampled",
+      "positive": "admission-plain-sampled"
+    },
+    {
+      "name": "delivery-cleanup-omitted",
+      "negative": "delivery-formatter-sampled",
+      "positive": "delivery-plain-sampled"
+    },
+    {
+      "name": "caller-activity-disposed",
+      "negative": "admission-formatter-sampled",
+      "positive": "admission-plain-sampled"
+    },
+    {
+      "name": "unsafe-listener-disposal",
+      "negative": "admission-stop-fault",
+      "positive": "admission-plain-sampled"
+    }
+  ],
+  "protocol": "Strict compiled each, actual causal negative with no cancellation/timeout, positive control, all ten corrected baseline/rollback; no per-mutant fresh NuGet claim; preserve source6209 and new-file removal/runtime/oracles in finally",
+  "native_corrected_cases": 10,
+  "native_corrected_failures": 0
+}

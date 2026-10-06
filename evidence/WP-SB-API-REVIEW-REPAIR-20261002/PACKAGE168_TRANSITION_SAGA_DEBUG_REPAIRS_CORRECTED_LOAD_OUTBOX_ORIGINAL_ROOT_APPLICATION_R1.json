@@ -1,0 +1,121 @@
+{
+  "utc": "2026-10-05T05:55:37.799948+00:00",
+  "actor": "/root",
+  "status": "SOURCE_APPLIED_PEER_APPROVED_NATIVE_PENDING",
+  "epoch": 168,
+  "prior167_freeze_ACK": true,
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/StateMachineExtensions.cs",
+      "before_sha256": "56ffd7ecdb18acf1ab5482438bedfc41c3083c0459f0e67c4ea7ace05fb2cd1e",
+      "after_sha256": "4c89784259081376d309e2dd7a6d3208b088e4ac84d6dc09ad67e843c11a8ffb",
+      "before_lines": 36,
+      "after_lines": 43
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/ViciOneServiceBusStateMachine.BehaviorContextProxy.cs",
+      "before_sha256": "fe53621cb99b7e11375da1f2fe2dd61416a816c27e5164cc553d6efe23bfce5d",
+      "after_sha256": "17435cad1c9301199a66954c598ed0dab4a10021a6804cb4ac7207fae86c6182",
+      "before_lines": 224,
+      "after_lines": 272
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaStateQueryRuntimeExtensionDeepContractTests.cs",
+      "before_sha256": "6804f583901a3ab2f5ba441ef7940ce7aefd9b5d501485f2d4b573a732e7a1cd",
+      "after_sha256": "727ef8ef1ca38988486b7f7ad3777a11d86e9eadd9c899096c9f2dacfac21b87",
+      "before_lines": 585,
+      "after_lines": 709
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/SagaRepositoryLifecycleDeepContractTests.cs",
+      "before_sha256": "94b25151ce6dc8881522300f1850c6019bc7ca87f2da0d0e42c722ef205e7c40",
+      "after_sha256": "8fc600cfb6ff1e7fc64adedc2d99a0ccd35d4d0eb4679c6797c54db3438126d6",
+      "before_lines": 1262,
+      "after_lines": 1268
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/SendSagaPipe.cs",
+      "before_sha256": "c78556af2d8c968b475e3f99772bcab6aed09d56298e8c34d662ca26ca1560e5",
+      "after_sha256": "e978c95870fe1baef38f4a4872da0c3f59a5b85a4c1a700d51178d1cda56e7ca",
+      "before_lines": 180,
+      "after_lines": 192
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Saga/FactoryMethodSagaFactory.cs",
+      "before_sha256": "71288cb1f4038b4621c449217d3c0ceffa92edd81593a64532accebe0db74a5c",
+      "after_sha256": "d3089385353bc9eb9def5122159ec922091676966e6b999c081a8b25f3379ee8",
+      "before_lines": 60,
+      "after_lines": 66
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryContextTests.cs",
+      "before_sha256": "088b487e02e1dcb420498c0b54179bd78b8e4fdf8eef8bea1fcadc698eaeaee9",
+      "after_sha256": "bc070ae3344fbb3c55532b5072ecb48f015fe694d90b556c5ba2eefc7191d70a",
+      "before_lines": 847,
+      "after_lines": 893
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/OutboxMessagePipeTests.cs",
+      "before_sha256": "220566ed35ef39c1eba6cf8a5ada95854606bffcca8e4a12f2c34dcd92282727",
+      "after_sha256": "960f4369d0a340e2079e6d98c89e093217912e7be07d492d3f0251f58c85fcd5",
+      "before_lines": 241,
+      "after_lines": 480
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "05fa13b77847376b3afc9438542fdef44f544e1cb9b613a04ec27d31f093ccb1",
+      "after_sha256": "bfd627e483f07beef4f3b300be65a01d1a2dfedc36f17805ad8712091be8f7cd",
+      "before_rows": 4644,
+      "after_rows": 4646
+    }
+  ],
+  "author_peer_bindings": [
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package167-transition-token-context-product-proposed-r2/REPORT.json",
+      "author_sha256": "bc14c88a05a7fdebdd51916b34185d22a29ed766828f42af2d6994b14a60770f",
+      "manifest_files_verified": 5,
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package167-transition-token-lifecycle-independent-scanner-r2/REPORT.json",
+      "peer_sha256": "afc322276a0317a165cbc4fb84167cd63adca60bbb390f870e9d0042cf0c1db6"
+    },
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package167-transition-live-lifecycle-controls2-proposed-r1/REPORT.json",
+      "author_sha256": "4835d59833d4be9daafddb9487c27ce565ca47e35567fef7c5a19a8b714aa9d0",
+      "manifest_files_verified": 4,
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package167-transition-token-lifecycle-independent-scanner-r2/REPORT.json",
+      "peer_sha256": "afc322276a0317a165cbc4fb84167cd63adca60bbb390f870e9d0042cf0c1db6"
+    },
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package168-saga-owned-debug-containment-product-oracle-proposed-r1/REPORT.json",
+      "author_sha256": "0f27142772c116b328ce21078b8d33a30a9be971e34bc118b5a9d0405e86e395",
+      "manifest_files_verified": 7,
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package168-saga-owned-debug-containment-independent-scanner-r1/REPORT.json",
+      "peer_sha256": "acbe59a53f54a1f24f43d4583e357738e06e74d68914975186e00f9ef7a7f6c8"
+    },
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-inmemory-typed-load-original3-oracles-corrected-r3/REPORT.json",
+      "author_sha256": "639a2885280f879c526a7274d42d5c558113b5293b3ca1835421303a7b4b0e2b",
+      "manifest_files_verified": 5,
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-inmemory-typed-load-race-correction-independent-scanner-r3/REPORT.json",
+      "peer_sha256": "bb3a8370d15dd832b460832c30cfba0b34f2b05d1d655ae9eaf5d718d72c5809"
+    },
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-outbox-debug-progress4-oracles-proposed-r1/REPORT.json",
+      "author_sha256": "83f0d3a3e067460c0bae1f5d2193ee768ae47ef9dedc9b94fc5ca8cae0bf0004",
+      "manifest_files_verified": 8,
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-outbox-debug4-independent-qualification-r1/REPORT.json",
+      "peer_sha256": "7100f5df81deea062cc4a5dd2b7853f5e4c9be0f0a84642c63927e1d61300ee2"
+    }
+  ],
+  "requirements_prefix_preserved": 4644,
+  "requirements_current": 4646,
+  "root_reads": [
+    "Product43/272 whole1dbdec, owningSaga192/66 whole792a1c; all literal deltas independently reconstructed.",
+    "Transition124 additions77200f; correctedLoadwholeDelta1dbdec; Outboxnew236+helpers00396f.",
+    "Peer reports8e3e25/e9e771;1673340manifest3323live5logsphysicalpacks2 validatedf5dfc9."
+  ],
+  "limits": [
+    "Source approval is not native success. No accepted count increase.",
+    "Two CT overrides add declared API/XML metadata; no metadata sameness.",
+    "Load and Outbox oracles candidates until actual finite native causes."
+  ]
+}

@@ -1,0 +1,366 @@
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs", "bytes": 18461, "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825", "start_line": 1, "end_line": 120}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.DependencyInjection.Registration;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>Plans and attaches all component endpoints owned by one bus contract.</summary>
+internal sealed class BusRegistrationContext :
+    RegistrationContext,
+    IBusRegistrationContext,
+    IBusRegistrationIdentity
+{
+    IConfigureReceiveEndpoint? _configureReceiveEndpoints;
+
+    /// <summary>Creates a registration context for a specific bus contract.</summary>
+    /// <param name="provider">The service provider that contains bus components.</param>
+    /// <param name="selector">The bus-aware component registration selector.</param>
+    /// <param name="setScopedConsumeContext">The accessor that installs and restores ambient consume contexts.</param>
+    /// <param name="busType">The contract that identifies this bus owner.</param>
+    public BusRegistrationContext(IServiceProvider provider, IContainerSelector selector, ISetScopedConsumeContext setScopedConsumeContext, Type busType)
+        : base(provider, selector, setScopedConsumeContext)
+    {
+        ArgumentNullException.ThrowIfNull(busType);
+        if (!typeof(IBus).IsAssignableFrom(busType))
+            throw new ArgumentException($"{TypeCache.GetShortName(busType)} is not a bus contract", nameof(busType));
+
+        BusType = busType;
+        BusKey = BusRegistrationIdentity.GetKey(busType);
+    }
+
+    string IBusRegistrationIdentity.BusKey => BusKey;
+
+    internal string BusKey { get; }
+
+    /// <summary>Gets the bus contract represented by this context.</summary>
+    public Type BusType { get; }
+
+    /// <summary>Gets the endpoint naming convention registered for this bus owner.</summary>
+    public IEndpointNameFormatter EndpointNameFormatter => Selector.GetEndpointNameFormatter(this);
+
+    /// <summary>Creates endpoints for every eligible registration owned by this bus.</summary>
+    /// <typeparam name="T">The receive endpoint configurator contract.</typeparam>
+    /// <param name="configurator">The transport receive-endpoint factory.</param>
+    /// <param name="endpointNameFormatter">An optional endpoint naming convention for this operation.</param>
+    public void ConfigureEndpoints<T>(IReceiveConfigurator<T> configurator, IEndpointNameFormatter? endpointNameFormatter = null)
+        where T : IReceiveEndpointConfigurator
+    {
+        ConfigureEndpoints(configurator, endpointNameFormatter, null);
+    }
+
+    /// <summary>Creates endpoints for registrations selected by an optional registration filter.</summary>
+    /// <typeparam name="T">The receive endpoint configurator contract.</typeparam>
+    /// <param name="configurator">The transport receive-endpoint factory.</param>
+    /// <param name="endpointNameFormatter">An optional endpoint naming convention for this operation.</param>
+    /// <param name="configureFilter">An optional callback that includes or excludes registrations.</param>
+    public void ConfigureEndpoints<T>(IReceiveConfigurator<T> configurator, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IRegistrationFilterConfigurator>? configureFilter)
+        where T : IReceiveEndpointConfigurator
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+
+        endpointNameFormatter ??= EndpointNameFormatter;
+        IRegistrationFilter registrationFilter = CreateRegistrationFilter(configureFilter);
+        IConsumerKind[] consumerKinds = GetConsumerKinds();
+        List<PlannedRegistration> registrations = PlanRegistrations(
+            consumerKinds,
+            endpointNameFormatter,
+            registrationFilter);
+        EndpointPlan endpointPlan = PlanEndpoints(registrations, endpointNameFormatter, registrationFilter);
+
+        if (configurator is not IServiceInstanceConfigurator<T>
+            && endpointPlan.Endpoints.Any(endpoint => endpoint.RequiresServiceInstance))
+            ConfigureServiceInstanceEndpoints(endpointPlan, endpointNameFormatter, configurator);
+        else
+            ConfigureTheEndpoints(
+                endpointPlan.Endpoints,
+                endpointNameFormatter,
+                endpointPlan.GetDefinitionByName,
+                configurator);
+    }
+
+    static IRegistrationFilter CreateRegistrationFilter(Action<IRegistrationFilterConfigurator>? configureFilter)
+    {
+        var builder = new RegistrationFilterConfigurator();
+        configureFilter?.Invoke(builder);
+        return builder.Filter;
+    }
+
+    IConsumerKind[] GetConsumerKinds()
+    {
+        return ((IEnumerable<IConsumerKind>?)GetService(typeof(IEnumerable<IConsumerKind>)) ?? [])
+            .OrderBy(kind => kind.IsFallback)
+            .ThenBy(kind => kind.Order)
+            .ThenBy(kind => kind.Name, StringComparer.Ordinal)
+            .ToArray();
+    }
+
+    List<PlannedRegistration> PlanRegistrations(
+        IReadOnlyCollection<IConsumerKind> consumerKinds,
+        IEndpointNameFormatter endpointNameFormatter,
+        IRegistrationFilter registrationFilter)
+    {
+        var context = new ConsumerKindContext(this, endpointNameFormatter, registrationFilter);
+        IEnumerable<PlannedRegistration> registrations = consumerKinds.SelectMany(kind =>
+            kind.GetRegistrations(context).Select(registration => new PlannedRegistration(
+                kind,
+                registration,
+                registration.RequiresServiceInstance || consumerKinds.Any(candidate =>
+                    candidate is IConsumerKindServiceRequirement requirement
+                    && requirement.RequiresServiceInstance(registration.RegistrationType)))));
+
+        return SelectRegistrationOwners(registrations);
+    }
+
+    EndpointPlan PlanEndpoints(
+        IReadOnlyCollection<PlannedRegistration> registrations,
+        IEndpointNameFormatter endpointNameFormatter,
+        IRegistrationFilter registrationFilter)
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs", "bytes": 18461, "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825", "start_line": 121, "end_line": 240}
+    {
+        Dictionary<string, List<PlannedRegistration>> registrationsByEndpoint = registrations
+            .GroupBy(registration => registration.Registration.EndpointName)
+            .ToDictionary(
+                group => group.Key,
+                group => group.OrderBy(value => value.Kind.Order).ToList());
+        List<NamedEndpoint> explicitlyDefinedEndpoints = Selector.GetRegistrations<IEndpointRegistration>(this)
+            .Where(registration => registration.IncludeInConfigureEndpoints
+                && !WasConfigured(registration.Type)
+                && registrationFilter.Matches(registration))
+            .Select(registration => registration.GetDefinition(this))
+            .Select(definition => new NamedEndpoint(definition.GetEndpointName(endpointNameFormatter), definition))
+            .GroupBy(endpoint => endpoint.Name, (name, values) => new NamedEndpoint(
+                name,
+                values.Select(endpoint => endpoint.Definition).Combine(this, name)!))
+            .ToList();
+
+        IEndpointDefinition? GetDefinitionByName(string name) =>
+            explicitlyDefinedEndpoints.SingleOrDefault(endpoint => endpoint.Name == name)?.Definition;
+
+        HashSet<string> companionEndpointNames = registrations
+            .SelectMany(registration => registration.Registration.CompanionEndpointNames)
+            .ToHashSet(StringComparer.Ordinal);
+        IEnumerable<string> endpointNames = registrationsByEndpoint.Keys
+            .Union(explicitlyDefinedEndpoints.Select(endpoint => endpoint.Name))
+            .Where(name => !companionEndpointNames.Contains(name))
+            .OrderBy(name => registrationsByEndpoint.TryGetValue(name, out List<PlannedRegistration>? endpointRegistrations)
+                ? endpointRegistrations.Min(registration => registration.Kind.Order)
+                : int.MaxValue)
+            .ThenBy(name => name, StringComparer.Ordinal);
+        List<Endpoint> endpoints = endpointNames.Select(name =>
+        {
+            registrationsByEndpoint.TryGetValue(name, out List<PlannedRegistration>? endpointRegistrations);
+            endpointRegistrations ??= [];
+            IEndpointDefinition definition = GetDefinitionByName(name)
+                ?? CreateConsumerKindEndpointDefinition(name, endpointRegistrations);
+            return new Endpoint(definition, endpointRegistrations);
+        }).ToList();
+
+        return new EndpointPlan(endpoints, GetDefinitionByName);
+    }
+
+    void ConfigureServiceInstanceEndpoints<T>(
+        EndpointPlan endpointPlan,
+        IEndpointNameFormatter endpointNameFormatter,
+        IReceiveConfigurator<T> configurator)
+        where T : IReceiveEndpointConfigurator
+    {
+        IConsumerKindHost[] hosts = Selector.GetRegistrations<IConsumerKindHost>(this).ToArray();
+        if (hosts.Length != 1)
+        {
+            throw new ConfigurationException(
+                Providers.Configuration.ConfigurationMessages.Create("Consumer kind host", BusKey,
+                    "Exactly one service-instance host is required by the registered consumer kinds",
+                    "Register the capability package that owns the service-instance consumer kind"));
+        }
+
+        IConsumerKindHost host = hosts[0];
+        var endpointDefinition = new RegistrationContextEndpointDefinition(host.EndpointDefinition, this);
+        configurator.ReceiveEndpoint(endpointDefinition, endpointNameFormatter, endpointConfigurator =>
+        {
+            var options = new ServiceInstanceOptions().SetEndpointNameFormatter(endpointNameFormatter);
+            var instanceConfigurator = new ServiceInstanceConfigurator<T>(configurator, options, endpointConfigurator);
+            host.Configure(instanceConfigurator, this);
+            ConfigureTheEndpoints(
+                endpointPlan.Endpoints,
+                endpointNameFormatter,
+                endpointPlan.GetDefinitionByName,
+                configurator,
+                instanceConfigurator);
+        });
+    }
+
+    /// <summary>Gets the cached aggregate of global and bus-specific endpoint callbacks.</summary>
+    /// <returns>The callback aggregate for this bus owner.</returns>
+    public IConfigureReceiveEndpoint GetConfigureReceiveEndpoints()
+    {
+        if (_configureReceiveEndpoints != null)
+            return _configureReceiveEndpoints;
+
+        _configureReceiveEndpoints = Selector.GetConfigureReceiveEndpoints(this);
+
+        return _configureReceiveEndpoints;
+    }
+
+    IEndpointDefinition CreateConsumerKindEndpointDefinition(string endpointName, IReadOnlyCollection<PlannedRegistration> registrations)
+    {
+        if (registrations.Count == 0)
+            return new NamedEndpointDefinition(endpointName);
+
+        var firstKind = registrations
+            .GroupBy(x => x.Kind.Order)
+            .OrderBy(x => x.Key)
+            .First();
+
+        return firstKind
+            .Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(endpointName, x.Registration.Definition,
+                x.Registration.EndpointDefinition))
+            .Combine(this, endpointName) ?? new NamedEndpointDefinition(endpointName);
+    }
+
+    void ConfigureTheEndpoints<T>(IEnumerable<Endpoint> endpoints, IEndpointNameFormatter endpointNameFormatter,
+        Func<string, IEndpointDefinition?> getEndpointDefinitionByName,
+        IReceiveConfigurator<T> configurator, IReceiveConfigurator<T>? instanceConfigurator = null)
+        where T : IReceiveEndpointConfigurator
+    {
+        var configureReceiveEndpoint = GetConfigureReceiveEndpoints();
+
+        foreach (var endpoint in endpoints)
+        {
+            IReceiveConfigurator<T> useConfigurator = instanceConfigurator != null && endpoint.RequiresServiceInstance
+                ? instanceConfigurator
+                : configurator;
+
+            var endpointDefinition = new RegistrationContextEndpointDefinition(endpoint.Definition, this);
+
+            useConfigurator.ReceiveEndpoint(endpointDefinition, endpointNameFormatter, cfg =>
+            {
+                configureReceiveEndpoint.Configure(endpointDefinition.GetEndpointName(endpointNameFormatter), cfg);
+
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs", "bytes": 18461, "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825", "start_line": 241, "end_line": 360}
+                var context = new ConsumerKindEndpointContext<T>(this, cfg, configurator, endpointNameFormatter,
+                    getEndpointDefinitionByName, configureReceiveEndpoint);
+                foreach (var registration in endpoint.Registrations)
+                {
+                    registration.Registration.Configure(context);
+                    MarkConfigured(registration.Registration.RegistrationType);
+                }
+            });
+        }
+    }
+
+    List<PlannedRegistration> SelectRegistrationOwners(IEnumerable<PlannedRegistration> registrations)
+    {
+        return registrations
+            .GroupBy(registration => registration.Registration.RegistrationType)
+            .Select(group =>
+            {
+                PlannedRegistration[] explicitOwners = group.Where(registration => !registration.Kind.IsFallback).ToArray();
+                if (explicitOwners.Length == 1)
+                    return explicitOwners[0];
+
+                if (explicitOwners.Length > 1)
+                {
+                    string owners = string.Join(", ", explicitOwners.Select(registration => registration.Kind.Name)
+                        .OrderBy(name => name, StringComparer.Ordinal));
+                    throw new ConfigurationException(
+                        Providers.Configuration.ConfigurationMessages.Create("Consumer kind", BusKey,
+                            $"Handler '{TypeCache.GetShortName(group.Key)}' is claimed by multiple capability categories: {owners}",
+                            "Register exactly one capability package that owns the handler type"));
+                }
+
+                PlannedRegistration[] fallbackOwners = group.ToArray();
+                if (fallbackOwners.Length == 1)
+                    return fallbackOwners[0];
+
+                throw new ConfigurationException(
+                    Providers.Configuration.ConfigurationMessages.Create("Consumer kind", BusKey,
+                        $"Handler '{TypeCache.GetShortName(group.Key)}' is claimed by multiple fallback categories",
+                        "Register exactly one fallback consumer category"));
+            })
+            .ToList();
+    }
+
+
+    sealed class ConsumerKindContext :
+        IConsumerKindContext
+    {
+        readonly BusRegistrationContext _context;
+        readonly IRegistrationFilter _filter;
+
+        public ConsumerKindContext(BusRegistrationContext context, IEndpointNameFormatter endpointNameFormatter,
+            IRegistrationFilter filter)
+        {
+            _context = context;
+            EndpointNameFormatter = endpointNameFormatter;
+            _filter = filter;
+        }
+
+        public IRegistrationContext RegistrationContext => _context;
+        public IEndpointNameFormatter EndpointNameFormatter { get; }
+
+        public IEnumerable<TRegistration> GetRegistrations<TRegistration>()
+            where TRegistration : class, IRegistration
+        {
+            return _context.Selector.GetRegistrations<TRegistration>(_context)
+                .Where(x => x.IncludeInConfigureEndpoints && !_context.WasConfigured(x.Type) && _filter.Matches(x));
+        }
+    }
+
+
+    sealed class ConsumerKindEndpointContext<T> :
+        IConsumerKindEndpointContext
+        where T : IReceiveEndpointConfigurator
+    {
+        readonly IConfigureReceiveEndpoint _configureReceiveEndpoint;
+        readonly IReceiveConfigurator<T> _configurator;
+        readonly IEndpointNameFormatter _endpointNameFormatter;
+        readonly Func<string, IEndpointDefinition?> _getEndpointDefinitionByName;
+
+        public ConsumerKindEndpointContext(BusRegistrationContext registrationContext,
+            IReceiveEndpointConfigurator endpointConfigurator, IReceiveConfigurator<T> configurator,
+            IEndpointNameFormatter endpointNameFormatter, Func<string, IEndpointDefinition?> getEndpointDefinitionByName,
+            IConfigureReceiveEndpoint configureReceiveEndpoint)
+        {
+            RegistrationContext = registrationContext;
+            EndpointConfigurator = endpointConfigurator;
+            _configurator = configurator;
+            _endpointNameFormatter = endpointNameFormatter;
+            _getEndpointDefinitionByName = getEndpointDefinitionByName;
+            _configureReceiveEndpoint = configureReceiveEndpoint;
+        }
+
+        public IRegistrationContext RegistrationContext { get; }
+        public IReceiveEndpointConfigurator EndpointConfigurator { get; }
+
+        public void ConfigureCompanionEndpoint(string endpointName, IEndpointDefinition? endpointDefinition,
+            Action<IReceiveEndpointConfigurator> configure)
+        {
+            endpointDefinition ??= _getEndpointDefinitionByName(endpointName);
+            if (endpointDefinition != null)
+            {
+                var registrationDefinition = new RegistrationContextEndpointDefinition(endpointDefinition,
+                    (IBusRegistrationContext)RegistrationContext);
+                _configurator.ReceiveEndpoint(registrationDefinition, _endpointNameFormatter, companionConfigurator =>
+                {
+                    _configureReceiveEndpoint.Configure(registrationDefinition.GetEndpointName(_endpointNameFormatter), companionConfigurator);
+                    configure(companionConfigurator);
+                });
+                return;
+            }
+
+            _configurator.ReceiveEndpoint(endpointName, companionConfigurator =>
+            {
+                _configureReceiveEndpoint.Configure(endpointName, companionConfigurator);
+                configure(companionConfigurator);
+            });
+        }
+    }
+
+
+

@@ -38,7 +38,16 @@ public sealed class SqlTransportMessageTests
         };
         var provider = new SqlHeaderProvider(message);
 
-        KeyValuePair<string, object> header = Assert.Single(provider.GetAll());
+        KeyValuePair<string, object>[] projected = provider.GetAll().ToArray();
+        KeyValuePair<string, object> header = Assert.Single(projected,
+            item => string.Equals(item.Key, "shared", StringComparison.OrdinalIgnoreCase));
+        AssertHeaderProjection(provider, projected, new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["shared"] = "transport",
+            [MessageHeaders.TransportMessageId] = Guid.Empty,
+            [nameof(SqlTransportMessage.MessageDeliveryId)] = 0L,
+            [nameof(SqlTransportMessage.DeliveryCount)] = 0,
+        });
 
         Assert.Equal("shared", header.Key, ignoreCase: true);
         Assert.Equal("transport", Assert.IsType<string>(header.Value));
@@ -60,9 +69,17 @@ public sealed class SqlTransportMessageTests
 
         AssertHeader(provider, "APPLICATION-ONLY", "application");
         AssertHeader(provider, "TRANSPORT-ONLY", "transport");
-        Dictionary<string, object> merged = provider.GetAll().ToDictionary(
+        KeyValuePair<string, object>[] projected = provider.GetAll().ToArray();
+        Dictionary<string, object> merged = projected.ToDictionary(
             header => header.Key, header => header.Value, StringComparer.OrdinalIgnoreCase);
-        Assert.Equal(2, merged.Count);
+        AssertHeaderProjection(provider, projected, new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["application-only"] = "application",
+            ["transport-only"] = "transport",
+            [MessageHeaders.TransportMessageId] = Guid.Empty,
+            [nameof(SqlTransportMessage.MessageDeliveryId)] = 0L,
+            [nameof(SqlTransportMessage.DeliveryCount)] = 0,
+        });
         Assert.Equal("application", merged["APPLICATION-ONLY"]);
         Assert.Equal("transport", merged["TRANSPORT-ONLY"]);
     }
@@ -144,6 +161,25 @@ public sealed class SqlTransportMessageTests
         Assert.Null(redeliveryCount);
         Assert.False(provider.TryGetHeader("missing", out object? missing));
         Assert.Null(missing);
+    }
+
+    private static void AssertHeaderProjection(
+        SqlHeaderProvider provider,
+        KeyValuePair<string, object>[] actual,
+        IReadOnlyDictionary<string, object> expected)
+    {
+        Assert.Equal(
+            expected.Keys.OrderBy(key => key, StringComparer.Ordinal).ToArray(),
+            actual.Select(header => header.Key).OrderBy(key => key, StringComparer.Ordinal).ToArray());
+        foreach (KeyValuePair<string, object> header in actual)
+        {
+            object expectedValue = expected[header.Key];
+            Assert.Equal(expectedValue, header.Value);
+            Assert.Equal(expectedValue.GetType(), header.Value.GetType());
+            Assert.True(provider.TryGetHeader(header.Key, out object? lookup), header.Key);
+            Assert.Equal(header.Value, lookup);
+            Assert.Equal(header.Value.GetType(), lookup!.GetType());
+        }
     }
 
     private static void AssertHeader(SqlHeaderProvider provider, string key, object expected)

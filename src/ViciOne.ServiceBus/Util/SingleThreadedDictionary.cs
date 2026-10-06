@@ -58,7 +58,7 @@ public class SingleThreadedDictionary<TKey, TValue> :
         return _dictionary.TryGetValue(key, out value);
     }
 
-    /// <summary>Gets or sets the value at the specified index.</summary>
+    /// <summary>Gets the value associated with the specified key.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
     public TValue this[TKey key] => _dictionary[key];
 

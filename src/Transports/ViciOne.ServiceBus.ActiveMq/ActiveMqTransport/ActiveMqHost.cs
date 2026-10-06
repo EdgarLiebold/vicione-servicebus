@@ -81,7 +81,14 @@ public class ActiveMqHost :
 
         configuration.Validate().ThrowIfContainsFailure("The receive endpoint configuration is invalid:");
 
-        TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
+        try
+        {
+            TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
+        }
+        catch
+        {
+            // Optional diagnostics must not interrupt transport creation or topology setup.
+        }
 
         configuration.Build(this);
 

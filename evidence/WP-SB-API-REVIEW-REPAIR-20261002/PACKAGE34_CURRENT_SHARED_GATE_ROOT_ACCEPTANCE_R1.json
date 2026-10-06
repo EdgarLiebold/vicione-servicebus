@@ -1,0 +1,107 @@
+{
+  "status": "ROOT_CURRENT_SHARED_PACKAGE_API_GATE_ACCEPTED_CURRENT_UNIT_AND_INTEGRATED_FINAL_REVIEW_PENDING",
+  "actor": "/root",
+  "utc": "2026-10-04T00:27:58.989549+00:00",
+  "actual_receipt": {
+    "phase": "package34-final-current-f003-gate-r1",
+    "command": [
+      "env",
+      "TMPDIR=/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-current-shared-gate-capture-r1/live-temp",
+      "bash",
+      "tools/ci/verify_developer_journeys.sh"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-04T00:06:05.756930+00:00",
+    "completed_utc": "2026-10-04T00:09:20.819858+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package34-final-current-f003-gate-r1.log",
+    "log_sha256": "e08275335bcfa1577a7efa94930a4beb151f5d79abb219780db7c5f59e397e19"
+  },
+  "root_actual_raw_log_personally_whole_read": {
+    "lines": 169,
+    "method": "Two untruncated literal tool displays in preceding context; exact SHA retained in continuation."
+  },
+  "root_personally_whole_read": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-current-shared-gate-capture-r1/qualification/REVIEW.md",
+      "bytes": 3698,
+      "sha256": "9e9dcbe0f46de48bcf54510b7d6b183b24ca8c575c6f123a9f6aeba0100013da"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-current-shared-gate-capture-r1/qualification/ROOT_READABLE_BINDING_OVERVIEW.md",
+      "bytes": 7263,
+      "sha256": "1abad3c431dd760c509b9a5972f4b0f5ad163dd45a5794b3f9634429acd007ef"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-current-shared-gate-capture-r1/qualification/BOUNDED_RESULT.json",
+      "bytes": 1433,
+      "sha256": "b4ee5d8d1d1e010b2bee3f4a32e30f2ca7d6c1dea3e0efe9ffd50ea7b660a406"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-current-shared-gate-capture-r1/qualification/ACTUAL_RECEIPT.json",
+      "bytes": 749,
+      "sha256": "3a4635eaff2700f2fb3aaa52a09ce07f4fe38ec5425f75eeb6bb3b13a0ed9df4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-current-shared-gate-capture-r1/qualification/ACTUAL_CURRENT_OUTBOX14_AND_SAGA2_XML.json",
+      "bytes": 13873,
+      "sha256": "858332c6560c2a84110517b056e7d41af78f833d69721c517172cbcacfb1a778"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-current-shared-gate-capture-r1/qualification/OWN_CURRENT_RUNTIME_AND_SAGA_DOC_TARGETS.json",
+      "bytes": 2273,
+      "sha256": "12accd7c76ef80b813fb54f709d6b1cf8f1665ae8698bb3726d4f5805e8068a7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-current-shared-gate-capture-r1/qualification/GATE_MOMENT_SOURCE_INTEGRITY.json",
+      "bytes": 824,
+      "sha256": "006e1cbd574a5c0ce531b07798afdc57da83208fc5912d22b9ad59418c0d2fa7"
+    }
+  ],
+  "independent_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-current-shared-gate-capture-r1/qualification/MANIFEST.json",
+    "bytes": 1651635,
+    "sha256": "297df4d0b306149a02c6b4bfd7ce26a0b4ef3a570b4501dccd8fd4becf577a0f"
+  },
+  "root_manifest_read_scope": "All header fields personally read; all4752 artifact bindings freshly checked programmatically, no literal full-body or semantic source read claim.",
+  "root_fresh_physical_recheck": {
+    "artifacts": 4752,
+    "zip_archives": 31,
+    "complete_zip_payloads": 217,
+    "runtime_api_cache_Dlls_exact_archive_payload": 30,
+    "current_tracked_unchanged": 6209,
+    "new_product_paths_unchanged": 2
+  },
+  "fresh_product_Pdb_peer_qualification": {
+    "assemblies": 32,
+    "runtime_api": 30,
+    "analyzer": 2,
+    "documents": 4287,
+    "physical": 4145,
+    "actual_embedded_generated": 142
+  },
+  "apps": 7,
+  "app_pdb_documents": 47,
+  "final_transient_locks": 6,
+  "execution_scope": {
+    "journeys_compiled": 18,
+    "journey13_provider_harness_registration_executed": true,
+    "isolated_consumers_executed": 4,
+    "all18business_journeys_executed": false,
+    "loaded_product_telemetry": false
+  },
+  "api_baseline_unchanged": {
+    "lines": 20116,
+    "sha256": "e6f246add57089d65de9f78c2b8d38fd6a3f5f73117792e7eea1dff9fbe02719",
+    "update_flags": []
+  },
+  "current_Core_runtime_Dll_sha256": "85ab95b82413f85014e572ce80d53b2a6caf580cc8bdab71eaa94961fdd37324",
+  "current_Dll_not_assumed_identical_to_private_package30_or_mutation_build": true,
+  "fresh_emitted_XML_members": 16,
+  "root_own_exact_hash_source_F042_and_Saga_prior_full_read_reused": true,
+  "canonical_owner_changed": false,
+  "current_unit_suite_green": false,
+  "whole_root766_read_complete": false,
+  "integrated_all42_review_complete": false,
+  "global_Aplus": false
+}

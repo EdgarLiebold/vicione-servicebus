@@ -1,0 +1,5 @@
+{
+  "status": "SETUP_FAILURE_EXCLUDED_FROM_DEFECT_PROOF",
+  "phase": "package04-f018-ownership-original-restore",
+  "reason": "Two actual EF.Sagas transitive local package dependencies Futures and JobService absent in selected isolated source mapping; add unchanged package01 originals before fresh restore/build. No assertion executed."
+}

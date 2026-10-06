@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-06T18:14:42.087379+00:00",
+  "status": "EXACT_METADATA_NORM2_OWNER55_DOC5_SOURCE_ONLY_FRESH_COMPILED_IDENTITY_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-norm2-owner55-doc5-exact-revisions-proposed-r1/REPORT.json",
+    "sha256": "a6c1f0a1a5044231ce369de07610c7946b440338ab53260fe5a5ca0f0a04cb87"
+  },
+  "author_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-norm2-owner55-doc5-exact-revisions-proposed-r1/MANIFEST.json",
+    "sha256": "8bd426a7041785a63374514c4717b3381d49c4690e9a7822f8d4f6c8b176537d"
+  },
+  "different_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-norm2-owner55-doc5-independent-exact-source-peer-r1/REPORT.json",
+    "sha256": "8b90a7f7e0d517b333d1e31e3f13ce06f9fe4e9f4a10c25b571295095b6e0d33"
+  },
+  "different_peer_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package524-norm2-owner55-doc5-independent-exact-source-peer-r1/MANIFEST.json",
+    "sha256": "d6b53cfe73db01f9526b59bd359dccc401307382d31ed8273546acd58fe60aed"
+  },
+  "before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package533-norm2-owner55-doc5-root-acceptance-before-r1/MANIFEST.json",
+    "sha256": "4e0b61ef2abaef39fc2a26f1bc791f5a7cb4f1a41c3257881216f0439f5b0a52"
+  },
+  "root_semantic_reads": "3b0a85 all4unique changed literal values; da36b8 author fullReport; 421311 full differentpeer",
+  "master_rows": 19431,
+  "changed_existing_rows": 62,
+  "changed_member_contracts": 2,
+  "changed_owner_contexts": 55,
+  "added_current_documentation_contexts": 5,
+  "unchanged_member_norms": 60,
+  "canonical_Original_members_represented": 43,
+  "existing_accessor_sidecars_represented": 19,
+  "new_UIDs": 0,
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "preflight_transparency": "928d49 stopped before snapshots or writes because authorMAN schema has payloads, not flatdict. Actual schema2489a9 read; generic payloads/files/flat normalization used, all11+2 payloads verified.",
+  "limits": [
+    "All62 entire prior rows retained, unrelated author fields unchanged. Source primarySHA/PDB/XML remain historical pending fresh31 identity overlay.",
+    "Norm revisions reflect existing actual validation/reset behavior, not new Product policy or Finding.",
+    "F176 actual532 failure remains open; affectedTestfileprecision9 separate immutable overlay."
+  ]
+}

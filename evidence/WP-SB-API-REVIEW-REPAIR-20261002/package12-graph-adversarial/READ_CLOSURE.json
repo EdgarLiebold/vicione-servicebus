@@ -1,0 +1,1277 @@
+{
+  "status": "READ_FULL_SCOPED_ADVERSARIAL_REVIEW",
+  "utc": "2026-10-03T04:00:17.292597+00:00",
+  "read_by": "azure_test_scope",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_GRAPH_FREEZE.json",
+    "sha256": "0dc7415ee56a76034a34cc78b73d3c2e26585ee442666cb03b9744ab7d554e17"
+  },
+  "owned_inputs": [
+    {
+      "index": 0,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/00-ConfigurationException.cs.txt",
+      "bytes": 2662,
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "e8786338b21da05d6dcef8897497597dbcf684d9fb759d3692b7648a4e100ad4"
+    },
+    {
+      "index": 1,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/01-ValidateViciOneServiceBusHostOptions.cs.txt",
+      "bytes": 2641,
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "e8786338b21da05d6dcef8897497597dbcf684d9fb759d3692b7648a4e100ad4"
+    },
+    {
+      "index": 2,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/02-ViciOneServiceBusHostOptions.cs.txt",
+      "bytes": 1550,
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "e8786338b21da05d6dcef8897497597dbcf684d9fb759d3692b7648a4e100ad4"
+    },
+    {
+      "index": 3,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/03-BatchCollector.cs.txt",
+      "bytes": 13959,
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "e8786338b21da05d6dcef8897497597dbcf684d9fb759d3692b7648a4e100ad4"
+    },
+    {
+      "index": 4,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/04-BatchOptions.cs.txt",
+      "bytes": 7243,
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "e8786338b21da05d6dcef8897497597dbcf684d9fb759d3692b7648a4e100ad4"
+    },
+    {
+      "index": 5,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/05-ConsumerRegistration.cs.txt",
+      "bytes": 4762,
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "e8786338b21da05d6dcef8897497597dbcf684d9fb759d3692b7648a4e100ad4"
+    },
+    {
+      "index": 6,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/06-BatchConsumerMessageConnector.cs.txt",
+      "bytes": 5099,
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "e8786338b21da05d6dcef8897497597dbcf684d9fb759d3692b7648a4e100ad4"
+    },
+    {
+      "index": 7,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/07-ConsumerBusIdentityOptions.cs.txt",
+      "bytes": 281,
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-diagnostic-adversarial/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "e8786338b21da05d6dcef8897497597dbcf684d9fb759d3692b7648a4e100ad4"
+    },
+    {
+      "index": 8,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/08-ServiceBusInstrumentation.cs.txt",
+      "bytes": 22480,
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_FROZEN_NUMBERED_TEXT",
+      "semantic_notes": "Typed telemetry ActivitySource lifetime and lazy per-typed-bus meter factory; payload/durable observations isolated. Imported existing F004 frame, no transfer of its native acceptance."
+    },
+    {
+      "index": 9,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/09-MessageJournalTelemetry.cs.txt",
+      "bytes": 6793,
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_FROZEN_NUMBERED_TEXT",
+      "semantic_notes": "Per-provider telemetry resolved via IMeterFactory, failure inert instead of process fallback; standalone process singleton explicit; own source/process meter disposal idempotent. Imported F004 frame."
+    },
+    {
+      "index": 10,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/10-MessageJournalWriter.cs.txt",
+      "bytes": 4896,
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_FROZEN_NUMBERED_TEXT",
+      "semantic_notes": "Journal writer uses injected telemetry for DI route, lazy process telemetry only standalone; bounded linked token/timeouts and capture/policy/store failures observed without altering message. Imported F004 frame."
+    },
+    {
+      "index": 11,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/11-MessageJournalConfigurationExtensions.cs.txt",
+      "bytes": 11009,
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_FROZEN_NUMBERED_TEXT",
+      "semantic_notes": "Default/typed journal bus-owner registration, one provider telemetry singleton, writer connected atomically with reverse rollback; external store/policy borrowed. Imported F004 frame."
+    },
+    {
+      "index": 12,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/12-TransportRegistrationBusFactory.cs.txt",
+      "bytes": 14561,
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 13,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/13-InMemoryRegistrationBusFactory.cs.txt",
+      "bytes": 3639,
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 14,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous/GraphCases.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/14-GraphCases.cs.txt",
+      "bytes": 10579,
+      "sha256": "3949b502b36ddb6ab5fc1d720d823beabe72593a65ba2efb323b2769b68f455b",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 15,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous/GraphOwnership.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/15-GraphOwnership.PublicConsumer.csproj.txt",
+      "bytes": 879,
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 16,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/16-NuGet.Config.txt",
+      "bytes": 573,
+      "sha256": "40fd0fd2e3cd796175ec2b984d6b144bbc6c4b5cbd275cc825389d53e92f7421",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 17,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/17-OwnedLifetime.cs.txt",
+      "bytes": 800,
+      "sha256": "edab6fa44c6384df17eab9c575e55c9c476fef32507a361067f3c611366c6528",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 18,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/18-Program.cs.txt",
+      "bytes": 3205,
+      "sha256": "a14fe98d60109aa992dc01ff014c720a05f92039e65e2425e801d59fe4c5b78f",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 19,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/19-packages.lock.json.txt",
+      "bytes": 8006,
+      "sha256": "f4a3f658d73a3e9c083c0dd52aff4e1416c547830c0c59b75004002b115c33bb",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 20,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/20-GraphCases.cs.txt",
+      "bytes": 10579,
+      "sha256": "3949b502b36ddb6ab5fc1d720d823beabe72593a65ba2efb323b2769b68f455b",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 21,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphOwnership.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/21-GraphOwnership.PublicConsumer.csproj.txt",
+      "bytes": 879,
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 22,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/22-NuGet.Config.txt",
+      "bytes": 581,
+      "sha256": "d181fa362b64a8f92e113eb19e914828d8e3371ddf2532d3deaaded6705bb3c9",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 23,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/23-OwnedLifetime.cs.txt",
+      "bytes": 800,
+      "sha256": "edab6fa44c6384df17eab9c575e55c9c476fef32507a361067f3c611366c6528",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 24,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/24-Program.cs.txt",
+      "bytes": 3205,
+      "sha256": "a14fe98d60109aa992dc01ff014c720a05f92039e65e2425e801d59fe4c5b78f",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 25,
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/25-packages.lock.json.txt",
+      "bytes": 8006,
+      "sha256": "4db37ce93421924eda50a0d828e85be064b22f0e777f6a672b75caa173293bad",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+      "own_prior_manifest_sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+    },
+    {
+      "index": 26,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package12_graph_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/26-package12_graph_mutations.py.txt",
+      "bytes": 8658,
+      "sha256": "2ea43c6efa235e4691d64d48a13eb1536d16b9f4304cf2ad9d7b401016dab7c0",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_FROZEN_NUMBERED_TEXT",
+      "semantic_notes": "FULL serial strict-compiled runner; only two factory graph/eager-validation mutants, fresh 14-source snapshot/binary receipts; unchanged public oracle, exact negative predicates and positive controls, finally original restoration and new identity removal."
+    },
+    {
+      "index": 27,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/run_operation.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-freeze/27-run_operation.py.txt",
+      "bytes": 1644,
+      "sha256": "e77b44c2d7c0aa92d0b00addcb182d479cfdf7302161b841a479a9c8f5e1b2ea",
+      "current_and_snapshot_equal": true,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_FROZEN_NUMBERED_TEXT",
+      "semantic_notes": "FULL append-only operation runner: actual process cwd/command/start/end/exit/hash; no synthetic PASS, unique phase; invocation by Root only."
+    }
+  ],
+  "owned_count": 28,
+  "owned_fresh_count": 6,
+  "owned_own_prior_exact_sha_reuse_count": 22,
+  "shared_public_route_source_inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationBusFactory.cs",
+      "repo_path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IRegistrationBusFactory.cs",
+      "sha256": "a48cf56a209a2d0539925e99df4afc840ba2636a3c7f581cf2680d53e82b74be",
+      "bytes": 794,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "Public IRegistrationBusFactory accepts registration context, bus-instance specifications, and configured bus name and returns transport-backed IBusInstance. Validation/application order and factory failure cleanup are deferred to concrete implementations."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "repo_path": "src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d",
+      "bytes": 7359,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "Public standalone in-memory factory and default/typed DI UsingInMemory overloads validate selector, callback and addresses as appropriate and register InMemoryRegistrationBusFactory. Default durable dispatcher and delay provider bind to IBus; typed variants bind IDurableSendDispatcher<TBus> and Bind<TBus,IInMemoryDelayProvider>. Unqualified delay provider is intentionally first-registration alias while qualified typed provider remains independent. Effective host address validation and bus-instance lifecycle are downstream. Typed overload inference selects generic core, a positive control against accidental default-bus registration."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusFactoryConfigurator.cs",
+      "repo_path": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusFactoryConfigurator.cs",
+      "sha256": "667c1f8c0b1d1bdd293ae3dc1b45c54f44dabf7388f2ccf925c56513c52a7e5a",
+      "bytes": 7333,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "InMemoryBusFactoryConfigurator marks the bus consume endpoint auto-starting, creates a generated temporary bus queue, and delegates named/definition receive endpoints to the host. Publish callbacks mutate typed or runtime topology, host overloads set validated base addresses or escape virtual-host identity, and injected configuration remains the owner of routing and observer state."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryTopologyConfiguration.cs",
+      "repo_path": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryTopologyConfiguration.cs",
+      "sha256": "afe7d630bbc272b69287a67a68bd7b9b1e04cb8240163092f97751547bf087ed",
+      "bytes": 3321,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "InMemoryTopologyConfiguration roots bus-local message/send/publish/consume topology while inheriting global send/publish conventions through observers. Child endpoint topology deliberately shares message/send/publish state and creates a separate consume topology; validation composes all three operational topologies in dependency order."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryDelayProvider.cs",
+      "repo_path": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryDelayProvider.cs",
+      "sha256": "3a48b29ec8165d8af994138dcc9222f2fa19120278db72fa91f136a4c39b449c",
+      "bytes": 10483,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "InMemoryDelayProvider owns a sorted deadline queue, logical clock offset and one timer; it validates negative/overflow delays, releases due tasks outside the owner lock and handles cancellation-registration races without blocking unregister disposal. Long waits are explicitly chunked to the native maximum timer interval, disproving an automatic timer-limit candidate for this provider. Disposal marks closure and clears queued delays, stops/disposes the timer and cancels pending tasks; concurrent repeat disposal intentionally does not await the first call, as documented."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryHost.cs",
+      "repo_path": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryHost.cs",
+      "sha256": "97c3abed508531b9c686458adbb5cf32f7382c34309d1b8c0ffa2cfde4329753",
+      "bytes": 6157,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "InMemoryHost creates and validates dynamic endpoint configuration before building and starting it, applies endpoint definitions through its configuration owner, exposes the shared fabric's logical clock and reports the transport provider as its host-owned agent. Dynamic configuration is added before validation; recovery/retry registration behavior requires the base host collection contract."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryTransportProvider.cs",
+      "repo_path": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryTransportProvider.cs",
+      "sha256": "b6b41198f318dcd3172349a3b0f9cbd2572715113562671c4ffdb99d58c3d1b6",
+      "bytes": 5973,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "Host-owned Agent/fabric initialized ready, pre-canceled acquisition returns canceled Task, normalized address selects exchange/type. Publish route applies message topology before delegating send; point-to-point send does not apply publish topology, relevant reliable-scheduler hypothesis. Stops fabric after base agent stop."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryBusFactoryConfigurator.cs",
+      "repo_path": "src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryBusFactoryConfigurator.cs",
+      "sha256": "16a9c5f4f7d8e2d892eabbabf3c5e9daf92c24bf1508f711205ff0d765d97905",
+      "bytes": 2249,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "IInMemoryBusFactoryConfigurator exposes typed and runtime publish topology, default host capacity configuration, absolute loopback host identity, and nonempty virtual-host identity encoded into one component. It extends the receive-endpoint factory contract; actual validation and isolation are provided by already read in-memory configuration implementations."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryDelayProvider.cs",
+      "repo_path": "src/ViciOne.ServiceBus/Providers/Transports/InMemory/IInMemoryDelayProvider.cs",
+      "sha256": "ef3acc185d000b01f23b0ff1cfa4dd2531ff6a255f974eef599010f55c5810ee",
+      "bytes": 1433,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "IInMemoryDelayProvider promises a logical UTC clock, nonnegative relative and absolute cancelable delays, and positive logical-time advances that release every reached deadline. This is the public timing control for transport delay tests; it imposes no process clock or polling implementation requirement."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Transports/InMemory/InMemoryBus.cs",
+      "repo_path": "src/ViciOne.ServiceBus/Providers/Transports/InMemory/InMemoryBus.cs",
+      "sha256": "a9be3e6a7850c969954347ca7fdf69a60f4ace25026befd7ac90ba5a9be74182",
+      "bytes": 2424,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "InMemoryBus public standalone factory null-checks callback/address, constructs fresh message/topology/bus configuration, invokes the callback, then builds through the configurator. Only a stateless cached MessageUrnEntityNameFormatter is shared; mutable topology is new per bus, preserving independent configurations and host identity."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/MultiBusInstance.cs",
+      "repo_path": "src/ViciOne.ServiceBus/Transports/Hosting/MultiBusInstance.cs",
+      "sha256": "134486a76d999a9e8e2cab4c9f7f97e5d719ab4d07521a00cf566fa3258399d6",
+      "bytes": 4582,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "Typed MultiBus adapter forwards lifecycle/config/rider/dynamic endpoints to underlying registration while exposing typed bus identity. Name strips conventional I prefix then kebab sanitizes; name derived only short interface name may collide across namespaces but stable registration identity contract not necessarily uniqueness there. Null/blank guards retained."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/TransportBusInstance.cs",
+      "repo_path": "src/ViciOne.ServiceBus/Transports/Hosting/TransportBusInstance.cs",
+      "sha256": "022411e69a6977706272c9fe1b0c98bd67aac209b03665fc42572b48416f453b",
+      "bytes": 7618,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "47c1538fe6f41d2df013c3ac75d272ff39b1af3a224aeeffe288ec851a72c572",
+      "semantic_notes": "TransportBusInstance combines required bus/host/config/registration. Rider name uses contract short name; public neutral/typed endpoint routes first apply registered configure-receive-endpoints then caller callback with exact registration context. Definition name queried inside callback and host independently; arbitrary unstable custom definition could change, but completed definition normal contract not proved defect. No ownership/disposal behavior added by adapter."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "repo_path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825",
+      "bytes": 18461,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "844309629e0d31af1868a3f10adad7c92489e8d39f7b5d1cfd2f654f38033c12",
+      "semantic_notes": "Default/typed DI registration, exact bus context per provider, factory descriptor closures, ordinary Bind ownership. Previously personally FULL; no transfer of Root closure."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "repo_path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "bytes": 16239,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "844309629e0d31af1868a3f10adad7c92489e8d39f7b5d1cfd2f654f38033c12",
+      "semantic_notes": "Default/typed DI registration, exact bus context per provider, factory descriptor closures, ordinary Bind ownership. Previously personally FULL; no transfer of Root closure."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "repo_path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "bytes": 10520,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "844309629e0d31af1868a3f10adad7c92489e8d39f7b5d1cfd2f654f38033c12",
+      "semantic_notes": "Default/typed DI registration, exact bus context per provider, factory descriptor closures, ordinary Bind ownership. Previously personally FULL; no transfer of Root closure."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/Bind.cs",
+      "repo_path": "src/ViciOne.ServiceBus/DependencyInjection/Bind.cs",
+      "sha256": "06b86e51fa1bea044a76a4dc46467d3120138d76a8629701539b34172163deb9",
+      "bytes": 3581,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PERSONAL_PRIOR_FULL_EXACT_SHA_REUSE",
+      "own_prior_manifest_sha256": "844309629e0d31af1868a3f10adad7c92489e8d39f7b5d1cfd2f654f38033c12",
+      "semantic_notes": "Default/typed DI registration, exact bus context per provider, factory descriptor closures, ordinary Bind ownership. Previously personally FULL; no transfer of Root closure."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "bytes": 3639,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "PERSONAL_FRESH_FULL",
+      "semantic_notes": "Current complete numbered source personally read in this preflight. Construction, URI, scope/runtime ownership and public lifecycle checked below."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Addressing/InMemoryHostAddress.cs",
+      "sha256": "16367e7a179234e310ed5a39aac0c922e1614f97811db116c00718d3ef0ec265",
+      "bytes": 3042,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "PERSONAL_FRESH_FULL",
+      "semantic_notes": "Current complete numbered source personally read in this preflight. Construction, URI, scope/runtime ownership and public lifecycle checked below."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "PERSONAL_FRESH_FULL",
+      "semantic_notes": "Current complete numbered source personally read in this preflight. Construction, URI, scope/runtime ownership and public lifecycle checked below."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusConfiguration.cs",
+      "sha256": "f434862f967b22837e2d3988dcdde507eb9ae9897938b64ae5a4a605df3b6612",
+      "bytes": 2870,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "PERSONAL_FRESH_FULL",
+      "semantic_notes": "Current complete numbered source personally read in this preflight. Construction, URI, scope/runtime ownership and public lifecycle checked below."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryHostConfiguration.cs",
+      "sha256": "414c32cae0345b670e5a9799eb5e2105c8569adb38b0b219f6660d77b08c6f9c",
+      "bytes": 9052,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "PERSONAL_FRESH_FULL",
+      "semantic_notes": "Current complete numbered source personally read in this preflight. Construction, URI, scope/runtime ownership and public lifecycle checked below."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryBusInstance.cs",
+      "sha256": "f4251cbd910265dce9d7eb23f8c4ba5f199171736b4b717c056e841b5af58044",
+      "bytes": 2740,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "PERSONAL_FRESH_FULL",
+      "semantic_notes": "Current complete numbered source personally read in this preflight. Construction, URI, scope/runtime ownership and public lifecycle checked below."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/IBusInstance.cs",
+      "sha256": "3d6cbe937f0e13bce8695881e35b61289d4f8a101eee2c9f659b5ff6e1ec882f",
+      "bytes": 1863,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "PERSONAL_FRESH_FULL",
+      "semantic_notes": "Current complete numbered source personally read in this preflight. Construction, URI, scope/runtime ownership and public lifecycle checked below."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs",
+      "sha256": "6594736c849a6f95031c368dc469a5d57dce59e97a0bc6cf4579aebc6ee0ecd3",
+      "bytes": 12787,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "PERSONAL_FRESH_FULL",
+      "semantic_notes": "Current complete numbered source personally read in this preflight. Construction, URI, scope/runtime ownership and public lifecycle checked below."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+      "sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad",
+      "bytes": 11978,
+      "read_by": "azure_test_scope",
+      "read_status": "READ_FULL",
+      "read_mode": "PERSONAL_FRESH_FULL",
+      "semantic_notes": "Current complete numbered source personally read in this preflight. Construction, URI, scope/runtime ownership and public lifecycle checked below."
+    }
+  ],
+  "shared_route_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package12-shared-graph-second-preflight/READ_CLOSURE.json",
+    "sha256": "520d849a3da4561dd6cab2733fefe3ac345752cb56b839299c568c1e3bfb5f9f"
+  },
+  "metadata_inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_GRAPH_FREEZE.json",
+      "sha256": "0dc7415ee56a76034a34cc78b73d3c2e26585ee442666cb03b9744ab7d554e17",
+      "bytes": 14829,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_GRAPH_ROOT_BINDING.json",
+      "sha256": "c9ec2908b81b703fa18c6dca0d84618bcbc4305a6bc5d7bb45db88acd24d7e92",
+      "bytes": 35421,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NUMBERED_BOUNDED_BATCHES"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_GRAPH_MUTATIONS.json",
+      "sha256": "223fb6d987369d190c87a311b193cffeadac99c68738d84ea7a3a92367725d95",
+      "bytes": 65472,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NUMBERED_BOUNDED_BATCHES"
+    }
+  ],
+  "actual_native_logs": [
+    {
+      "receipt": {
+        "phase": "package12-shared-graph-core-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:26:52.932512+00:00",
+        "completed_utc": "2026-10-03T03:27:05.988903+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-shared-graph-core-build.log",
+        "log_sha256": "c6da7f9ba3477b408d203b2f458c74b5e5cdc7a4230a3f5580b7b45c32dfa45c"
+      },
+      "log_bytes": 496,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-shared-graph-core-pack",
+        "command": [
+          "dotnet",
+          "pack",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "-o",
+          "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package12-shared-graph/corrected",
+          "/p:PackageVersion=1.0.0"
+        ],
+        "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:27:24.526827+00:00",
+        "completed_utc": "2026-10-03T03:27:26.500604+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-shared-graph-core-pack.log",
+        "log_sha256": "8b76ebda38066e624d466da344bbbae5462d108a13c9ffd2017718eeb895b6e2"
+      },
+      "log_bytes": 174,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-restore",
+        "command": [
+          "dotnet",
+          "restore",
+          "GraphOwnership.PublicConsumer.csproj",
+          "--configfile",
+          "NuGet.Config",
+          "--disable-parallel"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:37:08.334397+00:00",
+        "completed_utc": "2026-10-03T03:37:10.766016+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-restore.log",
+        "log_sha256": "a00af9d9561c4a9c6763a727834152414280db7ec251af207718c816af7b9e9b"
+      },
+      "log_bytes": 226,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-build",
+        "command": [
+          "dotnet",
+          "build",
+          "GraphOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:37:32.400287+00:00",
+        "completed_utc": "2026-10-03T03:37:37.019152+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-build.log",
+        "log_sha256": "e48bcf68af62b2af638c0d3aaeefe126791a39487ff3dd790e785ba5b221aa5b"
+      },
+      "log_bytes": 2136,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-build-r3",
+        "command": [
+          "dotnet",
+          "build",
+          "GraphOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:40:12.844930+00:00",
+        "completed_utc": "2026-10-03T03:40:16.209593+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-build-r3.log",
+        "log_sha256": "48a996090656bb6aec0d12b8db4ace33ec3c7a15a3bb8089b6f85aea1d86d6ef"
+      },
+      "log_bytes": 301,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-eight-r2",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:41:01.295327+00:00",
+        "completed_utc": "2026-10-03T03:41:02.182061+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-eight-r2.log",
+        "log_sha256": "d7cd511850a1d1b4b540768c7411272428d858cf44febd4fcab6f2360ac0124f"
+      },
+      "log_bytes": 23689,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-corrected-restore",
+        "command": [
+          "dotnet",
+          "restore",
+          "GraphOwnership.PublicConsumer.csproj",
+          "--configfile",
+          "NuGet.Config",
+          "--disable-parallel"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:41:35.105827+00:00",
+        "completed_utc": "2026-10-03T03:41:37.249766+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-corrected-restore.log",
+        "log_sha256": "e359d4e85f4a064169b3f664078eb93c00d5b98bf956ce33b62173b902a77e41"
+      },
+      "log_bytes": 227,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-corrected-build",
+        "command": [
+          "dotnet",
+          "build",
+          "GraphOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:42:02.719645+00:00",
+        "completed_utc": "2026-10-03T03:42:06.374278+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-corrected-build.log",
+        "log_sha256": "83f2ec5adb21ebe4cf9f845a909109acc7786767f48c5051b2220af9775a0cf1"
+      },
+      "log_bytes": 302,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-corrected-eight",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:42:56.764822+00:00",
+        "completed_utc": "2026-10-03T03:42:57.546121+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-corrected-eight.log",
+        "log_sha256": "1db24c3185a94ab53ca26cadb5a542bef09931e59415ad6b278fa38f0ed1f956"
+      },
+      "log_bytes": 1297,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-build-r2",
+        "command": [
+          "dotnet",
+          "build",
+          "GraphOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:38:12.294150+00:00",
+        "completed_utc": "2026-10-03T03:38:18.214087+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-build-r2.log",
+        "log_sha256": "bef8730ea9cce5e6a7838a4f2ee259cc1924055c7bf7d9c2e20bc755afa979cd"
+      },
+      "log_bytes": 301,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-eight",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:39:35.193323+00:00",
+        "completed_utc": "2026-10-03T03:39:35.813347+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-eight.log",
+        "log_sha256": "ec9b06971dced6453f1137b705f0bb8a150f3fe99173e83bc1ca55ab8f529e38"
+      },
+      "log_bytes": 19248,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-corrected-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:20.568436+00:00",
+        "completed_utc": "2026-10-03T03:44:36.305499+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-corrected-build.log",
+        "log_sha256": "4a3eb5ca0028fad9c896e8187aa6f34a5032c69fcf19bac7ebcae93f3abd7f45"
+      },
+      "log_bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-corrected-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:36.465834+00:00",
+        "completed_utc": "2026-10-03T03:44:37.563349+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-corrected-all.log",
+        "log_sha256": "77c2e6d109e311c2e274e4e79da662a39952122b5cebd6d032664d9ed53711e0"
+      },
+      "log_bytes": 1297,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:37.682729+00:00",
+        "completed_utc": "2026-10-03T03:44:50.725840+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-build.log",
+        "log_sha256": "77765d005d501a20d62069fa1c3bcca4bc535d12ee6e43718171d88eaf1205b5"
+      },
+      "log_bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-shared-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "shared-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:44:50.980752+00:00",
+        "completed_utc": "2026-10-03T03:44:51.685489+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-shared-default.log",
+        "log_sha256": "c9cf46ec9b9733eb60075a70d45ae77fb9cd1df7c302038f314df07f889e9cb4"
+      },
+      "log_bytes": 6470,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-shared-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "shared-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:44:51.781051+00:00",
+        "completed_utc": "2026-10-03T03:44:52.502483+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-shared-typed.log",
+        "log_sha256": "b2b04c0d2fcca5159d1b398696e5ea685f7bc85c6a47b02d9a45b68a5ae73c22"
+      },
+      "log_bytes": 6483,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-independent-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:52.615418+00:00",
+        "completed_utc": "2026-10-03T03:44:53.499272+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-independent-default.log",
+        "log_sha256": "36cb3c554f0627c757001de18a7ec02b42b5e27489c9c5e859b0f9f49fc28539"
+      },
+      "log_bytes": 919,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-independent-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:53.602913+00:00",
+        "completed_utc": "2026-10-03T03:44:54.392691+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-independent-typed.log",
+        "log_sha256": "2732b59df133be06dabf58ba25f216e90eb9515c3468003bd1b5ead8f40f4fe5"
+      },
+      "log_bytes": 917,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:54.505475+00:00",
+        "completed_utc": "2026-10-03T03:45:04.209807+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-build.log",
+        "log_sha256": "d2ed17c7ab96e9eb763fa40ce9e45845aac742c4e468b56671623f24182a7eba"
+      },
+      "log_bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-invalid-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "invalid-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:45:04.429623+00:00",
+        "completed_utc": "2026-10-03T03:45:04.723056+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-invalid-default.log",
+        "log_sha256": "12f212aa7eaf13bb03e96f121a0235bcc94d643069e2d700a0578542ce050054"
+      },
+      "log_bytes": 2555,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-invalid-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "invalid-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:45:04.848947+00:00",
+        "completed_utc": "2026-10-03T03:45:05.184502+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-invalid-typed.log",
+        "log_sha256": "0825086ca33f1f130e237168f4cf4a28fc0ca3dc9a3a1fc08e5f3a07b13a3616"
+      },
+      "log_bytes": 2553,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-independent-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:45:05.293248+00:00",
+        "completed_utc": "2026-10-03T03:45:06.122769+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-independent-default.log",
+        "log_sha256": "d583d4c1605891bffdb5ad956941d4f2357b8ddf52613ce02bc4cadb4c9f6d18"
+      },
+      "log_bytes": 919,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-independent-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:45:06.222216+00:00",
+        "completed_utc": "2026-10-03T03:45:07.008520+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-independent-typed.log",
+        "log_sha256": "96d408001d86343edac6a979245a5f7dbca4053c43f6f838296ecf66299a8e66"
+      },
+      "log_bytes": 917,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-rollback-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:45:07.117693+00:00",
+        "completed_utc": "2026-10-03T03:45:14.455975+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-rollback-build.log",
+        "log_sha256": "cc368032c64750cf99a46e95f1ad0b67794ce0c189a5f2551401a7158a1da7d7"
+      },
+      "log_bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-rollback-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:45:14.598097+00:00",
+        "completed_utc": "2026-10-03T03:45:15.776919+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-rollback-all.log",
+        "log_sha256": "77c2e6d109e311c2e274e4e79da662a39952122b5cebd6d032664d9ed53711e0"
+      },
+      "log_bytes": 1297,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    }
+  ],
+  "selected_actual_receipt_count": 25,
+  "ledger_observation": {
+    "sha256": "14460f34c5db422f40aa7b408fe3351853153bbed520e445af44f7a20b9bec79",
+    "read_scope": "Complete selected25 actual receipt rows only, not whole ledger FULL"
+  },
+  "skills": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-gap-analysis/SKILL.md",
+      "sha256": "cfec7d0e13deaee15fb97151d0cd5339fa5f14c109a10c49de81e9a5512231b7",
+      "bytes": 19121,
+      "read_mode": "OWN_PRIOR_PINNED_FULL_READING_REUSE",
+      "read_status": "READ_FULL",
+      "pin": "2124a6e3518b2120cda1c076d62ed79491b00693"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-anti-patterns/SKILL.md",
+      "sha256": "0f589352ba88c5873e85a2bde65d44f72c75ec76a0547105ff6698271d813bf0",
+      "bytes": 20609,
+      "read_mode": "OWN_PRIOR_PINNED_FULL_READING_REUSE",
+      "read_status": "READ_FULL",
+      "pin": "2124a6e3518b2120cda1c076d62ed79491b00693"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/SKILL.md",
+      "sha256": "ec6f69ed00a627c0319a2bbdcfd71fcfab84eaae28900b2f814af3b27e44bd70",
+      "bytes": 4594,
+      "read_mode": "OWN_PRIOR_PINNED_FULL_READING_REUSE",
+      "read_status": "READ_FULL",
+      "pin": "2124a6e3518b2120cda1c076d62ed79491b00693"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/extensions/dotnet.md",
+      "sha256": "ef257a931a25501697fde8a36e027ba9195ff624ff701dd5fd276d746c0d25be",
+      "bytes": 6883,
+      "read_mode": "OWN_PRIOR_PINNED_FULL_READING_REUSE",
+      "read_status": "READ_FULL",
+      "pin": "2124a6e3518b2120cda1c076d62ed79491b00693"
+    }
+  ],
+  "root_read_transfer": false,
+  "limits": [
+    "Scoped F039 internal factory and eight public console modes only. No Core766/all-InMemory/canonical-test-owner grades, no CLOSED symbol or whole API acceptance.",
+    "Two sequential providers, not parallel CreateBus; no ARM/cloud/broker/restart/retained-heap claim. Explicit public logging override isolates open F019.",
+    "Imported F004 and earlier package frames are personally FULL or own exact SHA reused here, but their complete native review is not transferred or regraded.",
+    "Frozen selected Graph package/PDB/source frame only. Later Package13 current ScopeConsumerFactory/build outputs are outside this acceptance.",
+    "Compiled mutants substitute strict-built DLLs into unchanged NuGet consumer; no fresh pack per mutant claim.",
+    "Guards are exclusions and cannot PASS. WaitAsync is an observation deadline, not universal underlying task cancellation. All accepted runs completed without guard failure.",
+    "No builds/restores/tests/native/product/canonical-test/CSV writes by this internal independent reviewer."
+  ]
+}

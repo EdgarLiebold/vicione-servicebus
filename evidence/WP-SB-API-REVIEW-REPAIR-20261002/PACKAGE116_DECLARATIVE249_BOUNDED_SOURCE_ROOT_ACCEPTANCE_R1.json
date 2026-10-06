@@ -1,0 +1,173 @@
+{
+  "utc": "2026-10-04T18:45:14.182637+00:00",
+  "decision": "ACCEPT_249_EXACT_DECLARED_INTERFACE_NORMS_ONLY_HOLD_14_FALSE_XML_CALLBACK_MEMBERS",
+  "before": 1834,
+  "after": 2083,
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package112-declarative263-interfaces-contracts-r1/PER_ID263_DECLARED_CONTRACT_RECOMMENDATIONS.json",
+    "sha256": "f54543542e0593e3381b3c3769a04a056f93fd5c51bf18f6f9f3e736dcaf7666"
+  },
+  "review_actor": "/root/runtime_spi_adversarial_r2",
+  "root_reads": [
+    "c44db6 selected compact contracts0..25 and41..65; truncated middle26..40 recovered79d332/dc6bea",
+    "e0c017 complete compact contracts66..98",
+    "cbf2df complete compact contracts99..131",
+    "c4f513 complete compact contracts132..164",
+    "942458 complete compact contracts165..197",
+    "5ace87 complete compact contracts198..230",
+    "1f10b1 complete compact contracts231..262",
+    "b35da8 complete68 physical type headers/constraints and14 heldIDs",
+    "7ea21d complete report; b35da8 supersedes truncated1e1186 metadata"
+  ],
+  "source_identity": {
+    "exact_current_owners": 68,
+    "delegated_personal_whole_source_review": true,
+    "root_does_not_claim_personal_whole68_raw_reads": true
+  },
+  "acceptance_scope": "Source abstract declarations, explicit constraints/variance/nullable/ref/out/defaults/XML norms only. Abstract methods/events leave actual caller invocation/order/fault/disconnect obligations separately pending; no stub mirror tests or new runtime credit.",
+  "held_ids": [
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.CompensateFailAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1},System.Exception)",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.CompensateFailAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1},System.Exception)\">\n    <summary>Called after the message has been dispatched to all consumers when one or more exceptions have occurred.</summary>\n    <typeparam name=\"TActivity\">The activity type.</typeparam>\n    <typeparam name=\"TLog\">The log type.</typeparam>\n    <param name=\"context\">The context associated with the operation.</param>\n    <param name=\"exception\">The exception associated with the operation.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.CompensateFailAsync<TActivity, TLog>(global::ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity, TLog> context, global::System.Exception exception) where TActivity : class where TLog : class",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.ExecuteFaultAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1},System.Exception)",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.ExecuteFaultAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1},System.Exception)\">\n    <summary>Called after the message has been dispatched to all consumers when one or more exceptions have occurred.</summary>\n    <typeparam name=\"TActivity\">The activity type.</typeparam>\n    <typeparam name=\"TArguments\">The arguments type.</typeparam>\n    <param name=\"context\">The context associated with the operation.</param>\n    <param name=\"exception\">The exception associated with the operation.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.ExecuteFaultAsync<TActivity, TArguments>(global::ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity, TArguments> context, global::System.Exception exception) where TActivity : class where TArguments : class",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostCompensateAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1})",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostCompensateAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1})\">\n    <summary>\n    Called after the message has been dispatched to all consumers - note that in the case of an exception\n    this method is not called, and the DispatchFaulted method is called instead.\n    </summary>\n    <typeparam name=\"TActivity\">The activity type.</typeparam>\n    <typeparam name=\"TLog\">The log type.</typeparam>\n    <param name=\"context\">The context associated with the operation.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostCompensateAsync<TActivity, TLog>(global::ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity, TLog> context) where TActivity : class where TLog : class",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostExecuteAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1})",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostExecuteAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1})\">\n    <summary>\n    Called after the message has been dispatched to all consumers - note that in the case of an exception\n    this method is not called, and the DispatchFaulted method is called instead.\n    </summary>\n    <typeparam name=\"TActivity\">The activity type.</typeparam>\n    <typeparam name=\"TArguments\">The arguments type.</typeparam>\n    <param name=\"context\">The context associated with the operation.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PostExecuteAsync<TActivity, TArguments>(global::ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity, TArguments> context) where TActivity : class where TArguments : class",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreCompensateAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1})",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreCompensateAsync``2(ViciOne.ServiceBus.Advanced.CompensateActivityContext{``0,``1})\">\n    <summary>Called before a message is dispatched to any consumers.</summary>\n    <typeparam name=\"TActivity\">The activity type.</typeparam>\n    <typeparam name=\"TLog\">The log type.</typeparam>\n    <param name=\"context\">The consume context.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreCompensateAsync<TActivity, TLog>(global::ViciOne.ServiceBus.Advanced.CompensateActivityContext<TActivity, TLog> context) where TActivity : class where TLog : class",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreExecuteAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1})",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IActivityObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreExecuteAsync``2(ViciOne.ServiceBus.Advanced.ExecuteActivityContext{``0,``1})\">\n    <summary>Called before a message is dispatched to any consumers.</summary>\n    <typeparam name=\"TActivity\">The activity type.</typeparam>\n    <typeparam name=\"TArguments\">The arguments type.</typeparam>\n    <param name=\"context\">The consume context.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IActivityObserver.PreExecuteAsync<TActivity, TArguments>(global::ViciOne.ServiceBus.Advanced.ExecuteActivityContext<TActivity, TArguments> context) where TActivity : class where TArguments : class",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver`1.PostConsumeAsync(ViciOne.ServiceBus.ConsumeContext{`0})",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IConsumeMessageObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver`1.PostConsumeAsync(ViciOne.ServiceBus.ConsumeContext{`0})\">\n    <summary>\n    Called after the message has been dispatched to all consumers - note that in the case of an exception\n    this method is not called, and the DispatchFaulted method is called instead.\n    </summary>\n    <param name=\"context\">The context associated with the operation.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver<in T>.PostConsumeAsync(global::ViciOne.ServiceBus.ConsumeContext<in T> context)",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver.PostConsumeAsync``1(ViciOne.ServiceBus.ConsumeContext{``0})",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IConsumeObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver.PostConsumeAsync``1(ViciOne.ServiceBus.ConsumeContext{``0})\">\n    <summary>\n    Called after the message has been dispatched to all consumers - note that in the case of an exception\n    this method is not called, and the DispatchFaulted method is called instead.\n    </summary>\n    <typeparam name=\"T\">The value type.</typeparam>\n    <param name=\"context\">The context associated with the operation.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver.PostConsumeAsync<T>(global::ViciOne.ServiceBus.ConsumeContext<T> context) where T : class",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PostSendAsync``1(``0)",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PostSendAsync``1(``0)\">\n    <summary>\n    Called after the message has been dispatched to all consumers - note that in the case of an exception\n    this method is not called, and the DispatchFaulted method is called instead.\n    </summary>\n    <typeparam name=\"T\">The value type.</typeparam>\n    <param name=\"context\">The context associated with the operation.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PostSendAsync<T>(T context) where T : class, global::ViciOne.ServiceBus.Advanced.PipeContext",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PreSendAsync``1(``0)",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PreSendAsync``1(``0)\">\n    <summary>Called before a message is dispatched to any consumers.</summary>\n    <typeparam name=\"T\">The value type.</typeparam>\n    <param name=\"context\">The consume context.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.PreSendAsync<T>(T context) where T : class, global::ViciOne.ServiceBus.Advanced.PipeContext",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.SendFaultAsync``1(``0,System.Exception)",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.SendFaultAsync``1(``0,System.Exception)\">\n    <summary>Called after the message has been dispatched to all consumers when one or more exceptions have occurred.</summary>\n    <typeparam name=\"T\">The value type.</typeparam>\n    <param name=\"context\">The context associated with the operation.</param>\n    <param name=\"exception\">The exception associated with the operation.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver.SendFaultAsync<T>(T context, global::System.Exception exception) where T : class, global::ViciOne.ServiceBus.Advanced.PipeContext",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.PostSendAsync(`0)",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.PostSendAsync(`0)\">\n    <summary>\n    Called after the message has been dispatched to all consumers - note that in the case of an exception\n    this method is not called, and the DispatchFaulted method is called instead.\n    </summary>\n    <param name=\"context\">The context associated with the operation.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver<in TContext>.PostSendAsync(TContext context)",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.PreSendAsync(`0)",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.PreSendAsync(`0)\">\n    <summary>Called before a message is dispatched to any consumers.</summary>\n    <param name=\"context\">The consume context.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver<in TContext>.PreSendAsync(TContext context)",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "symbol_id": "M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.SendFaultAsync(`0,System.Exception)",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IFilterObserver.cs",
+      "old_xml": "<member name=\"M:ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1.SendFaultAsync(`0,System.Exception)\">\n    <summary>Called after the message has been dispatched to all consumers when one or more exceptions have occurred.</summary>\n    <param name=\"context\">The context associated with the operation.</param>\n    <param name=\"exception\">The exception associated with the operation.</param>\n    <returns>A task that represents the asynchronous operation.</returns>\n</member>\n",
+      "hold_scope": "Current original XML callback name/observed activity-or-pipe purpose is false; proposed XML-only correction pending Root acceptance/native emission.",
+      "declared_signature_unchanged": "global::System.Threading.Tasks.Task global::ViciOne.ServiceBus.Advanced.Observers.IFilterObserver<in TContext>.SendFaultAsync(TContext context, global::System.Exception exception)",
+      "runtime_behavior_accepted": false,
+      "CLOSED": false
+    }
+  ],
+  "runtime_review_closed": false,
+  "fresh_package_credit": false,
+  "whole_API_review": "PARTIAL"
+}

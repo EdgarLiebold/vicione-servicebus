@@ -22,7 +22,7 @@ public class ScopedSendPipeAdapter<TMessage> :
         _provider = provider;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Supplies this adapter's service provider to the context's payload get-or-add operation.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     protected override void Send<T>(SendContext<T> context)
@@ -30,7 +30,7 @@ public class ScopedSendPipeAdapter<TMessage> :
         context.GetOrAddPayload(() => _provider);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Performs no additional work for this adapter's typed send context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     protected override void Send(SendContext<TMessage> context)
     {

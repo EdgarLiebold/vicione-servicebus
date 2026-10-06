@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-05T01:18:16.383277+00:00",
+  "actor": "/root",
+  "status": "CONFIRMED_LOW_PUBLISHED_XML_DOCUMENTATION_DEFECT",
+  "confirmed_before": 139,
+  "confirmed_after": 140,
+  "accepted_current": 136,
+  "source": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/SetSerializerFilter.cs",
+    "sha256": "83948113bc8f098a51398138eb75291c27d7aeaf1c20379c2d3843fd82addf53",
+    "root_whole_source_read": "8e4722 actual39"
+  },
+  "actual_published_XML": {
+    "pack": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package161-fresh-two/packages/ViciOne.ServiceBus.1.0.0.nupkg",
+    "sha256": "b8d98ab2b1171db0a69c859deea663af8ff508f0c42db2e27f6bda5d405cbc84",
+    "xml_sha256": "08c5bc1b893afde01c60043608776fcd0b1ffc03be68a365f9ba12535b64a64b",
+    "member": "T:ViciOne.ServiceBus.Middleware.SetSerializerFilter`1",
+    "summary": "Sets the CorrelationId header uses the supplied implementation.",
+    "ZIP_CRC_valid": true
+  },
+  "causal_norm": "Actual SendAsync selects serializer from serialization.TryGetMessageSerializer(_contentType) and assigns context.Serializer on success before returning raw next task. No CorrelationId write exists.",
+  "limits": [
+    "Comment-only correction; no mirror test or runtime-grade claim.",
+    "Fresh repaired XML and compiled source qualification still required before repair acceptance."
+  ]
+}

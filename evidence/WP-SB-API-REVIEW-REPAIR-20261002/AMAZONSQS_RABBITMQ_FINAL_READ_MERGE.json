@@ -1,0 +1,34 @@
+{
+  "status": "ORIGINAL_HASH_CHECKED_READ_PROGRESS_ONLY",
+  "before_sha256": "4382dce390d5e8e0502b3cf6f0ab8c3668d34a4ec252de460550bcce84264769",
+  "after_sha256": "8d40bf136cac3cd8d21ad0966851bd3012dd3b5812721f53f67750f1b8ebbe2b",
+  "before_FULL": 3588,
+  "after_FULL": 3952,
+  "prior_FULL_rows_preserved_entire": 3588,
+  "bindings": [
+    {
+      "manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/amazonsqs-family-review/FINAL_RESEARCH_MANIFEST.json",
+      "sha256": "cd1ddf793bef126febe23e474b95949a80078513da2e2ce927a43571dd1bc0f1",
+      "artifacts_verified": 43,
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/amazonsqs-family-review/PENDING_TO_FULL_PROPOSAL_FINAL_167.json",
+      "proposal_sha256": "88dd2dfa19c3f855a5bd142ca74844c9f7a305e13c4cf34be078e709530fe4b1",
+      "new_FULL": 167,
+      "prior_FULL_preserved": 1,
+      "original_source_hash_bytes_checked": 167,
+      "personal_reader": "/root/adversarial_package_01"
+    },
+    {
+      "manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/rabbitmq-family-review/FINAL_MANIFEST.json",
+      "sha256": "f06950ef2eba4723225c32a41faa735cfbf2e7d61448147be78f61f237ce9bb8",
+      "artifacts_verified": 129,
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/rabbitmq-family-review/LEDGER_CHECKPOINT.json",
+      "proposal_sha256": "9766de5765f248759999e7ce78e6fb9e9d07d817811c8dac5911962cc1b88f80",
+      "new_FULL": 197,
+      "prior_FULL_preserved": 1,
+      "original_source_hash_bytes_checked": 197,
+      "personal_reader": "/root/repair_research"
+    }
+  ],
+  "CLOSED": 0,
+  "Root_canonical_author_personal_read_transfer": false
+}

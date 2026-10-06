@@ -1,0 +1,2379 @@
+{
+  "status": "ALL32_SELECTED_PACKAGE_BINDINGS_EXACT",
+  "bindings": [
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original",
+      "package": "ViciOne.ServiceBus",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+      "sha512": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original",
+      "package": "ViciOne.ServiceBus.Abstractions",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+      "sha512": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original",
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+      "sha512": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "dll_sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original",
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+      "sha256": "b3fba9d2130a1a96435de7e07bf5ce74f967c2ddabe2e96f1d38e627fc43fc4a",
+      "sha512": "OIae2JMqb9TJTMmYShLtFHsYewLHhi2oOKWynWpAQTNWb4/S+dq3V9xFuObJsCkRKs9eteu7FJn+/Aft/S+3cA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "dll_sha256": "fc09b8faf17f995df0fc5bf3e4dc8568f547c0ebee36aa190a98cc061494f967",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original",
+      "package": "ViciOne.ServiceBus.Courier",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+      "sha512": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+      "dll_sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original",
+      "package": "ViciOne.ServiceBus.Futures",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+      "sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+      "sha512": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+      "dll_sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original",
+      "package": "ViciOne.ServiceBus.JobService",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+      "sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+      "sha512": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+      "dll_sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original",
+      "package": "ViciOne.ServiceBus.Sagas",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+      "sha512": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+      "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original",
+      "package": "ViciOne.ServiceBus",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+      "sha512": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original",
+      "package": "ViciOne.ServiceBus.Abstractions",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+      "sha512": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original",
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+      "sha512": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "dll_sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original",
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+      "sha256": "b3fba9d2130a1a96435de7e07bf5ce74f967c2ddabe2e96f1d38e627fc43fc4a",
+      "sha512": "OIae2JMqb9TJTMmYShLtFHsYewLHhi2oOKWynWpAQTNWb4/S+dq3V9xFuObJsCkRKs9eteu7FJn+/Aft/S+3cA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "dll_sha256": "fc09b8faf17f995df0fc5bf3e4dc8568f547c0ebee36aa190a98cc061494f967",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original",
+      "package": "ViciOne.ServiceBus.Courier",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+      "sha512": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+      "dll_sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original",
+      "package": "ViciOne.ServiceBus.Futures",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+      "sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+      "sha512": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+      "dll_sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original",
+      "package": "ViciOne.ServiceBus.JobService",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+      "sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+      "sha512": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+      "dll_sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original",
+      "package": "ViciOne.ServiceBus.Sagas",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+      "sha512": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+      "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "package": "ViciOne.ServiceBus",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+      "sha512": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "package": "ViciOne.ServiceBus.Abstractions",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+      "sha512": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+      "sha512": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "dll_sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+      "sha256": "209f5441ac5ece0edd31eaafa08567eb20d6e863304ed33912c422e6e1af7891",
+      "sha512": "GMV6R/u6im5M1pmpC7NUnNqkoRS4lIoPZZf9ahXEbeO5rNdHp78dVDNbFrOP+kkKzYPc1jtI61LlOP78lpcyrA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "dll_sha256": "3d9cfe2389b8ae86292c476479ae1cd6ee752c707969cd10a272e00ecfe471af",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "package": "ViciOne.ServiceBus.Courier",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+      "sha512": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+      "dll_sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "package": "ViciOne.ServiceBus.Futures",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+      "sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+      "sha512": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+      "dll_sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "package": "ViciOne.ServiceBus.JobService",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+      "sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+      "sha512": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+      "dll_sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "package": "ViciOne.ServiceBus.Sagas",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+      "sha512": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+      "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "package": "ViciOne.ServiceBus",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+      "sha512": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "package": "ViciOne.ServiceBus.Abstractions",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+      "sha512": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+      "sha512": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "dll_sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+      "sha256": "209f5441ac5ece0edd31eaafa08567eb20d6e863304ed33912c422e6e1af7891",
+      "sha512": "GMV6R/u6im5M1pmpC7NUnNqkoRS4lIoPZZf9ahXEbeO5rNdHp78dVDNbFrOP+kkKzYPc1jtI61LlOP78lpcyrA==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "dll_sha256": "3d9cfe2389b8ae86292c476479ae1cd6ee752c707969cd10a272e00ecfe471af",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "package": "ViciOne.ServiceBus.Courier",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+      "sha512": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+      "dll_sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "package": "ViciOne.ServiceBus.Futures",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+      "sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+      "sha512": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+      "dll_sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "package": "ViciOne.ServiceBus.JobService",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+      "sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+      "sha512": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+      "dll_sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "package": "ViciOne.ServiceBus.Sagas",
+      "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-corrected/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+      "sha512": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+      "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+      "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+      "status": "ARCHIVE_LOCK_OWNCACHE_RUNTIME_EXACT"
+    }
+  ],
+  "graphs": [
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original",
+      "lock_packages": 40,
+      "managed_runtime_dlls": 37,
+      "packages": [
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite/10.0.12",
+          "archive_sha256": "914345c27b9294e45314670ac1ff3510d71123c894e6df3a910b0313d3b9aa07",
+          "lock_hash": "rRXkKBWHjtngj2DYqSXOThGpqiR0LQkxk0b0PIVDhVEzfwpgOR7dbKMw1/My8unDCTCwn/blclR7imxntYGvEg==",
+          "raw_sha512": "xlbLTnWeuhq+iQAgpEeva2eYn1HkaD+CyQdaPnvghlNySrkPSAQZAUrDIvzt0ugW+FaGIJIMiewcBltlqBQqXg==",
+          "signed": true
+        },
+        {
+          "package": "ViciOne.ServiceBus/1.0.0",
+          "archive_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "lock_hash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "raw_sha512": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions/1.0.0",
+          "archive_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "lock_hash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "raw_sha512": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+          "archive_sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+          "lock_hash": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "raw_sha512": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+          "archive_sha256": "b3fba9d2130a1a96435de7e07bf5ce74f967c2ddabe2e96f1d38e627fc43fc4a",
+          "lock_hash": "OIae2JMqb9TJTMmYShLtFHsYewLHhi2oOKWynWpAQTNWb4/S+dq3V9xFuObJsCkRKs9eteu7FJn+/Aft/S+3cA==",
+          "raw_sha512": "OIae2JMqb9TJTMmYShLtFHsYewLHhi2oOKWynWpAQTNWb4/S+dq3V9xFuObJsCkRKs9eteu7FJn+/Aft/S+3cA==",
+          "signed": false
+        },
+        {
+          "package": "xunit.v3.assert/4.0.0",
+          "archive_sha256": "58e041a132ba8092aa78779616fe953ae2e5ec9102e2b480bf6776a9297d51d1",
+          "lock_hash": "QxYfC+98lCMe7Kl9iWDUeUn+gmiPJ2Sz/r+trSdp1mvKyDMXj8S1kYdfkFNJSHyUSQ6KWomenSDgfWhGpR8zEQ==",
+          "raw_sha512": "5HS5G6TPk+jD77LDDTuWQ1MSBVpTEdYmlEJhmJdTpTjc7b7LBjUrFyDRN8wpqqXY/Gc5cDSZfdhSKF1JfsKNEA==",
+          "signed": true
+        },
+        {
+          "package": "FastExpressionCompiler/5.4.1",
+          "archive_sha256": "1076ef1b02332739d97669a7edfd4e89fae58a9e117e9700d4aff19d34a29795",
+          "lock_hash": "nqMykMspK5cQd35Y8ulQzAujxCcCwZVUne32pC5xNpXqrbPCuKOPMWkKHJ3LveAZPm6dsVvump0TJ1SZ9RzfTQ==",
+          "raw_sha512": "Z7u90jdIwikzJq026AgvwgN1gnsP0HQW9CgkhwpvkKjSCIVl9jp4TGUTV976vyxM61LEcB/SS0S/MAfhfmQYNA==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Data.Sqlite.Core/10.0.12",
+          "archive_sha256": "5e8ed353006dadf55d5c7f56d237321c20bb10c786262e6b25526756e1036332",
+          "lock_hash": "2aL9eL5HQr0V4b8V909SD+jQAx6qnTTl7sT/v3D8dIvmr2UGdpZIQxqm1pj2Js3e4EYTvpw0oMH7DjapJJuPPw==",
+          "raw_sha512": "U6a1XGw24t9M39INjA7yjncLkGl/UrJBKIFKDaqdjB3JIUYH6HjUDNokXrfVX2XVS0WUDPGjmU/aOhW3E62m9Q==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore/10.0.12",
+          "archive_sha256": "7e9f98370ce04178d704d1bc6a3b86bda1c254230f1e487e4fa666f2cb8323f5",
+          "lock_hash": "e7OrVN8U5yr4kuwdTHWBHGVQIVsGfMkAr0Ej1/BnrS989Q0XBVANpIzNZ2bc1GvMZ0/XwMt5InTnmKskxGy99Q==",
+          "raw_sha512": "RMOhWDPnNYra6hKkj7moYkpeTIUV8MBH2arDuGkzxZ4cun7+bD2HQfy4wbWaGufdndBP9VCUWuyiGq1Pv5wbxw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+          "archive_sha256": "6b5d47aec9ac71ff5cf4248210cbaa810bd4031bf8fabc68d5440a8aad3a67d1",
+          "lock_hash": "kDrux7T6C3V/YYYe2LXr7x6AEsVyq5Y2YoTE9er1SwbDtap3z1g8RgxNh5eKQVyB4T+DKvBBJ4Ezd/VZzJQJZg==",
+          "raw_sha512": "wHwoTc4A/BwWeWRkPf0azaDyhRNf3K8qYWcAl+v3zsOdP8xe/ikvxSXXme7Vu1Txfc8nH579wUlMOd1RN3Gyqw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Analyzers/10.0.12",
+          "archive_sha256": "cf3991f30bc2fc2bfc08c372987fa5eec4dfd9906eb1871233c4172f829b2714",
+          "lock_hash": "Kd4o2oO1A6dfKxjz5LS16QyLtpCFTUiFWwmBABETAXRsSImBdRdWeKjSgbbRhAMiV3a3/nWr95ZtzClT4uaADQ==",
+          "raw_sha512": "mBajPzL60eP21FdbsXm254MLpiNtlJQI352APp4tlam9Rqy9frtSr+9HUnoABycrBgiiluoOeIDdPqMk3VnPOg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+          "archive_sha256": "993a89827edc7a0d36d3861e7e965af4f345717f02154841fc3f34ee087c5792",
+          "lock_hash": "OiHmr8XzX96dbgMsYGe8qoqg4KxibdZG2r0QUVJBGktFInOp8IrABe8jvcbo5hrqeWfbwpK7fCEBiEPbY/ik4A==",
+          "raw_sha512": "2CIHh1kiCQ1QWPjHjr4W8INi/fQMeZT2ZBOd/bE5TWwJhZ+ApygUWrAq1R3NRMuDiwPln0HQeL6vEi/SvoKtdg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.12",
+          "archive_sha256": "bc684b844caec77c45fe6435654b4ea91d6d665a55f9abf8f331710461d2bf31",
+          "lock_hash": "DAGu68RfIDD5d6qYhtQqMUsRS7hKKFqHI6h/9VUa4FjMcQ8+IJA0rK+1pDZtrDJ+yi3YAG0L2TSViZ0csEDM0w==",
+          "raw_sha512": "g0NMRDlao2J+AgKrma9Y3DpjN2xq4zKc9wds1d3qg+LVbdIT0xb7Leg/3oeAgXlg186NqDFgTsY6cWCy6xidpQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+          "archive_sha256": "ee944e3c5912ffc6193624aab6e75d28a449f1d4617cbc92860db2c058c616bc",
+          "lock_hash": "sI3A6MUAyZwccLnwq0cXuRmC3WBtXieimBWafXSfhRJ4jnM2uGVXrqImDDVyW27u4vVaTOGlJxNJd8d1FGvCNQ==",
+          "raw_sha512": "tpbESsKJgXYHIAmM6KWhw8utAY0isZKBjPlAbsaZ1ccV1MhGBE+gX1ZKiwyFAAkLW3Qr50Y8OprmAoRsP3PvbQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Memory/10.0.12",
+          "archive_sha256": "79eb1513cf083ed4bfa773621c59203a8225c750378095d71165d6823012d8ca",
+          "lock_hash": "fhC3DHcBcFF4bXvHIxFtXJYNut7q7ZItqNFcgWfrIgmpVImlcEKNHhE7ztpNSPJYMHYYStS5QGND2I5mC26yeA==",
+          "raw_sha512": "A/kXPFwMtUPhq8OM56upWhhWBOKsyENh6/b3ryPFTCr4YVJ36BupsjLOpK7mVEcJ0Prz3QyxahaeHLu81g+2Mw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration/10.0.12",
+          "archive_sha256": "d06de9d376ee3d28b0fec645b396993a3eb7b04fbc1ef7091654a08d9e1e72cb",
+          "lock_hash": "e3IPP32CRNL031VZJAUTlCTG0YN7WFh4mN3fsSHTDQCJB+3+f0jGycv4fXk3rrftaY3B85XrQaj7sRthrOsavg==",
+          "raw_sha512": "2IfERnC6VSvQ4XyMfXMZMO334BCHD7ifkNN1KkyA7fdIXRjMQmPenR25EuRNj4dZ8h0wwtEtlFpr+ppKkiOUWw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+          "archive_sha256": "f7397df285cb2a34c88a6929710c0b8ed84913382e2ae708f734060bc091ce51",
+          "lock_hash": "8xaGcvS/qZ1otoxPQCEJkNva389CVL/plNcvIETZhQTETYdRkYDPEYhUMoAGONo4FU45ufdfE0j29AfWVVj0wA==",
+          "raw_sha512": "TZ4PJHUuUpM8ck2v6La2r23Hbvs5BAuWZKKn7/S10SBpHAAYXiRrfoBuOF3MCUH4ds7Tys7uScFCwK30a8crZg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+          "archive_sha256": "fe267b1321b7e183183ed3042071bcaf5e3ad244a83e1d27fb055071367eba48",
+          "lock_hash": "dAgIf1TOr8KLs+aBRIbXUZBjHoSH4rDG8+XkX/Q6AZwkQdMA0+yPDKTHsieeXdZDfpOpZVHzOnuAb5Z2nX3KsA==",
+          "raw_sha512": "hX7WQh+3+FYIhWq9Edz5hXgbpn+aQRRGXJpUQ4h9E6tZTdPkQ6dtDOyCssCXZlv/oq9PieQKFKdgUhsNEP8jpQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection/10.0.12",
+          "archive_sha256": "b979c630191f6c48b548cad866d8224a0ed0e6e7be0aba87f454b57597b63779",
+          "lock_hash": "lXyK2O5GoYvfxW8eCFcD16JFbcoSTM1sJkAM0UHS1jZyl9NYMW64Tqm6OQFT0IDBjZi+xHt95/Zg+nxZhGFhZg==",
+          "raw_sha512": "4bTS7TpB4aMRxegFpYgsp9HDI0TvFC6bt2n9SsyJ9xLy6ZEspW2ji7bQ7dKguG2w5LbsJtFiWz+wiPZgpmQ/KQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+          "archive_sha256": "4664fab0ac4b56b8935333f59ee9e7801c8ab96de7c57cb3b6eb8192a5a61c55",
+          "lock_hash": "9/qymSh7hVDMGTGwrLz8MRp5zRyXy9adGDOs4HwRdnLil3oZGYuWeZjbmHgCQ9BL1qBroVfgUK3U/nb61617Cw==",
+          "raw_sha512": "kTf3x6w7DOuNj6kS0kL8oEGSSXJnqiPm3G+ddUfVB743EaO5Np8CX3r9pQp0ovBY7/J+KY0JLbwuhC02nFQO1g==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyModel/10.0.12",
+          "archive_sha256": "b47be2500b09c9f1b8bc7b193eaaa7a515e8218b0dfb5a43b03f45b2ceb317ff",
+          "lock_hash": "rDPQVTxh/zMTDF7wHlRqL/jjZbwjAP6315ydBxj51pZW7qkAwGwjoSiMutxYI91xmOE3ZXjAGHbYRqzyJV7Urw==",
+          "raw_sha512": "+gOJOAuUejAsox0/B0JzNlDnmHjHW7lnBf0O2ZuTbTRP+SHxDYMAeAsGNy3tOrn0YbV/npj0cDeDvxT143noPg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics/10.0.12",
+          "archive_sha256": "6edb9246a77906a0bb91bb63175c4f70cdf7b49328d3ceaae6e6c4c7bacf89ea",
+          "lock_hash": "amx0O/R4dReqKlC3T740+CHpX8D8tAIV0f5kAPfFi4XK9jYo9BSepGt9/rWfvvCoSMaZ1+XvnqPp/Vv2fmTdAg==",
+          "raw_sha512": "J15IKoJ6sYUgft34XsWdImt8EQrD9tdyOzwZDBJpIDkAqR119mNhAbbwAm2b8Ul5W6j3V94OptYWMOqLO+8+2A==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+          "archive_sha256": "5ece1e660e3f707cb2d8bda190329406434b5faab45d5ee6ea8e51c93c744ec0",
+          "lock_hash": "fMp91qlRlMOuHfMyp7LuAnOS+MOeWTF1obJmyFcs4nZCXu6pr+QB1AbFJcl2qpBltBrqF/Y7+Rn9IuNcSuctig==",
+          "raw_sha512": "8i5OD/g0Xj8Q1TizgLzs6h/M7sF+CUT2JzgNuUnFBf5qHF0/jk84HCnk4mpG+t0QyFKdRB4aJ+/mLEpLhJ5sVg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+          "archive_sha256": "8aa7164a9800fbc1bff7ef624093780a2a588d93bd066cd590b32ab08f4bb49c",
+          "lock_hash": "Ck8nkBxEYPOGtUCp0whKwfE4qAHBnsK0DY1kgZLKvzf7s9xyr4lASa4K4AKNN1VHy7r3Z1Z57U6C0TMzFjD8ig==",
+          "raw_sha512": "cwawQoayFa162+os743171OgPp4QHue/R6W6HbhFGnvaPbQz2hE39Gt6nngLZopOVkauxNiRGfQge8OFDN6hIw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+          "archive_sha256": "9f2f201db6ccc5cb6c2c2f724301652f8c59be4a12a900a9a20adf850e806771",
+          "lock_hash": "oN4AYFq+50m7a65GgRxRqjdynWS6kVQAH6gHKRTfsrLP/aH7RvxIQ7139fjbnrxBwzfZQtZRhlcjvEIiRzihrg==",
+          "raw_sha512": "aRkha3TyZrBSBQBETqgCUXRU/LIgJQ+fS/GCgdaFGWrUEhFvkDAQyS0SK28zEjx5siE7qGhhbQb7ETbc4S2ptA==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+          "archive_sha256": "49dad2381a98e644f68b711106f06c01db62c7fc3b4b1e79799ba770d0d4d9e7",
+          "lock_hash": "iQseV6HixWzEYQH4i++84ToIroXnM5jC1TJF4EqBz3lWNG1HBTMYDLkRb6Wm3wk5V6WqSfl7NukO/LYsloGyfg==",
+          "raw_sha512": "uvXk5vVWju5qjSCOQCiuXi0bDoy7kI9Ds1XRpIPl0PTpgWA+sAanC6j3fR2H6lw9KHHdwdgp4oCUvN417a4Saw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "archive_sha256": "535354f24c323122edbbc3a090f7c00e201effb88ab10db043e537a2023da70f",
+          "lock_hash": "ZlIxIJtWmrph0Ikj0svSaTkZ+d+ZYpTAhazpf1b3aoFRmlNnNWwkcvqnqT9yKHjKvfBRthvUrkq11OxfItOhpg==",
+          "raw_sha512": "F31e9IMQm70ywZhUsXWzAx5x51989XK6CJ9FxPK5MpD/nxRzu6qAt8MT0ZfV7wl+38v60dx2GZny6cs0LJc+OQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Logging/10.0.12",
+          "archive_sha256": "539919dc90956d273ac67d24e99ae7d92a893848b6efd368c1d0e61e5bc955a9",
+          "lock_hash": "6I46fTPfgYkrjRYfRXbho9WOvOelTnNjWuZws/hzGHDASH1LEJeA4VKK9k3wJvido8o7jJSB5WkMTonX7HM1bA==",
+          "raw_sha512": "7Dee3dIOa04MmZo+XN/FjjaVu2Q0ywIEYHJPhqve5hnu/XnXf9aed+8OBVGx93NeVZhLxDo+zeuemG7NlPHHjQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+          "archive_sha256": "34eaaa60afb61ed3d86e2e2669eae0c690d0e237e8a7066ba5bdb45a386709e7",
+          "lock_hash": "+24lC4plfbEDNfLAdTV/SWKS7dW+16X4HdydO3R++134kSNTzcbYA4KpR1Hdh6uWisB8Za3AzwyOn+K+NxWIug==",
+          "raw_sha512": "6U8g6MRgR1JhFCr4XnlPJIjgKh9Fhh30wwUnuFvnaeJqpgx6c1J4BA5RnPNaMm7vE1zN/QOR+nTSTNswgInX2w==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Options/10.0.12",
+          "archive_sha256": "eec90916f11d84ea41e942b59cbf82f1e32726d87e99be7ee2b2424e31570ff7",
+          "lock_hash": "TDYD33TSRpXKZWlmTXNlj5kCihxatmv2Ec1u6C+bMYLphCS7PoSLE9Pjd/nunDoE7yETk+LLKjVJX78HYtWjpA==",
+          "raw_sha512": "AVPXba8q1GXeRiVr4SVu4YX0iBU+Tn59ObvD2uWkkWOwKoVPZ+HQMpen7TCiA9xpwHGMNqt381z1iWA6nokngQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+          "archive_sha256": "71cbb9b3b179ee51d5416b3b8602d7109bdfc61ae741c0c3903fe4959e2ed7e1",
+          "lock_hash": "rqpu4qj5WE9x1IHGXSIgHBKi7IUlQaHyp4aXCYIanG2OghlUMFZpZTgExaXwcvmLAJHsxKQWMPpc7D2WIbCVtA==",
+          "raw_sha512": "geP3An4Gv41CXftA64EmzzkZrUpqYAefpTcHBV0UvM28tydQAhMDNNmh4xYpp2KdHhpwsoZgbzug96QrolVzMQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Primitives/10.0.12",
+          "archive_sha256": "97ee742afe0cb0634558262f925cc112b5882d09db8d169575e559031da63922",
+          "lock_hash": "dYfCLR52UA+3DL7C4I/pvSaRPkNqxrUAQmbFL2u0zvYKKzqgrFCJl08Df+F1aYc8leu9JvpC9bsURUdpExcBXQ==",
+          "raw_sha512": "G4hMZ9wJv75ufnnBkHAHbqiywfMGfeyfz/aiBZoLeg5vVgEqZPPAT/nLFb/Pk+/mGCAIRi3i0WfGHTcVDN9lCg==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.bundle_e_sqlite3/2.1.12",
+          "archive_sha256": "a9a06e6b5a313f6ef3675f91997d012adeffe8aa9e1ffd69ed46a4e685b054e1",
+          "lock_hash": "mAgscpQMLw5/nfA1Q5oJVAT29yROUo1ifZGbbTpx/lwZpSxMUGoYbKfmvdm8oXER+RzxqBmmQzeBEVKfeHv2nw==",
+          "raw_sha512": "KbeKXtiMrpxd7dFgsnorA1Gci/xVRDCBmkfZNdiiE1la6OdUEMtyTTJ3TBeCn9nIvZgXo5uCd9dVCji3Ay6LuA==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.core/2.1.12",
+          "archive_sha256": "af06904138ffa6dc95a599133d64d254716d6facc7543a6b3b910793dae9dca5",
+          "lock_hash": "ETpNw9DY3ckWLgRRAeCHj+GKOuPi61aeczkXhgHexUvqoZBAYg8RYESE2J7O1M7+o6QbdSEZwrw9bfqztUVWXg==",
+          "raw_sha512": "WgmgyKwGLTR6ZfIf1+1dFNxsOyp9GmsU9YjjeUjgz+NZnw2hyjVB0U8taT1Z1vv21s5+gvhHQ3vtpZajsMKJYg==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.lib.e_sqlite3/2.1.12",
+          "archive_sha256": "4a22c02ffcf489792903cf263def9fce27739716883f965f0b5eeff1637430ac",
+          "lock_hash": "fWi8Dbknuhgg72fWinIdjXVaqO1hHL4YBBwVLnr7e1c9TAZwJ0QE38j9syW1hwx6HaqEVTwI+O07WPdZn8Rp0w==",
+          "raw_sha512": "Dli+ELKNuRX0g72Uq2I2OZa5zgi4fwSXV4Je3wyF7jH9oz6AKRA9wXIzMwuVeW7RfAZdSVgIcEeZZON59LdtiA==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.provider.e_sqlite3/2.1.12",
+          "archive_sha256": "df2b3271992e5d719186c4671e3cf4f8658097c154cbcd41494ab594c5997595",
+          "lock_hash": "W3oH4XIfCzFrgUSDKHhN6N+dgzA5YHOR2VxX8GB6Qy7CyrJJgxPEG8NirgYWlPQC5P2jz2knSsexWu4tDUL33g==",
+          "raw_sha512": "k4RCblP+Hc1JAc77crV+fFZLiZeJPaY8VjMA8kvki00Z0dohG6xxXw4qkuVyCUC2+HChbhwW+ydhmjmlUZAXUQ==",
+          "signed": true
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier/1.0.0",
+          "archive_sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+          "lock_hash": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "raw_sha512": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures/1.0.0",
+          "archive_sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+          "lock_hash": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "raw_sha512": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService/1.0.0",
+          "archive_sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+          "lock_hash": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "raw_sha512": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas/1.0.0",
+          "archive_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "lock_hash": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "raw_sha512": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "signed": false
+        }
+      ],
+      "runtime": [
+        {
+          "package": "ViciOne.ServiceBus/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "sha256": "fc09b8faf17f995df0fc5bf3e4dc8568f547c0ebee36aa190a98cc061494f967"
+        },
+        {
+          "package": "xunit.v3.assert/4.0.0",
+          "member": "lib/net8.0/xunit.v3.assert.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/xunit.v3.assert.dll",
+          "sha256": "d14ea33253a7e289af5254617203b02f0643ba7ff618670de837d642ef22af11"
+        },
+        {
+          "package": "FastExpressionCompiler/5.4.1",
+          "member": "lib/net9.0/FastExpressionCompiler.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/FastExpressionCompiler.dll",
+          "sha256": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a"
+        },
+        {
+          "package": "Microsoft.Data.Sqlite.Core/10.0.12",
+          "member": "lib/net8.0/Microsoft.Data.Sqlite.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Data.Sqlite.dll",
+          "sha256": "b98d957462be432895b00dccca012d3c127e118d3d4262418014b92c7bbd66cf"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.EntityFrameworkCore.dll",
+          "sha256": "f5b1703d608e241314952b2ede8dcdd1b8d8adda8c91a13cb7e6b1007414cef4"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+          "sha256": "74bc17c936d66ea090b6a5b4cc4307d2154c9692e57edd4c55d68dd4a99c11b6"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
+          "sha256": "a1e4f36208650b15b75a4b01a5821d61d5be417ac2e86ec3c65e2560a87e0d7d"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
+          "sha256": "69683d0960188b56da3d5b69db14e2255f073d355aa6da333d6916303aa1fa33"
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+          "sha256": "eb027242c11808fe0d8faf851bd30d0c6e39944b773713ffb04e17e196bece0f"
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Memory/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Caching.Memory.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Caching.Memory.dll",
+          "sha256": "dca415c48a9d6af45c7f28f6481a88baa9cb9f09d3090ca5878d1acbd446048d"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Configuration.dll",
+          "sha256": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+          "sha256": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+          "sha256": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+          "sha256": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+          "sha256": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyModel/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyModel.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.DependencyModel.dll",
+          "sha256": "afa9a88cc25e3e2a9b8394c6930adf2a7ed229d20f91f0d03b98164b02bd16de"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.dll",
+          "sha256": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+          "sha256": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+          "sha256": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+          "sha256": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a"
+        },
+        {
+          "package": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+          "sha256": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216"
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+          "sha256": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887"
+        },
+        {
+          "package": "Microsoft.Extensions.Logging/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Logging.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Logging.dll",
+          "sha256": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a"
+        },
+        {
+          "package": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+          "sha256": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668"
+        },
+        {
+          "package": "Microsoft.Extensions.Options/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Options.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Options.dll",
+          "sha256": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3"
+        },
+        {
+          "package": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+          "sha256": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f"
+        },
+        {
+          "package": "Microsoft.Extensions.Primitives/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Primitives.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/Microsoft.Extensions.Primitives.dll",
+          "sha256": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc"
+        },
+        {
+          "package": "SQLitePCLRaw.bundle_e_sqlite3/2.1.12",
+          "member": "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/SQLitePCLRaw.batteries_v2.dll",
+          "sha256": "815ce410c9eab531dd219318e3ba16c5e38e83d361cfbbdbb4bbca222c497b0b"
+        },
+        {
+          "package": "SQLitePCLRaw.core/2.1.12",
+          "member": "lib/netstandard2.0/SQLitePCLRaw.core.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/SQLitePCLRaw.core.dll",
+          "sha256": "af340ac9eb9195795660d7fc1114f486b6ab63998f33176e2f24c8e0acb9aa84"
+        },
+        {
+          "package": "SQLitePCLRaw.provider.e_sqlite3/2.1.12",
+          "member": "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+          "sha256": "df996bcae63c2cabcfe8d4b9c5110eb39a2a4706178b07d875665391c6eb3995"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714"
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da"
+        }
+      ],
+      "assets_sha256": "bc4293bbdce2e985ca3c6e435c22edba9be1d5872c6bcab469eb627ef616b372",
+      "status": "MACHINE_STRUCTURAL_GRAPH_CHECK_ONLY"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original",
+      "lock_packages": 40,
+      "managed_runtime_dlls": 37,
+      "packages": [
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite/10.0.12",
+          "archive_sha256": "914345c27b9294e45314670ac1ff3510d71123c894e6df3a910b0313d3b9aa07",
+          "lock_hash": "rRXkKBWHjtngj2DYqSXOThGpqiR0LQkxk0b0PIVDhVEzfwpgOR7dbKMw1/My8unDCTCwn/blclR7imxntYGvEg==",
+          "raw_sha512": "xlbLTnWeuhq+iQAgpEeva2eYn1HkaD+CyQdaPnvghlNySrkPSAQZAUrDIvzt0ugW+FaGIJIMiewcBltlqBQqXg==",
+          "signed": true
+        },
+        {
+          "package": "ViciOne.ServiceBus/1.0.0",
+          "archive_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "lock_hash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "raw_sha512": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions/1.0.0",
+          "archive_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "lock_hash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "raw_sha512": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+          "archive_sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+          "lock_hash": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "raw_sha512": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+          "archive_sha256": "b3fba9d2130a1a96435de7e07bf5ce74f967c2ddabe2e96f1d38e627fc43fc4a",
+          "lock_hash": "OIae2JMqb9TJTMmYShLtFHsYewLHhi2oOKWynWpAQTNWb4/S+dq3V9xFuObJsCkRKs9eteu7FJn+/Aft/S+3cA==",
+          "raw_sha512": "OIae2JMqb9TJTMmYShLtFHsYewLHhi2oOKWynWpAQTNWb4/S+dq3V9xFuObJsCkRKs9eteu7FJn+/Aft/S+3cA==",
+          "signed": false
+        },
+        {
+          "package": "xunit.v3.assert/4.0.0",
+          "archive_sha256": "58e041a132ba8092aa78779616fe953ae2e5ec9102e2b480bf6776a9297d51d1",
+          "lock_hash": "QxYfC+98lCMe7Kl9iWDUeUn+gmiPJ2Sz/r+trSdp1mvKyDMXj8S1kYdfkFNJSHyUSQ6KWomenSDgfWhGpR8zEQ==",
+          "raw_sha512": "5HS5G6TPk+jD77LDDTuWQ1MSBVpTEdYmlEJhmJdTpTjc7b7LBjUrFyDRN8wpqqXY/Gc5cDSZfdhSKF1JfsKNEA==",
+          "signed": true
+        },
+        {
+          "package": "FastExpressionCompiler/5.4.1",
+          "archive_sha256": "1076ef1b02332739d97669a7edfd4e89fae58a9e117e9700d4aff19d34a29795",
+          "lock_hash": "nqMykMspK5cQd35Y8ulQzAujxCcCwZVUne32pC5xNpXqrbPCuKOPMWkKHJ3LveAZPm6dsVvump0TJ1SZ9RzfTQ==",
+          "raw_sha512": "Z7u90jdIwikzJq026AgvwgN1gnsP0HQW9CgkhwpvkKjSCIVl9jp4TGUTV976vyxM61LEcB/SS0S/MAfhfmQYNA==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Data.Sqlite.Core/10.0.12",
+          "archive_sha256": "5e8ed353006dadf55d5c7f56d237321c20bb10c786262e6b25526756e1036332",
+          "lock_hash": "2aL9eL5HQr0V4b8V909SD+jQAx6qnTTl7sT/v3D8dIvmr2UGdpZIQxqm1pj2Js3e4EYTvpw0oMH7DjapJJuPPw==",
+          "raw_sha512": "U6a1XGw24t9M39INjA7yjncLkGl/UrJBKIFKDaqdjB3JIUYH6HjUDNokXrfVX2XVS0WUDPGjmU/aOhW3E62m9Q==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore/10.0.12",
+          "archive_sha256": "7e9f98370ce04178d704d1bc6a3b86bda1c254230f1e487e4fa666f2cb8323f5",
+          "lock_hash": "e7OrVN8U5yr4kuwdTHWBHGVQIVsGfMkAr0Ej1/BnrS989Q0XBVANpIzNZ2bc1GvMZ0/XwMt5InTnmKskxGy99Q==",
+          "raw_sha512": "RMOhWDPnNYra6hKkj7moYkpeTIUV8MBH2arDuGkzxZ4cun7+bD2HQfy4wbWaGufdndBP9VCUWuyiGq1Pv5wbxw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+          "archive_sha256": "6b5d47aec9ac71ff5cf4248210cbaa810bd4031bf8fabc68d5440a8aad3a67d1",
+          "lock_hash": "kDrux7T6C3V/YYYe2LXr7x6AEsVyq5Y2YoTE9er1SwbDtap3z1g8RgxNh5eKQVyB4T+DKvBBJ4Ezd/VZzJQJZg==",
+          "raw_sha512": "wHwoTc4A/BwWeWRkPf0azaDyhRNf3K8qYWcAl+v3zsOdP8xe/ikvxSXXme7Vu1Txfc8nH579wUlMOd1RN3Gyqw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Analyzers/10.0.12",
+          "archive_sha256": "cf3991f30bc2fc2bfc08c372987fa5eec4dfd9906eb1871233c4172f829b2714",
+          "lock_hash": "Kd4o2oO1A6dfKxjz5LS16QyLtpCFTUiFWwmBABETAXRsSImBdRdWeKjSgbbRhAMiV3a3/nWr95ZtzClT4uaADQ==",
+          "raw_sha512": "mBajPzL60eP21FdbsXm254MLpiNtlJQI352APp4tlam9Rqy9frtSr+9HUnoABycrBgiiluoOeIDdPqMk3VnPOg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+          "archive_sha256": "993a89827edc7a0d36d3861e7e965af4f345717f02154841fc3f34ee087c5792",
+          "lock_hash": "OiHmr8XzX96dbgMsYGe8qoqg4KxibdZG2r0QUVJBGktFInOp8IrABe8jvcbo5hrqeWfbwpK7fCEBiEPbY/ik4A==",
+          "raw_sha512": "2CIHh1kiCQ1QWPjHjr4W8INi/fQMeZT2ZBOd/bE5TWwJhZ+ApygUWrAq1R3NRMuDiwPln0HQeL6vEi/SvoKtdg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.12",
+          "archive_sha256": "bc684b844caec77c45fe6435654b4ea91d6d665a55f9abf8f331710461d2bf31",
+          "lock_hash": "DAGu68RfIDD5d6qYhtQqMUsRS7hKKFqHI6h/9VUa4FjMcQ8+IJA0rK+1pDZtrDJ+yi3YAG0L2TSViZ0csEDM0w==",
+          "raw_sha512": "g0NMRDlao2J+AgKrma9Y3DpjN2xq4zKc9wds1d3qg+LVbdIT0xb7Leg/3oeAgXlg186NqDFgTsY6cWCy6xidpQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+          "archive_sha256": "ee944e3c5912ffc6193624aab6e75d28a449f1d4617cbc92860db2c058c616bc",
+          "lock_hash": "sI3A6MUAyZwccLnwq0cXuRmC3WBtXieimBWafXSfhRJ4jnM2uGVXrqImDDVyW27u4vVaTOGlJxNJd8d1FGvCNQ==",
+          "raw_sha512": "tpbESsKJgXYHIAmM6KWhw8utAY0isZKBjPlAbsaZ1ccV1MhGBE+gX1ZKiwyFAAkLW3Qr50Y8OprmAoRsP3PvbQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Memory/10.0.12",
+          "archive_sha256": "79eb1513cf083ed4bfa773621c59203a8225c750378095d71165d6823012d8ca",
+          "lock_hash": "fhC3DHcBcFF4bXvHIxFtXJYNut7q7ZItqNFcgWfrIgmpVImlcEKNHhE7ztpNSPJYMHYYStS5QGND2I5mC26yeA==",
+          "raw_sha512": "A/kXPFwMtUPhq8OM56upWhhWBOKsyENh6/b3ryPFTCr4YVJ36BupsjLOpK7mVEcJ0Prz3QyxahaeHLu81g+2Mw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration/10.0.12",
+          "archive_sha256": "d06de9d376ee3d28b0fec645b396993a3eb7b04fbc1ef7091654a08d9e1e72cb",
+          "lock_hash": "e3IPP32CRNL031VZJAUTlCTG0YN7WFh4mN3fsSHTDQCJB+3+f0jGycv4fXk3rrftaY3B85XrQaj7sRthrOsavg==",
+          "raw_sha512": "2IfERnC6VSvQ4XyMfXMZMO334BCHD7ifkNN1KkyA7fdIXRjMQmPenR25EuRNj4dZ8h0wwtEtlFpr+ppKkiOUWw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+          "archive_sha256": "f7397df285cb2a34c88a6929710c0b8ed84913382e2ae708f734060bc091ce51",
+          "lock_hash": "8xaGcvS/qZ1otoxPQCEJkNva389CVL/plNcvIETZhQTETYdRkYDPEYhUMoAGONo4FU45ufdfE0j29AfWVVj0wA==",
+          "raw_sha512": "TZ4PJHUuUpM8ck2v6La2r23Hbvs5BAuWZKKn7/S10SBpHAAYXiRrfoBuOF3MCUH4ds7Tys7uScFCwK30a8crZg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+          "archive_sha256": "fe267b1321b7e183183ed3042071bcaf5e3ad244a83e1d27fb055071367eba48",
+          "lock_hash": "dAgIf1TOr8KLs+aBRIbXUZBjHoSH4rDG8+XkX/Q6AZwkQdMA0+yPDKTHsieeXdZDfpOpZVHzOnuAb5Z2nX3KsA==",
+          "raw_sha512": "hX7WQh+3+FYIhWq9Edz5hXgbpn+aQRRGXJpUQ4h9E6tZTdPkQ6dtDOyCssCXZlv/oq9PieQKFKdgUhsNEP8jpQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection/10.0.12",
+          "archive_sha256": "b979c630191f6c48b548cad866d8224a0ed0e6e7be0aba87f454b57597b63779",
+          "lock_hash": "lXyK2O5GoYvfxW8eCFcD16JFbcoSTM1sJkAM0UHS1jZyl9NYMW64Tqm6OQFT0IDBjZi+xHt95/Zg+nxZhGFhZg==",
+          "raw_sha512": "4bTS7TpB4aMRxegFpYgsp9HDI0TvFC6bt2n9SsyJ9xLy6ZEspW2ji7bQ7dKguG2w5LbsJtFiWz+wiPZgpmQ/KQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+          "archive_sha256": "4664fab0ac4b56b8935333f59ee9e7801c8ab96de7c57cb3b6eb8192a5a61c55",
+          "lock_hash": "9/qymSh7hVDMGTGwrLz8MRp5zRyXy9adGDOs4HwRdnLil3oZGYuWeZjbmHgCQ9BL1qBroVfgUK3U/nb61617Cw==",
+          "raw_sha512": "kTf3x6w7DOuNj6kS0kL8oEGSSXJnqiPm3G+ddUfVB743EaO5Np8CX3r9pQp0ovBY7/J+KY0JLbwuhC02nFQO1g==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyModel/10.0.12",
+          "archive_sha256": "b47be2500b09c9f1b8bc7b193eaaa7a515e8218b0dfb5a43b03f45b2ceb317ff",
+          "lock_hash": "rDPQVTxh/zMTDF7wHlRqL/jjZbwjAP6315ydBxj51pZW7qkAwGwjoSiMutxYI91xmOE3ZXjAGHbYRqzyJV7Urw==",
+          "raw_sha512": "+gOJOAuUejAsox0/B0JzNlDnmHjHW7lnBf0O2ZuTbTRP+SHxDYMAeAsGNy3tOrn0YbV/npj0cDeDvxT143noPg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics/10.0.12",
+          "archive_sha256": "6edb9246a77906a0bb91bb63175c4f70cdf7b49328d3ceaae6e6c4c7bacf89ea",
+          "lock_hash": "amx0O/R4dReqKlC3T740+CHpX8D8tAIV0f5kAPfFi4XK9jYo9BSepGt9/rWfvvCoSMaZ1+XvnqPp/Vv2fmTdAg==",
+          "raw_sha512": "J15IKoJ6sYUgft34XsWdImt8EQrD9tdyOzwZDBJpIDkAqR119mNhAbbwAm2b8Ul5W6j3V94OptYWMOqLO+8+2A==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+          "archive_sha256": "5ece1e660e3f707cb2d8bda190329406434b5faab45d5ee6ea8e51c93c744ec0",
+          "lock_hash": "fMp91qlRlMOuHfMyp7LuAnOS+MOeWTF1obJmyFcs4nZCXu6pr+QB1AbFJcl2qpBltBrqF/Y7+Rn9IuNcSuctig==",
+          "raw_sha512": "8i5OD/g0Xj8Q1TizgLzs6h/M7sF+CUT2JzgNuUnFBf5qHF0/jk84HCnk4mpG+t0QyFKdRB4aJ+/mLEpLhJ5sVg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+          "archive_sha256": "8aa7164a9800fbc1bff7ef624093780a2a588d93bd066cd590b32ab08f4bb49c",
+          "lock_hash": "Ck8nkBxEYPOGtUCp0whKwfE4qAHBnsK0DY1kgZLKvzf7s9xyr4lASa4K4AKNN1VHy7r3Z1Z57U6C0TMzFjD8ig==",
+          "raw_sha512": "cwawQoayFa162+os743171OgPp4QHue/R6W6HbhFGnvaPbQz2hE39Gt6nngLZopOVkauxNiRGfQge8OFDN6hIw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+          "archive_sha256": "9f2f201db6ccc5cb6c2c2f724301652f8c59be4a12a900a9a20adf850e806771",
+          "lock_hash": "oN4AYFq+50m7a65GgRxRqjdynWS6kVQAH6gHKRTfsrLP/aH7RvxIQ7139fjbnrxBwzfZQtZRhlcjvEIiRzihrg==",
+          "raw_sha512": "aRkha3TyZrBSBQBETqgCUXRU/LIgJQ+fS/GCgdaFGWrUEhFvkDAQyS0SK28zEjx5siE7qGhhbQb7ETbc4S2ptA==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+          "archive_sha256": "49dad2381a98e644f68b711106f06c01db62c7fc3b4b1e79799ba770d0d4d9e7",
+          "lock_hash": "iQseV6HixWzEYQH4i++84ToIroXnM5jC1TJF4EqBz3lWNG1HBTMYDLkRb6Wm3wk5V6WqSfl7NukO/LYsloGyfg==",
+          "raw_sha512": "uvXk5vVWju5qjSCOQCiuXi0bDoy7kI9Ds1XRpIPl0PTpgWA+sAanC6j3fR2H6lw9KHHdwdgp4oCUvN417a4Saw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "archive_sha256": "535354f24c323122edbbc3a090f7c00e201effb88ab10db043e537a2023da70f",
+          "lock_hash": "ZlIxIJtWmrph0Ikj0svSaTkZ+d+ZYpTAhazpf1b3aoFRmlNnNWwkcvqnqT9yKHjKvfBRthvUrkq11OxfItOhpg==",
+          "raw_sha512": "F31e9IMQm70ywZhUsXWzAx5x51989XK6CJ9FxPK5MpD/nxRzu6qAt8MT0ZfV7wl+38v60dx2GZny6cs0LJc+OQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Logging/10.0.12",
+          "archive_sha256": "539919dc90956d273ac67d24e99ae7d92a893848b6efd368c1d0e61e5bc955a9",
+          "lock_hash": "6I46fTPfgYkrjRYfRXbho9WOvOelTnNjWuZws/hzGHDASH1LEJeA4VKK9k3wJvido8o7jJSB5WkMTonX7HM1bA==",
+          "raw_sha512": "7Dee3dIOa04MmZo+XN/FjjaVu2Q0ywIEYHJPhqve5hnu/XnXf9aed+8OBVGx93NeVZhLxDo+zeuemG7NlPHHjQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+          "archive_sha256": "34eaaa60afb61ed3d86e2e2669eae0c690d0e237e8a7066ba5bdb45a386709e7",
+          "lock_hash": "+24lC4plfbEDNfLAdTV/SWKS7dW+16X4HdydO3R++134kSNTzcbYA4KpR1Hdh6uWisB8Za3AzwyOn+K+NxWIug==",
+          "raw_sha512": "6U8g6MRgR1JhFCr4XnlPJIjgKh9Fhh30wwUnuFvnaeJqpgx6c1J4BA5RnPNaMm7vE1zN/QOR+nTSTNswgInX2w==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Options/10.0.12",
+          "archive_sha256": "eec90916f11d84ea41e942b59cbf82f1e32726d87e99be7ee2b2424e31570ff7",
+          "lock_hash": "TDYD33TSRpXKZWlmTXNlj5kCihxatmv2Ec1u6C+bMYLphCS7PoSLE9Pjd/nunDoE7yETk+LLKjVJX78HYtWjpA==",
+          "raw_sha512": "AVPXba8q1GXeRiVr4SVu4YX0iBU+Tn59ObvD2uWkkWOwKoVPZ+HQMpen7TCiA9xpwHGMNqt381z1iWA6nokngQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+          "archive_sha256": "71cbb9b3b179ee51d5416b3b8602d7109bdfc61ae741c0c3903fe4959e2ed7e1",
+          "lock_hash": "rqpu4qj5WE9x1IHGXSIgHBKi7IUlQaHyp4aXCYIanG2OghlUMFZpZTgExaXwcvmLAJHsxKQWMPpc7D2WIbCVtA==",
+          "raw_sha512": "geP3An4Gv41CXftA64EmzzkZrUpqYAefpTcHBV0UvM28tydQAhMDNNmh4xYpp2KdHhpwsoZgbzug96QrolVzMQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Primitives/10.0.12",
+          "archive_sha256": "97ee742afe0cb0634558262f925cc112b5882d09db8d169575e559031da63922",
+          "lock_hash": "dYfCLR52UA+3DL7C4I/pvSaRPkNqxrUAQmbFL2u0zvYKKzqgrFCJl08Df+F1aYc8leu9JvpC9bsURUdpExcBXQ==",
+          "raw_sha512": "G4hMZ9wJv75ufnnBkHAHbqiywfMGfeyfz/aiBZoLeg5vVgEqZPPAT/nLFb/Pk+/mGCAIRi3i0WfGHTcVDN9lCg==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.bundle_e_sqlite3/2.1.12",
+          "archive_sha256": "a9a06e6b5a313f6ef3675f91997d012adeffe8aa9e1ffd69ed46a4e685b054e1",
+          "lock_hash": "mAgscpQMLw5/nfA1Q5oJVAT29yROUo1ifZGbbTpx/lwZpSxMUGoYbKfmvdm8oXER+RzxqBmmQzeBEVKfeHv2nw==",
+          "raw_sha512": "KbeKXtiMrpxd7dFgsnorA1Gci/xVRDCBmkfZNdiiE1la6OdUEMtyTTJ3TBeCn9nIvZgXo5uCd9dVCji3Ay6LuA==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.core/2.1.12",
+          "archive_sha256": "af06904138ffa6dc95a599133d64d254716d6facc7543a6b3b910793dae9dca5",
+          "lock_hash": "ETpNw9DY3ckWLgRRAeCHj+GKOuPi61aeczkXhgHexUvqoZBAYg8RYESE2J7O1M7+o6QbdSEZwrw9bfqztUVWXg==",
+          "raw_sha512": "WgmgyKwGLTR6ZfIf1+1dFNxsOyp9GmsU9YjjeUjgz+NZnw2hyjVB0U8taT1Z1vv21s5+gvhHQ3vtpZajsMKJYg==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.lib.e_sqlite3/2.1.12",
+          "archive_sha256": "4a22c02ffcf489792903cf263def9fce27739716883f965f0b5eeff1637430ac",
+          "lock_hash": "fWi8Dbknuhgg72fWinIdjXVaqO1hHL4YBBwVLnr7e1c9TAZwJ0QE38j9syW1hwx6HaqEVTwI+O07WPdZn8Rp0w==",
+          "raw_sha512": "Dli+ELKNuRX0g72Uq2I2OZa5zgi4fwSXV4Je3wyF7jH9oz6AKRA9wXIzMwuVeW7RfAZdSVgIcEeZZON59LdtiA==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.provider.e_sqlite3/2.1.12",
+          "archive_sha256": "df2b3271992e5d719186c4671e3cf4f8658097c154cbcd41494ab594c5997595",
+          "lock_hash": "W3oH4XIfCzFrgUSDKHhN6N+dgzA5YHOR2VxX8GB6Qy7CyrJJgxPEG8NirgYWlPQC5P2jz2knSsexWu4tDUL33g==",
+          "raw_sha512": "k4RCblP+Hc1JAc77crV+fFZLiZeJPaY8VjMA8kvki00Z0dohG6xxXw4qkuVyCUC2+HChbhwW+ydhmjmlUZAXUQ==",
+          "signed": true
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier/1.0.0",
+          "archive_sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+          "lock_hash": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "raw_sha512": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures/1.0.0",
+          "archive_sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+          "lock_hash": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "raw_sha512": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService/1.0.0",
+          "archive_sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+          "lock_hash": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "raw_sha512": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas/1.0.0",
+          "archive_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "lock_hash": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "raw_sha512": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "signed": false
+        }
+      ],
+      "runtime": [
+        {
+          "package": "ViciOne.ServiceBus/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "sha256": "fc09b8faf17f995df0fc5bf3e4dc8568f547c0ebee36aa190a98cc061494f967"
+        },
+        {
+          "package": "xunit.v3.assert/4.0.0",
+          "member": "lib/net8.0/xunit.v3.assert.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/xunit.v3.assert.dll",
+          "sha256": "d14ea33253a7e289af5254617203b02f0643ba7ff618670de837d642ef22af11"
+        },
+        {
+          "package": "FastExpressionCompiler/5.4.1",
+          "member": "lib/net9.0/FastExpressionCompiler.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/FastExpressionCompiler.dll",
+          "sha256": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a"
+        },
+        {
+          "package": "Microsoft.Data.Sqlite.Core/10.0.12",
+          "member": "lib/net8.0/Microsoft.Data.Sqlite.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Data.Sqlite.dll",
+          "sha256": "b98d957462be432895b00dccca012d3c127e118d3d4262418014b92c7bbd66cf"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.EntityFrameworkCore.dll",
+          "sha256": "f5b1703d608e241314952b2ede8dcdd1b8d8adda8c91a13cb7e6b1007414cef4"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+          "sha256": "74bc17c936d66ea090b6a5b4cc4307d2154c9692e57edd4c55d68dd4a99c11b6"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
+          "sha256": "a1e4f36208650b15b75a4b01a5821d61d5be417ac2e86ec3c65e2560a87e0d7d"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
+          "sha256": "69683d0960188b56da3d5b69db14e2255f073d355aa6da333d6916303aa1fa33"
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+          "sha256": "eb027242c11808fe0d8faf851bd30d0c6e39944b773713ffb04e17e196bece0f"
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Memory/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Caching.Memory.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Caching.Memory.dll",
+          "sha256": "dca415c48a9d6af45c7f28f6481a88baa9cb9f09d3090ca5878d1acbd446048d"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Configuration.dll",
+          "sha256": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+          "sha256": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+          "sha256": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+          "sha256": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+          "sha256": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyModel/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyModel.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.DependencyModel.dll",
+          "sha256": "afa9a88cc25e3e2a9b8394c6930adf2a7ed229d20f91f0d03b98164b02bd16de"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.dll",
+          "sha256": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+          "sha256": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+          "sha256": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+          "sha256": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a"
+        },
+        {
+          "package": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+          "sha256": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216"
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+          "sha256": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887"
+        },
+        {
+          "package": "Microsoft.Extensions.Logging/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Logging.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Logging.dll",
+          "sha256": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a"
+        },
+        {
+          "package": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+          "sha256": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668"
+        },
+        {
+          "package": "Microsoft.Extensions.Options/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Options.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Options.dll",
+          "sha256": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3"
+        },
+        {
+          "package": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+          "sha256": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f"
+        },
+        {
+          "package": "Microsoft.Extensions.Primitives/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Primitives.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/Microsoft.Extensions.Primitives.dll",
+          "sha256": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc"
+        },
+        {
+          "package": "SQLitePCLRaw.bundle_e_sqlite3/2.1.12",
+          "member": "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/SQLitePCLRaw.batteries_v2.dll",
+          "sha256": "815ce410c9eab531dd219318e3ba16c5e38e83d361cfbbdbb4bbca222c497b0b"
+        },
+        {
+          "package": "SQLitePCLRaw.core/2.1.12",
+          "member": "lib/netstandard2.0/SQLitePCLRaw.core.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/SQLitePCLRaw.core.dll",
+          "sha256": "af340ac9eb9195795660d7fc1114f486b6ab63998f33176e2f24c8e0acb9aa84"
+        },
+        {
+          "package": "SQLitePCLRaw.provider.e_sqlite3/2.1.12",
+          "member": "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+          "sha256": "df996bcae63c2cabcfe8d4b9c5110eb39a2a4706178b07d875665391c6eb3995"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714"
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da"
+        }
+      ],
+      "assets_sha256": "2217fe4f8ed35648b6e0e72b1c6bff422bb60edbd15cf953f7b6a4ed68a4e939",
+      "status": "MACHINE_STRUCTURAL_GRAPH_CHECK_ONLY"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+      "lock_packages": 40,
+      "managed_runtime_dlls": 37,
+      "packages": [
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite/10.0.12",
+          "archive_sha256": "914345c27b9294e45314670ac1ff3510d71123c894e6df3a910b0313d3b9aa07",
+          "lock_hash": "rRXkKBWHjtngj2DYqSXOThGpqiR0LQkxk0b0PIVDhVEzfwpgOR7dbKMw1/My8unDCTCwn/blclR7imxntYGvEg==",
+          "raw_sha512": "xlbLTnWeuhq+iQAgpEeva2eYn1HkaD+CyQdaPnvghlNySrkPSAQZAUrDIvzt0ugW+FaGIJIMiewcBltlqBQqXg==",
+          "signed": true
+        },
+        {
+          "package": "ViciOne.ServiceBus/1.0.0",
+          "archive_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "lock_hash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "raw_sha512": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions/1.0.0",
+          "archive_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "lock_hash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "raw_sha512": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+          "archive_sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+          "lock_hash": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "raw_sha512": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+          "archive_sha256": "209f5441ac5ece0edd31eaafa08567eb20d6e863304ed33912c422e6e1af7891",
+          "lock_hash": "GMV6R/u6im5M1pmpC7NUnNqkoRS4lIoPZZf9ahXEbeO5rNdHp78dVDNbFrOP+kkKzYPc1jtI61LlOP78lpcyrA==",
+          "raw_sha512": "GMV6R/u6im5M1pmpC7NUnNqkoRS4lIoPZZf9ahXEbeO5rNdHp78dVDNbFrOP+kkKzYPc1jtI61LlOP78lpcyrA==",
+          "signed": false
+        },
+        {
+          "package": "xunit.v3.assert/4.0.0",
+          "archive_sha256": "58e041a132ba8092aa78779616fe953ae2e5ec9102e2b480bf6776a9297d51d1",
+          "lock_hash": "QxYfC+98lCMe7Kl9iWDUeUn+gmiPJ2Sz/r+trSdp1mvKyDMXj8S1kYdfkFNJSHyUSQ6KWomenSDgfWhGpR8zEQ==",
+          "raw_sha512": "5HS5G6TPk+jD77LDDTuWQ1MSBVpTEdYmlEJhmJdTpTjc7b7LBjUrFyDRN8wpqqXY/Gc5cDSZfdhSKF1JfsKNEA==",
+          "signed": true
+        },
+        {
+          "package": "FastExpressionCompiler/5.4.1",
+          "archive_sha256": "1076ef1b02332739d97669a7edfd4e89fae58a9e117e9700d4aff19d34a29795",
+          "lock_hash": "nqMykMspK5cQd35Y8ulQzAujxCcCwZVUne32pC5xNpXqrbPCuKOPMWkKHJ3LveAZPm6dsVvump0TJ1SZ9RzfTQ==",
+          "raw_sha512": "Z7u90jdIwikzJq026AgvwgN1gnsP0HQW9CgkhwpvkKjSCIVl9jp4TGUTV976vyxM61LEcB/SS0S/MAfhfmQYNA==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Data.Sqlite.Core/10.0.12",
+          "archive_sha256": "5e8ed353006dadf55d5c7f56d237321c20bb10c786262e6b25526756e1036332",
+          "lock_hash": "2aL9eL5HQr0V4b8V909SD+jQAx6qnTTl7sT/v3D8dIvmr2UGdpZIQxqm1pj2Js3e4EYTvpw0oMH7DjapJJuPPw==",
+          "raw_sha512": "U6a1XGw24t9M39INjA7yjncLkGl/UrJBKIFKDaqdjB3JIUYH6HjUDNokXrfVX2XVS0WUDPGjmU/aOhW3E62m9Q==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore/10.0.12",
+          "archive_sha256": "7e9f98370ce04178d704d1bc6a3b86bda1c254230f1e487e4fa666f2cb8323f5",
+          "lock_hash": "e7OrVN8U5yr4kuwdTHWBHGVQIVsGfMkAr0Ej1/BnrS989Q0XBVANpIzNZ2bc1GvMZ0/XwMt5InTnmKskxGy99Q==",
+          "raw_sha512": "RMOhWDPnNYra6hKkj7moYkpeTIUV8MBH2arDuGkzxZ4cun7+bD2HQfy4wbWaGufdndBP9VCUWuyiGq1Pv5wbxw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+          "archive_sha256": "6b5d47aec9ac71ff5cf4248210cbaa810bd4031bf8fabc68d5440a8aad3a67d1",
+          "lock_hash": "kDrux7T6C3V/YYYe2LXr7x6AEsVyq5Y2YoTE9er1SwbDtap3z1g8RgxNh5eKQVyB4T+DKvBBJ4Ezd/VZzJQJZg==",
+          "raw_sha512": "wHwoTc4A/BwWeWRkPf0azaDyhRNf3K8qYWcAl+v3zsOdP8xe/ikvxSXXme7Vu1Txfc8nH579wUlMOd1RN3Gyqw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Analyzers/10.0.12",
+          "archive_sha256": "cf3991f30bc2fc2bfc08c372987fa5eec4dfd9906eb1871233c4172f829b2714",
+          "lock_hash": "Kd4o2oO1A6dfKxjz5LS16QyLtpCFTUiFWwmBABETAXRsSImBdRdWeKjSgbbRhAMiV3a3/nWr95ZtzClT4uaADQ==",
+          "raw_sha512": "mBajPzL60eP21FdbsXm254MLpiNtlJQI352APp4tlam9Rqy9frtSr+9HUnoABycrBgiiluoOeIDdPqMk3VnPOg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+          "archive_sha256": "993a89827edc7a0d36d3861e7e965af4f345717f02154841fc3f34ee087c5792",
+          "lock_hash": "OiHmr8XzX96dbgMsYGe8qoqg4KxibdZG2r0QUVJBGktFInOp8IrABe8jvcbo5hrqeWfbwpK7fCEBiEPbY/ik4A==",
+          "raw_sha512": "2CIHh1kiCQ1QWPjHjr4W8INi/fQMeZT2ZBOd/bE5TWwJhZ+ApygUWrAq1R3NRMuDiwPln0HQeL6vEi/SvoKtdg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.12",
+          "archive_sha256": "bc684b844caec77c45fe6435654b4ea91d6d665a55f9abf8f331710461d2bf31",
+          "lock_hash": "DAGu68RfIDD5d6qYhtQqMUsRS7hKKFqHI6h/9VUa4FjMcQ8+IJA0rK+1pDZtrDJ+yi3YAG0L2TSViZ0csEDM0w==",
+          "raw_sha512": "g0NMRDlao2J+AgKrma9Y3DpjN2xq4zKc9wds1d3qg+LVbdIT0xb7Leg/3oeAgXlg186NqDFgTsY6cWCy6xidpQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+          "archive_sha256": "ee944e3c5912ffc6193624aab6e75d28a449f1d4617cbc92860db2c058c616bc",
+          "lock_hash": "sI3A6MUAyZwccLnwq0cXuRmC3WBtXieimBWafXSfhRJ4jnM2uGVXrqImDDVyW27u4vVaTOGlJxNJd8d1FGvCNQ==",
+          "raw_sha512": "tpbESsKJgXYHIAmM6KWhw8utAY0isZKBjPlAbsaZ1ccV1MhGBE+gX1ZKiwyFAAkLW3Qr50Y8OprmAoRsP3PvbQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Memory/10.0.12",
+          "archive_sha256": "79eb1513cf083ed4bfa773621c59203a8225c750378095d71165d6823012d8ca",
+          "lock_hash": "fhC3DHcBcFF4bXvHIxFtXJYNut7q7ZItqNFcgWfrIgmpVImlcEKNHhE7ztpNSPJYMHYYStS5QGND2I5mC26yeA==",
+          "raw_sha512": "A/kXPFwMtUPhq8OM56upWhhWBOKsyENh6/b3ryPFTCr4YVJ36BupsjLOpK7mVEcJ0Prz3QyxahaeHLu81g+2Mw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration/10.0.12",
+          "archive_sha256": "d06de9d376ee3d28b0fec645b396993a3eb7b04fbc1ef7091654a08d9e1e72cb",
+          "lock_hash": "e3IPP32CRNL031VZJAUTlCTG0YN7WFh4mN3fsSHTDQCJB+3+f0jGycv4fXk3rrftaY3B85XrQaj7sRthrOsavg==",
+          "raw_sha512": "2IfERnC6VSvQ4XyMfXMZMO334BCHD7ifkNN1KkyA7fdIXRjMQmPenR25EuRNj4dZ8h0wwtEtlFpr+ppKkiOUWw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+          "archive_sha256": "f7397df285cb2a34c88a6929710c0b8ed84913382e2ae708f734060bc091ce51",
+          "lock_hash": "8xaGcvS/qZ1otoxPQCEJkNva389CVL/plNcvIETZhQTETYdRkYDPEYhUMoAGONo4FU45ufdfE0j29AfWVVj0wA==",
+          "raw_sha512": "TZ4PJHUuUpM8ck2v6La2r23Hbvs5BAuWZKKn7/S10SBpHAAYXiRrfoBuOF3MCUH4ds7Tys7uScFCwK30a8crZg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+          "archive_sha256": "fe267b1321b7e183183ed3042071bcaf5e3ad244a83e1d27fb055071367eba48",
+          "lock_hash": "dAgIf1TOr8KLs+aBRIbXUZBjHoSH4rDG8+XkX/Q6AZwkQdMA0+yPDKTHsieeXdZDfpOpZVHzOnuAb5Z2nX3KsA==",
+          "raw_sha512": "hX7WQh+3+FYIhWq9Edz5hXgbpn+aQRRGXJpUQ4h9E6tZTdPkQ6dtDOyCssCXZlv/oq9PieQKFKdgUhsNEP8jpQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection/10.0.12",
+          "archive_sha256": "b979c630191f6c48b548cad866d8224a0ed0e6e7be0aba87f454b57597b63779",
+          "lock_hash": "lXyK2O5GoYvfxW8eCFcD16JFbcoSTM1sJkAM0UHS1jZyl9NYMW64Tqm6OQFT0IDBjZi+xHt95/Zg+nxZhGFhZg==",
+          "raw_sha512": "4bTS7TpB4aMRxegFpYgsp9HDI0TvFC6bt2n9SsyJ9xLy6ZEspW2ji7bQ7dKguG2w5LbsJtFiWz+wiPZgpmQ/KQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+          "archive_sha256": "4664fab0ac4b56b8935333f59ee9e7801c8ab96de7c57cb3b6eb8192a5a61c55",
+          "lock_hash": "9/qymSh7hVDMGTGwrLz8MRp5zRyXy9adGDOs4HwRdnLil3oZGYuWeZjbmHgCQ9BL1qBroVfgUK3U/nb61617Cw==",
+          "raw_sha512": "kTf3x6w7DOuNj6kS0kL8oEGSSXJnqiPm3G+ddUfVB743EaO5Np8CX3r9pQp0ovBY7/J+KY0JLbwuhC02nFQO1g==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyModel/10.0.12",
+          "archive_sha256": "b47be2500b09c9f1b8bc7b193eaaa7a515e8218b0dfb5a43b03f45b2ceb317ff",
+          "lock_hash": "rDPQVTxh/zMTDF7wHlRqL/jjZbwjAP6315ydBxj51pZW7qkAwGwjoSiMutxYI91xmOE3ZXjAGHbYRqzyJV7Urw==",
+          "raw_sha512": "+gOJOAuUejAsox0/B0JzNlDnmHjHW7lnBf0O2ZuTbTRP+SHxDYMAeAsGNy3tOrn0YbV/npj0cDeDvxT143noPg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics/10.0.12",
+          "archive_sha256": "6edb9246a77906a0bb91bb63175c4f70cdf7b49328d3ceaae6e6c4c7bacf89ea",
+          "lock_hash": "amx0O/R4dReqKlC3T740+CHpX8D8tAIV0f5kAPfFi4XK9jYo9BSepGt9/rWfvvCoSMaZ1+XvnqPp/Vv2fmTdAg==",
+          "raw_sha512": "J15IKoJ6sYUgft34XsWdImt8EQrD9tdyOzwZDBJpIDkAqR119mNhAbbwAm2b8Ul5W6j3V94OptYWMOqLO+8+2A==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+          "archive_sha256": "5ece1e660e3f707cb2d8bda190329406434b5faab45d5ee6ea8e51c93c744ec0",
+          "lock_hash": "fMp91qlRlMOuHfMyp7LuAnOS+MOeWTF1obJmyFcs4nZCXu6pr+QB1AbFJcl2qpBltBrqF/Y7+Rn9IuNcSuctig==",
+          "raw_sha512": "8i5OD/g0Xj8Q1TizgLzs6h/M7sF+CUT2JzgNuUnFBf5qHF0/jk84HCnk4mpG+t0QyFKdRB4aJ+/mLEpLhJ5sVg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+          "archive_sha256": "8aa7164a9800fbc1bff7ef624093780a2a588d93bd066cd590b32ab08f4bb49c",
+          "lock_hash": "Ck8nkBxEYPOGtUCp0whKwfE4qAHBnsK0DY1kgZLKvzf7s9xyr4lASa4K4AKNN1VHy7r3Z1Z57U6C0TMzFjD8ig==",
+          "raw_sha512": "cwawQoayFa162+os743171OgPp4QHue/R6W6HbhFGnvaPbQz2hE39Gt6nngLZopOVkauxNiRGfQge8OFDN6hIw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+          "archive_sha256": "9f2f201db6ccc5cb6c2c2f724301652f8c59be4a12a900a9a20adf850e806771",
+          "lock_hash": "oN4AYFq+50m7a65GgRxRqjdynWS6kVQAH6gHKRTfsrLP/aH7RvxIQ7139fjbnrxBwzfZQtZRhlcjvEIiRzihrg==",
+          "raw_sha512": "aRkha3TyZrBSBQBETqgCUXRU/LIgJQ+fS/GCgdaFGWrUEhFvkDAQyS0SK28zEjx5siE7qGhhbQb7ETbc4S2ptA==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+          "archive_sha256": "49dad2381a98e644f68b711106f06c01db62c7fc3b4b1e79799ba770d0d4d9e7",
+          "lock_hash": "iQseV6HixWzEYQH4i++84ToIroXnM5jC1TJF4EqBz3lWNG1HBTMYDLkRb6Wm3wk5V6WqSfl7NukO/LYsloGyfg==",
+          "raw_sha512": "uvXk5vVWju5qjSCOQCiuXi0bDoy7kI9Ds1XRpIPl0PTpgWA+sAanC6j3fR2H6lw9KHHdwdgp4oCUvN417a4Saw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "archive_sha256": "535354f24c323122edbbc3a090f7c00e201effb88ab10db043e537a2023da70f",
+          "lock_hash": "ZlIxIJtWmrph0Ikj0svSaTkZ+d+ZYpTAhazpf1b3aoFRmlNnNWwkcvqnqT9yKHjKvfBRthvUrkq11OxfItOhpg==",
+          "raw_sha512": "F31e9IMQm70ywZhUsXWzAx5x51989XK6CJ9FxPK5MpD/nxRzu6qAt8MT0ZfV7wl+38v60dx2GZny6cs0LJc+OQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Logging/10.0.12",
+          "archive_sha256": "539919dc90956d273ac67d24e99ae7d92a893848b6efd368c1d0e61e5bc955a9",
+          "lock_hash": "6I46fTPfgYkrjRYfRXbho9WOvOelTnNjWuZws/hzGHDASH1LEJeA4VKK9k3wJvido8o7jJSB5WkMTonX7HM1bA==",
+          "raw_sha512": "7Dee3dIOa04MmZo+XN/FjjaVu2Q0ywIEYHJPhqve5hnu/XnXf9aed+8OBVGx93NeVZhLxDo+zeuemG7NlPHHjQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+          "archive_sha256": "34eaaa60afb61ed3d86e2e2669eae0c690d0e237e8a7066ba5bdb45a386709e7",
+          "lock_hash": "+24lC4plfbEDNfLAdTV/SWKS7dW+16X4HdydO3R++134kSNTzcbYA4KpR1Hdh6uWisB8Za3AzwyOn+K+NxWIug==",
+          "raw_sha512": "6U8g6MRgR1JhFCr4XnlPJIjgKh9Fhh30wwUnuFvnaeJqpgx6c1J4BA5RnPNaMm7vE1zN/QOR+nTSTNswgInX2w==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Options/10.0.12",
+          "archive_sha256": "eec90916f11d84ea41e942b59cbf82f1e32726d87e99be7ee2b2424e31570ff7",
+          "lock_hash": "TDYD33TSRpXKZWlmTXNlj5kCihxatmv2Ec1u6C+bMYLphCS7PoSLE9Pjd/nunDoE7yETk+LLKjVJX78HYtWjpA==",
+          "raw_sha512": "AVPXba8q1GXeRiVr4SVu4YX0iBU+Tn59ObvD2uWkkWOwKoVPZ+HQMpen7TCiA9xpwHGMNqt381z1iWA6nokngQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+          "archive_sha256": "71cbb9b3b179ee51d5416b3b8602d7109bdfc61ae741c0c3903fe4959e2ed7e1",
+          "lock_hash": "rqpu4qj5WE9x1IHGXSIgHBKi7IUlQaHyp4aXCYIanG2OghlUMFZpZTgExaXwcvmLAJHsxKQWMPpc7D2WIbCVtA==",
+          "raw_sha512": "geP3An4Gv41CXftA64EmzzkZrUpqYAefpTcHBV0UvM28tydQAhMDNNmh4xYpp2KdHhpwsoZgbzug96QrolVzMQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Primitives/10.0.12",
+          "archive_sha256": "97ee742afe0cb0634558262f925cc112b5882d09db8d169575e559031da63922",
+          "lock_hash": "dYfCLR52UA+3DL7C4I/pvSaRPkNqxrUAQmbFL2u0zvYKKzqgrFCJl08Df+F1aYc8leu9JvpC9bsURUdpExcBXQ==",
+          "raw_sha512": "G4hMZ9wJv75ufnnBkHAHbqiywfMGfeyfz/aiBZoLeg5vVgEqZPPAT/nLFb/Pk+/mGCAIRi3i0WfGHTcVDN9lCg==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.bundle_e_sqlite3/2.1.12",
+          "archive_sha256": "a9a06e6b5a313f6ef3675f91997d012adeffe8aa9e1ffd69ed46a4e685b054e1",
+          "lock_hash": "mAgscpQMLw5/nfA1Q5oJVAT29yROUo1ifZGbbTpx/lwZpSxMUGoYbKfmvdm8oXER+RzxqBmmQzeBEVKfeHv2nw==",
+          "raw_sha512": "KbeKXtiMrpxd7dFgsnorA1Gci/xVRDCBmkfZNdiiE1la6OdUEMtyTTJ3TBeCn9nIvZgXo5uCd9dVCji3Ay6LuA==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.core/2.1.12",
+          "archive_sha256": "af06904138ffa6dc95a599133d64d254716d6facc7543a6b3b910793dae9dca5",
+          "lock_hash": "ETpNw9DY3ckWLgRRAeCHj+GKOuPi61aeczkXhgHexUvqoZBAYg8RYESE2J7O1M7+o6QbdSEZwrw9bfqztUVWXg==",
+          "raw_sha512": "WgmgyKwGLTR6ZfIf1+1dFNxsOyp9GmsU9YjjeUjgz+NZnw2hyjVB0U8taT1Z1vv21s5+gvhHQ3vtpZajsMKJYg==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.lib.e_sqlite3/2.1.12",
+          "archive_sha256": "4a22c02ffcf489792903cf263def9fce27739716883f965f0b5eeff1637430ac",
+          "lock_hash": "fWi8Dbknuhgg72fWinIdjXVaqO1hHL4YBBwVLnr7e1c9TAZwJ0QE38j9syW1hwx6HaqEVTwI+O07WPdZn8Rp0w==",
+          "raw_sha512": "Dli+ELKNuRX0g72Uq2I2OZa5zgi4fwSXV4Je3wyF7jH9oz6AKRA9wXIzMwuVeW7RfAZdSVgIcEeZZON59LdtiA==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.provider.e_sqlite3/2.1.12",
+          "archive_sha256": "df2b3271992e5d719186c4671e3cf4f8658097c154cbcd41494ab594c5997595",
+          "lock_hash": "W3oH4XIfCzFrgUSDKHhN6N+dgzA5YHOR2VxX8GB6Qy7CyrJJgxPEG8NirgYWlPQC5P2jz2knSsexWu4tDUL33g==",
+          "raw_sha512": "k4RCblP+Hc1JAc77crV+fFZLiZeJPaY8VjMA8kvki00Z0dohG6xxXw4qkuVyCUC2+HChbhwW+ydhmjmlUZAXUQ==",
+          "signed": true
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier/1.0.0",
+          "archive_sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+          "lock_hash": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "raw_sha512": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures/1.0.0",
+          "archive_sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+          "lock_hash": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "raw_sha512": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService/1.0.0",
+          "archive_sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+          "lock_hash": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "raw_sha512": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas/1.0.0",
+          "archive_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "lock_hash": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "raw_sha512": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "signed": false
+        }
+      ],
+      "runtime": [
+        {
+          "package": "ViciOne.ServiceBus/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "sha256": "3d9cfe2389b8ae86292c476479ae1cd6ee752c707969cd10a272e00ecfe471af"
+        },
+        {
+          "package": "xunit.v3.assert/4.0.0",
+          "member": "lib/net8.0/xunit.v3.assert.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/xunit.v3.assert.dll",
+          "sha256": "d14ea33253a7e289af5254617203b02f0643ba7ff618670de837d642ef22af11"
+        },
+        {
+          "package": "FastExpressionCompiler/5.4.1",
+          "member": "lib/net9.0/FastExpressionCompiler.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/FastExpressionCompiler.dll",
+          "sha256": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a"
+        },
+        {
+          "package": "Microsoft.Data.Sqlite.Core/10.0.12",
+          "member": "lib/net8.0/Microsoft.Data.Sqlite.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Data.Sqlite.dll",
+          "sha256": "b98d957462be432895b00dccca012d3c127e118d3d4262418014b92c7bbd66cf"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.EntityFrameworkCore.dll",
+          "sha256": "f5b1703d608e241314952b2ede8dcdd1b8d8adda8c91a13cb7e6b1007414cef4"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+          "sha256": "74bc17c936d66ea090b6a5b4cc4307d2154c9692e57edd4c55d68dd4a99c11b6"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
+          "sha256": "a1e4f36208650b15b75a4b01a5821d61d5be417ac2e86ec3c65e2560a87e0d7d"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
+          "sha256": "69683d0960188b56da3d5b69db14e2255f073d355aa6da333d6916303aa1fa33"
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+          "sha256": "eb027242c11808fe0d8faf851bd30d0c6e39944b773713ffb04e17e196bece0f"
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Memory/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Caching.Memory.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Caching.Memory.dll",
+          "sha256": "dca415c48a9d6af45c7f28f6481a88baa9cb9f09d3090ca5878d1acbd446048d"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.dll",
+          "sha256": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+          "sha256": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+          "sha256": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+          "sha256": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+          "sha256": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyModel/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyModel.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyModel.dll",
+          "sha256": "afa9a88cc25e3e2a9b8394c6930adf2a7ed229d20f91f0d03b98164b02bd16de"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.dll",
+          "sha256": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+          "sha256": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+          "sha256": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+          "sha256": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a"
+        },
+        {
+          "package": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+          "sha256": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216"
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+          "sha256": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887"
+        },
+        {
+          "package": "Microsoft.Extensions.Logging/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Logging.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.dll",
+          "sha256": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a"
+        },
+        {
+          "package": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+          "sha256": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668"
+        },
+        {
+          "package": "Microsoft.Extensions.Options/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Options.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Options.dll",
+          "sha256": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3"
+        },
+        {
+          "package": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+          "sha256": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f"
+        },
+        {
+          "package": "Microsoft.Extensions.Primitives/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Primitives.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/Microsoft.Extensions.Primitives.dll",
+          "sha256": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc"
+        },
+        {
+          "package": "SQLitePCLRaw.bundle_e_sqlite3/2.1.12",
+          "member": "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/SQLitePCLRaw.batteries_v2.dll",
+          "sha256": "815ce410c9eab531dd219318e3ba16c5e38e83d361cfbbdbb4bbca222c497b0b"
+        },
+        {
+          "package": "SQLitePCLRaw.core/2.1.12",
+          "member": "lib/netstandard2.0/SQLitePCLRaw.core.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/SQLitePCLRaw.core.dll",
+          "sha256": "af340ac9eb9195795660d7fc1114f486b6ab63998f33176e2f24c8e0acb9aa84"
+        },
+        {
+          "package": "SQLitePCLRaw.provider.e_sqlite3/2.1.12",
+          "member": "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+          "sha256": "df996bcae63c2cabcfe8d4b9c5110eb39a2a4706178b07d875665391c6eb3995"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714"
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da"
+        }
+      ],
+      "assets_sha256": "1fdc13aee8de19b3cc515475be35eda22c187e588b70ef35c671be03832aba99",
+      "status": "MACHINE_STRUCTURAL_GRAPH_CHECK_ONLY"
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+      "lock_packages": 40,
+      "managed_runtime_dlls": 37,
+      "packages": [
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite/10.0.12",
+          "archive_sha256": "914345c27b9294e45314670ac1ff3510d71123c894e6df3a910b0313d3b9aa07",
+          "lock_hash": "rRXkKBWHjtngj2DYqSXOThGpqiR0LQkxk0b0PIVDhVEzfwpgOR7dbKMw1/My8unDCTCwn/blclR7imxntYGvEg==",
+          "raw_sha512": "xlbLTnWeuhq+iQAgpEeva2eYn1HkaD+CyQdaPnvghlNySrkPSAQZAUrDIvzt0ugW+FaGIJIMiewcBltlqBQqXg==",
+          "signed": true
+        },
+        {
+          "package": "ViciOne.ServiceBus/1.0.0",
+          "archive_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "lock_hash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "raw_sha512": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions/1.0.0",
+          "archive_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "lock_hash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "raw_sha512": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+          "archive_sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+          "lock_hash": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "raw_sha512": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+          "archive_sha256": "209f5441ac5ece0edd31eaafa08567eb20d6e863304ed33912c422e6e1af7891",
+          "lock_hash": "GMV6R/u6im5M1pmpC7NUnNqkoRS4lIoPZZf9ahXEbeO5rNdHp78dVDNbFrOP+kkKzYPc1jtI61LlOP78lpcyrA==",
+          "raw_sha512": "GMV6R/u6im5M1pmpC7NUnNqkoRS4lIoPZZf9ahXEbeO5rNdHp78dVDNbFrOP+kkKzYPc1jtI61LlOP78lpcyrA==",
+          "signed": false
+        },
+        {
+          "package": "xunit.v3.assert/4.0.0",
+          "archive_sha256": "58e041a132ba8092aa78779616fe953ae2e5ec9102e2b480bf6776a9297d51d1",
+          "lock_hash": "QxYfC+98lCMe7Kl9iWDUeUn+gmiPJ2Sz/r+trSdp1mvKyDMXj8S1kYdfkFNJSHyUSQ6KWomenSDgfWhGpR8zEQ==",
+          "raw_sha512": "5HS5G6TPk+jD77LDDTuWQ1MSBVpTEdYmlEJhmJdTpTjc7b7LBjUrFyDRN8wpqqXY/Gc5cDSZfdhSKF1JfsKNEA==",
+          "signed": true
+        },
+        {
+          "package": "FastExpressionCompiler/5.4.1",
+          "archive_sha256": "1076ef1b02332739d97669a7edfd4e89fae58a9e117e9700d4aff19d34a29795",
+          "lock_hash": "nqMykMspK5cQd35Y8ulQzAujxCcCwZVUne32pC5xNpXqrbPCuKOPMWkKHJ3LveAZPm6dsVvump0TJ1SZ9RzfTQ==",
+          "raw_sha512": "Z7u90jdIwikzJq026AgvwgN1gnsP0HQW9CgkhwpvkKjSCIVl9jp4TGUTV976vyxM61LEcB/SS0S/MAfhfmQYNA==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Data.Sqlite.Core/10.0.12",
+          "archive_sha256": "5e8ed353006dadf55d5c7f56d237321c20bb10c786262e6b25526756e1036332",
+          "lock_hash": "2aL9eL5HQr0V4b8V909SD+jQAx6qnTTl7sT/v3D8dIvmr2UGdpZIQxqm1pj2Js3e4EYTvpw0oMH7DjapJJuPPw==",
+          "raw_sha512": "U6a1XGw24t9M39INjA7yjncLkGl/UrJBKIFKDaqdjB3JIUYH6HjUDNokXrfVX2XVS0WUDPGjmU/aOhW3E62m9Q==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore/10.0.12",
+          "archive_sha256": "7e9f98370ce04178d704d1bc6a3b86bda1c254230f1e487e4fa666f2cb8323f5",
+          "lock_hash": "e7OrVN8U5yr4kuwdTHWBHGVQIVsGfMkAr0Ej1/BnrS989Q0XBVANpIzNZ2bc1GvMZ0/XwMt5InTnmKskxGy99Q==",
+          "raw_sha512": "RMOhWDPnNYra6hKkj7moYkpeTIUV8MBH2arDuGkzxZ4cun7+bD2HQfy4wbWaGufdndBP9VCUWuyiGq1Pv5wbxw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+          "archive_sha256": "6b5d47aec9ac71ff5cf4248210cbaa810bd4031bf8fabc68d5440a8aad3a67d1",
+          "lock_hash": "kDrux7T6C3V/YYYe2LXr7x6AEsVyq5Y2YoTE9er1SwbDtap3z1g8RgxNh5eKQVyB4T+DKvBBJ4Ezd/VZzJQJZg==",
+          "raw_sha512": "wHwoTc4A/BwWeWRkPf0azaDyhRNf3K8qYWcAl+v3zsOdP8xe/ikvxSXXme7Vu1Txfc8nH579wUlMOd1RN3Gyqw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Analyzers/10.0.12",
+          "archive_sha256": "cf3991f30bc2fc2bfc08c372987fa5eec4dfd9906eb1871233c4172f829b2714",
+          "lock_hash": "Kd4o2oO1A6dfKxjz5LS16QyLtpCFTUiFWwmBABETAXRsSImBdRdWeKjSgbbRhAMiV3a3/nWr95ZtzClT4uaADQ==",
+          "raw_sha512": "mBajPzL60eP21FdbsXm254MLpiNtlJQI352APp4tlam9Rqy9frtSr+9HUnoABycrBgiiluoOeIDdPqMk3VnPOg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+          "archive_sha256": "993a89827edc7a0d36d3861e7e965af4f345717f02154841fc3f34ee087c5792",
+          "lock_hash": "OiHmr8XzX96dbgMsYGe8qoqg4KxibdZG2r0QUVJBGktFInOp8IrABe8jvcbo5hrqeWfbwpK7fCEBiEPbY/ik4A==",
+          "raw_sha512": "2CIHh1kiCQ1QWPjHjr4W8INi/fQMeZT2ZBOd/bE5TWwJhZ+ApygUWrAq1R3NRMuDiwPln0HQeL6vEi/SvoKtdg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.12",
+          "archive_sha256": "bc684b844caec77c45fe6435654b4ea91d6d665a55f9abf8f331710461d2bf31",
+          "lock_hash": "DAGu68RfIDD5d6qYhtQqMUsRS7hKKFqHI6h/9VUa4FjMcQ8+IJA0rK+1pDZtrDJ+yi3YAG0L2TSViZ0csEDM0w==",
+          "raw_sha512": "g0NMRDlao2J+AgKrma9Y3DpjN2xq4zKc9wds1d3qg+LVbdIT0xb7Leg/3oeAgXlg186NqDFgTsY6cWCy6xidpQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+          "archive_sha256": "ee944e3c5912ffc6193624aab6e75d28a449f1d4617cbc92860db2c058c616bc",
+          "lock_hash": "sI3A6MUAyZwccLnwq0cXuRmC3WBtXieimBWafXSfhRJ4jnM2uGVXrqImDDVyW27u4vVaTOGlJxNJd8d1FGvCNQ==",
+          "raw_sha512": "tpbESsKJgXYHIAmM6KWhw8utAY0isZKBjPlAbsaZ1ccV1MhGBE+gX1ZKiwyFAAkLW3Qr50Y8OprmAoRsP3PvbQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Memory/10.0.12",
+          "archive_sha256": "79eb1513cf083ed4bfa773621c59203a8225c750378095d71165d6823012d8ca",
+          "lock_hash": "fhC3DHcBcFF4bXvHIxFtXJYNut7q7ZItqNFcgWfrIgmpVImlcEKNHhE7ztpNSPJYMHYYStS5QGND2I5mC26yeA==",
+          "raw_sha512": "A/kXPFwMtUPhq8OM56upWhhWBOKsyENh6/b3ryPFTCr4YVJ36BupsjLOpK7mVEcJ0Prz3QyxahaeHLu81g+2Mw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration/10.0.12",
+          "archive_sha256": "d06de9d376ee3d28b0fec645b396993a3eb7b04fbc1ef7091654a08d9e1e72cb",
+          "lock_hash": "e3IPP32CRNL031VZJAUTlCTG0YN7WFh4mN3fsSHTDQCJB+3+f0jGycv4fXk3rrftaY3B85XrQaj7sRthrOsavg==",
+          "raw_sha512": "2IfERnC6VSvQ4XyMfXMZMO334BCHD7ifkNN1KkyA7fdIXRjMQmPenR25EuRNj4dZ8h0wwtEtlFpr+ppKkiOUWw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+          "archive_sha256": "f7397df285cb2a34c88a6929710c0b8ed84913382e2ae708f734060bc091ce51",
+          "lock_hash": "8xaGcvS/qZ1otoxPQCEJkNva389CVL/plNcvIETZhQTETYdRkYDPEYhUMoAGONo4FU45ufdfE0j29AfWVVj0wA==",
+          "raw_sha512": "TZ4PJHUuUpM8ck2v6La2r23Hbvs5BAuWZKKn7/S10SBpHAAYXiRrfoBuOF3MCUH4ds7Tys7uScFCwK30a8crZg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+          "archive_sha256": "fe267b1321b7e183183ed3042071bcaf5e3ad244a83e1d27fb055071367eba48",
+          "lock_hash": "dAgIf1TOr8KLs+aBRIbXUZBjHoSH4rDG8+XkX/Q6AZwkQdMA0+yPDKTHsieeXdZDfpOpZVHzOnuAb5Z2nX3KsA==",
+          "raw_sha512": "hX7WQh+3+FYIhWq9Edz5hXgbpn+aQRRGXJpUQ4h9E6tZTdPkQ6dtDOyCssCXZlv/oq9PieQKFKdgUhsNEP8jpQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection/10.0.12",
+          "archive_sha256": "b979c630191f6c48b548cad866d8224a0ed0e6e7be0aba87f454b57597b63779",
+          "lock_hash": "lXyK2O5GoYvfxW8eCFcD16JFbcoSTM1sJkAM0UHS1jZyl9NYMW64Tqm6OQFT0IDBjZi+xHt95/Zg+nxZhGFhZg==",
+          "raw_sha512": "4bTS7TpB4aMRxegFpYgsp9HDI0TvFC6bt2n9SsyJ9xLy6ZEspW2ji7bQ7dKguG2w5LbsJtFiWz+wiPZgpmQ/KQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+          "archive_sha256": "4664fab0ac4b56b8935333f59ee9e7801c8ab96de7c57cb3b6eb8192a5a61c55",
+          "lock_hash": "9/qymSh7hVDMGTGwrLz8MRp5zRyXy9adGDOs4HwRdnLil3oZGYuWeZjbmHgCQ9BL1qBroVfgUK3U/nb61617Cw==",
+          "raw_sha512": "kTf3x6w7DOuNj6kS0kL8oEGSSXJnqiPm3G+ddUfVB743EaO5Np8CX3r9pQp0ovBY7/J+KY0JLbwuhC02nFQO1g==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyModel/10.0.12",
+          "archive_sha256": "b47be2500b09c9f1b8bc7b193eaaa7a515e8218b0dfb5a43b03f45b2ceb317ff",
+          "lock_hash": "rDPQVTxh/zMTDF7wHlRqL/jjZbwjAP6315ydBxj51pZW7qkAwGwjoSiMutxYI91xmOE3ZXjAGHbYRqzyJV7Urw==",
+          "raw_sha512": "+gOJOAuUejAsox0/B0JzNlDnmHjHW7lnBf0O2ZuTbTRP+SHxDYMAeAsGNy3tOrn0YbV/npj0cDeDvxT143noPg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics/10.0.12",
+          "archive_sha256": "6edb9246a77906a0bb91bb63175c4f70cdf7b49328d3ceaae6e6c4c7bacf89ea",
+          "lock_hash": "amx0O/R4dReqKlC3T740+CHpX8D8tAIV0f5kAPfFi4XK9jYo9BSepGt9/rWfvvCoSMaZ1+XvnqPp/Vv2fmTdAg==",
+          "raw_sha512": "J15IKoJ6sYUgft34XsWdImt8EQrD9tdyOzwZDBJpIDkAqR119mNhAbbwAm2b8Ul5W6j3V94OptYWMOqLO+8+2A==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+          "archive_sha256": "5ece1e660e3f707cb2d8bda190329406434b5faab45d5ee6ea8e51c93c744ec0",
+          "lock_hash": "fMp91qlRlMOuHfMyp7LuAnOS+MOeWTF1obJmyFcs4nZCXu6pr+QB1AbFJcl2qpBltBrqF/Y7+Rn9IuNcSuctig==",
+          "raw_sha512": "8i5OD/g0Xj8Q1TizgLzs6h/M7sF+CUT2JzgNuUnFBf5qHF0/jk84HCnk4mpG+t0QyFKdRB4aJ+/mLEpLhJ5sVg==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+          "archive_sha256": "8aa7164a9800fbc1bff7ef624093780a2a588d93bd066cd590b32ab08f4bb49c",
+          "lock_hash": "Ck8nkBxEYPOGtUCp0whKwfE4qAHBnsK0DY1kgZLKvzf7s9xyr4lASa4K4AKNN1VHy7r3Z1Z57U6C0TMzFjD8ig==",
+          "raw_sha512": "cwawQoayFa162+os743171OgPp4QHue/R6W6HbhFGnvaPbQz2hE39Gt6nngLZopOVkauxNiRGfQge8OFDN6hIw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+          "archive_sha256": "9f2f201db6ccc5cb6c2c2f724301652f8c59be4a12a900a9a20adf850e806771",
+          "lock_hash": "oN4AYFq+50m7a65GgRxRqjdynWS6kVQAH6gHKRTfsrLP/aH7RvxIQ7139fjbnrxBwzfZQtZRhlcjvEIiRzihrg==",
+          "raw_sha512": "aRkha3TyZrBSBQBETqgCUXRU/LIgJQ+fS/GCgdaFGWrUEhFvkDAQyS0SK28zEjx5siE7qGhhbQb7ETbc4S2ptA==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+          "archive_sha256": "49dad2381a98e644f68b711106f06c01db62c7fc3b4b1e79799ba770d0d4d9e7",
+          "lock_hash": "iQseV6HixWzEYQH4i++84ToIroXnM5jC1TJF4EqBz3lWNG1HBTMYDLkRb6Wm3wk5V6WqSfl7NukO/LYsloGyfg==",
+          "raw_sha512": "uvXk5vVWju5qjSCOQCiuXi0bDoy7kI9Ds1XRpIPl0PTpgWA+sAanC6j3fR2H6lw9KHHdwdgp4oCUvN417a4Saw==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "archive_sha256": "535354f24c323122edbbc3a090f7c00e201effb88ab10db043e537a2023da70f",
+          "lock_hash": "ZlIxIJtWmrph0Ikj0svSaTkZ+d+ZYpTAhazpf1b3aoFRmlNnNWwkcvqnqT9yKHjKvfBRthvUrkq11OxfItOhpg==",
+          "raw_sha512": "F31e9IMQm70ywZhUsXWzAx5x51989XK6CJ9FxPK5MpD/nxRzu6qAt8MT0ZfV7wl+38v60dx2GZny6cs0LJc+OQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Logging/10.0.12",
+          "archive_sha256": "539919dc90956d273ac67d24e99ae7d92a893848b6efd368c1d0e61e5bc955a9",
+          "lock_hash": "6I46fTPfgYkrjRYfRXbho9WOvOelTnNjWuZws/hzGHDASH1LEJeA4VKK9k3wJvido8o7jJSB5WkMTonX7HM1bA==",
+          "raw_sha512": "7Dee3dIOa04MmZo+XN/FjjaVu2Q0ywIEYHJPhqve5hnu/XnXf9aed+8OBVGx93NeVZhLxDo+zeuemG7NlPHHjQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+          "archive_sha256": "34eaaa60afb61ed3d86e2e2669eae0c690d0e237e8a7066ba5bdb45a386709e7",
+          "lock_hash": "+24lC4plfbEDNfLAdTV/SWKS7dW+16X4HdydO3R++134kSNTzcbYA4KpR1Hdh6uWisB8Za3AzwyOn+K+NxWIug==",
+          "raw_sha512": "6U8g6MRgR1JhFCr4XnlPJIjgKh9Fhh30wwUnuFvnaeJqpgx6c1J4BA5RnPNaMm7vE1zN/QOR+nTSTNswgInX2w==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Options/10.0.12",
+          "archive_sha256": "eec90916f11d84ea41e942b59cbf82f1e32726d87e99be7ee2b2424e31570ff7",
+          "lock_hash": "TDYD33TSRpXKZWlmTXNlj5kCihxatmv2Ec1u6C+bMYLphCS7PoSLE9Pjd/nunDoE7yETk+LLKjVJX78HYtWjpA==",
+          "raw_sha512": "AVPXba8q1GXeRiVr4SVu4YX0iBU+Tn59ObvD2uWkkWOwKoVPZ+HQMpen7TCiA9xpwHGMNqt381z1iWA6nokngQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+          "archive_sha256": "71cbb9b3b179ee51d5416b3b8602d7109bdfc61ae741c0c3903fe4959e2ed7e1",
+          "lock_hash": "rqpu4qj5WE9x1IHGXSIgHBKi7IUlQaHyp4aXCYIanG2OghlUMFZpZTgExaXwcvmLAJHsxKQWMPpc7D2WIbCVtA==",
+          "raw_sha512": "geP3An4Gv41CXftA64EmzzkZrUpqYAefpTcHBV0UvM28tydQAhMDNNmh4xYpp2KdHhpwsoZgbzug96QrolVzMQ==",
+          "signed": true
+        },
+        {
+          "package": "Microsoft.Extensions.Primitives/10.0.12",
+          "archive_sha256": "97ee742afe0cb0634558262f925cc112b5882d09db8d169575e559031da63922",
+          "lock_hash": "dYfCLR52UA+3DL7C4I/pvSaRPkNqxrUAQmbFL2u0zvYKKzqgrFCJl08Df+F1aYc8leu9JvpC9bsURUdpExcBXQ==",
+          "raw_sha512": "G4hMZ9wJv75ufnnBkHAHbqiywfMGfeyfz/aiBZoLeg5vVgEqZPPAT/nLFb/Pk+/mGCAIRi3i0WfGHTcVDN9lCg==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.bundle_e_sqlite3/2.1.12",
+          "archive_sha256": "a9a06e6b5a313f6ef3675f91997d012adeffe8aa9e1ffd69ed46a4e685b054e1",
+          "lock_hash": "mAgscpQMLw5/nfA1Q5oJVAT29yROUo1ifZGbbTpx/lwZpSxMUGoYbKfmvdm8oXER+RzxqBmmQzeBEVKfeHv2nw==",
+          "raw_sha512": "KbeKXtiMrpxd7dFgsnorA1Gci/xVRDCBmkfZNdiiE1la6OdUEMtyTTJ3TBeCn9nIvZgXo5uCd9dVCji3Ay6LuA==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.core/2.1.12",
+          "archive_sha256": "af06904138ffa6dc95a599133d64d254716d6facc7543a6b3b910793dae9dca5",
+          "lock_hash": "ETpNw9DY3ckWLgRRAeCHj+GKOuPi61aeczkXhgHexUvqoZBAYg8RYESE2J7O1M7+o6QbdSEZwrw9bfqztUVWXg==",
+          "raw_sha512": "WgmgyKwGLTR6ZfIf1+1dFNxsOyp9GmsU9YjjeUjgz+NZnw2hyjVB0U8taT1Z1vv21s5+gvhHQ3vtpZajsMKJYg==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.lib.e_sqlite3/2.1.12",
+          "archive_sha256": "4a22c02ffcf489792903cf263def9fce27739716883f965f0b5eeff1637430ac",
+          "lock_hash": "fWi8Dbknuhgg72fWinIdjXVaqO1hHL4YBBwVLnr7e1c9TAZwJ0QE38j9syW1hwx6HaqEVTwI+O07WPdZn8Rp0w==",
+          "raw_sha512": "Dli+ELKNuRX0g72Uq2I2OZa5zgi4fwSXV4Je3wyF7jH9oz6AKRA9wXIzMwuVeW7RfAZdSVgIcEeZZON59LdtiA==",
+          "signed": true
+        },
+        {
+          "package": "SQLitePCLRaw.provider.e_sqlite3/2.1.12",
+          "archive_sha256": "df2b3271992e5d719186c4671e3cf4f8658097c154cbcd41494ab594c5997595",
+          "lock_hash": "W3oH4XIfCzFrgUSDKHhN6N+dgzA5YHOR2VxX8GB6Qy7CyrJJgxPEG8NirgYWlPQC5P2jz2knSsexWu4tDUL33g==",
+          "raw_sha512": "k4RCblP+Hc1JAc77crV+fFZLiZeJPaY8VjMA8kvki00Z0dohG6xxXw4qkuVyCUC2+HChbhwW+ydhmjmlUZAXUQ==",
+          "signed": true
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier/1.0.0",
+          "archive_sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+          "lock_hash": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "raw_sha512": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures/1.0.0",
+          "archive_sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+          "lock_hash": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "raw_sha512": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService/1.0.0",
+          "archive_sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+          "lock_hash": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "raw_sha512": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "signed": false
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas/1.0.0",
+          "archive_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "lock_hash": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "raw_sha512": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "signed": false
+        }
+      ],
+      "runtime": [
+        {
+          "package": "ViciOne.ServiceBus/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "sha256": "3d9cfe2389b8ae86292c476479ae1cd6ee752c707969cd10a272e00ecfe471af"
+        },
+        {
+          "package": "xunit.v3.assert/4.0.0",
+          "member": "lib/net8.0/xunit.v3.assert.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/xunit.v3.assert.dll",
+          "sha256": "d14ea33253a7e289af5254617203b02f0643ba7ff618670de837d642ef22af11"
+        },
+        {
+          "package": "FastExpressionCompiler/5.4.1",
+          "member": "lib/net9.0/FastExpressionCompiler.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/FastExpressionCompiler.dll",
+          "sha256": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a"
+        },
+        {
+          "package": "Microsoft.Data.Sqlite.Core/10.0.12",
+          "member": "lib/net8.0/Microsoft.Data.Sqlite.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Data.Sqlite.dll",
+          "sha256": "b98d957462be432895b00dccca012d3c127e118d3d4262418014b92c7bbd66cf"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.EntityFrameworkCore.dll",
+          "sha256": "f5b1703d608e241314952b2ede8dcdd1b8d8adda8c91a13cb7e6b1007414cef4"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+          "sha256": "74bc17c936d66ea090b6a5b4cc4307d2154c9692e57edd4c55d68dd4a99c11b6"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
+          "sha256": "a1e4f36208650b15b75a4b01a5821d61d5be417ac2e86ec3c65e2560a87e0d7d"
+        },
+        {
+          "package": "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.12",
+          "member": "lib/net10.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
+          "sha256": "69683d0960188b56da3d5b69db14e2255f073d355aa6da333d6916303aa1fa33"
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+          "sha256": "eb027242c11808fe0d8faf851bd30d0c6e39944b773713ffb04e17e196bece0f"
+        },
+        {
+          "package": "Microsoft.Extensions.Caching.Memory/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Caching.Memory.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Caching.Memory.dll",
+          "sha256": "dca415c48a9d6af45c7f28f6481a88baa9cb9f09d3090ca5878d1acbd446048d"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.dll",
+          "sha256": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+          "sha256": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56"
+        },
+        {
+          "package": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Binder.dll",
+          "sha256": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+          "sha256": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+          "sha256": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6"
+        },
+        {
+          "package": "Microsoft.Extensions.DependencyModel/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.DependencyModel.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyModel.dll",
+          "sha256": "afa9a88cc25e3e2a9b8394c6930adf2a7ed229d20f91f0d03b98164b02bd16de"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.dll",
+          "sha256": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+          "sha256": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+          "sha256": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a"
+        },
+        {
+          "package": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+          "sha256": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a"
+        },
+        {
+          "package": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+          "sha256": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216"
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+          "sha256": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887"
+        },
+        {
+          "package": "Microsoft.Extensions.Logging/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Logging.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.dll",
+          "sha256": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a"
+        },
+        {
+          "package": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+          "sha256": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668"
+        },
+        {
+          "package": "Microsoft.Extensions.Options/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Options.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Options.dll",
+          "sha256": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3"
+        },
+        {
+          "package": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll",
+          "sha256": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f"
+        },
+        {
+          "package": "Microsoft.Extensions.Primitives/10.0.12",
+          "member": "lib/net10.0/Microsoft.Extensions.Primitives.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/Microsoft.Extensions.Primitives.dll",
+          "sha256": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc"
+        },
+        {
+          "package": "SQLitePCLRaw.bundle_e_sqlite3/2.1.12",
+          "member": "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/SQLitePCLRaw.batteries_v2.dll",
+          "sha256": "815ce410c9eab531dd219318e3ba16c5e38e83d361cfbbdbb4bbca222c497b0b"
+        },
+        {
+          "package": "SQLitePCLRaw.core/2.1.12",
+          "member": "lib/netstandard2.0/SQLitePCLRaw.core.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/SQLitePCLRaw.core.dll",
+          "sha256": "af340ac9eb9195795660d7fc1114f486b6ab63998f33176e2f24c8e0acb9aa84"
+        },
+        {
+          "package": "SQLitePCLRaw.provider.e_sqlite3/2.1.12",
+          "member": "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+          "sha256": "df996bcae63c2cabcfe8d4b9c5110eb39a2a4706178b07d875665391c6eb3995"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714"
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas/1.0.0",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da"
+        }
+      ],
+      "assets_sha256": "87fe98e2fa38b8fd4bbfc5c9ab07a3792491800a77e8f7ce549f043b36d20d1a",
+      "status": "MACHINE_STRUCTURAL_GRAPH_CHECK_ONLY"
+    }
+  ]
+}

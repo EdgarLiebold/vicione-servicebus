@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Logging;
@@ -205,7 +206,7 @@ public abstract class BaseReceiveEndpointContext :
     }
 
     /// <summary>Releases endpoint-provider resources and initializes empty provider caches for the next generation.</summary>
-    /// <param name="cancellationToken">The token that cancels resource release.</param>
+    /// <param name="cancellationToken">The token that cancels waiting to begin the reset.</param>
     /// <returns>A value task that completes after the current providers have been released.</returns>
     public async ValueTask ResetAsync(CancellationToken cancellationToken = default)
     {
@@ -215,11 +216,33 @@ public abstract class BaseReceiveEndpointContext :
             ISendEndpointProvider? sendEndpointProvider = _sendEndpointProvider.IsValueCreated ? _sendEndpointProvider.Value : null;
             IPublishEndpointProvider? publishEndpointProvider = _publishEndpointProvider.IsValueCreated ? _publishEndpointProvider.Value : null;
 
+            Exception? sendReleaseFailure = null;
             if (sendEndpointProvider is not null)
-                await ReleaseSendEndpointProviderAsync(sendEndpointProvider).ConfigureAwait(false);
+            {
+                try
+                {
+                    await ReleaseSendEndpointProviderAsync(sendEndpointProvider).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    sendReleaseFailure = exception;
+                }
+            }
 
             if (publishEndpointProvider is not null && !ReferenceEquals(publishEndpointProvider, sendEndpointProvider))
-                await ReleasePublishEndpointProviderAsync(publishEndpointProvider).ConfigureAwait(false);
+            {
+                try
+                {
+                    await ReleasePublishEndpointProviderAsync(publishEndpointProvider).ConfigureAwait(false);
+                }
+                catch (Exception exception) when (sendReleaseFailure is not null)
+                {
+                    throw new AggregateException("Endpoint provider release failed.", sendReleaseFailure, exception);
+                }
+            }
+
+            if (sendReleaseFailure is not null)
+                ExceptionDispatchInfo.Capture(sendReleaseFailure).Throw();
 
             _sendTransportProvider = CreateSendTransportProviderLazy();
             _publishTransportProvider = CreatePublishTransportProviderLazy();

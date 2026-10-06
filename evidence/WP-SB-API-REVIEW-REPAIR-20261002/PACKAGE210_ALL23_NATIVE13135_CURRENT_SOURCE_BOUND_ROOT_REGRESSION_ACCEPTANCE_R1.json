@@ -1,0 +1,79 @@
+{
+  "status": "ROOT_ACCEPTED_CURRENT210_ALL23_UNIT13135_SOURCE_BOUND_REGRESSION",
+  "utc": "2026-10-05T19:08:16.806024+00:00",
+  "capture_before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package210-all23-unit-source-bound-capture-r1/BEFORE.json",
+    "sha256": "3f2155b3306a0f80a7648bff53d9eac299b225f869628b2fc6675bbac854f02c"
+  },
+  "capture_after": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package210-all23-unit-source-bound-capture-r1/AFTER.json",
+    "sha256": "c4a94e27530b216c4b548aeee011f21250fc3375d20ae7f41d63e7fbe38dda39"
+  },
+  "actual_PDB_sources": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package210-all23-unit-source-bound-capture-r1/SYMBOL_SOURCE_BINDING.json",
+    "sha256": "950195aae9c4ac57e658fbb89d8b2e95d20bdd440bd10efe7af8a4f0d3695956"
+  },
+  "independent": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package210-all23-independent-qualification-r1/REPORT.json",
+    "sha256": "0c0bf2ec513559bb3e440332659d09478c7028670b3482617e456ce4269a90c4"
+  },
+  "Root_report_read_receipt": "029cfd",
+  "build": {
+    "phase": "package210-all23-unit-after-naming10-strict-build-r1",
+    "command": [
+      "dotnet",
+      "build",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T18:49:34.261531+00:00",
+    "completed_utc": "2026-10-05T18:49:49.186940+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package210-all23-unit-after-naming10-strict-build-r1.log",
+    "log_sha256": "0edc1450d6087e04b578f8c2a8c0006c6794769c09163e927e536dd64fee3f15"
+  },
+  "native": {
+    "phase": "package210-all23-unit-after-naming10-native-r1",
+    "command": [
+      "dotnet",
+      "test",
+      "--solution",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "--configuration",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "--results-directory",
+      "artifacts/results-package210-all23-unit-after-naming10-r1",
+      "--max-parallel-test-modules",
+      "1"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T18:53:48.778375+00:00",
+    "completed_utc": "2026-10-05T19:00:04.308354+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package210-all23-unit-after-naming10-native-r1.log",
+    "log_sha256": "00efead1fe997dae1afd0da20bd613246b50355f0d01f0226f339e20f39492c1"
+  },
+  "actual_counts": {
+    "gesamt": 13135,
+    "erfolgreich": 13135,
+    "fehlgeschlagen": 0,
+    "übersprungen": 0
+  },
+  "startup_modules": 23,
+  "actual_frames": 57,
+  "PDB_document_bindings": 5784,
+  "requirement_JSON_count": 23,
+  "requirement_rows": 7540,
+  "source_and_runtime_inputs_unchanged_during_native": true,
+  "API_count_delta": 0,
+  "finding_count_delta": 0,
+  "global_API_grade": null,
+  "scope": "Regression only. Independent own57 reparses and23 exact embeddedRequirement bytechecks. Summary has no individually graded13135 cases or loadedmoduletelemetry. 219 selected canonical copies,3 others fingerprintbound only. Test213 added after this completed freeze and is not covered by210.",
+  "administrative_validation": "Initial Root manifest-schema assumption failed closed before any durable mutation; actual list schema0a32b2 now verified in full."
+}

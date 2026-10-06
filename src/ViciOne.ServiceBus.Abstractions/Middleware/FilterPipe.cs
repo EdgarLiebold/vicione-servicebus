@@ -29,7 +29,7 @@ public class FilterPipe<TContext> :
         _next.Probe(context);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Invokes the retained filter with its configured continuation and returns its task.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [DebuggerStepThrough]

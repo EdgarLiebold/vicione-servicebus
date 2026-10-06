@@ -9,6 +9,161 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachine;
 
 public sealed class StateMachineBehaviorProxyObserverDeepContractTests
 {
+    [Theory]
+    [InlineData(false, 0)]
+    [InlineData(true, 0)]
+    [InlineData(false, 1)]
+    [InlineData(true, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 2)]
+    [RequirementCoverage(
+        "REQ-VSB-STATE-MACHINE-OBSERVATION",
+        "public-typed-and-untyped-raise-preserve-primary-and-fault-observer-causes")]
+    public async Task PublicRaise_PreservesApplicationFailureWhenFaultObserverAlsoFailsAsync(
+        bool typed,
+        int observerFailureMode)
+    {
+        var trace = new List<string>();
+        var primary = new InvalidOperationException("unique saga activity primary");
+        Exception? secondary = observerFailureMode switch
+        {
+            1 => new System.IO.IOException("unique saga observer secondary"),
+            2 => new OperationCanceledException("independent saga observer cancellation"),
+            _ => null,
+        };
+        var machine = new PrimaryFailureMachine(primary, trace);
+        var instance = new ProxySaga();
+        var data = new ProxyData("actual public failure message");
+        var observer = new PrimaryFailureObserver(secondary, trace);
+        using IDisposable handle = machine.ConnectEventObserver(observer);
+
+        Task operation = typed
+            ? StateMachineTestExecution.RaiseAsync(machine, instance, machine.DataFailure, data)
+            : StateMachineTestExecution.RaiseAsync(machine, instance, machine.Failure);
+        Exception? observed = await Record.ExceptionAsync(() => operation);
+
+        Assert.Same(primary, observer.Primary);
+        Assert.Equal(1, machine.ActivityCalls);
+        Assert.Equal(1, observer.PreCalls);
+        Assert.Equal(1, observer.FaultCalls);
+        Assert.Equal(0, observer.PostCalls);
+        Assert.Equal(
+            typed ? new[] { "pre-typed", "activity", "fault-typed" } : new[] { "pre", "activity", "fault" },
+            trace);
+        Assert.Same(machine.ActivityContext, observer.FaultContext);
+        IBehaviorContext<ProxySaga> actualContext = Assert.IsAssignableFrom<IBehaviorContext<ProxySaga>>(observer.FaultContext);
+        Assert.Same(machine, actualContext.StateMachine);
+        Assert.Same(instance, actualContext.Saga);
+        Assert.Same(typed ? (IEvent)machine.DataFailure : machine.Failure, actualContext.Event);
+        if (typed)
+            Assert.Same(data, Assert.IsAssignableFrom<IBehaviorContext<ProxySaga, ProxyData>>(actualContext).Message);
+
+        if (secondary == null)
+            Assert.Same(primary, observed);
+        else
+        {
+            AggregateException aggregate = Assert.IsType<AggregateException>(observed);
+            IReadOnlyCollection<Exception> causes = aggregate.Flatten().InnerExceptions;
+            Assert.Equal(2, causes.Count);
+            Assert.Single(causes, cause => ReferenceEquals(primary, cause));
+            Assert.Single(causes, cause => ReferenceEquals(secondary, cause));
+        }
+
+        Assert.True(operation.IsFaulted);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage(
+        "REQ-VSB-STATE-MACHINE-OBSERVATION",
+        "public-typed-and-untyped-raise-same-reference-fault-observer-preserves-primary")]
+    public async Task PublicRaise_PreservesPrimaryIdentityWhenFaultObserverRethrowsTheSameExceptionAsync(bool typed)
+    {
+        var trace = new List<string>();
+        var primary = new InvalidOperationException("same-reference activity and observer failure");
+        var machine = new PrimaryFailureMachine(primary, trace);
+        var instance = new ProxySaga();
+        var data = new ProxyData("same-reference actual message");
+        var observer = new PrimaryFailureObserver(primary, trace);
+        using IDisposable handle = machine.ConnectEventObserver(observer);
+
+        Task operation = typed
+            ? StateMachineTestExecution.RaiseAsync(machine, instance, machine.DataFailure, data)
+            : StateMachineTestExecution.RaiseAsync(machine, instance, machine.Failure);
+        Exception? observed = await Record.ExceptionAsync(() => operation);
+
+        Assert.Same(primary, observed);
+        Assert.Same(primary, observer.Primary);
+        Assert.Same(machine.ActivityContext, observer.FaultContext);
+        Assert.Equal(1, machine.ActivityCalls);
+        Assert.Equal(1, observer.PreCalls);
+        Assert.Equal(1, observer.FaultCalls);
+        Assert.Equal(0, observer.PostCalls);
+        Assert.Equal(
+            typed ? new[] { "pre-typed", "activity", "fault-typed" } : new[] { "pre", "activity", "fault" },
+            trace);
+        Assert.True(operation.IsFaulted);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage(
+        "REQ-VSB-STATE-MACHINE-OBSERVATION",
+        "public-typed-and-untyped-raise-caller-cancellation-bypasses-fault-observer")]
+    public async Task PublicRaise_CallerCancellationDuringActivityBypassesFaultObserverAsync(bool typed)
+    {
+        using var caller = new CancellationTokenSource();
+        var trace = new List<string>();
+        var primary = new OperationCanceledException("activity caller cancellation", caller.Token);
+        var machine = new CallerCancellationMachine(caller, primary, trace);
+        var instance = new ProxySaga();
+        var data = new ProxyData("caller-canceled actual message");
+        var observer = new PrimaryFailureObserver(new System.IO.IOException("must not execute fault observer"), trace);
+        using IDisposable handle = machine.ConnectEventObserver(observer);
+        ConsumeContext<ProxyData> consumeContext = InMemoryOutboxTestContextFactory.Create(data, caller.Token);
+        var sagaInstance = new SagaInstance<ProxySaga>(instance);
+        await sagaInstance.MarkInUseAsync(caller.Token);
+        using var sagaContext = new InMemorySagaConsumeContext<ProxySaga, ProxyData>(consumeContext, sagaInstance);
+
+        Task operation;
+        if (typed)
+        {
+            IBehaviorContext<ProxySaga, ProxyData> context =
+                new ViciOneServiceBusStateMachine<ProxySaga>.BehaviorContextProxy<ProxyData>(
+                    machine, sagaContext, sagaContext, machine.DataFailure);
+            operation = ((IStateMachine<ProxySaga>)machine).RaiseEventAsync(context, caller.Token);
+        }
+        else
+        {
+            IBehaviorContext<ProxySaga> context =
+                new ViciOneServiceBusStateMachine<ProxySaga>.BehaviorContextProxy(machine, sagaContext, machine.Failure);
+            operation = ((IStateMachine<ProxySaga>)machine).RaiseEventAsync(context, caller.Token);
+        }
+
+        Exception? observed = await Record.ExceptionAsync(() => operation);
+
+        Assert.Same(primary, observed);
+        Assert.Equal(caller.Token, Assert.IsType<OperationCanceledException>(observed).CancellationToken);
+        Assert.True(caller.IsCancellationRequested);
+        Assert.True(operation.IsCanceled);
+        Assert.Equal(1, machine.ActivityCalls);
+        Assert.Equal(1, observer.PreCalls);
+        Assert.Equal(0, observer.FaultCalls);
+        Assert.Equal(0, observer.PostCalls);
+        Assert.Null(observer.Primary);
+        Assert.Null(observer.FaultContext);
+        IBehaviorContext<ProxySaga> actualContext = Assert.IsAssignableFrom<IBehaviorContext<ProxySaga>>(machine.ActivityContext);
+        Assert.Same(machine, actualContext.StateMachine);
+        Assert.Same(instance, actualContext.Saga);
+        Assert.Same(typed ? (IEvent)machine.DataFailure : machine.Failure, actualContext.Event);
+        Assert.Equal(caller.Token, actualContext.CancellationToken);
+        if (typed)
+            Assert.Same(data, Assert.IsAssignableFrom<IBehaviorContext<ProxySaga, ProxyData>>(actualContext).Message);
+        Assert.Equal(typed ? new[] { "pre-typed", "activity" } : new[] { "pre", "activity" }, trace);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RUNTIME", "behavior-proxies-preserve-saga-event-message-and-exception-identity")]
     public async Task BehaviorProxies_PreserveSagaEventMessageAndExceptionIdentityAsync()
@@ -422,14 +577,27 @@ public sealed class StateMachineBehaviorProxyObserverDeepContractTests
     public async Task NonTransitionObserver_RejectsANullNotificationTaskDeterministicallyAsync()
     {
         var machine = new ProxyMachine();
+        var instance = new ProxySaga();
         var observer = new RecordingEventObserver { NextTask = null };
         using IDisposable handle = machine.ConnectEventObserver(observer);
+        Task operation = StateMachineTestExecution.RaiseAsync(machine, instance, machine.Signal);
 
-        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => StateMachineTestExecution.RaiseAsync(machine, new ProxySaga(), machine.Signal));
+        AggregateException exception = await Assert.ThrowsAsync<AggregateException>(() => operation);
 
-        Assert.Contains("no notification task", exception.Message, StringComparison.Ordinal);
+        Assert.Equal(2, exception.InnerExceptions.Count);
+        InvalidOperationException primary = Assert.IsType<InvalidOperationException>(exception.InnerExceptions[0]);
+        InvalidOperationException secondary = Assert.IsType<InvalidOperationException>(exception.InnerExceptions[1]);
+        Assert.Equal("The event observer returned no notification task.", primary.Message);
+        Assert.Equal("The event observer returned no notification task.", secondary.Message);
+        Assert.NotSame(primary, secondary);
+        Assert.Same(primary, observer.LastException);
         Assert.Equal(["pre", "fault"], observer.Calls);
+        Assert.Equal(0, machine.SignalExecutions);
+        IBehaviorContext<ProxySaga> actualContext = Assert.IsAssignableFrom<IBehaviorContext<ProxySaga>>(observer.LastContext);
+        Assert.Same(machine, actualContext.StateMachine);
+        Assert.Same(instance, actualContext.Saga);
+        Assert.Same(machine.Signal, actualContext.Event);
+        Assert.True(operation.IsFaulted);
     }
 
     [Fact]
@@ -617,6 +785,91 @@ public sealed class StateMachineBehaviorProxyObserverDeepContractTests
             LastContext = context;
             LastException = exception;
             return NextTask!;
+        }
+    }
+
+    private sealed class PrimaryFailureMachine : ViciOneServiceBusStateMachine<ProxySaga>
+    {
+        public PrimaryFailureMachine(Exception primary, List<string> trace)
+        {
+            During(Initial, When(Failure).Then(context => Fail(context, primary, trace)));
+            During(Initial, When(DataFailure).Then(context => Fail(context, primary, trace)));
+        }
+
+        public IEvent Failure { get; private set; } = null!;
+        public IEvent<ProxyData> DataFailure { get; private set; } = null!;
+        public int ActivityCalls { get; private set; }
+        public object? ActivityContext { get; private set; }
+
+        private void Fail(object context, Exception primary, List<string> trace)
+        {
+            ActivityCalls++;
+            ActivityContext = context;
+            trace.Add("activity");
+            throw primary;
+        }
+    }
+
+    private sealed class PrimaryFailureObserver(Exception? secondary, List<string> trace) : IEventObserver<ProxySaga>
+    {
+        public int PreCalls { get; private set; }
+        public int PostCalls { get; private set; }
+        public int FaultCalls { get; private set; }
+        public Exception? Primary { get; private set; }
+        public object? FaultContext { get; private set; }
+
+        public Task PreExecuteAsync(IBehaviorContext<ProxySaga> context) => PreAsync("pre");
+        public Task PreExecuteAsync<T>(IBehaviorContext<ProxySaga, T> context) where T : class => PreAsync("pre-typed");
+        public Task PostExecuteAsync(IBehaviorContext<ProxySaga> context) => PostAsync("post");
+        public Task PostExecuteAsync<T>(IBehaviorContext<ProxySaga, T> context) where T : class => PostAsync("post-typed");
+        public Task ExecuteFaultAsync(IBehaviorContext<ProxySaga> context, Exception exception) => FaultAsync("fault", context, exception);
+        public Task ExecuteFaultAsync<T>(IBehaviorContext<ProxySaga, T> context, Exception exception) where T : class =>
+            FaultAsync("fault-typed", context, exception);
+
+        private Task PreAsync(string call)
+        {
+            PreCalls++;
+            trace.Add(call);
+            return Task.CompletedTask;
+        }
+
+        private Task PostAsync(string call)
+        {
+            PostCalls++;
+            trace.Add(call);
+            return Task.CompletedTask;
+        }
+
+        private Task FaultAsync(string call, object context, Exception exception)
+        {
+            FaultCalls++;
+            Primary = exception;
+            FaultContext = context;
+            trace.Add(call);
+            return secondary == null ? Task.CompletedTask : Task.FromException(secondary);
+        }
+    }
+
+    private sealed class CallerCancellationMachine : ViciOneServiceBusStateMachine<ProxySaga>
+    {
+        public CallerCancellationMachine(CancellationTokenSource caller, OperationCanceledException primary, List<string> trace)
+        {
+            During(Initial, When(Failure).Then(context => CancelAndFail(context, caller, primary, trace)));
+            During(Initial, When(DataFailure).Then(context => CancelAndFail(context, caller, primary, trace)));
+        }
+
+        public IEvent Failure { get; private set; } = null!;
+        public IEvent<ProxyData> DataFailure { get; private set; } = null!;
+        public int ActivityCalls { get; private set; }
+        public object? ActivityContext { get; private set; }
+
+        private void CancelAndFail(object context, CancellationTokenSource caller, OperationCanceledException primary, List<string> trace)
+        {
+            ActivityCalls++;
+            ActivityContext = context;
+            trace.Add("activity");
+            caller.Cancel();
+            throw primary;
         }
     }
 

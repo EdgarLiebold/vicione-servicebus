@@ -1,0 +1,43 @@
+{
+  "status": "SCOPED_F019_ACCEPTABLE_NO_BLOCKER",
+  "reviewer": "/root/adversarial_package_01",
+  "scope": "F-SB-API-019; independent internal readonly review, not PO/product release",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE16_F019_FREEZE.json",
+    "sha256": "e783c9197021d0659d9f3a2205b349bc3714b1b13b1b65de65d35ac1c2656179"
+  },
+  "ownedFULL": 45,
+  "independently_reconstructed_source_snapshots": 240,
+  "single_effect_variants": 8,
+  "actual_receipts": 44,
+  "final_original32": {
+    "causal_reds": 13,
+    "assertion_reds": 12,
+    "actual_business_loggerfactory_ODE": 1,
+    "positive_controls": 19,
+    "guards": 0
+  },
+  "final_corrected32": {
+    "pass": 32,
+    "fail": 0
+  },
+  "mutants": {
+    "strictcompiled": 8,
+    "native_exactassertion_reds": 8,
+    "positive_pairs": 8,
+    "baseline_pass": 32,
+    "rollback_pass": 32
+  },
+  "four_selectedPackage_chains_verified": true,
+  "actual_microsoft_binding_count": 34,
+  "pdb_images": 16,
+  "source_document_checks": 16880,
+  "source_document_mismatches": 0,
+  "generated_product_docs_unclaimed": 570,
+  "restored_original_M_count": 6209,
+  "new_frame_deleted_count": 1,
+  "caller_factory_no_foreign_disposal_contract_supported": true,
+  "blocked": false,
+  "no_native_run_by_reviewer": true,
+  "limits_file": "EXCLUSIONS_AND_LIMITS.json"
+}

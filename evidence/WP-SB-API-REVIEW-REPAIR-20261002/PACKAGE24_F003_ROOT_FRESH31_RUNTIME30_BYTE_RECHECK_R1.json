@@ -1,0 +1,8 @@
+{
+  "status": "ROOT_PHYSICAL_FROZEN31_CRC_AND_FROZEN30_ZIP_PAYLOAD_EQUALITY_VERIFIED",
+  "packages": 31,
+  "runtime_dlls": 30,
+  "live_source_paths_now_removed_by_gate_cleanup": true,
+  "loaded_telemetry_claimed": false,
+  "utc": "2026-10-03T21:05:22.444167+00:00"
+}

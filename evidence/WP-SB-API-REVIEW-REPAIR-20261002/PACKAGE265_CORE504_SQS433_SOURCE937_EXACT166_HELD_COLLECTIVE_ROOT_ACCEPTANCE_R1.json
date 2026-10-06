@@ -1,0 +1,95 @@
+{
+  "utc": "2026-10-05T23:46:28.157722+00:00",
+  "status": "COLLECTIVE_INDIVIDUAL_SOURCE937_ACCEPTED_EXACT166_HELD_WHOLE_API_OPEN",
+  "basis": "Core author and independent reviewer personally whole315/31374 and all630 norms, mandatory80 and321/322 precision composed; SourceDoc3 repaired by Root263 publication. SQS author and independent reviewer personally whole89/7166 plus15 helpers and all473 norms, mandatory current262 rebase10 composed. Root whole reports retained05c748 and personally all129+40 hold reasons read993a28/683cb5/aa992b. Root does not claim own315/89 whole authority. Own Root3/201 and5/149 documentation changes separately independently reviewed and published. Approved actual PDB parser re-run here binds all404 current owner checksums and1103 original IDs/XML.",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package243-core630-current236-individual-source-contracts-r1/REPORT.json",
+      "sha256": "83489e54943f3b91017b9a1808e359268a993e71891d5190c9de7a3af1a3cd6e",
+      "manifest_payloads_verified": 413
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package243-core630-dispose80-outcome-precision-overlay-r1/REPORT.json",
+      "sha256": "6763f28ce59f90bc1e4e6f6f0ec0575e1a6facc24ba9e2bfa4386aba9bc46dcd",
+      "manifest_payloads_verified": 4
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package243-core630-header-prior-reason2-precision-overlay-r1/REPORT.json",
+      "sha256": "c3865894bb8a4a829b58f0b6adf71d899dfe1b2f9bc813d66fb5620ac34a9dfe",
+      "manifest_payloads_verified": 4
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package243-core630-independent-runtime-source-peer-r1/REPORT.json",
+      "sha256": "34f1b8d09c18acbdcbf8c549cbe37c75c802e2fe1fbda5a84cbd9f73bcf4bf1b",
+      "manifest_payloads_verified": 6
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-amazonsqs473-current262-rebase-r2/REPORT.json",
+      "sha256": "f12287d44b9cdb39f0c4aa0432d6b350638e5b58cc7130b9f696e34057f2bbde",
+      "manifest_payloads_verified": 7
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-sqs473-independent-whole-source-norm-peer-r1/REPORT.json",
+      "sha256": "3cd06915bf8c39ea6be2fa8f0be1a45c74af8ccde0e03c3258212480c4130f80",
+      "manifest_payloads_verified": 19
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-predicate-doc5-fresh-root-publication-proof-r1/REPORT.json",
+      "sha256": "d18f771c9ce8ed5e1dd44a6f2f5a32bf344dd9cb3055ba2e84bae800a525cec1",
+      "manifest_payloads_verified": 7
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package262-sqs-doc5-fresh-root-publication-proof-r1/REPORT.json",
+      "sha256": "ae0e4005bca0971451d4e4445799678a70dbbe3e1d6382bda12970c46fbb0a7c",
+      "manifest_payloads_verified": 9
+    }
+  ],
+  "matrices": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/CORE630_CURRENT260_COMPOSED_MATRIX.json",
+      "sha256": "a770a8370e4b60951c5276b248caaf0ac9eda8e6846e5fbca13b1567339d4291"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/SQS473_CURRENT262_FINAL_MATRIX.json",
+      "sha256": "a254bceb1c635143d9985ca090b8f7575cc307894da6f0fff516edbbfbfb0609"
+    }
+  ],
+  "held_rows": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/EXACT166_HELD_ROWS.json",
+    "sha256": "def6263f64254c731b03230e4e4afbdc16257cf073d77ce292b18bf58825c0fa"
+  },
+  "mechanical": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "selected_ids": 630,
+      "source_owners": 315,
+      "actual_documents": 1340,
+      "selected_XML_present": 630,
+      "selected_XML_absent": 0,
+      "DLL_sha256": "239a7f4c51d833801efb382bb6b00b7a589e39095f3263f50e5e5bf2b0b59fc5",
+      "XML_sha256": "fdae5ec9ead8e38af855654de3d771a31f419763862c3e9e64235392bf35014a"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "selected_ids": 473,
+      "source_owners": 89,
+      "actual_documents": 168,
+      "selected_XML_present": 462,
+      "selected_XML_absent": 11,
+      "DLL_sha256": "c617c5dc01e47a953d8bdfc4466d3acea1d0517a83f40008efacbb1a7de72025",
+      "XML_sha256": "beb98653d9165265a303ef502ce7b7796aa103c4879fdb45f1369f4bfd94d9b0"
+    }
+  ],
+  "master_before_sha256": "7a73dc9e66565e1c91af8171fd0b3c3a8735ccc22efb5672946b9d707c671742",
+  "before_count": 17275,
+  "appended_source_rows": 937,
+  "expected_after_count": 18212,
+  "accepted_core": 504,
+  "accepted_sqs": 433,
+  "held_core": 126,
+  "held_sqs": 40,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "Product_Test_Req_SDK_changes": false
+}

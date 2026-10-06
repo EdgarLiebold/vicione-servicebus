@@ -1,0 +1,19 @@
+{
+  "scope": "F033 Core only; SignalR pending",
+  "source_frame_files": 16,
+  "author_personally_FULL_prior_runner": true,
+  "native_original": "10:5 exact IsType dual reds/5 positives/0 guards",
+  "native_corrected": "10/10 green",
+  "mutants": [
+    "original scoped awaitusing masks primary",
+    "drop captured primary",
+    "reverse actual dual references",
+    "swallow actual cleanup failure",
+    "double-dispose container-owned consumer only on fault",
+    "collapse mixed cancellation into pure cancellation"
+  ],
+  "positive_control_required_each": true,
+  "async_await_limit": "Gated async completion proved for correct code; omit-await mutation not claimed as deterministic",
+  "restoration": "finally all6209 original M files/new identity removal/oracle+selected runtime",
+  "native": "strict compiled DLL substitution into unchanged public NuGet consumer; no per-mutant fresh pack"
+}

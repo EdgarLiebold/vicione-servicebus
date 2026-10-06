@@ -35,6 +35,12 @@ public sealed class CourierActivityRegistrationAndScopeFactoryDeepContractTests
         Assert.Same(activityDefinition, activityContract.GetDefinition(context));
         Assert.Same(context, activitySelector.DefinitionProvider);
         Assert.Equal(1, activitySelector.DefinitionCalls);
+        Assert.Equal(
+            [typeof(IActivityDefinition<TestActivity, Arguments, Log>),
+                typeof(ExecuteActivityEndpointDefinition<TestActivity, Arguments>),
+                typeof(CompensateActivityEndpointDefinition<TestActivity, Log>)],
+            activitySelector.DefinitionRequests);
+        Assert.All(activitySelector.DefinitionProviders, provider => Assert.Same(context, provider));
         Assert.Equal([typeof(IExecuteActivity<Arguments>), typeof(ICompensateActivity<Log>)],
             activitySelector.EndpointDefinitionRequests);
 
@@ -46,6 +52,11 @@ public sealed class CourierActivityRegistrationAndScopeFactoryDeepContractTests
         Assert.Same(executeDefinition, executeContract.GetDefinition(context));
         Assert.Same(context, executeSelector.DefinitionProvider);
         Assert.Equal(1, executeSelector.DefinitionCalls);
+        Assert.Equal(
+            [typeof(IExecuteActivityDefinition<ExecuteOnlyActivity, Arguments>),
+                typeof(ExecuteActivityEndpointDefinition<ExecuteOnlyActivity, Arguments>)],
+            executeSelector.DefinitionRequests);
+        Assert.All(executeSelector.DefinitionProviders, provider => Assert.Same(context, provider));
         Assert.Equal([typeof(IExecuteActivity<Arguments>)], executeSelector.EndpointDefinitionRequests);
 
         Assert.False(new ActivityRegistration<ExcludedActivity, Arguments, Log>(new RecordingContainerSelector())
@@ -94,7 +105,7 @@ public sealed class CourierActivityRegistrationAndScopeFactoryDeepContractTests
             activityEvents);
         Assert.False(executeRecorder.ConfigureConsumeTopology);
         Assert.False(compensateRecorder.ConfigureConsumeTopology);
-        Assert.False(activity.IncludeInConfigureEndpoints);
+        Assert.True(activity.IncludeInConfigureEndpoints);
 
         var executeEvents = new List<string>();
         IReceiveEndpointConfigurator executeOnlyEndpoint = EndpointProxy("execute-only", "execute-only", executeEvents,
@@ -535,6 +546,10 @@ public sealed class CourierActivityRegistrationAndScopeFactoryDeepContractTests
 
         public int DefinitionCalls { get; private set; }
 
+        public List<Type> DefinitionRequests { get; } = [];
+
+        public List<IServiceProvider> DefinitionProviders { get; } = [];
+
         public List<Type> EndpointDefinitionRequests { get; } = [];
 
         public bool TryGetRegistration<T>(IServiceProvider provider, Type type, [NotNullWhen(true)] out T? value)
@@ -550,8 +565,14 @@ public sealed class CourierActivityRegistrationAndScopeFactoryDeepContractTests
         public T? GetDefinition<T>(IServiceProvider provider)
             where T : class, IDefinition
         {
-            DefinitionCalls++;
+            DefinitionRequests.Add(typeof(T));
             DefinitionProvider = provider;
+            DefinitionProviders.Add(provider);
+            if (typeof(T) == typeof(IActivityDefinition<TestActivity, Arguments, Log>)
+                || typeof(T) == typeof(IExecuteActivityDefinition<ExecuteOnlyActivity, Arguments>))
+            {
+                DefinitionCalls++;
+            }
             return definition as T;
         }
 

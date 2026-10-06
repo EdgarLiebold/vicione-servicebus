@@ -1,0 +1,108 @@
+LOG {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-batch-wrong-diagnostic-key-batch-default-too-large.log", "bytes": 2513, "sha256": "3ceb152b2ede7d9aea7a8380214b9677a66df39c7ff9bd6fc259e55eb2374df8"}
+{"cases":[{"case":"batch-default-too-large","assertions_passed":false,"exception_type":"Xunit.Sdk.SingleException","Message":"Assert.Single() Failure: The collection was empty","StackTrace":"   at Xunit.Assert.GetSingleResult[T](IEnumerable\u00601 collection, Predicate\u00601 predicate, String expected) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 787\n   at Xunit.Assert.Single[T](IEnumerable\u00601 collection) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 729\n   at ViciOneReview.CorePackage05.BatchTimerAssertions.\u003C\u003Ec__DisplayClass0_0.\u003C\u003CRunAsync\u003Eb__1\u003Ed.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/BatchTimerAssertions.cs:line 77\n--- End of stack trace from previous location ---\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func\u00601 body, Func\u00601[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func\u00601 body, Func\u00601[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.CorePackage05.BatchTimerAssertions.RunAsync(String variant, TimeSpan operationTimeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/BatchTimerAssertions.cs:line 59\n   at Program.\u003CMain\u003E$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/Program.cs:line 38","bounded_guard_failure":false}],"count":1,"failures":1,"runtime":{"framework":".NET 10.0.10","processArchitecture":"X64","coreLibPath":"/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll","coreLibSha256":"76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a","loadedProductAssemblies":[{"name":"ViciOne.ServiceBus","path":"/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll","sha256":"a178f6337ea9df7f82f082142a1e5c60fe9b176d82b9318a93342c327e0fbf55"},{"name":"ViciOne.ServiceBus.Abstractions","path":"/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll","sha256":"938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"}]}}
+
+LOG {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-batch-wrong-diagnostic-key-build.log", "bytes": 482, "sha256": "1daeea2dedd6ab8b98931db5cd77c53ccab2065aef97dab6527e7801cfbac2cf"}
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:10.70
+
+LOG {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-corrected-build.log", "bytes": 482, "sha256": "b2722399972a6559cd043832e66bf8e27811436e4dc2f5f05797be63126eece8"}
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:12.56
+
+LOG {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-rollback-build.log", "bytes": 482, "sha256": "96b27d192ae023bce0596daab250387e5b1743a2a95f41f55507371ccae0e88e"}
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:07.90
+
+LOG {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-live-input-build.log", "bytes": 482, "sha256": "4885bcca6ac1c4a111460c459d90cdae64ee77bf0a61d3e3714d4b822b1b23f5"}
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:08.31
+
+LOG {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-null-guard-lost-build.log", "bytes": 482, "sha256": "7ad1fa41f82ca8057d0f01e14df4996357900f30c78bbe39a91a7263459baed9"}
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:07.09
+
+LOG {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-return-array-build.log", "bytes": 482, "sha256": "2249d796857d4d8c1f7eb034e083c5e435a073fbc8ea267d4c55ca8ace88c56d"}
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:11.75
+
+LOG {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-build-r2.log", "bytes": 286, "sha256": "61d6826c3b00aee15c901fce860873291f8c340a0d8944c430bb2e2b93f92bac"}
+  CorePackage05.PublicConsumer -> /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/bin/Release/net10.0/CorePackage05.PublicConsumer.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:03.80
+
+LOG {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-build.log", "bytes": 9136, "sha256": "e09a998c65130c151fc404bf7445dbc24fd4ff833b77198a5145e6e03041ab9c"}
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(35,18): error CS1061: "ServiceCollection" enthält keine Definition für "AddLogging", und es konnte keine zugängliche AddLogging-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(38,70): error CS0246: Der Typ- oder Namespacename "ServiceProviderOptions" wurde nicht gefunden (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(38,45): error CS1061: "ServiceCollection" enthält keine Definition für "BuildServiceProvider", und es konnte keine zugängliche BuildServiceProvider-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(97,18): error CS1061: "ServiceCollection" enthält keine Definition für "AddLogging", und es konnte keine zugängliche AddLogging-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(113,58): error CS0246: Der Typ- oder Namespacename "ServiceProviderOptions" wurde nicht gefunden (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(113,33): error CS1061: "ServiceCollection" enthält keine Definition für "BuildServiceProvider", und es konnte keine zugängliche BuildServiceProvider-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/BatchTimerAssertions.cs(38,18): error CS1061: "ServiceCollection" enthält keine Definition für "AddLogging", und es konnte keine zugängliche AddLogging-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/BatchTimerAssertions.cs(55,58): error CS0246: Der Typ- oder Namespacename "ServiceProviderOptions" wurde nicht gefunden (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/BatchTimerAssertions.cs(55,33): error CS1061: "ServiceCollection" enthält keine Definition für "BuildServiceProvider", und es konnte keine zugängliche BuildServiceProvider-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+
+Fehler beim Buildvorgang.
+
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(35,18): error CS1061: "ServiceCollection" enthält keine Definition für "AddLogging", und es konnte keine zugängliche AddLogging-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(38,70): error CS0246: Der Typ- oder Namespacename "ServiceProviderOptions" wurde nicht gefunden (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(38,45): error CS1061: "ServiceCollection" enthält keine Definition für "BuildServiceProvider", und es konnte keine zugängliche BuildServiceProvider-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(97,18): error CS1061: "ServiceCollection" enthält keine Definition für "AddLogging", und es konnte keine zugängliche AddLogging-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(113,58): error CS0246: Der Typ- oder Namespacename "ServiceProviderOptions" wurde nicht gefunden (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/HostTimeoutAssertions.cs(113,33): error CS1061: "ServiceCollection" enthält keine Definition für "BuildServiceProvider", und es konnte keine zugängliche BuildServiceProvider-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/BatchTimerAssertions.cs(38,18): error CS1061: "ServiceCollection" enthält keine Definition für "AddLogging", und es konnte keine zugängliche AddLogging-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/BatchTimerAssertions.cs(55,58): error CS0246: Der Typ- oder Namespacename "ServiceProviderOptions" wurde nicht gefunden (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/BatchTimerAssertions.cs(55,33): error CS1061: "ServiceCollection" enthält keine Definition für "BuildServiceProvider", und es konnte keine zugängliche BuildServiceProvider-Erweiterungsmethode gefunden werden, die ein erstes Argument vom Typ "ServiceCollection" akzeptiert (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/CorePackage05.PublicConsumer.csproj]
+    0 Warnung(en)
+    9 Fehler
+
+Verstrichene Zeit 00:00:03.20
+
+LOG {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-final-metadata-build.log", "bytes": 286, "sha256": "3af2e0922b84ca6feef52bf203784aa65a1a2a6d9814b88187db5d3007a1aaf4"}
+  CorePackage05.PublicConsumer -> /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/bin/Release/net10.0/CorePackage05.PublicConsumer.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:03.38
+

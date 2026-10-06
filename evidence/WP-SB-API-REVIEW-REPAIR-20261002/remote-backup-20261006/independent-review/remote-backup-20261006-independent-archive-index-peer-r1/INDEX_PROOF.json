@@ -1,0 +1,24 @@
+{
+  "branch": "backup/servicebus-api-review-20261006",
+  "HEAD_before_backup_commit": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "main_unchanged_baseline": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "stage0_records": 8848,
+  "stage0_records_sha256": "99f299c353d98f36078fd5679342e97912209a6676207d63d09c4aebe75a3210",
+  "selected_Source6330_in_index": 6330,
+  "unique_selected_git_blobs_read": 6305,
+  "all_selected_direct_Git_blob_SHA256_matches_frozen_input_or_approvedDocs2": true,
+  "all_selected_current_worktree_SHA256_matches_same_expected": true,
+  "only_Doc2_overrides": {
+    "CHANGELOG.md": "4d2377126b992bb25b59b895b96238bd189fdf209e9387cb4bad570efd68440f",
+    "docs/changelog/product-fixes.md": "63d7a6b78faf10309159e6b070beca158e989f155ccb63fe6ccb76b2bbfe3c9e"
+  },
+  "git_regular_file_modes_only_for6330": true,
+  "staged_changed_paths": 3207,
+  "staged_chunks": [
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-001",
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-002",
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-003"
+  ],
+  "tracked_normal_source_test_docs_in_git_not_reliant_on_archive": true,
+  "scope": "Read-only stagedGit and archived durable audit snapshot, not new SDK/test/contract review"
+}

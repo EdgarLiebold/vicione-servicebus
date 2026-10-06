@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-04T20:39:21.787647+00:00",
+  "decision": "ACCEPT_TARGETED_F117_REPAIR_AND_REGISTER_TWO_QUALIFIED_BUS_DIAGNOSTIC_FINDINGS",
+  "confirmed_before": 117,
+  "confirmed_after": 119,
+  "known_accepted_before": 116,
+  "known_accepted_after": 117,
+  "F117_original": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE135_F117_MEDIATOR_ORIGINAL_FINDING_ROOT_REGISTRATION_R1.json",
+    "sha256": "4f715b5bca5cf61965f72e55c2c1b3f379bc0b6fba2bc583bc9fea6f5eccf7f8"
+  },
+  "F117_source": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE137_F117_MEDIATOR_PRODUCT_ROOT_APPLICATION_R1.json",
+    "sha256": "bc6e5121f6b84aea5afdd190823738921e1fde8e1eb2963a321d163bf1c4993c"
+  },
+  "current_native": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package138-fixed-mediator54-original-bus-independent-r1/REPORT.json",
+    "sha256": "b14a3ba8b3d5f6ac1c71aaab1b3e229c50005db9721deedc3d355d0e5edd7bf2"
+  },
+  "fresh_package": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package140-fresh-mediator-independent-r1/REPORT.json",
+    "sha256": "104f829a81f82847021126bf8be672312b38ca73a41a700db2d01581a0e56bb3"
+  },
+  "new_findings": [
+    {
+      "id": "F-SB-API-118",
+      "severity": "Medium",
+      "title": "Bus fault diagnostics replace original startup and stop failures",
+      "source_owner": "src/ViciOne.ServiceBus/Runtime/ServiceBusRuntime.Lifecycle.cs",
+      "source_sha256": "bb28c551abcd04bb211d6da7a7982987da1b7da3136551a92f7994afe1e9c99c",
+      "status": "CONFIRMED_ORIGINAL_NATIVE_SOURCE_BOUND_REPAIR_PENDING",
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package138-fixed-mediator54-original-bus-independent-r1/REPORT.json",
+        "sha256": "b14a3ba8b3d5f6ac1c71aaab1b3e229c50005db9721deedc3d355d0e5edd7bf2"
+      },
+      "original_native_phase": "package138-bus-warning-original-classes-native-r1",
+      "original_native_log_sha256": "680e3d13e21575da3e27290885e31c475ef81ebeb259d179ab3f52faa3574aca",
+      "original_cases": "StartObserverFailure and StopFailure loggerThrows:true",
+      "causal_boundary": "Two real public bus lifecycle routes fail finitely with unique warning logger instead of exact primary exception; additional startup cleanup warning paths remain explicit Source obligations requiring causal tests before full lifecycle repair acceptance.",
+      "proof_limit": "Original31 actual28P3finiteF0S; healthy false3 passed. Later exact observer/secondary-record/retry assertions not reached on failing rows, no empirical RED credit assigned.",
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-119",
+      "severity": "Medium",
+      "title": "Standalone bus creation diagnostic logger replaces construction failure",
+      "source_owner": "src/ViciOne.ServiceBus/Configuration/BusFactoryExtensions.cs",
+      "source_sha256": "ddec027a6a8ed8d05619e702442ce1e54db622182b33095561d63644f576d846",
+      "status": "CONFIRMED_ORIGINAL_NATIVE_SOURCE_BOUND_REPAIR_PENDING",
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package138-fixed-mediator54-original-bus-independent-r1/REPORT.json",
+        "sha256": "b14a3ba8b3d5f6ac1c71aaab1b3e229c50005db9721deedc3d355d0e5edd7bf2"
+      },
+      "original_native_phase": "package138-bus-warning-original-classes-native-r1",
+      "original_native_log_sha256": "680e3d13e21575da3e27290885e31c475ef81ebeb259d179ab3f52faa3574aca",
+      "original_cases": "CreationFaultObserverFailure loggerThrows:true",
+      "causal_boundary": "Real standalone InMemoryBus.Create fails with unique warning logger instead of ConfigurationException whose InnerException must remain the exact construction primary.",
+      "proof_limit": "Original31 actual28P3finiteF0S; healthy false3 passed. Later exact observer/secondary-record/retry assertions not reached on failing rows, no empirical RED credit assigned.",
+      "whole_API_member_review_closed": false
+    }
+  ],
+  "root_personal_review": "Entire54 raw c8da88; originalBus31 raw whole049d16+33c877; whole2cause owners f68a34; independent138 report wholeadc15d and whole normative1407bbda8 excluding purely mechanical153 IDs (initial884c79 truncated earns no whole credit). SourcepeerF117R2 complete12b37c+exact3delta ca07fd.",
+  "scope": "F117 three diagnostic routes corrected with unchanged all54 exact regression IDs GREEN, broader153 GREEN, fresh actual Mediator ZIP CRC/DLL/XML bound to current138 Source/PDB. No all153 testbody or global API Grade. Two Bus Findings confirmed only; fault/cancel cleanup branches retained, fixed tests and fresh Core pending.",
+  "whole_api_status": "PARTIAL"
+}

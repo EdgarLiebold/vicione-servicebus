@@ -223,7 +223,7 @@ sealed class DurableResourceStore<TKey, TValue> :
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, "Durable resource disposal faulted");
+            LogWarningSafely(exception, "Durable resource disposal faulted");
         }
     }
 
@@ -235,7 +235,19 @@ sealed class DurableResourceStore<TKey, TValue> :
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, faultMessage);
+            LogWarningSafely(exception, faultMessage);
+        }
+    }
+
+    static void LogWarningSafely(Exception exception, string message)
+    {
+        try
+        {
+            LogContext.Warning?.Log(exception, message);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics cannot interrupt owned cancellation or disposal.
         }
     }
 

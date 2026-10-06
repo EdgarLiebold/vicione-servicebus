@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-06T09:45:17.737797+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_INDIVIDUAL_SOURCE15_NO_NEW_NATIVE_GRADE",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package401-persistence-job-individual-source15-root-proposed-r1/REPORT.json",
+    "sha256": "3ae53ee9ca6dc25234abae93eccb87d206eb2a68a9909b807c7526af64742a0e"
+  },
+  "different_adversarial_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package401-persistence-job15-independent-source-norm-peer-r1/REPORT.json",
+    "sha256": "0975d84023ea4a53ed9581024afb4eebafd20e2a83badfe0da181e3566ac7f3d"
+  },
+  "mandatory_ID_bound_overlay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package401-source15-job-constructor-order2-peer-precision-overlay-r1/REPORT.json",
+    "sha256": "051bf68edde0cd627cc10510d4aabdf8f75c7f02f4f4946d766ad6551f328eaf"
+  },
+  "composed_norms15": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package401-source15-job-constructor-order2-peer-precision-overlay-r1/INDIVIDUAL_CONTRACTS15_COMPOSED.json",
+    "sha256": "ae32e5dafcf847f808755e7ca33edd7625678e4b2a9751982551d4c6e758e74e"
+  },
+  "Root_whole_source_reads": [
+    "df5222",
+    "d16a83+7823cf",
+    "c465c6",
+    "8213c1+d72e4e+9a19e4",
+    "9fb554 JobConfigurator324"
+  ],
+  "Root_whole_norm15_read": "26b7a6",
+  "Root_whole_peer_read": "3b0a16",
+  "new_canonical_members": 15,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "held_original7": [
+    141,
+    15727,
+    18062,
+    18082,
+    18085,
+    18086,
+    18228
+  ],
+  "master_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "fc72aef7f28c4bbcd3d9298fb17d9d9a820d12a367c228439d348bf97de5eefb"
+  },
+  "limits": [
+    "Source/PDB/XML individual norms only; provider/native integration remains explicit separate boundary",
+    "Mandatory Job2 constructor-effect correction retained, all13 other norms byte-object identical"
+  ]
+}

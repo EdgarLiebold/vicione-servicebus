@@ -1,0 +1,31 @@
+{
+  "status": "ROOT_ACCEPTS_ORIGINAL_TYPED_CONSUMER_DEFECT_AND_TWO_INDEPENDENT_CONTROLS_ONLY",
+  "utc": "2026-10-04T06:02:58.708039+00:00",
+  "actor": "/root",
+  "root_personal_full_source_reader_chunk": "a03c00",
+  "reader_approved_sha256": "9f9c7bbe0241a53bd4f2eaf284da8be665e7c537cf96885e07ad796c717c2c51",
+  "root_full_review_reads": "a94d59 (final native review and R5 source review)",
+  "root_actual_cases_and_symbol_summary_read": "320414 (bounded full actual receipts, four native observations, all3 PE/PDB summaries, explicit privatePDB equality, machine26row endcheck)",
+  "actual_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package39-provider-probe-original-independent-qualification-r1/ACTUAL_ORIGINAL_QUALIFICATION_R1.json",
+    "bytes": 3588514,
+    "sha256": "a0359d37fb6d51ff368aae9693a7589d7e729464564211bf4730aced40959418"
+  },
+  "adversarial_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package39-provider-probe-original-independent-qualification-r1/REVIEW_FINAL_R1.md",
+    "bytes": 4025,
+    "sha256": "b907321bda442f3ff75f900ae1b57c3f56949b1164067caf4d496a9e5336f1f6"
+  },
+  "adversarial_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package39-provider-probe-original-independent-qualification-r1/MANIFEST_FINAL_R1.json",
+    "bytes": 9183,
+    "sha256": "6a0e631b76e3d5e84fc2af188f72bcc89055d856d6635694466d796eec871bdd"
+  },
+  "end_binding": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package39-provider-probe-original-independent-qualification-r1/ACTUAL_PDB_AND_END_BINDING_R1.json",
+    "bytes": 24904,
+    "sha256": "26eabd24019c9e3f6db4ce7e023a0124462dfafd3311dff0cf9f6832c9b7c0c8"
+  },
+  "outcome": "Two shared-collection provider builds reuse the same actual consumer definition and first-provider dependency; A-disposed case also configures that disposed definition. Two independent collections use distinct correct living definitions.",
+  "limits": "Original diagnosis only; no repair/native acceptance of six current cache edits; no whole API A+, default/saga/courier/parallel or loaded-module claims."
+}

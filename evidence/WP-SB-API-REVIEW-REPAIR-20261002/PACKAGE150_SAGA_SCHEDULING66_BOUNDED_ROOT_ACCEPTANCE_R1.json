@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-04T22:08:33.372159+00:00",
+  "decision": "ACCEPT66_SAGA_SCHEDULING_EXTENSION_CONFIGURATION_CONTRACTS_DOWNSTREAM_WORKFLOW_RETAINED",
+  "api_before": 2889,
+  "api_after": 2955,
+  "semantic_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-saga-scheduling66-current-contracts-r1/REPORT.json",
+    "sha256": "3f053f73c52dd98d82659ce682fe087ddfa745b9319e8c4d2c2cc37415790ec9"
+  },
+  "semantic_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-saga-scheduling66-current-contracts-r1/PER_MEMBER_CONTRACT_MATRIX.json",
+    "sha256": "0cf621f34179635368288a260f093dd5d873c0c13972b46847b9bf189f52a255"
+  },
+  "native_binding": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-saga-scheduling66-current-contracts-r1/SOURCE_XML_ASSERTION_NATIVE_BINDINGS.json",
+    "sha256": "e1c3de74900e0c5323cb46a941015e7b26d3fe2b3344e7d6bf5cc0fd62a5c433"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package150-saga-scheduling66-current-contracts-r1/MANIFEST.json",
+    "sha256": "25ca608c3654266aae8e04fd2e4cff7a659d76edda92b431d2c7952e96a00ffc"
+  },
+  "root_complete_contract_read": "29 unique exact contract clauses plus all guard/constraint/NA/gap profilescccd64; exact every66 row clause/input/binder/SourceLine/assert mapping86515f; all46 unique exact parameter/null/default/ref shapes+rowassignment97cc94; complete7actualspecificassertioncontracts and4source/PDB pins31f7d6; report9d2fda",
+  "root_own_whole_sources": "Both actualSource2 1782L prior fcb7d3/7db4b9/e49dff/4158fa/5b1a46/1c58a9/ca91f3. DateTime TInstance and TimeSpan TSaga names retained exact. Two complete testowner assertions prior f5a207/61e5b6/4242e5/8a73b9. Four activity+admission whole640 prior6bf9c6/1c8391/9b9f74; focused2integration prefixes9b9f74, no whole downstream helper claim.",
+  "scope": "20 absolute+20 configured-relative+20 explicit-relative+4Unschedule methods and2statictypes. Actual147 seven per-overload reflection/callback/guard/binder/factory/time assertions qualified; no 122 downstream activitycases fanned out. CapturedTask12 can start adapter or use completed task at registration, unlike lazy userdelegates. Callback null optional actual literal, raw metadata empty-string representation does not mean string callback.",
+  "limits": [
+    "TimeSpan callback pipe forwarding Source-derived, no callback executioncredit fromDateTime.",
+    "Downstream scheduler capability/token/header-owned replacement/previous cancel/next workflows distinct and retained. External Add may run its own effects; return its exact result.",
+    "No UTC rewrite/past-date/negativeDelay/deadline policy invented. No blanket runtime/fullAPIgrade."
+  ],
+  "whole_api_status": "PARTIAL"
+}

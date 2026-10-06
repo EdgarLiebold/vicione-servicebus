@@ -1,0 +1,24 @@
+{
+  "utc": "2026-10-03T13:18:23.663496+00:00",
+  "status": "ROOT_SOURCE_PREFLIGHT_ACCEPTED_NATIVE_PENDING",
+  "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE22_F001_SOURCE_FREEZE_R4.json",
+  "freeze_sha256": "5d020a2efef1a01a0d19dd2df085dba40e96fcaf6bd7f7c293a9248b2e35fcab",
+  "root_personal_full_inputs": 34,
+  "source_only_xml_files": 33,
+  "source_signature_runtime_unchanged": true,
+  "peer_full_review_bodies_read": [
+    "REVIEW.txt",
+    "REVIEW.json"
+  ],
+  "peer_manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package22-f001-source-preflight/004-r4/MANIFEST.json",
+  "peer_manifest_sha256": "e4ef6870f07aa230868d08e25c3ebd5caf694bad3a16f4bc585a57ca0262f04d",
+  "root_independent_manifest_artifacts_verified": 14,
+  "source_snapshots_current_and_original_before_sha_independently_verified": 34,
+  "native_release_strict_builds": [
+    "package22-f001-r4-courier-strict-build",
+    "package22-f001-r4-azure-strict-build",
+    "package22-f001-r4-initializers-strict-build"
+  ],
+  "actual_emitted_xml_member_and_public_buffer_outbox_controls_pending": true,
+  "root_no_canonical_suite_grade": true
+}

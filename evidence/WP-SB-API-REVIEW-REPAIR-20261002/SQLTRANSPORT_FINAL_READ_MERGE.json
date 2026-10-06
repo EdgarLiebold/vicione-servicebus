@@ -1,0 +1,18 @@
+{
+  "status": "181_ORIGINAL_PENDING_TO_PERSONAL_FULL_PARTIAL_MERGED",
+  "before_sha256": "b1cbbb98baf0e0151f62b929d783cc833cee6d0c60557c0994c3c9c1da1d3024",
+  "after_sha256": "24cbe9a188d7a8c487ba337d9b193cab235720cabcd1798853b6c845daec0613",
+  "before_full": 3983,
+  "after_full": 4164,
+  "source_files": 184,
+  "new_full_files": 181,
+  "manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/sqltransport-family-review/FINAL_MANIFEST.json",
+  "manifest_sha256": "d1283658a7465082d000fe59a7fd97695283bcdfd209cf0de7ae0ad64680c0a1",
+  "manifest_artifacts_checked": 140,
+  "prior_all_full_rows_preserved": true,
+  "prior3_sql_project_rows_preserved": true,
+  "candidate_refinements_root_personally_full_read": true,
+  "new_findings": 0,
+  "api_closed": 0,
+  "lead_canonical_owner_full_inherited": false
+}

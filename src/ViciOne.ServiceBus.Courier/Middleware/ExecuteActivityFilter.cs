@@ -58,7 +58,16 @@ internal sealed class ExecuteActivityFilter<TActivity, TArguments> :
                 context.Result = context.Faulted(exception);
 
             if (_observers.Count > 0)
-                await _observers.ExecuteFaultAsync(context, exception).ConfigureAwait(false);
+            {
+                try
+                {
+                    await _observers.ExecuteFaultAsync(context, exception).ConfigureAwait(false);
+                }
+                catch (Exception observerException)
+                {
+                    throw new AggregateException(exception, observerException);
+                }
+            }
 
             throw;
         }

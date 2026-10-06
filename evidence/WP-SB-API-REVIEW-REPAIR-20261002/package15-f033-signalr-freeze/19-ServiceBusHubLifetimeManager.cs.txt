@@ -1,0 +1,724 @@
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR.Protocol;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.SignalR.Configuration;
+using ViciOne.ServiceBus.SignalR.Contracts;
+
+namespace ViciOne.ServiceBus.SignalR.Runtime;
+
+/// <summary>Coordinates node-local SignalR state and routes scale-out operations through ViciOne.ServiceBus.</summary>
+internal sealed class ServiceBusHubLifetimeManager<THub> :
+    HubLifetimeManager<THub>
+    where THub : Hub
+{
+    readonly PendingClientInvocationTracker _clientInvocations = new();
+    readonly ILogger<ServiceBusHubLifetimeManager<THub>> _logger;
+    readonly IHubProtocolResolver _protocolResolver;
+    readonly IBackplaneScopeProvider _scopeProvider;
+
+    /// <summary>Initializes a hub lifetime manager with immutable settings and scoped bus access.</summary>
+    public ServiceBusHubLifetimeManager(
+        SignalRBackplaneSettings<THub> settings,
+        IBackplaneScopeProvider scopeProvider,
+        IHubProtocolResolver protocolResolver,
+        ILogger<ServiceBusHubLifetimeManager<THub>>? logger = null)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+        _scopeProvider = scopeProvider ?? throw new ArgumentNullException(nameof(scopeProvider));
+        _protocolResolver = protocolResolver ?? throw new ArgumentNullException(nameof(protocolResolver));
+        _logger = logger ?? NullLogger<ServiceBusHubLifetimeManager<THub>>.Instance;
+
+        if (_protocolResolver.AllProtocols.Count == 0)
+            throw new InvalidOperationException("At least one SignalR hub protocol must be registered.");
+    }
+
+    /// <summary>Gets the unique identity used to route client results back to this process.</summary>
+    internal string NodeId { get; } = NewId.NextGuid().ToString("N");
+
+    /// <summary>Gets the node-local connection registry.</summary>
+    internal HubConnectionStore Connections { get; } = new();
+
+    /// <summary>Gets the node-local group subscription index.</summary>
+    internal ConnectionSubscriptionIndex Groups { get; } = new();
+
+    /// <summary>Gets the node-local user subscription index.</summary>
+    internal ConnectionSubscriptionIndex Users { get; } = new();
+
+    /// <summary>Gets the number of client invocations still awaiting completion or cancellation.</summary>
+    internal int PendingClientInvocationCount => _clientInvocations.Count;
+
+    /// <summary>Registers a connection and indexes its user identifier when present.</summary>
+    public override Task OnConnectedAsync(HubConnectionContext connection)
+    {
+        ArgumentNullException.ThrowIfNull(connection);
+
+        connection.Features.Set(new ConnectionGroupFeature());
+        Connections.Add(connection);
+
+        if (!string.IsNullOrEmpty(connection.UserIdentifier))
+            Users.AddSubscription(connection.UserIdentifier, connection);
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>Removes all local subscriptions and terminates pending invocations for a disconnected connection.</summary>
+    public override async Task OnDisconnectedAsync(HubConnectionContext connection)
+    {
+        ArgumentNullException.ThrowIfNull(connection);
+
+        Connections.Remove(connection);
+
+        if (!string.IsNullOrEmpty(connection.UserIdentifier))
+            Users.RemoveSubscription(connection.UserIdentifier, connection);
+
+        ConnectionGroupFeature? feature = connection.Features.Get<ConnectionGroupFeature>();
+        if (feature is not null)
+        {
+            foreach (string groupName in feature.Snapshot())
+                RemoveGroup(connection, groupName);
+        }
+
+        RemovedPendingClientInvocation[] pending =
+            _clientInvocations.RemoveForConnection(connection.ConnectionId);
+        if (pending.Length == 0)
+            return;
+
+        var forwards = new List<Task>(pending.Length);
+        foreach (RemovedPendingClientInvocation removed in pending)
+        {
+            PendingClientInvocation invocation = removed.Invocation;
+            if (invocation.IsRemote)
+            {
+                forwards.Add(PublishRemoteCompletionAsync(
+                    removed.InvocationId,
+                    invocation,
+                    CompletionMessage.WithError(removed.InvocationId, "The SignalR connection disconnected.")));
+            }
+            else
+            {
+                invocation.Completion!.TrySetException(
+                    new IOException($"SignalR connection '{connection.ConnectionId}' disconnected."));
+            }
+        }
+
+        await Task.WhenAll(forwards).ConfigureAwait(false);
+    }
+
+    /// <summary>Publishes an invocation for every connection of this hub.</summary>
+    public override Task SendAllAsync(
+        string methodName,
+        object?[] args,
+        CancellationToken cancellationToken = default)
+    {
+        IReadOnlyDictionary<string, byte[]> payloads = SerializeInvocation(methodName, args);
+        return PublishAsync(
+            new BroadcastMessage<THub>(payloads, []),
+            cancellationToken);
+    }
+
+    /// <summary>Publishes an invocation for every connection except the exact identifiers supplied.</summary>
+    public override Task SendAllExceptAsync(
+        string methodName,
+        object?[] args,
+        IReadOnlyList<string> excludedConnectionIds,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(excludedConnectionIds);
+        IReadOnlyDictionary<string, byte[]> payloads = SerializeInvocation(methodName, args);
+        return PublishAsync(
+            new BroadcastMessage<THub>(payloads, [.. excludedConnectionIds]),
+            cancellationToken);
+    }
+
+    /// <summary>Writes directly to a local connection or publishes to the node that owns it.</summary>
+    public override async Task SendConnectionAsync(
+        string connectionId,
+        string methodName,
+        object?[] args,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(connectionId);
+        ValidateInvocation(methodName, args);
+
+        HubConnectionContext? connection = Connections[connectionId];
+        if (connection is not null)
+        {
+            await connection.WriteAsync(new InvocationMessage(methodName, args), cancellationToken)
+                .ConfigureAwait(false);
+            return;
+        }
+
+        await PublishAsync(
+                new ConnectionMessage<THub>(connectionId, SerializeInvocation(methodName, args)),
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>Publishes one invocation for each distinct connection identifier.</summary>
+    public override async Task SendConnectionsAsync(
+        IReadOnlyList<string> connectionIds,
+        string methodName,
+        object?[] args,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(connectionIds);
+        ValidateInvocation(methodName, args);
+
+        string[] targets = [.. connectionIds.Distinct(StringComparer.Ordinal)];
+        if (targets.Length == 0)
+            return;
+
+        IReadOnlyDictionary<string, byte[]> payloads = SerializeInvocation(methodName, args);
+        IBackplaneScope<THub> scope =
+            await _scopeProvider.CreateScopeAsync<THub>().ConfigureAwait(false);
+        Exception? operationFailure = null;
+        try
+        {
+            await Task.WhenAll(targets.Select(target =>
+                    scope.PublishEndpoint.PublishAsync(
+                        new ConnectionMessage<THub>(target, payloads),
+                        cancellationToken)))
+                .ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await BackplaneOperationLifetime.ReleaseAfterOperationAsync(scope, null, operationFailure)
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>Publishes an invocation for every connection in a case-sensitive group.</summary>
+    public override Task SendGroupAsync(
+        string groupName,
+        string methodName,
+        object?[] args,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(groupName);
+        IReadOnlyDictionary<string, byte[]> payloads = SerializeInvocation(methodName, args);
+        return PublishAsync(
+            new GroupMessage<THub>(groupName, payloads, []),
+            cancellationToken);
+    }
+
+    /// <summary>Publishes a group invocation while excluding exact connection identifiers.</summary>
+    public override Task SendGroupExceptAsync(
+        string groupName,
+        string methodName,
+        object?[] args,
+        IReadOnlyList<string> excludedConnectionIds,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(groupName);
+        ArgumentNullException.ThrowIfNull(excludedConnectionIds);
+        IReadOnlyDictionary<string, byte[]> payloads = SerializeInvocation(methodName, args);
+        return PublishAsync(
+            new GroupMessage<THub>(groupName, payloads, [.. excludedConnectionIds]),
+            cancellationToken);
+    }
+
+    /// <summary>Publishes one invocation for each distinct non-empty group name.</summary>
+    public override async Task SendGroupsAsync(
+        IReadOnlyList<string> groupNames,
+        string methodName,
+        object?[] args,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(groupNames);
+        ValidateInvocation(methodName, args);
+
+        string[] targets =
+        [
+            .. groupNames
+                .Where(static groupName => !string.IsNullOrEmpty(groupName))
+                .Distinct(StringComparer.Ordinal),
+        ];
+        if (targets.Length == 0)
+            return;
+
+        IReadOnlyDictionary<string, byte[]> payloads = SerializeInvocation(methodName, args);
+        IBackplaneScope<THub> scope =
+            await _scopeProvider.CreateScopeAsync<THub>().ConfigureAwait(false);
+        Exception? operationFailure = null;
+        try
+        {
+            await Task.WhenAll(targets.Select(target =>
+                    scope.PublishEndpoint.PublishAsync(
+                        new GroupMessage<THub>(target, payloads, []),
+                        cancellationToken)))
+                .ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await BackplaneOperationLifetime.ReleaseAfterOperationAsync(scope, null, operationFailure)
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>Publishes an invocation for every connection of one user.</summary>
+    public override Task SendUserAsync(
+        string userId,
+        string methodName,
+        object?[] args,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(userId);
+        IReadOnlyDictionary<string, byte[]> payloads = SerializeInvocation(methodName, args);
+        return PublishAsync(new UserMessage<THub>(userId, payloads), cancellationToken);
+    }
+
+    /// <summary>Publishes one invocation for each distinct non-empty user identifier.</summary>
+    public override async Task SendUsersAsync(
+        IReadOnlyList<string> userIds,
+        string methodName,
+        object?[] args,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(userIds);
+        ValidateInvocation(methodName, args);
+
+        string[] targets =
+        [
+            .. userIds
+                .Where(static userId => !string.IsNullOrEmpty(userId))
+                .Distinct(StringComparer.Ordinal),
+        ];
+        if (targets.Length == 0)
+            return;
+
+        IReadOnlyDictionary<string, byte[]> payloads = SerializeInvocation(methodName, args);
+        IBackplaneScope<THub> scope =
+            await _scopeProvider.CreateScopeAsync<THub>().ConfigureAwait(false);
+        Exception? operationFailure = null;
+        try
+        {
+            await Task.WhenAll(targets.Select(target =>
+                    scope.PublishEndpoint.PublishAsync(
+                        new UserMessage<THub>(target, payloads),
+                        cancellationToken)))
+                .ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await BackplaneOperationLifetime.ReleaseAfterOperationAsync(scope, null, operationFailure)
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>Adds a connection to a local group or requests the owning node to do so.</summary>
+    public override Task AddToGroupAsync(
+        string connectionId,
+        string groupName,
+        CancellationToken cancellationToken = default)
+    {
+        return ChangeGroupMembershipAsync(
+            connectionId,
+            groupName,
+            GroupCommandAction.Add,
+            cancellationToken);
+    }
+
+    /// <summary>Removes a connection from a local group or requests the owning node to do so.</summary>
+    public override Task RemoveFromGroupAsync(
+        string connectionId,
+        string groupName,
+        CancellationToken cancellationToken = default)
+    {
+        return ChangeGroupMembershipAsync(
+            connectionId,
+            groupName,
+            GroupCommandAction.Remove,
+            cancellationToken);
+    }
+
+    /// <summary>Invokes a client method and awaits its typed result across local or remote ownership.</summary>
+    public override async Task<TResult> InvokeConnectionAsync<TResult>(
+        string connectionId,
+        string methodName,
+        object?[] args,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(connectionId);
+        ValidateInvocation(methodName, args);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        string invocationId = NewId.NextGuid().ToString("N");
+        PendingClientInvocation pending =
+            _clientInvocations.AddLocal(invocationId, connectionId, typeof(TResult));
+        HubConnectionContext? connection = Connections[connectionId];
+        bool routedThroughBackplane = connection is null;
+
+        try
+        {
+            if (connection is null)
+            {
+                await PublishAsync(
+                        new ConnectionMessage<THub>(
+                            connectionId,
+                            SerializeInvocation(methodName, args, invocationId),
+                            invocationId,
+                            NodeId),
+                        cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                await connection.WriteAsync(
+                        new InvocationMessage(invocationId, methodName, args),
+                        cancellationToken)
+                    .ConfigureAwait(false);
+            }
+
+            CompletionMessage completion = await pending.Completion!.Task
+                .WaitAsync(cancellationToken)
+                .ConfigureAwait(false);
+            return GetResult<TResult>(completion);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            await TryCancelClientInvocationAsync(
+                    connection,
+                    connectionId,
+                    invocationId,
+                    routedThroughBackplane)
+                .ConfigureAwait(false);
+            throw;
+        }
+        finally
+        {
+            _clientInvocations.TryRemove(invocationId, pending);
+        }
+    }
+
+    /// <summary>Completes a local result waiter or forwards the completion to the requesting node.</summary>
+    public override Task SetConnectionResultAsync(string connectionId, CompletionMessage result)
+    {
+        ArgumentNullException.ThrowIfNull(connectionId);
+        ArgumentNullException.ThrowIfNull(result);
+
+        if (string.IsNullOrWhiteSpace(result.InvocationId))
+            throw new InvalidDataException("A SignalR client completion must identify its invocation.");
+
+        if (!_clientInvocations.TryRemove(result.InvocationId, connectionId, out PendingClientInvocation? pending) ||
+            pending is null)
+            return Task.CompletedTask;
+
+        if (!pending.IsRemote)
+        {
+            pending.Completion!.TrySetResult(result);
+            return Task.CompletedTask;
+        }
+
+        return PublishRemoteCompletionAsync(result.InvocationId, pending, result);
+    }
+
+    /// <summary>Provides the expected client result type to the active SignalR hub protocol.</summary>
+    public override bool TryGetReturnType(
+        string invocationId,
+        [NotNullWhen(true)] out Type? type)
+    {
+        ArgumentNullException.ThrowIfNull(invocationId);
+        return _clientInvocations.TryGetResultType(invocationId, out type);
+    }
+
+    /// <summary>Adds local group state only once and keeps the connection feature and lookup index consistent.</summary>
+    internal void AddGroup(HubConnectionContext connection, string groupName)
+    {
+        ArgumentNullException.ThrowIfNull(connection);
+        ArgumentNullException.ThrowIfNull(groupName);
+
+        ConnectionGroupFeature feature = connection.Features.Get<ConnectionGroupFeature>()
+            ?? throw new InvalidOperationException("The SignalR connection was not registered with this lifetime manager.");
+
+        if (feature.Add(groupName))
+            Groups.AddSubscription(groupName, connection);
+    }
+
+    /// <summary>Removes local group state only once and drops empty subscription entries.</summary>
+    internal void RemoveGroup(HubConnectionContext connection, string groupName)
+    {
+        ArgumentNullException.ThrowIfNull(connection);
+        ArgumentNullException.ThrowIfNull(groupName);
+
+        ConnectionGroupFeature feature = connection.Features.Get<ConnectionGroupFeature>()
+            ?? throw new InvalidOperationException("The SignalR connection was not registered with this lifetime manager.");
+
+        if (feature.Remove(groupName))
+            Groups.RemoveSubscription(groupName, connection);
+    }
+
+    /// <summary>Registers the result-forwarding state before an invocation is written to a remote-owned client.</summary>
+    internal bool RegisterRemoteInvocation(
+        HubConnectionContext connection,
+        string invocationId,
+        string resultNodeId)
+    {
+        ArgumentNullException.ThrowIfNull(connection);
+        ArgumentException.ThrowIfNullOrWhiteSpace(invocationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(resultNodeId);
+
+        return _clientInvocations.TryAddRemote(
+            invocationId,
+            connection.ConnectionId,
+            resultNodeId,
+            connection.Protocol.Name);
+    }
+
+    /// <summary>Returns a write failure to the node awaiting a remote client result.</summary>
+    internal Task FailRemoteInvocationAsync(
+        string connectionId,
+        string invocationId,
+        string error)
+    {
+        ArgumentNullException.ThrowIfNull(connectionId);
+        ArgumentNullException.ThrowIfNull(invocationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(error);
+
+        if (!_clientInvocations.TryRemove(invocationId, connectionId, out PendingClientInvocation? pending) ||
+            pending is null ||
+            !pending.IsRemote)
+        {
+            return Task.CompletedTask;
+        }
+
+        return PublishRemoteCompletionAsync(
+            invocationId,
+            pending,
+            CompletionMessage.WithError(invocationId, error));
+    }
+
+    /// <summary>Forwards cancellation to an owned connection only when its remote invocation is still pending.</summary>
+    internal async Task CancelRemoteInvocationAsync(
+        string connectionId,
+        string invocationId,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(connectionId);
+        ArgumentNullException.ThrowIfNull(invocationId);
+
+        if (!_clientInvocations.TryRemove(invocationId, connectionId, out PendingClientInvocation? pending) ||
+            pending is null ||
+            !pending.IsRemote)
+        {
+            return;
+        }
+
+        HubConnectionContext? connection = Connections[connectionId];
+        if (connection is not null)
+        {
+            await connection.WriteAsync(new CancelInvocationMessage(invocationId), cancellationToken)
+                .ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>Parses and completes a client result addressed to this node.</summary>
+    internal void ReceiveClientResult(ClientResultMessage<THub> resultMessage)
+    {
+        ArgumentNullException.ThrowIfNull(resultMessage);
+
+        if (!string.Equals(resultMessage.TargetNodeId, NodeId, StringComparison.Ordinal) ||
+            !_clientInvocations.TryGet(resultMessage.InvocationId, out PendingClientInvocation? pending) ||
+            pending is null ||
+            pending.IsRemote)
+        {
+            return;
+        }
+
+        try
+        {
+            IHubProtocol protocol = _protocolResolver.GetProtocol(resultMessage.ProtocolName, null)
+                ?? throw new InvalidDataException(
+                    $"SignalR protocol '{resultMessage.ProtocolName}' is not registered on the requesting node.");
+            CompletionMessage completion = HubMessageSerializer.DeserializeCompletion(
+                protocol,
+                resultMessage.Payload,
+                new ClientResultInvocationBinder(_clientInvocations));
+
+            if (!string.Equals(completion.InvocationId, resultMessage.InvocationId, StringComparison.Ordinal))
+                throw new InvalidDataException("The SignalR result envelope and protocol frame identify different invocations.");
+
+            if (_clientInvocations.TryRemove(resultMessage.InvocationId, pending))
+                pending.Completion!.TrySetResult(completion);
+        }
+        catch (Exception exception)
+        {
+            if (_clientInvocations.TryRemove(resultMessage.InvocationId, pending))
+                pending.Completion!.TrySetException(exception);
+        }
+    }
+
+    async Task ChangeGroupMembershipAsync(
+        string connectionId,
+        string groupName,
+        GroupCommandAction action,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(connectionId);
+        ArgumentNullException.ThrowIfNull(groupName);
+
+        HubConnectionContext? connection = Connections[connectionId];
+        if (connection is not null)
+        {
+            if (action == GroupCommandAction.Add)
+                AddGroup(connection, groupName);
+            else
+                RemoveGroup(connection, groupName);
+
+            return;
+        }
+
+        IBackplaneScope<THub> scope =
+            await _scopeProvider.CreateScopeAsync<THub>().ConfigureAwait(false);
+        RequestHandle<GroupCommand<THub>>? request = null;
+        Exception? operationFailure = null;
+        try
+        {
+            request = scope.GroupCommandClient.Create(
+                new GroupCommand<THub>(action, groupName, connectionId),
+                cancellationToken: cancellationToken);
+            Response<GroupCommandAcknowledgement<THub>> response =
+                await request.GetResponseAsync<GroupCommandAcknowledgement<THub>>(
+                        cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
+            if (string.IsNullOrWhiteSpace(response.Message.NodeId))
+                throw new InvalidDataException("The SignalR group command acknowledgement did not identify its handling node.");
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await BackplaneOperationLifetime.ReleaseAfterOperationAsync(scope, request, operationFailure)
+            .ConfigureAwait(false);
+    }
+
+    IReadOnlyDictionary<string, byte[]> SerializeInvocation(
+        string methodName,
+        object?[] args,
+        string? invocationId = null)
+    {
+        return _protocolResolver.AllProtocols.SerializeInvocation(methodName, args, invocationId);
+    }
+
+    async Task PublishAsync<TMessage>(TMessage message, CancellationToken cancellationToken)
+        where TMessage : class
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        IBackplaneScope<THub> scope =
+            await _scopeProvider.CreateScopeAsync<THub>().ConfigureAwait(false);
+        Exception? operationFailure = null;
+        try
+        {
+            await scope.PublishEndpoint.PublishAsync(message, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await BackplaneOperationLifetime.ReleaseAfterOperationAsync(scope, null, operationFailure)
+            .ConfigureAwait(false);
+    }
+
+    async Task PublishRemoteCompletionAsync(
+        string invocationId,
+        PendingClientInvocation pending,
+        CompletionMessage completion)
+    {
+        IHubProtocol protocol = _protocolResolver.GetProtocol(pending.ProtocolName!, null)
+            ?? throw new InvalidDataException(
+                $"SignalR protocol '{pending.ProtocolName}' is no longer registered on the owning node.");
+        byte[] payload = HubMessageSerializer.SerializeCompletion(protocol, completion);
+        await PublishAsync(
+                new ClientResultMessage<THub>(
+                    pending.ResultNodeId!,
+                    invocationId,
+                    protocol.Name,
+                    payload),
+                CancellationToken.None)
+            .ConfigureAwait(false);
+    }
+
+    async Task TryCancelClientInvocationAsync(
+        HubConnectionContext? connection,
+        string connectionId,
+        string invocationId,
+        bool routedThroughBackplane)
+    {
+        try
+        {
+            if (routedThroughBackplane)
+            {
+                await PublishAsync(
+                        new InvocationCancellationMessage<THub>(connectionId, invocationId),
+                        CancellationToken.None)
+                    .ConfigureAwait(false);
+            }
+            else if (connection is not null)
+            {
+                await connection.WriteAsync(new CancelInvocationMessage(invocationId), CancellationToken.None)
+                    .ConfigureAwait(false);
+            }
+        }
+        catch (Exception exception)
+        {
+            _logger.LogWarning(
+                exception,
+                "SignalR invocation {InvocationId} was canceled locally, but its cancellation could not be forwarded.",
+                invocationId);
+        }
+    }
+
+    static TResult GetResult<TResult>(CompletionMessage completion)
+    {
+        if (completion.Error is not null)
+            throw new HubException(completion.Error);
+        if (!completion.HasResult)
+            throw new HubException("The SignalR client completed the invocation without returning a result.");
+        if (completion.Result is null)
+            return default!;
+        if (completion.Result is TResult result)
+            return result;
+
+        throw new InvalidDataException(
+            $"The SignalR client result has type '{completion.Result.GetType()}', but '{typeof(TResult)}' was expected.");
+    }
+
+    static void ValidateInvocation(string methodName, object?[] args)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(methodName);
+        ArgumentNullException.ThrowIfNull(args);
+    }
+
+    sealed class ClientResultInvocationBinder(PendingClientInvocationTracker invocations) :
+        IInvocationBinder
+    {
+        public IReadOnlyList<Type> GetParameterTypes(string methodName)
+        {
+            throw new NotSupportedException("Client result payloads do not contain hub method parameters.");
+        }
+
+        public Type GetReturnType(string invocationId)
+        {
+            return invocations.TryGetResultType(invocationId, out Type? resultType)
+                ? resultType!
+                : throw new InvalidDataException($"SignalR invocation '{invocationId}' is not pending on this node.");
+        }
+
+        public Type GetStreamItemType(string streamId)
+        {
+            throw new NotSupportedException("Client result payloads do not contain stream items.");
+        }
+    }
+}

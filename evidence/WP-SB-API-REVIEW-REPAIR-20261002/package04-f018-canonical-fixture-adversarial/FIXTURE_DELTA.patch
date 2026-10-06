@@ -1,0 +1,35 @@
+--- /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018/EntityFrameworkSagaRepositoryFactoryTests.before-canonical-repair.cs.txt
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture/EntityFrameworkSagaRepositoryFactoryTests.cs.txt
+@@ -222,9 +222,13 @@
+     {
+         var executionStrategy = new ExecutionStrategyProbe();
+         await using FactoryDatabase database = await FactoryDatabase.CreateAsync(executionStrategy);
++        await using FactoryDbContext actualContext = database.CreateContext();
++        await using var actualTransaction = await actualContext.Database.BeginTransactionAsync(
++            System.Data.IsolationLevel.Serializable, TestContext.Current.CancellationToken);
+         executionStrategy.Reset();
++        database.Observer.Reset();
+         var contextFactory = new EntityFrameworkSagaRepositoryContextFactory<FactorySaga>(
+-            new DelegateSagaDbContextFactory<FactorySaga>(database.CreateContext),
++            new ContainerSagaDbContextFactory<FactoryDbContext, FactorySaga>(actualContext),
+             new SagaConsumeContextFactory<DbContext, FactorySaga>(),
+             new OptimisticSagaRepositoryLockStrategy<FactorySaga>(
+                 new OptimisticLoadQueryExecutor<FactorySaga>(),
+@@ -233,7 +237,7 @@
+                 isTransactionEnabled: true));
+         ConsumeContext<FactoryMessage> context = CreateConsumeContext(
+             new FactoryMessage(),
+-            new TransactionPayload(Guid.Parse("9c49617d-5341-465f-b624-3807677f7b99")));
++            new TransactionPayload(actualTransaction.TransactionId));
+         int delivered = 0;
+ 
+         await contextFactory.SendQueryAsync(
+@@ -247,6 +251,8 @@
+ 
+         Assert.Equal(1, delivered);
+         Assert.Equal(1, executionStrategy.ExecutionCount);
++        Assert.Equal(0, database.Observer.StartedCount);
++        Assert.Same(actualTransaction, actualContext.Database.CurrentTransaction);
+     }
+ 
+     private static ConsumeContext<FactoryMessage> CreateConsumeContext(FactoryMessage message, IDbTransactionContext transaction)

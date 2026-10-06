@@ -1,0 +1,173 @@
+{
+  "utc": "2026-10-05T22:17:04.356126+00:00",
+  "status": "F147_DOC3_ROOT_REPAIR_ACCEPTED_BOUNDED_SOURCE3_ORIGINAL_IDS_WHOLE_API_OPEN",
+  "basis": "Root genuine prior whole Source1000 +83 support lines, exact7 proposed clauses and publication report; independent Runtime source and Qualification actual compiled publication. Root now whole independent publication report; no borrowed personal whole-source authority.",
+  "source_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE249_F147_JOBSERVICE_DOC3_XML_ONLY_PRODUCT3_ROOT_APPLICATION_R1.json",
+    "sha256": "3d028bcdbba811b1471e8c133874f63c11e1fbdfe51ad8f158e5e2d7ceb6076f"
+  },
+  "source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-independent-runtime-source-peer-r2/REPORT.json",
+    "sha256": "3e770149bd1c2daab64a67dc49fcdc685b7b29a93dcc817ddb97deecf2ea0959"
+  },
+  "publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-independent-publication-peer-r1/REPORT.json",
+    "sha256": "85a70facf8c621386c25e55c97e897840e6c9750f5c8e336630b86325ebfaef3",
+    "manifest_sha256": "e1b3cd2b17339d882e7d1ab10a3e8cc60f3392c20ccf1a52e440b35039f06620"
+  },
+  "root_publication_proof": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-fresh-root-publication-proof-r1/REPORT.json",
+    "sha256": "6b5718eff3be7275d1a16df164db6a45e3b68042cc3bc9e4998564d3d14d8fa0"
+  },
+  "verified_manifest_payloads": 13,
+  "actual_DLL": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll",
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-fresh-root-publication-proof-r1/ViciOne.ServiceBus.JobService.dll",
+    "sha256": "cedf76266141704b6f68170c6bc138fc2c8c768ce0276c13947f1287c793ae7f"
+  },
+  "actual_XML": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.xml",
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-fresh-root-publication-proof-r1/ViciOne.ServiceBus.JobService.xml",
+    "sha256": "f5b3adc289f10e2700e7678a591e60190a3c1c06703a799c496d560934238218"
+  },
+  "nupkg": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/packages-package249-jobservice-doc3-r1/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+    "sha256": "912305914341155dec36e34af9d017400c386c0a4803f7d48af30db9acadc764",
+    "bytes": 217187,
+    "CRC_unique_names_NuSpec_net10_DLL_XML_current_frozen_exact": true
+  },
+  "strict_build": {
+    "phase": "package249-jobservice-doc3-strict-build-r1",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T21:59:29.091205+00:00",
+    "completed_utc": "2026-10-05T21:59:38.311865+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package249-jobservice-doc3-strict-build-r1.log",
+    "log_sha256": "dadde1667677b9162bf8a6bd01432a0326c94628778f2ac7f8bdf63afc8083df"
+  },
+  "fresh_pack": {
+    "phase": "package249-jobservice-doc3-fresh-pack-r1",
+    "command": [
+      "dotnet",
+      "pack",
+      "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "-o",
+      "artifacts/packages-package249-jobservice-doc3-r1"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T22:01:01.077910+00:00",
+    "completed_utc": "2026-10-05T22:01:03.867878+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package249-jobservice-doc3-fresh-pack-r1.log",
+    "log_sha256": "6545706efb5fc21d0da2242accc87d74b0f20ddbcb67d0a8e3b5c61a01cf5c24"
+  },
+  "corrected_XML_elements": 7,
+  "source3_non_XML_and_public_declarations_byte_equal": true,
+  "added_original_ids": [
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.FinalizeJobAsync(ViciOne.ServiceBus.IPublishEndpoint,System.Guid,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.FinalizeRecurringJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.String,System.Threading.CancellationToken)",
+    "T:ViciOne.ServiceBus.JobService.JobDistributionContext"
+  ],
+  "new_local_contracts": {
+    "82": "Guards publishEndpoint then nonempty jobId and returns the exact publisher Task for IFinalizeJob with the supplied cancellation token. Completion acknowledges the configured publication operation, without a persistence-removal acknowledgement.",
+    "110": "Async guards publishEndpoint and jobName, computes the deterministic recurring identifier, awaits publication of IFinalizeJob with the supplied cancellation token, then returns that identifier. Completion does not acknowledge removal from persistence.",
+    "511": "Sealed distribution context snapshots the job name, effective concurrency, allocation and instance wrappers, and shallow metadata dictionaries through read-only collections. Metadata values retain object references and may remain mutable; subsequent capacity liveness and deep immutability are not guaranteed."
+  },
+  "rebound_existing_original_rows": [
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.CancelJobAsync(ViciOne.ServiceBus.IPublishEndpoint,System.Guid,System.String,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.GetJobStateAsync(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.IGetJobState},System.Guid,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.RetryJobAsync(ViciOne.ServiceBus.IPublishEndpoint,System.Guid,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.Guid,``0,System.Action{ViciOne.ServiceBus.JobService.ISetPropertyCollection},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,``0,System.Action{ViciOne.ServiceBus.JobService.ISetPropertyCollection},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,``0,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},System.Guid,``0,System.Action{ViciOne.ServiceBus.JobService.ISetPropertyCollection},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},``0,System.Action{ViciOne.ServiceBus.JobService.ISetPropertyCollection},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},``0,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobAsync``1(ViciOne.ServiceBus.IRequestClient{``0},``0,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobFromValuesAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.Guid,System.Object,System.Action{ViciOne.ServiceBus.JobService.ISetPropertyCollection},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobFromValuesAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.Object,System.Action{ViciOne.ServiceBus.JobService.ISetPropertyCollection},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobFromValuesAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.Object,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobFromValuesAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},System.Guid,System.Object,System.Action{ViciOne.ServiceBus.JobService.ISetPropertyCollection},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobFromValuesAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},System.Object,System.Action{ViciOne.ServiceBus.JobService.ISetPropertyCollection},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobFromValuesAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},System.Object,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.SubmitJobFromValuesAsync``1(ViciOne.ServiceBus.IRequestClient{``0},System.Object,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.AddOrUpdateRecurringJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.String,``0,System.Action{ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator},System.Action{ViciOne.ServiceBus.JobService.ISetPropertyCollection},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.AddOrUpdateRecurringJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.String,``0,System.Action{ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.AddOrUpdateRecurringJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.String,``0,System.String,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.AddOrUpdateRecurringJobAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},System.String,``0,System.Action{ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator},System.Action{ViciOne.ServiceBus.JobService.ISetPropertyCollection},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.AddOrUpdateRecurringJobAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},System.String,``0,System.Action{ViciOne.ServiceBus.JobService.IRecurringJobScheduleConfigurator},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.AddOrUpdateRecurringJobAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},System.String,``0,System.String,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.CancelRecurringJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.String,System.String,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.RunRecurringJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.String,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.ScheduleJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.DateTimeOffset,``0,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.ScheduleJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.Guid,System.DateTimeOffset,``0,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.ScheduleJobAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},System.DateTimeOffset,``0,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.ScheduleJobAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},System.Guid,System.DateTimeOffset,``0,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.ScheduleJobFromValuesAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.DateTimeOffset,System.Object,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.ScheduleJobFromValuesAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.Guid,System.DateTimeOffset,System.Object,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.ScheduleJobFromValuesAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},System.DateTimeOffset,System.Object,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.ScheduleJobFromValuesAsync``1(ViciOne.ServiceBus.IRequestClient{ViciOne.ServiceBus.Contracts.JobService.ISubmitJob{``0}},System.Guid,System.DateTimeOffset,System.Object,System.Threading.CancellationToken)",
+    "P:ViciOne.ServiceBus.JobService.JobDistributionContext.ActiveAllocations",
+    "P:ViciOne.ServiceBus.JobService.JobDistributionContext.ConcurrentJobLimit",
+    "P:ViciOne.ServiceBus.JobService.JobDistributionContext.JobTypeName",
+    "P:ViciOne.ServiceBus.JobService.JobDistributionContext.JobTypeProperties",
+    "P:ViciOne.ServiceBus.JobService.JobDistributionContext.ServiceInstances",
+    "T:ViciOne.ServiceBus.JobService.JobServiceExtensions",
+    "T:ViciOne.ServiceBus.JobService.RecurringJobExtensions"
+  ],
+  "historical_previous_bindings_preserved": true,
+  "remaining_Job_original_holds": 14,
+  "master_before_sha256": "71cff1ccca78ee7553d1ba9dfb55713e3bb51d589401105efdecc6ca1fd96605",
+  "canonical_accounting": {
+    "original_canonical_denominator": 18569,
+    "historical_current_r2_basic_denominator": 18598,
+    "original_canonical_accepted": 15720,
+    "historical_current_r2_new_canonical_accepted": 29,
+    "current_canonical_accepted": 15749,
+    "accessor_sidecar_accepted": 833,
+    "master_unique_rows": 16582,
+    "master_declared_accepted_count_field": 16582,
+    "master_declared_denominator_field": 18598,
+    "original_canonical_remaining": 2849,
+    "historical_current_r2_canonical_remaining": 2849,
+    "sidecar_get": 690,
+    "sidecar_set": 137,
+    "sidecar_original_parent_unique": 714,
+    "sidecar_unmapped": 0,
+    "original_duplicate_keys": 0,
+    "master_duplicate_keys": 0,
+    "evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE168_MASTER_CANONICAL_ACCESSOR_ROOT_COUNT_PRECISION_R1.json",
+      "sha256": "8be3bc5b82aa65ef6139de4002fd86789583c9a4fbf28a3d88f73496afc12b57"
+    },
+    "historical_current_r2_inventory_is_not_fresh168_metadata": true,
+    "latest_source_append_evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE253_F147_JOB_DOC3_FRESH_PUBLICATION_ROOT_REPAIR_ACCEPTANCE_R1.json"
+    },
+    "latest_subtotal_precision": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE170_MASTER548_ACCESSOR_AND_SPEC_LINECOUNT_ROOT_PRECISION_R1.json",
+      "sha256": "b41b9e72fbcf91d8314f882fd469a082ce1582994f521ffcb04718adf615fdd2"
+    },
+    "sidecar_event_add": 3,
+    "sidecar_event_remove": 3
+  },
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package253-jobservice-doc3-root-before-r1",
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "final_gates": "Pending remaining API repairs and final23 modules/31packs/18journeys/4executedconsumers.",
+  "master_after_sha256": "98fded294a6c9e4344a2a8602ee1ee7d61974acaf80963f56c8d80af5b99c96a"
+}

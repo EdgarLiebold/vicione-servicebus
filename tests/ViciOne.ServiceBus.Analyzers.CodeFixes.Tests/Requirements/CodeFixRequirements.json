@@ -89,5 +89,19 @@
     "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CodeFixProviderContractTests",
     "testMethod": "CodeFixAssembly_ExportsOnlyTheTwoCodeFixProviders"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX",
+    "variantKey": "additional-token-preserves-existing-token-position",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CancellationTokenForwardingBoundaryTests",
+    "testMethod": "AdditionalTokenOverload_PreservesExistingArgumentAndBindsPipelineTokenAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX",
+    "variantKey": "escaped-keyword-context-token-produces-binding-compilation",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CancellationTokenForwardingBoundaryTests",
+    "testMethod": "KeywordContextParameter_ProducesCompilableEscapedTokenForwardingAsync"
   }
 ]

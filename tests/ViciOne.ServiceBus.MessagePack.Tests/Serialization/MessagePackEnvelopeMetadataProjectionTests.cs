@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Time.Testing;
+using MessagePack;
+using System.Text.Json;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.MessagePack.Serialization;
 using ViciOne.ServiceBus.Metadata;
@@ -89,6 +91,58 @@ public sealed class MessagePackEnvelopeMetadataProjectionTests
         envelope.Update(context);
 
         Assert.Equal(ProjectionTime - TimeSpan.FromSeconds(30), envelope.ExpirationTime);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [RequirementCoverage("REQ-VSB-ENVELOPE-METADATA-PROJECTION", "messagepack-host-cache-roundtrip-preserves-wire-mutability")]
+    public void HostSnapshots_RoundTripWithoutSerializingTheirReadOnlyMode(int sourceKind)
+    {
+        HostInfo source = sourceKind switch
+        {
+            0 => HostMetadataCache.Host,
+            1 => HostMetadataCache.Empty,
+            2 => new BusHostInfo
+            {
+                MachineName = "wire-machine", ProcessName = "wire-process", ProcessId = 79,
+                Assembly = "wire-assembly", AssemblyVersion = "2.3.4",
+                FrameworkVersion = "wire-framework", ViciOneServiceBusVersion = "wire-servicebus",
+                OperatingSystemVersion = "wire-os"
+            },
+            _ => throw new ArgumentOutOfRangeException(nameof(sourceKind))
+        };
+        var expectedWire = new BusHostInfo
+        {
+            MachineName = source.MachineName, ProcessName = source.ProcessName, ProcessId = source.ProcessId,
+            Assembly = source.Assembly, AssemblyVersion = source.AssemblyVersion,
+            FrameworkVersion = source.FrameworkVersion, ViciOneServiceBusVersion = source.ViciOneServiceBusVersion,
+            OperatingSystemVersion = source.OperatingSystemVersion
+        };
+        Assert.IsType<BusHostInfo>(source);
+
+        byte[] actualBytes = MessagePackSerializationRuntime.Serialize<HostInfo>(source);
+        byte[] expectedBytes = MessagePackSerializationRuntime.Serialize<HostInfo>(expectedWire);
+
+        string actualJson = MessagePackSerializer.ConvertToJson(actualBytes, cancellationToken: TestContext.Current.CancellationToken);
+        Assert.Equal(MessagePackSerializer.ConvertToJson(expectedBytes, cancellationToken: TestContext.Current.CancellationToken), actualJson);
+        using var wireJson = JsonDocument.Parse(actualJson);
+        Assert.All(wireJson.RootElement.EnumerateObject(), property =>
+        {
+            Assert.DoesNotContain("readonly", property.Name, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("frozen", property.Name, StringComparison.OrdinalIgnoreCase);
+        });
+        HostInfo restored = MessagePackSerializationRuntime.Deserialize<HostInfo>(actualBytes);
+        var mutable = Assert.IsType<BusHostInfo>(restored);
+        AssertHost(expectedWire, restored);
+        mutable.MachineName = "changed-after-deserialization";
+        mutable.ProcessId = int.MinValue;
+        Assert.Equal("changed-after-deserialization", mutable.MachineName);
+        Assert.Equal(int.MinValue, mutable.ProcessId);
+        AssertHost(expectedWire, source);
+        if (sourceKind < 2)
+            Assert.Same(source, sourceKind == 0 ? HostMetadataCache.Host : HostMetadataCache.Empty);
     }
 
     private sealed record TestMessage(string Value);

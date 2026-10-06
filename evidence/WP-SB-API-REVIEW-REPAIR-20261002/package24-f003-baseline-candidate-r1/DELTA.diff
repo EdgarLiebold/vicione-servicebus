@@ -1,0 +1,161 @@
+--- original
++++ actual
+@@ -583,6 +583,8 @@
+   METHOD public abstract System.Threading.Tasks.Task<T> SendAsync(System.Guid requestId, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken)
+ TYPE interface public ViciOne.ServiceBus.Advanced.IRetryFailureClassification
+   PROPERTY ViciOne.ServiceBus.Advanced.RetryFailureKind RetryFailureKind { public-get[modifiers=abstract];  }
++TYPE interface public ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability
++  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=abstract];  }
+ TYPE interface public ViciOne.ServiceBus.Advanced.IScheduleMessageProvider
+   METHOD public abstract System.Threading.Tasks.Task CancelScheduledSendAsync(System.Guid tokenId, System.Threading.CancellationToken cancellationToken)
+   METHOD public abstract System.Threading.Tasks.Task CancelScheduledSendAsync(System.Uri destinationAddress, System.Guid tokenId, System.Threading.CancellationToken cancellationToken)
+@@ -1262,6 +1264,13 @@
+   METHOD public abstract System.Threading.Tasks.Task SetCompletedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+   PROPERTY System.Boolean IsCompleted { public-get[modifiers=abstract];  }
+   PROPERTY TSaga Saga { public-get[modifiers=abstract];  }
++TYPE enum public ViciOne.ServiceBus.Advanced.ScheduleCancellationMode
++  FIELD public System.Int32 value__
++  FIELD public const ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CallerSpecifiedToken = 2
++  FIELD public const ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CallerSpecifiedTokenWithoutCancellation = 4
++  FIELD public const ViciOne.ServiceBus.Advanced.ScheduleCancellationMode ProviderAssignedToken = 3
++  FIELD public const ViciOne.ServiceBus.Advanced.ScheduleCancellationMode Unknown = 0
++  FIELD public const ViciOne.ServiceBus.Advanced.ScheduleCancellationMode Unsupported = 1
+ TYPE class public ViciOne.ServiceBus.Advanced.SchedulePublishExtensions [static]
+   METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<T>> SchedulePublishAsync<T>(ViciOne.ServiceBus.ConsumeContext context, System.DateTimeOffset dueAt, System.Object values, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
+   METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<T>> SchedulePublishAsync<T>(ViciOne.ServiceBus.ConsumeContext context, System.DateTimeOffset dueAt, System.Object values, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
+@@ -7100,12 +7109,13 @@
+ TYPE class public ViciOne.ServiceBus.Configuration.ServiceBusSubscriptionEndpointBuilder [base=ViciOne.ServiceBus.Configuration.ReceiveEndpointBuilder]
+   CTOR public ViciOne.ServiceBus.Configuration.ServiceBusSubscriptionEndpointBuilder(ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusHostConfiguration hostConfiguration, ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusSubscriptionEndpointConfiguration configuration)
+   METHOD public ViciOne.ServiceBus.AzureServiceBus.ServiceBusReceiveEndpointContext CreateReceiveEndpointContext()
+-TYPE class public ViciOne.ServiceBus.Scheduling.ServiceBusScheduleMessageProvider [interfaces=ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]
++TYPE class public ViciOne.ServiceBus.Scheduling.ServiceBusScheduleMessageProvider [interfaces=ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability&ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]
+   CTOR public ViciOne.ServiceBus.Scheduling.ServiceBusScheduleMessageProvider(ViciOne.ServiceBus.ConsumeContext consumeContext)
+   CTOR public ViciOne.ServiceBus.Scheduling.ServiceBusScheduleMessageProvider(ViciOne.ServiceBus.ISendEndpointProvider sendEndpointProvider)
+   METHOD public virtual final System.Threading.Tasks.Task CancelScheduledSendAsync(System.Guid tokenId, System.Threading.CancellationToken cancellationToken)
+   METHOD public virtual final System.Threading.Tasks.Task CancelScheduledSendAsync(System.Uri destinationAddress, System.Guid tokenId, System.Threading.CancellationToken cancellationToken)
+   METHOD public virtual final System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<T>> ScheduleSendAsync<T>(System.Uri destinationAddress, System.DateTimeOffset dueAt, T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
++  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=virtual final];  }
+ 
+ ASSEMBLY ViciOne.ServiceBus.Courier VERSION=1.0.0.0
+ TYPE class public ViciOne.ServiceBus.ActivityCompensationException [sealed,base=ViciOne.ServiceBus.CourierException]
+@@ -7619,6 +7629,10 @@
+ TYPE class public Microsoft.Extensions.DependencyInjection.EntityFrameworkReliableMessagingServiceCollectionExtensions [static]
+   METHOD public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddEntityFrameworkReliableStore<TBus,TDbContext>(Microsoft.Extensions.DependencyInjection.IServiceCollection services) [generic=TBus{flags=ReferenceTypeConstraint;constraints=[ViciOne.ServiceBus.IBus];nullable=[1];unmanaged=false},TDbContext{flags=None;constraints=[Microsoft.EntityFrameworkCore.DbContext];nullable=[0];unmanaged=false}]
+   METHOD public static ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator UseEntityFramework<TDbContext>(ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator configurator) [generic=TDbContext{flags=None;constraints=[Microsoft.EntityFrameworkCore.DbContext];nullable=[0];unmanaged=false}]
++TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkInboxIdentityMigration [static]
++  METHOD public static System.Guid CreateConsumerId<TConsumer,TMessage>(System.String persistenceIdentity, System.Uri inputAddress) [generic=TConsumer{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false},TMessage{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
++  METHOD public static System.Guid CreateLegacyConsumerId<TConsumer,TMessage>(System.String legacyRuntimeBusKey, System.Uri inputAddress) [generic=TConsumer{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false},TMessage{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
++  METHOD public static System.Threading.Tasks.Task<ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult> MigrateAsync(Microsoft.EntityFrameworkCore.DbContext context, System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration> mappings, System.Collections.Generic.IEnumerable<System.Guid> explicitlyUnchangedConsumerIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+ TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkMessageJournalConfigurationExtensions [static]
+   METHOD public static ViciOne.ServiceBus.Advanced.ConnectHandle UseEntityFrameworkCoreMessageJournal(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator configurator, Microsoft.EntityFrameworkCore.DbContextOptions contextOptions, System.String tableName, ViciOne.ServiceBus.MessageJournal.IMessageJournalPolicy policy, ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits storeLimits, ViciOne.ServiceBus.MessageJournal.MessageJournalOptions journalOptions, System.String schemaName = null [nullability={read=Nullable;write=Nullable}])
+   METHOD public static ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator UseEntityFramework<TDbContext>(ViciOne.ServiceBus.Configuration.IMessageJournalConfigurator configurator, Microsoft.EntityFrameworkCore.DbContextOptions<TDbContext> contextOptions [nullability={read=NotNull;write=NotNull;arguments=[{read=Unknown;write=Unknown}]}], System.String tableName, ViciOne.ServiceBus.MessageJournal.MessageJournalStoreLimits storeLimits, System.String schemaName = null [nullability={read=Nullable;write=Nullable}]) [generic=TDbContext{flags=None;constraints=[Microsoft.EntityFrameworkCore.DbContext];nullable=[0];unmanaged=false}]
+@@ -7689,6 +7703,30 @@
+   METHOD public abstract System.String GetOutboxStatement(Microsoft.EntityFrameworkCore.DbContext context)
+   METHOD public abstract System.String GetRowLockStatement<T>(Microsoft.EntityFrameworkCore.DbContext context) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
+   METHOD public abstract System.String GetRowLockStatement<T>(Microsoft.EntityFrameworkCore.DbContext context, params System.String[] propertyNames) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
++TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration [sealed,interfaces=System.IEquatable<ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration>]
++  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration(System.Guid LegacyConsumerId, System.Guid StableConsumerId)
++  METHOD public System.Void Deconstruct(out System.Guid LegacyConsumerId, out System.Guid StableConsumerId)
++  METHOD public ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration <Clone>$()
++  METHOD public override System.Boolean Equals(System.Object obj [nullability={read=Nullable;write=Nullable}])
++  METHOD public override System.Int32 GetHashCode()
++  METHOD public override System.String ToString()
++  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration left [nullability={read=Nullable;write=Nullable}], ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration right [nullability={read=Nullable;write=Nullable}])
++  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration left [nullability={read=Nullable;write=Nullable}], ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration right [nullability={read=Nullable;write=Nullable}])
++  METHOD public virtual final System.Boolean Equals(ViciOne.ServiceBus.EntityFrameworkCore.InboxConsumerIdentityMigration other [nullability={read=Nullable;write=Nullable}])
++  PROPERTY System.Guid LegacyConsumerId { public-get; public-init[return-modreq=[System.Runtime.CompilerServices.IsExternalInit];return-modopt=[]]; }
++  PROPERTY System.Guid StableConsumerId { public-get; public-init[return-modreq=[System.Runtime.CompilerServices.IsExternalInit];return-modopt=[]]; }
++TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult [sealed,interfaces=System.IEquatable<ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult>]
++  CTOR public ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult(System.Int64 InboxRowsMigrated, System.Int64 OutboxMessagesReparented)
++  METHOD public System.Void Deconstruct(out System.Int64 InboxRowsMigrated, out System.Int64 OutboxMessagesReparented)
++  METHOD public ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult <Clone>$()
++  METHOD public override System.Boolean Equals(System.Object obj [nullability={read=Nullable;write=Nullable}])
++  METHOD public override System.Int32 GetHashCode()
++  METHOD public override System.String ToString()
++  METHOD public static System.Boolean op_Equality(ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult left [nullability={read=Nullable;write=Nullable}], ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult right [nullability={read=Nullable;write=Nullable}])
++  METHOD public static System.Boolean op_Inequality(ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult left [nullability={read=Nullable;write=Nullable}], ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult right [nullability={read=Nullable;write=Nullable}])
++  METHOD public virtual final System.Boolean Equals(ViciOne.ServiceBus.EntityFrameworkCore.InboxIdentityMigrationResult other [nullability={read=Nullable;write=Nullable}])
++  PROPERTY System.Int64 InboxRowsMigrated { public-get; public-init[return-modreq=[System.Runtime.CompilerServices.IsExternalInit];return-modopt=[]]; }
++  PROPERTY System.Int64 OutboxMessagesReparented { public-get; public-init[return-modreq=[System.Runtime.CompilerServices.IsExternalInit];return-modopt=[]]; }
+ TYPE class public ViciOne.ServiceBus.EntityFrameworkCore.InboxState
+   CTOR public ViciOne.ServiceBus.EntityFrameworkCore.InboxState()
+   PROPERTY System.Byte[] RowVersion { public-get; public-set; } [nullability={read=Nullable;write=Nullable;element={read=NotNull;write=NotNull}}]
+@@ -7958,6 +7996,7 @@
+   CTOR public ViciOne.ServiceBus.EventHubs.Configuration.EventHubReceiveEndpointConfigurator(ViciOne.ServiceBus.EventHubs.Configuration.IEventHubHostConfiguration hostConfiguration, ViciOne.ServiceBus.Transports.IBusInstance busInstance, ViciOne.ServiceBus.Configuration.IReceiveEndpointConfiguration endpointConfiguration, ViciOne.ServiceBus.EventHubs.Configuration.IHostSettings hostSettings, ViciOne.ServiceBus.EventHubs.Configuration.IStorageSettings storageSettings, System.String eventHubName, System.String consumerGroup)
+   METHOD protected override System.Boolean IsAlreadyConfigured()
+   METHOD public ViciOne.ServiceBus.Transports.ReceiveEndpoint Build()
++  METHOD public override System.Collections.Generic.IEnumerable<ViciOne.ServiceBus.Configuration.ValidationResult> Validate()
+   METHOD public override ViciOne.ServiceBus.Transports.ReceiveEndpointContext CreateReceiveEndpointContext()
+   METHOD public virtual final System.Void OnPartitionClosing(System.Func<Azure.Messaging.EventHubs.Processor.PartitionClosingEventArgs,System.Threading.Tasks.Task> handler)
+   METHOD public virtual final System.Void OnPartitionInitializing(System.Func<Azure.Messaging.EventHubs.Processor.PartitionInitializingEventArgs,System.Threading.Tasks.Task> handler)
+@@ -13884,12 +13923,13 @@
+   PROPERTY System.String Role { public-get; public-set; } [nullability={read=Nullable;write=Nullable}]
+   PROPERTY System.String Schema { public-get; public-set; } [nullability={read=Nullable;write=Nullable}]
+   PROPERTY System.String Username { public-get; public-set; } [nullability={read=Nullable;write=Nullable}]
+-TYPE class public ViciOne.ServiceBus.Scheduling.SqlScheduleMessageProvider [interfaces=ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]
++TYPE class public ViciOne.ServiceBus.Scheduling.SqlScheduleMessageProvider [interfaces=ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability&ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]
+   CTOR public ViciOne.ServiceBus.Scheduling.SqlScheduleMessageProvider(ViciOne.ServiceBus.ConsumeContext context)
+   CTOR public ViciOne.ServiceBus.Scheduling.SqlScheduleMessageProvider(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration hostConfiguration, ViciOne.ServiceBus.ISendEndpointProvider sendEndpointProvider)
+   METHOD public virtual final System.Threading.Tasks.Task CancelScheduledSendAsync(System.Guid tokenId, System.Threading.CancellationToken cancellationToken)
+   METHOD public virtual final System.Threading.Tasks.Task CancelScheduledSendAsync(System.Uri destinationAddress, System.Guid tokenId, System.Threading.CancellationToken cancellationToken)
+   METHOD public virtual final System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<T>> ScheduleSendAsync<T>(System.Uri destinationAddress, System.DateTimeOffset dueAt, T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
++  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=virtual final];  }
+ TYPE interface public ViciOne.ServiceBus.SqlTransport.ClientContext [interfaces=ViciOne.ServiceBus.Advanced.PipeContext]
+   METHOD public abstract System.Threading.Tasks.Task PublishAsync<T>(System.String topicName, ViciOne.ServiceBus.SqlTransport.SqlMessageSendContext<T> context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
+   METHOD public abstract System.Threading.Tasks.Task SendAsync<T>(System.String queueName, ViciOne.ServiceBus.SqlTransport.SqlMessageSendContext<T> context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
+@@ -18897,13 +18937,14 @@
+   METHOD public static System.Threading.Tasks.Task<T> RetryAsync<T>(ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy retryPolicy, System.Func<System.Threading.Tasks.Task<T>> retryMethod [nullability={read=NotNull;write=NotNull;arguments=[{read=NotNull;write=NotNull;arguments=[{read=Nullable;write=Nullable}]}]}], System.Boolean log, System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) [generic=T{flags=None;constraints=[];nullable=[2];unmanaged=false}] [return-nullability={read=NotNull;write=NotNull;arguments=[{read=Nullable;write=Nullable}]}]
+   METHOD public static System.Threading.Tasks.Task<T> RetryAsync<T>(ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy retryPolicy, System.Func<System.Threading.Tasks.Task<T>> retryMethod [nullability={read=NotNull;write=NotNull;arguments=[{read=NotNull;write=NotNull;arguments=[{read=Nullable;write=Nullable}]}]}], System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) [generic=T{flags=None;constraints=[];nullable=[2];unmanaged=false}] [return-nullability={read=NotNull;write=NotNull;arguments=[{read=Nullable;write=Nullable}]}]
+   METHOD public static System.Threading.Tasks.Task<T> RetryAsync<T>(ViciOne.ServiceBus.Advanced.Middleware.IRetryPolicy retryPolicy, System.Func<System.Threading.Tasks.Task<T>> retryMethod [nullability={read=NotNull;write=NotNull;arguments=[{read=NotNull;write=NotNull;arguments=[{read=Nullable;write=Nullable}]}]}], System.TimeProvider timeProvider, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) [generic=T{flags=None;constraints=[];nullable=[2];unmanaged=false}] [return-nullability={read=NotNull;write=NotNull;arguments=[{read=Nullable;write=Nullable}]}]
+-TYPE class public ViciOne.ServiceBus.Scheduling.BaseScheduleMessageProvider [abstract,interfaces=ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]
++TYPE class public ViciOne.ServiceBus.Scheduling.BaseScheduleMessageProvider [abstract,interfaces=ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability&ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]
+   CTOR protected ViciOne.ServiceBus.Scheduling.BaseScheduleMessageProvider()
+   METHOD protected abstract System.Threading.Tasks.Task CancelScheduledSendAsync(System.Guid tokenId, System.Uri destinationAddress [nullability={read=Nullable;write=Nullable}], System.Threading.CancellationToken cancellationToken)
+   METHOD protected abstract System.Threading.Tasks.Task ScheduleSendAsync(ViciOne.ServiceBus.Scheduling.ScheduleMessage message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<ViciOne.ServiceBus.Scheduling.ScheduleMessage>> pipe, System.Threading.CancellationToken cancellationToken)
+   METHOD public virtual final System.Threading.Tasks.Task CancelScheduledSendAsync(System.Guid tokenId, System.Threading.CancellationToken cancellationToken)
+   METHOD public virtual final System.Threading.Tasks.Task CancelScheduledSendAsync(System.Uri destinationAddress, System.Guid tokenId, System.Threading.CancellationToken cancellationToken)
+   METHOD public virtual final System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<T>> ScheduleSendAsync<T>(System.Uri destinationAddress, System.DateTimeOffset dueAt, T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
++  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=virtual];  }
+ TYPE class public ViciOne.ServiceBus.Scheduling.CancelScheduledMessageCommand [sealed,interfaces=ViciOne.ServiceBus.Scheduling.CancelScheduledMessage]
+   CTOR public ViciOne.ServiceBus.Scheduling.CancelScheduledMessageCommand()
+   CTOR public ViciOne.ServiceBus.Scheduling.CancelScheduledMessageCommand(System.Guid tokenId, System.DateTimeOffset timestamp)
+@@ -18925,11 +18966,12 @@
+   PROPERTY System.String ScheduleId { public-get[modifiers=virtual final]; protected-set; }
+   PROPERTY System.String TimeZoneId { public-get[modifiers=virtual final]; protected-set; }
+   PROPERTY ViciOne.ServiceBus.Scheduling.MissedEventPolicy MisfirePolicy { public-get[modifiers=virtual final]; protected-set; }
+-TYPE class public ViciOne.ServiceBus.Scheduling.DelayedScheduleMessageProvider [sealed,interfaces=ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]
++TYPE class public ViciOne.ServiceBus.Scheduling.DelayedScheduleMessageProvider [sealed,interfaces=ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability&ViciOne.ServiceBus.Advanced.IScheduleMessageProvider]
+   CTOR public ViciOne.ServiceBus.Scheduling.DelayedScheduleMessageProvider(ViciOne.ServiceBus.ISendEndpointProvider sendEndpointProvider, System.TimeProvider timeProvider = null [nullability={read=Nullable;write=Nullable}])
+   METHOD public virtual final System.Threading.Tasks.Task CancelScheduledSendAsync(System.Guid tokenId, System.Threading.CancellationToken cancellationToken)
+   METHOD public virtual final System.Threading.Tasks.Task CancelScheduledSendAsync(System.Uri destinationAddress, System.Guid tokenId, System.Threading.CancellationToken cancellationToken)
+   METHOD public virtual final System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage<T>> ScheduleSendAsync<T>(System.Uri destinationAddress, System.DateTimeOffset dueAt, T message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<T>> pipe, System.Threading.CancellationToken cancellationToken) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
++  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=virtual final];  }
+ TYPE class public ViciOne.ServiceBus.Scheduling.EndpointRecurringMessageScheduler [sealed,interfaces=ViciOne.ServiceBus.Advanced.IRecurringMessageScheduler]
+   CTOR public ViciOne.ServiceBus.Scheduling.EndpointRecurringMessageScheduler(ViciOne.ServiceBus.ISendEndpoint sendEndpoint, ViciOne.ServiceBus.Advanced.Topology.IBusTopology busTopology = null [nullability={read=Nullable;write=Nullable}], System.TimeProvider timeProvider = null [nullability={read=Nullable;write=Nullable}])
+   CTOR public ViciOne.ServiceBus.Scheduling.EndpointRecurringMessageScheduler(ViciOne.ServiceBus.ISendEndpointProvider sendEndpointProvider, System.Uri schedulerAddress, ViciOne.ServiceBus.Advanced.Topology.IBusTopology busTopology = null [nullability={read=Nullable;write=Nullable}], System.TimeProvider timeProvider = null [nullability={read=Nullable;write=Nullable}])
+@@ -18961,7 +19003,8 @@
+   CTOR public ViciOne.ServiceBus.Scheduling.EndpointScheduleMessageProvider(System.Func<System.Threading.CancellationToken,System.Threading.Tasks.Task<ViciOne.ServiceBus.ISendEndpoint>> schedulerEndpoint, System.TimeProvider timeProvider = null [nullability={read=Nullable;write=Nullable}])
+   METHOD protected override System.Threading.Tasks.Task CancelScheduledSendAsync(System.Guid tokenId, System.Uri destinationAddress [nullability={read=Nullable;write=Nullable}], System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+   METHOD protected override System.Threading.Tasks.Task ScheduleSendAsync(ViciOne.ServiceBus.Scheduling.ScheduleMessage message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<ViciOne.ServiceBus.Scheduling.ScheduleMessage>> pipe, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+-TYPE class public ViciOne.ServiceBus.Scheduling.MessageScheduler [sealed,interfaces=ViciOne.ServiceBus.Advanced.IAdvancedMessageScheduler]
++  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=override];  }
++TYPE class public ViciOne.ServiceBus.Scheduling.MessageScheduler [sealed,interfaces=ViciOne.ServiceBus.Advanced.IAdvancedMessageScheduler&ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability]
+   CTOR public ViciOne.ServiceBus.Scheduling.MessageScheduler(ViciOne.ServiceBus.Advanced.IScheduleMessageProvider provider, ViciOne.ServiceBus.Advanced.Topology.IBusTopology busTopology, System.TimeProvider timeProvider = null [nullability={read=Nullable;write=Nullable}])
+   METHOD public virtual final System.Threading.Tasks.Task CancelScheduledPublishAsync(System.Type messageType, System.Guid tokenId, System.Threading.CancellationToken cancellationToken)
+   METHOD public virtual final System.Threading.Tasks.Task CancelScheduledPublishAsync<T>(System.Guid tokenId, System.Threading.CancellationToken cancellationToken) [generic=T{flags=ReferenceTypeConstraint;constraints=[];nullable=[1];unmanaged=false}]
+@@ -18987,6 +19030,7 @@
+   METHOD public virtual final System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage> ScheduleSendAsync(System.Uri destinationAddress, System.DateTimeOffset dueAt, System.Object message, System.Type messageType, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken)
+   METHOD public virtual final System.Threading.Tasks.Task<ViciOne.ServiceBus.ScheduledMessage> ScheduleSendAsync(System.Uri destinationAddress, System.DateTimeOffset dueAt, System.Object message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext> pipe, System.Threading.CancellationToken cancellationToken)
+   PROPERTY System.TimeProvider TimeProvider { public-get[modifiers=virtual final];  }
++  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=virtual final];  }
+ TYPE class public ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand [sealed,interfaces=ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessage]
+   CTOR public ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand()
+   CTOR public ViciOne.ServiceBus.Scheduling.PauseScheduledRecurringMessageCommand(System.String scheduleId, System.String scheduleGroup, System.DateTimeOffset timestamp)
+@@ -19023,6 +19067,7 @@
+   CTOR public ViciOne.ServiceBus.Scheduling.PublishScheduleMessageProvider(ViciOne.ServiceBus.IPublishEndpoint publishEndpoint, System.TimeProvider timeProvider = null [nullability={read=Nullable;write=Nullable}])
+   METHOD protected override System.Threading.Tasks.Task CancelScheduledSendAsync(System.Guid tokenId, System.Uri destinationAddress [nullability={read=Nullable;write=Nullable}], System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+   METHOD protected override System.Threading.Tasks.Task ScheduleSendAsync(ViciOne.ServiceBus.Scheduling.ScheduleMessage message, ViciOne.ServiceBus.Advanced.Middleware.IPipe<ViciOne.ServiceBus.Advanced.SendContext<ViciOne.ServiceBus.Scheduling.ScheduleMessage>> pipe, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
++  PROPERTY ViciOne.ServiceBus.Advanced.ScheduleCancellationMode CancellationMode { public-get[modifiers=override];  }
+ TYPE class public ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand [sealed,interfaces=ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessage]
+   CTOR public ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand()
+   CTOR public ViciOne.ServiceBus.Scheduling.ResumeScheduledRecurringMessageCommand(System.String scheduleId, System.String scheduleGroup, System.DateTimeOffset timestamp)

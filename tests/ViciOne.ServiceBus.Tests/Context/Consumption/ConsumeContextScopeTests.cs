@@ -29,12 +29,15 @@ public sealed class ConsumeContextScopeTests
         TimeSpan faultedDuration = TimeSpan.FromMilliseconds(23);
         using var cancellation = new CancellationTokenSource();
 
-        Assert.Same(
-            sourceProxy.NotificationTask,
-            scope.NotifyConsumedAsync(consumedDuration, "consumer", cancellation.Token));
-        Assert.Same(
-            sourceProxy.NotificationTask,
-            scope.NotifyFaultedAsync(faultedDuration, "consumer", failure, cancellation.Token));
+        Task consumed = scope.NotifyConsumedAsync(consumedDuration, "consumer", cancellation.Token);
+        Task faulted = scope.NotifyFaultedAsync(faultedDuration, "consumer", failure, cancellation.Token);
+        Assert.Same(sourceProxy.NotificationTask, consumed);
+        Assert.Same(sourceProxy.NotificationTask, faulted);
+        Assert.False(consumed.IsCompleted);
+        Assert.False(faulted.IsCompleted);
+        sourceProxy.CompleteNotification();
+        Assert.True(consumed.IsCompletedSuccessfully);
+        Assert.True(faulted.IsCompletedSuccessfully);
 
         Assert.Collection(
             sourceProxy.NotificationInvocations,
@@ -237,7 +240,11 @@ public sealed class ConsumeContextScopeTests
 
         public SerializerContext SerializerContext { get; set; } = null!;
 
-        public Task NotificationTask { get; } = Task.CompletedTask;
+        readonly TaskCompletionSource _notification = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task NotificationTask => _notification.Task;
+
+        public void CompleteNotification() => _notification.SetResult();
 
         public List<NotificationInvocation> NotificationInvocations { get; } = [];
 

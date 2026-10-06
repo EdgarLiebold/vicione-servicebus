@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T18:09:06.940420+00:00",
+  "finding": "F-SB-API-176",
+  "kind": "Existing naming finding reopened for new test helper regressions, no new finding ID",
+  "actual_failure_capture": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package532-actual-unit-failure1-frozen-capture-r1/REPORT.json",
+    "sha256": "c6c1a04590b5054392caff27707cbb12af794f238249f398e402bc30ee091627",
+    "MAN": "c8da01b53b0ccf0c602c7d1d6a2093316f33954dfc1df4c077ed3a72d294904e"
+  },
+  "actual_counts": {
+    "total": 13460,
+    "passed": 13459,
+    "failed": 1,
+    "skipped": 0
+  },
+  "JOIN": "8af5f2",
+  "helper_declarations": 13,
+  "test_files": 10,
+  "architecture_oracle": "AsyncApiConventionArchitectureTests.EveryMethodName_MatchesItsAsynchronousContractBidirectionally",
+  "product_API_signature_changes": 0,
+  "before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package532-actual-unit-failure1-state-registration-before-r1/MANIFEST.json",
+    "sha256": "c28ded93d330b03d3b7bd4559b2dcf2d03adce700fc32d9924c0452108fc7103"
+  },
+  "whole_API_closed": false,
+  "grade": null
+}

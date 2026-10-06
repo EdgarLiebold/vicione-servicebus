@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
@@ -144,19 +145,11 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
         if (IsArgumentImplicitlyDeclared(operation, cancellationTokenSymbol, out parameterIndex, out parameterName))
             return true;
 
-        var overload = FindOverloadWithAdditionalParameterOfType(operation.TargetMethod, cancellationTokenSymbol);
+        var overload = FindOverloadWithAdditionalParameterOfType(operation.TargetMethod, cancellationTokenSymbol, out parameterIndex);
         if (overload == null)
             return false;
 
-        for (var i = 0; i < overload.Parameters.Length; i++)
-        {
-            if (!SymbolEqualityComparer.Default.Equals(overload.Parameters[i].Type, cancellationTokenSymbol))
-                continue;
-            parameterName ??= overload.Parameters[i].Name;
-            parameterIndex = i;
-            break;
-        }
-
+        parameterName = overload.Parameters[parameterIndex].Name;
         return true;
 
 
@@ -186,17 +179,26 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
         }
     }
 
-    static IMethodSymbol? FindOverloadWithAdditionalParameterOfType(IMethodSymbol methodSymbol, ITypeSymbol additionalParameterType)
+    static IMethodSymbol? FindOverloadWithAdditionalParameterOfType(IMethodSymbol methodSymbol, ITypeSymbol additionalParameterType,
+        out int additionalParameterIndex)
     {
         methodSymbol = methodSymbol.OriginalDefinition;
         ImmutableArray<ISymbol> members = methodSymbol.ContainingType.GetMembers(methodSymbol.Name);
 
-        return members.OfType<IMethodSymbol>()
-            .FirstOrDefault(member => HasSameParametersPlus(methodSymbol, member, additionalParameterType));
+        foreach (var member in members.OfType<IMethodSymbol>())
+        {
+            if (HasSameParametersPlus(methodSymbol, member, additionalParameterType, out additionalParameterIndex))
+                return member;
+        }
+
+        additionalParameterIndex = -1;
+        return null;
     }
 
-    static bool HasSameParametersPlus(IMethodSymbol method, IMethodSymbol candidate, ITypeSymbol additionalParameterType)
+    static bool HasSameParametersPlus(IMethodSymbol method, IMethodSymbol candidate, ITypeSymbol additionalParameterType,
+        out int additionalParameterIndex)
     {
+        additionalParameterIndex = -1;
         if (SymbolEqualityComparer.Default.Equals(method, candidate)
             || method.Arity != candidate.Arity
             || candidate.Parameters.Length != method.Parameters.Length + 1)
@@ -221,7 +223,10 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
             }
 
             if (matches)
+            {
+                additionalParameterIndex = addedIndex;
                 return true;
+            }
         }
 
         return false;
@@ -335,7 +340,12 @@ public sealed class CancellationTokenOverloadMethodAnalyzer :
                 if (!IsSymbolAccessibleFromOperation(member, operation))
                     continue;
 
-                var fullPath = availableSymbol.Name + "." + member.Name;
+                var symbolName = availableSymbol.Name;
+                if (SyntaxFacts.GetKeywordKind(symbolName) != SyntaxKind.None
+                    || SyntaxFacts.GetContextualKeywordKind(symbolName) != SyntaxKind.None)
+                    symbolName = "@" + symbolName;
+
+                var fullPath = symbolName + "." + member.Name;
                 paths.Add(fullPath);
             }
         }

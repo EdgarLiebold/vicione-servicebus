@@ -1,0 +1,8 @@
+{
+  "excluded_phase": "package17-f029-public-corrected-build",
+  "compiler_errors": 3,
+  "cause": "missing public Middleware/Operations namespace imports",
+  "product_finding_or_mutant_kill": false,
+  "source_fix": "imports + Probe.CreateScope (public interface direct)",
+  "root_delta_full_read": true
+}

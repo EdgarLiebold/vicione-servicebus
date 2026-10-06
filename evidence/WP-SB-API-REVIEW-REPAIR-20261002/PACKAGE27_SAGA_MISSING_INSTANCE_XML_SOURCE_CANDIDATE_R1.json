@@ -1,0 +1,52 @@
+{
+  "status": "SOURCE_CANDIDATE_XML_ONLY_SAGA_MISSING_INSTANCE_CONTRACT_CORRECTION",
+  "actor": "/root",
+  "utc": "2026-10-03T21:14:10.787927+00:00",
+  "root_personally_FULL_relevant_seven_paths": true,
+  "scope": "Two XML comment-only changes; public signatures and runtime statements unchanged",
+  "source_preflight_peer": "/root/archive_review_continuation",
+  "changed_paths": [
+    "src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IEventCorrelationConfigurator.cs",
+    "src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IMissingInstanceConfigurator.cs"
+  ],
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IEventCorrelationConfigurator.cs",
+      "sha256": "e84e4811b5f3bb9fb004c99868b6ab89d2cc06efe56d315f86414a74b0f210da",
+      "bytes": 5906
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IMissingInstanceConfigurator.cs",
+      "sha256": "371400f80b30ba62cd23a45e37871cc2206dd04ee6c04e018d047ed5040653f1",
+      "bytes": 1713
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/SagaStateMachine/MessageEventCorrelation.cs",
+      "sha256": "e71d2c5582fdf24368a11a63e02c252112b95353a619d6c3ae3f2109992b9019",
+      "bytes": 5244
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/EventMissingInstanceConfigurator.cs",
+      "sha256": "692ad6fb3e8897307d03f9fd90ccfefae92a88631bafa63536c5ac775c52e092",
+      "bytes": 1908
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Saga/AnyExistingSagaPolicy.cs",
+      "sha256": "2cb0880b2f29b3c449e8c9226549ecb06cc451f895e6074d77b26aa3a9c703c6",
+      "bytes": 2871
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Saga/NewOrExistingSagaPolicy.cs",
+      "sha256": "c63ca35ce82bd8f21c90c97ff6a22fd4ed10981336146c30d256a43d771ea1ea",
+      "bytes": 3335
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/StateMachineInterfaceType.ViciOneServiceBusEventCorrelationConfigurator.cs",
+      "sha256": "46add3fac37d0f4fa53152a1a79121b0ce84e2a62b884c7041deacd6a4798bd9",
+      "bytes": 12339
+    }
+  ],
+  "native_emitted_XML_pending": true,
+  "final_peer_bind_pending": true,
+  "global_API_Aplus": false
+}

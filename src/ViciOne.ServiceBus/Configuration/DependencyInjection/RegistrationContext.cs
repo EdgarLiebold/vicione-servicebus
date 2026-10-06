@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -61,10 +62,17 @@ internal class RegistrationContext :
         if (!Selector.TryGetRegistration<IConsumerRegistration>(_provider, typeof(T), out var consumer))
             throw new ArgumentException($"The consumer type was not found: {TypeCache.GetShortName(typeof(T))}", nameof(T));
 
-        if (configure != null)
-            consumer.AddConfigureAction<T>((_, cfg) => configure.Invoke(cfg));
+        if (configure == null)
+            consumer.Configure(configurator, this);
+        else
+        {
+            if (consumer is not ConsumerRegistration<T> registration)
+                throw EndpointRegistrationConfiguration.Unsupported(consumer, this, "Consumer configuration");
 
-        consumer.Configure(configurator, this);
+            EndpointRegistrationConfiguration.RequireDefaultDispatch(consumer, typeof(IConsumerRegistration),
+                typeof(ConsumerRegistration<T>), this, "Consumer configuration");
+            registration.Configure(configurator, this, configure);
+        }
         _configuredTypes.Add(typeof(T));
     }
 

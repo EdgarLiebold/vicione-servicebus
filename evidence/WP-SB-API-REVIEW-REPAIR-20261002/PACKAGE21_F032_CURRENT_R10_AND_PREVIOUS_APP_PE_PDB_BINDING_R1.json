@@ -1,0 +1,268 @@
+{
+  "status": "ROOT_ACTUAL_CURRENT_PRODUCT17_AND_CURRENT_PREVIOUS_PUBLIC_APPS_PE_PDB_SOURCE_CHECKSUM_BOUND",
+  "utc": "2026-10-03T15:04:31.869942+00:00",
+  "inspector": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-adversarial/verify_pdb.py",
+    "sha256": "26527e1c6caadb47808dd705098a4da6690d37bbe46770b5ab4950c5e2d1bc78",
+    "root_personally_FULL_code_read": true,
+    "extra_checks": "Root independent inline debug entry/stream bounds and uniqueness, RSDS age1, #Pdb GUID+timestamp equality also for embedded branch, all Source documents SHA256 GUID"
+  },
+  "actual_apps": [
+    {
+      "kind": "actual_consumer_app",
+      "owner": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032",
+      "dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/bin/Release/net10.0/FilterOwnership.PublicConsumer.dll",
+      "dll_sha256": "f8875b8495cb12652be5a3aded69c28c9ee7db33ea62c01f2981bd3708a91690",
+      "pdb_kind": "SIDECAR_PORTABLE_PDB_CODEVIEW_ID_MATCHED",
+      "pdb_sha256": "9a8cc225ce0c896393bcaad2c2b3f3c9b984af5802c590923868f6a1087f7ec2",
+      "own_source_bindings": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/Cases.cs",
+          "sha256": "bb81c24d2d6c748c2b7fc9af724fc7135eb0fe8dd7abbcc110d1b6816337f5c1",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/Models.cs",
+          "sha256": "f5ccde4ddbfe734daab28d648f933c8fd558367598f752ebb4c42365012f1a4c",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/OwnedDisposal.cs",
+          "sha256": "d3341a506f5687f179d0da7ebe3532f595de11144ae193e8792663fe4f4816f0",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/OwnedLifetime.cs",
+          "sha256": "a5b663bfbbb613393f0c001f4db6d57ac1d75a95dfe3e8cd2ab4d43e0b3eeb62",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/Program.cs",
+          "sha256": "85266ef793a78358387362782b2510243846165b8a76920b5516f73dfdf483c0",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032/RuntimeOwner.cs",
+          "sha256": "cce4cf4f083bfc62ce514728b1769312278a9325de321688a09a9bd49bc68740",
+          "actual_matched_PDB_document": true
+        }
+      ],
+      "own_sources_count": 6,
+      "generated_document_count": 3,
+      "generated_source_personal_FULL_claim": false,
+      "codeview_guid_stamp_age1_verified": true
+    },
+    {
+      "kind": "actual_consumer_app",
+      "owner": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10",
+      "dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10/bin/Release/net10.0/FilterOwnership.PublicConsumer.dll",
+      "dll_sha256": "bc2345187eebc5915068cba47ffb91141f634b0f6abdeb99a355f2754cbae242",
+      "pdb_kind": "SIDECAR_PORTABLE_PDB_CODEVIEW_ID_MATCHED",
+      "pdb_sha256": "b9a02baf873ddef3f32b15dcd4da1ab556eef2fc70258871a4f25aecfa9fcb56",
+      "own_source_bindings": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10/Cases.cs",
+          "sha256": "41cb77ce4c0f5222cf5157368b45b4752d6380c0fad95d5b1d76a278d96f81b0",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10/Models.cs",
+          "sha256": "f5ccde4ddbfe734daab28d648f933c8fd558367598f752ebb4c42365012f1a4c",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10/OwnedDisposal.cs",
+          "sha256": "d3341a506f5687f179d0da7ebe3532f595de11144ae193e8792663fe4f4816f0",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10/OwnedLifetime.cs",
+          "sha256": "a5b663bfbbb613393f0c001f4db6d57ac1d75a95dfe3e8cd2ab4d43e0b3eeb62",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10/Program.cs",
+          "sha256": "85266ef793a78358387362782b2510243846165b8a76920b5516f73dfdf483c0",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10/RuntimeOwner.cs",
+          "sha256": "cce4cf4f083bfc62ce514728b1769312278a9325de321688a09a9bd49bc68740",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10/SupplementalCases.cs",
+          "sha256": "ef0ca98929c35b562e32297d3f53a4b121a6f9dec17069bfbf74ac4729d8f3f4",
+          "actual_matched_PDB_document": true
+        }
+      ],
+      "own_sources_count": 7,
+      "generated_document_count": 3,
+      "generated_source_personal_FULL_claim": false,
+      "codeview_guid_stamp_age1_verified": true
+    },
+    {
+      "kind": "actual_consumer_app",
+      "owner": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10-previous",
+      "dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10-previous/bin/Release/net10.0/FilterOwnership.PublicConsumer.dll",
+      "dll_sha256": "88a30857abffb817ea9ddc5a8809620312d7f69e91a7899679f797b962d68d95",
+      "pdb_kind": "SIDECAR_PORTABLE_PDB_CODEVIEW_ID_MATCHED",
+      "pdb_sha256": "96a0da01198661fbbeaada896bf36a1fe12bfcef1ecf90068c1514eba9cddda3",
+      "own_source_bindings": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10-previous/Cases.cs",
+          "sha256": "41cb77ce4c0f5222cf5157368b45b4752d6380c0fad95d5b1d76a278d96f81b0",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10-previous/Models.cs",
+          "sha256": "f5ccde4ddbfe734daab28d648f933c8fd558367598f752ebb4c42365012f1a4c",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10-previous/OwnedDisposal.cs",
+          "sha256": "d3341a506f5687f179d0da7ebe3532f595de11144ae193e8792663fe4f4816f0",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10-previous/OwnedLifetime.cs",
+          "sha256": "a5b663bfbbb613393f0c001f4db6d57ac1d75a95dfe3e8cd2ab4d43e0b3eeb62",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10-previous/Program.cs",
+          "sha256": "85266ef793a78358387362782b2510243846165b8a76920b5516f73dfdf483c0",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10-previous/RuntimeOwner.cs",
+          "sha256": "cce4cf4f083bfc62ce514728b1769312278a9325de321688a09a9bd49bc68740",
+          "actual_matched_PDB_document": true
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10-previous/SupplementalCases.cs",
+          "sha256": "ef0ca98929c35b562e32297d3f53a4b121a6f9dec17069bfbf74ac4729d8f3f4",
+          "actual_matched_PDB_document": true
+        }
+      ],
+      "own_sources_count": 7,
+      "generated_document_count": 3,
+      "generated_source_personal_FULL_claim": false,
+      "codeview_guid_stamp_age1_verified": true
+    }
+  ],
+  "selected_product_PE_PDB": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "dll_sha256": "78d166b2d084393c32665ab27f1f82871a9e80f8febdcc80e8c5d67936a49322",
+      "pdb_kind": "EMBEDDED_MPDB",
+      "pdb_sha256": "95ddca1325d8880b05ae41616a7743d5629b4349e8b95b3326238e51d69284f1",
+      "codeview_guid_stamp_age1_verified": true
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Abstractions",
+      "dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package21-f032-r10/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "dll_sha256": "c651e3df23a4e4f9c2006a3a61617edfbb38e840eeedaba2aeac195e7acc62c4",
+      "pdb_kind": "EMBEDDED_MPDB",
+      "pdb_sha256": "7e3afaaedf3c25e904fcb76dca2bf4fcb6f6fe504522350b8eeaccea2f6ef4fa",
+      "codeview_guid_stamp_age1_verified": true
+    }
+  ],
+  "product_source17": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/CreatedConsumeScopeContext.cs",
+      "sha256": "960f4d8bd125f708985768b090d11ab50e43b2e649ef053a3e1475c00d90e49f",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ExistingConsumeScopeContext.cs",
+      "sha256": "e16fa6e1b81e6d626542a5265e051df20b24991c9ab134ca6a1e59a9fb730f79",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/CreatedExecuteScopeContext.cs",
+      "sha256": "90f3aee95fb2cbe554ed01b9df7fbebae1ff7e58688690ccc7d44d26e2cb7b84",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ExistingExecuteScopeContext.cs",
+      "sha256": "3318b1e19001be122c635f646c52fa37ab18b2f149363f2313665434e1f9e86d",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/CreatedCompensateScopeContext.cs",
+      "sha256": "ba5afcb473870f9b92ce2f8f5e2efabc7f40140fc8f378b41cd541855a7ed3c3",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ExistingCompensateScopeContext.cs",
+      "sha256": "d4c2a5ed546eedd5882c0c4efc84a5d59469f45b9df74f8735941c5b4434a287",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ConsumeScopeLifetime.cs",
+      "sha256": "45cfc82eaa2b5896449331bb0ffa97e87934cefc20278598b0d2eda814bcd66f",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/FilterScopeProvider.cs",
+      "sha256": "a9e243b844a43544b4563066051c01f38a1c8f2e8f6e4d1c887627185bbabcc7",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ScopedConsumeFilter.cs",
+      "sha256": "5fa3d762fc58b742a9245deaba75075007e4b3b9343c37dfa212d7a4ba45995c",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ScopedFilter.cs",
+      "sha256": "bafa94a4559526d8b4b0788821953e48bbe9d39767fa7534cd20825d89e67e9e",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ScopedExecuteFilter.cs",
+      "sha256": "1ee459e3e4d6816a368d276eeb1227ebf9c3d7f497c88a7c0d9d10287da95724",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ScopedCompensateFilter.cs",
+      "sha256": "b1adbff5e18bf32e57f3f96ac40fedc76f24af8068afb4feff18c526fce00dfa",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/IConsumeScopeContext.cs",
+      "sha256": "e87623ae4b021c2479f419d6a4c37eb1fc209f14ea4550348c4e36922b82548c",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/IExecuteScopeContext.cs",
+      "sha256": "673dba25dd2437b20ca2225e084131816e109a27205f99b2e9e84746e3e1d7e6",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ICompensateScopeContext.cs",
+      "sha256": "6649d06b8e1dd2d4dce1674d7ecaca474cb22fe6760c61095447b3e1dd58dd97",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/IFilterScopeContext.cs",
+      "sha256": "9c76ac0a853728c6bed2c960f6ea3fc9f66ce62829b1dfce73c4ed017751df2e",
+      "actual_selected_embedded_PDB_document_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedServiceLifetime.cs",
+      "sha256": "97116c4a83389a921a52075a5de26929600ad6791a0e049f072ec173cd8cb0af",
+      "actual_selected_embedded_PDB_document_matches": true
+    }
+  ],
+  "current_source_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE21_F032_PRODUCT_SOURCE_FREEZE_R1.json",
+    "sha256": "e4925bf67fcc2b789ec9654a4845905fa8cf1ffe4c261951d55a2a23d0e1b1f2"
+  },
+  "previous_product_prior_source_binding_pending": true,
+  "saga_app_not_built_yet": true,
+  "mutant_PDB_stage_pending": true,
+  "whole_Core_source_FULL_from_PDB": false,
+  "whole_API_closed": false
+}

@@ -1,0 +1,44 @@
+{
+  "utc": "2026-10-04T20:40:22.780376+00:00",
+  "decision": "APPLY_SOURCE_APPROVED_TWO_FINITE_FUTURE_TIMING_ORIGINAL_ORACLES",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package135-future-fault-timing-order-original2-oracles-proposed-r1/REPORT.json",
+    "sha256": "b5ad1380d43b5bcdd04ffe72dd504f18926f2b69b7f423ab5952afc2eb6de977"
+  },
+  "author_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package135-future-fault-timing-order-original2-oracles-proposed-r1/MANIFEST.json",
+    "sha256": "ad3cca05d590026e788b4c423c93b4c6e8ad1a9d3394102aa2134258aef17ac9"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package135-future-timing2-independent-scanner-r1/REPORT.json",
+    "sha256": "ed0d5d45dc2e331b359ac1698d39f23b2cb845e58cc502c564e9a4cc78239b58"
+  },
+  "peer_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package135-future-timing2-independent-scanner-r1/MANIFEST.json",
+    "sha256": "18636e443ee7bbf235db08e9d72ed5678bfa38645a86142ae063361b62478bc0"
+  },
+  "test_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Futures/FutureEventAdmissionContractTests.cs",
+    "sha256": "7797ae8c129c56381fea8bf6d7543cc98339a320f2a0feba344256517a00f41e"
+  },
+  "test_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Futures/FutureEventAdmissionContractTests.cs",
+    "sha256": "0a301c9d10843186f514df15382fb8250a4789cc57da5d17d5ce1b3cdc32bf2a"
+  },
+  "requirements_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "sha256": "054474dd84cc57c5914d98c4d9565ef58891aa40686c75bee3961a0f18b29611"
+  },
+  "requirements_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "sha256": "fe69588ca7c1164898a8065af7f15312843da639496bd770b22f20555355bd76"
+  },
+  "requirements_rows_before": 4593,
+  "requirements_rows_after": 4594,
+  "source_unchanged": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+    "sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a"
+  },
+  "root_personal_reads": "Whole352L proposedTest18727b+2e73f2; exactdelta812b3b; actualFuturetimingXML+Source94ca66 and wholeowner9d5704/95089a/ecbfb1; wholePeer7be2ef/author eae171/research c6f7fc. Existing8cases reverseexact verified by independentpeer; new2 compare actual deferredhealthy vs documented immediateafterdeferred with finiteFactoryCount failure, joinedrealSagaeventtasks and exact stored-ref/replay.",
+  "scope": "No new Finding until actual original10 class native qualification. No product mutation, SDK inactive;140artifactFreeze ea67e075 acknowledged before test mutation."
+}

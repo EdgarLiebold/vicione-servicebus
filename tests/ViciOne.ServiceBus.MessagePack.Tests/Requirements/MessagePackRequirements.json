@@ -1,115 +1,800 @@
 [
-  { "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE", "variantKey": "single-options-owner", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests", "testMethod": "ProductAssembly_NamesSerializerOnlyInsideTheOptionsOwner" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE", "variantKey": "scanner-positive-control", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests", "testMethod": "Scanner_SeesTheRealOwnerWhenExclusionIsDisabled" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE", "variantKey": "scanner-reference-shapes", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests", "testMethod": "Scanner_RejectsEveryStaticSerializerReferenceShape" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE", "variantKey": "owner-qualified-by-namespace", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests", "testMethod": "Scanner_DoesNotExcludeAnOwnerSimpleNameInAnotherNamespace" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE", "variantKey": "owner-exclusion-is-exact", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests", "testMethod": "Scanner_ExcludesOnlyTheQualifiedOwner" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE", "variantKey": "scanner-negative-control", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests", "testMethod": "Scanner_AcceptsAnAssemblyWithoutSerializerReferences" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES", "variantKey": "proxy-roundtrip", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "InterfaceContract_RoundTripsAllAccessorShapes" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "variantKey": "same-type-compiled-once", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "SameConcreteType_IsCompiledOnce" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "variantKey": "complete-concrete-type-boundary", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "Cache_RejectsMissingFactoriesAndNonConcreteContractImplementations" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "variantKey": "complete-invoker-boundary", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "Invoker_RequiresEveryFormatterOperation" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "variantKey": "concurrent-cold-cache", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "ConcurrentColdCache_CompilesOneSharedEntryAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "variantKey": "one-entry-per-concrete-type", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "DifferentConcreteTypes_OwnDifferentCompiledEntries" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "variantKey": "failed-compilation-is-cached", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "FailedCompilation_IsCachedForTheConcreteType" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "variantKey": "weak-key", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "Cache_DoesNotKeepItsOwnTypeKeyAlive" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "variantKey": "collectibility-control", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "CollectibilityControl_ReleasesAnUncachedType" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES", "variantKey": "runtime-concrete-formatter", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "RuntimeConcreteFormatter_PreservesBothImplementations" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES", "variantKey": "parallel-roundtrip", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "ParallelRoundTrips_PreserveEveryValue" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-SECURITY", "variantKey": "untrusted-data-mode", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests", "testMethod": "Options_UseUntrustedDataSecurity" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-RESOLVER", "variantKey": "owned-contracts-coexist-with-fallback", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests", "testMethod": "Options_ResolveOwnedContractsWithoutHidingFallbackContracts" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-SECURITY", "variantKey": "hardened-dictionary-read", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests", "testMethod": "HardenedOptions_ReadTheOverlayDictionaryShape" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-SERIALIZER", "variantKey": "runtime-boundaries-and-nil", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests", "testMethod": "RuntimeOperations_ValidateOwnedInputsAndPreserveNil" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CLONE", "variantKey": "native-payload-byte-identity", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests", "testMethod": "NativeEnvelopeClone_PreservesPayloadBytesWithoutAliasing" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING", "variantKey": "serialized-forwarding-headers-remain-bound", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests", "testMethod": "ForwardedBody_RejectsLaterApplicationHeaderChangesAndPreservesInheritedHeaders" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CLONE", "variantKey": "repeated-clone-remains-readable", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests", "testMethod": "RepeatedClone_DoesNotAddEncodingLayers" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CLONE", "variantKey": "overlay-form-preserved", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests", "testMethod": "OverlayEnvelopeClone_PreservesDictionaryFormAndNativeFlag" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CLONE", "variantKey": "foreign-envelope-encoded", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests", "testMethod": "ForeignEnvelopeClone_EncodesTheForeignMessageOnce" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CLONE", "variantKey": "metadata-copied-without-aliasing", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests", "testMethod": "Clone_CopiesMetadataAndOwnsItsHeaderDictionary" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-ENVELOPE", "variantKey": "binary-only-payload-contract", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests", "testMethod": "EnvelopePayload_IsStaticallyRestrictedToOwnedBinaryContent" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-ENVELOPE", "variantKey": "complete-constructor-boundary", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests", "testMethod": "EnvelopeConstruction_RejectsEveryMissingOwnedInput" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-ENVELOPE", "variantKey": "serialized-payload-snapshot", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests", "testMethod": "SerializedPayloadConstruction_OwnsItsInputBytes" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-ENVELOPE", "variantKey": "metadata-and-body-roundtrip", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "EnvelopeRoundTrip_PreservesMessageAndTransportMetadata" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-SCALARS", "variantKey": "binary-concrete-and-interface", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "BinaryPayloads_RoundTripForConcreteAndInterfaceContracts" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-SCALARS", "variantKey": "date-time-kind", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "DateTimeValues_RoundTripWithTheirKinds" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CONTRACTLESS", "variantKey": "private-setters-no-default-constructor", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "ContractlessObjects_RoundTripWithoutPublicDefaultConstructorOrSetters" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-SCALARS", "variantKey": "precision-floor", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "DecimalNearPrecisionFloor_RoundTripsExactly" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-COLLECTIONS", "variantKey": "arrays-sets-enumerables-and-duplicate-keys", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "CollectionShapes_RoundTripWithoutChangingTheirSemantics" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-SCALARS", "variantKey": "char-and-nullable-char", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "CharacterValues_RoundTrip" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-EDGE-SHAPES", "variantKey": "empty-object-and-empty-collections", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "EmptyShapes_RoundTripWithoutInventingContent" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-XML-PAYLOAD", "variantKey": "opaque-text-and-bytes", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "XmlPayload_RemainsOpaqueTextAndBytes" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA", "variantKey": "external-reference", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "MessageData_RoundTripsItsExternalReferenceAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA", "variantKey": "inline-text-value", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "MessageData_RoundTripsItsInlineTextAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-GRAPHS", "variantKey": "nested-list-array-and-pairs", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "ObjectGraphShapes_RoundTripWithZeroOneAndManyMembers" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-GRAPHS", "variantKey": "read-only-interface-collections", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "ReadOnlyInterfaceCollections_RoundTripThroughTheirDeclaredContract" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-JOBS", "variantKey": "nested-interface-job-payload", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackDomainContractTests", "testMethod": "JobPayload_RoundTripsThroughDictionaryAndRestoresNestedInterfacesAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-COURIER", "variantKey": "nested-routing-slip-without-product-coupling", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackDomainContractTests", "testMethod": "RoutingSlip_RoundTripsNestedContractsWithoutMessagePackDependingOnCourier" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FAULTS", "variantKey": "serializable-and-nonserializable-exceptions", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackDomainContractTests", "testMethod": "ReceiveFault_RoundTripsExceptionInformation" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION", "variantKey": "factory-shares-serializer", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests", "testMethod": "Factory_UsesOneSerializerForBothDirections" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION", "variantKey": "concurrent-first-access-shares-serializer", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests", "testMethod": "Factory_ConcurrentFirstAccessCreatesOneSerializerAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION", "variantKey": "content-type-descriptors-are-independent", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests", "testMethod": "Factory_ContentTypeDescriptorsAreIndependent" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES", "variantKey": "in-memory-pipeline-dispatch", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests", "testMethod": "InterfaceMessage_DispatchesThroughTheConfiguredInMemoryPipelineAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-REDELIVERY", "variantKey": "messagepack-envelope-remains-consumable", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests", "testMethod": "DelayedRedelivery_PreservesMessageTypeAndReachesTheSecondDeliveryAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-BODY", "variantKey": "owned-snapshot-single-serialization-and-read-only-accessors", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests", "testMethod": "EveryAccessorOrder_DescribesTheSameOwnedBody" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-BODY", "variantKey": "constructor-boundaries", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests", "testMethod": "Constructors_RejectMissingMessagesAtTheirOwningBoundaries" },
-  { "requirementId": "REQ-VSB-MESSAGE-BODY-CONTRACT", "variantKey": "messagepack-concrete-type-set", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests", "testMethod": "EveryConcreteMessagePackMessageBody_IsInTheExplicitContractSet" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING", "variantKey": "expired-discarded-before-serialization", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests", "testMethod": "ExpiredForwardedMessage_IsDiscardedBeforeMessagePackSerializationAsync" },
-  { "requirementId": "REQ-VSB-ENVELOPE-METADATA-PROJECTION", "variantKey": "messagepack-matches-system-text-json", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeMetadataProjectionTests", "testMethod": "SendContext_ProjectsTheSameMetadataForBothWireFormats" },
-  { "requirementId": "REQ-VSB-ENVELOPE-METADATA-PROJECTION", "variantKey": "messagepack-one-utc-read", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeMetadataProjectionTests", "testMethod": "MissingSentTime_CapturesExactlyOneUtcInstant" },
-  { "requirementId": "REQ-VSB-ENVELOPE-METADATA-PROJECTION", "variantKey": "messagepack-expired-overlay-has-no-grace", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeMetadataProjectionTests", "testMethod": "Overlay_UsesTheExactExpiredInstantWithoutSerializerFallback" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-MIXED-SERIALIZERS", "variantKey": "json-request-messagepack-response", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests", "testMethod": "MixedSerializers_PreserveEachDirectionAndExactContentTypeAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION", "variantKey": "body-owned-capacity-boundaries-single-pass", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.PayloadAdmissionMessagePackTests", "testMethod": "BodyOwnedCapacityLimit_EnforcesExactBoundariesWithoutReserializingAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION", "variantKey": "envelope-owned-capacity-boundaries-single-pass", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.PayloadAdmissionMessagePackTests", "testMethod": "EnvelopeOwnedCapacityLimit_EnforcesExactBoundariesWithoutReserializingAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION", "variantKey": "copied-envelope-exact-body-and-wire-snapshot", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.PayloadAdmissionMessagePackTests", "testMethod": "CopiedEnvelope_AdmitsItsEmbeddedBodyAndPreservesTheWireBytesAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION", "variantKey": "copied-envelope-embedded-body-one-byte-over-limit", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.PayloadAdmissionMessagePackTests", "testMethod": "CopiedEnvelope_RejectsTheFullEmbeddedBodyOneByteOverLimitAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION", "variantKey": "copied-envelope-ambiguous-or-trailing-content-rejected", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.PayloadAdmissionMessagePackTests", "testMethod": "CopiedEnvelope_RejectsAmbiguousOrTrailingContentBeforeTransportAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-DURABLE-SEND", "variantKey": "typed-facade-canonical-envelope-and-idempotent-retry", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests", "testMethod": "TypedDurableSender_UsesTheConfiguredMessagePackEnvelopeWithoutReserializationAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-PUBLIC-API", "variantKey": "minimal-greenfield-surface", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests", "testMethod": "PublicApi_ContainsOnlyCompositionAndTheAdvancedFactory" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION", "variantKey": "missing-owner-fails-at-extension-boundary", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests", "testMethod": "ConfigurationExtensions_RejectMissingConfiguratorsWithExactOwnership" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-DEPENDENCIES", "variantKey": "no-optional-capability-coupling", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests", "testMethod": "ProductAssembly_DoesNotReferenceOptionalCourierOrJobServiceCapabilities" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "variantKey": "resolver-concurrent-shared-instance", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "Resolver_ConcurrentCallsReturnOneSharedFormatterAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "variantKey": "resolver-weak-key", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "Resolver_DoesNotKeepCollectibleClosedGenericContractAlive" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES", "variantKey": "null-roundtrip", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "InterfaceContract_RoundTripsNull" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-RESOLVER", "variantKey": "all-owned-contract-mappings", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests", "testMethod": "ServiceBusResolver_OwnsEveryDeclaredContractMapping" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-RESOLVER", "variantKey": "concrete-contracts-defer-to-fallback", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests", "testMethod": "ServiceBusResolver_DefersConcreteContractsToTheCompositeFallback" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA", "variantKey": "inline-bytes-and-address", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessageDataFormatterTests", "testMethod": "InlineBytes_RoundTripWithTheirReferenceAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA", "variantKey": "inline-object-and-address", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessageDataFormatterTests", "testMethod": "InlineObject_RestoresItsValueAndReferenceAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA", "variantKey": "empty-handle", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessageDataFormatterTests", "testMethod": "EmptyHandle_RoundTripsAsTheSharedEmptyValue" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA", "variantKey": "null-normalizes-to-empty-handle", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessageDataFormatterTests", "testMethod": "NullHandle_RoundTripsAsTheSharedEmptyValue" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING", "variantKey": "reusable-serializer-isolates-eager-owned-bodies", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests", "testMethod": "ReusedForwardingSerializer_IsolatesEveryEagerOwnedBody" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING", "variantKey": "transport-body-accepts-preserved-contract-types", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests", "testMethod": "TransportBody_PreservesForwardedContractTypesDifferentFromTheLocalMessageType" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING", "variantKey": "overlay-survives-payload-admission", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests", "testMethod": "OverlayPayload_RemainsReadableWhenPayloadAdmissionIsActive" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING", "variantKey": "recursive-case-insensitive-overlay-parity", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests", "testMethod": "Overlay_MatchesNamesCaseInsensitivelyAndRecursivelyMergesObjectsAndArrays" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-SERIALIZATION", "variantKey": "null-and-value-bodies", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackObjectSerializationTests", "testMethod": "SerializeObject_ProducesAnEmptyBodyForNullAndMessagePackForAValue" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-SERIALIZATION", "variantKey": "reference-input-forms", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackObjectSerializationTests", "testMethod": "DeserializeObject_HandlesEveryReferenceInputForm" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-SERIALIZATION", "variantKey": "value-input-forms", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackObjectSerializationTests", "testMethod": "DeserializeObject_HandlesEveryValueInputForm" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-SERIALIZATION", "variantKey": "blank-text-is-absent", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackObjectSerializationTests", "testMethod": "DeserializeObject_TreatsBlankTextAsAnAbsentValue" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "outer-envelope-failure-is-observable", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "Deserialize_RejectsMalformedEnvelopeBytes" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "missing-arguments-have-exact-ownership", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "Deserialize_RejectsMissingArgumentsWithExactOwnership" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "unsupported-and-malformed-contracts-return-false", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "TryGetMessage_ReturnsFalseForUnsupportedAndMalformedContracts" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "cancellation-remains-observable", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "TryGetMessage_DoesNotConvertCancellationIntoAnUnsupportedContract" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "non-null-envelope-payload", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "SerializerContext_RejectsEveryMissingOwnedInputAndPayload" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "dictionary-and-explicit-contract-projection", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "SerializerContext_ProjectsDictionariesAndExplicitContractSets" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-PUBLIC-API", "variantKey": "complete-configuration-overload-matrix", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests", "testMethod": "ConfigurationApi_ExposesTheCompleteOverloadMatrixWithReviewedDefaults" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION", "variantKey": "endpoint-deserializer-registration", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests", "testMethod": "EndpointDeserializer_RegistersTheFactoryAndForwardsTheDefaultSelection" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION", "variantKey": "bus-deserializer-registration", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests", "testMethod": "BusDeserializer_RegistersTheFactoryAndForwardsTheDefaultSelection" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION", "variantKey": "endpoint-bidirectional-registration", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests", "testMethod": "EndpointSerializer_RegistersOneSharedFactoryForBothDirections" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION", "variantKey": "bus-bidirectional-registration", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests", "testMethod": "BusSerializer_RegistersOneSharedFactoryForBothDirections" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-BODY", "variantKey": "base64-body-and-null-boundary", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "Base64Body_PreservesBytesAndRejectsMissingText" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-BODY", "variantKey": "transport-text-carrier-normalization", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "TransportTextCarrier_NormalizesDirectAndProviderWrappedBase64WithTheSelectedSerializer" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-DIAGNOSTICS", "variantKey": "provider-and-content-type", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "Probe_ReportsTheMessagePackProviderAndExactContentType" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-SERIALIZER", "variantKey": "send-and-probe-boundaries", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests", "testMethod": "Serializer_RejectsMissingSendAndProbeContextsWithExactOwnership" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING", "variantKey": "typed-overlay-preserves-existing-properties", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "TypedForwardingSerializer_OverlaysReplacementValuesAndPreservesTheRemainingPayload" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING", "variantKey": "overlay-creates-missing-payload", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests", "testMethod": "Overlay_CreatesAPayloadWhenTheEnvelopeHasNoMessage" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING", "variantKey": "owned-input-boundaries", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests", "testMethod": "ForwardingSerializer_RejectsEveryMissingOwnedInput" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES", "variantKey": "declared-concrete-null-roundtrip", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "DeclaredConcreteMapping_RoundTripsNull" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES", "variantKey": "declared-concrete-runtime-type-guard", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests", "testMethod": "DeclaredConcreteMapping_RejectsAnotherImplementation" },
-  { "requirementId": "REQ-VSB-BODY-CROSS-OWNER", "variantKey": "messagepack-forward-message-pipe-success", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests", "testMethod": "ForwardAsync_PreservesTheMessagePackEnvelopeAndBinaryPayloadAsync" },
-  { "requirementId": "REQ-VSB-MESSAGEPACK-REQUIREMENTS", "variantKey": "projection-matches-compiled-metadata", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Requirements.RequirementCoverageProjectionTests", "testMethod": "MessagePackRequirements_MatchCompiledRequirementMetadata" }
-  ,{ "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "nested-pure-versus-mixed-cancellation-callback", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "TryGetMessage_PropagatesOnlyPureNestedCancellationFromDeserializationCallbacks" }
-  ,{ "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "cyclic-non-cancellation-branch-is-not-cancellation", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "TryGetMessage_CyclicBusinessBranchCannotTurnAnAggregateIntoCancellation" }
-  ,{ "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "shared-cancellation-leaf-remains-cancellation", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "TryGetMessage_SharedCancellationLeafIsNotMistakenForACycle" }
-  ,{ "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "cancellation-with-business-inner-is-mixed", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "TryGetMessage_CancellationWithBusinessInnerIsNotPureCancellation" }
-  ,{ "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "empty-aggregate-prevents-false-cancellation", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "TryGetMessage_EmptyAggregateBranchCannotTurnIntoCancellation" }
-  ,{ "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION", "variantKey": "throwing-base-exception-prevents-false-cancellation", "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests", "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests", "testMethod": "TryGetMessage_ThrowingBaseExceptionBranchCannotTurnIntoCancellation" }
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE",
+    "variantKey": "single-options-owner",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests",
+    "testMethod": "ProductAssembly_NamesSerializerOnlyInsideTheOptionsOwner"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE",
+    "variantKey": "scanner-positive-control",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests",
+    "testMethod": "Scanner_SeesTheRealOwnerWhenExclusionIsDisabled"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE",
+    "variantKey": "scanner-reference-shapes",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests",
+    "testMethod": "Scanner_RejectsEveryStaticSerializerReferenceShape"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE",
+    "variantKey": "owner-qualified-by-namespace",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests",
+    "testMethod": "Scanner_DoesNotExcludeAnOwnerSimpleNameInAnotherNamespace"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE",
+    "variantKey": "owner-exclusion-is-exact",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests",
+    "testMethod": "Scanner_ExcludesOnlyTheQualifiedOwner"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-ARCHITECTURE",
+    "variantKey": "scanner-negative-control",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Architecture.MessagePackSerializerBoundaryTests",
+    "testMethod": "Scanner_AcceptsAnAssemblyWithoutSerializerReferences"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES",
+    "variantKey": "proxy-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "InterfaceContract_RoundTripsAllAccessorShapes"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE",
+    "variantKey": "same-type-compiled-once",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "SameConcreteType_IsCompiledOnce"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE",
+    "variantKey": "complete-concrete-type-boundary",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "Cache_RejectsMissingFactoriesAndNonConcreteContractImplementations"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE",
+    "variantKey": "complete-invoker-boundary",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "Invoker_RequiresEveryFormatterOperation"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE",
+    "variantKey": "concurrent-cold-cache",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "ConcurrentColdCache_CompilesOneSharedEntryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE",
+    "variantKey": "one-entry-per-concrete-type",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "DifferentConcreteTypes_OwnDifferentCompiledEntries"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE",
+    "variantKey": "failed-compilation-is-cached",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "FailedCompilation_IsCachedForTheConcreteType"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE",
+    "variantKey": "weak-key",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "Cache_DoesNotKeepItsOwnTypeKeyAlive"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE",
+    "variantKey": "collectibility-control",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "CollectibilityControl_ReleasesAnUncachedType"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES",
+    "variantKey": "runtime-concrete-formatter",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "RuntimeConcreteFormatter_PreservesBothImplementations"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES",
+    "variantKey": "parallel-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "ParallelRoundTrips_PreserveEveryValue"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-SECURITY",
+    "variantKey": "untrusted-data-mode",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests",
+    "testMethod": "Options_UseUntrustedDataSecurity"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-RESOLVER",
+    "variantKey": "owned-contracts-coexist-with-fallback",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests",
+    "testMethod": "Options_ResolveOwnedContractsWithoutHidingFallbackContracts"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-SECURITY",
+    "variantKey": "hardened-dictionary-read",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests",
+    "testMethod": "HardenedOptions_ReadTheOverlayDictionaryShape"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-SERIALIZER",
+    "variantKey": "runtime-boundaries-and-nil",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests",
+    "testMethod": "RuntimeOperations_ValidateOwnedInputsAndPreserveNil"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CLONE",
+    "variantKey": "native-payload-byte-identity",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests",
+    "testMethod": "NativeEnvelopeClone_PreservesPayloadBytesWithoutAliasing"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING",
+    "variantKey": "serialized-forwarding-headers-remain-bound",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests",
+    "testMethod": "ForwardedBody_RejectsLaterApplicationHeaderChangesAndPreservesInheritedHeaders"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CLONE",
+    "variantKey": "repeated-clone-remains-readable",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests",
+    "testMethod": "RepeatedClone_DoesNotAddEncodingLayers"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CLONE",
+    "variantKey": "overlay-form-preserved",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests",
+    "testMethod": "OverlayEnvelopeClone_PreservesDictionaryFormAndNativeFlag"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CLONE",
+    "variantKey": "foreign-envelope-encoded",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests",
+    "testMethod": "ForeignEnvelopeClone_EncodesTheForeignMessageOnce"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CLONE",
+    "variantKey": "metadata-copied-without-aliasing",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests",
+    "testMethod": "Clone_CopiesMetadataAndOwnsItsHeaderDictionary"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-ENVELOPE",
+    "variantKey": "binary-only-payload-contract",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests",
+    "testMethod": "EnvelopePayload_IsStaticallyRestrictedToOwnedBinaryContent"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-ENVELOPE",
+    "variantKey": "complete-constructor-boundary",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests",
+    "testMethod": "EnvelopeConstruction_RejectsEveryMissingOwnedInput"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-ENVELOPE",
+    "variantKey": "serialized-payload-snapshot",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeTests",
+    "testMethod": "SerializedPayloadConstruction_OwnsItsInputBytes"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-ENVELOPE",
+    "variantKey": "metadata-and-body-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "EnvelopeRoundTrip_PreservesMessageAndTransportMetadata"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-SCALARS",
+    "variantKey": "binary-concrete-and-interface",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "BinaryPayloads_RoundTripForConcreteAndInterfaceContracts"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-SCALARS",
+    "variantKey": "date-time-kind",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "DateTimeValues_RoundTripWithTheirKinds"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CONTRACTLESS",
+    "variantKey": "private-setters-no-default-constructor",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "ContractlessObjects_RoundTripWithoutPublicDefaultConstructorOrSetters"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-SCALARS",
+    "variantKey": "precision-floor",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "DecimalNearPrecisionFloor_RoundTripsExactly"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-COLLECTIONS",
+    "variantKey": "arrays-sets-enumerables-and-duplicate-keys",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "CollectionShapes_RoundTripWithoutChangingTheirSemantics"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-SCALARS",
+    "variantKey": "char-and-nullable-char",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "CharacterValues_RoundTrip"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-EDGE-SHAPES",
+    "variantKey": "empty-object-and-empty-collections",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "EmptyShapes_RoundTripWithoutInventingContent"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-XML-PAYLOAD",
+    "variantKey": "opaque-text-and-bytes",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "XmlPayload_RemainsOpaqueTextAndBytes"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA",
+    "variantKey": "external-reference",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "MessageData_RoundTripsItsExternalReferenceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA",
+    "variantKey": "inline-text-value",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "MessageData_RoundTripsItsInlineTextAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-GRAPHS",
+    "variantKey": "nested-list-array-and-pairs",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "ObjectGraphShapes_RoundTripWithZeroOneAndManyMembers"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-GRAPHS",
+    "variantKey": "read-only-interface-collections",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "ReadOnlyInterfaceCollections_RoundTripThroughTheirDeclaredContract"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-JOBS",
+    "variantKey": "nested-interface-job-payload",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackDomainContractTests",
+    "testMethod": "JobPayload_RoundTripsThroughDictionaryAndRestoresNestedInterfacesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-COURIER",
+    "variantKey": "nested-routing-slip-without-product-coupling",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackDomainContractTests",
+    "testMethod": "RoutingSlip_RoundTripsNestedContractsWithoutMessagePackDependingOnCourier"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FAULTS",
+    "variantKey": "serializable-and-nonserializable-exceptions",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackDomainContractTests",
+    "testMethod": "ReceiveFault_RoundTripsExceptionInformation"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION",
+    "variantKey": "factory-shares-serializer",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests",
+    "testMethod": "Factory_UsesOneSerializerForBothDirections"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION",
+    "variantKey": "concurrent-first-access-shares-serializer",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests",
+    "testMethod": "Factory_ConcurrentFirstAccessCreatesOneSerializerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION",
+    "variantKey": "content-type-descriptors-are-independent",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests",
+    "testMethod": "Factory_ContentTypeDescriptorsAreIndependent"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES",
+    "variantKey": "in-memory-pipeline-dispatch",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests",
+    "testMethod": "InterfaceMessage_DispatchesThroughTheConfiguredInMemoryPipelineAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-REDELIVERY",
+    "variantKey": "messagepack-envelope-remains-consumable",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests",
+    "testMethod": "DelayedRedelivery_PreservesMessageTypeAndReachesTheSecondDeliveryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-BODY",
+    "variantKey": "owned-snapshot-single-serialization-and-read-only-accessors",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests",
+    "testMethod": "EveryAccessorOrder_DescribesTheSameOwnedBody"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-BODY",
+    "variantKey": "constructor-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests",
+    "testMethod": "Constructors_RejectMissingMessagesAtTheirOwningBoundaries"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGE-BODY-CONTRACT",
+    "variantKey": "messagepack-concrete-type-set",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageBodyTests",
+    "testMethod": "EveryConcreteMessagePackMessageBody_IsInTheExplicitContractSet"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING",
+    "variantKey": "expired-discarded-before-serialization",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests",
+    "testMethod": "ExpiredForwardedMessage_IsDiscardedBeforeMessagePackSerializationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ENVELOPE-METADATA-PROJECTION",
+    "variantKey": "messagepack-matches-system-text-json",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeMetadataProjectionTests",
+    "testMethod": "SendContext_ProjectsTheSameMetadataForBothWireFormats"
+  },
+  {
+    "requirementId": "REQ-VSB-ENVELOPE-METADATA-PROJECTION",
+    "variantKey": "messagepack-one-utc-read",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeMetadataProjectionTests",
+    "testMethod": "MissingSentTime_CapturesExactlyOneUtcInstant"
+  },
+  {
+    "requirementId": "REQ-VSB-ENVELOPE-METADATA-PROJECTION",
+    "variantKey": "messagepack-expired-overlay-has-no-grace",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeMetadataProjectionTests",
+    "testMethod": "Overlay_UsesTheExactExpiredInstantWithoutSerializerFallback"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-MIXED-SERIALIZERS",
+    "variantKey": "json-request-messagepack-response",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests",
+    "testMethod": "MixedSerializers_PreserveEachDirectionAndExactContentTypeAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION",
+    "variantKey": "body-owned-capacity-boundaries-single-pass",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.PayloadAdmissionMessagePackTests",
+    "testMethod": "BodyOwnedCapacityLimit_EnforcesExactBoundariesWithoutReserializingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION",
+    "variantKey": "envelope-owned-capacity-boundaries-single-pass",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.PayloadAdmissionMessagePackTests",
+    "testMethod": "EnvelopeOwnedCapacityLimit_EnforcesExactBoundariesWithoutReserializingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION",
+    "variantKey": "copied-envelope-exact-body-and-wire-snapshot",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.PayloadAdmissionMessagePackTests",
+    "testMethod": "CopiedEnvelope_AdmitsItsEmbeddedBodyAndPreservesTheWireBytesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION",
+    "variantKey": "copied-envelope-embedded-body-one-byte-over-limit",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.PayloadAdmissionMessagePackTests",
+    "testMethod": "CopiedEnvelope_RejectsTheFullEmbeddedBodyOneByteOverLimitAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION",
+    "variantKey": "copied-envelope-ambiguous-or-trailing-content-rejected",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.PayloadAdmissionMessagePackTests",
+    "testMethod": "CopiedEnvelope_RejectsAmbiguousOrTrailingContentBeforeTransportAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DURABLE-SEND",
+    "variantKey": "typed-facade-canonical-envelope-and-idempotent-retry",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests",
+    "testMethod": "TypedDurableSender_UsesTheConfiguredMessagePackEnvelopeWithoutReserializationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-PUBLIC-API",
+    "variantKey": "minimal-greenfield-surface",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests",
+    "testMethod": "PublicApi_ContainsOnlyCompositionAndTheAdvancedFactory"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION",
+    "variantKey": "missing-owner-fails-at-extension-boundary",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests",
+    "testMethod": "ConfigurationExtensions_RejectMissingConfiguratorsWithExactOwnership"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DEPENDENCIES",
+    "variantKey": "no-optional-capability-coupling",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests",
+    "testMethod": "ProductAssembly_DoesNotReferenceOptionalCourierOrJobServiceCapabilities"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE",
+    "variantKey": "resolver-concurrent-shared-instance",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "Resolver_ConcurrentCallsReturnOneSharedFormatterAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORMATTER-CACHE",
+    "variantKey": "resolver-weak-key",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "Resolver_DoesNotKeepCollectibleClosedGenericContractAlive"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES",
+    "variantKey": "null-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "InterfaceContract_RoundTripsNull"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-RESOLVER",
+    "variantKey": "all-owned-contract-mappings",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests",
+    "testMethod": "ServiceBusResolver_OwnsEveryDeclaredContractMapping"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-RESOLVER",
+    "variantKey": "concrete-contracts-defer-to-fallback",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializationRuntimeTests",
+    "testMethod": "ServiceBusResolver_DefersConcreteContractsToTheCompositeFallback"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA",
+    "variantKey": "inline-bytes-and-address",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessageDataFormatterTests",
+    "testMethod": "InlineBytes_RoundTripWithTheirReferenceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA",
+    "variantKey": "inline-object-and-address",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessageDataFormatterTests",
+    "testMethod": "InlineObject_RestoresItsValueAndReferenceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA",
+    "variantKey": "empty-handle",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessageDataFormatterTests",
+    "testMethod": "EmptyHandle_RoundTripsAsTheSharedEmptyValue"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-MESSAGE-DATA",
+    "variantKey": "null-normalizes-to-empty-handle",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessageDataFormatterTests",
+    "testMethod": "NullHandle_RoundTripsAsTheSharedEmptyValue"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING",
+    "variantKey": "reusable-serializer-isolates-eager-owned-bodies",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests",
+    "testMethod": "ReusedForwardingSerializer_IsolatesEveryEagerOwnedBody"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING",
+    "variantKey": "transport-body-accepts-preserved-contract-types",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests",
+    "testMethod": "TransportBody_PreservesForwardedContractTypesDifferentFromTheLocalMessageType"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING",
+    "variantKey": "overlay-survives-payload-admission",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests",
+    "testMethod": "OverlayPayload_RemainsReadableWhenPayloadAdmissionIsActive"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING",
+    "variantKey": "recursive-case-insensitive-overlay-parity",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests",
+    "testMethod": "Overlay_MatchesNamesCaseInsensitivelyAndRecursivelyMergesObjectsAndArrays"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-SERIALIZATION",
+    "variantKey": "null-and-value-bodies",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackObjectSerializationTests",
+    "testMethod": "SerializeObject_ProducesAnEmptyBodyForNullAndMessagePackForAValue"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-SERIALIZATION",
+    "variantKey": "reference-input-forms",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackObjectSerializationTests",
+    "testMethod": "DeserializeObject_HandlesEveryReferenceInputForm"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-SERIALIZATION",
+    "variantKey": "value-input-forms",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackObjectSerializationTests",
+    "testMethod": "DeserializeObject_HandlesEveryValueInputForm"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-OBJECT-SERIALIZATION",
+    "variantKey": "blank-text-is-absent",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackObjectSerializationTests",
+    "testMethod": "DeserializeObject_TreatsBlankTextAsAnAbsentValue"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "outer-envelope-failure-is-observable",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "Deserialize_RejectsMalformedEnvelopeBytes"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "missing-arguments-have-exact-ownership",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "Deserialize_RejectsMissingArgumentsWithExactOwnership"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "unsupported-and-malformed-contracts-return-false",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "TryGetMessage_ReturnsFalseForUnsupportedAndMalformedContracts"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "cancellation-remains-observable",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "TryGetMessage_DoesNotConvertCancellationIntoAnUnsupportedContract"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "non-null-envelope-payload",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "SerializerContext_RejectsEveryMissingOwnedInputAndPayload"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "dictionary-and-explicit-contract-projection",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "SerializerContext_ProjectsDictionariesAndExplicitContractSets"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-PUBLIC-API",
+    "variantKey": "complete-configuration-overload-matrix",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests",
+    "testMethod": "ConfigurationApi_ExposesTheCompleteOverloadMatrixWithReviewedDefaults"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION",
+    "variantKey": "endpoint-deserializer-registration",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests",
+    "testMethod": "EndpointDeserializer_RegistersTheFactoryAndForwardsTheDefaultSelection"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION",
+    "variantKey": "bus-deserializer-registration",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests",
+    "testMethod": "BusDeserializer_RegistersTheFactoryAndForwardsTheDefaultSelection"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION",
+    "variantKey": "endpoint-bidirectional-registration",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests",
+    "testMethod": "EndpointSerializer_RegistersOneSharedFactoryForBothDirections"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-CONFIGURATION",
+    "variantKey": "bus-bidirectional-registration",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackConfigurationContractTests",
+    "testMethod": "BusSerializer_RegistersOneSharedFactoryForBothDirections"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-BODY",
+    "variantKey": "base64-body-and-null-boundary",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "Base64Body_PreservesBytesAndRejectsMissingText"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-BODY",
+    "variantKey": "transport-text-carrier-normalization",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "TransportTextCarrier_NormalizesDirectAndProviderWrappedBase64WithTheSelectedSerializer"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DIAGNOSTICS",
+    "variantKey": "provider-and-content-type",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "Probe_ReportsTheMessagePackProviderAndExactContentType"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-SERIALIZER",
+    "variantKey": "send-and-probe-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackMessageSerializerTests",
+    "testMethod": "Serializer_RejectsMissingSendAndProbeContextsWithExactOwnership"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING",
+    "variantKey": "typed-overlay-preserves-existing-properties",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "TypedForwardingSerializer_OverlaysReplacementValuesAndPreservesTheRemainingPayload"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING",
+    "variantKey": "overlay-creates-missing-payload",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests",
+    "testMethod": "Overlay_CreatesAPayloadWhenTheEnvelopeHasNoMessage"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-FORWARDING",
+    "variantKey": "owned-input-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackForwardingSerializerTests",
+    "testMethod": "ForwardingSerializer_RejectsEveryMissingOwnedInput"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES",
+    "variantKey": "declared-concrete-null-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "DeclaredConcreteMapping_RoundTripsNull"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-INTERFACES",
+    "variantKey": "declared-concrete-runtime-type-guard",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.InterfaceMessagePackFormatterTests",
+    "testMethod": "DeclaredConcreteMapping_RejectsAnotherImplementation"
+  },
+  {
+    "requirementId": "REQ-VSB-BODY-CROSS-OWNER",
+    "variantKey": "messagepack-forward-message-pipe-success",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Configuration.MessagePackTransportIntegrationTests",
+    "testMethod": "ForwardAsync_PreservesTheMessagePackEnvelopeAndBinaryPayloadAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-REQUIREMENTS",
+    "variantKey": "projection-matches-compiled-metadata",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Requirements.RequirementCoverageProjectionTests",
+    "testMethod": "MessagePackRequirements_MatchCompiledRequirementMetadata"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "nested-pure-versus-mixed-cancellation-callback",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "TryGetMessage_PropagatesOnlyPureNestedCancellationFromDeserializationCallbacks"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "cyclic-non-cancellation-branch-is-not-cancellation",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "TryGetMessage_CyclicBusinessBranchCannotTurnAnAggregateIntoCancellation"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "shared-cancellation-leaf-remains-cancellation",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "TryGetMessage_SharedCancellationLeafIsNotMistakenForACycle"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "cancellation-with-business-inner-is-mixed",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "TryGetMessage_CancellationWithBusinessInnerIsNotPureCancellation"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "empty-aggregate-prevents-false-cancellation",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "TryGetMessage_EmptyAggregateBranchCannotTurnIntoCancellation"
+  },
+  {
+    "requirementId": "REQ-VSB-MESSAGEPACK-DESERIALIZATION",
+    "variantKey": "throwing-base-exception-prevents-false-cancellation",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackSerializerContextTests",
+    "testMethod": "TryGetMessage_ThrowingBaseExceptionBranchCannotTurnIntoCancellation"
+  },
+  {
+    "requirementId": "REQ-VSB-ENVELOPE-METADATA-PROJECTION",
+    "testAssembly": "ViciOne.ServiceBus.MessagePack.Tests",
+    "testType": "ViciOne.ServiceBus.MessagePack.Tests.Serialization.MessagePackEnvelopeMetadataProjectionTests",
+    "testMethod": "HostSnapshots_RoundTripWithoutSerializingTheirReadOnlyMode",
+    "variantKey": "messagepack-host-cache-roundtrip-preserves-wire-mutability"
+  }
 ]

@@ -21,7 +21,7 @@ public class ContextFilter<TContext> :
         _filter = filter ?? throw new ArgumentNullException(nameof(filter));
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Invokes the continuation only when the configured asynchronous predicate accepts the context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

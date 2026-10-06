@@ -1,0 +1,350 @@
+{
+  "status": "ROOT_XML_ONLY_R6_FOR_ADVERSARIAL_NATIVE",
+  "utc": "2026-10-03T17:58:30.749331+00:00",
+  "finding": "F-SB-API-001",
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedPublishEndpointExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedPublishEndpointExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedPublishEndpointExtensions.cs",
+      "sha256": "13dfb22a39d2a5523e2669717faa63deecec152c55eff37d52bb1deaeb75d6e7",
+      "bytes": 6727,
+      "prior_sha256": "13dfb22a39d2a5523e2669717faa63deecec152c55eff37d52bb1deaeb75d6e7"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedSendEndpointExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedSendEndpointExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedSendEndpointExtensions.cs",
+      "sha256": "c02d3bbdc1bdf8b50852405b8cecece5c906d0a551cb44d04379e1af54935b0b",
+      "bytes": 6457,
+      "prior_sha256": "c02d3bbdc1bdf8b50852405b8cecece5c906d0a551cb44d04379e1af54935b0b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/BatchEndpointExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/BatchEndpointExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/BatchEndpointExtensions.cs",
+      "sha256": "85505dee0176ba1ba13d8b9ab9e429d9274287c74d60e9374c5962aad892ac25",
+      "bytes": 27061,
+      "prior_sha256": "85505dee0176ba1ba13d8b9ab9e429d9274287c74d60e9374c5962aad892ac25"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Contexts/SendConsumeContextExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Contexts/SendConsumeContextExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/Contexts/SendConsumeContextExtensions.cs",
+      "sha256": "20c881381f272c973f4ff0a1919e8de041f85af554942469e1668eeb63dec348",
+      "bytes": 14736,
+      "prior_sha256": "20c881381f272c973f4ff0a1919e8de041f85af554942469e1668eeb63dec348"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedPublishEndpoint.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedPublishEndpoint.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedPublishEndpoint.cs",
+      "sha256": "243ce44672bfd9cdbbdd70e5b916a549cc684e8d7879e64182bb9d548a773bac",
+      "bytes": 8551,
+      "prior_sha256": "243ce44672bfd9cdbbdd70e5b916a549cc684e8d7879e64182bb9d548a773bac"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedSendEndpoint.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedSendEndpoint.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedSendEndpoint.cs",
+      "sha256": "a90cf1c678ef9e5d49231efbf9f56d562f0d5510de42067e2ca701e759f97c8e",
+      "bytes": 8243,
+      "prior_sha256": "a90cf1c678ef9e5d49231efbf9f56d562f0d5510de42067e2ca701e759f97c8e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/IRequestSendEndpoint.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IRequestSendEndpoint.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/IRequestSendEndpoint.cs",
+      "sha256": "d58b2941821a0ea8c02591cf0e02787c03cd0cd87588758061e1cb33f7f6fdfe",
+      "bytes": 1795,
+      "prior_sha256": "d58b2941821a0ea8c02591cf0e02787c03cd0cd87588758061e1cb33f7f6fdfe"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PublishExecuteExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PublishExecuteExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PublishExecuteExtensions.cs",
+      "sha256": "979de2e286b6585a6d6cf4842b8b02cb8febb5bb28fb7fdd0f8a59962a214df9",
+      "bytes": 11263,
+      "prior_sha256": "979de2e286b6585a6d6cf4842b8b02cb8febb5bb28fb7fdd0f8a59962a214df9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/RespondAsyncExecuteExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/RespondAsyncExecuteExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/RespondAsyncExecuteExtensions.cs",
+      "sha256": "81ead008a156a8fe8d1d9b7506d51c2e2794277c9aa2e65e66ced00d1c75a9a2",
+      "bytes": 8281,
+      "prior_sha256": "81ead008a156a8fe8d1d9b7506d51c2e2794277c9aa2e65e66ced00d1c75a9a2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/SendConsumeContextExecuteExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/SendConsumeContextExecuteExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/SendConsumeContextExecuteExtensions.cs",
+      "sha256": "5c91112f897765a7f7b5d7b62276a3e36df0fcd4bb1b9d2e295144eb8d1d208a",
+      "bytes": 12305,
+      "prior_sha256": "5c91112f897765a7f7b5d7b62276a3e36df0fcd4bb1b9d2e295144eb8d1d208a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/SendExecuteExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/SendExecuteExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/SendExecuteExtensions.cs",
+      "sha256": "b76bfa3e0ca3fe0755e8e6b5d7e2d047172e706d507a48e6b62ba20e06fbb55d",
+      "bytes": 10976,
+      "prior_sha256": "b76bfa3e0ca3fe0755e8e6b5d7e2d047172e706d507a48e6b62ba20e06fbb55d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/IOutgoingMessages.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/IOutgoingMessages.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/IOutgoingMessages.cs",
+      "sha256": "e81ef024d0fb4f352131469f69fe796ec337413f3b057ed67ff7e3c145ee1e46",
+      "bytes": 4887,
+      "prior_sha256": "e81ef024d0fb4f352131469f69fe796ec337413f3b057ed67ff7e3c145ee1e46"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+      "sha256": "71a2cf0a5e52f6301e42236b56acfd4238eb4f753155095684bb62553d337338",
+      "bytes": 2246,
+      "prior_sha256": "71a2cf0a5e52f6301e42236b56acfd4238eb4f753155095684bb62553d337338"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/ISendEndpoint.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/ISendEndpoint.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/ISendEndpoint.cs",
+      "sha256": "a794b799efb8a700843111a9fcfea6e508c80a3c4b79e523947c1bf4ec9840b3",
+      "bytes": 2236,
+      "prior_sha256": "a794b799efb8a700843111a9fcfea6e508c80a3c4b79e523947c1bf4ec9840b3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Internals/Dispatching/ResponseEndpointDispatcher.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Internals/Dispatching/ResponseEndpointDispatcher.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Internals/Dispatching/ResponseEndpointDispatcher.cs",
+      "sha256": "bfdb44982ec6c134093e2a78017664b652682a5e313d5f873057905215c51962",
+      "bytes": 4569,
+      "prior_sha256": "bfdb44982ec6c134093e2a78017664b652682a5e313d5f873057905215c51962"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Scheduling/ConsumeContextSchedulerExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Scheduling/ConsumeContextSchedulerExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Scheduling/ConsumeContextSchedulerExtensions.cs",
+      "sha256": "426f4561b8413ed6b5755cf7b5457ed44803fd6f2905489b2b3c6c9da5b77083",
+      "bytes": 25963,
+      "prior_sha256": "426f4561b8413ed6b5755cf7b5457ed44803fd6f2905489b2b3c6c9da5b77083"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Scheduling/ConsumeContextSelfSchedulerExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Scheduling/ConsumeContextSelfSchedulerExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Scheduling/ConsumeContextSelfSchedulerExtensions.cs",
+      "sha256": "d4d7b96511e5c3aaf14c86a7cb5e16827abe7ef63d46c91f21e36bef430147f0",
+      "bytes": 23655,
+      "prior_sha256": "d4d7b96511e5c3aaf14c86a7cb5e16827abe7ef63d46c91f21e36bef430147f0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Scheduling/IRecurringMessageScheduler.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Scheduling/IRecurringMessageScheduler.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Scheduling/IRecurringMessageScheduler.cs",
+      "sha256": "f2570379407fd2e34ddacd9583a7b8a561b51ff164fd066c6e29f9ebb5ccca3a",
+      "bytes": 20473,
+      "prior_sha256": "f2570379407fd2e34ddacd9583a7b8a561b51ff164fd066c6e29f9ebb5ccca3a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Scheduling/MessageSchedulerContext.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Scheduling/MessageSchedulerContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Scheduling/MessageSchedulerContext.cs",
+      "sha256": "bdc1dc6e6d56d9cec6989416ddb8245b4b226de1fefd0fd132b25c22aa8adc3a",
+      "bytes": 9654,
+      "prior_sha256": "bdc1dc6e6d56d9cec6989416ddb8245b4b226de1fefd0fd132b25c22aa8adc3a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Transports/PublishEndpoint.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Transports/PublishEndpoint.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Transports/PublishEndpoint.cs",
+      "sha256": "d82cd1856628e44a089a1d41f2b7ca5f1d300f1581fc1a8ef6b9ebdfa3d3d14c",
+      "bytes": 13879,
+      "prior_sha256": "d82cd1856628e44a089a1d41f2b7ca5f1d300f1581fc1a8ef6b9ebdfa3d3d14c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/EndpointConventionExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Advanced/EndpointConventionExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus/Advanced/EndpointConventionExtensions.cs",
+      "sha256": "8448bd9442950d3a1544a88377013d44235d2dbd81b75bbed1ba7e686a83f84e",
+      "bytes": 13274,
+      "prior_sha256": "8448bd9442950d3a1544a88377013d44235d2dbd81b75bbed1ba7e686a83f84e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/ForwardExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Advanced/ForwardExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus/Advanced/ForwardExtensions.cs",
+      "sha256": "f0d62a53840b53f33338adc9bab53c8d2874641bf592aa9f20eda56f4ea1c388",
+      "bytes": 6804,
+      "prior_sha256": "f0d62a53840b53f33338adc9bab53c8d2874641bf592aa9f20eda56f4ea1c388"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Clients/Endpoints/RequestSendEndpoint.cs",
+      "relative": "src/ViciOne.ServiceBus/Clients/Endpoints/RequestSendEndpoint.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus/Clients/Endpoints/RequestSendEndpoint.cs",
+      "sha256": "7597fcddf2b085501b9b417209954c0e320adad2930d44dd0b19a748e296081e",
+      "bytes": 4250,
+      "prior_sha256": "7597fcddf2b085501b9b417209954c0e320adad2930d44dd0b19a748e296081e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Context/Consumption/BaseConsumeContext.cs",
+      "relative": "src/ViciOne.ServiceBus/Context/Consumption/BaseConsumeContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus/Context/Consumption/BaseConsumeContext.cs",
+      "sha256": "f196ec3e96bd9bf4551f2aa15d599b5c9e1b3bcb4bc8e15c12d16e46c6d74951",
+      "bytes": 24714,
+      "prior_sha256": "20ae6f6127e84f8c256b72681452d58fdd283c474742c475e722700d6d686fc4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedMessageInitializerExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedMessageInitializerExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedMessageInitializerExtensions.cs",
+      "sha256": "40437d47bd2195dd55d018a2ce6d5cf3a6ba5105550199220e8026625ae402d4",
+      "bytes": 8016,
+      "prior_sha256": "40437d47bd2195dd55d018a2ce6d5cf3a6ba5105550199220e8026625ae402d4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/RoutingSlipExecutor.cs",
+      "relative": "src/ViciOne.ServiceBus.Courier/Courier/RoutingSlipExecutor.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Courier/Courier/RoutingSlipExecutor.cs",
+      "sha256": "ca1398b807c4b5c349b633e1fbd9a62c8b7a9104a913ebe793f7d8732339682b",
+      "bytes": 5458,
+      "prior_sha256": "ca1398b807c4b5c349b633e1fbd9a62c8b7a9104a913ebe793f7d8732339682b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Scheduling/ServiceBusScheduleMessageProvider.cs",
+      "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Scheduling/ServiceBusScheduleMessageProvider.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Scheduling/ServiceBusScheduleMessageProvider.cs",
+      "sha256": "3cb42f3e357533211483a778a4be3cdd22ef247ccf78e16115597195ca13ec1d",
+      "bytes": 4709,
+      "prior_sha256": "3cb42f3e357533211483a778a4be3cdd22ef247ccf78e16115597195ca13ec1d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/api/completion-boundaries.md",
+      "relative": "docs/api/completion-boundaries.md",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/docs/api/completion-boundaries.md",
+      "sha256": "589c15bf447df6dbf93a7465571cc673715ce7a6ee1ed23f91076d218f83365f",
+      "bytes": 4209,
+      "prior_sha256": "589c15bf447df6dbf93a7465571cc673715ce7a6ee1ed23f91076d218f83365f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/ConsumeContext.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/ConsumeContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/ConsumeContext.cs",
+      "sha256": "794be20f8ca3e1aa76d3641938f91d8045b80b44b732d6fdd629d5ba96cd3d24",
+      "bytes": 12287,
+      "prior_sha256": "794be20f8ca3e1aa76d3641938f91d8045b80b44b732d6fdd629d5ba96cd3d24"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Scheduling/IMessageScheduler.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Scheduling/IMessageScheduler.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Scheduling/IMessageScheduler.cs",
+      "sha256": "6b0e3d213bb5c5eccd29cb194085483c3b0e2fa3c2492280b88d5642d5af0358",
+      "bytes": 6420,
+      "prior_sha256": "6b0e3d213bb5c5eccd29cb194085483c3b0e2fa3c2492280b88d5642d5af0358"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedMessageScheduler.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedMessageScheduler.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedMessageScheduler.cs",
+      "sha256": "1e4e57dd2f09e24695d70c93e7aca3823d71655026d3a3b05db40f6818ca42c7",
+      "bytes": 22001,
+      "prior_sha256": "1e4e57dd2f09e24695d70c93e7aca3823d71655026d3a3b05db40f6818ca42c7"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/RelativeMessageSchedulerContextExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/RelativeMessageSchedulerContextExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/RelativeMessageSchedulerContextExtensions.cs",
+      "sha256": "151a650f1207776c623510858e7f4942c473f0082172f46a0df8f0a21a12c548",
+      "bytes": 13935,
+      "prior_sha256": "151a650f1207776c623510858e7f4942c473f0082172f46a0df8f0a21a12c548"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedRelativeMessageSchedulerExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedRelativeMessageSchedulerExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedRelativeMessageSchedulerExtensions.cs",
+      "sha256": "0505733bec6df3e0764c6eabb5eee0687ca2939799b9ce5288cc8a9439fd4456",
+      "bytes": 24184,
+      "prior_sha256": "0505733bec6df3e0764c6eabb5eee0687ca2939799b9ce5288cc8a9439fd4456"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedMessageSchedulerExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedMessageSchedulerExtensions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedMessageSchedulerExtensions.cs",
+      "sha256": "d365a314f58659e515fffb8936cf9586c460e967068a32b19a919ec8a15a7421",
+      "bytes": 17873,
+      "prior_sha256": "d365a314f58659e515fffb8936cf9586c460e967068a32b19a919ec8a15a7421"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/Advanced/IJobContext.cs",
+      "relative": "src/ViciOne.ServiceBus.JobService/Advanced/IJobContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.JobService/Advanced/IJobContext.cs",
+      "sha256": "44a474f3c41020668770035246d63562d551cd7f7b922a8b4c210d84d286eed3",
+      "bytes": 3955,
+      "prior_sha256": "44a474f3c41020668770035246d63562d551cd7f7b922a8b4c210d84d286eed3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/JobService/ConsumeJobContext.cs",
+      "relative": "src/ViciOne.ServiceBus.JobService/JobService/ConsumeJobContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.JobService/JobService/ConsumeJobContext.cs",
+      "sha256": "336e2df9830fecb6043cc173e5fff9fa0e9188ef539b3956e832098e0dd7978e",
+      "bytes": 16039,
+      "prior_sha256": "336e2df9830fecb6043cc173e5fff9fa0e9188ef539b3956e832098e0dd7978e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/JobService/JobStateMachine.cs",
+      "relative": "src/ViciOne.ServiceBus.JobService/JobService/JobStateMachine.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.JobService/JobService/JobStateMachine.cs",
+      "sha256": "b2427ff0adff6fa9b2f5b7e6ad28826aec0dd19980e14f7ba932965b94bcd4c9",
+      "bytes": 44826,
+      "prior_sha256": "b2427ff0adff6fa9b2f5b7e6ad28826aec0dd19980e14f7ba932965b94bcd4c9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/JobService/JobSaga.cs",
+      "relative": "src/ViciOne.ServiceBus.JobService/JobService/JobSaga.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.JobService/JobService/JobSaga.cs",
+      "sha256": "d08dc1261a25c5f8cbefccea43936bc19a2f65c39138b87edb01eabf2c4bd466",
+      "bytes": 4399,
+      "prior_sha256": "d08dc1261a25c5f8cbefccea43936bc19a2f65c39138b87edb01eabf2c4bd466"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/Contracts/JobService/IJobState.cs",
+      "relative": "src/ViciOne.ServiceBus.JobService/Contracts/JobService/IJobState.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-source-r6/src/ViciOne.ServiceBus.JobService/Contracts/JobService/IJobState.cs",
+      "sha256": "995e094d91c2551cf254d5212fa41f8a95c4c4256367b83b920ef1408ace261a",
+      "bytes": 2622,
+      "prior_sha256": "995e094d91c2551cf254d5212fa41f8a95c4c4256367b83b920ef1408ace261a"
+    }
+  ],
+  "product_xml_files": 38,
+  "new_boundary_document": 1,
+  "runtime_code_and_signatures_unchanged": true,
+  "retained_specialized_contract_files": 6,
+  "native_emitted_xml_public_ids_and_runtime_controls_pending": true,
+  "canonical_test_changes": 0,
+  "acceptance_pending": true,
+  "supersedes_source_freeze_sha256": "698f93d66ceca692d41dc83f7eafe1a2ca1ef6bd622b0d497605d1de06ec11a5",
+  "r2_changed_files": [
+    "src/ViciOne.ServiceBus.Abstractions/ISendEndpoint.cs",
+    "src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+    "src/ViciOne.ServiceBus.Abstractions/IOutgoingMessages.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedSendEndpoint.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedPublishEndpoint.cs"
+  ],
+  "r2_correction": "Explicitly qualify IOutgoingMessages schedule return missing from4locator entries; absolute repository documentation links derived from tracked PackageProjectUrl rather than context-dependent relative URI. No remote availability claim before changes are merged.",
+  "r3_additional_files": [
+    "src/ViciOne.ServiceBus.Abstractions/ConsumeContext.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Scheduling/IMessageScheduler.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedMessageScheduler.cs"
+  ],
+  "r3_correction": "Inherited DeferResponse and scheduler contract overclaims qualified against Root FULL real implementation; XML-only, signatures and runtime unchanged.",
+  "r4_additional_files": [
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/RelativeMessageSchedulerContextExtensions.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedRelativeMessageSchedulerExtensions.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedMessageSchedulerExtensions.cs"
+  ],
+  "r4_correction": "Three public convenience wrapper layers delegate without stronger acceptance/cancellation boundary;39Returns XML-only qualified.",
+  "job_extension_source_freeze_sha256": "120170b361f7283611cac9307fd62fcaf930148f478a8d033834e1215e35a949",
+  "r5_correction": "Envelope DestinationAddress semantics and5Job snapshot/progress/checkpoint documents; XML-only; all runtime and signatures unchanged.",
+  "r6_correction": "RespondAsync typed response publishes when ResponseAddress absent; source-verified XML summary only."
+}

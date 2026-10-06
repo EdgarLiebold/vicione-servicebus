@@ -1,0 +1,16 @@
+{
+  "utc": "2026-10-06T10:36:36.322451+00:00",
+  "status": "ROOT416_ADMIN_COMPLETION_AFTER_FAIL_CLOSED_FINDING_ID_CHECK",
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE416_F152_F221_F222_F223_FIXED30_CORE7935_FRESH3_SOURCE12_OWNER_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "2db64416416c9dbec310a502a410779a8e6dab1cff6501a60ff6df777c7215a3"
+  },
+  "precision": "Initial Root416 script wrote reviewed report and Master19334 then stopped at no matching short F152/F221/F222/F223 IDs before STATE/PO/AFTER. Actual persisted IDs are F-SB-API-152/221/222/223; authoritative current STATE remained byte-exact pre416 backup. Completion targets exact four IDs after all actual repair gates, no new Product/Test/Req/native action. Reviewed report and applied Master are retained byte-exact.",
+  "selected_actual_IDs": [
+    "F-SB-API-152",
+    "F-SB-API-221",
+    "F-SB-API-222",
+    "F-SB-API-223"
+  ],
+  "master_after_sha256": "0572050db173df06f0a03201da82cf6ca27de6574ad54ca4c26487cbc22be446"
+}

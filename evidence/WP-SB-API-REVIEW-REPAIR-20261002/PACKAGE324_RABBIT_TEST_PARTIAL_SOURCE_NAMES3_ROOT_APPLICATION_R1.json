@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-06T03:20:48.316419+00:00",
+  "status": "PATH_ONLY_RENAMES3_APPLIED_INDEPENDENT_REVIEWED_FRESH325_PENDING",
+  "changes": [
+    {
+      "before": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionCancellationTests.cs",
+      "after": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionWiringTests.Cancellation.cs",
+      "sha256": "976415e47c26f4af54a2b1dc05c65671a799677afe0dcaeaee1e0022b60927f3",
+      "bytes": 10533,
+      "source_byte_changes": 0
+    },
+    {
+      "before": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionGenerationTests.cs",
+      "after": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionWiringTests.Generation.cs",
+      "sha256": "1ab4dec4b89de93dbb59b55546fa607b05d48f96077884ff4a9b97ce153822a2",
+      "bytes": 16703,
+      "source_byte_changes": 0
+    },
+    {
+      "before": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionLifetimeTests.cs",
+      "after": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredConnectionWiringTests.Lifetime.cs",
+      "sha256": "b3b76799b161693a2ff721db258fdd2bca0c119544ab543cea553ed216cdf3fa",
+      "bytes": 15936,
+      "source_byte_changes": 0
+    }
+  ],
+  "proposal_manifest_sha256": "5a2ef499b5715507a7e61dbfa77ddc68faac060a6ce0fa126522ce8f8610fa0b",
+  "peer_manifest_sha256": "a353fdf38213be8740acd07906407a03f3371482bbc8d552070ebd07f9f343a1",
+  "peer_report_sha256": "f05f2e1bc46b7c4f6ecd1c0e4c70afea2cd88c48f06e92c9a8e19d8840646d53",
+  "actual_failed318": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package318-all23-unit-source-bound-capture-r1/FAILED_AFTER.json",
+    "sha256": "626d464825ee41f295fa6ea2f5fd8f49f8133c9dee356d83f6e6c79588d20e86"
+  },
+  "Product_API_Test_class_methods_assertions_Requirement_bytes_unchanged": true,
+  "native_added": 0,
+  "whole_API_closed": false,
+  "grade": null
+}

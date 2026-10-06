@@ -1,0 +1,210 @@
+{
+  "actor": "/root",
+  "status": "ROOT_PERSONALLY_READ_ALL90_LAYOUT_PACKS_COMPLETE766_OWNER",
+  "previous": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE35_ROOT_LAYOUT_PARTIAL_007_R1.json",
+    "bytes": 3725,
+    "sha256": "1ca08cab78f579ddcd91a22d1725024d86ee46c113646f1306cc8dd86e9500e4"
+  },
+  "packs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0055.txt",
+      "bytes": 12666,
+      "sha256": "5bd3f61a42359253f82aab909273a0bdaef3d4860cd692f9bd875628d945c39a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0056.txt",
+      "bytes": 12208,
+      "sha256": "ad1a819779e504bc095ae5b417d5537d2e7235e728c6f878866ac577ac8e7cc8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0057.txt",
+      "bytes": 11193,
+      "sha256": "be456f98dd21c0f93c49fd13d8f49137d9a78114fcef97d78308f8cf6f2387e6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0058.txt",
+      "bytes": 13360,
+      "sha256": "7fd0ec90421a62191b241b96dd769f92220733349d5d1169704b34547272ddf7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0059.txt",
+      "bytes": 10657,
+      "sha256": "5048219d84dd47f8df87a1566b0f65886d0021babd8d3d476bc2713f322f740d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0060.txt",
+      "bytes": 13534,
+      "sha256": "5499d5fb7f69defa3cfd8d5f8fe346a6f6f9ab068fa4fbdad1f028b3de59d032"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0061.txt",
+      "bytes": 13234,
+      "sha256": "ae28c793e30232e10a10706b72f4083b9776736f74f45670a487b7196b0e4db9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0062.txt",
+      "bytes": 12963,
+      "sha256": "78ab04ab5a0b21316dda2399426b45b27ef72ec3f32e516e6776afc3397e564d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0063.txt",
+      "bytes": 10143,
+      "sha256": "e36f5fe158272e5f4f00361c6ae562d3bcdf3b2c82851a7e693e5d2af1b849bc"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0064.txt",
+      "bytes": 12961,
+      "sha256": "ef4fe1a94f9c0eb5d2a60bc2eb27fb988e117335505a599463810a7b8303e27b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0065.txt",
+      "bytes": 13964,
+      "sha256": "fe443aab551718177fc7f4635ece65760707873cd53c78d0c8d5aae245a7d50b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0066.txt",
+      "bytes": 12835,
+      "sha256": "2da8e5522e94ddd78c4967b8c4367a49fa8d2141f38fa2f31dfa3caf1af88f35"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0067.txt",
+      "bytes": 10979,
+      "sha256": "3503c550799c357a07dc4d54932dd910edd3a8ccaf98445d07c56b2706edd6f5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0068.txt",
+      "bytes": 11736,
+      "sha256": "a2181bc53ba60801139276aa43d1cec3e98d6c642db6d90f589797f403e72f3c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0069.txt",
+      "bytes": 13791,
+      "sha256": "b93a8693c77b369aff2f91286ded07d0191d24bffc9594682f7f52d9da865d65"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0070.txt",
+      "bytes": 11115,
+      "sha256": "72c4061ff5c163beb9125a549b1f6095398035f221de3cbe9ac9d5f2bfb7f3eb"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0071.txt",
+      "bytes": 12406,
+      "sha256": "92fa82f9663e7ad7146299c685f6ee7884021881a89d13dce718acadc274e762"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0072.txt",
+      "bytes": 12711,
+      "sha256": "ff37091d4223bc12ba2ebfcdf0821a6034a6adb795772215a023e0394085da99"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0073.txt",
+      "bytes": 12841,
+      "sha256": "e841f14e0879f3a66ee268ccabdfa502e3db7eeec5ed29a5509efae3f2c4f4d4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0074.txt",
+      "bytes": 13965,
+      "sha256": "4fbc4f5ab307a6066d446f473879dec9761767470cd16a41ef40ba7fc871c10e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0075.txt",
+      "bytes": 13869,
+      "sha256": "35a392f9b0d1b54bf93cbb79a113f0a9249bd2373ae7b86d7ebfffaba8749838"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0076.txt",
+      "bytes": 11981,
+      "sha256": "1a1205a3b6afc59f627ec2ab0b81c73a24342f955b5ab2aadb0e008ca454180b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0077.txt",
+      "bytes": 13805,
+      "sha256": "f4cac77a028052feef7dab13e992939ce86ab149f86ef8b8301d656216b6fb85"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0078.txt",
+      "bytes": 13435,
+      "sha256": "412ace04eb3633f39c53c2b386f0c4daaa0f88664e37b3378494a3cf74c0a02b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0079.txt",
+      "bytes": 11373,
+      "sha256": "8965ed420ec136a096f61691cd6f22e8f5f603a443aba559620bf88efb1859e7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0080.txt",
+      "bytes": 13880,
+      "sha256": "9cb3592252cc7434b4e0cde9684dfda34528cdef7b3048536eee6e455812f4af"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0081.txt",
+      "bytes": 13245,
+      "sha256": "942002c84707c58837dc6ac8e8a534d1c3183d6e5565022c5fdb5293a5e66e9f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0082.txt",
+      "bytes": 13927,
+      "sha256": "159f25090c349c84eb212f813a9e4d7b4419211d6cf1b1c75f0ae3b9c77d292f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0083.txt",
+      "bytes": 13906,
+      "sha256": "584f075df55297b8ad9a0ce051d1013ba3a7b8876c156d0bbc475a717b6da897"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0084.txt",
+      "bytes": 13497,
+      "sha256": "88c13e6c224784acf6023036f2b00a8d836d087f3d4a90e59db8bb8a790959c8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0085.txt",
+      "bytes": 9391,
+      "sha256": "47cddd49aedf6253ae62402d288bf106a165ee7b56ab11c006641f9288c65f9b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0086.txt",
+      "bytes": 13712,
+      "sha256": "2450d424409fa566a4c780fd55ddfb26af0a4240075a5f0da4165df059254cf1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0087.txt",
+      "bytes": 13861,
+      "sha256": "e84fc705bc1fd217e1d4956506b5c123c5be351d6ec6946da226f0a85159ff04"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0088.txt",
+      "bytes": 13555,
+      "sha256": "f51fb68a9f2a0e2ec5ec2178e7d772924ddaaaf3cdcb632206fd6ab072d4c834"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0089.txt",
+      "bytes": 3413,
+      "sha256": "f9f918087a89a07d84abebd5485beb74acba4676974e41fb80eba8a8e0244605"
+    }
+  ],
+  "complete_file_ordinals_combined": "0..765",
+  "whole766_owner_full": true,
+  "ordinary_RAW_increment": 0,
+  "read_outputs": "55..88 personally complete in seventeen untruncated paired outputs;89 personally complete in output6cae82. Prior receipts bind0..54.",
+  "literal_source_closure": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE35_ROOT_GROUPED_R2_PARTIAL_033.json",
+    "bytes": 45801,
+    "sha256": "355375c83c7f3c5a8ec98d23da80d2cc8f336e7f754edefecd5a107b8357c6fc"
+  },
+  "requirements_closure": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE35_ROOT_REQUIREMENTS_PARTIAL_006_R1.json",
+    "bytes": 43302,
+    "sha256": "2aec0b7dbd2c30b20f28d2cdf2351c42c346b29b9fc153ea1fc698497f711fe7"
+  },
+  "language_and_context_closure": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE35_WHOLE_LANGUAGE_AND_VALIDATOR_ROOT_ACCEPTANCE_R1.json",
+    "bytes": 3234,
+    "sha256": "d3fb714c8a5cc9280636452f3dd2e431bf8889afa4d80dcfd588e126288678b5"
+  },
+  "fresh_projection_validation": "actual process82266 exit0 outputaeffc7: exact766/current Git/physical snapshots/requirements4538/context84 PASS; validation has zero personal-read credit",
+  "limits": [
+    "Personal source/context/ordered reconstruction closure is complete before Core edits.",
+    "This receipt does not claim current Core compilation, runtime success or final A+."
+  ]
+}

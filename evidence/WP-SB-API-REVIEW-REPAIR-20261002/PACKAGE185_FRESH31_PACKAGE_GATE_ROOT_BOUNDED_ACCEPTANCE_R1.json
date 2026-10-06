@@ -1,0 +1,108 @@
+{
+  "utc": "2026-10-05T13:54:49.488299+00:00",
+  "status": "FRESH31_PACKAGE_GATE_ACCEPTED_WITH_EXPLICIT_EXECUTION_BOUNDS",
+  "receipt": {
+    "phase": "package185-current31-package18journey4consumer-gate-r2",
+    "command": [
+      "env",
+      "TMPDIR=/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-current31-journey18-consumer4-capture-proposed-r2/live-temp",
+      "bash",
+      "tools/ci/verify_developer_journeys.sh"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T13:33:54.060276+00:00",
+    "completed_utc": "2026-10-05T13:37:31.292636+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package185-current31-package18journey4consumer-gate-r2.log",
+    "log_sha256": "1ac702a54b50a621438d56a4bb70e8a18ee53cb76e5bfa1f6d71c0b6cd534316"
+  },
+  "result": {
+    "status": "CURRENT_SHARED_GATE_PASS_FRESH_ARTIFACT_BINDING_NO_BLOCK",
+    "blockers": [],
+    "receipt": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-current31-journey18-consumer4-capture-proposed-r2/qualification-r2/ACTUAL_RECEIPT.json",
+      "bytes": 809,
+      "sha256": "a57617d73bb70727f374b4151921f298714c920f496bb603a3190ea2c4996dbb"
+    },
+    "fresh_packages": 31,
+    "runtime_api_assemblies": 30,
+    "analyzer_assemblies": 2,
+    "product_pdb_documents": 4292,
+    "product_physical_document_checks": 4150,
+    "product_embedded_generated_document_checks": 142,
+    "apps": 7,
+    "app_pdb_documents": 47,
+    "transient_final_locks": 6,
+    "compiled_journey_source_files": 18,
+    "isolated_consumer_apps_executed": 4,
+    "all_18_business_journeys_executed": false,
+    "actual_loaded_product_telemetry": false,
+    "public_api_lines": 20118,
+    "public_api_sha256": "f21dbd840230b816b300ad227ad3de39322cf1bd544dcafbf1f2ecd326fe9bef",
+    "public_api_unchanged": true,
+    "current_XML_members": 23,
+    "tracked_gate_moment_unchanged": 6209,
+    "additional_relevant_untracked_paths_unchanged": 60,
+    "source_semantic_whole_API_grade": false,
+    "canonical_unit_suite_closed": false,
+    "global_Aplus": false,
+    "SDK_or_native_executed_by_peer": false,
+    "primary_embedded_source_spec": "https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md"
+  },
+  "qualification_artifacts": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-current31-journey18-consumer4-capture-proposed-r2/qualification-r2/ACTUAL30_XML_ARCHIVES_AND_REVIEWED23_PROPERTY_MEMBERS.json",
+      "sha256": "247e515d00a31c310f3d4803fb2aa202f0361d6574d29156c136fd1ac2a66098"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-current31-journey18-consumer4-capture-proposed-r2/qualification-r2/ACTUAL31_ZIP_PAYLOADS_AND30_CACHE_BINDING.json",
+      "sha256": "ebf08d19a707c856e345042dd8de549a2f1b7333df76e6651308ea7c1e8e3e2c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-current31-journey18-consumer4-capture-proposed-r2/qualification-r2/ACTUAL32_PRODUCT_ASSEMBLY_PDB_BINDING.json",
+      "sha256": "5b4c7833acb4f610b7c0640f2331c992bf77ae60b4dadeeefc29e1696acd2824"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-current31-journey18-consumer4-capture-proposed-r2/qualification-r2/ACTUAL6_FINAL_LOCK_ASSETS_DEPS_GRAPHS.json",
+      "sha256": "3d9602aec9fbd0dc276ecfa1e02793f72614dc710a2aee4c8a34ec6c9cb98e59"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-current31-journey18-consumer4-capture-proposed-r2/qualification-r2/ACTUAL7_APPS_PDB_AND47_DOCUMENTS.json",
+      "sha256": "2faac37025e3500575dccb525dfd746f59831e4bd975a73e393fa1d281cdf490"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-current31-journey18-consumer4-capture-proposed-r2/qualification-r2/ACTUAL_RECEIPT.json",
+      "sha256": "a57617d73bb70727f374b4151921f298714c920f496bb603a3190ea2c4996dbb"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-current31-journey18-consumer4-capture-proposed-r2/qualification-r2/ACTUAL_REVIEWED_BASELINE23_SEVEN_OWNER_BINDINGS.json",
+      "sha256": "5482984127f832efe48f2e2f1a8323443732daf33d28030b4731078ecdf8c63c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-current31-journey18-consumer4-capture-proposed-r2/qualification-r2/BOUNDED_RESULT.json",
+      "sha256": "30ff3e471b1829a233124c9203141d6243118befe97699a903435cef599d9395"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-current31-journey18-consumer4-capture-proposed-r2/qualification-r2/GATE_MOMENT_SOURCE_INTEGRITY.json",
+      "sha256": "e72a3cf446c98e3bcc8ae0956cb1ef77dd8872bcf8d78f0e653d92175ec6cdd1"
+    }
+  ],
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-actual-gate-independent-result-peer-r1/REPORT.json",
+    "sha256": "7cde4531b6bcf919d36d067f7cec8ca6c69b7b5e1577a3bd407cd0bab14888a7",
+    "manifest_sha256": "899517ecb9596515ed47fa1327dd1e412c1a1a48fb4d56c4043479cd84869f27"
+  },
+  "root_own_actual_PDB_reparse": {
+    "receipt": "ed7580",
+    "product_assemblies": 32,
+    "product_documents": 4292,
+    "app_assemblies": 7,
+    "app_documents": 47
+  },
+  "root_qualification_source_whole_read": "d8a3c1",
+  "whole_API_closed": false,
+  "global_Aplus": false,
+  "source_epoch": "Frozen185 moment; later186 test and Req additions excluded",
+  "known_findings": 176,
+  "accepted_findings": 176
+}

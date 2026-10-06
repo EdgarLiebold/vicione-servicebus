@@ -1,0 +1,25 @@
+{
+  "utc": "2026-10-05T00:04:35.140227+00:00",
+  "decision": "ACCEPT1_OUTBOX_FACTORY_CORRECTED_ABSTRACT_CONTRACT",
+  "api_before": 5023,
+  "api_after": 5024,
+  "original_context": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-core-context-transport-initializer401-research-r1/PER_SYMBOL401_CONTEXT_AND_RECOMMENDATIONS.json",
+    "sha256": "2341bf1bfd9ffadd4b1a13c68ce3fd1807c4974d70dffe5cde92d7bf2d7629b7"
+  },
+  "root_current_XML2_and_source20_filter51_provider123_review": [
+    "053ecf",
+    "d6c445",
+    "067ba2"
+  ],
+  "currentF130repair": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE156_F127_F129_F130_CURRENT_FRESH2_BOUNDED_ROOT_REPAIR_ACCEPTANCE_R1.json",
+    "sha256": "137cdd57809f397eb14cb6d6d9ae4ee2311935153a6a520ab4f2cb94ee5b9c50"
+  },
+  "limits": [
+    "Original source/XML historicalprose remains externalimmutable; currentRootnorm explicitly describes incoming consume policy.",
+    "Classmessage required consume/options/next; optionalcaller token forwarded asprovider operationinput, no CTS ownership transfer.",
+    "Abstractinterface doesnotimplement nullguards/tokenordering/nextinvocation/delivery durability; no universal always-next/broker-ack promise."
+  ],
+  "CLOSED": false
+}

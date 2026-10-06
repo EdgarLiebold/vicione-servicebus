@@ -1,0 +1,182 @@
+{
+  "utc": "2026-10-03T02:08:09.377075+00:00",
+  "status": "RESEARCH_AND_PLAN_BEFORE_AUTHORING",
+  "finding": "F030 bounded bus identity diagnostic; startup contract remains PO pending",
+  "root_personal_read": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKindEndpointContext.cs",
+      "sha256": "6a0e6e67ed13ed4f7ce4aa56fc78de2606bf1fb34add4b4b9ae6360b0bb18913",
+      "bytes": 1088,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKindContext.cs",
+      "sha256": "692a19b3b52e86f67b085f3f356b27375ab7a39f032bde967b79a062f194a065",
+      "bytes": 921,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "sha256": "7fa0fd503d34bf8b31fa89d44af32b8a0f5397ff270a3576e0d1b5a1736e5775",
+      "bytes": 463,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ConfigurationMessages.cs",
+      "sha256": "a065264bf22b087fcb671d1165334f4f504b97109a379bf7c02bcc6966a01f31",
+      "bytes": 2491,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerKind.cs",
+      "sha256": "a380102810512390083e300911f516317acd6507337157ec2a5547da62fe6bf2",
+      "bytes": 4961,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3ae4735449c76fb29ca75718ef96f5babef34bd80cd11a3a51ccaea33d822942",
+      "bytes": 4930,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825",
+      "bytes": 18461,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/InMemoryOutbox/OutboxConsumePipeSpecificationObserver.cs",
+      "sha256": "e8ce214465493f57191f4de419ef597dce40fb541abb1d380099a34c4f16eb52",
+      "bytes": 9904,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d674136886bc706ef596fe3d2017c8608d0171e0a9a6c02f3d9d03ca74f46d5b",
+      "bytes": 4603,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerConfigurator.cs",
+      "sha256": "26fa69cfc869a3e8ad7212cc0e9ad276eecfed23064d9d618e7801f90094aa85",
+      "bytes": 6999,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerSpecification.cs",
+      "sha256": "0588767c92b0bfb4df24d097dd4bce826abbe84b5e2bdba9d5258e901a9b9b89",
+      "bytes": 9833,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+      "sha256": "59bb94ea1dbc25064b7237e373708e7fc5e594721ded3dd3ac98b6542d0b696c",
+      "bytes": 2022,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/OptionsSet.cs",
+      "sha256": "7074f6865b74205f0fb309008f4dd7b1e4ef5e98f7df23532025c2ae4619723a",
+      "bytes": 2471,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/IOptions.cs",
+      "sha256": "6ba80f56a3cb5b33f2f9e73466eb3e0195ed256938245c1383358f5f1263a926",
+      "bytes": 151,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/IConsumerSpecification.cs",
+      "sha256": "1f09f4e24fb479b25ff5341a62fd7977fadb7b8040a8b6995105bc792849bc13",
+      "bytes": 1165,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/IConsumerConfigurator.cs",
+      "sha256": "2904ec06ec66bd2e111cb5440ec80ef26632d4b6b1031ea4bbe4cb21652f2bb4",
+      "bytes": 2770,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "df09223331e2acd9be04e5e241510bd39cc2572618b3d3b0d16f0548e4f9c0d0",
+      "bytes": 13411,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "bytes": 10520,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusFactoryConfigurator.cs",
+      "sha256": "667c1f8c0b1d1bdd293ae3dc1b45c54f44dabf7388f2ccf925c56513c52a7e5a",
+      "bytes": 7333,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusScopeIsolationTests.cs",
+      "sha256": "cac6ad7fa7da97c3ce6604c0def2060c71c461bdf7fbd847ef314b61f63f7f40",
+      "bytes": 7085,
+      "reader": "/root",
+      "read_status": "FULL_PERSONAL_CURRENT_TEXT_READ"
+    }
+  ],
+  "owned_test_scope": "New isolated console NuGet consumer; no canonical Core test modification or whole766 acceptance. Reuse personally FULL-read Package05 Program runtime reporting, OwnedLifetime and exact public package csproj; read all new owner inputs after authoring.",
+  "implementation": [
+    "Internal immutable ConsumerBusIdentityOptions carries only existing canonical BusKey string, captured from registration without retaining IServiceProvider.",
+    "Read option in Batch connector; pass to grouped and ungrouped collectors. Existing internal constructor callers remain optional honest unknown fallback.",
+    "Use common ConfigurationMessages.Create shape preserving endpoint, Batch.TimeLimit key, max whole-ms and remedy. No startup behavior change."
+  ],
+  "cases": [
+    "default-invalid-plain",
+    "default-invalid-grouped",
+    "default-valid-plain",
+    "default-valid-grouped",
+    "typed-invalid-plain",
+    "typed-invalid-grouped",
+    "typed-valid-plain",
+    "typed-valid-grouped"
+  ],
+  "assertions": [
+    "Typed two buses within same provider and same endpoint name, distinct hosts; exact each canonical key, exact receive address; no default/unknown or other bus key.",
+    "Invalid actual System interval gives owned ConfigurationException result, single terminal per sent message, no consumer delivery.",
+    "Valid System interval size-completes exact two distinct IDs once per owning bus, actual grouped key route.",
+    "Run identical new consumer against prior frozen Package05 packages for causal diagnostic red and positive controls, then fresh fixed packages.",
+    "Mutation source omission/default/grouped handoff/cross-owner, each strict actual compiled DLL with native discriminating negative+positive; rollback all owned product sources and prior M6209."
+  ],
+  "independent_review": "Azure helper afterfreeze; authorRoot onlyNative serial",
+  "limits": [
+    "No original startup target closure",
+    "No whole test owner grade or wholeAPI A+"
+  ]
+}

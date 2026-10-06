@@ -74,8 +74,14 @@ public class SqlScheduleMessageProvider :
         await endpoint.SendAsync(message, schedulePipe, cancellationToken).ConfigureAwait(false);
 
         var accepted = schedulePipe.AcceptResult();
-        LogContext.Debug?.Log("SCHED {DestinationAddress} {MessageId} {MessageType} {DeliveryTime:G} {Token}",
-            destinationAddress, accepted.MessageId, TypeCache<T>.ShortName, dueAt, accepted.ScheduledMessageId);
+        try
+        {
+            LogContext.Debug?.Log("SCHED {DestinationAddress} {MessageId} {MessageType} {DeliveryTime:G} {Token}",
+                destinationAddress, accepted.MessageId, TypeCache<T>.ShortName, dueAt, accepted.ScheduledMessageId);
+        }
+        catch (Exception)
+        {
+        }
 
         return new ScheduledMessageHandle<T>(accepted.ScheduledMessageId ?? tokenId, dueAt, destinationAddress, message);
     }
@@ -94,7 +100,15 @@ public class SqlScheduleMessageProvider :
         {
             var deleted = await clientContext.DeleteScheduledMessageAsync(tokenId, cancellationToken).ConfigureAwait(false);
             if (deleted)
-                LogContext.Debug?.Log("CANCEL {TokenId}", tokenId);
+            {
+                try
+                {
+                    LogContext.Debug?.Log("CANCEL {TokenId}", tokenId);
+                }
+                catch (Exception)
+                {
+                }
+            }
         }, cancellationToken);
     }
 
@@ -114,7 +128,15 @@ public class SqlScheduleMessageProvider :
         {
             var deleted = await clientContext.DeleteScheduledMessageAsync(tokenId, cancellationToken).ConfigureAwait(false);
             if (deleted)
-                LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId}", destinationAddress, tokenId);
+            {
+                try
+                {
+                    LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId}", destinationAddress, tokenId);
+                }
+                catch (Exception)
+                {
+                }
+            }
         }, cancellationToken);
     }
 

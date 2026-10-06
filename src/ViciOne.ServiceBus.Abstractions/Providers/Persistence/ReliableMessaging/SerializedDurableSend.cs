@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 
-/// <summary>Immutable serialized representation admitted into producer-side durable storage.</summary>
+/// <summary>Carries serialized fields for producer-side durable storage, retaining the supplied body and metadata memory views.</summary>
 /// <remarks>
 /// <see cref="ContractIdentity"/> is the durable protocol identity. No assembly-qualified CLR type name is persisted.
 /// Metadata is ServiceBus-owned infrastructure metadata; payload body remains opaque to the durable store.

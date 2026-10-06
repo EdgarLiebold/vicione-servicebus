@@ -1,0 +1,320 @@
+{
+  "accepted_count": 28,
+  "explicit_record_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43
+  ],
+  "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+  "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+  "reason": "Root reviewed whole context and closure reports; selected28 member semantics, exact named assertions and declaration NAs; previously personally whole read Core test owners reused at exact identical source hashes. Truncated initial projection superseded for overloads18..27 by whole compact selected rows. Current owners/test source hashes verified.",
+  "xml_delta_acceptance": "Previously closed F048/F049 receipt PACKAGE41_S3_20_AND_F047_F049_ROOT_ACCEPTANCE_R1.json binds corrected generated XML and source/PDB; no executable change; applies to three cached TaskResults properties and two declarations.",
+  "open_members_retained": 18,
+  "accepted_members": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PartitionedTaskExecutor`1.#ctor(ViciOne.ServiceBus.Advanced.Middleware.PartitionKeyProvider{`0},System.Int32,System.Int32,System.Nullable{System.Int32},ViciOne.ServiceBus.Advanced.Middleware.IPartitionHashGenerator)",
+      "source_sha256": "49b5490e5403e00c42bff802c79d74e055ffadc8f2672cb265ffc5f6446f42e4",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PartitionedTaskExecutor`1.DisposeAsync",
+      "source_sha256": "49b5490e5403e00c42bff802c79d74e055ffadc8f2672cb265ffc5f6446f42e4",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PartitionedTaskExecutor`1.EnqueueAsync(`0,System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "source_sha256": "49b5490e5403e00c42bff802c79d74e055ffadc8f2672cb265ffc5f6446f42e4",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PartitionedTaskExecutor`1.ExecuteAsync(`0,System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "source_sha256": "49b5490e5403e00c42bff802c79d74e055ffadc8f2672cb265ffc5f6446f42e4",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.ConsumerConcurrencyGate`1.#ctor(ViciOne.ServiceBus.Advanced.Registration.ConsumerConcurrencyPolicy)",
+      "source_sha256": "4655e105dcdc53f9d2ead2499acdc21def5cae8e61e09fe1ab1b526517d9d76f",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.ConsumerConcurrencyGate`1.Dispose",
+      "source_sha256": "4655e105dcdc53f9d2ead2499acdc21def5cae8e61e09fe1ab1b526517d9d76f",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Advanced.Registration.PartitionedConsumerConcurrencyGate`2.#ctor(System.Int32,ViciOne.ServiceBus.Advanced.Registration.ConsumerPartitionKeySelector{`0,`1},System.Collections.Generic.IEqualityComparer{`1})",
+      "source_sha256": "eb5d6aed820e54ac06bb56e1d5d464e42220455c7fbe91eb34c748f6f5723f96",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.#ctor(System.Int32,System.Int32)",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.DisposeAsync",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.EnqueueAsync(System.Action,System.Threading.CancellationToken)",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.EnqueueAsync(System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.EnqueueBlocking(System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.EnqueueValueTaskAsync(System.Func{System.Threading.Tasks.ValueTask},System.Threading.CancellationToken)",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteAsync(System.Action,System.Threading.CancellationToken)",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteAsync(System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteAsync``1(System.Func{System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteAsync``1(System.Func{``0},System.Threading.CancellationToken)",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteValueTaskAsync(System.Func{System.Threading.Tasks.ValueTask},System.Threading.CancellationToken)",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TaskExecutor.ExecuteValueTaskAsync``1(System.Func{System.Threading.Tasks.ValueTask{``0}},System.Threading.CancellationToken)",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "P:ViciOne.ServiceBus.Util.TaskResults.Completed",
+      "source_sha256": "1faab1c4e508d7627540ccf28dcc4967460005de1359cded92b03317aeb6ceb7",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "P:ViciOne.ServiceBus.Util.TaskResults.False",
+      "source_sha256": "1faab1c4e508d7627540ccf28dcc4967460005de1359cded92b03317aeb6ceb7",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "P:ViciOne.ServiceBus.Util.TaskResults.True",
+      "source_sha256": "1faab1c4e508d7627540ccf28dcc4967460005de1359cded92b03317aeb6ceb7",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "T:ViciOne.ServiceBus.Advanced.Middleware.PartitionedTaskExecutor`1",
+      "source_sha256": "49b5490e5403e00c42bff802c79d74e055ffadc8f2672cb265ffc5f6446f42e4",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "T:ViciOne.ServiceBus.Advanced.Registration.ConsumerConcurrencyGate`1",
+      "source_sha256": "4655e105dcdc53f9d2ead2499acdc21def5cae8e61e09fe1ab1b526517d9d76f",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "T:ViciOne.ServiceBus.Advanced.Registration.PartitionedConsumerConcurrencyGate`2",
+      "source_sha256": "eb5d6aed820e54ac06bb56e1d5d464e42220455c7fbe91eb34c748f6f5723f96",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "T:ViciOne.ServiceBus.Util.SingleThreadedDictionary`2",
+      "source_sha256": "dfe528b8550504e3859116692b8655c45b16628155f3145c6b17c2b36835a9aa",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "T:ViciOne.ServiceBus.Util.TaskExecutor",
+      "source_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "T:ViciOne.ServiceBus.Util.TaskResults",
+      "source_sha256": "1faab1c4e508d7627540ccf28dcc4967460005de1359cded92b03317aeb6ceb7",
+      "semantic_evidence": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-core-utilities44-closure-recommendations-r1/PER_SYMBOL44_PLUS2_CLOSURE_RECOMMENDATIONS.json",
+      "semantic_evidence_sha256": "757d303f0a774bb99ca46e138b9cc0b4644f9cb85e5aa343cd5a5800321edbae",
+      "status": "ROOT_ACCEPTED_THIS_MEMBER_CONTRACT",
+      "root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE51_UTILITIES28_MEMBER_ROOT_ACCEPTANCE_R1.json",
+      "limit": "Actual member only; declaration acceptance does not close independently recorded executable members or exhaustive concurrency."
+    }
+  ]
+}

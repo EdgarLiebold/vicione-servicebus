@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-05T15:01:33.431580+00:00",
+  "status": "INDEPENDENTLY_REVIEWED_ORIGINAL_VALIDATION2_TEST_AND_ADDREQ1_APPLIED_ORIGINAL_NATIVE_PENDING",
+  "product_source_changed": false,
+  "test": {
+    "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsConfiguredPipeValidationTests.cs",
+    "sha256": "bd00ec4342f4a7c2772f36436f67963d8d5a42d01163b79e93194d361a8f7cb9",
+    "cases": 2,
+    "root_whole_read_receipt": "9c2c5e"
+  },
+  "requirements": {
+    "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+    "before_count": 183,
+    "after_count": 184,
+    "before_sha256": "c13688e226f66947e49d5264d8842cd41317010bb3023f0f2c2734f5444af2a2",
+    "after_sha256": "d31916f03c00cbadb2a26c09c76fa40b28f54c9125393c1cb434fd55d22fdc1a",
+    "prefix183_preserved": true
+  },
+  "proposal_manifest_sha256": "c03a93172036b634a435f74eec73204b9502d43cff245cd383a04155d12a215c",
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-sqs-configured-pipe-validation2-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "4a6ea89162e915a972684b15cf0cc033016a79b872a92d95ddadefb0130711c4",
+    "root_whole_report_receipt": "d27659",
+    "count_precision_erratum": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package189-validation2-peer-owner-count-erratum-r1/ERRATUM.json"
+  },
+  "limits": "Original2 finite supported public validation oracles; no new confirmed finding or grade before native. Separate from fixed8 and lifetime9."
+}

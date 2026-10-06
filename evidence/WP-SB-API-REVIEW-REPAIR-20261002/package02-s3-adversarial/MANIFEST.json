@@ -1,0 +1,57 @@
+{
+  "review_id": "PACKAGE02-S3-INTERNAL-ADVERSARIAL-20261003",
+  "freeze_sha256": "4bd24d58a2d13c7141d249d8b4b687e31537fd1f9753edc4918ad08e61436ab1",
+  "status": "PATCH_REVIEW_PASS_WITH_STATED_PROOF_LIMITS",
+  "files": [
+    {
+      "path": "REPORT.md",
+      "sha256": "52ed22c2cc615edb5a185231da11118b1484a079d9061af60028f1208254c6ed",
+      "bytes": 1986
+    },
+    {
+      "path": "REVIEW.json",
+      "sha256": "33d8696af00615abc070b13205a45276dc6601dbb202eacdfee355c5f3655199",
+      "bytes": 40013
+    },
+    {
+      "path": "delta-01.patch",
+      "sha256": "ac4ea25b9613d2cddd242454818a9608fe7e5c494cb9153624c691a67f2e1dc0",
+      "bytes": 926
+    },
+    {
+      "path": "delta-02.patch",
+      "sha256": "084e9076060cd049a6b354a97a0d30aed080750e58c5fa9e5a2d367e59bfd86c",
+      "bytes": 1749
+    },
+    {
+      "path": "delta-03.patch",
+      "sha256": "93baa1d13f45e0dacb7e03f0bc7fd8855c3288d40d42ca43344a73a418ae63ce",
+      "bytes": 841
+    },
+    {
+      "path": "delta-04.patch",
+      "sha256": "9044501f938fb7cc9e6beb736652d39f1c1d871ab7db11ae9c4a5f79d21cfbcb",
+      "bytes": 4751
+    },
+    {
+      "path": "delta-05.patch",
+      "sha256": "7f3c844febddfc57387465d6dbc766758d3a1ab76978d914ce714fd59b76dc4d",
+      "bytes": 3163
+    },
+    {
+      "path": "mutant-prefix-boundary-overrejection.patch",
+      "sha256": "03a2a7874fed90ca425dd15500435d00f837ebeee3989f713b0c42663c063005",
+      "bytes": 620
+    },
+    {
+      "path": "mutant-substring-overrejection.patch",
+      "sha256": "5221abb98c1889bc7ac67a248ef2573449bbcaa9bb59de31370e728a7bcea89a",
+      "bytes": 613
+    },
+    {
+      "path": "mutant-wrong-reserved-prefix.patch",
+      "sha256": "13696b4b22e6148a488c6df8fb09ce0774bd0db0c20897c01e92e889c4baac8e",
+      "bytes": 613
+    }
+  ]
+}

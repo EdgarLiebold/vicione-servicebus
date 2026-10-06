@@ -1,0 +1,24 @@
+{
+  "utc": "2026-10-04T19:58:14.787690+00:00",
+  "decision": "APPLY_THREE_MEDIATOR_ORIGINAL_LOGGER_PROBES_WITH_THREE_EXISTING_BASE_CONTROLS",
+  "independent_source_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package129-mediator-logger3-independent-source-r1/REPORT.json",
+    "sha256": "0f2044ba875276e4308f924f895fcf501b703be169d875fbb1290b72e926625b"
+  },
+  "author_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package129-mediator-receive-logger-three-oracles-proposed-r1/MANIFEST.json",
+    "sha256": "32f1ea3fafa4868eb91e935df9190b657aac19a347577937b549a21cb2b3e264"
+  },
+  "before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveNotificationContractTests.cs",
+    "sha256": "fef84eed0426af0daf944bb8476529d6126275486817ea59520fbd6e31380ca1"
+  },
+  "root_personal_review": "Entire509L proposed owner read7d183b/bc2f77/0f975f plus delta8a3bd8; actualentireMediatorowner8272ec and independentreport8e1323. All helper/assertion cleanup preserved.",
+  "requirements_delta": 0,
+  "product_changes": 0,
+  "native_credit": 0,
+  "after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveNotificationContractTests.cs",
+    "sha256": "bb179b6d60b15ed4bf2f30452714a54e9f11732f017c0759208f89b44a610b23"
+  }
+}

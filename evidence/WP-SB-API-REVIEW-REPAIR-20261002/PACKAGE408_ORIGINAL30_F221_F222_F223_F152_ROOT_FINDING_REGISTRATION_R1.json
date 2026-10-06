@@ -1,0 +1,76 @@
+{
+  "utc": "2026-10-06T09:58:16.540948+00:00",
+  "status": "ROOT_REGISTERED_FINITE_ORIGINAL_F221_F222_F223_AND_REOPENED_F152_OWNING_DIAGNOSTICS",
+  "actual407_original": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package407-joint-public-original30-source-capture-r1/original30-r2/AFTER.json",
+    "sha256": "4a8d96fa1e50872768332556ded286aeee36692431b30a5538f244b3002e47f9"
+  },
+  "different_actual_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package407-original30-independent-qualification-r1/REPORT.json",
+    "sha256": "add13cac30fd621ac5c052de8cc8df9131b29c03dd0c84f79168111dad9f85c4"
+  },
+  "Root_whole_peer_read": "d43e1a",
+  "new_findings": [
+    {
+      "id": "F-SB-API-221",
+      "title": "Activity observer retirement skips later acquired registrations after a child failure",
+      "owner": "src/ViciOne.ServiceBus/Configuration/ActivityObserverConfigurationExtensions.cs",
+      "counts": {
+        "total": 8,
+        "passed": 4,
+        "failed": 4,
+        "skipped": 0
+      },
+      "causal_bound": "Hostilecasesfirst114: second actual child remains connected after first child unique cleanup error; Same cleanup cause and prior retirements reached."
+    },
+    {
+      "id": "F-SB-API-222",
+      "title": "Async test-harness disposal skips inactivity retirement after a test cancellation callback fails",
+      "owner": "src/ViciOne.ServiceBus.Testing/Harnesses/AsyncTestHarness.cs",
+      "counts": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "causal_bound": "Hostilefirst49 inactivity token remains uncanceled after exact user callback failure and test token cancellation; returned exception tree later unreachable."
+    },
+    {
+      "id": "F-SB-API-223",
+      "title": "Multi-consumer admission rollback stops at first cleanup failure and loses admission cause",
+      "owner": "src/ViciOne.ServiceBus.Testing/Harnesses/Consumers/MultiTestConsumer.cs",
+      "counts": {
+        "total": 4,
+        "passed": 2,
+        "failed": 2,
+        "skipped": 0
+      },
+      "causal_bound": "Modes2/3 first71 second actual handle never released after unique first cleanup cause; later cause-tree classification unreachable."
+    }
+  ],
+  "F152_extension": {
+    "Courier": {
+      "total": 12,
+      "passed": 6,
+      "failed": 6,
+      "skipped": 0,
+      "expressions": 3,
+      "public_routes": 6,
+      "first": "116 unique owning Debug IO blocks valid callback/specification admission"
+    },
+    "BusHarness": {
+      "total": 4,
+      "passed": 2,
+      "failed": 2,
+      "skipped": 0,
+      "expressions": 2,
+      "first": "101/152 unique owning Error IO replaces exact initiating start/stop cause"
+    }
+  },
+  "known_before": 220,
+  "known_after": 223,
+  "bounded_accepted_before": 220,
+  "bounded_accepted_after": 219,
+  "no_repair_accepted": true,
+  "whole_API_closed": false
+}

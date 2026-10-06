@@ -46,8 +46,13 @@ public class RabbitMqReceiveEndpointBuilder :
     /// <returns>The RabbitMQ receive-endpoint context.</returns>
     public RabbitMqReceiveEndpointContext CreateReceiveEndpointContext()
     {
+        return CreateReceiveEndpointContext(null);
+    }
+
+    internal RabbitMqReceiveEndpointContext CreateReceiveEndpointContext(Func<IPipe<ConnectionContext>, IPipe<ConnectionContext>>? connectionPipe)
+    {
         var brokerTopology = BuildTopology(_configuration.Settings);
-        var context = new RabbitMqQueueReceiveEndpointContext(_hostConfiguration, _configuration, brokerTopology);
+        var context = new RabbitMqQueueReceiveEndpointContext(_hostConfiguration, _configuration, brokerTopology, connectionPipe);
 
         if (_configuration.Settings.QueueName != RabbitMqExchangeNames.ReplyTo)
         {

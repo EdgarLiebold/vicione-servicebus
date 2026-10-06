@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-06T02:43:56.544343+00:00",
+  "status": "INDEPENDENT_SOURCE_REVIEWED_PRODUCT1_APPLIED_FIXED_NATIVE_PENDING",
+  "finding_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE314_F213_ACTIVEMQ_ENSURE_TOPIC_CLOSE_DISPOSE_ORIGINAL6_ROOT_FINDING_REGISTRATION_R1.json",
+    "sha256": "fbd4dfda1e0d572ea652a8c04dabecb4f9a6ec51756343b39778171a45db44c1"
+  },
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package311-activemq-ensure-topic-outcome-product1-proposed-r1",
+    "manifest_sha256": "2c45307859c074b1093dce9156e51717b0fbc00ba5b3996fa260d598c540784d"
+  },
+  "different_agent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package311-ensure-topic-independent-scanner-source-peer-r1",
+    "manifest_sha256": "a9a888d7baa2e1eb720a2686b9aa103cf4b244248105d1fb53d3f12915a1dbe2"
+  },
+  "exact_delta": {
+    "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqSessionContext.cs",
+    "before_sha256": "ac1cbba6f7b5945099b36491d2b7df3b5f5ac954a51d762f0f336bc3aa1d8274",
+    "after_sha256": "3b529b33838114123c489731c2413579bb87f4c71c76adca27b9f6ac2c6e75e3",
+    "before_lines": 326,
+    "after_lines": 322,
+    "before_literal": "            try\n            {\n                producer.Close();\n            }\n            finally\n            {\n                // Dispose also runs when Close fails so the session does not retain the short-lived producer.\n                producer.Dispose();\n            }",
+    "after_literal": "            var failures = new ActiveMqCleanupFailures();\n            failures.Capture(() => producer.Close(), static _ => { });\n            // Dispose also runs when Close fails so the session does not retain the short-lived producer.\n            failures.Capture(() => producer.Dispose(), static _ => { });\n            failures.ThrowIfAny(\"One or more ActiveMQ topic producer cleanup stages failed.\");",
+    "inverse": "Exact replacement of one after literal with before literal reconstructs all original bytes",
+    "all_other_bytes_unchanged": true
+  },
+  "root_wholeproposed322": "dd703a",
+  "root_wholepeer": "6eac06",
+  "helper265_wholerelevantCollector": "5f6bb4",
+  "preservation": "All other source/API/XML/test/Req bytes unchanged; currentModulefixed/full/strict/package and identity-rebase await actualqualified evidence.",
+  "native_credit": 0,
+  "grade": null
+}

@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-06T01:03:30.584560+00:00",
+  "status": "CONFIRMED_SQS_CLIENT_OWNING_DIAGNOSTICS_ORIGINAL12_REPAIR_PENDING",
+  "id": "F-SB-API-208",
+  "severity": "Medium",
+  "source_owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsClientContext.cs",
+  "title": "Optional owning SQS client diagnostics interrupt successful subscription continuation or prevent delete SDK admission",
+  "family_reconciliation": "One client-facade diagnostic containment family, four sites/three public methods. Distinct owner from F205 startup purge and F191 durable receive Warning; neither business provider nor global helper policy changed. No duplicate fourcase IDs.",
+  "actual_original": {
+    "total": 12,
+    "passed": 8,
+    "failed": 4,
+    "skipped": 0,
+    "first_failure": "All4hostile atNull133 after unique diagnostic identity; subscription postSDK200, deletes preSDK. Later failedbranch assertions not credited."
+  },
+  "independent_original": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package283-sqs-original12-independent-runtime-qualification-r1/REPORT.json",
+    "sha256": "3f570f2e41cc55426f11264643d91210b84ac42940498cf7f6e074072b18e2fe"
+  },
+  "whole_API_closed": false
+}

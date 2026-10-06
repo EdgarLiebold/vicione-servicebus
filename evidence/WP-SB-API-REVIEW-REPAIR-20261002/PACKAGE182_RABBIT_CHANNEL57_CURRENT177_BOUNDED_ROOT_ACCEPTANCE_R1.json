@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-05T12:12:11.673966+00:00",
+  "actor": "/root",
+  "scope": "57 disjointoriginal Rabbit Channel SPI and concrete/local wrapper bodies; current177 qualifiedsource and emittedXML",
+  "before": {
+    "raw": 9037,
+    "original": 8175
+  },
+  "after": {
+    "raw": 9094,
+    "original": 8232,
+    "sidecars": 833,
+    "original_remaining": 10337
+  },
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package211-rabbit-channel57-current177-contracts-r3/REPORT.json",
+    "sha256": "11c3fd8c0d168ec5fbddf5df8478eb774bedbda8865e1a3916fa5dd761b67050",
+    "manifest_sha256": "04b404acd84724293746122920587424805737ee0876c06e7db3519bd0595f49"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package211-rabbit-channel57-current177-rebase-independent-scanner-r3/REPORT.json",
+    "sha256": "2d958fc068f4f45854ee08f837e70aee1d28db33965a3d4a01d968e7b3928fa6",
+    "manifest_sha256": "a6e161aa3a6b895e5331c16a50466c79dc49d8a0b4f503b8c168cf3abc43e2c3"
+  },
+  "specific_NA_overlay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package211-rabbit-dispose-specific-na-precision-r1/ERRATUM.json",
+    "sha256": "5a642fdfdbe22c60caf02f67b5cbbd0a9c386ea49022c702ba654d38fa527ae6"
+  },
+  "Root_personal": "57 behavior/ownership/cancellation norms0faecf withmissing9–16 recoveredf8599f,29–42a56c08,43–56b25e12; allwholeReport/peer/onefieldalias048915. Initialwrongnormfield304c21 not credited. LiteralallthreeMAN,57OriginalCSV/disjoint/current6ownerSHA/selected177PDBsnapshots/57publishedXML/ZIPCRC checked here. No Rootwholeall6Source claim, independentauthor genuine1307L +focusedpeer ownercall/Lifetime/helper141 credited to respectiveauthors only.",
+  "semantic_precision": "R3 owning Dispose Cleanup uses defaultNone, directhelper caller CT separate. awaitAck is local return policy; actualpublish observed/lease drainage obligations remain. Single specific_NA alias clarifies repairedF166diagnostic versus remaining operative Dispose requirements. IConnection disposal failure stillvisible distincthelper.",
+  "native_cases_added": 0,
+  "whole_API_closed": false,
+  "whole_API_A_plus": false
+}

@@ -1,0 +1,53 @@
+{
+  "status": "ROOT_APPLIED_REVIEWED_RABBIT_OWNED_VALIDATORS_PRODUCT1_FIXED_NATIVE_PENDING",
+  "utc": "2026-10-05T17:22:59.746826+00:00",
+  "finding_id": "F-SB-API-192",
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE196_RABBITMQ_F192_VALIDATION_ORIGINAL2_ROOT_REGISTRATION_R1.json",
+    "sha256": "d4f69696f5bbdfdd7ee55380d6d3e99dfdb894e482b12fe9fdace0d836d7ca26"
+  },
+  "author_REPORT_sha256": "9a4e05cec3e58420bda0f08ea950636e10259c1136065c9163227cbce2ad888d",
+  "author_MANIFEST_sha256": "0cda3ca402465e5b06f157112d7fb39dcf3561c6aee6b242ebb8eb77bc3aa654",
+  "independent_source_peer_REPORT_sha256": "3718131558d4b9937e328f93f409a527d014cd493e90e19e76bc533c2f9d0d55",
+  "independent_source_peer_MANIFEST_sha256": "9b4a2e742d0579c5286b2d1e9e76cf39e6b5c4ee5987dd36832b7b8779061497",
+  "change": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs",
+    "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs",
+    "before_sha256": "a5a4c0ebf984d221bea5d441e0f924b147a426e8e07b516ef1bdc076bd7bf612",
+    "after_sha256": "c8cedf5ca860b08c0ad501f4d8d6febb82a403876e9a440574ca174d332e7a1e",
+    "before_lines": 415,
+    "after_lines": 421,
+    "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package198-rabbit-configured-validation-product1-proposed-r1/before/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs",
+    "proposed_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package198-rabbit-configured-validation-product1-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs"
+  },
+  "preservation": "Exact two-literal inverse full415 owner bytes; only six validation body lines plus one summary, all public declarations and other bodies unchanged. Channel then connection then unchanged base results retain queueName prefix.",
+  "test": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Configuration/RabbitMqConfiguredPipeValidationTests.cs",
+    "sha256": "8d25dc7a28eaefc92d18f7ba9c3f08346cd1212cebb8138573ec6d649ebab175",
+    "lines": 77
+  },
+  "requirements": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+    "sha256": "d1e2e569c3a132a012346d45cbd4b39caf1fabdacf8ab1ce775de8c34ba6c57e",
+    "rows": 284,
+    "unchanged": true
+  },
+  "product_sources_unchanged": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/PipeConfigurator.cs",
+      "sha256": "3ceb5da4b84704720359cc99774160b5ead449a673fed41cd7ad4e88fab7eca3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResultExtensions.cs",
+      "sha256": "54edcef773f15092f88e140bbdf9e27357943d9c74458302a095fa42fbecc357"
+    }
+  ],
+  "XML_elements_changed": 1,
+  "public_API_changed": false,
+  "root_read_receipts": [
+    "95d879 exactQauthor",
+    "28f255 fullpeer/fullpatch/finalOriginal"
+  ],
+  "native_count": 0,
+  "repair_accepted": false
+}

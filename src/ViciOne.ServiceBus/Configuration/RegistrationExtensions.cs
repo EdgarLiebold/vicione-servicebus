@@ -75,8 +75,7 @@ public static class RegistrationExtensions
 
     /// <summary>Adds the specified consumer types.</summary>
     /// <param name="configurator">The configurator to update.</param>
-    /// <param name="types">The state machine types to add.</param>
-    /// ˆ
+    /// <param name="types">The consumer types to add.</param>
     public static void AddConsumers(this IRegistrationConfigurator configurator, params Type[] types)
     {
         AddConsumers(configurator, null, types);

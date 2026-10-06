@@ -1,0 +1,51 @@
+{
+  "utc": "2026-10-06T20:21:37.008926+00:00",
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE551_FINAL234_CURRENT18600_LOCAL_GATES_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "83f7abba93ae4cc1eaf06cb9c1c26e565454ede6701c50fc777c7e5bb908e885",
+    "bytes": 14949
+  },
+  "MASTER": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "e96bfa2d27674d730d2bd2b5b35e05be12010696adb1362474ed5f3efeb32bc7",
+    "bytes": 86416895
+  },
+  "immutable_MASTER": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINAL_EVIDENCE/API_MEMBER_ACCEPTANCE_FINAL.json",
+    "sha256": "e96bfa2d27674d730d2bd2b5b35e05be12010696adb1362474ed5f3efeb32bc7",
+    "bytes": 86416895
+  },
+  "STATE": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+    "sha256": "ca0d1f6cabd41e5080ca445d1d1dc8281db103591b4325e19331cf1c0f5a6c9c",
+    "bytes": 3623416
+  },
+  "FINDINGS": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINDINGS_CURRENT.json",
+    "sha256": "452b23628e5821e43dd71bfc5b4bd82633ad8bc60f97d8b7e953469217855677",
+    "bytes": 511085
+  },
+  "all19433_member_objects_unchanged": true,
+  "changed_findings_exact9": [
+    "F-SB-API-147",
+    "F-SB-API-152",
+    "F-SB-API-228",
+    "F-SB-API-229",
+    "F-SB-API-230",
+    "F-SB-API-231",
+    "F-SB-API-232",
+    "F-SB-API-233",
+    "F-SB-API-234"
+  ],
+  "prior225_retained": true,
+  "csv_counts": {
+    "FILE_COVERAGE": 6330,
+    "API_COVERAGE": 18569,
+    "API_INVENTORY": 18600,
+    "CONTRACT_TEST_MATRIX": 270,
+    "REQUIREMENT_EVIDENCE": 18,
+    "SKILL_USAGE": 40
+  },
+  "Source_Test_Product_changes": 0,
+  "SDK_calls": 0
+}

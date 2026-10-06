@@ -1,0 +1,111 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+using Xunit;
+
+namespace ViciOneReview.SharedEndpoint;
+
+public static class EndpointCases
+{
+    public static async Task RunAsync(string mode, TimeSpan timeout, CancellationToken caller)
+    {
+        var probe = new Probe(mode);
+        var previousProbe = State.Probe;
+        var previousLog = LogContext.Current;
+        State.Probe = probe;
+        using var logger = LoggerFactory.Create(_ => { });
+        LogContext.ConfigureCurrentLogContext(logger);
+        ServiceProvider? provider = null;
+        IBusControl? control = null;
+        ConnectHandle? observer = null;
+        bool started = false;
+        await OwnedLifetime.RunAsync(async () =>
+        {
+            var services = new ServiceCollection(); services.AddLogging(); services.AddSingleton(probe);
+            if (mode == "mixed-typed") services.AddViciOneServiceBus<ISharedBus>(bus =>
+            {
+                bus.Limits(MessageLimits.Conservative); Register(bus);
+                bus.UsingInMemory((context, config) => { config.PrefetchCount = 37; config.ConfigureEndpoints(context); });
+            });
+            else services.AddViciOneServiceBus(bus =>
+            {
+                bus.Limits(MessageLimits.Conservative); Register(bus);
+                bus.UsingInMemory((context, config) => { config.PrefetchCount = 37; config.ConfigureEndpoints(context); });
+            });
+            provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+            Exception? rejected = null;
+            try
+            {
+                control = mode == "mixed-typed" ? provider.GetRequiredService<IBusInstance<ISharedBus>>().BusControl : provider.GetRequiredService<IBusControl>();
+            }
+            catch (ConfigurationException exception) { rejected = exception; }
+            bool mustReject = mode.EndsWith("-qos", StringComparison.Ordinal)
+                || mode.StartsWith("mixed-concurrency-", StringComparison.Ordinal) || mode == "mixed-topology-conflict";
+            if (mustReject)
+            {
+                Assert.NotNull(rejected);
+                if (mode == "mixed-topology-conflict") Assert.Contains("ConfigureConsumeTopology", rejected.ToString(), StringComparison.Ordinal);
+                else
+                {
+                    var qos = Assert.IsType<EndpointQosConfigurationException>(rejected);
+                    Assert.Contains(Probe.Endpoint, qos.Message, StringComparison.Ordinal);
+                    Assert.Contains("consumer definition", qos.Message, StringComparison.Ordinal);
+                    Assert.Contains(mode is "mixed-saga-qos" or "mixed-concurrency-saga" ? nameof(StateDefinition) : nameof(PlainDefinition), qos.Message, StringComparison.Ordinal);
+                }
+                Assert.Equal(0, probe.Materializations); Assert.Empty(probe.Callbacks);
+                return;
+            }
+            Assert.Null(rejected); Assert.NotNull(control);
+            observer = control.ConnectConsumeObserver(probe);
+            started = true; await control.StartAsync(caller).WaitAsync(timeout, caller);
+            var endpoint = await control.GetSendEndpointAsync(new Uri("loopback://localhost/" + Probe.Endpoint), caller).WaitAsync(timeout, caller);
+            if (mode != "dedicated-saga") await endpoint.SendAsync(new PlainMessage(1), caller).WaitAsync(timeout, caller);
+            if (probe.SameKind) await endpoint.SendAsync(new OtherMessage(2), caller).WaitAsync(timeout, caller);
+            else await endpoint.SendAsync(new StateMessage(Probe.Correlation), caller).WaitAsync(timeout, caller);
+            if (mode != "dedicated-saga") await probe.PlainTerminal.Task.WaitAsync(timeout, caller);
+            if (probe.SameKind) await probe.OtherTerminal.Task.WaitAsync(timeout, caller);
+            else await probe.StateTerminal.Task.WaitAsync(timeout, caller);
+            await control.StopAsync(CancellationToken.None).WaitAsync(timeout); started = false;
+            Assert.Equal(1, probe.Materializations); Assert.Equal(0, probe.Faults);
+            int expected = mode == "dedicated-saga" ? 1 : 2;
+            Assert.Equal(expected, probe.Terminals); Assert.Equal(expected, probe.BusinessCalls);
+            string[] ordered = mode switch
+            {
+                "dedicated-saga" => ["saga"],
+                "global-override" => ["global"],
+                "same-kind-reverse" => ["other", "consumer"],
+                _ when probe.SameKind => ["consumer", "other"],
+                _ => ["consumer", "saga"]
+            };
+            Assert.Equal(ordered, probe.Callbacks);
+        }, () => Task.CompletedTask, async () =>
+        {
+            if (control is not null && started) { await control.StopAsync(CancellationToken.None).WaitAsync(timeout); started = false; }
+        }, async () =>
+        {
+            if (observer is not null) await observer.DisposeAsync().AsTask().WaitAsync(timeout);
+        }, async () =>
+        {
+            if (provider is not null) await provider.DisposeAsync().AsTask().WaitAsync(timeout);
+        }, () => { State.Probe = previousProbe; LogContext.Current = previousLog; return Task.CompletedTask; });
+
+        void Register(IBusRegistrationConfigurator bus)
+        {
+            if (mode == "mixed-reverse") bus.AddSaga<State, StateDefinition>().InMemoryRepository();
+            if (mode == "same-kind-reverse") bus.AddConsumer<OtherConsumer, OtherDefinition>();
+            if (mode != "dedicated-saga") bus.AddConsumer<PlainConsumer, PlainDefinition>();
+            if (probe.SameKind && mode != "same-kind-reverse") bus.AddConsumer<OtherConsumer, OtherDefinition>();
+            else if (!probe.SameKind && mode != "mixed-reverse") bus.AddSaga<State, StateDefinition>().InMemoryRepository();
+            if (mode == "global-override") bus.AddEndpoint(typeof(GlobalDefinition));
+            bus.AddConfigureEndpointsCallback((name, _) =>
+            {
+                if (name == Probe.Endpoint) Interlocked.Increment(ref probe.Materializations);
+            });
+        }
+    }
+    public interface ISharedBus : IBus;
+}

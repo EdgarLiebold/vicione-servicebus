@@ -40,15 +40,30 @@ public static class BusDepotTestDriver
         return depot.StopAsync(cancellationToken);
     }
 
+    public static Task RunLifecycleAsync((Type Contract, IBusControl? Control)[] instances, bool stop, CancellationToken cancellationToken)
+    {
+        var depot = new BusDepot(instances.Select(instance => new TestBusInstance(instance.Contract, instance.Control)),
+            NullLogger<BusDepot>.Instance);
+        return stop ? depot.StopAsync(cancellationToken) : depot.StartAsync(cancellationToken);
+    }
+
     private sealed class TestBusInstance : IBusInstance
     {
+        public TestBusInstance() : this(typeof(IBus), null) { }
+
+        public TestBusInstance(Type contract, IBusControl? control)
+        {
+            InstanceType = contract;
+            BusControl = control!;
+        }
+
         public string Name => "test";
 
-        public Type InstanceType => typeof(IBus);
+        public Type InstanceType { get; }
 
         public IBus Bus => null!;
 
-        public IBusControl BusControl => null!;
+        public IBusControl BusControl { get; }
 
         public IHostConfiguration HostConfiguration => null!;
 

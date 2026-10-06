@@ -1,0 +1,108 @@
+{
+  "status": "ROOT_ACCEPTED713_BOUNDED_SOURCE_DECLARATIONS_LOCAL_PROPERTIES_GENERATED_DELEGATE_SHAPES_TEN_DOC_HELD",
+  "utc": "2026-10-05T17:19:35.236051+00:00",
+  "author_report_sha256": "6fac8ac11f063d5c6ef6f54afcbd2788f4149b8e5de82e9e102b69b234547fab",
+  "author_manifest_sha256": "ec6a6ef194082f643cec8bfe6405aa02748d61f80b1b5af65442e48e6b5882cf",
+  "precision_overlay_report_sha256": "84e33ff17ebeee7202b06d4c18021452ec97012f8a5a13118c2476d727286626",
+  "precision_overlay_manifest_sha256": "b4ed9847d7246902468d8a71a5b3b881f3692ee951fac1ce7865a362353794b6",
+  "independent_source_peer_report_sha256": "7257326dc069629b395a4edd2ec0b8d267cfae20eea2f79f3bc30a691fd45085",
+  "independent_source_peer_manifest_sha256": "2b662d3939bfb100b66f4698553ad544b1aaa27bcbb7c5879ed068e246a236ae",
+  "two_personal_semantic_readers": {
+    "author": {
+      "whole_owners": 216,
+      "source_lines": 12014,
+      "individual_norms": 723
+    },
+    "independent": {
+      "whole_owners": 216,
+      "source_lines": 12014,
+      "individual_norms": 723
+    }
+  },
+  "root_read_authority": "Reports934dd9/5f7b40; all15 exact norm deltasfea017; retained author Report0c7b79. Root physical identity/original ID/parsed XML and full15-overlay inverse counterproof here; no third Root whole216/723 semantic read claim.",
+  "root_actual196_reparsed_PDB": {
+    "DLL": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package196-rabbit-configured-validation-original2-source-bound-capture-r1/payload/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+    "DLL_sha256": "b4a325b185eff5454a908132e87f8355e9dd4715263a750efcc2978d2bdc8c95",
+    "PDB_sha256": "c808a059de925e6a774bf64974964584754467a58f85bbc790db9ee56384417e",
+    "documents": 700,
+    "selected216_current_source_checksums_exact": true,
+    "same191_DLL_PDB_XML_identity": true
+  },
+  "XML": {
+    "sha256": "2c8703ae0d114b1f5bd14d307028095a9646c62fd6730e9c9274beb07532d6dd",
+    "actual_nodes_selected": 671,
+    "generated_delegate_XML_absent_NA": 52,
+    "comparison": "Structural equality preserving inner tags/attributes/text/tails; ignore only outer member tail framing. New Master rows store actual compiled raw member windows."
+  },
+  "scope": {
+    "selected_original": 723,
+    "accepted713": 713,
+    "ten_doc_held": [
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions",
+        "id": "M:ViciOne.ServiceBus.Observables.IConsumeObserverConverter.ConsumeFaultAsync(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver,System.Object,System.Exception,System.Threading.CancellationToken)",
+        "ordinal": 132
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions",
+        "id": "M:ViciOne.ServiceBus.Observables.IConsumeObserverConverter.PostConsumeAsync(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver,System.Object,System.Threading.CancellationToken)",
+        "ordinal": 133
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions",
+        "id": "M:ViciOne.ServiceBus.Observables.IConsumeObserverConverter.PreConsumeAsync(ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver,System.Object,System.Threading.CancellationToken)",
+        "ordinal": 134
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions",
+        "id": "P:ViciOne.ServiceBus.Topology.MessageTopology`1.EntityName",
+        "ordinal": 485
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions",
+        "id": "T:ViciOne.ServiceBus.Middleware.LastPipe`1",
+        "ordinal": 648
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions",
+        "id": "T:ViciOne.ServiceBus.Middleware.MessagePublishPipe`1",
+        "ordinal": 650
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions",
+        "id": "T:ViciOne.ServiceBus.Middleware.MessageSendPipe`1",
+        "ordinal": 651
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions",
+        "id": "T:ViciOne.ServiceBus.Observables.ConsumeObserverConverter`1",
+        "ordinal": 662
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions",
+        "id": "T:ViciOne.ServiceBus.Observables.IConsumeObserverConverter",
+        "ordinal": 665
+      },
+      {
+        "assembly": "ViciOne.ServiceBus.Abstractions",
+        "id": "T:ViciOne.ServiceBus.Providers.Persistence.SerializedDurableSend",
+        "ordinal": 704
+      }
+    ],
+    "concrete_members_omitted": 1139,
+    "native_cases_added": 0,
+    "global_grade": null,
+    "whole_API_member_review_closed": false
+  },
+  "counts_before": {
+    "raw_rows": 11477,
+    "original_canonical": 10615,
+    "original_remaining": 7954
+  },
+  "counts_after": {
+    "raw_rows": 12190,
+    "original_canonical": 11328,
+    "original_remaining": 7241
+  },
+  "history_preserved": "All prior11477 complete rowobjects remain equal in original order. No prior source epochs rewritten."
+}

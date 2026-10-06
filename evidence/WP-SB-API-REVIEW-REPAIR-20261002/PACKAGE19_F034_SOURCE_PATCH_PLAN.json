@@ -1,0 +1,35 @@
+{
+  "status": "ROOT_FOUR_FILE_CURRENT_FULL_SOURCE_PATCH_PLAN",
+  "finding": "F-SB-API-034",
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Configuration/ExecuteActivityEndpointDefinition.cs",
+      "sha256": "0a2162ee037cabd2ca12a7ea154216aefadb45053654095e37887fc4d411d48c"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Configuration/CompensateActivityEndpointDefinition.cs",
+      "sha256": "fc80eb6fea5324b4febc275c8d431eb3b1baa05f09219357b058f3687d29bc04"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ExecuteActivityRegistration.cs",
+      "sha256": "fc1f71aad0ff0d12503aa01e7522afa34652efa6477b160ace523d039ebd7026"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ActivityRegistration.cs",
+      "sha256": "c1ced58aa978c363c4b6e41120785e4a6dc3e2046084dbcd049ce2bd3392ea78"
+    }
+  ],
+  "adversarial_plans": [
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f034-plan-audit/AUDIT.json",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f034-preflight/REVIEW_R3.json"
+  ],
+  "change": "Add existing IDefinition marker to sealed generated types. Resolve exact generated activity type first using same bus selector. Under optional null concrete lookup, preserve custom or own generated generic fallback and reject only sealed exact generated class with foreign activity. Preserve cache/name policy.",
+  "original_phase": "package19-f034-public-previous-thirtyfour",
+  "separate_observations": [
+    "conventional generic naming timeout: no F034 causal credit",
+    "definition-execute orphan fluent endpoint: independent candidate",
+    "definition-full companion precedence: independent candidate",
+    "caller fallback compensate mixed conventional URI: classification pending"
+  ],
+  "whole_API_closed": false
+}

@@ -1,0 +1,11 @@
+--- a/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs
++++ b/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs
+@@ -57,7 +57,7 @@
+ 
+         var client = settings.ServiceBusClient;
+         var managementClient = settings.ServiceBusAdministrationClient;
+-        var ownsClient = client == null;
++        var ownsClient = true;
+ 
+         ValidateCustomPort(settings, client, managementClient);
+ 

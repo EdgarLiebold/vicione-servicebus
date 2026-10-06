@@ -10,6 +10,7 @@ public static class ServiceBusBatchingExtensions
     /// Each batch contains at most <see cref="ServiceBusSessionBatchOptions.MessageLimitPerSession" /> messages from one session,
     /// while up to <see cref="ServiceBusSessionBatchOptions.MaxConcurrentSessions" /> sessions can be processed concurrently.
     /// The endpoint processor is configured for sessions and allows enough concurrent callbacks to fill each batch.
+    /// The configured values are captured before validation; later changes to the callback's options object do not alter the batch or endpoint settings.
     /// </summary>
     /// <typeparam name="TConsumer">The consumer receiving the session batches.</typeparam>
     /// <param name="consumerConfigurator">The consumer registration to configure.</param>
@@ -20,8 +21,16 @@ public static class ServiceBusBatchingExtensions
     {
         ArgumentNullException.ThrowIfNull(consumerConfigurator);
         ArgumentNullException.ThrowIfNull(configure);
-        ServiceBusSessionBatchOptions sessionOptions = new();
-        configure(sessionOptions);
+        ServiceBusSessionBatchOptions configured = new();
+        configure(configured);
+        ServiceBusSessionBatchOptions sessionOptions = new()
+        {
+            MessageLimitPerSession = configured.MessageLimitPerSession,
+            MaxConcurrentSessions = configured.MaxConcurrentSessions,
+            SessionIdleTimeout = configured.SessionIdleTimeout,
+            TimeLimit = configured.TimeLimit,
+            TimeLimitStart = configured.TimeLimitStart,
+        };
         sessionOptions.Validate();
 
         consumerConfigurator.Options<BatchOptions>(o =>

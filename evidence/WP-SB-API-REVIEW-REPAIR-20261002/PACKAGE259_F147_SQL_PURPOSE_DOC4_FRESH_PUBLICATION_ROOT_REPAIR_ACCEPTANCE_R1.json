@@ -1,0 +1,139 @@
+{
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE258_F147_SQL_PURPOSE_DOC4_XML_ONLY_PRODUCT3_ROOT_APPLICATION_R1.json",
+    "sha256": "cf37ea9b644ed94927c15ba7effab3b320dec5104983517b85a3b1fdaf3db8ac"
+  },
+  "actual_DLL": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll",
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-fresh-root-publication-proof-r1/ViciOne.ServiceBus.SqlTransport.dll",
+    "sha256": "42801a678e2233083b3990af30b1ab3a6743d575caf1d259f01ebce75d3b0e3e"
+  },
+  "actual_XML": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.xml",
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-fresh-root-publication-proof-r1/ViciOne.ServiceBus.SqlTransport.xml",
+    "sha256": "267b03a8aca85e0537d42e6b7e45deaba80049db8ce1adc12df1d526812eb7df"
+  },
+  "nupkg": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/packages-package258-sql-purpose-doc4-r1/ViciOne.ServiceBus.SqlTransport.1.0.0.nupkg",
+    "sha256": "4a6f079e47de73f2ba5ce03bf8bca2bb860636ee284f37b60bac7145ce8b1318",
+    "bytes": 155837,
+    "CRC_unique_names_NuSpec_net10_DLL_XML_current_frozen_exact": true
+  },
+  "strict_build": {
+    "phase": "package258-sql-purpose-doc4-strict-build-r1",
+    "command": [
+      "dotnet",
+      "build",
+      "src/Transports/ViciOne.ServiceBus.SqlTransport/ViciOne.ServiceBus.SqlTransport.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T22:45:11.712302+00:00",
+    "completed_utc": "2026-10-05T22:45:18.432550+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package258-sql-purpose-doc4-strict-build-r1.log",
+    "log_sha256": "ae8f0d74000a85d2d4ea826da97928b30979a5ee8045c7ed01a9c5691b5284bc"
+  },
+  "fresh_pack": {
+    "phase": "package258-sql-purpose-doc4-fresh-pack-r1",
+    "command": [
+      "dotnet",
+      "pack",
+      "src/Transports/ViciOne.ServiceBus.SqlTransport/ViciOne.ServiceBus.SqlTransport.csproj",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "-o",
+      "artifacts/packages-package258-sql-purpose-doc4-r1"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T22:46:45.423891+00:00",
+    "completed_utc": "2026-10-05T22:46:47.771230+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package258-sql-purpose-doc4-fresh-pack-r1.log",
+    "log_sha256": "e15d7cc1058895019b2a4fea4c7c5f9b087dc2e3968b0ca55f1985e724099251"
+  },
+  "changed4_nodes": [
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.Middleware.ConfigureSqlTopologyFilter`1.SendAsync(ViciOne.ServiceBus.SqlTransport.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.SqlTransport.ClientContext})",
+      "after_clause": "<summary>Ensures the configured SQL topology exists, then invokes the next client pipeline stage.</summary>",
+      "before_clause": "<summary>Sends a message to the configured destination.</summary>",
+      "source_sha256": "2447d5e14d569c8ab20dd36fcbafa7be3e8287488f5a52f38ef6bc3457438e18",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/ConfigureSqlTopologyFilter.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "2447d5e14d569c8ab20dd36fcbafa7be3e8287488f5a52f38ef6bc3457438e18",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.QueueSqlReceiveEndpointContext.#ctor(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration,ViciOne.ServiceBus.SqlTransport.Configuration.ISqlReceiveEndpointConfiguration,ViciOne.ServiceBus.SqlTransport.Topology.BrokerTopology)",
+      "after_clause": "<param name=\"configuration\">The SQL receive-endpoint configuration used by this context.</param>",
+      "before_clause": "<param name=\"configuration\">The callback used to configure the component.</param>",
+      "source_sha256": "44c62aedeb3beb084e403eae37fcd5b885a907392ac5ef97a77e1a967c8e65f6",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "44c62aedeb3beb084e403eae37fcd5b885a907392ac5ef97a77e1a967c8e65f6",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Providers.Transports.SqlPublishTopologyConfigurationExtensions.AddPublishMessageTypesFromNamespaceContaining(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator,System.Type,System.Action{ViciOne.ServiceBus.Providers.Transports.ISqlMessagePublishTopologyConfigurator,System.Type},System.Func{System.Type,System.Boolean})",
+      "after_clause": "<param name=\"filter\">An optional predicate that selects valid message types from the matching namespace.</param>",
+      "before_clause": "<param name=\"filter\">The filter to add to the pipeline.</param>",
+      "source_sha256": "e47d119b62693462ff9cea79ac76e85b5e8f56f34e47e748b30697019a907fcf",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlPublishTopologyConfigurationExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "e47d119b62693462ff9cea79ac76e85b5e8f56f34e47e748b30697019a907fcf",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Providers.Transports.SqlPublishTopologyConfigurationExtensions.AddPublishMessageTypesFromNamespaceContaining``1(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator,System.Action{ViciOne.ServiceBus.Providers.Transports.ISqlMessagePublishTopologyConfigurator,System.Type},System.Func{System.Type,System.Boolean})",
+      "after_clause": "<param name=\"filter\">An optional predicate that selects valid message types from the matching namespace.</param>",
+      "before_clause": "<param name=\"filter\">The filter to add to the pipeline.</param>",
+      "source_sha256": "e47d119b62693462ff9cea79ac76e85b5e8f56f34e47e748b30697019a907fcf",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlPublishTopologyConfigurationExtensions.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "e47d119b62693462ff9cea79ac76e85b5e8f56f34e47e748b30697019a907fcf",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    }
+  ],
+  "utc": "2026-10-05T23:04:00.419974+00:00",
+  "status": "F147_SQL_PURPOSE_DOC4_ROOT_REPAIR_ACCEPTED_BOUNDED_WHOLE_API_OPEN",
+  "root_basis": "Own whole85/5317 SQL and9/493 helpers +AssemblyTypeCache120; fresh current3/295 whole5a1566; Root actualP36/XML4inverse/ZIP. Independent Runtime Source3/295+120 and Scanner own before/proposed3/295+120 actual before/new PDB145/ZIP/XML4inverse. Root wholeindreportsd0766c.",
+  "source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "f1057108acd30e471a537b73241a831cad4ac4ba3fab83a4e414f0d0aaf89534"
+  },
+  "publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-doc4-independent-scanner-fresh-publication-peer-r1/REPORT.json",
+    "sha256": "a9194c7148e9aaccb4a8c79f1a8c7f2b6f93110c90090597b266f6d19419b03a",
+    "manifest_sha256": "e7851b1c1b896b3ea3312f63d8041e17103933dcd725061fa6408cddd6c7d8ee"
+  },
+  "root_publication": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-fresh-root-publication-proof-r1/REPORT.json",
+    "sha256": "196624c2bbaad6c1567fe1b02c8128a28c8ff8b5b700384150a5d7335b509f8d"
+  },
+  "entire_XML_inverse_exact": true,
+  "prior_doc254_handle4_preserved": true,
+  "nonXML_publicdecl_byte_equal": true,
+  "API_count_change": 0,
+  "master_rows": 16936,
+  "master_sha256_unchanged": "7e7f465d3e05c4ca11398152e280b9daec621fe9b441e9e79abeef1387b9c60e",
+  "original_API_remaining": 2495,
+  "SQL369_reserved_member_contracts_still_pending": true,
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package259-sql-purpose-doc4-root-before-r1",
+  "initial_admin_stop": "A map-style Sourcepeer MAN needed normalization; initial list-only guard stopped before mutation. All payload checks subsequently performed for actual map/list formats without weakening SHA guards."
+}

@@ -1,0 +1,1662 @@
+{
+  "utc": "2026-10-04T20:37:09.038648+00:00",
+  "decision": "ROOT_ACCEPT75_BOUNDED_SOURCE_AND_SPECIFIC_ASSERTION_CONTEXTS_HOLD_WHENANY_ORDER94",
+  "accepted_before": 2146,
+  "accepted_after": 2221,
+  "master_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "e73381a12d425e95a2943ecba447d61585e769dd58ac027bde19200749a16c92"
+  },
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/PER_ID76_CURRENT_MEMBER_CONTEXTS.json",
+    "sha256": "76f3e33b233dac105e03e71702d3f5f0469d06bef9628b7e3e3c77e222e546b0"
+  },
+  "assertions": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/ACTUAL_ASSERTION_TRACES.json",
+    "sha256": "6ac78ed903bf9cbb29eec9195748e9796ec85fc90c56abaa5292be91f7fc5a79"
+  },
+  "report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/REPORT.json",
+    "sha256": "1932171ae518519aae70551e0863b1271078f6c6b5fef8fb35bf88590ea26c93"
+  },
+  "owners": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/CURRENT_OWNER_BINDINGS.json",
+    "sha256": "4558d6209c04d660b685e5d3d4abecd320229ba1c38ff6375ab5bac8f8c7377d"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/MANIFEST.json",
+    "sha256": "cc942b16914c3a66bd437d36c05519812d9abedcda98695f4f552e74694595ea"
+  },
+  "prose_erratum": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-subscription-hash-prose-erratum-r1/ERRATUM.json",
+    "sha256": "ab24e5b696138137ef4cb718305aa6ad3ef019eb715af5ed6a9a4be13dd02309"
+  },
+  "root_personal_reads": [
+    "All76 individual normative contracts and limits in0da959/ae0d42; initial288205 truncation corrected by compact full chunks, no blanket76 acceptance.",
+    "Actual54 individual named assertion contexts plus exact qualified pass lines in99861d/2ecf6f/bd3d1e; initial77e4f7 truncated and55569e instrumentKeyError do not supply whole credit. Current real Boundary definition assertions cbbb13.",
+    "Complete current15 product Sourceowners personally read: sixowners bcabc9; Variable4b89b0; StateExtensions e87c95; Definition/State/QuartzLease adaf13; Futurewhole9d5704/95089a/ecbfb1/94ca66; RegistrationExtensions60147a; FutureExtensions68a74a; QuartzSchedulingwhole d81a97+419171. Exact source signatures/defaults/nullability/constraints and exceptional contracts checked.",
+    "Prior genuine focused tests retained explicitly for savedwrapper245L, EventAdmission352L18727b/2e73f2, selectedtyped/publicSPI/twoBus/fanout tests Root125/128/139. Artifact identity adds no whole human credit. Instrument2018c2 failed before any write; corrected metadata shape4b1423."
+  ],
+  "scope": "Exact contract plus listed meaningful Source/tests. Actual125 Futures and120 Quartz runtime are bounded historical epochs; no transfer to later mutated Core. Literal formatter/loadedassembly/input-selector adapters accepted by Source, no invented positive native. Protected stateful methods have real event/held-child workflows beyond null guards. No arbitrary implementation, all branches, concurrent-dispose joining or late-hard-cancellation promise. All CLOSED remain false.",
+  "hold": {
+    "original187_index": 94,
+    "reason": "WhenAnyFaulted after WhenAllCompletedOrFaulted leaves WaitForPending=true; actual finite event oracle proposed and independently approved, original native pending."
+  },
+  "members": [
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureEndpointDefinition`1.#ctor(ViciOne.ServiceBus.Configuration.IEndpointSettings{ViciOne.ServiceBus.Configuration.IEndpointDefinition{`0}})",
+      "original187_index": 3,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureEndpointDefinition.cs",
+        "current_sha256": "862792b059d7d43c4dc69fcb6bd1d10799a7f2a3b15ed077b9d2c3e391975706",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureEndpointDefinition.cs",
+        "whole_read_receipt": "f494f9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "862792b059d7d43c4dc69fcb6bd1d10799a7f2a3b15ed077b9d2c3e391975706",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "862792b059d7d43c4dc69fcb6bd1d10799a7f2a3b15ed077b9d2c3e391975706"
+      },
+      "contract": "Forwards exact IEndpointSettings<IEndpointDefinition<TFuture>> to SettingsEndpointDefinition<TFuture>; inherited validation and snapshot semantics remain base-owned.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        0
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureEndpointDefinition`1.FormatEndpointName(ViciOne.ServiceBus.Advanced.IEndpointNameFormatter)",
+      "original187_index": 4,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureEndpointDefinition.cs",
+        "current_sha256": "862792b059d7d43c4dc69fcb6bd1d10799a7f2a3b15ed077b9d2c3e391975706",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureEndpointDefinition.cs",
+        "whole_read_receipt": "f494f9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "862792b059d7d43c4dc69fcb6bd1d10799a7f2a3b15ed077b9d2c3e391975706",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "862792b059d7d43c4dc69fcb6bd1d10799a7f2a3b15ed077b9d2c3e391975706"
+      },
+      "contract": "Protected override returns formatter.Message<TFuture>(); exact formatter convention only, no cache or caller object identity guarantee.",
+      "individual_limit": "Current test uses explicitendpointname and doesnotinvokeformatterfallback. Exactreturnformatter.Message<TFuture>() is pureSourceforwarder; externalformatterimplementation ownsresult, nomirrortestneeded.",
+      "assertion_evidence_indexes": [
+        0
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRegistrationConfiguratorExtensions.AddFuture``1(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Type)",
+      "original187_index": 5,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationConfiguratorExtensions.cs",
+        "current_sha256": "4b123c4c9d3e6fbeffec978aaed5367447107fb5dbc3e5f31a7a9a6c1ffe7100",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationConfiguratorExtensions.cs",
+        "whole_read_receipt": "f494f9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4b123c4c9d3e6fbeffec978aaed5367447107fb5dbc3e5f31a7a9a6c1ffe7100",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4b123c4c9d3e6fbeffec978aaed5367447107fb5dbc3e5f31a7a9a6c1ffe7100"
+      },
+      "contract": "Null configurator guard, advanced registrar and Services.RegisterFuture<TFuture>(optional definitionType), RequireRepository<FutureState>, return new typed future registration configurator. Definition type defaults null.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        1
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRegistrationConfiguratorRuntimeExtensions.AddFuture(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Type,System.Type)",
+      "original187_index": 6,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationConfiguratorRuntimeExtensions.cs",
+        "current_sha256": "6a7604464694825525ff4bc97cbf8ecbcd3a98948fd2e84ad94367af253ad86b",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationConfiguratorRuntimeExtensions.cs",
+        "whole_read_receipt": "f494f9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "6a7604464694825525ff4bc97cbf8ecbcd3a98948fd2e84ad94367af253ad86b",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "6a7604464694825525ff4bc97cbf8ecbcd3a98948fd2e84ad94367af253ad86b"
+      },
+      "contract": "Guards configurator/futureType, rejects open/abstract/nonclass and wrong saga-state contract before MakeGenericType; calls runtime registrar then returns IFutureRegistrationConfigurator. Optional definition defaults null.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        1,
+        2
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRegistrationExtensions.AddFutureRequestConsumer``4(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Action{ViciOne.ServiceBus.Configuration.IConsumerConfigurator{``1}})",
+      "original187_index": 7,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "current_sha256": "099fb83159a9101f94461b19a1144fb957750b96941933b2ea69aefb1f75782a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a"
+      },
+      "contract": "Guardsconfigurator; registerscompanionconsumerwithFutureRequestConsumerDefinition optionalconfigure=null thenselectedRequestConsumerFutureDefinition; returnsfutureconfigurator. Typedselecteddefinitions nowactivatedthroughnormalpublicDI. Automaticallygeneratedexactbuiltinmachinesretainownerprovenance evenwhenwrapped; independentlyconstructedexplicitinstances/factories/cross-providerborrow remainassupplied underactualR4remarks.",
+      "individual_limit": "Realdefault/typedactualactivation andpublicSPI6,own-two-busdispatch, independentoverride3/generatedwrapper1 exactcurrentcontrols bound. No arbitrarysubclass/allsameendpoint-DIidentitypromise.",
+      "assertion_evidence_indexes": [
+        3,
+        49,
+        50,
+        51,
+        52,
+        53
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRegistrationExtensions.AddFuture``2(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator)",
+      "original187_index": 8,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "current_sha256": "099fb83159a9101f94461b19a1144fb957750b96941933b2ea69aefb1f75782a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a"
+      },
+      "contract": "Guards configurator and forwards typeof(TDefinition) to typed AddFuture<T>; compile-time definition association retained.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        1
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRegistrationExtensions.AddFutures(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Func{System.Type,System.Boolean},System.Type[])",
+      "original187_index": 9,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "current_sha256": "099fb83159a9101f94461b19a1144fb957750b96941933b2ea69aefb1f75782a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a"
+      },
+      "contract": "Guards configurator/array/null elements. Filter defaults accept-all; joins future/definition exact closed generic association, filter applies to future type, dispatches each via runtime AddFuture. Convenience overload supplies null filter. No atomic transaction/rollback of earlier registrations promised.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        4
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRegistrationExtensions.AddFutures(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Type[])",
+      "original187_index": 10,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "current_sha256": "099fb83159a9101f94461b19a1144fb957750b96941933b2ea69aefb1f75782a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a"
+      },
+      "contract": "Guards configurator/array/null elements. Filter defaults accept-all; joins future/definition exact closed generic association, filter applies to future type, dispatches each via runtime AddFuture. Convenience overload supplies null filter. No atomic transaction/rollback of earlier registrations promised.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        4
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRegistrationExtensions.AddFuturesFromAssemblies(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Func{System.Type,System.Boolean},System.Reflection.Assembly[])",
+      "original187_index": 11,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "current_sha256": "099fb83159a9101f94461b19a1144fb957750b96941933b2ea69aefb1f75782a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a"
+      },
+      "contract": "Guards configurator/array, requires nonempty assemblies and no null entries, discovers Future/definition types and retains concrete closed candidates before filtered registration. Convenience overload forwards null filter.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        5
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRegistrationExtensions.AddFuturesFromAssemblies(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Reflection.Assembly[])",
+      "original187_index": 12,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "current_sha256": "099fb83159a9101f94461b19a1144fb957750b96941933b2ea69aefb1f75782a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a"
+      },
+      "contract": "Guards configurator/array, requires nonempty assemblies and no null entries, discovers Future/definition types and retains concrete closed candidates before filtered registration. Convenience overload forwards null filter.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        5
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRegistrationExtensions.AddFuturesFromLoadedAssemblies(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Func{System.Type,System.Boolean})",
+      "original187_index": 13,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "current_sha256": "099fb83159a9101f94461b19a1144fb957750b96941933b2ea69aefb1f75782a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a"
+      },
+      "contract": "Optional filter defaults null; scans actual AppDomain.CurrentDomain loaded assemblies. No promise to inspect not-yet-loaded assemblies.",
+      "individual_limit": "Actualloadedassemblytest directly coversfalsefilter/noaddition only; AppDomain.GetAssemblies→actualcommonassemblies scanner isSource-sufficient boundedadapter. Not promiseunloadedassemblies or atomicrollback.",
+      "assertion_evidence_indexes": [
+        5
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRegistrationExtensions.AddFuturesFromNamespaceContaining(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Type,System.Func{System.Type,System.Boolean})",
+      "original187_index": 14,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "current_sha256": "099fb83159a9101f94461b19a1144fb957750b96941933b2ea69aefb1f75782a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a"
+      },
+      "contract": "Guards runtime anchor and named namespace; scans exact anchor namespace or child prefix with dot boundary in same assembly, retaining concrete closed Future/definitions. Generic overload forwards typeof(T).",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        5
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRegistrationExtensions.AddFuturesFromNamespaceContaining``1(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Func{System.Type,System.Boolean})",
+      "original187_index": 15,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "current_sha256": "099fb83159a9101f94461b19a1144fb957750b96941933b2ea69aefb1f75782a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureRegistrationExtensions.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "0229a7536a932b237cccba8937d7df1e894f9d326c0eb822eabd09284b09280a"
+      },
+      "contract": "Guards runtime anchor and named namespace; scans exact anchor namespace or child prefix with dot boundary in same assembly, retaining concrete closed Future/definitions. Generic overload forwards typeof(T).",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        5
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureExtensions.SetResultAwaited``2(ViciOne.ServiceBus.Sagas.IEventActivityBinder{ViciOne.ServiceBus.Futures.FutureState,``0},System.Func{ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState,``0},System.Guid},ViciOne.ServiceBus.Sagas.AsyncEventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0,``1})",
+      "original187_index": 30,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureExtensions.cs",
+        "current_sha256": "89719a52a2a78d02ca0ce16e8e02c5854d5ad2a5c205e454a248b69aa84d53c3",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "89719a52a2a78d02ca0ce16e8e02c5854d5ad2a5c205e454a248b69aa84d53c3",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "89719a52a2a78d02ca0ce16e8e02c5854d5ad2a5c205e454a248b69aa84d53c3"
+      },
+      "contract": "Guards binder/selector/factory, appends awaited context.SetResultAsync(selected id,factory). Awaits actual factory under event context; no standalone pending admission.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        6
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureExtensions.SetResult``2(ViciOne.ServiceBus.Sagas.IEventActivityBinder{ViciOne.ServiceBus.Futures.FutureState,``0},System.Func{ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState,``0},System.Guid},ViciOne.ServiceBus.Sagas.EventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0,``1})",
+      "original187_index": 31,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureExtensions.cs",
+        "current_sha256": "89719a52a2a78d02ca0ce16e8e02c5854d5ad2a5c205e454a248b69aa84d53c3",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "89719a52a2a78d02ca0ce16e8e02c5854d5ad2a5c205e454a248b69aa84d53c3",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "89719a52a2a78d02ca0ce16e8e02c5854d5ad2a5c205e454a248b69aa84d53c3"
+      },
+      "contract": "Guards binder/selector/factory, appends context.SetResult(selected id,factory), returns actual extended binder.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        6
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureLocation.#ctor(System.Guid,System.Uri)",
+      "original187_index": 33,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureLocation.cs",
+        "current_sha256": "729878231f96a0f55a00d24a058d5b041f86ee8801032ff3253f84d4fb870840",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureLocation.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "729878231f96a0f55a00d24a058d5b041f86ee8801032ff3253f84d4fb870840",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "729878231f96a0f55a00d24a058d5b041f86ee8801032ff3253f84d4fb870840"
+      },
+      "contract": "Guid+Uri overload rejectsGuid.Empty thennull/relative/noendpointaddress, stores exactId and normalizedqueue:<endpoint>; readonlystruct no mutation. Syntheticdefaultstruct is differentID, not thisconstructor.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        7,
+        8
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureLocation.#ctor(System.Uri)",
+      "original187_index": 34,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureLocation.cs",
+        "current_sha256": "729878231f96a0f55a00d24a058d5b041f86ee8801032ff3253f84d4fb870840",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureLocation.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "729878231f96a0f55a00d24a058d5b041f86ee8801032ff3253f84d4fb870840",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "729878231f96a0f55a00d24a058d5b041f86ee8801032ff3253f84d4fb870840"
+      },
+      "contract": "Uri overload guardsnull/absolute, requiresone usable nonempty z-base32idquery parsednonemptyGuid; invalidquery/format producesstableFormatException; Address retainsleftpathUri. Doesnotqueue-normalize thisoverload.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        7,
+        8
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureLocation.op_Implicit(ViciOne.ServiceBus.Futures.FutureLocation)~System.Uri",
+      "original187_index": 35,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureLocation.cs",
+        "current_sha256": "729878231f96a0f55a00d24a058d5b041f86ee8801032ff3253f84d4fb870840",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureLocation.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "729878231f96a0f55a00d24a058d5b041f86ee8801032ff3253f84d4fb870840",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "729878231f96a0f55a00d24a058d5b041f86ee8801032ff3253f84d4fb870840"
+      },
+      "contract": "Encodes Id through ZBase32IdFormatter then builds Uri from Address with id query. Explicit validated instances round trip; no guarantee for default struct with null Address.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        7
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureMessage.#ctor",
+      "original187_index": 36,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "current_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6"
+      },
+      "contract": "Empty constructor retains empty read-only storage. Value constructor guards both inputs, creates detached shallow dictionary and validated copied message URN list; no deep-copy promise.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        9,
+        10
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureMessage.#ctor(System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object},System.Collections.Generic.IReadOnlyList{System.String})",
+      "original187_index": 37,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "current_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6"
+      },
+      "contract": "Empty constructor retains empty read-only storage. Value constructor guards both inputs, creates detached shallow dictionary and validated copied message URN list; no deep-copy promise.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        9,
+        10
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureMessage.HasMessageType(System.Type)",
+      "original187_index": 38,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "current_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6"
+      },
+      "contract": "Type overload nullguards, computes message URN and matches declared supported URNs ordinal-ignore-case; generic class overload forwards typeof(T). Returns false for absent contract.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        11
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureMessage.HasMessageType``1",
+      "original187_index": 39,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "current_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6"
+      },
+      "contract": "Type overload nullguards, computes message URN and matches declared supported URNs ordinal-ignore-case; generic class overload forwards typeof(T). Returns false for absent contract.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        11
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.AddSubscription(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState})",
+      "original187_index": 46,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context; absent ResponseAddress returns without allocating subscriber. Otherwise adds exact address+optional request id through value comparer, deduplicating same pair.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        12
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.CreateFutureMessage``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},``0)",
+      "original187_index": 47,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context/message; context serializer.ToDictionary, copies dictionary and captures MessageTypeCache<T> URNs into FutureMessage. Shallow storage normalization, not transport send.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        13
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.GetCommand``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState})",
+      "original187_index": 48,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context; returns null for absent/unsupported command, otherwise deserializes requested class from stored dictionary through actual serializer. Conversion exceptions are not generally swallowed.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        13
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.SelectResults``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState})",
+      "original187_index": 49,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context; returns lazy matching deserialized results when HasResults else empty. Enumeration observes current Results, not snapshot.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        14
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.SetCompleted(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.Guid)",
+      "original187_index": 50,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context; timestamp is SentTime or clock; removes selected id if pending exists. Records Completed only once no pending and no faults, otherwise leaves incomplete. Low-level untracked calls permitted; not terminal replay guard.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        15
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.SetFaultAsync``2(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState,``0},System.Guid,ViciOne.ServiceBus.Sagas.AsyncEventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0,``1},System.Threading.CancellationToken)",
+      "original187_index": 51,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context/factory and pre-cancellation, awaits required fault then serializes before SetFaulted/store. Returns exact fault; token default, no hard timeout.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        16
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.SetFault``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.Guid,``0,System.Nullable{System.DateTimeOffset})",
+      "original187_index": 52,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context/factory/fault, creates/serializes required fault before lifecycle mutation, calls SetFaulted and stores Faults[id]; direct form optional timestamp defaults null, factory form returns exact object.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        16
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.SetFault``2(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState,``0},System.Guid,ViciOne.ServiceBus.Sagas.EventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0,``1})",
+      "original187_index": 53,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context/factory/fault, creates/serializes required fault before lifecycle mutation, calls SetFaulted and stores Faults[id]; direct form optional timestamp defaults null, factory form returns exact object.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        16
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.SetFaulted(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.Guid,System.Nullable{System.DateTimeOffset})",
+      "original187_index": 54,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context; optional timestamp defaults null then SentTime/clock; removes selected pending id if present and preserves first Faulted timestamp with ??=. Does not itself serialize a fault.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        17
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.SetResultAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.Guid,ViciOne.ServiceBus.Sagas.AsyncEventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0},System.Threading.CancellationToken)",
+      "original187_index": 55,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context/factory, checks supplied token before factory then awaits factory, rejects null, serializes before lifecycle mutation, stores Results[id], returns exact result. Supplied token defaults default; does not replace context token or promise late hard cancellation.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        14
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.SetResultAsync``2(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState,``0},System.Guid,ViciOne.ServiceBus.Sagas.AsyncEventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0,``1},System.Threading.CancellationToken)",
+      "original187_index": 56,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context/factory, checks supplied token before factory then awaits factory, rejects null, serializes before lifecycle mutation, stores Results[id], returns exact result. Supplied token defaults default; does not replace context token or promise late hard cancellation.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        14
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.SetResult``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.Guid,ViciOne.ServiceBus.Sagas.EventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0})",
+      "original187_index": 57,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context and factory/result, creates/serializes required result before lifecycle mutation; completes id if Completed not yet set then overwrites Results[id]. Factory overload returns exact created object; direct result overload returns void. Untracked explicit use retained.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        14
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.SetResult``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.Guid,``0)",
+      "original187_index": 58,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context and factory/result, creates/serializes required result before lifecycle mutation; completes id if Completed not yet set then overwrites Results[id]. Factory overload returns exact created object; direct result overload returns void. Untracked explicit use retained.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        14
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.SetResult``2(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState,``0},System.Guid,ViciOne.ServiceBus.Sagas.EventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0,``1})",
+      "original187_index": 59,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context and factory/result, creates/serializes required result before lifecycle mutation; completes id if Completed not yet set then overwrites Results[id]. Factory overload returns exact created object; direct result overload returns void. Untracked explicit use retained.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        14
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.ToObject``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},ViciOne.ServiceBus.Futures.FutureMessage)",
+      "original187_index": 60,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context/message; returns null for unsupported contract, otherwise deserializes. No mutation or scope ownership.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        13
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.TryGetFault``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.Guid,``0@)",
+      "original187_index": 61,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context; exact id lookup, deserialize only supported contract. Returns true iff fault nonnull, otherwise false/null; actual serializer failures propagate. [NotNullWhen(true)] retained.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        16
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureStateExtensions.TryGetResult``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.Guid,``0@)",
+      "original187_index": 62,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "current_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureStateExtensions.cs",
+        "whole_read_receipt": "b8aa3b",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4ecf74079b75550d164f4c2d7aa7f04225f32990b972a9c0be50e74c16ec5f18"
+      },
+      "contract": "Guards context; exact id lookup, deserialize only supported contract. Returns true iff result nonnull, otherwise false/null; actual serializer failures propagate. [NotNullWhen(true)] retained.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        14
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureSubscription.#ctor(System.Uri,System.Nullable{System.Guid})",
+      "original187_index": 63,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "current_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38"
+      },
+      "contract": "Requires nonnull absolute address, optional requestId default null, rejects Guid.Empty when supplied. Retains exact Uri and nullable Guid.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        18,
+        19
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureSubscription.Equals(System.Object)",
+      "original187_index": 64,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "current_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38"
+      },
+      "contract": "Typed overload handles null/reference equality then Address and RequestId; object overload accepts only FutureSubscription. Does not equate subscriptions with same address but different request ids.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        18
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureSubscription.Equals(ViciOne.ServiceBus.Futures.FutureSubscription)",
+      "original187_index": 65,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "current_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38"
+      },
+      "contract": "Typed overload handles null/reference equality then Address and RequestId; object overload accepts only FutureSubscription. Does not equate subscriptions with same address but different request ids.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        18
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureSubscription.GetHashCode",
+      "original187_index": 66,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "current_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38"
+      },
+      "contract": "HashCode.Combine(RequestId, Address), consistent with pair equality. No stable cross-process numeric hash promise.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        18
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureSubscription.op_Equality(ViciOne.ServiceBus.Futures.FutureSubscription,ViciOne.ServiceBus.Futures.FutureSubscription)",
+      "original187_index": 67,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "current_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38"
+      },
+      "contract": "Null-safe value Equals(left,right); two null subscriptions equal.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        18
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureSubscription.op_Inequality(ViciOne.ServiceBus.Futures.FutureSubscription,ViciOne.ServiceBus.Futures.FutureSubscription)",
+      "original187_index": 68,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "current_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureSubscription.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "926ee5cd79dcc203e147dfe9ccf7b6ba31f86fefa2ec4baa69cb5397aef6ff38"
+      },
+      "contract": "Negates null-safe pair Equals; no mutation.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        18
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureVariableExtensions.SetVariableAsync``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.String,ViciOne.ServiceBus.Sagas.AsyncEventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0},System.Threading.CancellationToken)",
+      "original187_index": 71,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "current_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "whole_read_receipt": "858b35",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81"
+      },
+      "contract": "Guards context/key/factory; checks supplied token before async factory, awaits required result, stores exact object under key and returns same. Case-insensitive dictionary; cancellationToken defaults default and is not injected into factory context.",
+      "individual_limit": "Actualasyncstate/typedSame-value controls pass. Existingprecancel test directlytypedonly; stateoverload literalprecheckplussharedalgorithm SourceNA, no latehardcancellation or injectedfactorycontexttokenpromise.",
+      "assertion_evidence_indexes": [
+        20,
+        21
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureVariableExtensions.SetVariableAsync``2(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState,``0},System.String,ViciOne.ServiceBus.Sagas.AsyncEventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0,``1},System.Threading.CancellationToken)",
+      "original187_index": 72,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "current_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "whole_read_receipt": "858b35",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81"
+      },
+      "contract": "Guards context/key/factory; checks supplied token before async factory, awaits required result, stores exact object under key and returns same. Case-insensitive dictionary; cancellationToken defaults default and is not injected into factory context.",
+      "individual_limit": "Actualasyncstate/typedSame-value controls pass. Existingprecancel test directlytypedonly; stateoverload literalprecheckplussharedalgorithm SourceNA, no latehardcancellation or injectedfactorycontexttokenpromise.",
+      "assertion_evidence_indexes": [
+        20,
+        21
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureVariableExtensions.SetVariableAwaited``1(ViciOne.ServiceBus.Sagas.IEventActivityBinder{ViciOne.ServiceBus.Futures.FutureState},System.String,ViciOne.ServiceBus.Sagas.AsyncEventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0})",
+      "original187_index": 73,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "current_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "whole_read_receipt": "858b35",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81"
+      },
+      "contract": "Guards binder/key/factory; returns actual extended binder appending awaited variable write. No immediate factory evaluation or hard cancellation.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        22
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureVariableExtensions.SetVariableAwaited``2(ViciOne.ServiceBus.Sagas.IEventActivityBinder{ViciOne.ServiceBus.Futures.FutureState,``0},System.String,ViciOne.ServiceBus.Sagas.AsyncEventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0,``1})",
+      "original187_index": 74,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "current_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "whole_read_receipt": "858b35",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81"
+      },
+      "contract": "Guards binder/key/factory; returns actual extended binder appending awaited variable write. No immediate factory evaluation or hard cancellation.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        22
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureVariableExtensions.SetVariable``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.String,ViciOne.ServiceBus.Sagas.EventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0})",
+      "original187_index": 75,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "current_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "whole_read_receipt": "858b35",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81"
+      },
+      "contract": "Context factory overload guards context/key/factory and required returned value, stores reference and returns it; direct value overload guards context/key/value then returns void. Binder overload guards binder/key/factory then appends operation and returns actual extended binder. Exact signature below separates forms.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        23
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureVariableExtensions.SetVariable``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.String,``0)",
+      "original187_index": 76,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "current_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "whole_read_receipt": "858b35",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81"
+      },
+      "contract": "Context factory overload guards context/key/factory and required returned value, stores reference and returns it; direct value overload guards context/key/value then returns void. Binder overload guards binder/key/factory then appends operation and returns actual extended binder. Exact signature below separates forms.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        23
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureVariableExtensions.SetVariable``1(ViciOne.ServiceBus.Sagas.IEventActivityBinder{ViciOne.ServiceBus.Futures.FutureState},System.String,ViciOne.ServiceBus.Sagas.EventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0})",
+      "original187_index": 77,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "current_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "whole_read_receipt": "858b35",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81"
+      },
+      "contract": "Context factory overload guards context/key/factory and required returned value, stores reference and returns it; direct value overload guards context/key/value then returns void. Binder overload guards binder/key/factory then appends operation and returns actual extended binder. Exact signature below separates forms.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        22
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureVariableExtensions.SetVariable``2(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState,``0},System.String,ViciOne.ServiceBus.Sagas.EventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0,``1})",
+      "original187_index": 78,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "current_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "whole_read_receipt": "858b35",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81"
+      },
+      "contract": "Context factory overload guards context/key/factory and required returned value, stores reference and returns it; direct value overload guards context/key/value then returns void. Binder overload guards binder/key/factory then appends operation and returns actual extended binder. Exact signature below separates forms.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        23
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureVariableExtensions.SetVariable``2(ViciOne.ServiceBus.Sagas.IEventActivityBinder{ViciOne.ServiceBus.Futures.FutureState,``0},System.String,ViciOne.ServiceBus.Sagas.EventMessageFactory{ViciOne.ServiceBus.Futures.FutureState,``0,``1})",
+      "original187_index": 79,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "current_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "whole_read_receipt": "858b35",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81"
+      },
+      "contract": "Context factory overload guards context/key/factory and required returned value, stores reference and returns it; direct value overload guards context/key/value then returns void. Binder overload guards binder/key/factory then appends operation and returns actual extended binder. Exact signature below separates forms.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        22
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureVariableExtensions.TryGetVariable``1(ViciOne.ServiceBus.Sagas.IBehaviorContext{ViciOne.ServiceBus.Futures.FutureState},System.String,``0@)",
+      "original187_index": 80,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "current_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureVariableExtensions.cs",
+        "whole_read_receipt": "858b35",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "fee0980b441988f20fd97a4a6a85e18581550f544790473687785542ad1ecb81"
+      },
+      "contract": "Guards context/key; attempts serializer conversion when Variables exist. Missing/incompatible conversion returns false/null; OCE/OOM/StackOverflow/AccessViolation propagate rather than swallowing.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        24
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.ConfigureCommand(System.Action{ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator{ViciOne.ServiceBus.Futures.FutureState,`0}})",
+      "original187_index": 83,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "current_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "whole_read_receipt": "8c2c19 +4487b4 +352314 complete1..EOF",
+        "same_as_package62_source": false,
+        "historical_source_sha256": "5c46d9bd8b613b71d45631cf99d3fa39b1ae9d382203b2d06bcc1981a9f28b7c",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a"
+      },
+      "contract": "Guards configure callback then updates command event correlation through Event callback; returns void.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        25,
+        38
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.ExecuteRoutingSlip(System.Action{ViciOne.ServiceBus.Configuration.IFutureRoutingSlipConfigurator{`1,`2,`0}})",
+      "original187_index": 84,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "current_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "whole_read_receipt": "8c2c19 +4487b4 +352314 complete1..EOF",
+        "same_as_package62_source": false,
+        "historical_source_sha256": "5c46d9bd8b613b71d45631cf99d3fa39b1ae9d382203b2d06bcc1981a9f28b7c",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a"
+      },
+      "contract": "Guards configure, constructs/validates routing config, installs admission boundary and per-id completion/fault binding then initiating execution with context token; returns actual routing handle. Transport itinerary delivery remains separate.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        25,
+        39,
+        40
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.SendRequest``1(System.Action{ViciOne.ServiceBus.Configuration.IFutureRequestConfigurator{`2,`0,``0}})",
+      "original187_index": 89,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "current_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "whole_read_receipt": "8c2c19 +4487b4 +352314 complete1..EOF",
+        "same_as_package62_source": false,
+        "historical_source_sha256": "5c46d9bd8b613b71d45631cf99d3fa39b1ae9d382203b2d06bcc1981a9f28b7c",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a"
+      },
+      "contract": "Input-selecting overload guards selector; constructs/validates request configuration (optional callback default null), appends awaited initiating request send with event cancellation token, returns real typed request handle. Direct command form uses command as input.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        25,
+        41
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.SendRequest``2(System.Func{`0,``0},System.Action{ViciOne.ServiceBus.Configuration.IFutureRequestConfigurator{`2,``0,``1}})",
+      "original187_index": 90,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "current_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "whole_read_receipt": "8c2c19 +4487b4 +352314 complete1..EOF",
+        "same_as_package62_source": false,
+        "historical_source_sha256": "5c46d9bd8b613b71d45631cf99d3fa39b1ae9d382203b2d06bcc1981a9f28b7c",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a"
+      },
+      "contract": "Input-selecting overload guards selector; constructs/validates request configuration (optional callback default null), appends awaited initiating request send with event cancellation token, returns real typed request handle. Direct command form uses command as input.",
+      "individual_limit": "Currentdirectnamedtest provesnullselector only. Wholecurrent598bd6 exactadapter defersselector(context.Message), passesselectedvalue+exactcontexttoken totypedrequest.SendAsync and awaits it; backendtyped/request/lifecycle separatelyvalidated. This adapter doesnotinventstandalonepositiveNativecase or require mirror ofsingleexpression.",
+      "assertion_evidence_indexes": [
+        25
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.SendRequests``2(System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Action{ViciOne.ServiceBus.Configuration.IFutureRequestConfigurator{`2,``0,``1}})",
+      "original187_index": 91,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "current_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "whole_read_receipt": "8c2c19 +4487b4 +352314 complete1..EOF",
+        "same_as_package62_source": false,
+        "historical_source_sha256": "5c46d9bd8b613b71d45631cf99d3fa39b1ae9d382203b2d06bcc1981a9f28b7c",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a"
+      },
+      "contract": "Guards selector and required configure, constructs/validates request and appends actual range send using event token. Runtime selector returning null/dispatch failures remain dispatcher obligations.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        25,
+        38,
+        42
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.WhenAllCompleted(System.Action{ViciOne.ServiceBus.Configuration.IFutureResultConfigurator{`1}})",
+      "original187_index": 92,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "current_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "whole_read_receipt": "8c2c19 +4487b4 +352314 complete1..EOF",
+        "same_as_package62_source": false,
+        "historical_source_sha256": "5c46d9bd8b613b71d45631cf99d3fa39b1ae9d382203b2d06bcc1981a9f28b7c",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a"
+      },
+      "contract": "Guards callback then configures shared terminal FutureResult via FutureResultConfigurator; no dispatch until event execution.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        25,
+        43
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.WhenAllCompletedOrFaulted(System.Action{ViciOne.ServiceBus.Configuration.IFutureFaultConfigurator{`2}})",
+      "original187_index": 93,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "current_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+        "whole_read_receipt": "8c2c19 +4487b4 +352314 complete1..EOF",
+        "same_as_package62_source": false,
+        "historical_source_sha256": "5c46d9bd8b613b71d45631cf99d3fa39b1ae9d382203b2d06bcc1981a9f28b7c",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a"
+      },
+      "contract": "Guards callback, sets shared fault.WaitForPending true before configuring factory. Actual accepted response/fault admission and terminal send join separately pending.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        25,
+        44,
+        45
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Quartz",
+      "id": "M:ViciOne.ServiceBus.Quartz.QuartzSchedulerLease.DisposeAsync",
+      "original187_index": 97,
+      "source": {
+        "path": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulerLease.cs",
+        "current_sha256": "0f32a6ca76cfca1a29c6be961337db7840839554a32dadb71dd8aed4e291f237",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulerLease.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "0f32a6ca76cfca1a29c6be961337db7840839554a32dadb71dd8aed4e291f237",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "0f32a6ca76cfca1a29c6be961337db7840839554a32dadb71dd8aed4e291f237"
+      },
+      "contract": "Atomically exchanges factory with null, so first call owns cleanup and later calls return. Disconnect observer then partitioner; owned factory enumerate/shutdown schedulers and async-preferred/sync dispose; single exception preserved via EDI, multiple ordered AggregateException. Borrowed factory never shutdown/disposed. Concurrent later callers do not join first in-flight disposal.",
+      "individual_limit": "Actualowned/borrowed/orderedcleanupcontrols qualifiedQuartz322. Atomicfirst-disposerSourcecontract; laterconcurrentDispose returnswithoutjoiningfirst, nocontendedjoinpromise.",
+      "assertion_evidence_indexes": [
+        26,
+        27,
+        28
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Quartz",
+      "id": "M:ViciOne.ServiceBus.Quartz.QuartzSchedulingExtensions.AddQuartzScheduling(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator,System.Func{System.IServiceProvider,Quartz.ISchedulerFactory},System.Action{ViciOne.ServiceBus.Quartz.QuartzEndpointOptions})",
+      "original187_index": 99,
+      "source": {
+        "path": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulingExtensions.cs",
+        "current_sha256": "2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulingExtensions.cs",
+        "whole_read_receipt": "179e54 +d32e71 complete432L",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107"
+      },
+      "contract": "Guards configurator/resolver, optional callback default null. Creates validated endpoint settings for selected bus, registers claim registry/binding/consumers/definitions, preserves existing TimeProvider via TryAdd. Borrowed resolver; duplicate bus registration and second QuartzHostedService lifecycle owner rejected. Generic route uses typeof(TBus).",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        29,
+        30,
+        47,
+        48
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Quartz",
+      "id": "M:ViciOne.ServiceBus.Quartz.QuartzSchedulingExtensions.AddQuartzScheduling``1(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0},System.Func{System.IServiceProvider,Quartz.ISchedulerFactory},System.Action{ViciOne.ServiceBus.Quartz.QuartzEndpointOptions})",
+      "original187_index": 100,
+      "source": {
+        "path": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulingExtensions.cs",
+        "current_sha256": "2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulingExtensions.cs",
+        "whole_read_receipt": "179e54 +d32e71 complete432L",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "2172882d92f9980414ad432fe8ef7751f686b690e69f24bad17acd67a401a107"
+      },
+      "contract": "Guards configurator/resolver, optional callback default null. Creates validated endpoint settings for selected bus, registers claim registry/binding/consumers/definitions, preserves existing TimeProvider via TryAdd. Borrowed resolver; duplicate bus registration and second QuartzHostedService lifecycle owner rejected. Generic route uses typeof(TBus).",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        29,
+        30
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Configuration.FutureDefinition`1.ConcurrentMessageLimit",
+      "original187_index": 108,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureDefinition.cs",
+        "current_sha256": "4b54c585e3f8384f63eee1d0bb8a9b0e915b4f4ea1e46a3f20020f70a1d339df",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureDefinition.cs",
+        "whole_read_receipt": "f494f9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4b54c585e3f8384f63eee1d0bb8a9b0e915b4f4ea1e46a3f20020f70a1d339df",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4b54c585e3f8384f63eee1d0bb8a9b0e915b4f4ea1e46a3f20020f70a1d339df"
+      },
+      "contract": "Nullable value backing field; protected setter permits null, rejects <=0 before assignment. Actual definition Configure applies it to saga concurrency.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        31
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Configuration.FutureDefinition`1.EndpointName",
+      "original187_index": 110,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureDefinition.cs",
+        "current_sha256": "4b54c585e3f8384f63eee1d0bb8a9b0e915b4f4ea1e46a3f20020f70a1d339df",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Configuration/FutureDefinition.cs",
+        "whole_read_receipt": "f494f9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "4b54c585e3f8384f63eee1d0bb8a9b0e915b4f4ea1e46a3f20020f70a1d339df",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "4b54c585e3f8384f63eee1d0bb8a9b0e915b4f4ea1e46a3f20020f70a1d339df"
+      },
+      "contract": "Protected setter rejects null/whitespace; retained name/cache belongs definition. GetEndpointName public SPI first caches explicit name, endpoint definition name or formatter.Message<TFuture>; later formatter does not change cache.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        32
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Futures.FutureMessage.Message",
+      "original187_index": 117,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "current_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6"
+      },
+      "contract": "Setter requires nonnull dictionary and copies entries into FrozenDictionary; getter exposes detached read-only shallow snapshot, not cloned object graph.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        33,
+        10
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Futures.FutureMessage.SupportedMessageTypes",
+      "original187_index": 118,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "current_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureMessage.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "5b39a5b1aa912fafe0099eca2b317fa32691cbc20ce97d7ac447c49d19241ba6"
+      },
+      "contract": "Setter requires list and each valid urn:message absolute string, copies string array into read-only wrapper before assignment; getter is not raw mutable array.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        34,
+        10
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Futures.FutureState.Faults",
+      "original187_index": 125,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+        "current_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504"
+      },
+      "contract": "Live Guid-key dictionary; setter copies structure, null getter lazily creates empty dictionary. FutureMessage values shared.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        35,
+        36,
+        37
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Futures.FutureState.Pending",
+      "original187_index": 127,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+        "current_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504"
+      },
+      "contract": "Live HashSet<Guid>; setter copies supplied set or clears backing to null, getter lazily rehydrates empty set under per-state lock. No concurrent mutation guarantee.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        35,
+        36,
+        37
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Futures.FutureState.Results",
+      "original187_index": 128,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+        "current_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504"
+      },
+      "contract": "Live Guid-key dictionary; setter copies structure, null getter lazily creates empty dictionary. FutureMessage values shared.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        35,
+        36,
+        37
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Futures.FutureState.Subscriptions",
+      "original187_index": 130,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+        "current_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504"
+      },
+      "contract": "Live HashSet using FutureSubscription.Comparer; setter detaches input with same comparer; null backing lazily rehydrates.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        35,
+        36,
+        37
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Futures.FutureState.Variables",
+      "original187_index": 131,
+      "source": {
+        "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+        "current_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+        "whole_read_receipt": "468542",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504"
+      },
+      "contract": "Live Dictionary<string,object> with OrdinalIgnoreCase; setter shallow-copies with correct comparer or null, lazy getter restores same comparer.",
+      "individual_limit": "Root may review this exact Source/member contract and concrete assertion trace; no new mirror proposed. Arbitrary caller implementation behavior and inherited runtime guarantee remain separately owned.",
+      "assertion_evidence_indexes": [
+        35,
+        36,
+        37
+      ],
+      "CLOSED": false
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Quartz",
+      "id": "P:ViciOne.ServiceBus.Quartz.QuartzSchedulerLease.SchedulerFactory",
+      "original187_index": 149,
+      "source": {
+        "path": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulerLease.cs",
+        "current_sha256": "0f32a6ca76cfca1a29c6be961337db7840839554a32dadb71dd8aed4e291f237",
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package134-fsq76-existing-assertion-current-contract-overlay-r1/context-source/src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulerLease.cs",
+        "whole_read_receipt": "b408e9",
+        "same_as_package62_source": true,
+        "historical_source_sha256": "0f32a6ca76cfca1a29c6be961337db7840839554a32dadb71dd8aed4e291f237",
+        "read_credit": "Actual own complete owner read; no imported whole-reader credit",
+        "historical85_source_sha256": "0f32a6ca76cfca1a29c6be961337db7840839554a32dadb71dd8aed4e291f237"
+      },
+      "contract": "Returns current exact factory while live; null after atomic disposal ownership exchange causes ObjectDisposedException, borrowed factory still accessible to its caller via original reference.",
+      "individual_limit": "Actualowned/borrowed/orderedcleanupcontrols qualifiedQuartz322. Atomicfirst-disposerSourcecontract; laterconcurrentDispose returnswithoutjoiningfirst, nocontendedjoinpromise.",
+      "assertion_evidence_indexes": [
+        26
+      ],
+      "CLOSED": false
+    }
+  ]
+}

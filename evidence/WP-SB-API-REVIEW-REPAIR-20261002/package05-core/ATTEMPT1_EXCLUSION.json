@@ -1,0 +1,4 @@
+{
+  "status": "EXCLUDED_FROM_FINAL_COMPLETE_ROUND",
+  "cause": "Runner expected assertion wrapper for accepted-host-boundary rejection; real public startup correctly surfaced OptionsValidationException directly on inclusive-upper mutant. Seven native mutated builds executed; runner stopped after six validated kills. No changed consumer assertion, complete17 fresh r2 round required. M6209 and packed runtime already finally restored."
+}

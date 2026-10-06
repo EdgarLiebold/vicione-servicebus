@@ -1,0 +1,515 @@
+{
+  "utc": "2026-10-05T13:07:44.791747+00:00",
+  "result": "F176_ORIGINAL184_SOURCE5_PE_PDB_BOUND_IDENTIFIER_ONLY10_APPLIED_FIXED_NATIVE_PENDING",
+  "finding": "F-SB-API-176",
+  "severity": "Low",
+  "classification": "INTERNAL_TASK_RETURNING_HELPERS_VIOLATE_EXISTING_ASYNC_NAMING_RULE",
+  "original_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package215-naming10-original-source-binary-independent-r1/REPORT.json",
+    "sha256": "863922060de3fbe218b18a113ca8be957866256a3e6f55900661a3b8260c28ec"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package215-async-helper-naming10-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "3e42c5572be0050653496977d22197be50ffff98647502bbf495d1056ab51630"
+  },
+  "proposal_manifest_sha256": "5b9a0c643ac163dbcbd92b30dd9bfe429682a8b8af6cabd78e21dae7401a28e2",
+  "root_personal_read": [
+    "213ec1 whole qualifier59",
+    "1edb9d whole independent report",
+    "ff68cf patch1..200",
+    "281180 patch201..380",
+    "757816 patch381..524",
+    "da1af5 current10/manifests/literal inverses",
+    "381bc2 original whole report"
+  ],
+  "original_frames_reparsed": 5,
+  "original_source_bindings_verified": 11,
+  "changes": [
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/BatchEndpointExtensions.cs",
+      "old_symbol": "InvokeBatch",
+      "new_symbol": "InvokeBatchAsync",
+      "lines": 432,
+      "before_sha256": "a813c6bd1914d289fe799a986fa273250f8b6b9c6a3afb9c886b08ceb1f73a16",
+      "after_sha256": "734c5ad3326223f80efc8fb4397b808ba0c73fbc067365aa6cf5befbb15883af",
+      "exact_changed_lines": [
+        {
+          "line": 23,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, cancellationToken));"
+        },
+        {
+          "line": 40,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 58,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 76,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 87,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, cancellationToken));"
+        },
+        {
+          "line": 102,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 118,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 134,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 148,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, messageType, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, messageType, cancellationToken));"
+        },
+        {
+          "line": 165,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, messageType, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, messageType, pipe, cancellationToken));"
+        },
+        {
+          "line": 183,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, messageType, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, messageType, pipe, cancellationToken));"
+        },
+        {
+          "line": 201,
+          "before": "        return InvokeBatch(batch, message => endpoint.SendAsync(message, messageType, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.SendAsync(message, messageType, pipe, cancellationToken));"
+        },
+        {
+          "line": 214,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, cancellationToken));"
+        },
+        {
+          "line": 231,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 249,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 267,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 278,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, cancellationToken));"
+        },
+        {
+          "line": 293,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 309,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 325,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, pipe, cancellationToken));"
+        },
+        {
+          "line": 340,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, messageType, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, messageType, cancellationToken));"
+        },
+        {
+          "line": 357,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, messageType, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, messageType, pipe, cancellationToken));"
+        },
+        {
+          "line": 375,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, messageType, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, messageType, pipe, cancellationToken));"
+        },
+        {
+          "line": 393,
+          "before": "        return InvokeBatch(batch, message => endpoint.PublishAsync(message, messageType, pipe, cancellationToken));",
+          "after": "        return InvokeBatchAsync(batch, message => endpoint.PublishAsync(message, messageType, pipe, cancellationToken));"
+        },
+        {
+          "line": 396,
+          "before": "    static Task InvokeBatch<T>(T[] messages, Func<T, Task> operation)",
+          "after": "    static Task InvokeBatchAsync<T>(T[] messages, Func<T, Task> operation)"
+        }
+      ],
+      "identifier_occurrences_changed": 25,
+      "inverse_byte_equal": true,
+      "XML_comment_lines_equal": true,
+      "Task_token_assertion_attributes_and_bodies_unchanged": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/QueueProcessorLifecycleTests.cs",
+      "old_symbol": "Invoke",
+      "new_symbol": "InvokeAsync",
+      "lines": 227,
+      "before_sha256": "15424cfb3d22d261eacccb19c861205b45997a7858792ee4fb6bd07cd8b728c9",
+      "after_sha256": "8dbc7f89c5c3043aadf590ea7031e272b61c40a7312113903d83deb93f323159",
+      "exact_changed_lines": [
+        {
+          "line": 181,
+          "before": "        public Task Invoke(string operation, CancellationToken token)",
+          "after": "        public Task InvokeAsync(string operation, CancellationToken token)"
+        },
+        {
+          "line": 194,
+          "before": "        public override Task StartProcessingAsync(CancellationToken cancellationToken = default) => probe.Invoke(\"start\", cancellationToken);",
+          "after": "        public override Task StartProcessingAsync(CancellationToken cancellationToken = default) => probe.InvokeAsync(\"start\", cancellationToken);"
+        },
+        {
+          "line": 195,
+          "before": "        public override Task StopProcessingAsync(CancellationToken cancellationToken = default) => probe.Invoke(\"stop\", cancellationToken);",
+          "after": "        public override Task StopProcessingAsync(CancellationToken cancellationToken = default) => probe.InvokeAsync(\"stop\", cancellationToken);"
+        },
+        {
+          "line": 196,
+          "before": "        public override Task CloseAsync(CancellationToken cancellationToken = default) => probe.Invoke(\"close\", cancellationToken);",
+          "after": "        public override Task CloseAsync(CancellationToken cancellationToken = default) => probe.InvokeAsync(\"close\", cancellationToken);"
+        },
+        {
+          "line": 212,
+          "before": "        public override Task StartProcessingAsync(CancellationToken cancellationToken = default) => _probe.Invoke(\"start\", cancellationToken);",
+          "after": "        public override Task StartProcessingAsync(CancellationToken cancellationToken = default) => _probe.InvokeAsync(\"start\", cancellationToken);"
+        },
+        {
+          "line": 213,
+          "before": "        public override Task StopProcessingAsync(CancellationToken cancellationToken = default) => _probe.Invoke(\"stop\", cancellationToken);",
+          "after": "        public override Task StopProcessingAsync(CancellationToken cancellationToken = default) => _probe.InvokeAsync(\"stop\", cancellationToken);"
+        },
+        {
+          "line": 214,
+          "before": "        public override Task CloseAsync(CancellationToken cancellationToken = default) => _probe.Invoke(\"close\", cancellationToken);",
+          "after": "        public override Task CloseAsync(CancellationToken cancellationToken = default) => _probe.InvokeAsync(\"close\", cancellationToken);"
+        }
+      ],
+      "identifier_occurrences_changed": 7,
+      "inverse_byte_equal": true,
+      "XML_comment_lines_equal": true,
+      "Task_token_assertion_attributes_and_bodies_unchanged": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusAdministrationOwnershipTests.cs",
+      "old_symbol": "Record",
+      "new_symbol": "RecordAsync",
+      "lines": 307,
+      "before_sha256": "fd8d09cc4ed6787651517940c9ab022116958333e67e719f099d940c7effc5cb",
+      "after_sha256": "93ebf119330cd95ec6be8d405ea2f08d9cfbb11280512938562816574bea90fc",
+      "exact_changed_lines": [
+        {
+          "line": 222,
+          "before": "        private Task<global::Azure.Response<T>> Record<T>(string operation, object input, CancellationToken token, Stage<T>[] stages)",
+          "after": "        private Task<global::Azure.Response<T>> RecordAsync<T>(string operation, object input, CancellationToken token, Stage<T>[] stages)"
+        },
+        {
+          "line": 273,
+          "before": "                owner.Record(\"get\", name, cancellationToken, owner._queueStages);",
+          "after": "                owner.RecordAsync(\"get\", name, cancellationToken, owner._queueStages);"
+        },
+        {
+          "line": 275,
+          "before": "                owner.Record(\"create\", options, cancellationToken, owner._queueStages);",
+          "after": "                owner.RecordAsync(\"create\", options, cancellationToken, owner._queueStages);"
+        },
+        {
+          "line": 277,
+          "before": "                owner.Record(\"get\", name, cancellationToken, owner._topicStages);",
+          "after": "                owner.RecordAsync(\"get\", name, cancellationToken, owner._topicStages);"
+        },
+        {
+          "line": 279,
+          "before": "                owner.Record(\"create\", options, cancellationToken, owner._topicStages);",
+          "after": "                owner.RecordAsync(\"create\", options, cancellationToken, owner._topicStages);"
+        }
+      ],
+      "identifier_occurrences_changed": 5,
+      "inverse_byte_equal": true,
+      "XML_comment_lines_equal": true,
+      "Task_token_assertion_attributes_and_bodies_unchanged": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusDeadLetterStateTests.cs",
+      "old_symbol": "Record",
+      "new_symbol": "RecordAsync",
+      "lines": 214,
+      "before_sha256": "abe3e190bace34305939f57efd1fe3753d6de0d515f424b4143f8ffcaab45043",
+      "after_sha256": "991e747772599f88659883364e5909ff7d8a76f3c747e82cd5370289b8280a25",
+      "exact_changed_lines": [
+        {
+          "line": 169,
+          "before": "        public Task Record(string operation, ServiceBusReceivedMessage message, CancellationToken token,",
+          "after": "        public Task RecordAsync(string operation, ServiceBusReceivedMessage message, CancellationToken token,"
+        },
+        {
+          "line": 188,
+          "before": "            probe.Record(\"complete\", message, cancellationToken);",
+          "after": "            probe.RecordAsync(\"complete\", message, cancellationToken);"
+        },
+        {
+          "line": 190,
+          "before": "            probe.Record(\"abandon\", message, cancellationToken, propertiesToModify);",
+          "after": "            probe.RecordAsync(\"abandon\", message, cancellationToken, propertiesToModify);"
+        },
+        {
+          "line": 192,
+          "before": "            probe.Record(\"deadletter\", message, cancellationToken, propertiesToModify);",
+          "after": "            probe.RecordAsync(\"deadletter\", message, cancellationToken, propertiesToModify);"
+        },
+        {
+          "line": 195,
+          "before": "            probe.Record(\"deadletter\", message, cancellationToken, propertiesToModify, deadLetterReason, deadLetterErrorDescription);",
+          "after": "            probe.RecordAsync(\"deadletter\", message, cancellationToken, propertiesToModify, deadLetterReason, deadLetterErrorDescription);"
+        },
+        {
+          "line": 202,
+          "before": "            probe.Record(\"complete\", message, cancellationToken);",
+          "after": "            probe.RecordAsync(\"complete\", message, cancellationToken);"
+        },
+        {
+          "line": 204,
+          "before": "            probe.Record(\"abandon\", message, cancellationToken, propertiesToModify);",
+          "after": "            probe.RecordAsync(\"abandon\", message, cancellationToken, propertiesToModify);"
+        },
+        {
+          "line": 206,
+          "before": "            probe.Record(\"deadletter\", message, cancellationToken, propertiesToModify);",
+          "after": "            probe.RecordAsync(\"deadletter\", message, cancellationToken, propertiesToModify);"
+        },
+        {
+          "line": 209,
+          "before": "            probe.Record(\"deadletter\", message, cancellationToken, propertiesToModify, deadLetterReason, deadLetterErrorDescription);",
+          "after": "            probe.RecordAsync(\"deadletter\", message, cancellationToken, propertiesToModify, deadLetterReason, deadLetterErrorDescription);"
+        }
+      ],
+      "identifier_occurrences_changed": 9,
+      "inverse_byte_equal": true,
+      "XML_comment_lines_equal": true,
+      "Task_token_assertion_attributes_and_bodies_unchanged": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusReceiverDispatchOwnershipTests.cs",
+      "old_symbol": "StartCallback",
+      "new_symbol": "StartCallbackAsync",
+      "lines": 387,
+      "before_sha256": "5de79ee65e27e2bb5d5108b266e5e757f2b5a85144be58bb32c8b495f51fbd3a",
+      "after_sha256": "423976dae04aeb37c6444fa590db952e0577e09883bd300c7f4d234d281283a2",
+      "exact_changed_lines": [
+        {
+          "line": 99,
+          "before": "            pending = fixture.StartCallback(caller.Token);",
+          "after": "            pending = fixture.StartCallbackAsync(caller.Token);"
+        },
+        {
+          "line": 158,
+          "before": "            delivery = fixture.StartCallback(CancellationToken.None);",
+          "after": "            delivery = fixture.StartCallbackAsync(CancellationToken.None);"
+        },
+        {
+          "line": 260,
+          "before": "        public Task StartCallback(CancellationToken caller) => (_callback ?? throw new InvalidOperationException(\"Receiver.Start did not register callback\"))(",
+          "after": "        public Task StartCallbackAsync(CancellationToken caller) => (_callback ?? throw new InvalidOperationException(\"Receiver.Start did not register callback\"))("
+        }
+      ],
+      "identifier_occurrences_changed": 3,
+      "inverse_byte_equal": true,
+      "XML_comment_lines_equal": true,
+      "Task_token_assertion_attributes_and_bodies_unchanged": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusTopologyOwnershipTests.cs",
+      "old_symbol": "Invoke",
+      "new_symbol": "InvokeAsync",
+      "lines": 561,
+      "before_sha256": "915d44d9e0dfe5b2ec0660f687671c704dd66d94958862ee7265e90a0b9f6ce6",
+      "after_sha256": "27a55810d04c3c22f9a7a220b3d5004a03537666a7047802b22674d917075f30",
+      "exact_changed_lines": [
+        {
+          "line": 257,
+          "before": "            ((RecordingConnection)connection).Handler = Invoke;",
+          "after": "            ((RecordingConnection)connection).Handler = InvokeAsync;"
+        },
+        {
+          "line": 274,
+          "before": "        private Task Invoke(MethodInfo method, object?[] args)",
+          "after": "        private Task InvokeAsync(MethodInfo method, object?[] args)"
+        }
+      ],
+      "identifier_occurrences_changed": 2,
+      "inverse_byte_equal": true,
+      "XML_comment_lines_equal": true,
+      "Task_token_assertion_attributes_and_bodies_unchanged": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlClientLeaseAndTimerContractTests.cs",
+      "old_symbol": "Capture",
+      "new_symbol": "CaptureAsync",
+      "lines": 213,
+      "before_sha256": "9a868c37bc1cb7ddc16b4f70b89b2c37fe208d0b8d7b52ab91309b822b77b67d",
+      "after_sha256": "8df71ff885f60f315164c57508cd08095c7da8bda079fe26cba22b0d667266be",
+      "exact_changed_lines": [
+        {
+          "line": 163,
+          "before": "                \"PurgeQueueAsync\" => Capture(args, token, 73L),",
+          "after": "                \"PurgeQueueAsync\" => CaptureAsync(args, token, 73L),"
+        },
+        {
+          "line": 164,
+          "before": "                \"RenewLockAsync\" => Capture(args, token, true),",
+          "after": "                \"RenewLockAsync\" => CaptureAsync(args, token, true),"
+        },
+        {
+          "line": 165,
+          "before": "                \"TouchQueueAsync\" => Capture(args, token, 0),",
+          "after": "                \"TouchQueueAsync\" => CaptureAsync(args, token, 0),"
+        },
+        {
+          "line": 166,
+          "before": "                \"ReceiveMessagesAsync\" => Capture<IEnumerable<SqlTransportMessage>>(args, token, Array.Empty<SqlTransportMessage>()),",
+          "after": "                \"ReceiveMessagesAsync\" => CaptureAsync<IEnumerable<SqlTransportMessage>>(args, token, Array.Empty<SqlTransportMessage>()),"
+        },
+        {
+          "line": 171,
+          "before": "        private Task<T> Capture<T>(object?[] args, CancellationToken token, T result)",
+          "after": "        private Task<T> CaptureAsync<T>(object?[] args, CancellationToken token, T result)"
+        }
+      ],
+      "identifier_occurrences_changed": 5,
+      "inverse_byte_equal": true,
+      "XML_comment_lines_equal": true,
+      "Task_token_assertion_attributes_and_bodies_unchanged": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs",
+      "old_symbol": "GetOwnedStartupTask",
+      "new_symbol": "GetOwnedStartupTaskAsync",
+      "lines": 1134,
+      "before_sha256": "303c63521ca7bca3c2d1a979189f97b55b174af119cb5e2037adba0e3c95ff0b",
+      "after_sha256": "7159b8ae98c4374d15699b040e4412fcdee9002cf3a462556069cdde8a3f6962",
+      "exact_changed_lines": [
+        {
+          "line": 517,
+          "before": "            startup = GetOwnedStartupTask(transport);",
+          "after": "            startup = GetOwnedStartupTaskAsync(transport);"
+        },
+        {
+          "line": 623,
+          "before": "    private static Task GetOwnedStartupTask(ReceiveTransportHandle transport)",
+          "after": "    private static Task GetOwnedStartupTaskAsync(ReceiveTransportHandle transport)"
+        }
+      ],
+      "identifier_occurrences_changed": 2,
+      "inverse_byte_equal": true,
+      "XML_comment_lines_equal": true,
+      "Task_token_assertion_attributes_and_bodies_unchanged": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineFaultedRequestScheduleActivitiesDeepContractTests.cs",
+      "old_symbol": "CreateMessage",
+      "new_symbol": "CreateMessageAsync",
+      "lines": 2216,
+      "before_sha256": "4766dc43b7b8b463dcb75e815f8f9e7ad3723c50d0d7f24a64267774c845c2f4",
+      "after_sha256": "8f9e097d2a5bb3ada85336457586289a04a5772b183808753ac8e3a8733cdf52",
+      "exact_changed_lines": [
+        {
+          "line": 584,
+          "before": "        Task<InitializedMessage<Request>> CreateMessage(object context)",
+          "after": "        Task<InitializedMessage<Request>> CreateMessageAsync(object context)"
+        },
+        {
+          "line": 606,
+          "before": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorContext<Saga>, Request>(ctx => CreateMessage(ctx)));",
+          "after": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorContext<Saga>, Request>(ctx => CreateMessageAsync(ctx)));"
+        },
+        {
+          "line": 614,
+          "before": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorContext<Saga>, Request>(ctx => CreateMessage(ctx)));",
+          "after": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorContext<Saga>, Request>(ctx => CreateMessageAsync(ctx)));"
+        },
+        {
+          "line": 622,
+          "before": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorContext<Saga, Data>, Request>(ctx => CreateMessage(ctx)));",
+          "after": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorContext<Saga, Data>, Request>(ctx => CreateMessageAsync(ctx)));"
+        },
+        {
+          "line": 630,
+          "before": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorExceptionContext<Saga, BaseFault>, Request>(ctx => CreateMessage(ctx)));",
+          "after": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorExceptionContext<Saga, BaseFault>, Request>(ctx => CreateMessageAsync(ctx)));"
+        },
+        {
+          "line": 638,
+          "before": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorExceptionContext<Saga, BaseFault>, Request>(ctx => CreateMessage(ctx)));",
+          "after": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorExceptionContext<Saga, BaseFault>, Request>(ctx => CreateMessageAsync(ctx)));"
+        },
+        {
+          "line": 646,
+          "before": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorExceptionContext<Saga, Data, BaseFault>, Request>(ctx => CreateMessage(ctx)));",
+          "after": "                    ctx => Address(ctx), new ContextMessageFactory<IBehaviorExceptionContext<Saga, Data, BaseFault>, Request>(ctx => CreateMessageAsync(ctx)));"
+        }
+      ],
+      "identifier_occurrences_changed": 7,
+      "inverse_byte_equal": true,
+      "XML_comment_lines_equal": true,
+      "Task_token_assertion_attributes_and_bodies_unchanged": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/AdvancedSchedulerDefaultAdapterTests.cs",
+      "old_symbol": "InvokeRoute",
+      "new_symbol": "InvokeRouteAsync",
+      "lines": 210,
+      "before_sha256": "979a313d53215dcc35f9f808478fe035aeec2286d7c975d5234def85cbfa0f73",
+      "after_sha256": "b125fcc5cd53562fa2fb6caa1cad50b1907a5fcbc7a4a9752cd6d98573a457a6",
+      "exact_changed_lines": [
+        {
+          "line": 34,
+          "before": "        ScheduledMessage<Payload> result = await InvokeRoute(scheduler, route, delay, message, options, caller.Token)",
+          "after": "        ScheduledMessage<Payload> result = await InvokeRouteAsync(scheduler, route, delay, message, options, caller.Token)"
+        },
+        {
+          "line": 64,
+          "before": "        Task<ScheduledMessage<Payload>> canceledOperation = InvokeRoute(canceledScheduler, route, delay, message, options, canceled.Token);",
+          "after": "        Task<ScheduledMessage<Payload>> canceledOperation = InvokeRouteAsync(canceledScheduler, route, delay, message, options, canceled.Token);"
+        },
+        {
+          "line": 126,
+          "before": "    private static Task<ScheduledMessage<Payload>> InvokeRoute(IMessageScheduler scheduler, int route, TimeSpan delay,",
+          "after": "    private static Task<ScheduledMessage<Payload>> InvokeRouteAsync(IMessageScheduler scheduler, int route, TimeSpan delay,"
+        }
+      ],
+      "identifier_occurrences_changed": 3,
+      "inverse_byte_equal": true,
+      "XML_comment_lines_equal": true,
+      "Task_token_assertion_attributes_and_bodies_unchanged": true
+    }
+  ],
+  "public_api_change": false,
+  "test_assertion_change": false,
+  "architecture_rule_change": false,
+  "requirements_change": false,
+  "native_fixed_success": false,
+  "whole_api_closed": false
+}

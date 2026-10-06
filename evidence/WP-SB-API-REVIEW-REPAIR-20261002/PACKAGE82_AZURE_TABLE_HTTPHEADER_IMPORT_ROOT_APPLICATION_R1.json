@@ -1,0 +1,10 @@
+{
+  "utc": "2026-10-04T15:49:59.046078+00:00",
+  "decision": "ONE_IMPORT_NAMESPACE_COMPILER_FIX_INDEPENDENT_ADVERSARIAL_NO_BLOCK_APPLIED",
+  "before": "6321fcd38286af069c65fb6629486617ff23d65eba5c2be6f179d5a32fc77a35",
+  "after": "4c9049235334f66d28ae21d35a6dd06ef380904a5d0843fd764aaa41fe15cc3e",
+  "delta": "using global::Azure.Core; oneimport nextto existingglobalAzureimports",
+  "root_read": "cdaae8 actualexistingimportscope andrelatedHttpHeaderowner; e0acac entireindependentpinnedAzure.Core1.62.0Xmlproof",
+  "strict_failed_log_sha256": "ec25f0b270fc73686a7085d3bd1e0b51d61edd87335b0ada31797f3e15fb0297",
+  "requirements_unchanged": true
+}

@@ -1,0 +1,196 @@
+using System.Collections.Concurrent;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Monitoring;
+using ViciOne.ServiceBus.Providers.Transports;
+using ViciOne.ServiceBus.Transports;
+using Xunit;
+
+namespace ViciOneReview.GraphOwnership;
+
+public static class GraphCases
+{
+    public static async Task RunAsync(string mode, TimeSpan timeout, CancellationToken caller)
+    {
+        bool typed = mode.EndsWith("-typed", StringComparison.Ordinal);
+        bool independent = mode.StartsWith("independent-", StringComparison.Ordinal);
+        bool recovery = mode.StartsWith("callback-recovery-", StringComparison.Ordinal);
+        var previousLog = LogContext.Current;
+        using var logging = LoggerFactory.Create(_ => { });
+        LogContext.ConfigureCurrentLogContext(logging); // Isolate separately pending F019.
+        using var delayCancellation = CancellationTokenSource.CreateLinkedTokenSource(caller);
+        var owners = new List<Owner>();
+        Task? pendingDelay = null;
+        var callbacks = new ConcurrentQueue<(Marker Marker, IInMemoryBusFactoryConfigurator Configurator)>();
+        var receipts = new ConcurrentQueue<(Marker Marker, string Value)>();
+        var received = new ConcurrentDictionary<string, TaskCompletionSource<Marker>>(StringComparer.Ordinal);
+        string queue = "graph-" + Guid.NewGuid().ToString("N");
+        var address = new Uri("loopback://graphhost/team%2Fblue/");
+        int callbackCount = 0;
+        await OwnedLifetime.RunAsync(async () =>
+        {
+            if (mode.StartsWith("invalid-", StringComparison.Ordinal))
+            {
+                foreach (string invalid in new[] { "relative", "https://localhost/", "loopback://user:password@localhost/", "loopback://localhost/?x=1", "loopback://localhost/#fragment", "loopback://localhost:123/", "loopback://localhost/one/two" })
+                {
+                    var uri = new Uri(invalid, UriKind.RelativeOrAbsolute);
+                    var services = new ServiceCollection();
+                    var failure = Assert.Throws<ArgumentException>(() => Register(services, uri, (_, _) => { }));
+                    Assert.Equal("address", failure.ParamName);
+                }
+                Assert.Equal(0, owners.Count); // All seven fail at registration, before provider construction.
+                return;
+            }
+
+            var servicesA = CreateServices();
+            Owner a = Create(servicesA);
+            Marker markerA = a.Provider.GetRequiredService<Marker>();
+            if (recovery)
+            {
+                var failure = Assert.Throws<ConfigurationException>(() => a.Resolve(typed));
+                Assert.Contains("owned-graph-callback-fault", failure.Message, StringComparison.Ordinal);
+                Assert.Equal(1, Volatile.Read(ref callbackCount));
+            }
+            else
+                await a.StartAsync(typed, timeout, caller);
+
+            Owner b = Create(independent ? CreateServices() : servicesA);
+            Marker markerB = b.Provider.GetRequiredService<Marker>();
+            Assert.NotSame(markerA, markerB);
+            await b.StartAsync(typed, timeout, caller);
+            var configured = callbacks.ToArray();
+            Assert.Equal(2, configured.Length);
+            Assert.Equal(2, Volatile.Read(ref callbackCount));
+            Assert.Same(markerA, configured[0].Marker); Assert.Same(markerB, configured[1].Marker);
+            Assert.NotSame(configured[0].Configurator, configured[1].Configurator);
+            if (!recovery)
+            {
+                Assert.NotSame(a.Bus, b.Bus);
+                Assert.NotSame(a.Instance!.HostConfiguration, b.Instance!.HostConfiguration);
+                Assert.Equal(address, a.Instance.HostConfiguration.HostAddress);
+                await RejectThenReceiveAsync(a, "A", markerA);
+            }
+            Assert.Equal(address, b.Instance!.HostConfiguration.HostAddress);
+            await RejectThenReceiveAsync(b, "B", markerB);
+
+            IInMemoryDelayProvider delayB = GetDelay(b);
+            if (!recovery) Assert.NotSame(GetDelay(a), delayB);
+            pendingDelay = delayB.DelayAsync(TimeSpan.FromDays(1), delayCancellation.Token);
+            await a.CloseAsync(timeout);
+            delayB.Advance(TimeSpan.FromDays(2));
+            await pendingDelay.WaitAsync(timeout, caller); // Positive completion after A cleanup.
+            await ReceiveAsync(b, "B-survives", markerB);
+            await b.StopAsync(timeout); // All actual callbacks have drained before exact counts.
+            var delivered = receipts.ToArray();
+            Assert.Equal(recovery ? 2 : 3, delivered.Length);
+            Assert.Equal(recovery ? 0 : 1, delivered.Count(item => ReferenceEquals(item.Marker, markerA)));
+            Assert.Equal(2, delivered.Count(item => ReferenceEquals(item.Marker, markerB)));
+            Assert.DoesNotContain(delivered, item => item.Value.Length > 100);
+        }, () =>
+        {
+            delayCancellation.Cancel();
+            return Task.CompletedTask;
+        }, async () =>
+        {
+            if (pendingDelay is null) return;
+            try { await pendingDelay.WaitAsync(timeout); }
+            catch (OperationCanceledException) when (delayCancellation.IsCancellationRequested) { }
+        }, () => OwnedLifetime.RunAsync(() => Task.CompletedTask,
+            owners.AsEnumerable().Reverse().Select<Owner, Func<Task>>(owner => () => owner.CloseAsync(timeout)).ToArray()),
+            () => { LogContext.Current = previousLog; return Task.CompletedTask; });
+
+        void Register(ServiceCollection services, Uri uri, Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator> configure)
+        {
+            if (typed) services.AddViciOneServiceBus<IGraphBus>(registration =>
+            {
+                registration.Limits(new MessageLimits { MaxBodyBytes = 8192, MaxEnvelopeBytes = 16384, MaxJsonDepth = 32 });
+                registration.UsingInMemory(uri, configure);
+            });
+            else services.AddViciOneServiceBus(registration =>
+            {
+                registration.Limits(new MessageLimits { MaxBodyBytes = 8192, MaxEnvelopeBytes = 16384, MaxJsonDepth = 32 });
+                registration.UsingInMemory(uri, configure);
+            });
+        }
+
+        ServiceCollection CreateServices()
+        {
+            var services = new ServiceCollection();
+            services.AddLogging(); services.AddSingleton<Marker>(_ => new Marker());
+            Register(services, address, (context, configurator) =>
+            {
+                Marker marker = context.GetRequiredService<Marker>();
+                callbacks.Enqueue((marker, configurator));
+                int invocation = Interlocked.Increment(ref callbackCount);
+                if (recovery && invocation == 1) throw new InvalidOperationException("owned-graph-callback-fault");
+                configurator.ReceiveEndpoint(queue, endpoint => endpoint.Handler<Probe>(message =>
+                {
+                    receipts.Enqueue((marker, message.Message.Value));
+                    received.GetOrAdd(message.Message.Value, static _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).TrySetResult(marker);
+                    return Task.CompletedTask;
+                }));
+            });
+            return services;
+        }
+
+        Owner Create(ServiceCollection services)
+        {
+            var owner = new Owner(services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true }));
+            owners.Add(owner); return owner;
+        }
+
+        async Task RejectThenReceiveAsync(Owner owner, string value, Marker marker)
+        {
+            ISendEndpoint endpoint = await owner.Bus!.GetSendEndpointAsync(new Uri(address, queue), cancellationToken: caller).WaitAsync(timeout, caller);
+            var failure = await Assert.ThrowsAsync<PayloadAdmissionException>(() => endpoint.SendAsync(new Probe(new string('x', 16384)), caller).WaitAsync(timeout, caller));
+            Assert.Equal(8192, failure.ConfiguredLimitBytes); Assert.True(failure.ActualBytes > 8192);
+            await ReceiveAsync(owner, value, marker);
+        }
+
+        async Task ReceiveAsync(Owner owner, string value, Marker marker)
+        {
+            ISendEndpoint endpoint = await owner.Bus!.GetSendEndpointAsync(new Uri(address, queue), cancellationToken: caller).WaitAsync(timeout, caller);
+            await endpoint.SendAsync(new Probe(value), caller).WaitAsync(timeout, caller);
+            Marker actual = await received.GetOrAdd(value, static _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).Task.WaitAsync(timeout, caller);
+            Assert.Same(marker, actual);
+        }
+
+        IInMemoryDelayProvider GetDelay(Owner owner) => typed
+            ? owner.Provider.GetRequiredService<Bind<IGraphBus, IInMemoryDelayProvider>>().Value
+            : owner.Provider.GetRequiredService<IInMemoryDelayProvider>();
+    }
+
+    public interface IGraphBus : IBus;
+    public sealed record Probe(string Value);
+    sealed class Marker;
+
+    sealed class Owner(ServiceProvider provider)
+    {
+        public ServiceProvider Provider { get; } = provider;
+        public IBusControl? Bus { get; private set; }
+        public IBusInstance? Instance { get; private set; }
+        bool _started, _disposed;
+        public void Resolve(bool typed)
+        {
+            Instance = typed ? Provider.GetRequiredService<IBusInstance<IGraphBus>>() : Provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value;
+            Bus = Instance.BusControl;
+        }
+        public async Task StartAsync(bool typed, TimeSpan timeout, CancellationToken caller)
+        {
+            Resolve(typed); _started = true;
+            await Bus!.StartAsync(caller).WaitAsync(timeout, caller);
+        }
+        public async Task StopAsync(TimeSpan timeout)
+        {
+            if (Bus is not null && _started) { await Bus.StopAsync(CancellationToken.None).WaitAsync(timeout); _started = false; }
+        }
+        public Task CloseAsync(TimeSpan timeout) => OwnedLifetime.RunAsync(() => Task.CompletedTask,
+            () => StopAsync(timeout), async () =>
+            {
+                if (!_disposed) { await Provider.DisposeAsync().AsTask().WaitAsync(timeout); _disposed = true; }
+            });
+    }
+}

@@ -17,7 +17,7 @@ public class QueueSqlReceiveEndpointContext :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="hostConfiguration">The host configuration.</param>
-    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <param name="configuration">The SQL receive-endpoint configuration used by this context.</param>
     /// <param name="brokerTopology">The broker topology.</param>
     public QueueSqlReceiveEndpointContext(ISqlHostConfiguration hostConfiguration, ISqlReceiveEndpointConfiguration configuration,
         BrokerTopology brokerTopology)

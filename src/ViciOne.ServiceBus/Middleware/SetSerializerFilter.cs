@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
-/// <summary>Sets the CorrelationId header uses the supplied implementation.</summary>
+/// <summary>Selects an available serializer matching the configured content type before forwarding the send context.</summary>
 /// <typeparam name="T">The message type.</typeparam>
 public class SetSerializerFilter<T> :
     IFilter<SendContext<T>>
@@ -18,7 +18,7 @@ public class SetSerializerFilter<T> :
         _contentType = contentType;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Selects an available serializer for the configured content type before invoking the continuation.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

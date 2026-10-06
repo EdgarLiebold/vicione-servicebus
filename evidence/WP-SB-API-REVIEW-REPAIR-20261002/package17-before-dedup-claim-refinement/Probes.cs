@@ -1,0 +1,71 @@
+using System.Collections.Concurrent;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Observers;
+using ViciOne.ServiceBus.Advanced.Middleware;
+using ViciOne.ServiceBus.Operations;
+using ViciOne.ServiceBus.Context;
+using Xunit;
+
+namespace BatchClock;
+
+public sealed record Item(int Sequence, Guid Identity);
+public sealed record Terminal(Guid Identity, Guid? MessageId, Exception? Failure);
+public sealed class Probe : IConsumeObserver
+{
+    readonly ConcurrentDictionary<int, TaskCompletionSource<Terminal>> _terminals = new();
+    readonly ConcurrentDictionary<int, TaskCompletionSource<IMessageBatch<Item>>> _batches = new();
+    public readonly ConcurrentQueue<Terminal> AllTerminals = new();
+    public readonly ConcurrentQueue<IMessageBatch<Item>> AllBatches = new();
+    public Task<Terminal> Terminal(int sequence) => _terminals.GetOrAdd(sequence, _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).Task;
+    public Task<IMessageBatch<Item>> Batch(int count) => _batches.GetOrAdd(count, _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).Task;
+    public Task Deliver(ConsumeContext<IMessageBatch<Item>> context)
+    {
+        AllBatches.Enqueue(context.Message);
+        _batches.GetOrAdd(AllBatches.Count, _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).TrySetResult(context.Message);
+        return Task.CompletedTask;
+    }
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class => Record(context, null);
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception) where T : class => Record(context, exception);
+    Task Record<T>(ConsumeContext<T> context, Exception? failure) where T : class
+    {
+        if (context.Message is Item item)
+        {
+            var terminal = new Terminal(item.Identity, context.MessageId, failure);
+            AllTerminals.Enqueue(terminal);
+            _terminals.GetOrAdd(item.Sequence, _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).TrySetResult(terminal);
+        }
+        return Task.CompletedTask;
+    }
+}
+public sealed class Receiver(Probe probe) : IConsumer<IMessageBatch<Item>>
+{
+    public Task ConsumeAsync(ConsumeContext<IMessageBatch<Item>> context) => probe.Deliver(context);
+}
+public sealed class AttachClock(Func<Item, Clock?> select, CancellationToken? overrideFirst = null) : IFilter<ConsumeContext<Item>>, IDisposable
+{
+    readonly ConcurrentQueue<CancellationTokenSource> _linked = new();
+    public readonly ConcurrentQueue<(Guid Identity, TimeProvider Provider, CancellationToken Token)> Entries = new();
+    public void Probe(ProbeContext context) => context.CreateScope("public-clock");
+    public Task SendAsync(ConsumeContext<Item> context, IPipe<ConsumeContext<Item>> next)
+    {
+        Assert.Same(TimeProvider.System, context.Advanced().GetTimeProvider());
+        if (select(context.Message) is { } clock) context.Advanced().SetTimeProvider(clock);
+        if (overrideFirst is { } token && context.Message.Sequence == 1)
+        {
+            var linked = CancellationTokenSource.CreateLinkedTokenSource(context.CancellationToken, token);
+            _linked.Enqueue(linked);
+            var forwarded = new TokenContext(context, linked.Token);
+            Entries.Enqueue((context.Message.Identity, forwarded.GetTimeProvider(), linked.Token));
+            return next.SendAsync(forwarded);
+        }
+        Entries.Enqueue((context.Message.Identity, context.Advanced().GetTimeProvider(), context.CancellationToken));
+        return next.SendAsync(context);
+    }
+    public void Dispose() { foreach (var linked in _linked) linked.Dispose(); }
+    sealed class TokenContext(ConsumeContext<Item> context, CancellationToken token) : ConsumeContextProxy<Item>(context)
+    {
+        public override CancellationToken CancellationToken => token;
+    }
+}

@@ -1,0 +1,54 @@
+{
+  "utc": "2026-10-06T07:27:07.250412+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_F216_F217_FIXED10_CORE7896_STRICT_FRESH_AND_TWO_PROPERTIES",
+  "independent_actual_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package371-joint-fixed-independent-qualification-r1/MANIFEST.json",
+    "sha256": "025eeadeec2a8968717a0b531b34a1f79ffb0d714cbb10c49c07792c3b42bcd8"
+  },
+  "product_Source_adversarial_peers": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package365-activity-product4-independent-runtime-source-peer-r1/MANIFEST.json",
+      "sha256": "0f177d974b9a41018fe909e5a1a1f334c475daba38d17783fbf8e1e5dcea9eaf"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package366-consumer-admission-product-independent-scanner-source-peer-r1/MANIFEST.json",
+      "sha256": "53dd7a84aabdc43685821b4f3a15609cc19e125c149df98c36e9a135e433a9c4"
+    }
+  ],
+  "Root_entire_finalReport": "76fa1a",
+  "Root_original_and_fixed_actual_raw": [
+    "fde54e originalActivity4",
+    "ec950d originalConsumer6",
+    "d1e392 fixedConsumer6",
+    "631070 sameepochActivity4"
+  ],
+  "Root_entire_product_sources_and_inverse": [
+    "2e16d1 Activity4 whole309",
+    "5a908d Consumer97",
+    "61a228 patch/inverse",
+    "e914fc Doc-only exact7c95 inverse"
+  ],
+  "Root_own_current371_P36_owner13_XML": "f3845a Core1340docs, current13owner binding+two propertyXML",
+  "manual_norm_precisions": "029d96 complete4spec norms, e8d75c complete2Consumer norms; allsix exactbefore guarded",
+  "original_before": 18370,
+  "original_after": 18372,
+  "original_remaining_after": 197,
+  "master_before": 19232,
+  "master_after": 19234,
+  "rebased_rows": 13,
+  "new_original_properties": 2,
+  "known_findings": 217,
+  "bounded_dispositions_after": 217,
+  "fixed_consumer6": 6,
+  "fixed_activity4": 4,
+  "Core_module_pass": 7896,
+  "strict_warnings": 0,
+  "strict_errors": 0,
+  "fresh_core_nupkg": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package371-F216-F217-strict-fresh-publication-capture-r1/fresh-pack/ViciOne.ServiceBus.1.0.0.nupkg",
+    "sha256": "7ce2bc2bf6a0f14fb7084aaab221a19c2dd94dca16d26743984636f1b0a5a879"
+  },
+  "global23modules31packs18compilations4executedconsumers": "Fresh still pending after all repairs; historical global results not relabelled371",
+  "grade": null,
+  "whole_API_closed": false
+}

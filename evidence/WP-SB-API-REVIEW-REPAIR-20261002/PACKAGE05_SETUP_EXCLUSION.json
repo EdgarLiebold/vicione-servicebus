@@ -1,0 +1,5 @@
+{
+  "phase": "package05-original-build",
+  "status": "EXCLUDED_COMPILATION_SETUP_FAILURE",
+  "cause": "Research draft referenced ServiceCollection provider/Logging helpers but had only transitive abstractions. Add explicit installed Microsoft.Extensions.DependencyInjection and Microsoft.Extensions.Logging10.0.12 identically to both owned consumers. No assertion change or defect/kill claim from setup failure."
+}

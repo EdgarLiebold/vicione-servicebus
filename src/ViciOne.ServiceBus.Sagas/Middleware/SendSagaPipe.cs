@@ -86,7 +86,13 @@ static class SagaRepositoryLifecycle
         Exception? operationFailure = null;
         try
         {
-            sagaConsumeContext.LogUsed();
+            try
+            {
+                sagaConsumeContext.LogUsed();
+            }
+            catch (Exception)
+            {
+            }
 
             Task existing = policy.ExistingAsync(sagaConsumeContext, next)
                 ?? throw new InvalidOperationException("The saga policy returned a null existing-saga task.");
@@ -106,7 +112,13 @@ static class SagaRepositoryLifecycle
                         "The saga repository returned a null delete task.")
                     .ConfigureAwait(false);
 
-                sagaConsumeContext.LogRemoved();
+                try
+                {
+                    sagaConsumeContext.LogRemoved();
+                }
+                catch (Exception)
+                {
+                }
             }
             else
             {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Observables;
@@ -136,7 +137,28 @@ public sealed class ReceiveEndpointCollection :
         where T : class
     {
         ArgumentNullException.ThrowIfNull(observer);
-        return new MultipleConnectHandle(_endpoints.Values.Select(x => x.ConnectConsumeMessageObserver(observer)));
+        var handles = new List<ConnectHandle>();
+        try
+        {
+            foreach (ReceiveEndpoint endpoint in _endpoints.Values)
+                handles.Add(endpoint.ConnectConsumeMessageObserver(observer));
+
+            return new MultipleConnectHandle(handles);
+        }
+        catch (Exception connectionFailure)
+        {
+            try
+            {
+                new MultipleConnectHandle(handles.Where(handle => handle is not null)).Disconnect();
+            }
+            catch (Exception cleanupFailure)
+            {
+                throw new AggregateException("Typed consume observer connection and registration cleanup both failed.",
+                    connectionFailure, cleanupFailure);
+            }
+
+            throw;
+        }
     }
 
     /// <summary>Creates a snapshot of the latest health observation for every endpoint.</summary>
@@ -154,19 +176,39 @@ public sealed class ReceiveEndpointCollection :
         await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            ReceiveEndpoint[] endpoints = _endpoints.Values.Where(x => (x.IsStarted() || x.IsPaused) && !x.IsBusEndpoint).ToArray();
+            var failures = new List<Exception>();
+            await StopEndpointPhaseAsync(false, cancellationToken, failures).ConfigureAwait(false);
+            await StopEndpointPhaseAsync(true, cancellationToken, failures).ConfigureAwait(false);
 
-            await Task.WhenAll(endpoints.Select(x => x.StopAsync(cancellationToken))).ConfigureAwait(false);
-
-            endpoints = _endpoints.Values.Where(x => (x.IsStarted() || x.IsPaused) && x.IsBusEndpoint).ToArray();
-
-            await Task.WhenAll(endpoints.Select(x => x.StopAsync(cancellationToken))).ConfigureAwait(false);
+            if (failures.Count == 1)
+                ExceptionDispatchInfo.Capture(failures[0]).Throw();
+            if (failures.Count > 1)
+                throw new AggregateException("Receive endpoint shutdown failed.", failures);
 
             _started = false;
         }
         finally
         {
             _lifecycleGate.Release();
+        }
+    }
+
+    async Task StopEndpointPhaseAsync(bool isBusEndpoint, CancellationToken cancellationToken, List<Exception> failures)
+    {
+        Task? stopped = null;
+        try
+        {
+            ReceiveEndpoint[] endpoints = _endpoints.Values
+                .Where(x => (x.IsStarted() || x.IsPaused) && x.IsBusEndpoint == isBusEndpoint).ToArray();
+            stopped = Task.WhenAll(endpoints.Select(x => x.StopAsync(cancellationToken)));
+            await stopped.ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            if (stopped?.Exception is { } aggregate)
+                failures.AddRange(aggregate.InnerExceptions);
+            else
+                failures.Add(exception);
         }
     }
 

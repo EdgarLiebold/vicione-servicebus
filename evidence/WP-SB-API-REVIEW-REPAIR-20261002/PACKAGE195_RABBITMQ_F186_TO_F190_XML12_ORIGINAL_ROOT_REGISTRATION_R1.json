@@ -1,0 +1,204 @@
+{
+  "utc": "2026-10-05T16:12:09.044703+00:00",
+  "status": "FIVE_PUBLISHED_XML_CAUSES_ROOT_REGISTERED_REPAIR_PENDING",
+  "findings": [
+    {
+      "id": "F-SB-API-186",
+      "severity": "Low",
+      "title": "RabbitMQ child endpoint XML incorrectly promises isolated or cloned topology",
+      "nodes": [
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqBusConfiguration.CreateEndpointConfiguration(System.Boolean)",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/IRabbitMqBusConfiguration.cs",
+          "xml_element": "summary",
+          "before_text": "Creates an isolated endpoint configuration that shares the bus topology.",
+          "after_text": "Creates an endpoint configuration; the built-in implementation shares message, send, and publish topology and creates new consume topology.",
+          "held714_ordinal": 21,
+          "actual185_XML_before_node": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqBusConfiguration.CreateEndpointConfiguration(System.Boolean)\">\n            <summary>Creates an isolated endpoint configuration that shares the bus topology.</summary>\n            <param name=\"isBusEndpoint\">Whether the configuration belongs to the bus endpoint.</param>\n            <returns>The new RabbitMQ endpoint configuration.</returns>\n        </member>\n        "
+        },
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqEndpointConfiguration.CreateEndpointConfiguration(System.Boolean)",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqEndpointConfiguration.cs",
+          "xml_element": "summary",
+          "before_text": "Creates a child endpoint configuration with cloned RabbitMQ topology.",
+          "after_text": "Creates a child endpoint configuration with new consume topology and retained parent message, send, and publish topology references.",
+          "held714_ordinal": null,
+          "actual185_XML_before_node": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqEndpointConfiguration.CreateEndpointConfiguration(System.Boolean)\">\n            <summary>Creates a child endpoint configuration with cloned RabbitMQ topology.</summary>\n            <param name=\"isBusEndpoint\">Whether the child belongs to the bus endpoint.</param>\n            <returns>The new child endpoint configuration.</returns>\n        </member>\n        "
+        }
+      ],
+      "native_count": 0,
+      "grade": null
+    },
+    {
+      "id": "F-SB-API-187",
+      "severity": "Low",
+      "title": "RabbitMQ cluster node XML incorrectly promises normalized or canonical host spelling",
+      "nodes": [
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.HostName",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/ClusterNode.cs",
+          "xml_element": "summary",
+          "before_text": "Gets the DNS name or normalized IP address.",
+          "after_text": "Gets the stored host name or IP address.",
+          "held714_ordinal": 124,
+          "actual185_XML_before_node": "<member name=\"P:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.HostName\">\n            <summary>Gets the DNS name or normalized IP address.</summary>\n        </member>\n        "
+        },
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.ToString",
+          "xml_element": "summary",
+          "before_text": "Returns the canonical node representation, using brackets for IPv6 hosts.",
+          "after_text": "Returns the stored host and optional port representation, adding brackets around IPv6 hosts.",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/ClusterNode.cs",
+          "held714_ordinal": null,
+          "actual185_XML_before_node": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.ToString\">\n            <summary>Returns the canonical node representation, using brackets for IPv6 hosts.</summary>\n            <returns>The canonical host and optional port.</returns>\n        </member>\n        "
+        },
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.ToString",
+          "xml_element": "returns",
+          "before_text": "The canonical host and optional port.",
+          "after_text": "The stored host and optional port, with brackets around IPv6 hosts.",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/ClusterNode.cs",
+          "held714_ordinal": null,
+          "actual185_XML_before_node": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.ToString\">\n            <summary>Returns the canonical node representation, using brackets for IPv6 hosts.</summary>\n            <returns>The canonical host and optional port.</returns>\n        </member>\n        "
+        }
+      ],
+      "native_count": 0,
+      "grade": null
+    },
+    {
+      "id": "F-SB-API-188",
+      "severity": "Low",
+      "title": "RabbitMQ connection timeout XML incorrectly specifies milliseconds for a TimeSpan",
+      "nodes": [
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqHostSettings.RequestedConnectionTimeout",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqHostSettings.cs",
+          "xml_element": "summary",
+          "before_text": "The requested connection timeout, in milliseconds.",
+          "after_text": "Gets the requested connection timeout.",
+          "held714_ordinal": 357,
+          "actual185_XML_before_node": "<member name=\"P:ViciOne.ServiceBus.RabbitMq.RabbitMqHostSettings.RequestedConnectionTimeout\">\n            <summary>The requested connection timeout, in milliseconds.</summary>\n        </member>\n        "
+        }
+      ],
+      "native_count": 0,
+      "grade": null
+    },
+    {
+      "id": "F-SB-API-189",
+      "severity": "Low",
+      "title": "RabbitMQ settings XML incorrectly describes read-only configuration views as immutable",
+      "nodes": [
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqReceiveEndpointConfiguration.Settings",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/IRabbitMqReceiveEndpointConfiguration.cs",
+          "xml_element": "summary",
+          "before_text": "Gets the immutable receive settings used to declare broker topology.",
+          "after_text": "Gets the receive settings used to declare broker topology.",
+          "held714_ordinal": 135,
+          "actual185_XML_before_node": "<member name=\"P:ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqReceiveEndpointConfiguration.Settings\">\n            <summary>Gets the immutable receive settings used to declare broker topology.</summary>\n        </member>\n        "
+        },
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "T:ViciOne.ServiceBus.RabbitMq.Configuration.BatchSettings",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/BatchSettings.cs",
+          "xml_element": "summary",
+          "before_text": "Defines immutable RabbitMQ client-side publish-batch settings.",
+          "after_text": "Defines read-only access to RabbitMQ client-side publish-batch settings.",
+          "held714_ordinal": 529,
+          "actual185_XML_before_node": "<member name=\"T:ViciOne.ServiceBus.RabbitMq.Configuration.BatchSettings\">\n            <summary>Defines immutable RabbitMQ client-side publish-batch settings.</summary>\n        </member>\n        "
+        }
+      ],
+      "native_count": 0,
+      "grade": null
+    },
+    {
+      "id": "F-SB-API-190",
+      "severity": "Low",
+      "title": "RabbitMQ receive XML incorrectly promises immutable supplied AMQP properties",
+      "nodes": [
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.Properties",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveContext.cs",
+          "xml_element": "summary",
+          "before_text": "Gets the immutable AMQP message properties.",
+          "after_text": "Gets the AMQP message properties supplied with the delivery.",
+          "held714_ordinal": 383,
+          "actual185_XML_before_node": "<member name=\"P:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.Properties\">\n            <summary>Gets the immutable AMQP message properties.</summary>\n        </member>\n        "
+        },
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.#ctor(System.String,System.String,System.String,System.UInt64,System.ReadOnlyMemory{System.Byte},System.Boolean,RabbitMQ.Client.IReadOnlyBasicProperties,ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveEndpointContext,System.Object[])",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveContext.cs",
+          "xml_element": "summary",
+          "before_text": "Creates a receive context from immutable AMQP delivery data.",
+          "after_text": "Creates a receive context from AMQP delivery data.",
+          "held714_ordinal": null,
+          "actual185_XML_before_node": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.#ctor(System.String,System.String,System.String,System.UInt64,System.ReadOnlyMemory{System.Byte},System.Boolean,RabbitMQ.Client.IReadOnlyBasicProperties,ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveEndpointContext,System.Object[])\">\n            <summary>Creates a receive context from immutable AMQP delivery data.</summary>\n            <param name=\"exchange\">The source exchange.</param>\n            <param name=\"routingKey\">The delivery routing key.</param>\n            <param name=\"consumerTag\">The broker-assigned consumer tag.</param>\n            <param name=\"deliveryTag\">The channel-scoped delivery tag.</param>\n            <param name=\"body\">The serialized message body.</param>\n            <param name=\"redelivered\">Whether RabbitMQ previously delivered this message.</param>\n            <param name=\"properties\">The immutable AMQP message properties.</param>\n            <param name=\"receiveEndpointContext\">The endpoint context and message limits.</param>\n            <param name=\"payloads\">Additional transport payloads.</param>\n        </member>\n        "
+        },
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.#ctor(System.String,System.String,System.String,System.UInt64,System.ReadOnlyMemory{System.Byte},System.Boolean,RabbitMQ.Client.IReadOnlyBasicProperties,ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveEndpointContext,System.Object[])",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveContext.cs",
+          "xml_element": "param:properties",
+          "before_text": "The immutable AMQP message properties.",
+          "after_text": "The AMQP message properties supplied with the delivery.",
+          "held714_ordinal": null,
+          "actual185_XML_before_node": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.#ctor(System.String,System.String,System.String,System.UInt64,System.ReadOnlyMemory{System.Byte},System.Boolean,RabbitMQ.Client.IReadOnlyBasicProperties,ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveEndpointContext,System.Object[])\">\n            <summary>Creates a receive context from immutable AMQP delivery data.</summary>\n            <param name=\"exchange\">The source exchange.</param>\n            <param name=\"routingKey\">The delivery routing key.</param>\n            <param name=\"consumerTag\">The broker-assigned consumer tag.</param>\n            <param name=\"deliveryTag\">The channel-scoped delivery tag.</param>\n            <param name=\"body\">The serialized message body.</param>\n            <param name=\"redelivered\">Whether RabbitMQ previously delivered this message.</param>\n            <param name=\"properties\">The immutable AMQP message properties.</param>\n            <param name=\"receiveEndpointContext\">The endpoint context and message limits.</param>\n            <param name=\"payloads\">Additional transport payloads.</param>\n        </member>\n        "
+        },
+        {
+          "assembly": "ViciOne.ServiceBus.RabbitMq",
+          "id": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.HeaderProvider",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveContext.cs",
+          "xml_element": "summary",
+          "before_text": "Gets a header provider over the immutable AMQP properties.",
+          "after_text": "Gets a header provider over the supplied AMQP properties.",
+          "held714_ordinal": null,
+          "actual185_XML_before_node": "<member name=\"P:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.HeaderProvider\">\n            <summary>Gets a header provider over the immutable AMQP properties.</summary>\n        </member>\n        "
+        }
+      ],
+      "native_count": 0,
+      "grade": null
+    }
+  ],
+  "counts": {
+    "known_before": 185,
+    "known_after": 190,
+    "accepted_before": 185,
+    "accepted_after": 185
+  },
+  "proposal_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package219-rabbit-settings-copy-property-doc12-product-proposed-r2/MANIFEST.json",
+    "sha256": "9b390fa72f423a87eed22cef0453e61a3ff1e3dca6e46989721d0faf6bd1d830"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package219-rabbit-doc12-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "dc565b2024eeb96cde80991afc2306e73ee4bcd02a9e820eeebc0316e3e62dda"
+  },
+  "root_review": {
+    "whole_proposed7_533_lines": [
+      "1c5dc0",
+      "e83b08"
+    ],
+    "entire_R2_added_literal2": "67dadb",
+    "entire_R2_changes12_report": "1f4474",
+    "whole_support3": "5cc4e1",
+    "focused_settings_actual_mutable_body": [
+      "3e6b1d",
+      "1991e1"
+    ],
+    "whole_peer": "2b7ed1",
+    "own_actual185_PDB_reparse_selected7_CRC_XML12": "this tool result"
+  },
+  "protected_HeaderProvider_outside18569": true,
+  "body_copy_preserved": true,
+  "no_ConfigureConnection_finding": true,
+  "whole_api_closed": false
+}

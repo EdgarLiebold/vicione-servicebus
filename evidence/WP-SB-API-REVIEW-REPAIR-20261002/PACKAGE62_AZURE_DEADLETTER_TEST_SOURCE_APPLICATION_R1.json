@@ -1,0 +1,18 @@
+{
+  "utc": "2026-10-04T13:11:52.025660+00:00",
+  "source_application": "EXACT_REVIEWED_TEST_AND_CURRENT199_LEDGER",
+  "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusDeadLetterStateTests.cs",
+  "source_sha256": "abe3e190bace34305939f57efd1fe3753d6de0d515f424b4143f8ffcaab45043",
+  "requirements_before": "da2f8486c1bf9792a13b5fd11317fc4e28403739f3313cd9c9ae89f987aa2217",
+  "requirements_after": "9675c0b832056fc553c3ba0468676af2ae9eb32c22ee50fa85073475ee09a168",
+  "delta": "add1 remove0 preserve198includingSchedule",
+  "root_whole_source_read": [
+    "fc54ed",
+    "590d89",
+    "d97230"
+  ],
+  "independent_source_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-azure-deadletter-state-adversarial-r1/REPORT.json",
+  "independent_source_report_sha256": "72d3e1ce584295bc916dd360718b4060ddf507bcde84ab1c58cc7794070b3689",
+  "native_credit": false,
+  "product_modified": false
+}

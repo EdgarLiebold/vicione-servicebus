@@ -1,0 +1,24 @@
+{
+  "utc": "2026-10-06T07:19:41.772328+00:00",
+  "status": "ALL3_PEER_PAYLOADS_VERIFIED",
+  "prior_readonly_schema_failure": "1454ab assumed files dict; actual files list; no writes in failed check",
+  "root_application_report_pins_already_verified": true,
+  "all_rows": [
+    {
+      "path": "EXACT_LITERAL_INVERSE.json",
+      "sha256": "47233d14c93aba0ff10ed4379d7127afeeb89ff8b995c2c241222fe209d293b8",
+      "size": 1252
+    },
+    {
+      "path": "OWN_INPUT_GUARDS.json",
+      "sha256": "9f6e0d6a58a4776bf33dc08bec26b3e73f2cca2b57b4d1844dfe3ddd85e5bc67",
+      "size": 1341
+    },
+    {
+      "path": "REPORT.json",
+      "sha256": "d2777980d2247da28301deaa53f096cae5b3ea92f129ddb2c56005e7ca447ac9",
+      "size": 3259
+    }
+  ],
+  "product_unchanged": true
+}

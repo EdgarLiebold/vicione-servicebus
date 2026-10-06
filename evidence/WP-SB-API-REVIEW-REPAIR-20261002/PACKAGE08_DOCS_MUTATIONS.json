@@ -1,0 +1,293 @@
+{
+  "status": "EXECUTED_ALL_3_LOGICAL_XML_MEMBER_MUTANTS_KILLED_ROLLBACK_GREEN",
+  "consumer_program_sha256": "381ffbb85b07f19082be84080e3175093c029103b2b70d93a8ab85cc51c4f497",
+  "checks": [
+    {
+      "phase": "package08-docs-corrected-empty-address",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "DocumentationContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "empty-address"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:12:28.814623+00:00",
+      "completed_utc": "2026-10-02T23:12:30.910027+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-corrected-empty-address.log",
+      "log_sha256": "5cbf48e7692d03724265162d200894a2d1dc75d4698237ec08b01d06038b5b8a"
+    },
+    {
+      "phase": "package08-docs-corrected-pre-auth",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "DocumentationContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "pre-auth"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:12:30.996616+00:00",
+      "completed_utc": "2026-10-02T23:12:32.505392+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-corrected-pre-auth.log",
+      "log_sha256": "694144d88b84bc5f7f7314a663a42cc37d76f88a1c458428070dad8be8cbd0d3"
+    },
+    {
+      "phase": "package08-docs-corrected-ef-single",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "DocumentationContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "ef-single"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:12:32.600838+00:00",
+      "completed_utc": "2026-10-02T23:12:34.320139+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-corrected-ef-single.log",
+      "log_sha256": "83561dfeea06e4b357cb04775f709aca447b0177a948df436692f3852d5079f4"
+    },
+    {
+      "phase": "package08-docs-corrected-ef-separate",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "DocumentationContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "ef-separate"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:12:34.419883+00:00",
+      "completed_utc": "2026-10-02T23:12:36.024132+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-corrected-ef-separate.log",
+      "log_sha256": "dd47fc5345b69e2069a31d260ae733e6358212e5e418461c405ce0234a9a33bc"
+    },
+    {
+      "phase": "package08-docs-corrected-ef-same",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "DocumentationContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "ef-same"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:12:36.111961+00:00",
+      "completed_utc": "2026-10-02T23:12:37.691945+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-corrected-ef-same.log",
+      "log_sha256": "e958812b2b5b5b1e76c4edc5284eaeb322408d13d5d28b1055ee44a2f0f9116d"
+    },
+    {
+      "phase": "package08-docs-rollback-empty-address",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "DocumentationContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "empty-address"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:12:39.789696+00:00",
+      "completed_utc": "2026-10-02T23:12:41.492762+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-rollback-empty-address.log",
+      "log_sha256": "5cbf48e7692d03724265162d200894a2d1dc75d4698237ec08b01d06038b5b8a"
+    },
+    {
+      "phase": "package08-docs-rollback-pre-auth",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "DocumentationContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "pre-auth"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:12:43.966245+00:00",
+      "completed_utc": "2026-10-02T23:12:45.699674+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-rollback-pre-auth.log",
+      "log_sha256": "694144d88b84bc5f7f7314a663a42cc37d76f88a1c458428070dad8be8cbd0d3"
+    },
+    {
+      "phase": "package08-docs-rollback-ef-same",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "DocumentationContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "ef-same"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:12:47.715924+00:00",
+      "completed_utc": "2026-10-02T23:12:49.478662+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-rollback-ef-same.log",
+      "log_sha256": "e958812b2b5b5b1e76c4edc5284eaeb322408d13d5d28b1055ee44a2f0f9116d"
+    }
+  ],
+  "mutants": [
+    {
+      "mode": "empty-address",
+      "member": "P:ViciOne.ServiceBus.Advanced.Serialization.IMessageData.Address",
+      "status": "KILLED_BY_PUBLIC_RUNTIME_PACKED_XML_CONTRACT_ASSERTION",
+      "corrected_xml_sha256": "1182e961a8760ac22f822533ae1ff9247402fecd5490a1fbbf09631d6acbdd02",
+      "mutant_xml_sha256": "d3249d9b35194387d39609b82fe052df15348f84f2cc316c6ec15aa29a4e7e8b",
+      "only_one_logical_member_changed": true,
+      "native_receipt": {
+        "phase": "package08-docs-mutant-empty-address",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "DocumentationContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "empty-address"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T23:12:38.111457+00:00",
+        "completed_utc": "2026-10-02T23:12:39.690644+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-mutant-empty-address.log",
+        "log_sha256": "8a415cd2bd1431d711d4865ca89fc3f840e53928ca6fc5885ee8609cafd7231f"
+      }
+    },
+    {
+      "mode": "pre-auth",
+      "member": "M:ViciOne.ServiceBus.Serialization.IEncryptionKeyProvider.TryGetKey(System.String,ViciOne.ServiceBus.Serialization.EncryptionKey@)",
+      "status": "KILLED_BY_PUBLIC_RUNTIME_PACKED_XML_CONTRACT_ASSERTION",
+      "corrected_xml_sha256": "beda69a21e970ddfdecc08bd744fe237cf78bdf35a51e57c1c980a789556e1c8",
+      "mutant_xml_sha256": "ef6bac3637f6276c7d63ff0237f7c9c2d0999ebac4a43354632f0518d07a12a7",
+      "only_one_logical_member_changed": true,
+      "native_receipt": {
+        "phase": "package08-docs-mutant-pre-auth",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "DocumentationContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "pre-auth"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T23:12:42.248031+00:00",
+        "completed_utc": "2026-10-02T23:12:43.855726+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-mutant-pre-auth.log",
+        "log_sha256": "c3dc41570c3b8811812a227940df8d247eecab36cef4c888c4adfcddbadc5686"
+      }
+    },
+    {
+      "mode": "ef-same",
+      "member": "M:ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxConfigurationExtensions.ConfigureEntityFrameworkTransactionalStore``2(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator{``0},System.Action{ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkOutboxConfigurator})",
+      "status": "KILLED_BY_PUBLIC_RUNTIME_PACKED_XML_CONTRACT_ASSERTION",
+      "corrected_xml_sha256": "907e8d3052ba3ed26713592df1f003c0ac0760e374a10070a9d99e8c7fe59128",
+      "mutant_xml_sha256": "503f51d253fd7ff36e336671dec1a7f94b7d04ad456ebb4643550b8c0a804c48",
+      "only_one_logical_member_changed": true,
+      "native_receipt": {
+        "phase": "package08-docs-mutant-ef-same",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "DocumentationContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "ef-same"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T23:12:45.841739+00:00",
+        "completed_utc": "2026-10-02T23:12:47.617798+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-mutant-ef-same.log",
+        "log_sha256": "c72545cb759693ce6d1d7f943646b9d6a25912cc021516de37f50e538cc41caf"
+      }
+    }
+  ],
+  "proof_limit": "Documentation-only member counterreversions in isolated restored package XML. No production source or provider behavior is mutated; packaged/runtime DLLs must remain unchanged.",
+  "all_runtime_dll_hashes_unchanged": true,
+  "runtime_dlls": {
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.EntityFrameworkCore.dll": "f5b1703d608e241314952b2ede8dcdd1b8d8adda8c91a13cb7e6b1007414cef4",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.dll": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Caching.Abstractions.dll": "eb027242c11808fe0d8faf851bd30d0c6e39944b773713ffb04e17e196bece0f",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll": "74bc17c936d66ea090b6a5b4cc4307d2154c9692e57edd4c55d68dd4a99c11b6",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Abstractions.dll": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.dll": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Primitives.dll": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.dll": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.EntityFrameworkCore.Relational.dll": "a1e4f36208650b15b75a4b01a5821d61d5be417ac2e86ec3c65e2560a87e0d7d",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Options.dll": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Binder.dll": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Caching.Memory.dll": "dca415c48a9d6af45c7f28f6481a88baa9cb9f09d3090ca5878d1acbd446048d",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/FastExpressionCompiler.dll": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.dll": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package08/docs-corrected/bin/Release/net10.0/DocumentationContracts.dll": "05428e2c579f75843b4c8038ac1ebbbd57a49fa775be24e6f88934ab99096223"
+  }
+}

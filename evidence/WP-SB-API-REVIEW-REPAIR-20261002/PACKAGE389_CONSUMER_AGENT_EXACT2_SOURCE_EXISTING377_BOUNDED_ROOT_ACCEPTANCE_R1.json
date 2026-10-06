@@ -1,0 +1,162 @@
+{
+  "utc": "2026-10-06T08:46:26.001560+00:00",
+  "status": "ROOT_DIFFERENT_AUTHOR_INDIVIDUAL_SOURCE2_NO_BLOCK_ACCEPTANCE",
+  "author": {
+    "REPORT": "20514482757c42a79a4fb780fe3dba2fbfe22ad1975ccf86867d046fb32ca0e5",
+    "MANIFEST": "d3cb07349eb929570a3dd1e50647396a061665b3a5ba60fa621d152f6cd9ceff"
+  },
+  "human_reads": [
+    "ConsumerAgent394 7c98c0",
+    "Agent281 835b9f",
+    "helper27 f74e65",
+    "selectedpublicTests1–185 05616d+c896c9 andhelper909–1026 d5f374",
+    "Norm2 007de1+1fd299;Case5 b291bc+1fd299"
+  ],
+  "own_P36": {
+    "frames": 3,
+    "documents": 2832,
+    "all_fields377_equal": true,
+    "Source4_bound": true,
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package389-consumer-agent-source2-root-independent-acceptance-r1/OWN377_P36_METADATA3.json",
+    "sha256": "c99d6ad0cfbdef637047670410fba473e111794836ba238bb393250ea106032b"
+  },
+  "individual_contracts2": [
+    {
+      "original_csv_zero_based_index": 8424,
+      "original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.Transports.ConsumerAgent`1.TrySetConsumeTask(System.Threading.Tasks.Task)",
+        "assembly": "ViciOne.ServiceBus",
+        "source_path": "./vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+        "source_line": "83",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Transports.ConsumerAgent`1.TrySetConsumeTask(System.Threading.Tasks.Task)",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "source_sha256": "c2a8271edf6e4bee150d47b606533e77382e2778289d7c995a3e21a956198b1b",
+      "member_contract": "Rejects null consumeTask before locking, including when a task was already registered. Under the consume-task lock, an existing nonnull _consumeTask makes later nonnull registration a no-op; otherwise stores the exact borrowed Task and starts the actual consume-task observer. No manual completion source is created and no Task is disposed/canceled by registration. The observer awaits this exact task, deliberately contains its consume-loop fault/cancellation, returns if stop has started, otherwise marks shutdown ungraceful and attempts public Stop under endpoint StopTimeout/default budget. That asynchronous observation task is retained internally but is not publicly exposed/joined by registration; custom endpoint/logging failure and Stop Faulted logging propagation remain unqualified operative obligations, not universal containment.",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c2a8271edf6e4bee150d47b606533e77382e2778289d7c995a3e21a956198b1b",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Transports.ConsumerAgent`1.TrySetConsumeTask(System.Threading.Tasks.Task)\">\n            <summary>Registers the task that represents the transport consume loop.</summary>\n            <param name=\"consumeTask\">The task that completes when the consume loop exits.</param>\n        </member>\n        ",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_CONTRACT_ONLY_RUNTIME_OBSERVER_OBLIGATIONS_OPEN",
+      "actual_existing_case_evidence_count": 2,
+      "native_cases_added": 0,
+      "native_grade": null,
+      "runtime_grade": false,
+      "closed": false,
+      "remaining_operative_obligations": [
+        "No arbitrary custom endpoint/logger failure containment or public join of private consume-task observer proved.",
+        "No concurrent registration/Stop/manual-versus-supplied arbitration empirical guarantee; first-wins lock semantics Source only.",
+        "No class-wide task drain/cancellation/provider lifecycle/native ABI acceptance."
+      ]
+    },
+    {
+      "original_csv_zero_based_index": 8425,
+      "original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.Transports.ConsumerAgent`1.TrySetManualConsumeTask",
+        "assembly": "ViciOne.ServiceBus",
+        "source_path": "./vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+        "source_line": "68",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Transports.ConsumerAgent`1.TrySetManualConsumeTask",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "source_sha256": "c2a8271edf6e4bee150d47b606533e77382e2778289d7c995a3e21a956198b1b",
+      "member_contract": "Under the consume-task lock, returns when either a consume Task or manual completion source already exists. Otherwise creates one boolean completion source with asynchronous continuations through the actual TaskCompletionSources helper, stores its exact Task and starts the same consume-task observer. Repeated manual calls preserve that source; later public/protected completion, cancellation and failure operations settle it through their separately bounded contracts. No signal is fabricated by registration and no readiness/agent-stop/dispatcher ownership guarantee follows merely from creation. Observer-task joining, arbitrary Stop Faulted diagnostics and callback/lifecycle behavior remain separately held.",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c2a8271edf6e4bee150d47b606533e77382e2778289d7c995a3e21a956198b1b",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "actual_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Transports.ConsumerAgent`1.TrySetManualConsumeTask\">\n            <summary>Creates a manually completed task to represent a callback-based consume loop.</summary>\n        </member>\n        ",
+      "recommendation": "BOUNDED_LOCAL_SOURCE_CONTRACT_ONLY_RUNTIME_OBSERVER_OBLIGATIONS_OPEN",
+      "actual_existing_case_evidence_count": 3,
+      "native_cases_added": 0,
+      "native_grade": null,
+      "runtime_grade": false,
+      "closed": false,
+      "remaining_operative_obligations": [
+        "No arbitrary custom endpoint/logger failure containment or public join of private consume-task observer proved.",
+        "No concurrent registration/Stop/manual-versus-supplied arbitration empirical guarantee; first-wins lock semantics Source only.",
+        "No class-wide task drain/cancellation/provider lifecycle/native ABI acceptance."
+      ]
+    }
+  ],
+  "actual_existing_public_case_reference": {
+    "log": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package377-instance-fixed6-independent-qualification-r1/publication/ACTUAL_MODULE.log",
+      "sha256": "74f684333cf4eb4b6037454a39811e53d5998217afb51f26c666709953c567b1"
+    },
+    "records": [
+      "erfolgreich ViciOne.ServiceBus.Tests.Transports.ConsumerAgentTests.UnexpectedConsumeLoopExit_StopsTheAgentAndMarksTheShutdownAsUngracefulAsync (29ms)",
+      "erfolgreich ViciOne.ServiceBus.Tests.Transports.ConsumerAgentTests.ExplicitStop_WaitsForTheFirstRegisteredTaskAndRemainsGracefulAsync (20ms)",
+      "erfolgreich ViciOne.ServiceBus.Tests.Transports.ConsumerAgentTests.ManualConsumeLoopOutcome_IsObservedAndOwnedAsync(outcome: Completed) (18ms)",
+      "erfolgreich ViciOne.ServiceBus.Tests.Transports.ConsumerAgentTests.ManualConsumeLoopOutcome_IsObservedAndOwnedAsync(outcome: Faulted) (1ms)",
+      "erfolgreich ViciOne.ServiceBus.Tests.Transports.ConsumerAgentTests.ManualConsumeLoopOutcome_IsObservedAndOwnedAsync(outcome: Canceled) (0ms)"
+    ],
+    "test_source": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+      "sha256": "c52245b80bfba363b1180424566ec3f35efa3c04037f722730a0a38b702ea215",
+      "lines": 1026,
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c52245b80bfba363b1180424566ec3f35efa3c04037f722730a0a38b702ea215",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    "scope": "Three personally read public-driver test methods, five actual PASS records; not all ConsumerAgent tests/7902 or every public failure contract.",
+    "public_driver": "TestConsumerAgent public RegisterConsumeTask/CreateManualConsumeTask/Complete/Cancel/Fault wrap actual protected API; public Stop/Completed and exposed protected GracefulShutdown/Stopped observed. Real TaskCompletionSources supplied. No RegisteredConsumeTask reflection is used by these selected methods.",
+    "case_limits": [
+      {
+        "method": "UnexpectedConsumeLoopExit_StopsTheAgentAndMarksTheShutdownAsUngracefulAsync",
+        "proved": "Completed/Stop finish after supplied loop Task settles; shutdown ungraceful and Stopping/Stopped signaled for idle dispatcher/NullLogger public SPI.",
+        "not_proved": "Private observer Task identity/join and arbitrary Stop/log failure."
+      },
+      {
+        "method": "ExplicitStop_WaitsForTheFirstRegisteredTaskAndRemainsGracefulAsync",
+        "proved": "Null guard name consumeTask; two supplied Tasks accepted through wrapper; immediate pending Stop snapshot after ignored Task settles, eventual public Stop completion after first Task settles; graceful flag.",
+        "not_proved": "Pending snapshot alone is not deterministic counterfactual proof of all first-task authority under a broken asynchronous replacement; no racing stop/two-registration universal guarantee."
+      },
+      {
+        "method": "ManualConsumeLoopOutcome_IsObservedAndOwnedAsync",
+        "proved": "Repeated manual creation followed by each Completed/Canceled/Faulted command leads public Completed/Stop terminal and ungraceful/Stopped flags for idle default SPI.",
+        "not_proved": "Exact private manual Task status/token/exception identity; these are not asserted publicly in this selected method, and private reflection tests are excluded."
+      }
+    ],
+    "excluded_private_probes": [
+      "ConsumerStoppingDiagnostic_DoesNotSkipManualLoopCompletionAsync RegisteredConsumeTask",
+      "ManualFailure_CompletesTheConsumeSourceDespiteCancellationCallbackFailureAsync RegisteredConsumeTask"
+    ],
+    "native_cases_added": 0,
+    "new_native_execution": false
+  },
+  "native_cases_added": 0,
+  "native_grade": null,
+  "whole_API_closed": false,
+  "limits": [
+    "Source2 local registration only; private observer tasks and hostile StopFaulted logger operative holds retained",
+    "No RegisteredConsumeTask private reflection credited",
+    "PendingStop snapshot alone not deterministic first-task authority counterfactual",
+    "377 actual5 references; no current388 wholemodule credit"
+  ],
+  "guard_attempt_precision": "59a3e7 aborted before E/Master/STATE/PO writes;8b46f7 wrongAgentCorepath StopIteration stoppedbeforeE/Master/STATE/PO;rg89f3bc physical AbstractionsAgent path corrected and guard independently rerun"
+}

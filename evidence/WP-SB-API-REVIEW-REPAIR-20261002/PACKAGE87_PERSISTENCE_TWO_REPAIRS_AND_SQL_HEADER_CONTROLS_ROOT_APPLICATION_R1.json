@@ -1,0 +1,62 @@
+{
+  "utc": "2026-10-04T16:19:42.513205+00:00",
+  "product_files": [
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.Azure.Table/Saga/AzureTableSagaRepositoryContext.cs",
+      "before": "c1d40175f20e2df0eb12b822402bfbee5f9cdc27b7c6db33492c54cf3dad417d",
+      "after": "1989c817cdff4807191cab9b0e67b492dfe6f700c868a0f1faa32b460e4ca71d"
+    },
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.DynamoDb/Saga/DynamoDbSagaRepositoryContextFactory.cs",
+      "before": "5f47fbc3fb1a7592e17b520eadd8708af3547b9bd757d6139a3db3281bf9ea27",
+      "after": "c1ff866477288b97c886b929e79667b0bdaa9dddebe939527bd51b293d70e1b8"
+    }
+  ],
+  "test_file": {
+    "utc": "2026-10-04T16:18:10.581055+00:00",
+    "status": "Q_ACTUAL_TEST_OWNER_PROPOSAL_COMPLETE_NEEDS_ROOT_INDEPENDENT_REVIEW",
+    "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlTransportMessageTests.cs",
+    "before_sha256": "59b193a933fc6bab98b12ab99f6775d1ae3a6cd04cc5cba3b419ad9ad9c7f953",
+    "after_sha256": "bd73a9ae2b7709b97b27beae4d66a7acdff05d5ba0cf2bdeafbf23abd7c059d8",
+    "test_names_cases_requirements_unchanged": true,
+    "exact_expected_key_sets": [
+      {
+        "method": "HeaderProvider_MergesDuplicateNamesWithTransportPrecedence",
+        "count": 4,
+        "custom": "shared=transport(String)",
+        "native": [
+          "TransportMessageId=Guid.Empty(Guid)",
+          "MessageDeliveryId=0(Int64)",
+          "DeliveryCount=0(Int32)"
+        ]
+      },
+      {
+        "method": "HeaderProvider_PreservesApplicationOnlyHeadersBesideTransportHeaders",
+        "count": 5,
+        "custom": [
+          "application-only=application(String)",
+          "transport-only=transport(String)"
+        ],
+        "native": [
+          "TransportMessageId=Guid.Empty(Guid)",
+          "MessageDeliveryId=0(Int64)",
+          "DeliveryCount=0(Int32)"
+        ]
+      }
+    ],
+    "oracle_strength": "Exact sorted full keys, exact raw value and type, every emitted actual key lookup agreement, duplicate shared key remains exactly one and transport precedence preserved. No permissive counts or absence timeout. Missing nullable native metadata is excluded by full expected key sets.",
+    "original_native_epoch_preserved": true,
+    "sdk_executed": false,
+    "repo_edits": false
+  },
+  "root_independent_adversarial_review": "Persistence exactdelta4fc901, actualAzureOwner previouslywholeb503c6 andexactInsert107309, pinnedAzureCoreResponseHeadersETag51378c/4fa28a, fullproposedDynamo109Laca3f6. Response ETag actualnullable typedSDK retainedbeforefactory; missingtag explicitfailurewithoutwildcard; existing409exceptionsemantics/guard unchanged. Bare rethrow preservesprimary identity/cancel andoneDispose; two exactorderedAggregateleaves onlydual failure. No altered providerownership. SQL controls exactdeltacbba60 actualoriginalkeyseedsea019a, exactnative mandatory defaults reflect existingTryGet values, completekeysets/types/lookup, previouspositive/invalidchecks preserved.",
+  "original10_frozen": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package82-persistence-original10-independent-r1/FREEZE.json",
+    "sha256": "1ce5f186e92fc8f1d836651f142ac0a28b60f1ed7146c6c896b7d193803865c4"
+  },
+  "finding_ids": [
+    "F-SB-API-091",
+    "F-SB-API-092"
+  ],
+  "native_pending": true
+}

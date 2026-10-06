@@ -1,0 +1,8 @@
+--- /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01/freeze/docs/changelog/product-fixes.md
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/02-product-fixes.md
+@@ -331,3 +331,5 @@
+ - Event Hubs checkpoint diagnostics now remove query strings, fragments and URI user information
+   from the Blob endpoint. The diagnostic container name is parsed from that sanitized endpoint
+   because an SDK name can also contain the original fragment. The configured SDK URI is retained.
++- Amazon S3 message-data options now reject the AWS-reserved `amzn-s3-demo-` prefix.
++  Valid names containing that text elsewhere and the shorter `amzn-s3-demo` name remain accepted.

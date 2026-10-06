@@ -1,0 +1,46 @@
+{
+  "status": "ROOT_PERSONALLY_READ_FULL_LAYOUT_PACKS_0019_THROUGH_0024",
+  "previous": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE35_ROOT_LAYOUT_PARTIAL_004_R1.json",
+    "bytes": 1685,
+    "sha256": "433d546f0229a95de2b4ac0450219f7dcf9686390966e74b4bf36f2beabbe9f1"
+  },
+  "packs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0019.txt",
+      "bytes": 13963,
+      "sha256": "689597ec735c8fb043767e7c5ddb9deab949a907d15455517a300f514adec3f7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0020.txt",
+      "bytes": 13786,
+      "sha256": "179968e59e0b53e95072caeaf893ee78171d5a334f3eff653a8eda54f8ae3b32"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0021.txt",
+      "bytes": 9835,
+      "sha256": "1b1efc69e58bdaed170fe21f5475bff035658f78d2c0f4785abcd10d1107abf2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0022.txt",
+      "bytes": 12552,
+      "sha256": "84c1d1cdbfa225267e0690fe51380e63d5302e2afcde382e25b1e31ae43a29dd"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0023.txt",
+      "bytes": 13703,
+      "sha256": "b93bacbff081870bc1ca330656027e7a42863e886c4d73f95895f7a4adedcb13"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-remaining-read-schedule-r1/LAYOUT-0024.txt",
+      "bytes": 11772,
+      "sha256": "2b23ae47bc09a48054395f8bda1c773d98ed5d68ccf9099c41ef08f1d8ac0d67"
+    }
+  ],
+  "complete_file_ordinals_combined": "0..218",
+  "file219": "HEADER_ONLY_AT_MAP_PENDING_NEXT_PACK",
+  "next_pack": "LAYOUT-0025.txt",
+  "whole766_owner_full": false,
+  "ordinary_RAW_increment": 0,
+  "read_outputs": "19/20 full untruncated;21..24 previously read with35token omission in FILE200 map; complete22 and23 reread untruncated repaired omission."
+}

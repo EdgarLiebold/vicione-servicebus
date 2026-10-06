@@ -1,0 +1,67 @@
+{
+  "finding": "F-SB-API-033",
+  "bounded_scope": "Core normal DI consumer pipeline primary/scope-cleanup arbitration; SignalR exposure sameFinding separately pending",
+  "Root_personally_FULL_before_product_patch": true,
+  "sources": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "4ac00b8633c77db1ce1c1add7585c734b42885c51955a61e5a83cfb96330d016",
+      "bytes": 1819
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "bytes": 1829
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs",
+      "sha256": "4f60e9e0f8e62b031ba6453b4ab45f3bc3b388dac9f76fbf67cdae9ebe09521d",
+      "bytes": 3432
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/CreatedConsumerConsumeScopeContext.cs",
+      "sha256": "5acb1230e873284bc83d80b6651f6562df4ddc59eb3e6ce7af06b38761031044",
+      "bytes": 1548
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ExistingConsumerConsumeScopeContext.cs",
+      "sha256": "10e23b41188c31f1d397a062b9cbe314e7be19042d7466246cf819d82e861d7c",
+      "bytes": 1378
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/IConsumerConsumeScopeContext.cs",
+      "sha256": "cdf6881daf80975e996dfc4390e244cfcf1b53e5f3b789afb547e2850335e3b5",
+      "bytes": 532
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/IConsumeScopeProvider.cs",
+      "sha256": "5b5c6949fedc0a80084de5b02d5b2878837494f7c273f582942e0bc9251fabf4",
+      "bytes": 1802
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ConsumeScopeProvider.cs",
+      "sha256": "3750b38ebbda662be62c63b589fbab1a06d9deb4e2dc58d8884c244dc49d31ce",
+      "bytes": 6926
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/BaseConsumeScopeProvider.cs",
+      "sha256": "c3b78593ce7d2d4b28939dedf9a76f992a3dcc627212e1c21e9e31c0c151c7b1",
+      "bytes": 7092
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ConsumeScopeLifetime.cs",
+      "sha256": "f99a3c70b5db3e507ee1124a4c5cf887c5a1e60774df1050ec06697303d106f3",
+      "bytes": 1957
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumerIngressFailure.cs",
+      "sha256": "70f6a75c0bfa33b5714faef3df94b0fd78c986b30e8512113280b4d8818799e7",
+      "bytes": 3026
+    }
+  ],
+  "minimal_patch": "Acquire transferred scope outside operation try; capture context/pipeline primary; await existing internal OwnedConsumerLifetime.ReleaseAfterOperationAsync(scope, primary). Never directly dispose DI consumer; existing provider arbitrates acquisitionfailure independently.",
+  "public_api_changes": false,
+  "required_controls": "7 original styles plus typed routes; exact P/C identity and ordering, independent OCE token/mixed failures, genuinely incomplete async cleanup gate, second real valid delivery, once invocation per consumer; no cleanup guards as PASS",
+  "required_adversarial": "frozen exact code/test/NuGet/native/compiled single-effect mutant review; wholeF033 remains open until separate SignalR closure",
+  "product_before": "using System;\nusing System.Threading.Tasks;\n\nnamespace ViciOne.ServiceBus.DependencyInjection;\n\n/// <summary>Creates scope consumer instances.</summary>\n/// <typeparam name=\"TConsumer\">The consumer implementation used by the member.</typeparam>\npublic class ScopeConsumerFactory<TConsumer> :\n    IConsumerFactory<TConsumer>\n    where TConsumer : class\n{\n    readonly IConsumeScopeProvider _scopeProvider;\n\n    /// <summary>Initializes a new instance.</summary>\n    /// <param name=\"scopeProvider\">The scope provider.</param>\n    public ScopeConsumerFactory(IConsumeScopeProvider scopeProvider)\n    {\n        _scopeProvider = scopeProvider ?? throw new ArgumentNullException(nameof(scopeProvider));\n    }\n\n    /// <summary>Sends a message to the configured destination.</summary>\n    /// <typeparam name=\"TMessage\">The message contract processed by the member.</typeparam>\n    /// <param name=\"context\">The context associated with the operation.</param>\n    /// <param name=\"next\">The next pipeline stage to invoke.</param>\n    /// <returns>A task that represents the asynchronous operation.</returns>\n    public async Task SendAsync<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)\n        where TMessage : class\n    {\n        ArgumentNullException.ThrowIfNull(context);\n        ArgumentNullException.ThrowIfNull(next);\n\n        await using IConsumerConsumeScopeContext<TConsumer, TMessage> scope = await _scopeProvider.GetScopeAsync<TConsumer, TMessage>(context);\n\n        await next.SendAsync(scope.Context).ConfigureAwait(false);\n    }\n\n    void IProbeSite.Probe(ProbeContext context)\n    {\n        ArgumentNullException.ThrowIfNull(context);\n        var scope = context.CreateConsumerFactoryScope<TConsumer>(\"scope\");\n        _scopeProvider.Probe(scope);\n    }\n}\n"
+}

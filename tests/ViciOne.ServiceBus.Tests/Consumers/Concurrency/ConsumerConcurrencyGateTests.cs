@@ -234,6 +234,66 @@ public sealed class ConsumerConcurrencyGateTests
             new PartitionedConsumerConcurrencyGate<Message, int>(2, null!)).ParamName);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-V5-CONSUMER-PARTITION", "dispose-rejects-before-selection-and-drains-accepted-work")]
+    public async Task PartitionedDispose_ClosesAdmissionBeforeSelectionAndDrainsAcceptedWorkAsync()
+    {
+        int selections = 0;
+        using PartitionedConsumerConcurrencyGate<Message, int> gate = new(2, message =>
+        {
+            Interlocked.Increment(ref selections);
+            return message.Key;
+        });
+        var entered = NewSignal();
+        var release = NewSignal();
+        int waitingInvocations = 0;
+        Task? first = null;
+        Task? waiting = null;
+        try
+        {
+            first = gate.ExecuteAsync(new Message(1), (entered, release), static async (state, token) =>
+            {
+                state.entered.TrySetResult();
+                await state.release.Task.WaitAsync(token);
+            }, TestContext.Current.CancellationToken).AsTask();
+            await entered.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+            waiting = gate.ExecuteAsync(new Message(1), 0, (_, _) =>
+            {
+                Interlocked.Increment(ref waitingInvocations);
+                return ValueTask.CompletedTask;
+            }, TestContext.Current.CancellationToken).AsTask();
+            Assert.Equal(2, Volatile.Read(ref selections));
+            Assert.False(first.IsCompleted);
+            Assert.False(waiting.IsCompleted);
+            Assert.Equal(0, Volatile.Read(ref waitingInvocations));
+
+            gate.Dispose();
+            gate.Dispose();
+            foreach (int key in new[] { 1, 2 })
+            {
+                ObjectDisposedException failure = Assert.Throws<ObjectDisposedException>(() =>
+                {
+                    _ = gate.ExecuteAsync(new Message(key), 0, static (_, _) => ValueTask.CompletedTask,
+                        TestContext.Current.CancellationToken);
+                });
+                Assert.Equal(typeof(PartitionedConsumerConcurrencyGate<Message, int>).FullName, failure.ObjectName);
+            }
+            Assert.Equal(2, Volatile.Read(ref selections));
+            Assert.False(waiting.IsCompleted);
+            release.TrySetResult();
+            await Task.WhenAll(first, waiting).WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+            Assert.True(first.IsCompletedSuccessfully);
+            Assert.True(waiting.IsCompletedSuccessfully);
+            Assert.Equal(1, Volatile.Read(ref waitingInvocations));
+        }
+        finally
+        {
+            release.TrySetResult();
+            await Task.WhenAll(new[] { first, waiting }.OfType<Task>())
+                .WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None);
+        }
+    }
+
     private static TaskCompletionSource NewSignal()
         => new(TaskCreationOptions.RunContinuationsAsynchronously);
 

@@ -1,0 +1,155 @@
+"""Serial compiled activity-ownership mutants; source and public oracle always restored."""
+import csv
+import hashlib
+import json
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+W = Path('/Users/edgar.liebold/Downloads/ViciOne Suite 2.0')
+O = W / 'repositories/vicione-servicebus'
+R = Path('/private/tmp/vicione-servicebus-api-review-20261001')
+M = R / 'mutations/source-main'
+F = R / 'frozen-repository'
+E = O / 'evidence/WP-SB-API-REVIEW-REPAIR-20261002'
+RUN = W / 'SERVICEBUS_API_REVIEW_AND_REPAIR/run_operation.py'
+C = R / 'repair-consumers/package10-f022/corrected'
+OUT = C / 'bin/Release/net10.0'
+APP = 'ActivityOwnership.PublicConsumer.dll'
+DLLS = ['ViciOne.ServiceBus.dll', 'ViciOne.ServiceBus.Abstractions.dll']
+PATHS = {
+    'results': 'src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs',
+    'host': 'src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs',
+    'host_xml': 'src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs',
+    'batch': 'src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs',
+    'batch_options': 'src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs',
+    'registration': 'src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs',
+    'connector': 'src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs',
+    'identity': 'src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs',
+    'trace': 'src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs',
+}
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+original = {key: (F / rel).read_bytes() if (F / rel).exists() else None for key, rel in PATHS.items()}
+for key, rel in PATHS.items():
+    assert ((M / rel).read_bytes() if (M / rel).exists() else None) == original[key], rel
+corrected = {key: (O / rel).read_text() for key, rel in PATHS.items()}
+runtime = {dll: (OUT / dll).read_bytes() for dll in DLLS}
+oracle = {str(p): sha(p) for p in C.iterdir() if p.is_file()}
+oracle[str(OUT / APP)] = sha(OUT / APP)
+result = dict(status='RUNNING', oracle_hashes=oracle, controls=[], mutants=[])
+
+
+def native(label, cwd, command, expected=0):
+    phase = 'package10-f022-mut-r2-' + label
+    completed = subprocess.run([sys.executable, str(RUN), phase, str(cwd), '--', *command],
+                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    receipt = next(json.loads(line) for line in reversed((E / 'VERIFICATION_LOG.jsonl').read_text().splitlines())
+                   if json.loads(line)['phase'] == phase)
+    assert sha(receipt['log']) == receipt['log_sha256']
+    print(phase, receipt['exit_code'], flush=True)
+    if completed.returncode != expected or receipt['exit_code'] != expected:
+        raise RuntimeError(completed.stdout[-7000:])
+    return receipt
+
+
+def build(label, sources):
+    for key, rel in PATHS.items():
+        (M / rel).write_text(sources[key])
+    receipt = native(label + '-build', M,
+        ['dotnet', 'build', 'src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj', '-c', 'Release', '--no-restore', '-warnaserror'])
+    folder = R / 'repair-evidence/package10-f022-binaries-r2' / label
+    folder.mkdir(parents=True, exist_ok=False)
+    source_hashes = {}
+    for key, rel in PATHS.items():
+        snapshot = folder / (key + '.cs.txt')
+        snapshot.write_bytes((M / rel).read_bytes())
+        source_hashes[rel] = dict(path=str(snapshot), sha256=sha(snapshot))
+    binaries = []
+    for dll in DLLS:
+        compiled = M / 'artifacts/sdk/bin' / dll.removesuffix('.dll') / 'release' / dll
+        snapshot = folder / dll
+        shutil.copyfile(compiled, snapshot)
+        shutil.copyfile(compiled, OUT / dll)
+        binaries.append(dict(path=str(snapshot), sha256=sha(snapshot)))
+    return dict(receipt=receipt, binaries=binaries, source_snapshots=source_hashes)
+
+
+def case(label, name='all', expected=0):
+    receipt = native(label + '-' + name, C,
+        ['dotnet', 'bin/Release/net10.0/' + APP, name, '00:00:20', '00:01:00'], expected)
+    actual = json.loads(Path(receipt['log']).read_text())
+    if expected:
+        assert actual['count'] == actual['failures'] == 1
+        failed = actual['cases'][0]
+        assert failed['case'] == name and not failed['assertions_passed']
+        assert not failed['bounded_guard_failure']
+        assert failed['exception_type'] in ('Xunit.Sdk.TrueException', 'Xunit.Sdk.FalseException', 'Xunit.Sdk.SameException', 'System.InvalidOperationException'), failed
+        if failed['exception_type'] == 'System.InvalidOperationException':
+            assert failed['Message'] == 'owned-stop-listener-fault', failed
+    else:
+        assert actual['failures'] == 0 and all(x['assertions_passed'] for x in actual['cases'])
+    for binary in current_binary['binaries']:
+        loaded = next(x for x in actual['runtime']['loadedProductAssemblies'] if Path(x['path']).name == Path(binary['path']).name)
+        assert loaded['sha256'] == binary['sha256']
+    return dict(receipt=receipt, actual=actual)
+
+
+def mutation(name):
+    sources = dict(corrected)
+    source = sources['trace']
+    start = source.index('    public SafeActivityScope StartDurableAdmission')
+    split = source.index('    public SafeActivityScope StartDurableDelivery', start)
+    end = source.index('\n    public ', split + 10)
+    target_start, target_end = (split, end) if name == 'delivery-cleanup-omitted' else (start, split)
+    target = source[target_start:target_end]
+    before = '            if (activity is not null)\n                ActivityObservation.TryDispose(activity);'
+    assert target.count(before) == 1, name
+    negative, positive = 'admission-formatter-sampled', 'admission-plain-sampled'
+    if name in ('admission-cleanup-omitted', 'delivery-cleanup-omitted'):
+        after = ''
+        if name == 'delivery-cleanup-omitted':
+            negative, positive = 'delivery-formatter-sampled', 'delivery-plain-sampled'
+    elif name == 'caller-activity-disposed':
+        after = '            if (activity?.Parent is { } parent)\n                ActivityObservation.TryDispose(parent);'
+    elif name == 'unsafe-listener-disposal':
+        after = '            if (activity is not null)\n                activity.Dispose();'
+        negative = 'admission-stop-fault'
+    else:
+        raise ValueError(name)
+    sources['trace'] = source[:target_start] + target.replace(before, after) + source[target_end:]
+    return sources, negative, positive
+
+
+try:
+    current_binary = build('corrected', corrected)
+    result['corrected_binary'] = current_binary
+    result['controls'].append(case('corrected'))
+    for name in ['admission-cleanup-omitted', 'delivery-cleanup-omitted', 'caller-activity-disposed', 'unsafe-listener-disposal']:
+        sources, negative, positive = mutation(name)
+        current_binary = build(name, sources)
+        rejection = case(name, negative, 1)
+        control = case(name, positive)
+        result['mutants'].append(dict(name=name, binary=current_binary, rejection=rejection,
+            positive_control=control, status='KILLED_BY_CAUSAL_ACTIVITY_OR_OPERATION_ASSERTION'))
+    current_binary = build('rollback', corrected)
+    result['rollback_binary'] = current_binary
+    result['rollback'] = case('rollback')
+    result['status'] = 'FOUR_COMPILED_MUTANTS_KILLED_TEN_BASELINE_AND_ROLLBACK_CASES_GREEN'
+finally:
+    for key, rel in PATHS.items():
+        if original[key] is None:
+            (M / rel).unlink(missing_ok=True)
+        else:
+            (M / rel).write_bytes(original[key])
+    for dll in DLLS:
+        (OUT / dll).write_bytes(runtime[dll])
+    result['oracle_hashes_preserved'] = all(sha(p) == expected for p, expected in oracle.items())
+    result['runtime_restored'] = all((OUT / dll).read_bytes() == content for dll, content in runtime.items())
+    rows = list(csv.DictReader((R / 'FILE_COVERAGE.csv').open()))
+    result['original_files_checked'] = len(rows)
+    result['original_mismatches'] = [row['path'] for row in rows if sha(M / row['path']) != row['sha256']]
+    result['new_identity_source_removed'] = not (M / PATHS['identity']).exists()
+    (E / 'PACKAGE10_F022_MUTATIONS_R2.json').write_text(json.dumps(result, indent=2) + '\n')
+    assert result['oracle_hashes_preserved'] and result['runtime_restored'] and not result['original_mismatches']
+    assert result['original_files_checked'] == 6209 and result['new_identity_source_removed']

@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-04T16:51:16.316476+00:00",
+  "source": {
+    "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureEventAdmissionContractTests.cs",
+    "before": null,
+    "after": "7797ae8c129c56381fea8bf6d7543cc98339a320f2a0feba344256517a00f41e"
+  },
+  "requirements": {
+    "before": "96706e608fbda960c909043c0325cb896722b10d468e5eba2c820e0a24372598",
+    "after": "ffba17dcad66685118f3d072e3f982ea4643f2bdf3790815ec0368b7ec530a56",
+    "rows_before": 4581,
+    "rows_after": 4584,
+    "add_only": [
+      {
+        "requirementId": "REQ-VSB-FUTURE-RESULTS",
+        "variantKey": "tracked-response-admission-precedes-early-and-late-callbacks",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testType": "ViciOne.ServiceBus.Tests.Futures.FutureEventAdmissionContractTests",
+        "testMethod": "ResponseCallbacks_RunOnceForEachAcceptedOperationRegardlessOfConfigurationOrderAsync"
+      },
+      {
+        "requirementId": "REQ-VSB-FUTURE-FAULTS",
+        "variantKey": "tracked-fault-admission-preserves-wait-for-all-and-callback-order",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testType": "ViciOne.ServiceBus.Tests.Futures.FutureEventAdmissionContractTests",
+        "testMethod": "RequestFaultCallbacks_AcceptRemainingWorkAfterFirstFaultAndRejectReplayAsync"
+      },
+      {
+        "requirementId": "REQ-VSB-FUTURE-RESULTS",
+        "variantKey": "tracked-routing-slip-terminal-admission-preserves-callbacks-and-outcome",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testType": "ViciOne.ServiceBus.Tests.Futures.FutureEventAdmissionContractTests",
+        "testMethod": "RoutingSlipTerminalEvents_RejectUnknownAndReplayButInvokeAcceptedCallbacksAsync"
+      }
+    ]
+  },
+  "root_review": "52f636 whole299/a81c56 actualhelper/d0cef8 independentwhole report/91bfed req",
+  "independent_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package83-future-event-boundary-oracles-adversarial-r1/REPORT.json",
+  "status": "SOURCE_APPROVED_NATIVE_PENDING"
+}

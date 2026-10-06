@@ -1,0 +1,80 @@
+{
+  "utc": "2026-10-05T05:31:15.084574+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED46_PREVIOUSLY_HELD_BOUNDED_SOURCE_CONTRACTS",
+  "accepted_before": 7132,
+  "accepted_after": 7178,
+  "accepted46_ids": [
+    "M:ViciOne.ServiceBus.Middleware.ConsumeContextMessageTypeFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+    "M:ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+    "M:ViciOne.ServiceBus.Middleware.ConsumePipe.ConnectRequestPipe``1(System.Guid,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{``0}})",
+    "M:ViciOne.ServiceBus.Middleware.ConsumePipe.SendAsync(ViciOne.ServiceBus.ConsumeContext)",
+    "M:ViciOne.ServiceBus.Middleware.ConsumerMergePipe`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0})",
+    "M:ViciOne.ServiceBus.Middleware.ConsumerMessageMergePipe`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1})",
+    "M:ViciOne.ServiceBus.Middleware.ConsumerSplitFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1}})",
+    "M:ViciOne.ServiceBus.Middleware.ContextFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.CorrelationIdMessageFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.DelayedMessageRedeliveryFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.DelayedMessageSchedulerFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+    "M:ViciOne.ServiceBus.Middleware.DelaySendPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+    "M:ViciOne.ServiceBus.Middleware.FaultDeadLetterFilter.SendAsync(ViciOne.ServiceBus.Advanced.ReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ReceiveContext})",
+    "M:ViciOne.ServiceBus.Middleware.ForkFilter`1.#ctor(ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.FutureRequestPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+    "M:ViciOne.ServiceBus.Middleware.FutureResultPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+    "M:ViciOne.ServiceBus.Middleware.GenerateFaultFilter.SendAsync(ViciOne.ServiceBus.Advanced.ExceptionReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExceptionReceiveContext})",
+    "M:ViciOne.ServiceBus.Middleware.InlineFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.KeyFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.MessageSchedulerFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+    "M:ViciOne.ServiceBus.Middleware.MessageSplitFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1}})",
+    "M:ViciOne.ServiceBus.Middleware.OutboxConsumeFilter`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`1}})",
+    "M:ViciOne.ServiceBus.Middleware.OutboxMessageSendPipe.SendAsync(ViciOne.ServiceBus.Advanced.SendContext)",
+    "M:ViciOne.ServiceBus.Middleware.PayloadFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.PipeContextSourceBindFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.ReceiveEndpointDependencyFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.RequestIdFilter`1.ConnectPipe(System.Guid,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.RequestIdFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.RequestIdTeeFilter`1.ConnectPipe(System.Guid,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.RethrowErrorTransportFilter.SendAsync(ViciOne.ServiceBus.Advanced.ExceptionReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExceptionReceiveContext})",
+    "M:ViciOne.ServiceBus.Middleware.ScheduleMessageRedeliveryFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.ScopeCompensateFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.CompensateContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.CompensateContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.ScopeConsumeFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+    "M:ViciOne.ServiceBus.Middleware.ScopedCompensateFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.CompensateContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.CompensateContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.ScopedConsumeFilter`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.ScopedExecuteFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ExecuteContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExecuteContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.ScopedFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.ScopeExecuteFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.ExecuteContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExecuteContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.ScopeMessageFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.SetCorrelationIdFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.SetPartitionKeyFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.SetRoutingKeyFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.SetSerializerFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+    "M:ViciOne.ServiceBus.Middleware.TimeoutFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.TransactionFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.TransportReadyFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})"
+  ],
+  "held194_id": "M:ViciOne.ServiceBus.Middleware.OutboxMessagePipe`1.SendAsync(ViciOne.ServiceBus.Middleware.OutboxConsumeContext{`0})",
+  "dossier": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-core-held47-current-reconciliation-r1/REPORT.json",
+    "sha256": "6901549f1d3308bc629871e7e85461e808db86cf19848007d8600391fe7840fa"
+  },
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-core-held47-current-reconciliation-r1/PER_ORIGINAL_HELD47_CURRENT_DISPOSITIONS.json",
+    "sha256": "af7940a71d22666a1c404bfca9b8b1aab24b52f85be638fda0d0da446860bfde"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-core-held47-current-reconciliation-r1/MANIFEST.json",
+    "sha256": "dd4a2c6f9a14c7ac6a08196a4c4cd07b4b703b95a6f62de2c8f6d927a8ed6a3b"
+  },
+  "qualified_source": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-parent-fixed18-ambient-original-selected100-neighbors2290-fresh2-independent-r1/REPORT.json",
+    "sha256": "b39086ac2f32a65e52834c8a51206f1d12c444f369fe7dd5806f5b2ea34121fb"
+  },
+  "root_read_authority": "All47 actual local norms personally read a8f375/1e3a33; reportwhole2f53d5. Prior494 genuine Root95ownercontexts/340losslessnorms+qualifiedSource/read gates preserved; childwhole45/2925L explicitly childauthority. All46 exact historicaltyped/currentSource/frozenPDB/XML checked; knownrepair statuses exact3legacyenum whitelist corrected after prewritefail61318f/54cf36. No new semanticSource/code change.",
+  "native_credit_added": 0,
+  "CLOSED": false,
+  "limits": [
+    "Outbox Send194 held for separate diagnostic-progress Original research.",
+    "Local source contracts only, no arbitrary provider/transaction-manager/global runtime guarantees.",
+    "No wholeAPI/A+ closure."
+  ]
+}

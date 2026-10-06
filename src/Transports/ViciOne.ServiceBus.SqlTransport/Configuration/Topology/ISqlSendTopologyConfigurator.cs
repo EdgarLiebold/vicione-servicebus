@@ -7,8 +7,8 @@ public interface ISqlSendTopologyConfigurator :
     ISendTopologyConfigurator,
     ISqlSendTopology
 {
-    /// <summary>Gets or sets the configure error settings.</summary>
+    /// <summary>Sets the callback that configures the error queue.</summary>
     Action<ISqlQueueConfigurator> ConfigureErrorSettings { set; }
-    /// <summary>Gets or sets the configure dead letter settings.</summary>
+    /// <summary>Sets the callback that configures the dead-letter queue.</summary>
     Action<ISqlQueueConfigurator> ConfigureDeadLetterSettings { set; }
 }

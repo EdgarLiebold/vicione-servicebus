@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-04T22:58:11.814512+00:00",
+  "status": "ROOT_APPLIED_ORIGINAL_ORACLES_PENDING_COMPILE_FINITE_NATIVE",
+  "changes": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorProxyObserverDeepContractTests.cs",
+      "before_sha256": "aee5995f787c1c6837def678b9e4a5822eb97683a41712c900606ebb49eb43a8",
+      "after_sha256": "15dba3746ea96bcbf22d37f98a80675d8e30579b6e8186e41b679e5edfa25cf1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "1f2f4f0fe38f1290e15a51b51f59e035d83a94459b9943406ff080da0f7a78f6",
+      "after_sha256": "cb06da744fbc336b23e2650329ac3ad071682d7c1c38849b219812e84210a579"
+    }
+  ],
+  "requirements_before": 4607,
+  "requirements_after": 4608,
+  "newcases": 6,
+  "product_sources_unchanged": true,
+  "adversarial_report_sha256": "130deadf6a6be51efa19b006864eedf4185891a2b591f7be64a9071625dc3a24",
+  "root_oracle_read": "9c278f",
+  "root_whole_current_state_read": [
+    "4ea75e",
+    "4599ba"
+  ],
+  "whole_api_status": "PARTIAL"
+}

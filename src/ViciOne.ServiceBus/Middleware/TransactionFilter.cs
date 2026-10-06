@@ -47,7 +47,7 @@ public class TransactionFilter<T> :
         step.Add("timeout", _options.Timeout);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Runs the continuation with an existing or owned transaction and finalizes only the owned transaction.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

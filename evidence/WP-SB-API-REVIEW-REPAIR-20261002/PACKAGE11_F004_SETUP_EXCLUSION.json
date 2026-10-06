@@ -1,0 +1,21 @@
+{
+  "status": "EXCLUDED_COMPILE_SETUP_NO_EXECUTED_CASE_OR_MUTANT_KILL",
+  "phase": "package11-f004-previous-build",
+  "errors": 3,
+  "causes": [
+    "Nested Select cleanup needed Func<Task> lambda",
+    "Actual public endpoint method is GetSendEndpointAsync"
+  ],
+  "prior_inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/previous/JournalCases.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-setup-exclusion/previous-JournalCases.cs.txt",
+      "sha256": "34d3c567808c10f8fa46e0261f2a0170453ae060fa12a16a97bac5189cc544f0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected/JournalCases.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-setup-exclusion/corrected-JournalCases.cs.txt",
+      "sha256": "34d3c567808c10f8fa46e0261f2a0170453ae060fa12a16a97bac5189cc544f0"
+    }
+  ]
+}

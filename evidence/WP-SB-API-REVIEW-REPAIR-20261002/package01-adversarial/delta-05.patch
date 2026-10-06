@@ -1,0 +1,13 @@
+--- baseline/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs
++++ freeze/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs
+@@ -56,8 +56,8 @@
+         return Task.CompletedTask;
+     }
+ 
+-    /// <summary>Gets the current message lock expiration in UTC.</summary>
+-    public DateTimeOffset LockedUntilUtc => _session.Message.LockedUntil.UtcDateTime;
++    /// <summary>Gets the current session lock expiration in UTC, including SDK-owned renewals.</summary>
++    public DateTimeOffset LockedUntilUtc => _session.SessionLockedUntil.ToUniversalTime();
+ 
+     /// <summary>Gets the accepted Azure Service Bus session identifier.</summary>
+     public string SessionId => _session.SessionId;

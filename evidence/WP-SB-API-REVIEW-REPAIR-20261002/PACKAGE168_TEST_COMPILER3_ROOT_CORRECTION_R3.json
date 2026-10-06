@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-05T06:00:54.978473+00:00",
+  "actor": "/root",
+  "status": "THREE_TEST_API_NAMES_CORRECTED_NATIVE_PENDING",
+  "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaStateQueryRuntimeExtensionDeepContractTests.cs",
+  "before_sha256": "727ef8ef1ca38988486b7f7ad3777a11d86e9eadd9c899096c9f2dacfac21b87",
+  "after_sha256": "ba0aa1085494d9c68980e29872ae0481d59d9569d4a2b15a4c22863901542c6a",
+  "exact_replacements": [
+    [
+      "machine.BeforeEnterContext.Data",
+      "machine.BeforeEnterContext.Message"
+    ],
+    [
+      "machine.NestedTypedContext.Data",
+      "machine.NestedTypedContext.Message"
+    ],
+    [
+      "behavior.ThenAsync(context =>",
+      "behavior.ThenAwaited(context =>"
+    ]
+  ],
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package168-transition-lifecycle-compiler-correction-proposed-r3/REPORT.json",
+    "sha256": "f855f7dc7e7f04a81a0de30402c167df15fca5b713bf7fb6fa08459c660ba8d8"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package168-transition-lifecycle-compiler-independent-scanner-r3/REPORT.json",
+    "sha256": "ef9f28f40e5990a62d9d5d8c38901cb57048be91ee81ec5cae3642e61d208bc7"
+  },
+  "failed_epoch_freeze_ACK": "c37d707e53d9335e542c5dec6f52ca79aa74e8522354265ea6aa8e100d32ed79",
+  "product_and_requirements_unchanged": true,
+  "no_finding_or_native_claim": true
+}

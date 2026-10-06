@@ -46,7 +46,14 @@ public class ConnectionContextSupervisor :
 
         var endpointAddress = new AmazonSqsEndpointAddress(_hostConfiguration.HostAddress, address);
 
-        TransportLogMessages.CreateSendTransport(endpointAddress);
+        try
+        {
+            TransportLogMessages.CreateSendTransport(endpointAddress);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics cannot prevent the transport operation.
+        }
 
         if (endpointAddress.Type == AmazonSqsEndpointAddress.AddressType.Queue)
         {

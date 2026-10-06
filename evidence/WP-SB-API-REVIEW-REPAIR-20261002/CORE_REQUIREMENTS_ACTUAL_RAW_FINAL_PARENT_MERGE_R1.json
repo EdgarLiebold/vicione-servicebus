@@ -1,0 +1,19 @@
+{
+  "status": "PARENT_INDEPENDENT_ORIGINAL_ACTUAL_RAW_TEAM_MERGE_ONLY",
+  "utc": "2026-10-03T13:54:40.981391+00:00",
+  "manifest_sha256": "0508da4af5ba30f8e1793ff5ae0b3c26843aa6f5ee9b827896f82d1f2853846d",
+  "artifacts": 44,
+  "original_git_input_frozen_exact": true,
+  "lossless_personally_acknowledged_parts": 118,
+  "bytes": 1508925,
+  "lines": 7408,
+  "passive_rows": 4538,
+  "root_personal_read": "FINAL_SUMMARY all118interval semantic notes and passive counterproof; no original RAW owner authority transfer; earlier E/CORE_PASSIVE_PROJECTION_PARENT_COUNTERPROOF_R1.json distinct preserved",
+  "before_sha256": "703af83740b40f58ec9c612e17498addc522027313effc8842702c6b8aa655e6",
+  "after_sha256": "fc001e4aa6f7113d13ac813585a816f843626b519d75bc074164af60d078718d",
+  "raw_full_before": 6157,
+  "raw_full_after": 6158,
+  "whole_API_closed": false,
+  "canonical_owner_authority_transferred": false,
+  "runtime_closed": 0
+}

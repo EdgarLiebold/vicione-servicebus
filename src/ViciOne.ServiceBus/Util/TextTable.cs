@@ -210,7 +210,7 @@ public class TextTable
         return this;
     }
 
-    /// <summary>Hides the separator for the selected row.</summary>
+    /// <summary>Hides separators after all data rows when rendering the table.</summary>
     /// <returns>The text table produced by the operation.</returns>
     public TextTable HideRowSeparator()
     {

@@ -5,4 +5,8 @@ namespace ViciOne.ServiceBus.SignalR.Configuration;
 
 /// <summary>Captures the immutable settings used by one registered hub backplane.</summary>
 internal sealed record SignalRBackplaneSettings<THub>(RequestTimeout RemoteGroupOperationTimeout)
-    where THub : Hub;
+    where THub : Hub
+{
+    /// <summary>Gets the bus owner selected by the hub backplane registration.</summary>
+    public Type BusType { get; init; } = typeof(IBus);
+}

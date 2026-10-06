@@ -1,0 +1,115 @@
+{
+  "utc": "2026-10-05T09:18:42.656767+00:00",
+  "actor": "root",
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs",
+      "before_sha256": "6594736c849a6f95031c368dc469a5d57dce59e97a0bc6cf4579aebc6ee0ecd3",
+      "after_sha256": "c3c7992a6614d283a8b694f1e75a047bec273bfbbde3605e2cdd9cba8f05217e",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package187-host-consumer-stop-diagnostic-product-proposed-r1/proposed/src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs",
+      "XML_count": 0
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "before_sha256": "0ea6d8e86568eaa166fa6707fcc8de8dab08151e456c77677272f26828a6c7fd",
+      "after_sha256": "c2a8271edf6e4bee150d47b606533e77382e2778289d7c995a3e21a956198b1b",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package187-host-consumer-stop-diagnostic-product-proposed-r1/proposed/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "XML_count": 0
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Configuration/SagaExtensions.cs",
+      "before_sha256": "5d271ce8157dae15c68f5302ef7abe0371bab40de07cbc903fb50c2bc2e2d5d8",
+      "after_sha256": "08102427d97805f3a5769d6e0c9a3238e7e712870cb24036eccfadd3cee0da24",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package188-saga-connect-subscribe-diagnostic-product-proposed-r1/proposed/src/ViciOne.ServiceBus.Sagas/Configuration/SagaExtensions.cs",
+      "XML_count": 0
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/PublishEndpointExtensions.cs",
+      "before_sha256": "6d24c7a94f05067566e064a21596e9314a2ef8b970f744c25bc8ec623c861c48",
+      "after_sha256": "5ad124b960ce4507979fea9a9564fd0f16a543c94b30b687a4198088716489fe",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-initializer-mediator-result-xml5-product-proposed-r1/proposed/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/PublishEndpointExtensions.cs",
+      "XML_count": 2
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/SendEndpointExtensions.cs",
+      "before_sha256": "e7d307c25ae1712b31dffa9b8c43d14db2d595fa8a0fc372f623ea45f9717aee",
+      "after_sha256": "035aa8252dd894d84ff4d1003930abc049290ee75b570fd5aa9b6ccb04752f74",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-initializer-mediator-result-xml5-product-proposed-r1/proposed/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/SendEndpointExtensions.cs",
+      "XML_count": 2
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Mediator/Mediator/MediatorRequestHandler.cs",
+      "before_sha256": "921fd4a710d3ca83f78e9987b27311caf691c641a32f9bb78ee1530bf6894c55",
+      "after_sha256": "3587575846ccc9c4bb7e9bfcc80de0aeb8e398d1cb9da968299c4d6d7a8b4541",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-initializer-mediator-result-xml5-product-proposed-r1/proposed/src/ViciOne.ServiceBus.Mediator/Mediator/MediatorRequestHandler.cs",
+      "XML_count": 1
+    }
+  ],
+  "independent_author_and_peer": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package187-host-consumer-stop-diagnostic-product-proposed-r1/REPORT.json",
+      "sha256": "80bcb6d816f1d6075315b22ea656dad823896aec231658205f21531f91767579",
+      "manifest_sha256": "f94514110652f8af01547c51f3e474974e51a3bfbedb31b61f603c6e4bf8bd0a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package187-host-consumer-stop-diagnostic-independent-scanner-r1/REPORT.json",
+      "sha256": "dcc23700dc9d3b454d102be5375c3bfb989bdcd85b50afe794d2a8570360fc8d",
+      "manifest_sha256": "63df098cf58bc981dee66d45d8b38835a5765b9c643cd679f3b0e43485d572a8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package188-saga-connect-subscribe-diagnostic-product-proposed-r1/REPORT.json",
+      "sha256": "908fa66324cf929f79d46a840250815df1d48d93e9c5452c2644be38b94ad36a",
+      "manifest_sha256": "fe54e43dfeb8b40da6dd2da42f39b9b6b26d6cd481afbcd6b6b62ab9fecc54a3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package188-saga-connect-subscribe-diagnostic-independent-scanner-r1/REPORT.json",
+      "sha256": "ce09c4ad15207dc923e0fd88089552fabb9e74cb5fca39aab2bb0edf1f9f26d4",
+      "manifest_sha256": "0ec703c5ebbcff90a0e154691f9986377ef061d624c181b36b265cd2853ec6d5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-initializer-mediator-result-xml5-product-proposed-r1/REPORT.json",
+      "sha256": "1803dadb8e6749f262ec3f09149fca3261e467293b572de7a6c6fbc3e0315afa",
+      "manifest_sha256": "27e1844b06926f15f8cc0b9f975861bc31c66fafd44701c85ea13de96cdd8588"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-initializer-mediator-result-xml5-independent-runtime-reviewer-r1/REPORT.json",
+      "sha256": "08148188ac2b9c468304a2994e5020e83c387dfff74168448dd4282500ebd625",
+      "manifest_sha256": "988d3ddde0771c9f31868481d95359fac00ce1770393f2e84d74e7340f997099"
+    }
+  ],
+  "root_reads_and_checks": "Whole runtime3delta/XML5delta/authorreports216cf3; wholeall3peerreports7ebb69. ExactOriginal4blocksabd9cb/wholeRoot174qualification6fc361. WholeoriginalXML3owners135c8fb63 and originalcurrent pairedPE/PDB/XML5 171128. All6author/peerMAN and allSource6 literalinverse preflight8a5e5e/83adb0. Actual owning operation tasks/callbacks/validations outside optionaldiagnosticguards.",
+  "prerequisite": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE174_PROVIDER_FIXED_F152_CONFIG_ORIGINAL_HOST_CONSUMER_TWO_REGISTERED_F001_XML5_EXTENSION_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "bcc34fc92291a4991c54b732f522d3fa6c3974f2f7712fbc1b2bff315cfc81e2"
+  },
+  "original_XML_two_frames": [
+    {
+      "origin": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Initializers/release/ViciOne.ServiceBus.Initializers.dll",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package175-root-before-r1/frames/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.dll",
+      "sha256": "fd70fb8e1c5d50bc363ec3f9421a392edb5055046ac83471db7acf15c3e04398",
+      "PDB_kind": "embedded-portable"
+    },
+    {
+      "origin": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Initializers/release/ViciOne.ServiceBus.Initializers.xml",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package175-root-before-r1/frames/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.xml",
+      "sha256": "9ed68c60c140944d4b0447812109e12839f62c2be6d49e87d397f89f5575d0dc",
+      "PDB_kind": null
+    },
+    {
+      "origin": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package175-root-before-r1/frames/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "780eac0b0b557359f1172aabed529ddfcb2206f2fe5780555aec3cbfa88fd19a",
+      "PDB_kind": "embedded-portable"
+    },
+    {
+      "origin": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.xml",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package175-root-before-r1/frames/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.xml",
+      "sha256": "c47e96a3eb2d3b3145508df65b40c59cda08ba03f8623550ab70f3aa84a8c65f",
+      "PDB_kind": null
+    }
+  ],
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package175-root-before-r1",
+  "preflight_precision": "Initial preflight stopped before anySource mutation when expecting a separate.pdb; actualoriginalpair has embeddedPortablePDB insideDLL. PartialoriginalDLLbackup rechecked byteexact; completed all4 rawDLL/XML before changingSource.",
+  "scope": "RuntimeSource3 firstowningHost/Consumer/SagaConfig optionalDebug guards +XMLSource3 exact5returns. Tests andall4Reqregistries unchanged.",
+  "current_native_or_whole_API_claim": false
+}

@@ -1,0 +1,11 @@
+{
+  "originals6209_F_M_current_ledger_equal": true,
+  "current_ledger_sha256": "a6c3e9c9f38f0774f5b60ac395e5dc9fefae2e66d7b9e0b2bc6f2d7cac3a02e6",
+  "exact_new_frame_paths": [
+    "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs"
+  ],
+  "exact_new_frame_paths_removed": true,
+  "all_public_oracle_and_constant_files_sha_unchanged": true,
+  "restored_runtime_core": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+  "restored_runtime_core_sha256": "29a0a2fb6462eb68d4fe781682db0750f689d0280f106b4c5097fe8bd34a3c90"
+}

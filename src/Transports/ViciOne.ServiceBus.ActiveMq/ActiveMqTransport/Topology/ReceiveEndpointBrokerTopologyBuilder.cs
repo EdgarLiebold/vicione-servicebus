@@ -8,7 +8,7 @@ public class ReceiveEndpointBrokerTopologyBuilder :
     /// <summary>Gets or sets the endpoint's consuming queue.</summary>
     public QueueHandle Queue { get; set; } = null!;
 
-    /// <summary>Creates an immutable snapshot of the accumulated receive topology.</summary>
+    /// <summary>Creates array snapshots of the accumulated receive topology with retained entity references.</summary>
     /// <returns>The configured ActiveMQ broker topology.</returns>
     public BrokerTopology BuildTopologyLayout()
     {

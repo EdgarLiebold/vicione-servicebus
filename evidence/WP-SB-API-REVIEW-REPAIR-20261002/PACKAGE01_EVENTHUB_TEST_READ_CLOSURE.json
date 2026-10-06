@@ -1,0 +1,266 @@
+{
+  "status": "REUSED_HASH_EQUAL_PRIOR_FULL_READS",
+  "tracked_project_files": [
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "ecd805162a2970979ebb8080228bfe22493418b176f19595cb97d916b129fb47",
+      "bytes": "679",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/AssemblyInfo.cs",
+      "sha256": "297bf6453797f1140a21672bec2004e52adebb472b3c2528cbb708b5ac0ce3d5",
+      "bytes": "152",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/BatchCheckpointBehaviorTests.cs",
+      "sha256": "b7441ebd5153f5c4cc268b21bd221cf15fab154686c736c4212faf0ddbc1fb4c",
+      "bytes": "10459",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub Microsoft SDK provider, checkpoint and configuration ownership",
+      "semantic_evidence": "EVENTHUB_REVIEW_NOTES.json; Microsoft azure-eventhub-dotnet core receive/auth/ownership/checkpoint workflows applied to full named sources; candidate validation and callback faults pending owned finite package oracles; no whole provider closure",
+      "open_work": "Complete semantic API/test/package closure remains open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBatchAndReliabilityTests.cs",
+      "sha256": "31f72e7ddeaea70340cac431a45d51e06cb9c3a39ad01be91d04765597f9fd52",
+      "bytes": "29991",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub broader integration contract closure",
+      "semantic_evidence": "Entire4 remaining broad integration files read. Exact100-item partition order and metadata, independent same-partition fault continuation, retries[0,1,2,3]/counts[0,0,1,2], two bound buses and cause identity, single inbox/outbox observed delivery, raw SDK source/content-type/default serializer, provider offset sequence metadata, saga fault arities, two generations4 partitions initialize/close and fresh producer scope after restart. These are emulator assertions, not cloud proof. CheckpointWriteProbe signals before ProcessNext completes, so attempted request is not persisted-commit oracle. Generic producer acquisition some tests omit operation token: scope risk not a confirmed product defect.",
+      "open_work": "Mutant adequacy per test, checkpoint provider completion oracle, contract symbol closure and cloud/host faults remain open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubCheckpointStorageTests.cs",
+      "sha256": "050dd5f8e4894cfdd779ec24baa26eac19517d68a94b99a831aacb03b71579be",
+      "bytes": "7324",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubConfigurationOwnershipTests.cs",
+      "sha256": "456b4fb513c9b9258dd177c21c3939c4be63f59c078886aa3ba052b4471e74d5",
+      "bytes": "10526",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub Microsoft SDK provider, checkpoint and configuration ownership",
+      "semantic_evidence": "EVENTHUB_REVIEW_NOTES.json; Microsoft azure-eventhub-dotnet core receive/auth/ownership/checkpoint workflows applied to full named sources; candidate validation and callback faults pending owned finite package oracles; no whole provider closure",
+      "open_work": "Complete semantic API/test/package closure remains open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredProducerTests.cs",
+      "sha256": "071ed4022007916a9cfaa071fda8c1b1635a9c09b56f184cf6b4ecc24fe1fe03",
+      "bytes": "13675",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubEndpointAndBusBoundaryTests.cs",
+      "sha256": "d51664a440ac6a8e3e0e6bb982d18f06fd619d933b9262a88252b9f5353fc0d3",
+      "bytes": "23046",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub broader integration contract closure",
+      "semantic_evidence": "Entire4 remaining broad integration files read. Exact100-item partition order and metadata, independent same-partition fault continuation, retries[0,1,2,3]/counts[0,0,1,2], two bound buses and cause identity, single inbox/outbox observed delivery, raw SDK source/content-type/default serializer, provider offset sequence metadata, saga fault arities, two generations4 partitions initialize/close and fresh producer scope after restart. These are emulator assertions, not cloud proof. CheckpointWriteProbe signals before ProcessNext completes, so attempted request is not persisted-commit oracle. Generic producer acquisition some tests omit operation token: scope risk not a confirmed product defect.",
+      "open_work": "Mutant adequacy per test, checkpoint provider completion oracle, contract symbol closure and cloud/host faults remain open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubHeaderProviderTests.cs",
+      "sha256": "4ef3ecd80c3ac680fd47b4c0f8ebe1a1b4dd6ade913b16d9782f17ed363e27cb",
+      "bytes": "3910",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubInteropAndContextTests.cs",
+      "sha256": "1d6366afc6998cf43fc7c10acbadc7c1c24667d972a319f5cc9de4621200c234",
+      "bytes": "17768",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub broader integration contract closure",
+      "semantic_evidence": "Entire4 remaining broad integration files read. Exact100-item partition order and metadata, independent same-partition fault continuation, retries[0,1,2,3]/counts[0,0,1,2], two bound buses and cause identity, single inbox/outbox observed delivery, raw SDK source/content-type/default serializer, provider offset sequence metadata, saga fault arities, two generations4 partitions initialize/close and fresh producer scope after restart. These are emulator assertions, not cloud proof. CheckpointWriteProbe signals before ProcessNext completes, so attempted request is not persisted-commit oracle. Generic producer acquisition some tests omit operation token: scope risk not a confirmed product defect.",
+      "open_work": "Mutant adequacy per test, checkpoint provider completion oracle, contract symbol closure and cloud/host faults remain open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubObserverAdmissionTests.cs",
+      "sha256": "987e0c998bfd9ade78800f694fd0d7504226d7aa45945fcbf9d15201902a388d",
+      "bytes": "7571",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProcessorContextTests.cs",
+      "sha256": "3c3b204017506c4e4a9730c56e43779a286378c67a3ca94ea6df2771b88237cc",
+      "bytes": "5275",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub Microsoft SDK provider, checkpoint and configuration ownership",
+      "semantic_evidence": "EVENTHUB_REVIEW_NOTES.json; Microsoft azure-eventhub-dotnet core receive/auth/ownership/checkpoint workflows applied to full named sources; candidate validation and callback faults pending owned finite package oracles; no whole provider closure",
+      "open_work": "Complete semantic API/test/package closure remains open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerBatchSenderTests.cs",
+      "sha256": "f727f7c995924225a8654e192dfde0e957593e0f67e274e7022ff62fb90bacc3",
+      "bytes": "23002",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerCacheTests.cs",
+      "sha256": "d57b741effae2b7ca5472d2604fc63d619d0c7eec58a550d714ab7809164f4bf",
+      "bytes": "8026",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerDeliveryTests.cs",
+      "sha256": "e34a4e464b4ebd729c509371eae681c0a2fb06c7ba1d10a925bde1521dcebe11",
+      "bytes": "17554",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerOutcomeTests.cs",
+      "sha256": "b9d402166843f9dd37c79f1e6bccf46772c888ca5281fa4cd202e9b1d908a3bf",
+      "bytes": "16981",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerResolutionTests.cs",
+      "sha256": "e185391a3fe4be3e78f8e17f61239d88e7a9629512acdd253db6d9b085466eaf",
+      "bytes": "5367",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceiveAdmissionTests.cs",
+      "sha256": "420acf2343de8d2ebe3f012a97a1fa3b5b009e6acb2dc27b9b78495230a1c8ce",
+      "bytes": "8542",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubSagaAndLifecycleTests.cs",
+      "sha256": "fa05b9a6bf47ee4a196821dd35ba1e711893be7dd90dcf2a3a675e55ed6c1bc2",
+      "bytes": "26185",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub broader integration contract closure",
+      "semantic_evidence": "Entire4 remaining broad integration files read. Exact100-item partition order and metadata, independent same-partition fault continuation, retries[0,1,2,3]/counts[0,0,1,2], two bound buses and cause identity, single inbox/outbox observed delivery, raw SDK source/content-type/default serializer, provider offset sequence metadata, saga fault arities, two generations4 partitions initialize/close and fresh producer scope after restart. These are emulator assertions, not cloud proof. CheckpointWriteProbe signals before ProcessNext completes, so attempted request is not persisted-commit oracle. Generic producer acquisition some tests omit operation token: scope risk not a confirmed product defect.",
+      "open_work": "Mutant adequacy per test, checkpoint provider completion oracle, contract symbol closure and cloud/host faults remain open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/PendingConfirmationCancellationTests.cs",
+      "sha256": "5dc028d22fa36cae6b5ef462a13ca7b4312d25d1c38f06cdc9b2d3021a3288b2",
+      "bytes": "5810",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/ProcessorCheckpointLifecycleTests.cs",
+      "sha256": "3b48a18526d22c7ff0f19d0a5fea973c4c455e4bc4c34a95d15922d08b3c02d5",
+      "bytes": "8919",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub Microsoft SDK provider, checkpoint and configuration ownership",
+      "semantic_evidence": "EVENTHUB_REVIEW_NOTES.json; Microsoft azure-eventhub-dotnet core receive/auth/ownership/checkpoint workflows applied to full named sources; candidate validation and callback faults pending owned finite package oracles; no whole provider closure",
+      "open_work": "Complete semantic API/test/package closure remains open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Infrastructure/EventHubLocalFixture.cs",
+      "sha256": "2f76967e5ed15630307250200a229784011f0ad37991b211e2c821660c32b2b8",
+      "bytes": "4412",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "sha256": "24ef367a2e722e73bff4f77281636a5c16b033b4a7b98cf9d8d49222c9488f28",
+      "bytes": "32582",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "9a77e000d6c694fdd8488c0113f70ae6f940b793c85607d6ed83393b2bfcb2fe",
+      "bytes": "1286",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub existing contract/test analysis",
+      "semantic_evidence": "Entire files read, including requirements 83 lines in bounded chunks after truncation. Exact payload identities and sequences exist in cache/outcome/delivery tests; BatchSender SDK mock capacity counts entries instead of AMQP bytes. Deferred fixtures gate real in-memory consume context and downstream resolution/delivery, no timeout used as positive success. Callback secondary failure F013 and static invalid settings F014 and probe SAS F015 are not covered by these assertions. Existing full local run remains 531/531; individual test execution association not invented.",
+      "open_work": "Remaining integration tests, mutation adequacy, cloud semantics and formal per-test grading open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+      "sha256": "827aab2eb3c7f3c08497c504a20f3ad17cb5ac1109df1d0497d6dd0703f12be6",
+      "bytes": "1780",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub Microsoft SDK provider, checkpoint and configuration ownership",
+      "semantic_evidence": "EVENTHUB_REVIEW_NOTES.json; Microsoft azure-eventhub-dotnet core receive/auth/ownership/checkpoint workflows applied to full named sources; candidate validation and callback faults pending owned finite package oracles; no whole provider closure",
+      "open_work": "Complete semantic API/test/package closure remains open"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "ddca799ea3d91af9c6447df3f3e766d78be38b7586d660c7f58c45e7a30ed361",
+      "bytes": "23136",
+      "kind": "test",
+      "read_status": "READ_FULL_SEMANTIC_REVIEW_PARTIAL",
+      "owner": "EventHub locked graph review",
+      "semantic_evidence": "All4 complete JSON files read without truncation in bounded chunks. Product and testing graph EventHubs5.12.2/Processor5.12.2/Blobs12.29.2; Azure.Core1.55 specific graph, not AzureSB1.60. Extensions10.0.12 central constraints retained. Runtime/Testing project and packaged-consumer closures contain no xunit/MTP dependency; LocalIntegration exclusively xunit.v3.mtp-v2 4.0.0 with MTP2.3.3 and preexisting CodeCoverage18.10.0. Frozen package-consumer same-version content identities are historical and must use isolated fresh feed rather than update baseline.",
+      "open_work": "Whole package metadata/signature/normalization closure remains open"
+    }
+  ],
+  "limits": "Runtime/project closure remains local integration; hermetic probe test requires no provider."
+}

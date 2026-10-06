@@ -1,0 +1,45 @@
+{
+  "utc": "2026-10-06T01:49:14.916858+00:00",
+  "status": "TEST_ONLY_ADD1_REQUIREMENT_ADD2_ROOT_APPLIED_ORIGINAL_NATIVE_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package296-activemq-session-delete10-testonly-proposed-r1",
+    "manifest": "d7f5a80e203d94094692a0985fdcbf71347eea8563ee325321d5581323006583"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package296-session-delete10-independent-source-peer-r1",
+    "manifest": "f5d737082d90f2aa533d30441461e34239a080c4c4cf5c0712b3a3e571f89500"
+  },
+  "root_whole_authority": "Entire newTest3004573d2/currentSession3127463ef/authorpeer0b2e4f. Retained mandatory testing skill/generation full authority applies. Current8+4helperguards exact; allProduct/existingtests unchanged. Initialguard3c779e stopped beforemutation because additions artifact is dictwrapper not directlist; inspectedd2c45a/ca767b and exact ADD2 suffix then reapplied.",
+  "test": {
+    "relative": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSessionDeleteDiagnosticsTests.cs",
+    "sha256": "adc0545959960bcd9282df05366f67b4f25b6ff6eafca6342583f3842e4f1790",
+    "lines": 300,
+    "cases": 10,
+    "first_hostile_assertion": 106
+  },
+  "requirements": {
+    "base_sha256": "2b686d5d21eca2d913d76de3630354e5d8a56b89f4b437fe1b8d27a6d10f6782",
+    "after_sha256": "fed9f4a10a90833eee5c41608ed095d36531ce183a0b09c5f9c73062917b10e0",
+    "before_rows": 132,
+    "after_rows": 134,
+    "additions": 2,
+    "latest_merge_required": true
+  },
+  "product_unchanged_guards": {
+    "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqSessionContext.cs": "ca6e8a09470f80131db9f8127b33778908eb71feddaaa59497eed5725e440d11",
+    "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/SessionContext.cs": "6a60648326a94df98be536f6bfb38f864d06836245a98334a28221b6d8563026",
+    "src/ViciOne.ServiceBus/Util/TaskExecutor.cs": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+    "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ActiveMqConnectionContext.cs": "43b516b33a5bac6bba661ef1997801cd63598988c83339e300b88ef5b5df3c22",
+    "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqLifecycleTests.cs": "6c655de8ce1cac810b87ad071e060ddd60253bd336a114d04e34c47cab4bd7ac",
+    "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqConnectionDisposeDiagnosticsTests.cs": "29c519a55dd0ca6cf5614460bffcba1d63386587b1b468cfd3e60babe6dfc456",
+    "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ViciOne.ServiceBus.ActiveMq.Tests.csproj": "8038fc39db9225d4855b67efd16cc70a49125d3257f560beb369a711fa01288b",
+    "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/TestDoubles/InterfaceProxy.cs": "f44c0e9aa656c42ca326cbe9c3691b27abe00530a3ddaf05fc4a8cc54a3bd309",
+    "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/MessageProducerCache.cs": "84cf2e11221f80a03fb56f39686e68812319aee46cb70dee3332718b4eb2ebd2",
+    "src/ViciOne.ServiceBus/Logging/EnabledLogger.cs": "ef5aa89d3cf563ec3af0cb6ac5e36cc6371afc8ccf85a57eb92589f69344ef17",
+    "src/ViciOne.ServiceBus/Transports/Diagnostics/TransportLogMessages.cs": "bf888194bae5a699298e52ad7faf34ade633ce567cfcf405ebac90ea698b55d8"
+  },
+  "counts": "OneTheory10 Originalcases pending; no predictedfailure/finding/nativecredit. Requirements existing132 objectprefix preserved+ADD2 only.",
+  "native_credit": 0,
+  "grade": null,
+  "closed": false
+}

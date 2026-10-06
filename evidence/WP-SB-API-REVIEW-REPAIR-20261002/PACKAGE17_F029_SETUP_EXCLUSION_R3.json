@@ -1,0 +1,8 @@
+{
+  "excluded_phase": "package17-f029-public-corrected-twentysix",
+  "actual": "25PASS1guardfailure;dedup terminaltimeout/cleanupguardfailure",
+  "cause": "size2 capacity admits original+duplicate;third distinct replacement cannotenter while bothconsume awaitsharedbatch",
+  "fix": "public endpointcapacity16 beforeConfigureConsumer; independent boundedcleanup attempts+trackedtasksjoins",
+  "not_product_error_or_mutant_kill": true,
+  "old_owner_and_app_archived": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-capacity-refinement/MANIFEST.json"
+}

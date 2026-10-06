@@ -1,0 +1,241 @@
+{
+  "utc": "2026-10-05T23:16:58.658288+00:00",
+  "status": "F147_CORE_PREDICATE_DOC5_ROOT_REPAIR_ACCEPTED_BOUNDED_WHOLE_API_OPEN",
+  "root_basis": "Own fullbefore/current3/201 feb23b/05bad3 and ownactualP36/XML5entireinverse/ZIP. Independent Runtime Source3+2 eachwholebefore/proposed, independent Scanner ownSource3/201 plusactual1340checksum/PDB/ZIP/XML5inverse. Rootwholepubpeerandall6priorMasterNorms f06c29. No borrowed semantic authority;1340allchecksums mechanical only.",
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE260_F147_CORE_PREDICATE_DOC5_XML_ONLY_PRODUCT3_ROOT_APPLICATION_R1.json",
+    "sha256": "7ad83335c6beaddd8f32adf99e8bf536538457540922c3d5bd1e5920f23f8c56"
+  },
+  "source_peers": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package243-core630-assembly-scan-doc3-independent-runtime-source-peer-r1/REPORT.json",
+      "sha256": "6b6c439a175ee11648a3261443344a09d1998794922ff55d457a45a381d71478",
+      "manifest_sha256": "35d31c3339a86bc6b132ee39c6b8a3bb4a3282268cb34b2e1d1207e92723e394"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-predicate-doc2-independent-runtime-source-peer-r1/REPORT.json",
+      "sha256": "a8c622dc10cb17213ad26ee7e18153a4706781609cb42173bf14c67295edc0dc",
+      "manifest_sha256": "3fb081c742bf181427256d57a3045b9825ec68d97deb464b411076da6484b1a0"
+    }
+  ],
+  "publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-doc5-independent-scanner-fresh-publication-peer-r1/REPORT.json",
+    "sha256": "8d8ac3ea8b231d93906d2006a4fa856c1ae35dd351dd2da7158534fefa30145c",
+    "manifest_sha256": "3a9f99078290c800cdd16eddf47834628eeeb8c4d501d673df4f86044adc3854"
+  },
+  "root_publication": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-predicate-doc5-fresh-root-publication-proof-r1/REPORT.json",
+    "sha256": "d18f771c9ce8ed5e1dd44a6f2f5a32bf344dd9cb3055ba2e84bae800a525cec1"
+  },
+  "actual_DLL": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-predicate-doc5-fresh-root-publication-proof-r1/ViciOne.ServiceBus.dll",
+    "sha256": "239a7f4c51d833801efb382bb6b00b7a589e39095f3263f50e5e5bf2b0b59fc5"
+  },
+  "actual_XML": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.xml",
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package260-core-predicate-doc5-fresh-root-publication-proof-r1/ViciOne.ServiceBus.xml",
+    "sha256": "fdae5ec9ead8e38af855654de3d771a31f419763862c3e9e64235392bf35014a"
+  },
+  "nupkg": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/packages-package260-core-predicate-doc5-r1/ViciOne.ServiceBus.1.0.0.nupkg",
+    "sha256": "625450ef76c555a9fa6369b284ec154e1e0066f0b31a4d9a9a5c4379cbcc62c8",
+    "bytes": 1508994,
+    "CRC_unique_names_NuSpec_net10_DLL_XML_current_frozen_exact": true
+  },
+  "strict_build": {
+    "phase": "package260-core-predicate-doc5-strict-build-r1",
+    "command": [
+      "dotnet",
+      "build",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T23:06:38.100168+00:00",
+    "completed_utc": "2026-10-05T23:06:49.048630+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package260-core-predicate-doc5-strict-build-r1.log",
+    "log_sha256": "ca4383ccd1abf13de563e380c76f72b555dd95045541d7a9777f8b3d83273fd7"
+  },
+  "fresh_pack": {
+    "phase": "package260-core-predicate-doc5-fresh-pack-r1",
+    "command": [
+      "dotnet",
+      "pack",
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "-o",
+      "artifacts/packages-package260-core-predicate-doc5-r1"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 0,
+    "started_utc": "2026-10-05T23:07:24.798145+00:00",
+    "completed_utc": "2026-10-05T23:07:26.521344+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package260-core-predicate-doc5-fresh-pack-r1.log",
+    "log_sha256": "1f9ca31b4c6a28de60151c17d9aeac2ebf87c8c81417eb08c392bde9a1297405"
+  },
+  "changed5_nodes": [
+    {
+      "id": "M:ViciOne.ServiceBus.Util.AssemblyTypeCache.FindTypes(System.Collections.Generic.IEnumerable{System.Reflection.Assembly},System.Func{System.Type,System.Boolean})",
+      "before_clause": "<param name=\"filter\">The filter to add to the pipeline.</param>",
+      "after_clause": "<param name=\"filter\">The optional predicate that selects discovered types.</param>",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/AssemblyTypeCache.cs",
+      "source_sha256": "30f9c2c1147435ef0dc21d947f5105e3b4dc57d9632101980714adf97410b914",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/AssemblyTypeCache.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30f9c2c1147435ef0dc21d947f5105e3b4dc57d9632101980714adf97410b914",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Util.AssemblyTypeCache.FindTypes(System.Collections.Generic.IEnumerable{System.Reflection.Assembly},ViciOne.ServiceBus.Util.TypeClassification,System.Func{System.Type,System.Boolean})",
+      "before_clause": "<param name=\"filter\">The filter to add to the pipeline.</param>",
+      "after_clause": "<param name=\"filter\">The optional predicate that selects discovered types.</param>",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/AssemblyTypeCache.cs",
+      "source_sha256": "30f9c2c1147435ef0dc21d947f5105e3b4dc57d9632101980714adf97410b914",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/AssemblyTypeCache.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30f9c2c1147435ef0dc21d947f5105e3b4dc57d9632101980714adf97410b914",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Util.AssemblyTypeCache.FindTypes(System.Reflection.Assembly,ViciOne.ServiceBus.Util.TypeClassification,System.Func{System.Type,System.Boolean})",
+      "before_clause": "<param name=\"filter\">The filter to add to the pipeline.</param>",
+      "after_clause": "<param name=\"filter\">The optional predicate that selects discovered types.</param>",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/AssemblyTypeCache.cs",
+      "source_sha256": "30f9c2c1147435ef0dc21d947f5105e3b4dc57d9632101980714adf97410b914",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/AssemblyTypeCache.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "30f9c2c1147435ef0dc21d947f5105e3b4dc57d9632101980714adf97410b914",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Util.TypeSet.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Util.Scanning.AssemblyScanTypeInfo},System.Func{System.Type,System.Boolean})",
+      "before_clause": "<param name=\"filter\">The filter to add to the pipeline.</param>",
+      "after_clause": "<param name=\"filter\">The optional predicate that selects discovered types.</param>",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/TypeSet.cs",
+      "source_sha256": "f01bd815fa334200d1401debe229de4215b2db5bca310f02040b122ee9dae374",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/TypeSet.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f01bd815fa334200d1401debe229de4215b2db5bca310f02040b122ee9dae374",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Util.Scanning.TypeQuery.#ctor(ViciOne.ServiceBus.Util.TypeClassification,System.Func{System.Type,System.Boolean})",
+      "before_clause": "<param name=\"filter\">The filter to add to the pipeline.</param>",
+      "after_clause": "<param name=\"filter\">The optional predicate that selects discovered types.</param>",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Scanning/TypeQuery.cs",
+      "source_sha256": "25511f81b3e1810cd79aa4180c72b9e7971f1d1fd8227c4c44d920d0d560d265",
+      "actual_PDB_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Scanning/TypeQuery.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "25511f81b3e1810cd79aa4180c72b9e7971f1d1fd8227c4c44d920d0d560d265",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      }
+    }
+  ],
+  "whole_XML_inverse5_exact": true,
+  "nonXML_publicdecl_bytes_equal": true,
+  "six_existing_source_rows_rebound": [
+    {
+      "index": 12892,
+      "assembly": "ViciOne.ServiceBus",
+      "id": "F:ViciOne.ServiceBus.Util.Scanning.TypeQuery.Filter",
+      "old_source_sha256": "e139cc1f8dac27d0b09dfb49b55e5e09ad076bef39bba6c2c5e192bed1560975",
+      "new_source_sha256": "25511f81b3e1810cd79aa4180c72b9e7971f1d1fd8227c4c44d920d0d560d265"
+    },
+    {
+      "index": 12893,
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.Scanning.TypeQuery.#ctor(ViciOne.ServiceBus.Util.TypeClassification,System.Func{System.Type,System.Boolean})",
+      "old_source_sha256": "e139cc1f8dac27d0b09dfb49b55e5e09ad076bef39bba6c2c5e192bed1560975",
+      "new_source_sha256": "25511f81b3e1810cd79aa4180c72b9e7971f1d1fd8227c4c44d920d0d560d265"
+    },
+    {
+      "index": 12894,
+      "assembly": "ViciOne.ServiceBus",
+      "id": "T:ViciOne.ServiceBus.Util.Scanning.TypeQuery",
+      "old_source_sha256": "e139cc1f8dac27d0b09dfb49b55e5e09ad076bef39bba6c2c5e192bed1560975",
+      "new_source_sha256": "25511f81b3e1810cd79aa4180c72b9e7971f1d1fd8227c4c44d920d0d560d265"
+    },
+    {
+      "index": 12906,
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Util.TypeSet.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Util.Scanning.AssemblyScanTypeInfo},System.Func{System.Type,System.Boolean})",
+      "old_source_sha256": "be65652ad4a51f73c44b3596fbc2e02c60066103cb746a55670d8709eb0cc6f8",
+      "new_source_sha256": "f01bd815fa334200d1401debe229de4215b2db5bca310f02040b122ee9dae374"
+    },
+    {
+      "index": 12907,
+      "assembly": "ViciOne.ServiceBus",
+      "id": "P:ViciOne.ServiceBus.Util.TypeSet.Records",
+      "old_source_sha256": "be65652ad4a51f73c44b3596fbc2e02c60066103cb746a55670d8709eb0cc6f8",
+      "new_source_sha256": "f01bd815fa334200d1401debe229de4215b2db5bca310f02040b122ee9dae374"
+    },
+    {
+      "index": 12908,
+      "assembly": "ViciOne.ServiceBus",
+      "id": "T:ViciOne.ServiceBus.Util.TypeSet",
+      "old_source_sha256": "be65652ad4a51f73c44b3596fbc2e02c60066103cb746a55670d8709eb0cc6f8",
+      "new_source_sha256": "f01bd815fa334200d1401debe229de4215b2db5bca310f02040b122ee9dae374"
+    }
+  ],
+  "other17269_rows_preserved": true,
+  "all_prior_member_norms_statuses_native_limits_preserved": true,
+  "API_count_change": 0,
+  "master_rows": 17275,
+  "master_before_sha256": "fc5b0a9c3d22a2d00d5edb7b358210cfd32575646fc1190d83c7e6de937efcc7",
+  "canonical_accounting_unchanged": {
+    "original_canonical_denominator": 18569,
+    "historical_current_r2_basic_denominator": 18598,
+    "original_canonical_accepted": 16413,
+    "historical_current_r2_new_canonical_accepted": 29,
+    "current_canonical_accepted": 16442,
+    "accessor_sidecar_accepted": 833,
+    "master_unique_rows": 17275,
+    "master_declared_accepted_count_field": 17275,
+    "master_declared_denominator_field": 18598,
+    "original_canonical_remaining": 2156,
+    "historical_current_r2_canonical_remaining": 2156,
+    "sidecar_get": 690,
+    "sidecar_set": 137,
+    "sidecar_original_parent_unique": 714,
+    "sidecar_unmapped": 0,
+    "original_duplicate_keys": 0,
+    "master_duplicate_keys": 0,
+    "evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE168_MASTER_CANONICAL_ACCESSOR_ROOT_COUNT_PRECISION_R1.json",
+      "sha256": "8be3bc5b82aa65ef6139de4002fd86789583c9a4fbf28a3d88f73496afc12b57"
+    },
+    "historical_current_r2_inventory_is_not_fresh168_metadata": true,
+    "latest_source_append_evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE261_SQL369_SOURCE339_EXACT30_HELD_ROOT_ACCEPTANCE_R1.json"
+    },
+    "latest_subtotal_precision": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE170_MASTER548_ACCESSOR_AND_SPEC_LINECOUNT_ROOT_PRECISION_R1.json",
+      "sha256": "b41b9e72fbcf91d8314f882fd469a082ce1582994f521ffcb04718adf615fdd2"
+    },
+    "sidecar_event_add": 3,
+    "sidecar_event_remove": 3
+  },
+  "original_API_remaining": 2156,
+  "Core630_reserved_FindTypes_three_IDs_still_unaccepted": true,
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package263-core-doc5-root-before-r1"
+}

@@ -1,0 +1,139 @@
+{
+  "public_inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/previous/Cases.cs",
+      "sha256": "f109cfab804fae687bb6fb95b36cca628e356210f792762fca88dc66910d8891",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/previous/DefinitionLifetime.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/previous/NuGet.Config",
+      "sha256": "8d60028f5f593cbca31bf984646d0b364a8bc4ebe4dabfc22eb8f50527cd5acf",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/previous/OwnedLifetime.cs",
+      "sha256": "42f8f72d69881ad3373ac3941d83597a0798ef814ce0441939c92ded685da0eb",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/previous/Probe.cs",
+      "sha256": "c1be427c1f159a1c35c1b4ce9688011e1571ea7af456b793848f723ebbd6c591",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/previous/Program.cs",
+      "sha256": "d416224a2e0d83dd025a8223fca16960b3e84df9bf8482108a8501c0a386c290",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/previous/Resources.cs",
+      "sha256": "133c9257fc8a18f82469f897db3a9a89ce84a107f9516722ce1454124b5a9fa2",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/previous/RuntimeOwner.cs",
+      "sha256": "d479aab5e5844c3557f1b69558c8075e186e556db895d3083c5166c1717ef2a2",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/previous/packages.lock.json",
+      "sha256": "50eaf67fedf39dd38cf44f053bca25ff971497e96a26799389ac88933b66d325",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/corrected/Cases.cs",
+      "sha256": "f109cfab804fae687bb6fb95b36cca628e356210f792762fca88dc66910d8891",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/corrected/DefinitionLifetime.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/corrected/NuGet.Config",
+      "sha256": "52ae547238b682611c915c61fb51b6e30c84661171956e426b4e16c0e4b39f0d",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/corrected/OwnedLifetime.cs",
+      "sha256": "42f8f72d69881ad3373ac3941d83597a0798ef814ce0441939c92ded685da0eb",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/corrected/Probe.cs",
+      "sha256": "c1be427c1f159a1c35c1b4ce9688011e1571ea7af456b793848f723ebbd6c591",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/corrected/Program.cs",
+      "sha256": "d416224a2e0d83dd025a8223fca16960b3e84df9bf8482108a8501c0a386c290",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/corrected/Resources.cs",
+      "sha256": "133c9257fc8a18f82469f897db3a9a89ce84a107f9516722ce1454124b5a9fa2",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/corrected/RuntimeOwner.cs",
+      "sha256": "d479aab5e5844c3557f1b69558c8075e186e556db895d3083c5166c1717ef2a2",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package18-f035/corrected/packages.lock.json",
+      "sha256": "07881084828c017cc5b61cb33263452337e76c5227731a10c2fbb2b2106d978f",
+      "root_read": "FULL_WHOLE_BODY_OR_EXACT_BYTE_IDENTICAL_ROOT_FULL_PAIRED_REUSE"
+    }
+  ],
+  "chains": [
+    {
+      "phase": "previous",
+      "package": "ViciOne.ServiceBus",
+      "archive_sha256": "08728644bcda7bc80281752b50b2051d7a54dabde34fcdc12e696caea92cc9b3",
+      "cache_sha256": "1a152ac238f1e1d5dbcfcd98b736bd39125aec89f7ba35824ba8654ed117e148",
+      "app_runtime_sha256": "1a152ac238f1e1d5dbcfcd98b736bd39125aec89f7ba35824ba8654ed117e148",
+      "lock_contentHash_matches_zip_sha512": true
+    },
+    {
+      "phase": "previous",
+      "package": "ViciOne.ServiceBus.Abstractions",
+      "archive_sha256": "087f531217398e428022dc854f73dff0239924020fc5042355a7b9adc8e0d73f",
+      "cache_sha256": "ef5817cda765fc00c65671440d18884fda8d7636b0dd5bed8135470507c9d6b2",
+      "app_runtime_sha256": "ef5817cda765fc00c65671440d18884fda8d7636b0dd5bed8135470507c9d6b2",
+      "lock_contentHash_matches_zip_sha512": true
+    },
+    {
+      "phase": "corrected",
+      "package": "ViciOne.ServiceBus",
+      "archive_sha256": "7287d3b8e4d9febdc35bd153fff0e9d6871814b2ed0b5e7d028f3bd28667efbd",
+      "cache_sha256": "29a0a2fb6462eb68d4fe781682db0750f689d0280f106b4c5097fe8bd34a3c90",
+      "app_runtime_sha256": "29a0a2fb6462eb68d4fe781682db0750f689d0280f106b4c5097fe8bd34a3c90",
+      "lock_contentHash_matches_zip_sha512": true
+    },
+    {
+      "phase": "corrected",
+      "package": "ViciOne.ServiceBus.Abstractions",
+      "archive_sha256": "440bd764b8dff36e641061930227b2065fe8a88f776d78b1f3b85a537277ca16",
+      "cache_sha256": "ef5817cda765fc00c65671440d18884fda8d7636b0dd5bed8135470507c9d6b2",
+      "app_runtime_sha256": "ef5817cda765fc00c65671440d18884fda8d7636b0dd5bed8135470507c9d6b2",
+      "lock_contentHash_matches_zip_sha512": true
+    }
+  ],
+  "root_current_registrar_FULL": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+    "sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+  },
+  "source_and_whole_owner_adversarial_preflights": [
+    "package18-f035-public-preflight/whole-owner-001",
+    "package18-f035-source-plan-preflight/FINAL_MANIFEST.json"
+  ],
+  "scope": "46 actual same public oracles; named AddDefinition and named AddEndpointDefinition explicitly part of SAME F035 open scope",
+  "corrected_native_pending": true,
+  "canonical_core_owner_transfer": false
+}

@@ -8,7 +8,7 @@ public interface IOutboxContextFactory<TContext> :
     IProbeSite
     where TContext : class
 {
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Coordinates outbox-aware consumption of the supplied message through the next pipeline stage according to the provider's inbox and delivery policy.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="options">The options that control the operation.</param>

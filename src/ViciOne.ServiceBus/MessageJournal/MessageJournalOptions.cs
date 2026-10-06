@@ -21,7 +21,7 @@ public sealed class MessageJournalOptions
         TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
-    /// <summary>Gets the maximum duration allowed for processing one journal observation.</summary>
+    /// <summary>Gets the delay before requesting cancellation of one journal observation.</summary>
     public TimeSpan WriteTimeout { get; }
 
     /// <summary>Gets the clock used for observation timestamps, elapsed time, and write-timeout scheduling.</summary>
@@ -31,9 +31,10 @@ public sealed class MessageJournalOptions
     /// Explicitly selects the only safe observer failure contract: journal failures are observable
     /// but never alter the message operation that has already succeeded or faulted.
     /// </summary>
-    /// <param name="writeTimeout">The finite, positive limit for processing one observation.</param>
+    /// <param name="writeTimeout">The finite, positive delay before requesting observation cancellation.</param>
     /// <param name="timeProvider">The clock used for timestamps, elapsed time, and timeout scheduling.</param>
     /// <returns>Immutable options that isolate journal failures from the observed message flow.</returns>
+    /// <remarks>Observation awaits the policy and store operations. Cancellation requires their cooperation and does not impose a hard completion deadline.</remarks>
     public static MessageJournalOptions ContinueMessageFlow(TimeSpan writeTimeout, TimeProvider timeProvider)
     {
         return new MessageJournalOptions(writeTimeout, timeProvider);

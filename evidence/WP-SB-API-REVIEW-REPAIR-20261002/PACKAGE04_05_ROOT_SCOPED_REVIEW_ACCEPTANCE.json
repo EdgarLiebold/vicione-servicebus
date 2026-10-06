@@ -1,0 +1,98 @@
+{
+  "status": "ROOT_SCOPED_REVIEW_ACCEPTED_SHARED_FINAL_PENDING",
+  "created_utc": "2026-10-03T02:04:15.205473+00:00",
+  "package05_manifest": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/FINAL_MANIFEST.json",
+    "sha256": "5b358aa858b3eff938491695c14d0a6eef515fe5afd0916c119959e6c84dc37b",
+    "verified_artifacts": 53
+  },
+  "package05_review": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/REVIEW.json",
+    "sha256": "38c8059446c03668f874745b919760586234a39730dd0408684ac83ef4b257f2",
+    "root_personally_full_read": true,
+    "accepted_findings": [
+      "F027",
+      "F028"
+    ],
+    "F030": "Creation/admission bounded proof accepted; original startup compatibility PO decision and named bus diagnostics remain open"
+  },
+  "package04_fixture_review": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-adversarial/REVIEW.json",
+    "sha256": "6f2e60413bdd369844fbe97e6d379a4a3be4a9be1374a69983333e0222aa1c2e",
+    "root_personally_full_read_txt_json": true,
+    "verified_proof_artifacts": 5,
+    "owner_native": {
+      "profile": "UnitArchitecture",
+      "total": 410,
+      "passed": 410,
+      "failed": 0,
+      "skipped": 0,
+      "minimum_expected_tests": 410,
+      "receipts": [
+        {
+          "phase": "package04-f018-canonical-fixture-build",
+          "command": [
+            "dotnet",
+            "build",
+            "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "/p:TreatWarningsAsErrors=true"
+          ],
+          "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T01:51:50.881027+00:00",
+          "completed_utc": "2026-10-03T01:52:06.640003+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-build.log",
+          "log_sha256": "57cb0bb9fe2e09f3049ad573e1835727b7903d1ccb9c177e90795d6f6f31bd7c"
+        },
+        {
+          "phase": "package04-f018-canonical-owner410",
+          "command": [
+            "env",
+            "VICIONE_TESTS__Profile=UnitArchitecture",
+            "dotnet",
+            "test",
+            "--project",
+            "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj",
+            "-c",
+            "Release",
+            "--no-build",
+            "--no-restore",
+            "--minimum-expected-tests",
+            "410"
+          ],
+          "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T01:52:21.896397+00:00",
+          "completed_utc": "2026-10-03T01:53:01.662002+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-owner410.log",
+          "log_sha256": "f3d31a3a47d11b6599099247711f9e2f6b07472166849d2d50d9e70d52e1726d"
+        }
+      ],
+      "binary_hashes": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll",
+          "sha256": "052900d7ca4b9ac0feb657af073559928af87dda89ce01e61efb11883c2b0115"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "sha256": "3d9cfe2389b8ae86292c476479ae1cd6ee752c707969cd10a272e00ecfe471af"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.dll",
+          "sha256": "70c111cec48d128c020f93dbb11b9bf917a1e2d7ff2ac4e4dd7e891061cbdd57"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+        }
+      ]
+    }
+  },
+  "limits": [
+    "No whole API closure/A+",
+    "Shared integrated profiles/packages/API gate/final rereview pending"
+  ]
+}

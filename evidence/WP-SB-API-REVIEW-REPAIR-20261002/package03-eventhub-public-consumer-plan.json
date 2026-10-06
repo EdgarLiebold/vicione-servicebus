@@ -1,0 +1,7 @@
+{
+  "status": "RESEARCH_PLAN_BEFORE_STANDALONE_CONSUMER",
+  "scope": "Standalone public NuGet-only consumer; project has no source ProjectReference, no Infrastructure or IVT. Mechanically reuse all seventy verified public oracle bodies and public capture helper, strip test metadata, replace framework operation timeout/token with explicit CLI timeout and live owned caller token. Use existing xunit.v3.assert only for exact assertions; own Record.ExceptionAsync performs ordinary await/catch.",
+  "input_freeze_sha256": "827aff14744d9383e0e18c584035ef729dfa820b1436c00a9870b882bd26d8a0",
+  "expected_cases": 70,
+  "limits": "Console contract cases are not MTP native owner cases or cloud start/production delivery proof. Fresh EH nupkg/cache/runtime DLL must be hash-bound; deadline is only fail limit, never a success oracle."
+}

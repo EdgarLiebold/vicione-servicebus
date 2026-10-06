@@ -1,0 +1,106 @@
+{
+  "status": "ROOT_APPLIED_REVIEWED_XML15_PRODUCT7_COMPILED_PUBLICATION_PENDING",
+  "utc": "2026-10-05T17:25:25.063187+00:00",
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE200_ABSTRACTIONS_F193_TO_F197_F147_EXTENSION_XML15_ORIGINAL_ROOT_REGISTRATION_R1.json",
+    "sha256": "cabcbd566d12abe88f6876f9106a455e263f359abed3f628f499fd710eab0a5b"
+  },
+  "author_REPORT_sha256": "3bc9134f397ebf9a897f41fa66b660eade33f13a5e7f0f336db647a023a5464e",
+  "author_MANIFEST_sha256": "38dbb155ee872993bac9d4d2ed7e6d72f722554bd885e2b6e48c447184fceb5b",
+  "retained_original13_peer_REPORT_sha256": "b201d34dd7975089d06f7a18c8defe7e5d149f1d9b1b4237c1aff9ed490f8026",
+  "freshtwo_summary_peer_REPORT_sha256": "c8eab0376356f4f5c2a762cb4009cf56f5a905635916a757baa6a77ad6e902b0",
+  "changes": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/LastPipe.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Middleware/LastPipe.cs",
+      "before_sha256": "5a33359715e0e0b4cf30ba45ab123d83c9517d33e6b4399dbab45898258e0cc7",
+      "after_sha256": "cba83390975521fda32aecbc7e7acb3f5887629ad095f17794b5cde95a36740c",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/before/src/ViciOne.ServiceBus.Abstractions/Middleware/LastPipe.cs",
+      "after_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/proposed/src/ViciOne.ServiceBus.Abstractions/Middleware/LastPipe.cs",
+      "lines": 56,
+      "XML_elements_changed": 2,
+      "nonXML_and_literal_inverse_exact": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/MessagePublishPipe.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Middleware/MessagePublishPipe.cs",
+      "before_sha256": "71c78f3f53f9574a2eb4a65b8ea5e024974b5c90a43551efcc1ab02566013ef6",
+      "after_sha256": "cafd6d4a2054cc4bfdf9424639b294b30cc43ed042823529725866719c4ce7b2",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/before/src/ViciOne.ServiceBus.Abstractions/Middleware/MessagePublishPipe.cs",
+      "after_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/proposed/src/ViciOne.ServiceBus.Abstractions/Middleware/MessagePublishPipe.cs",
+      "lines": 34,
+      "XML_elements_changed": 2,
+      "nonXML_and_literal_inverse_exact": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Middleware/MessageSendPipe.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Middleware/MessageSendPipe.cs",
+      "before_sha256": "245f4bccd09e5f232718442110104ad0d9eab05e46d2da6ef5ad453326cbcf16",
+      "after_sha256": "3744629cc7469baa1c49c210629af5692c1c458132e22707daef80a7abcad7ba",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/before/src/ViciOne.ServiceBus.Abstractions/Middleware/MessageSendPipe.cs",
+      "after_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/proposed/src/ViciOne.ServiceBus.Abstractions/Middleware/MessageSendPipe.cs",
+      "lines": 34,
+      "XML_elements_changed": 2,
+      "nonXML_and_literal_inverse_exact": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Observers/Observables/ConsumeObserverConverter.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Observers/Observables/ConsumeObserverConverter.cs",
+      "before_sha256": "d5e10aff0b0d218eccf84c86d333fed303b0660825fc1631bdb90bc0ee04ffef",
+      "after_sha256": "e571d935dfa58d9e551a84d253757e5f9b82caa5cc8158f857e1109595872953",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/before/src/ViciOne.ServiceBus.Abstractions/Observers/Observables/ConsumeObserverConverter.cs",
+      "after_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/proposed/src/ViciOne.ServiceBus.Abstractions/Observers/Observables/ConsumeObserverConverter.cs",
+      "lines": 57,
+      "XML_elements_changed": 1,
+      "nonXML_and_literal_inverse_exact": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Observers/Observables/IConsumeObserverConverter.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Observers/Observables/IConsumeObserverConverter.cs",
+      "before_sha256": "23987474700cfac221040462d3125a14331718d90ce8cac112926e8babead340",
+      "after_sha256": "9d9b3270a88fddb51ec633411ccd664b3870ad81ae42dbfda4360a8dc149ac1a",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/before/src/ViciOne.ServiceBus.Abstractions/Observers/Observables/IConsumeObserverConverter.cs",
+      "after_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/proposed/src/ViciOne.ServiceBus.Abstractions/Observers/Observables/IConsumeObserverConverter.cs",
+      "lines": 30,
+      "XML_elements_changed": 4,
+      "nonXML_and_literal_inverse_exact": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+      "before_sha256": "9f608a94ef067bb73c4866567c24a9b191d8b8385cfffbbd750c6729ef26f9ef",
+      "after_sha256": "f8b1f8ad6f7dfc1d0f5ce5cdaac48b4faf9cb5c40d476f6767008e9e9400166d",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/before/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+      "after_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/proposed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+      "lines": 105,
+      "XML_elements_changed": 1,
+      "nonXML_and_literal_inverse_exact": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Topology/MessageTopology.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Topology/MessageTopology.cs",
+      "before_sha256": "2182e92f72d9f9d540acce4a9e7be071415bf36248d699286f4c6b89084aecfe",
+      "after_sha256": "e45a00de8d7780b56f2a722b504a44e7c906e78b39d8864e48a1e839eaa66a9e",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/before/src/ViciOne.ServiceBus.Abstractions/Topology/MessageTopology.cs",
+      "after_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/proposed/src/ViciOne.ServiceBus.Abstractions/Topology/MessageTopology.cs",
+      "lines": 159,
+      "XML_elements_changed": 3,
+      "nonXML_and_literal_inverse_exact": true
+    }
+  ],
+  "XML_elements_changed": 15,
+  "emitted_members_changed": 13,
+  "product_sources": 7,
+  "source_lines": 475,
+  "all7_literal_inverse_whole_bytes_equal": true,
+  "all7_nonXML_bytes_equal": true,
+  "tests_requirements_API_runtime_changed": false,
+  "native_count": 0,
+  "root_accepted": false,
+  "compiled_expected13": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package221-abstractions-purpose-buffer-cache-doc15-product-proposed-r2/EXACT13_COMBINED_EXPECTED_AFTER_XML.json",
+    "sha256": "80b807dfd19e2c5cda18601ccbb8765db99c0afd5dbc6afbdf8e11a1ab9107f7"
+  },
+  "Root_source_review": "Composition of genuine whole7/475 + exact R2delta/Source peers; source/data integrity checks here.",
+  "source_freeze": "196 Post68c376 joinedb06f96 beforeanySourceapplication"
+}

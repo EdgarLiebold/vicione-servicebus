@@ -1,0 +1,44 @@
+{
+  "status": "ROOT_ACCEPTED_F019_TARGETED_SHARED_FINAL_PENDING",
+  "finding": "F-SB-API-019",
+  "freeze_sha256": "e783c9197021d0659d9f3a2205b349bc3714b1b13b1b65de65d35ac1c2656179",
+  "review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package16-f019-adversarial/REVIEW.json",
+  "review_sha256": "26bfae520485fb6510354c2eabe9f5fd3c82d815dc170478809dad90ffaad2b8",
+  "manifest_sha256": "d8b860c85be0a2afc95a4ec611d3f0d39cfbf2c0ea45364ac96efaa66831f301",
+  "owned_current_and_snapshot_verified": 45,
+  "review_artifacts_verified": 27,
+  "root_personally_FULL": [
+    "product old/new2 and47 source plan route inputs",
+    "whole32case public owner9 current files",
+    "all13 original causal failureblocks and8 mutant assertionblocks",
+    "final independent REVIEW.txt and REVIEW.json",
+    "Root pure240effect/44receipt/4packagechain/34actualMicrosoft binding helper authored/FULL before run"
+  ],
+  "original": {
+    "causal_reds": 13,
+    "assertion_reds": 12,
+    "actual_business_loggerfactory_ODE": 1,
+    "positive_controls": 19,
+    "guards": 0
+  },
+  "corrected": {
+    "pass": 32,
+    "fail": 0
+  },
+  "compiled_mutants": {
+    "strictcompiled": 8,
+    "native_exactassertion_reds": 8,
+    "positive_pairs": 8,
+    "baseline_pass": 32,
+    "rollback_pass": 32
+  },
+  "original_M_restored": 6209,
+  "new_frame_deleted_count": 1,
+  "whole_API_CLOSED": false,
+  "limits": [
+    "Scoped public API/package evidence; shared integrated final profiles/API gate pending.",
+    "No whole canonical Core766/Abstractions117 testowner semantic closure transferred.",
+    "No universal quiescence on cleanup guard failure, heap leak, cloud/ARM or A+ claim."
+  ],
+  "utc": "2026-10-03T06:29:03.265101+00:00"
+}

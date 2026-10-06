@@ -98,7 +98,13 @@ public class ConnectionContextSupervisor :
 
     Task<ISendTransport> CreateSendTransportAsync(Uri address, SendTransportContext<ClientContext> transportContext)
     {
-        TransportLogMessages.CreateSendTransport(address);
+        try
+        {
+            TransportLogMessages.CreateSendTransport(address);
+        }
+        catch (Exception)
+        {
+        }
 
         var transport = new SendTransport<ClientContext>(transportContext);
 

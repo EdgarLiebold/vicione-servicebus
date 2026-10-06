@@ -1,0 +1,324 @@
+{
+  "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACTS_EXACT_HOLDS_RETAINED",
+  "utc": "2026-10-05T18:47:46.961009+00:00",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package223-rabbit432-current198-individual-source-context-final-r2/REPORT.json",
+    "sha256": "367350b11ab725caadd5e6a5bd1728dcc92195e38201c32f8cf6cf7bc76897d0"
+  },
+  "mandatory_overlay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package223-rabbit432-six-norm-precision-overlay-r1/REPORT.json",
+    "sha256": "8e6d15cbed649238bdaa7d81ed468ffbb41111d0e598fedefaf0ed38c5dd30f2"
+  },
+  "independent": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package223-rabbit432-independent-scanner-source-peer-r1/REPORT.json",
+    "sha256": "5801bab53e8dd6ad397cc2da05f379659e690f88018208a403f3cd266e3496ef"
+  },
+  "semantic_authority": "Two genuine independent whole114/11382 and432 individual norms; Root report/6precision/holds adjudication. No Root third human whole114/432 assertion.",
+  "canonical_source_accepted": 373,
+  "held_exact": [
+    {
+      "ordinal": 7,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.#ctor",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 8,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.Equals(System.Object)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 9,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.Equals(ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 10,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.GetHashCode",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 17,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.op_Equality(ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode,ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 18,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.op_Inequality(ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode,ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 112,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqReceiveEndpointBuilder.CreateReceiveEndpointContext",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 156,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.IRabbitMqReceiveEndpointConfigurator.ConfigureConnection(System.Action{ViciOne.ServiceBus.Configuration.IPipeConfigurator{ViciOne.ServiceBus.RabbitMq.ConnectionContext}})",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 193,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.PublishBrokerTopologyOptions.#ctor",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 204,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.ActiveAndActualAgentsCompletedAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 205,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicCancelAsync(System.String,System.Threading.CancellationToken)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 206,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicCancelOkAsync(System.String,System.Threading.CancellationToken)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 207,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicConsumeOkAsync(System.String,System.Threading.CancellationToken)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 208,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleBasicDeliverAsync(System.String,System.UInt64,System.Boolean,System.String,System.String,RabbitMQ.Client.IReadOnlyBasicProperties,System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 209,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqBasicConsumer.HandleChannelShutdownAsync(System.Object,RabbitMQ.Client.Events.ShutdownEventArgs)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 217,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqConfigureEndpointsCallback.#ctor(System.Object,System.IntPtr)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 218,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqConfigureEndpointsCallback.BeginInvoke(ViciOne.ServiceBus.Configuration.IRegistrationContext,System.String,ViciOne.ServiceBus.RabbitMq.IRabbitMqReceiveEndpointConfigurator,System.AsyncCallback,System.Object)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 219,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqConfigureEndpointsCallback.EndInvoke(System.IAsyncResult)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 220,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqConfigureEndpointsCallback.Invoke(ViciOne.ServiceBus.Configuration.IRegistrationContext,System.String,ViciOne.ServiceBus.RabbitMq.IRabbitMqReceiveEndpointConfigurator)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 222,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqConnectionContext.CreateChannelAsync(System.Nullable{System.UInt16},System.Threading.CancellationToken)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 223,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqConnectionContext.CreateChannelContextAsync(ViciOne.ServiceBus.Advanced.Middleware.IAgent,System.Nullable{System.UInt16},System.Threading.CancellationToken)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 224,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqConnectionContext.DisposeAsync",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 232,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqEndpointAddress.#ctor",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 245,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.Equals(System.Object)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 246,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.Equals(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 247,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.GetHashCode",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 248,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.ToString",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 249,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.op_Equality(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest,ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 250,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.op_Inequality(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest,ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 251,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveRequest.{Clone}$",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 253,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.Deconstruct(System.String@,System.String@,System.Int32@,System.Int32@,System.Int32@,System.Boolean@,System.Boolean@)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 254,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.Equals(System.Object)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 255,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.Equals(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 256,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.GetHashCode",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 257,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.ToString",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 258,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.op_Equality(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult,ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 259,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.op_Inequality(ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult,ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 260,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqFaultRedriveResult.{Clone}$",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 266,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqHost.ConnectReceiveEndpoint(System.String,System.Action{ViciOne.ServiceBus.RabbitMq.IRabbitMqReceiveEndpointConfigurator})",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 271,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqHostAddress.#ctor",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 297,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqQueueReceiveEndpointContext.#ctor(ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqHostConfiguration,ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqReceiveEndpointConfiguration,ViciOne.ServiceBus.RabbitMq.Topology.BrokerTopology)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 317,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqRequestClientExtensions.CreateReplyToClientFactory(ViciOne.ServiceBus.Configuration.IReceiveConnector,ViciOne.ServiceBus.Advanced.RequestTimeout)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 327,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqSendFailureClassifier.#ctor",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 335,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqSendTransportContext.SendAsync``1(ViciOne.ServiceBus.RabbitMq.ChannelContext,ViciOne.ServiceBus.Advanced.SendContext{``0},System.Threading.CancellationToken)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 339,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqSslOptions.#ctor",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 340,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqTopologyEntityCache.#ctor",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 341,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqTopologyEntityCache.BindAsync(ViciOne.ServiceBus.RabbitMq.Topology.ExchangeToExchangeBinding,System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 342,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqTopologyEntityCache.BindAsync(ViciOne.ServiceBus.RabbitMq.Topology.ExchangeToQueueBinding,System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 343,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqTopologyEntityCache.DeclareExchangeAsync(ViciOne.ServiceBus.RabbitMq.Topology.Exchange,System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 344,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqTopologyEntityCache.DeclareQueueAsync(ViciOne.ServiceBus.RabbitMq.Topology.Queue,System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Threading.CancellationToken)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 345,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqTopologyEntityCache.Invalidate",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 347,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RefreshConnectionFactoryCallback.#ctor(System.Object,System.IntPtr)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 348,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RefreshConnectionFactoryCallback.BeginInvoke(RabbitMQ.Client.ConnectionFactory,System.AsyncCallback,System.Object)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 349,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RefreshConnectionFactoryCallback.EndInvoke(System.IAsyncResult)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 350,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RefreshConnectionFactoryCallback.Invoke(RabbitMQ.Client.ConnectionFactory)",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 374,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Topology.FanoutExchangeTypeSelector.#ctor",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 395,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Topology.RabbitMqEntityNameValidator.#ctor",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 413,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Topology.RabbitMqMessageSendTopology`1.#ctor",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    },
+    {
+      "ordinal": 430,
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Topology.ReceiveEndpointBrokerTopologyBuilder.#ctor",
+      "reason": "Runtime wiring/ownership or generated member compiled-identity hold; exact original dossier retained"
+    }
+  ],
+  "original_canonical_before": 12054,
+  "original_canonical_after": 12427,
+  "original_remaining_after": 6142,
+  "raw_before": 12916,
+  "raw_after": 13289,
+  "native_cases_added": 0,
+  "global_grade": null,
+  "whole_API_member_review_closed": false,
+  "history": "Prior complete Master objects/order unchanged; no coherent loaded/runtime claim."
+}

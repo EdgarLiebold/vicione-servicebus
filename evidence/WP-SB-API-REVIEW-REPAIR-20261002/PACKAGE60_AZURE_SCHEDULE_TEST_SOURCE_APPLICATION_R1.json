@@ -1,0 +1,10 @@
+{
+  "created_utc": "2026-10-04T12:55:26.834903+00:00",
+  "applied_test": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusScheduledSendOwnershipTests.cs",
+  "test_sha256": "67e03942a5c6925dfcf55e46d89b03d904b3a9d4f9594d6d4efb290b83b2d386",
+  "requirement_sha256": "da2f8486c1bf9792a13b5fd11317fc4e28403739f3313cd9c9ae89f987aa2217",
+  "delta": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-azure-priority-minimal-oracles-r1/REQUIREMENT_DELTA.json",
+  "source_adversarial_report": "0e4acd6b16092874787602ccc2bc6ba00d58f55a32a36ad52d17e08525212652",
+  "root_personal_read": "4e18b6 whole207tests+researchplan+delta; ed5e8e whole independentreport; 17fe44 whole2owners",
+  "product_changed": false
+}

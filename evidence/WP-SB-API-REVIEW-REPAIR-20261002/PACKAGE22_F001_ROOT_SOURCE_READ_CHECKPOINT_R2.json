@@ -1,0 +1,73 @@
+{
+  "finding": "F-SB-API-001",
+  "new_FULL": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Contexts/SendConsumeContextExtensions.cs",
+      "sha256": "bf2411eb355d1a0d8f06c9f13b6a9fe4a10eaf16c730dc1528d746367598441d",
+      "bytes": 14076,
+      "Root_personally_FULL": true,
+      "semantic": "Operation delegates and awaits active endpoint task; callbacks/types/nullguards/caller-context linked token remain unchanged. Forward expiration can discard; transport-consumption claim must not strengthen configured operation."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PublishExecuteExtensions.cs",
+      "sha256": "204f5e872585d2dbd457ca40857bae9e5739a21d02710306aed075586b7328ca",
+      "bytes": 10735,
+      "Root_personally_FULL": true,
+      "semantic": "Operation delegates and awaits active endpoint task; callbacks/types/nullguards/caller-context linked token remain unchanged. Forward expiration can discard; transport-consumption claim must not strengthen configured operation."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/RespondAsyncExecuteExtensions.cs",
+      "sha256": "9d79721cf3c178d966912c3ab2bec4e18ab22114087028d2555d67d7ce89209c",
+      "bytes": 7753,
+      "Root_personally_FULL": true,
+      "semantic": "Operation delegates and awaits active endpoint task; callbacks/types/nullguards/caller-context linked token remain unchanged. Forward expiration can discard; transport-consumption claim must not strengthen configured operation."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/SendConsumeContextExecuteExtensions.cs",
+      "sha256": "ac0931130b59aea7de2a7d820db387fbba54a064ee35d1f610ccae3b918f7a41",
+      "bytes": 11777,
+      "Root_personally_FULL": true,
+      "semantic": "Operation delegates and awaits active endpoint task; callbacks/types/nullguards/caller-context linked token remain unchanged. Forward expiration can discard; transport-consumption claim must not strengthen configured operation."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/SendExecuteExtensions.cs",
+      "sha256": "14cc563a67fc8a9caccec69cbab92d10744579d78c4a57c78877a369e809c5aa",
+      "bytes": 10448,
+      "Root_personally_FULL": true,
+      "semantic": "Operation delegates and awaits active endpoint task; callbacks/types/nullguards/caller-context linked token remain unchanged. Forward expiration can discard; transport-consumption claim must not strengthen configured operation."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Transports/PublishEndpoint.cs",
+      "sha256": "b52b5b1d71f3310f5bae2e900cbe3d87eb13c678cb6cf5cd3179bcd56afcf63b",
+      "bytes": 12555,
+      "Root_personally_FULL": true,
+      "semantic": "Operation delegates and awaits active endpoint task; callbacks/types/nullguards/caller-context linked token remain unchanged. Forward expiration can discard; transport-consumption claim must not strengthen configured operation."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/EndpointConventionExtensions.cs",
+      "sha256": "696e2df8734d06eb235f5a1cb69d060a23d7180d91217c7fcbe2ae905bbcc439",
+      "bytes": 12614,
+      "Root_personally_FULL": true,
+      "semantic": "Operation delegates and awaits active endpoint task; callbacks/types/nullguards/caller-context linked token remain unchanged. Forward expiration can discard; transport-consumption claim must not strengthen configured operation."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/ForwardExtensions.cs",
+      "sha256": "d76b862c2e0fa3788707d22bdf4c06bea5f3f05e0c6540ea2684aef367bcc66f",
+      "bytes": 6120,
+      "Root_personally_FULL": true,
+      "semantic": "Operation delegates and awaits active endpoint task; callbacks/types/nullguards/caller-context linked token remain unchanged. Forward expiration can discard; transport-consumption claim must not strengthen configured operation."
+    }
+  ],
+  "prior_checkpoint": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE22_F001_ROOT_SOURCE_READ_CHECKPOINT_R1.json",
+  "total_scope_personally_FULL": 26,
+  "remaining_scope_ids": [
+    2,
+    16,
+    17,
+    18,
+    19,
+    26
+  ],
+  "source_edits": 0,
+  "scope_closure_and_native_pending": true
+}

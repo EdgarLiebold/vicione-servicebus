@@ -89,7 +89,14 @@ public sealed class SendTransport<TContext> :
     /// <returns>A task that completes after the supervisor has stopped its agents.</returns>
     protected override Task StopSupervisorAsync(StopSupervisorContext context)
     {
-        TransportLogMessages.StoppingSendTransport(_context.EntityName);
+        try
+        {
+            TransportLogMessages.StoppingSendTransport(_context.EntityName);
+        }
+        catch (Exception)
+        {
+            // Optional shutdown diagnostics must not prevent owned agents from stopping.
+        }
 
         return base.StopSupervisorAsync(context);
     }

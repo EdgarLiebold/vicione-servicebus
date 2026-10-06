@@ -1,0 +1,2160 @@
+{
+  "role": "Independent internal readonly adversarial reviewer; researcher authored plan, Root authored this patch/oracle/runner",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE10_F022_FREEZE.json",
+    "sha256": "74225b35b438aaf9a6e4cee0100a9db52f2ba35d618871ae04836e6c692c5010"
+  },
+  "owned_inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/00-ConfigurationException.cs.txt",
+      "bytes": 2662,
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/01-ValidateViciOneServiceBusHostOptions.cs.txt",
+      "bytes": 2641,
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/02-ViciOneServiceBusHostOptions.cs.txt",
+      "bytes": 1550,
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/03-BatchCollector.cs.txt",
+      "bytes": 13959,
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/04-BatchOptions.cs.txt",
+      "bytes": 7243,
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/05-ConsumerRegistration.cs.txt",
+      "bytes": 4762,
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/06-BatchConsumerMessageConnector.cs.txt",
+      "bytes": 5099,
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/07-ConsumerBusIdentityOptions.cs.txt",
+      "bytes": 281,
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/08-ServiceBusInstrumentation.cs.txt",
+      "bytes": 22480,
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "read_status": "FULL",
+      "personal_read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_HASH_REUSED",
+      "basis": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/READ_CLOSURE.json additional_current_product_personal_full_reads[0]; complete current 22480-byte body personally read and hash unchanged."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/ActivityAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/09-ActivityAssertions.cs.txt",
+      "bytes": 12603,
+      "sha256": "d727f486b55eb15760be8f8ef478b8e97fee73e2983b028e871239207463992c",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/ActivityOwnership.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/10-ActivityOwnership.PublicConsumer.csproj.txt",
+      "bytes": 879,
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+      "read_status": "FULL",
+      "personal_read_mode": "OWN_PERSONAL_PREFREEZE_FULL_EXACT_HASH_REUSED",
+      "basis": "Complete csproj/both NuGet.Config/both 20-node locks personally read before freeze, exact unchanged hash and snapshot bytes verified."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/11-NuGet.Config.txt",
+      "bytes": 579,
+      "sha256": "d2c15752a15904c29d15c84eecb6592f6194c31a4281de551a647377c4433ead",
+      "read_status": "FULL",
+      "personal_read_mode": "OWN_PERSONAL_PREFREEZE_FULL_EXACT_HASH_REUSED",
+      "basis": "Complete csproj/both NuGet.Config/both 20-node locks personally read before freeze, exact unchanged hash and snapshot bytes verified."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/12-OwnedLifetime.cs.txt",
+      "bytes": 803,
+      "sha256": "aabe36d4b9b4468d55e6350587bc58e54adacea2c370e03477a9aae827e992ff",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/13-Program.cs.txt",
+      "bytes": 3299,
+      "sha256": "66ddf3fe8d290081a5fa847bc3671e38511c9a6b3624d9060863aa216f7cc3fe",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/StoreObservation.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/14-StoreObservation.cs.txt",
+      "bytes": 3647,
+      "sha256": "eed1124605e77b64b045c36f80a694f8278ef3dd4ecb86b77e9068de28a6db5d",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/15-packages.lock.json.txt",
+      "bytes": 8006,
+      "sha256": "1da302e7f1cac1be5d98036df79212b1f4df541db9bd2f490ae5b9d4b6df3b69",
+      "read_status": "FULL",
+      "personal_read_mode": "OWN_PERSONAL_PREFREEZE_FULL_EXACT_HASH_REUSED",
+      "basis": "Complete csproj/both NuGet.Config/both 20-node locks personally read before freeze, exact unchanged hash and snapshot bytes verified."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/16-ActivityAssertions.cs.txt",
+      "bytes": 12603,
+      "sha256": "d727f486b55eb15760be8f8ef478b8e97fee73e2983b028e871239207463992c",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/ActivityOwnership.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/17-ActivityOwnership.PublicConsumer.csproj.txt",
+      "bytes": 879,
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+      "read_status": "FULL",
+      "personal_read_mode": "OWN_PERSONAL_PREFREEZE_FULL_EXACT_HASH_REUSED",
+      "basis": "Complete csproj/both NuGet.Config/both 20-node locks personally read before freeze, exact unchanged hash and snapshot bytes verified."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/18-NuGet.Config.txt",
+      "bytes": 573,
+      "sha256": "cf0156fde59a1df2f8a3cf20cbaa7dabebd97c05e9132f397a37767f7bcc2b6c",
+      "read_status": "FULL",
+      "personal_read_mode": "OWN_PERSONAL_PREFREEZE_FULL_EXACT_HASH_REUSED",
+      "basis": "Complete csproj/both NuGet.Config/both 20-node locks personally read before freeze, exact unchanged hash and snapshot bytes verified."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/19-OwnedLifetime.cs.txt",
+      "bytes": 803,
+      "sha256": "aabe36d4b9b4468d55e6350587bc58e54adacea2c370e03477a9aae827e992ff",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/20-Program.cs.txt",
+      "bytes": 3299,
+      "sha256": "66ddf3fe8d290081a5fa847bc3671e38511c9a6b3624d9060863aa216f7cc3fe",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/StoreObservation.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/21-StoreObservation.cs.txt",
+      "bytes": 3647,
+      "sha256": "eed1124605e77b64b045c36f80a694f8278ef3dd4ecb86b77e9068de28a6db5d",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/22-packages.lock.json.txt",
+      "bytes": 8006,
+      "sha256": "b783c9752438cbb0dc18cece099e4a1c2d41ebcce9e6bcd8e8c5570dcedf3ff4",
+      "read_status": "FULL",
+      "personal_read_mode": "OWN_PERSONAL_PREFREEZE_FULL_EXACT_HASH_REUSED",
+      "basis": "Complete csproj/both NuGet.Config/both 20-node locks personally read before freeze, exact unchanged hash and snapshot bytes verified."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package10_f022_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/23-package10_f022_mutations.py.txt",
+      "bytes": 8501,
+      "sha256": "4e16c7a2389faa03038991f67ffb0e3e42d28737e5b1385a79df27a55b361c5a",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/run_operation.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-freeze/24-run_operation.py.txt",
+      "bytes": 1644,
+      "sha256": "e77b44c2d7c0aa92d0b00addcb182d479cfdf7302161b841a479a9c8f5e1b2ea",
+      "read_status": "FULL",
+      "personal_read_mode": "PERSONAL_COMPLETE_CURRENT_UNTRUNCATED_BODY_READ",
+      "basis": "Complete bounded source body read this review; identical previous/corrected body verified for paired owner inputs."
+    }
+  ],
+  "owned_input_count": 25,
+  "route_dependencies_personally_full_hash_reused": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "relative": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "bytes": 22238,
+      "sha256": "46e4802ba192be64b6f817feb04de970aefc612a66592b4f3219889c5616bd6e",
+      "original_manifest_match": true,
+      "current_product_sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "current_matches_original": true,
+      "read_status": "FULL",
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+      "relative": "src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+      "bytes": 1640,
+      "sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb",
+      "original_manifest_match": true,
+      "current_product_sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb",
+      "current_matches_original": true,
+      "read_status": "FULL",
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "relative": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "bytes": 5633,
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "original_manifest_match": true,
+      "current_product_sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "current_matches_original": true,
+      "read_status": "FULL",
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendAdmission.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendAdmission.cs",
+      "bytes": 4490,
+      "sha256": "c16c5ed64e9ae5c0a9f197b81305ee8120acd77bea809d73083845137908b373",
+      "original_manifest_match": true,
+      "current_product_sha256": "c16c5ed64e9ae5c0a9f197b81305ee8120acd77bea809d73083845137908b373",
+      "current_matches_original": true,
+      "read_status": "FULL",
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "bytes": 7884,
+      "sha256": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+      "original_manifest_match": true,
+      "current_product_sha256": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+      "current_matches_original": true,
+      "read_status": "FULL",
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+      "bytes": 5666,
+      "sha256": "9f608a94ef067bb73c4866567c24a9b191d8b8385cfffbbd750c6729ef26f9ef",
+      "original_manifest_match": true,
+      "current_product_sha256": "9f608a94ef067bb73c4866567c24a9b191d8b8385cfffbbd750c6729ef26f9ef",
+      "current_matches_original": true,
+      "read_status": "FULL",
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs",
+      "bytes": 2378,
+      "sha256": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d",
+      "original_manifest_match": true,
+      "current_product_sha256": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d",
+      "current_matches_original": true,
+      "read_status": "FULL",
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "bytes": 8551,
+      "sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+      "bytes": 6222,
+      "sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs",
+      "bytes": 1416,
+      "sha256": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/InMemoryDurableSendServiceCollectionExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/InMemoryDurableSendServiceCollectionExtensions.cs",
+      "bytes": 2857,
+      "sha256": "ba1a73be1c3544b0d455e792f18f0ec1b3ce3432b63f84012f7a53e786e6bbbb",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "ba1a73be1c3544b0d455e792f18f0ec1b3ce3432b63f84012f7a53e786e6bbbb",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/IReliableMessagingConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/IReliableMessagingConfigurator.cs",
+      "bytes": 1947,
+      "sha256": "cfdac0468fa9708f74600558384e25fbbec2cbd0be251f409e55705e71d06a4f",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "cfdac0468fa9708f74600558384e25fbbec2cbd0be251f409e55705e71d06a4f",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingConfigurator.cs",
+      "bytes": 7352,
+      "sha256": "cefe6a5190cf6fa4d57d01e19baacf951790fbf299f9cfef7586a97470153147",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "cefe6a5190cf6fa4d57d01e19baacf951790fbf299f9cfef7586a97470153147",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/IReliableMessagingProviderConfigurator.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/IReliableMessagingProviderConfigurator.cs",
+      "bytes": 1587,
+      "sha256": "ba8cea41474385abf366b753d378c4ea425488ff3acb98acdc161e812791c405",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "ba8cea41474385abf366b753d378c4ea425488ff3acb98acdc161e812791c405",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendAdmission.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendAdmission.cs",
+      "bytes": 840,
+      "sha256": "4bdced985859d401ad1b08442478cc90adc82cfbd262bc1a3db1f6b3fc929019",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "4bdced985859d401ad1b08442478cc90adc82cfbd262bc1a3db1f6b3fc929019",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/InMemoryTransport/DurableSend/InMemoryDurableSendDispatcher.cs",
+      "relative": "src/ViciOne.ServiceBus/InMemoryTransport/DurableSend/InMemoryDurableSendDispatcher.cs",
+      "bytes": 5068,
+      "sha256": "bd806c8273112f200fb82cd2a1d39e8263f95c78b1e58beda22facbd93a0fc77",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "bd806c8273112f200fb82cd2a1d39e8263f95c78b1e58beda22facbd93a0fc77",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs",
+      "bytes": 2626,
+      "sha256": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendConsumerCompletion.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendConsumerCompletion.cs",
+      "bytes": 1608,
+      "sha256": "eae0d3d24b8983a6fdc5518daf4d27547fe74384fab9b12b3acdae2ecd2ef06b",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "eae0d3d24b8983a6fdc5518daf4d27547fe74384fab9b12b3acdae2ecd2ef06b",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "relative": "src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "bytes": 7359,
+      "sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d",
+      "read_status": "FULL",
+      "basis": "Personal untruncated complete direct tool read this turn",
+      "current_product_sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Inbox.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Inbox.cs",
+      "bytes": 12906,
+      "sha256": "266f7c5d4ae0ef666477c276b8a44f5c28275094c1233f3f0e441160e7c18383",
+      "read_status": "FULL",
+      "basis": "Bounded artifacts await personal read",
+      "current_product_sha256": "266f7c5d4ae0ef666477c276b8a44f5c28275094c1233f3f0e441160e7c18383",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs",
+      "bytes": 13381,
+      "sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+      "read_status": "FULL",
+      "basis": "Bounded artifacts await personal read",
+      "current_product_sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Scheduling.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Scheduling.cs",
+      "bytes": 1362,
+      "sha256": "38ec8bca10734bbe111e26b39d0504f4e0818ca6f65ea1a4e8e9b878afec638c",
+      "read_status": "FULL",
+      "basis": "Bounded artifacts await personal read",
+      "current_product_sha256": "38ec8bca10734bbe111e26b39d0504f4e0818ca6f65ea1a4e8e9b878afec638c",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs",
+      "bytes": 5517,
+      "sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+      "read_status": "FULL",
+      "basis": "Bounded artifacts await personal read",
+      "current_product_sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+      "bytes": 4618,
+      "sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+      "read_status": "FULL",
+      "basis": "Bounded artifacts await personal read",
+      "current_product_sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "bytes": 8208,
+      "sha256": "0658c31e41c2cc96aeae7f33948a046b49189c263580df97a1fe71414594dcb9",
+      "read_status": "FULL",
+      "basis": "Bounded artifacts await personal read",
+      "current_product_sha256": "0658c31e41c2cc96aeae7f33948a046b49189c263580df97a1fe71414594dcb9",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "bytes": 3422,
+      "sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "read_status": "FULL",
+      "basis": "Bounded artifacts await personal read",
+      "current_product_sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "relative": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "bytes": 2062,
+      "sha256": "94c9fb781e42f0e164f62730684a18f2ec7df7d35cf7067171a086182dc56bed",
+      "read_status": "FULL",
+      "basis": "Bounded artifacts await personal read",
+      "current_product_sha256": "94c9fb781e42f0e164f62730684a18f2ec7df7d35cf7067171a086182dc56bed",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+      "bytes": 9142,
+      "sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+      "read_status": "FULL",
+      "basis": "Personal complete untruncated direct tool-output read this turn",
+      "current_product_sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+      "current_matches_original": true,
+      "personal_read_basis": "Own previous exact source FULL, hash verified this review; instrumentation current FULL reused separately"
+    }
+  ],
+  "source_snapshots54": [
+    {
+      "frame": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/corrected/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "corrected",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/corrected/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/corrected/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "corrected",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/corrected/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/corrected/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "corrected",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/corrected/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/corrected/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/corrected/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "corrected",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/corrected/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "admission-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/admission-cleanup-omitted/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "admission-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/admission-cleanup-omitted/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "admission-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/admission-cleanup-omitted/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "admission-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/admission-cleanup-omitted/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "admission-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/admission-cleanup-omitted/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "admission-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/admission-cleanup-omitted/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "admission-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/admission-cleanup-omitted/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "admission-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/admission-cleanup-omitted/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "admission-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/admission-cleanup-omitted/trace.cs.txt",
+      "sha256": "7d75f3e155355b9c833d229a77c992e95ebf141e784e598d43889b09fbba870a",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "delivery-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/delivery-cleanup-omitted/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "delivery-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/delivery-cleanup-omitted/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "delivery-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/delivery-cleanup-omitted/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "delivery-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/delivery-cleanup-omitted/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "delivery-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/delivery-cleanup-omitted/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "delivery-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/delivery-cleanup-omitted/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "delivery-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/delivery-cleanup-omitted/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "delivery-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/delivery-cleanup-omitted/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "delivery-cleanup-omitted",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/delivery-cleanup-omitted/trace.cs.txt",
+      "sha256": "1cb032aedf0a4eba857ed06f306e32faf47baac596bf34f4fe9e0150329c5079",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "caller-activity-disposed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/caller-activity-disposed/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "caller-activity-disposed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/caller-activity-disposed/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "caller-activity-disposed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/caller-activity-disposed/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "caller-activity-disposed",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/caller-activity-disposed/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "caller-activity-disposed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/caller-activity-disposed/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "caller-activity-disposed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/caller-activity-disposed/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "caller-activity-disposed",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/caller-activity-disposed/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "caller-activity-disposed",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/caller-activity-disposed/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "caller-activity-disposed",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/caller-activity-disposed/trace.cs.txt",
+      "sha256": "3373e74aaa8c96468ab8ebaa23d5d1d7ebc3eb2db766f4ba17bcb009e52387b0",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "unsafe-listener-disposal",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/unsafe-listener-disposal/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "unsafe-listener-disposal",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/unsafe-listener-disposal/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "unsafe-listener-disposal",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/unsafe-listener-disposal/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "unsafe-listener-disposal",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/unsafe-listener-disposal/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "unsafe-listener-disposal",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/unsafe-listener-disposal/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "unsafe-listener-disposal",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/unsafe-listener-disposal/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "unsafe-listener-disposal",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/unsafe-listener-disposal/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "unsafe-listener-disposal",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/unsafe-listener-disposal/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "unsafe-listener-disposal",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/unsafe-listener-disposal/trace.cs.txt",
+      "sha256": "814c0d271621d49921905bfeb36585b43d7e8d648ed4d361a48ffd0cb9e6acbd",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/rollback/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "rollback",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/rollback/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/rollback/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "rollback",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/rollback/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/rollback/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "rollback",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/rollback/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/rollback/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/rollback/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    },
+    {
+      "frame": "rollback",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package10-f022-binaries-r2/rollback/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "read_status": "FULL_EXACT_BODY_OR_LOSSLESS_PRIOR_FULL_PLUS_RECONSTRUCTED_CAUSAL_DELTA",
+      "read_basis": "All eight shared baseline bodies personally FULL; complete corrected trace own prior FULL exact hash reused; four exact catch-replacement deltas FULL read and complete byte reconstruction verified. No unrelated source omission in the 54 frames."
+    }
+  ],
+  "receipts_and_full_logs47": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-restore.log",
+      "bytes": 223,
+      "sha256": "10be20f69b65b18ba72e9354b3b9ebfec3876e28406c7158c0ed97ac75376015",
+      "receipt": {
+        "phase": "package10-f022-previous-restore",
+        "command": [
+          "dotnet",
+          "restore",
+          "ActivityOwnership.PublicConsumer.csproj",
+          "--configfile",
+          "NuGet.Config",
+          "--disable-parallel"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:33:28.397862+00:00",
+        "completed_utc": "2026-10-03T02:33:32.211189+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-restore.log",
+        "log_sha256": "10be20f69b65b18ba72e9354b3b9ebfec3876e28406c7158c0ed97ac75376015"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-build.log",
+      "bytes": 12715,
+      "sha256": "2e10b4846585acce98002413f2366402c5cab609dc5ab1b04e4ca112a6e0b5b9",
+      "receipt": {
+        "phase": "package10-f022-previous-build",
+        "command": [
+          "dotnet",
+          "build",
+          "ActivityOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:34:03.922308+00:00",
+        "completed_utc": "2026-10-03T02:34:10.015909+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-build.log",
+        "log_sha256": "2e10b4846585acce98002413f2366402c5cab609dc5ab1b04e4ca112a6e0b5b9"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-build-r2.log",
+      "bytes": 4624,
+      "sha256": "6ba13ef18def9ad4fbabfc054407c7df63dc6fa78a60c0aa124fc3bb1bf1f10d",
+      "receipt": {
+        "phase": "package10-f022-previous-build-r2",
+        "command": [
+          "dotnet",
+          "build",
+          "ActivityOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:34:55.933523+00:00",
+        "completed_utc": "2026-10-03T02:35:00.221642+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-build-r2.log",
+        "log_sha256": "6ba13ef18def9ad4fbabfc054407c7df63dc6fa78a60c0aa124fc3bb1bf1f10d"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-build-r3.log",
+      "bytes": 299,
+      "sha256": "65dddd355d36e4fc44ba20150f36ea72863c91aaac4cbe1a0e29d4ddd2d338a8",
+      "receipt": {
+        "phase": "package10-f022-previous-build-r3",
+        "command": [
+          "dotnet",
+          "build",
+          "ActivityOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:36:07.085946+00:00",
+        "completed_utc": "2026-10-03T02:36:19.620284+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-build-r3.log",
+        "log_sha256": "65dddd355d36e4fc44ba20150f36ea72863c91aaac4cbe1a0e29d4ddd2d338a8"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-ten.log",
+      "bytes": 6088,
+      "sha256": "2bc98b9c9be94c609e3e5ca17385cd44261b6f4e2fa898a77e691d8a35696089",
+      "receipt": {
+        "phase": "package10-f022-previous-ten",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:36:49.961626+00:00",
+        "completed_utc": "2026-10-03T02:36:51.426727+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-ten.log",
+        "log_sha256": "2bc98b9c9be94c609e3e5ca17385cd44261b6f4e2fa898a77e691d8a35696089"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-core-build.log",
+      "bytes": 496,
+      "sha256": "75522977e76321a7f1683ba9b04d9d4d2e282effb297c64168740cf8f641fed4",
+      "receipt": {
+        "phase": "package10-f022-core-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:43:00.401542+00:00",
+        "completed_utc": "2026-10-03T02:43:16.269082+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-core-build.log",
+        "log_sha256": "75522977e76321a7f1683ba9b04d9d4d2e282effb297c64168740cf8f641fed4"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-core-pack.log",
+      "bytes": 166,
+      "sha256": "a5ce5055539e028167e7abf337bd9aa315fd1c483c999c165b7264f8b9d05da9",
+      "receipt": {
+        "phase": "package10-f022-core-pack",
+        "command": [
+          "dotnet",
+          "pack",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "-o",
+          "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package10-f022/corrected",
+          "/p:PackageVersion=1.0.0"
+        ],
+        "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:43:33.592759+00:00",
+        "completed_utc": "2026-10-03T02:43:36.276238+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-core-pack.log",
+        "log_sha256": "a5ce5055539e028167e7abf337bd9aa315fd1c483c999c165b7264f8b9d05da9"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-abstractions-pack.log",
+      "bytes": 179,
+      "sha256": "881f03d33638dc63f05836b88849135c7465941b1e17665f7a24243c5c439bfc",
+      "receipt": {
+        "phase": "package10-f022-abstractions-pack",
+        "command": [
+          "dotnet",
+          "pack",
+          "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "-o",
+          "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package10-f022/corrected",
+          "/p:PackageVersion=1.0.0"
+        ],
+        "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:44:00.983265+00:00",
+        "completed_utc": "2026-10-03T02:44:02.581189+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-abstractions-pack.log",
+        "log_sha256": "881f03d33638dc63f05836b88849135c7465941b1e17665f7a24243c5c439bfc"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-corrected-restore.log",
+      "bytes": 224,
+      "sha256": "9a08dad0ecea61c8a800e092decf8d2e5c5b6c82e273880ffe596ac9f338c3e6",
+      "receipt": {
+        "phase": "package10-f022-corrected-restore",
+        "command": [
+          "dotnet",
+          "restore",
+          "ActivityOwnership.PublicConsumer.csproj",
+          "--configfile",
+          "NuGet.Config",
+          "--disable-parallel"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:44:34.853758+00:00",
+        "completed_utc": "2026-10-03T02:44:37.172399+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-corrected-restore.log",
+        "log_sha256": "9a08dad0ecea61c8a800e092decf8d2e5c5b6c82e273880ffe596ac9f338c3e6"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-corrected-build.log",
+      "bytes": 300,
+      "sha256": "16db129b23f495f367ef0479fc7a96f431f0fe2b2de408a82d8ea1d6c6316d1e",
+      "receipt": {
+        "phase": "package10-f022-corrected-build",
+        "command": [
+          "dotnet",
+          "build",
+          "ActivityOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:45:05.578529+00:00",
+        "completed_utc": "2026-10-03T02:45:09.421202+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-corrected-build.log",
+        "log_sha256": "16db129b23f495f367ef0479fc7a96f431f0fe2b2de408a82d8ea1d6c6316d1e"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-corrected-ten.log",
+      "bytes": 1428,
+      "sha256": "5fbc087248fbc93ebdccbc68f4de5ed2dc74272588f5cfa749cc744cb659be6e",
+      "receipt": {
+        "phase": "package10-f022-corrected-ten",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:45:30.629401+00:00",
+        "completed_utc": "2026-10-03T02:45:31.582879+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-corrected-ten.log",
+        "log_sha256": "5fbc087248fbc93ebdccbc68f4de5ed2dc74272588f5cfa749cc744cb659be6e"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-corrected-build.log",
+      "bytes": 482,
+      "sha256": "e339cfc0ae2ae5b3bc237dd9d0a279803d439e211a9b664902e923b5b654eb37",
+      "receipt": {
+        "phase": "package10-f022-mut-corrected-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:46:54.916964+00:00",
+        "completed_utc": "2026-10-03T02:47:10.213495+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-corrected-build.log",
+        "log_sha256": "e339cfc0ae2ae5b3bc237dd9d0a279803d439e211a9b664902e923b5b654eb37"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-corrected-all.log",
+      "bytes": 1428,
+      "sha256": "37110f593843b6afecfa04fe6eed6003b40ec6d809bce6eca2794c6821b70fb8",
+      "receipt": {
+        "phase": "package10-f022-mut-corrected-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:47:10.373045+00:00",
+        "completed_utc": "2026-10-03T02:47:11.371326+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-corrected-all.log",
+        "log_sha256": "37110f593843b6afecfa04fe6eed6003b40ec6d809bce6eca2794c6821b70fb8"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-admission-cleanup-omitted-build.log",
+      "bytes": 482,
+      "sha256": "09e779221b1472f7ca5487d5dd47b797192cbc4269bd5b1037e1455739f7c688",
+      "receipt": {
+        "phase": "package10-f022-mut-admission-cleanup-omitted-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:47:11.486458+00:00",
+        "completed_utc": "2026-10-03T02:47:26.098852+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-admission-cleanup-omitted-build.log",
+        "log_sha256": "09e779221b1472f7ca5487d5dd47b797192cbc4269bd5b1037e1455739f7c688"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-admission-cleanup-omitted-admission-formatter-sampled.log",
+      "bytes": 2470,
+      "sha256": "716272a0b9b74769e7f76ca8961c9df2c061ae2465842c6af28fa4829bc50dcd",
+      "receipt": {
+        "phase": "package10-f022-mut-admission-cleanup-omitted-admission-formatter-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-formatter-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:47:26.294427+00:00",
+        "completed_utc": "2026-10-03T02:47:26.762878+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-admission-cleanup-omitted-admission-formatter-sampled.log",
+        "log_sha256": "716272a0b9b74769e7f76ca8961c9df2c061ae2465842c6af28fa4829bc50dcd"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-admission-cleanup-omitted-admission-plain-sampled.log",
+      "bytes": 907,
+      "sha256": "bcf1fc3e2d3a832a6032798ec88154ae00271d70a5fe5090eb2758d7ed1e4d61",
+      "receipt": {
+        "phase": "package10-f022-mut-admission-cleanup-omitted-admission-plain-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-plain-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:47:26.865075+00:00",
+        "completed_utc": "2026-10-03T02:47:27.267371+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-admission-cleanup-omitted-admission-plain-sampled.log",
+        "log_sha256": "bcf1fc3e2d3a832a6032798ec88154ae00271d70a5fe5090eb2758d7ed1e4d61"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-delivery-cleanup-omitted-build.log",
+      "bytes": 482,
+      "sha256": "2429ee51506b123c94edd52fef7d8a250a577a1c9a10b6593f531558e788bfee",
+      "receipt": {
+        "phase": "package10-f022-mut-delivery-cleanup-omitted-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:47:27.380255+00:00",
+        "completed_utc": "2026-10-03T02:47:42.309252+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-delivery-cleanup-omitted-build.log",
+        "log_sha256": "2429ee51506b123c94edd52fef7d8a250a577a1c9a10b6593f531558e788bfee"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-delivery-cleanup-omitted-delivery-formatter-sampled.log",
+      "bytes": 2469,
+      "sha256": "f47e2e40e21f9c8dcf4244444da09bfb18343609796f6fca4adb8f4b6b7680e7",
+      "receipt": {
+        "phase": "package10-f022-mut-delivery-cleanup-omitted-delivery-formatter-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "delivery-formatter-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:47:42.542271+00:00",
+        "completed_utc": "2026-10-03T02:47:43.654029+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-delivery-cleanup-omitted-delivery-formatter-sampled.log",
+        "log_sha256": "f47e2e40e21f9c8dcf4244444da09bfb18343609796f6fca4adb8f4b6b7680e7"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-delivery-cleanup-omitted-delivery-plain-sampled.log",
+      "bytes": 906,
+      "sha256": "d94015c714b31ff4b6e5157a0dc2bd6c8af6710d1f42a0c388b45ac558107a40",
+      "receipt": {
+        "phase": "package10-f022-mut-delivery-cleanup-omitted-delivery-plain-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "delivery-plain-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:47:43.809587+00:00",
+        "completed_utc": "2026-10-03T02:47:45.051921+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-delivery-cleanup-omitted-delivery-plain-sampled.log",
+        "log_sha256": "d94015c714b31ff4b6e5157a0dc2bd6c8af6710d1f42a0c388b45ac558107a40"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-caller-activity-disposed-build.log",
+      "bytes": 482,
+      "sha256": "7a724d012d0b1f37a09d9ee6178a8dbd2fc17ff4fa0a9e6e9f16492866704dfe",
+      "receipt": {
+        "phase": "package10-f022-mut-caller-activity-disposed-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:47:45.193515+00:00",
+        "completed_utc": "2026-10-03T02:47:55.794493+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-caller-activity-disposed-build.log",
+        "log_sha256": "7a724d012d0b1f37a09d9ee6178a8dbd2fc17ff4fa0a9e6e9f16492866704dfe"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-caller-activity-disposed-admission-formatter-sampled.log",
+      "bytes": 2470,
+      "sha256": "6dea125301f5e2beeb38ddca2ea4b4f23dfbe218e8c58aed3e923626e6ded3c2",
+      "receipt": {
+        "phase": "package10-f022-mut-caller-activity-disposed-admission-formatter-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-formatter-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:47:55.988497+00:00",
+        "completed_utc": "2026-10-03T02:47:56.471595+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-caller-activity-disposed-admission-formatter-sampled.log",
+        "log_sha256": "6dea125301f5e2beeb38ddca2ea4b4f23dfbe218e8c58aed3e923626e6ded3c2"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-caller-activity-disposed-admission-plain-sampled.log",
+      "bytes": 907,
+      "sha256": "d3c2b769946a83bb85534a3a438ce5c3db23a5a8f6a349afd5d15ee2793c4fa6",
+      "receipt": {
+        "phase": "package10-f022-mut-caller-activity-disposed-admission-plain-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-plain-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:47:56.582158+00:00",
+        "completed_utc": "2026-10-03T02:47:57.006314+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-caller-activity-disposed-admission-plain-sampled.log",
+        "log_sha256": "d3c2b769946a83bb85534a3a438ce5c3db23a5a8f6a349afd5d15ee2793c4fa6"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-unsafe-listener-disposal-build.log",
+      "bytes": 482,
+      "sha256": "eb7e9a7954fffdd7a68e9c674ca814832223863b509d7037f02eb8c205019e12",
+      "receipt": {
+        "phase": "package10-f022-mut-unsafe-listener-disposal-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:47:57.126367+00:00",
+        "completed_utc": "2026-10-03T02:48:08.037406+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-unsafe-listener-disposal-build.log",
+        "log_sha256": "eb7e9a7954fffdd7a68e9c674ca814832223863b509d7037f02eb8c205019e12"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-unsafe-listener-disposal-admission-stop-fault.log",
+      "bytes": 3271,
+      "sha256": "5de7b6f50168187f5a2666921ea07af7025e1bb99f1e73bdb3e7e3ba9f1a9bba",
+      "receipt": {
+        "phase": "package10-f022-mut-unsafe-listener-disposal-admission-stop-fault",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-stop-fault",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:48:08.208452+00:00",
+        "completed_utc": "2026-10-03T02:48:08.784216+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-unsafe-listener-disposal-admission-stop-fault.log",
+        "log_sha256": "5de7b6f50168187f5a2666921ea07af7025e1bb99f1e73bdb3e7e3ba9f1a9bba"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-unsafe-listener-disposal-admission-plain-sampled.log",
+      "bytes": 907,
+      "sha256": "4c3084ec24fe5ebda03a765945d56d0fba2c171f7eab5d1f6963f67726c083d3",
+      "receipt": {
+        "phase": "package10-f022-mut-unsafe-listener-disposal-admission-plain-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-plain-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:48:08.905003+00:00",
+        "completed_utc": "2026-10-03T02:48:09.337556+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-unsafe-listener-disposal-admission-plain-sampled.log",
+        "log_sha256": "4c3084ec24fe5ebda03a765945d56d0fba2c171f7eab5d1f6963f67726c083d3"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-rollback-build.log",
+      "bytes": 482,
+      "sha256": "3957ffc2e9cca3975a9c3ee7cbaf1382465d54c86b32f24544cd82aa9cf74733",
+      "receipt": {
+        "phase": "package10-f022-mut-rollback-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:48:09.482838+00:00",
+        "completed_utc": "2026-10-03T02:48:16.928483+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-rollback-build.log",
+        "log_sha256": "3957ffc2e9cca3975a9c3ee7cbaf1382465d54c86b32f24544cd82aa9cf74733"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-rollback-all.log",
+      "bytes": 1428,
+      "sha256": "37110f593843b6afecfa04fe6eed6003b40ec6d809bce6eca2794c6821b70fb8",
+      "receipt": {
+        "phase": "package10-f022-mut-rollback-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:48:17.123503+00:00",
+        "completed_utc": "2026-10-03T02:48:18.116122+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-rollback-all.log",
+        "log_sha256": "37110f593843b6afecfa04fe6eed6003b40ec6d809bce6eca2794c6821b70fb8"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-build-r4.log",
+      "bytes": 299,
+      "sha256": "cfc4c5de9df551044b0e622a3c46ef14035ec631037057bb57d47a9ea99f1f79",
+      "receipt": {
+        "phase": "package10-f022-previous-build-r4",
+        "command": [
+          "dotnet",
+          "build",
+          "ActivityOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:50:29.898731+00:00",
+        "completed_utc": "2026-10-03T02:50:33.894359+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-build-r4.log",
+        "log_sha256": "cfc4c5de9df551044b0e622a3c46ef14035ec631037057bb57d47a9ea99f1f79"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-ten-r2.log",
+      "bytes": 6136,
+      "sha256": "609c7916de05b18635379e36a9e389d26aed0baeb292c081102d773fa8050b95",
+      "receipt": {
+        "phase": "package10-f022-previous-ten-r2",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/previous",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:50:51.220667+00:00",
+        "completed_utc": "2026-10-03T02:50:52.083373+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-previous-ten-r2.log",
+        "log_sha256": "609c7916de05b18635379e36a9e389d26aed0baeb292c081102d773fa8050b95"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-corrected-build-r2.log",
+      "bytes": 300,
+      "sha256": "2346e03448e531ee15470730bbe4c3e8e2bb2edfc0651018c5244481abee7b96",
+      "receipt": {
+        "phase": "package10-f022-corrected-build-r2",
+        "command": [
+          "dotnet",
+          "build",
+          "ActivityOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:51:01.463268+00:00",
+        "completed_utc": "2026-10-03T02:51:05.095203+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-corrected-build-r2.log",
+        "log_sha256": "2346e03448e531ee15470730bbe4c3e8e2bb2edfc0651018c5244481abee7b96"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-corrected-ten-r2.log",
+      "bytes": 1428,
+      "sha256": "5fbc087248fbc93ebdccbc68f4de5ed2dc74272588f5cfa749cc744cb659be6e",
+      "receipt": {
+        "phase": "package10-f022-corrected-ten-r2",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:51:35.908676+00:00",
+        "completed_utc": "2026-10-03T02:51:36.712075+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-corrected-ten-r2.log",
+        "log_sha256": "5fbc087248fbc93ebdccbc68f4de5ed2dc74272588f5cfa749cc744cb659be6e"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-corrected-build.log",
+      "bytes": 482,
+      "sha256": "2fe07b240980e41e8b6cc6e7145a122a098a28e2cff6bcbec38d7a0048565d5f",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-corrected-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:51:46.675496+00:00",
+        "completed_utc": "2026-10-03T02:52:01.287050+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-corrected-build.log",
+        "log_sha256": "2fe07b240980e41e8b6cc6e7145a122a098a28e2cff6bcbec38d7a0048565d5f"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-corrected-all.log",
+      "bytes": 1428,
+      "sha256": "37110f593843b6afecfa04fe6eed6003b40ec6d809bce6eca2794c6821b70fb8",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-corrected-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:52:01.449905+00:00",
+        "completed_utc": "2026-10-03T02:52:02.315749+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-corrected-all.log",
+        "log_sha256": "37110f593843b6afecfa04fe6eed6003b40ec6d809bce6eca2794c6821b70fb8"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-admission-cleanup-omitted-build.log",
+      "bytes": 482,
+      "sha256": "f5f74d729c19bd059f66a6036c561abb198d8c7ba2fa9e8d24feefa6a601cf1f",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-admission-cleanup-omitted-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:52:02.416479+00:00",
+        "completed_utc": "2026-10-03T02:52:16.208994+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-admission-cleanup-omitted-build.log",
+        "log_sha256": "f5f74d729c19bd059f66a6036c561abb198d8c7ba2fa9e8d24feefa6a601cf1f"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-admission-cleanup-omitted-admission-formatter-sampled.log",
+      "bytes": 2486,
+      "sha256": "9f874fa533f88bb2f03af952e7b29f8177f74099addc7358eadca1d9fd501395",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-admission-cleanup-omitted-admission-formatter-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-formatter-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:52:16.361655+00:00",
+        "completed_utc": "2026-10-03T02:52:16.796460+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-admission-cleanup-omitted-admission-formatter-sampled.log",
+        "log_sha256": "9f874fa533f88bb2f03af952e7b29f8177f74099addc7358eadca1d9fd501395"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-admission-cleanup-omitted-admission-plain-sampled.log",
+      "bytes": 907,
+      "sha256": "bcf1fc3e2d3a832a6032798ec88154ae00271d70a5fe5090eb2758d7ed1e4d61",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-admission-cleanup-omitted-admission-plain-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-plain-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:52:16.894159+00:00",
+        "completed_utc": "2026-10-03T02:52:17.300610+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-admission-cleanup-omitted-admission-plain-sampled.log",
+        "log_sha256": "bcf1fc3e2d3a832a6032798ec88154ae00271d70a5fe5090eb2758d7ed1e4d61"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-delivery-cleanup-omitted-build.log",
+      "bytes": 482,
+      "sha256": "5f64cd49f71d6817d05fb375eb216a0c55f4211ab1878c8faf896bd8835b174f",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-delivery-cleanup-omitted-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:52:17.402669+00:00",
+        "completed_utc": "2026-10-03T02:52:26.054542+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-delivery-cleanup-omitted-build.log",
+        "log_sha256": "5f64cd49f71d6817d05fb375eb216a0c55f4211ab1878c8faf896bd8835b174f"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-delivery-cleanup-omitted-delivery-formatter-sampled.log",
+      "bytes": 2485,
+      "sha256": "59bc016d24236eaac7a304ab8b0c934bffba54703a2335a5fa46bbcc700b30da",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-delivery-cleanup-omitted-delivery-formatter-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "delivery-formatter-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:52:26.218757+00:00",
+        "completed_utc": "2026-10-03T02:52:27.113025+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-delivery-cleanup-omitted-delivery-formatter-sampled.log",
+        "log_sha256": "59bc016d24236eaac7a304ab8b0c934bffba54703a2335a5fa46bbcc700b30da"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-delivery-cleanup-omitted-delivery-plain-sampled.log",
+      "bytes": 906,
+      "sha256": "d94015c714b31ff4b6e5157a0dc2bd6c8af6710d1f42a0c388b45ac558107a40",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-delivery-cleanup-omitted-delivery-plain-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "delivery-plain-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:52:27.236060+00:00",
+        "completed_utc": "2026-10-03T02:52:28.137816+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-delivery-cleanup-omitted-delivery-plain-sampled.log",
+        "log_sha256": "d94015c714b31ff4b6e5157a0dc2bd6c8af6710d1f42a0c388b45ac558107a40"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-caller-activity-disposed-build.log",
+      "bytes": 482,
+      "sha256": "003b31f25355f4b26338463c8c4b69143d5bde632d285cdb9324b8e6eef67e15",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-caller-activity-disposed-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:52:28.262106+00:00",
+        "completed_utc": "2026-10-03T02:52:36.369181+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-caller-activity-disposed-build.log",
+        "log_sha256": "003b31f25355f4b26338463c8c4b69143d5bde632d285cdb9324b8e6eef67e15"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-caller-activity-disposed-admission-formatter-sampled.log",
+      "bytes": 2489,
+      "sha256": "10b288ed1baef60c0a53b2b7f1e74a55a7350e9b91f6bc7bc3a4a36d63dc5c25",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-caller-activity-disposed-admission-formatter-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-formatter-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:52:36.547284+00:00",
+        "completed_utc": "2026-10-03T02:52:37.025845+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-caller-activity-disposed-admission-formatter-sampled.log",
+        "log_sha256": "10b288ed1baef60c0a53b2b7f1e74a55a7350e9b91f6bc7bc3a4a36d63dc5c25"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-caller-activity-disposed-admission-plain-sampled.log",
+      "bytes": 907,
+      "sha256": "d3c2b769946a83bb85534a3a438ce5c3db23a5a8f6a349afd5d15ee2793c4fa6",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-caller-activity-disposed-admission-plain-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-plain-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:52:37.151869+00:00",
+        "completed_utc": "2026-10-03T02:52:37.612824+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-caller-activity-disposed-admission-plain-sampled.log",
+        "log_sha256": "d3c2b769946a83bb85534a3a438ce5c3db23a5a8f6a349afd5d15ee2793c4fa6"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-unsafe-listener-disposal-build.log",
+      "bytes": 482,
+      "sha256": "97f9b0a9b3fd5f48de82b8729095bc905e569edc3cf0482458722583529ad5f7",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-unsafe-listener-disposal-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:52:37.749318+00:00",
+        "completed_utc": "2026-10-03T02:52:45.686695+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-unsafe-listener-disposal-build.log",
+        "log_sha256": "97f9b0a9b3fd5f48de82b8729095bc905e569edc3cf0482458722583529ad5f7"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-unsafe-listener-disposal-admission-stop-fault.log",
+      "bytes": 3291,
+      "sha256": "90abb984f1e8c03cdb2296a1ef97f10ee3003f7c025b95e678904da5a563009c",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-unsafe-listener-disposal-admission-stop-fault",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-stop-fault",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T02:52:45.837510+00:00",
+        "completed_utc": "2026-10-03T02:52:46.225367+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-unsafe-listener-disposal-admission-stop-fault.log",
+        "log_sha256": "90abb984f1e8c03cdb2296a1ef97f10ee3003f7c025b95e678904da5a563009c"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-unsafe-listener-disposal-admission-plain-sampled.log",
+      "bytes": 907,
+      "sha256": "4c3084ec24fe5ebda03a765945d56d0fba2c171f7eab5d1f6963f67726c083d3",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-unsafe-listener-disposal-admission-plain-sampled",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "admission-plain-sampled",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:52:46.327130+00:00",
+        "completed_utc": "2026-10-03T02:52:46.746575+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-unsafe-listener-disposal-admission-plain-sampled.log",
+        "log_sha256": "4c3084ec24fe5ebda03a765945d56d0fba2c171f7eab5d1f6963f67726c083d3"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-rollback-build.log",
+      "bytes": 482,
+      "sha256": "22de183587574ccd96e473722a541c8df1e4b35d5e5766410468df70432b60b8",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-rollback-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:52:46.863481+00:00",
+        "completed_utc": "2026-10-03T02:52:52.786795+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-rollback-build.log",
+        "log_sha256": "22de183587574ccd96e473722a541c8df1e4b35d5e5766410468df70432b60b8"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-rollback-all.log",
+      "bytes": 1428,
+      "sha256": "37110f593843b6afecfa04fe6eed6003b40ec6d809bce6eca2794c6821b70fb8",
+      "receipt": {
+        "phase": "package10-f022-mut-r2-rollback-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package10-f022/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T02:52:52.942576+00:00",
+        "completed_utc": "2026-10-03T02:52:53.822039+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-mut-r2-rollback-all.log",
+        "log_sha256": "37110f593843b6afecfa04fe6eed6003b40ec6d809bce6eca2794c6821b70fb8"
+      },
+      "read_status": "PERSONAL_FULL_TEXT",
+      "read_basis": "Six complete bounded log read batches; exact duplicate bodies read once with all receipt hashes independently checked."
+    }
+  ],
+  "distinct_full_log_body_hashes": 39,
+  "proof_document_read_mode": "Lossless complete object decomposition: all metadata/source records and 47 complete receipts read; exact actual objects checked against personally FULL actual log bodies; repeated objects/hash-identical known source bodies reused; neither truncated tool output nor summary adopted as FULL evidence. Lossless expansion equality independently asserted.",
+  "proof_documents": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE10_F022_ROOT_BINDING.json",
+      "sha256": "c24691a0625e656b0b456fbe2dfeaf442136eee275b721210237b85f9a30ee6a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE10_F022_MUTATIONS_R2.json",
+      "sha256": "8dcacab585b86bb437c991f1aa71158c3686c8a981156cec92dad71af9e1ee14"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE10_F022_SOURCE_PLAN.json",
+      "sha256": "d8fcaf3c3c4f194e4257bf05a1a7924458dd1da2a6948974c2953a11aa22fdf0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE10_F022_CONSUMER_PLAN.json",
+      "sha256": "cd29007796ace840c53e75058e4a175f5de600e2dec10698b1f92640befeb2f1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE10_F022_MUTATION_PLAN.json",
+      "sha256": "fe51bb00107bf0ffcaf70e8bd8d509e930469623f40c2bc997738779f7e3a50d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE10_F022_ORACLE_REFINEMENT_PLAN.json",
+      "sha256": "e6f44fdad0b82c9a1fd3d259ff464acc374534ac2189aaf69cea1fdc8c78522b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE10_F022_SETUP_EXCLUSION.json",
+      "sha256": "a9717e17b37e6f92cd77324aab64a053f132ea29c9be9c7a584ceea41d375997"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE10_F022_SETUP_EXCLUSION_R2.json",
+      "sha256": "e046bcae56cf26692a0880d6bad8917040adbf405d670405f28f5437d1e9a72c"
+    }
+  ],
+  "pdb_parser": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-adversarial/verify_pdb.py",
+    "sha256": "26527e1c6caadb47808dd705098a4da6690d37bbe46770b5ab4950c5e2d1bc78",
+    "personal_read": "Entire helper source personally FULL before readonly static Python reuse, no native .NET operations"
+  },
+  "guidance": "GUIDANCE_REUSE.json",
+  "full_canonical_core766_owner_claim": false,
+  "new_native_operations": 0,
+  "product_fixture_runner_writes": 0,
+  "writes_only": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-adversarial",
+  "CLOSED_symbol_claims": 0,
+  "whole_product_grade": null
+}

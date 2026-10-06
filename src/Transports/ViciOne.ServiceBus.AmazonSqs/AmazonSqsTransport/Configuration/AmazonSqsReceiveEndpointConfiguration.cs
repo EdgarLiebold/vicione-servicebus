@@ -17,7 +17,7 @@ public class AmazonSqsReceiveEndpointConfiguration :
     IAmazonSqsReceiveEndpointConfigurator
 {
     readonly IBuildPipeConfigurator<ClientContext> _clientConfigurator;
-    readonly IBuildPipeConfigurator<ConnectionContext> _connectionConfigurator;
+    readonly PipeConfigurator<ConnectionContext> _connectionConfigurator;
     readonly IAmazonSqsEndpointConfiguration _endpointConfiguration;
     readonly IAmazonSqsHostConfiguration _hostConfiguration;
     readonly Lazy<Uri> _inputAddress;
@@ -100,7 +100,7 @@ public class AmazonSqsReceiveEndpointConfiguration :
         ReceiveEndpoint = receiveEndpoint;
     }
 
-    /// <summary>Validates queue names, concurrency, polling, visibility, purge, and topology settings.</summary>
+    /// <summary>Validates queue names, concurrency, polling, visibility, purge, topology settings, and client- and connection-context pipe specifications.</summary>
     /// <returns>All detected validation failures and warnings.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
@@ -116,6 +116,12 @@ public class AmazonSqsReceiveEndpointConfiguration :
 
         foreach (var result in ValidateSubscriptionSettings())
             yield return result;
+
+        foreach (var result in _clientConfigurator.Validate())
+            yield return result.WithParentKey(queueName);
+
+        foreach (var result in _connectionConfigurator.Validate())
+            yield return result.WithParentKey(queueName);
 
         foreach (var result in base.Validate())
             yield return result.WithParentKey(queueName);
@@ -212,7 +218,7 @@ public class AmazonSqsReceiveEndpointConfiguration :
         }
     }
 
-    /// <summary>Sets the maximum number of messages delivered concurrently by the endpoint.</summary>
+    /// <summary>Sets the maximum number of concurrent deliveries within each ordered message group.</summary>
     public int ConcurrentDeliveryLimit
     {
         set => _settings.ConcurrentDeliveryLimit = AmazonSqsReceiveSettingsLimits.PositiveConcurrency(value, nameof(ConcurrentDeliveryLimit));
@@ -300,6 +306,11 @@ public class AmazonSqsReceiveEndpointConfiguration :
     public void DisableMessageOrdering()
     {
         _settings.IsOrdered = false;
+    }
+
+    internal Func<IPipe<ConnectionContext>, IPipe<ConnectionContext>> BuildConnectionPipe()
+    {
+        return _connectionConfigurator.BuildWithContinuation();
     }
 
     SqsReceiveEndpointContext CreateSqsReceiveEndpointContext()

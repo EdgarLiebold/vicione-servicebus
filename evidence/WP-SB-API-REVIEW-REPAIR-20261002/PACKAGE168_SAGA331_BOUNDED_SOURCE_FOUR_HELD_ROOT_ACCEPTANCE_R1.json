@@ -1,0 +1,67 @@
+{
+  "utc": "2026-10-05T06:14:08.849412+00:00",
+  "actor": "/root",
+  "status": "BOUNDED_SOURCE_CONTRACT_ACCEPTANCE_NO_NATIVE_OR_WHOLE_API_CLOSURE",
+  "dossier": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-saga-configuration-components335-contract-context-r1/REPORT.json",
+    "sha256": "b6a1dc1a9d82437e7fc73d7c62abaadc326423c8c40e8a760e56537ed548c1aa"
+  },
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-saga-configuration-components335-contract-context-r1/PER_MEMBER335_TYPED_SOURCE_XML_CONTRACTS.json",
+    "sha256": "2b0f3fc97afb518886a22569fc983667cafb1a679e0838a1221b1a82ea1eb9c3"
+  },
+  "root_actual_personal_scope": [
+    "319 unique literal member norms covering335 rows losslessly read378396/481f8a/76870a/1ecbe0.",
+    "66 complete owner-context paragraphs read517932/e5d542; child owns actual whole66 physical sources4357L, not Root whole-source credit.",
+    "Root whole actualSagaSpecification129 e8a92d justifies extra constructor249 held until actualpartial-handle rollback assessment."
+  ],
+  "accepted_contract_rows": 331,
+  "accepted_original_canonical": 262,
+  "accepted_accessor_sidecars": 69,
+  "held_rows": [
+    {
+      "ordinal": 56,
+      "id": "M:ViciOne.ServiceBus.Configuration.DefaultSagaFactory`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SagaConsumeContext{`0,`1}})",
+      "remaining_obligations": [
+        "HELD_NONESSENTIAL_DEBUG_WORKFLOW: actual Debug calls uncontained; pending SagaDebug Original6 validates creation/existing/delete templates, endpoint Subscribe/Connect calls distinct not claimed covered. No new FID/native."
+      ]
+    },
+    {
+      "ordinal": 209,
+      "id": "M:ViciOne.ServiceBus.Configuration.SagaExtensions.ConnectSaga``1(ViciOne.ServiceBus.Advanced.Middleware.IConsumePipeConnector,ViciOne.ServiceBus.Sagas.ISagaRepository{``0},ViciOne.ServiceBus.Configuration.IPipeSpecification{ViciOne.ServiceBus.Advanced.SagaConsumeContext{``0}}[])",
+      "remaining_obligations": [
+        "HELD_NONESSENTIAL_DEBUG_WORKFLOW: actual Debug calls uncontained; pending SagaDebug Original6 validates creation/existing/delete templates, endpoint Subscribe/Connect calls distinct not claimed covered. No new FID/native.",
+        "SPI_BOUNDARY: supplied pipes/specifications/repositories/registrars own actual returned Tasks/handles/callback side effects. Current local source contract does not accept arbitrary custom provider behavior."
+      ]
+    },
+    {
+      "ordinal": 210,
+      "id": "M:ViciOne.ServiceBus.Configuration.SagaExtensions.Saga``1(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Sagas.ISagaRepository{``0},System.Action{ViciOne.ServiceBus.Configuration.ISagaConfigurator{``0}})",
+      "remaining_obligations": [
+        "HELD_NONESSENTIAL_DEBUG_WORKFLOW: actual Debug calls uncontained; pending SagaDebug Original6 validates creation/existing/delete templates, endpoint Subscribe/Connect calls distinct not claimed covered. No new FID/native.",
+        "SPI_BOUNDARY: supplied pipes/specifications/repositories/registrars own actual returned Tasks/handles/callback side effects. Current local source contract does not accept arbitrary custom provider behavior."
+      ]
+    },
+    {
+      "ordinal": 249,
+      "id": "M:ViciOne.ServiceBus.Configuration.SagaSpecification`1.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ISagaMessageSpecification{`0}})",
+      "remaining_obligations": [
+        "UNPROVED_EXTERNAL_OBSERVER_HANDLE_FAILURE_ROLLBACK: constructor creates/retains observer handles sequentially; genuine injected-failure contract/reproduction needed before defect assertion."
+      ]
+    }
+  ],
+  "source66_all_current_equal": true,
+  "all_individual_published167_XML_mappings_exact": true,
+  "precision_overlay": {
+    "owner": "InMemorySagaRepositoryServiceCollectionExtensions",
+    "correction": "Only singleton dictionary uses TryAdd; load/query/consume/context registration helpers append ordered descriptors. Prior owner paragraph idempotence wording is inaccurate; exact row101 norm already correctly described ordering."
+  },
+  "native_cases_added": 0,
+  "whole_API_member_review_closed": false,
+  "limits": [
+    "Types accept shape and constraints only, not inherited or execution methods.",
+    "Remaining external SPI/task/callback, configuration-phase, converter/runtime obligations preserved per row; local Source contracts do not promise arbitrary provider behavior.",
+    "335 is typed contract rows:266 originalcanonical+69 compileraccessor sidecars. Historical child exact_original_members335 wording is accounting-imprecise; canonical denominator not inflated.",
+    "Four concrete members remain unaccepted:DefaultFactoryCreated, endpoint Connect/Subscribing, constructor partial observer handle acquisition."
+  ]
+}

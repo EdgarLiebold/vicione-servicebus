@@ -1,0 +1,740 @@
+{
+  "status": "INDEX_OF_PERSONALLY_FULL_REVIEWED_ASSERTIONS",
+  "assertions": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 39,
+      "assertion": "Assert.Equal(\"0\", args.PartitionId);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 40,
+      "assertion": "Assert.Equal(ProcessingStoppedReason.Shutdown, args.Reason);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 59,
+      "assertion": "Assert.Equal(\"0\", args.PartitionId);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 64,
+      "assertion": "Assert.Same(client, context.GetClient(builder));",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 69,
+      "assertion": "Assert.True(cleanupEntered.Task.IsCompletedSuccessfully, \"SDK closing completed before the internal close callback was entered.\");",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 70,
+      "assertion": "if (mode != \"cleanup-sync\") Assert.False(closing.IsCompleted);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 71,
+      "assertion": "Assert.Equal(mode == \"no-app\" ? new[] { \"internal\" } : new[] { \"application\", \"internal\" }, calls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 78,
+      "assertion": "Assert.Null(observed);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 79,
+      "assertion": "Assert.True(closing.IsCompletedSuccessfully);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 83,
+      "assertion": "Assert.Same(applicationFault, observed);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 84,
+      "assertion": "Assert.True(closing.IsFaulted);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 87,
+      "assertion": "Assert.Equal(caller.Token, Assert.IsAssignableFrom<OperationCanceledException>(observed).CancellationToken);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 88,
+      "assertion": "Assert.Same(callbackCancellation, observed);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 89,
+      "assertion": "Assert.True(closing.IsCanceled);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 92,
+      "assertion": "Assert.Equal(caller.Token, Assert.IsType<TaskCanceledException>(observed).CancellationToken);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 93,
+      "assertion": "Assert.True(closing.IsCanceled);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 97,
+      "assertion": "Assert.Same(cleanupFault, observed);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 98,
+      "assertion": "Assert.True(closing.IsFaulted);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 101,
+      "assertion": "AggregateException aggregate = Assert.IsType<AggregateException>(observed);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 102,
+      "assertion": "Assert.Equal(2, aggregate.InnerExceptions.Count);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 103,
+      "assertion": "Assert.Same(mode == \"dual-fault\" ? applicationFault : callbackCancellation, aggregate.InnerExceptions[0]);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 104,
+      "assertion": "Assert.Same(cleanupFault, aggregate.InnerExceptions[1]);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 105,
+      "assertion": "Assert.True(closing.IsFaulted);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "line": 108,
+      "assertion": "Assert.Equal(1, builder.Calls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 40,
+      "assertion": "ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() => ResolveAndValidateAsync(provider));",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 42,
+      "assertion": "Assert.Contains(property, diagnostic, StringComparison.Ordinal);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 43,
+      "assertion": "Assert.Contains(\"Event Hubs\", diagnostic, StringComparison.Ordinal);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 44,
+      "assertion": "Assert.Contains(\"bus '\", diagnostic, StringComparison.Ordinal);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 45,
+      "assertion": "Assert.Contains(\"Set \" + property, diagnostic, StringComparison.Ordinal);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 46,
+      "assertion": "Assert.Equal(0, optionsCalls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 57,
+      "assertion": "ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() => ResolveAndValidateAsync(provider));",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 59,
+      "assertion": "Assert.Contains(property, diagnostic, StringComparison.Ordinal);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 60,
+      "assertion": "Assert.Contains(message, diagnostic, StringComparison.Ordinal);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 73,
+      "assertion": "Assert.True(interval > TimeSpan.Zero);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 74,
+      "assertion": "Assert.True((long)interval.TotalMilliseconds <= MaximumTimerMilliseconds);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 89,
+      "assertion": "Assert.Equal(0, optionsCalls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 107,
+      "assertion": "retained = Assert.IsType<EventHubReceiveEndpointConfigurator>(endpoint);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 110,
+      "assertion": "Assert.NotNull(retained);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 111,
+      "assertion": "Assert.NotNull(capture);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 112,
+      "assertion": "Assert.Equal(1, capture.ContextCount);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 114,
+      "assertion": "Assert.Same(MessageLimits.Conservative, context.GetPayload<MessageLimits>());",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 117,
+      "assertion": "Assert.Equal(new Policy(\"policy-eh\", \"policy-group\", \"policy-container\", 2, 1, 1, TimeSpan.FromMinutes(1), 1, 1), original);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 118,
+      "assertion": "Assert.NotSame(retained, settings);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 123,
+      "assertion": "Assert.Equal(\"later-container\", retained.ContainerName);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 124,
+      "assertion": "Assert.Contains(retained.Validate(), result => result.Key == nameof(EventHubReceiveEndpointConfigurator.ContainerName)",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 135,
+      "assertion": "Assert.NotEqual(original, Capture(retained));",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 136,
+      "assertion": "Assert.Equal(original, Capture(settings));",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 137,
+      "assertion": "Assert.Same(settings, context.GetPayload<ReceiveSettings>());",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 154,
+      "assertion": "retained = Assert.IsType<EventHubReceiveEndpointConfigurator>(endpoint);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 163,
+      "assertion": "Assert.NotNull(retained);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 164,
+      "assertion": "Assert.Equal(0, originalCalls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 170,
+      "assertion": "Assert.NotNull(capture);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 171,
+      "assertion": "Assert.Equal(1, capture.ContextCount);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 173,
+      "assertion": "Assert.Same(MessageLimits.Conservative, context.GetPayload<MessageLimits>());",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 183,
+      "assertion": "Assert.Equal(\"original-generation\", client.Identifier);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 184,
+      "assertion": "Assert.Equal(context.GetPayload<ReceiveSettings>().EventHubName, client.EventHubName);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 185,
+      "assertion": "Assert.Equal(context.GetPayload<ReceiveSettings>().ConsumerGroup, client.ConsumerGroup);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 186,
+      "assertion": "Assert.False(client.IsRunning);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 190,
+      "assertion": "Assert.Equal(1, originalCalls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 191,
+      "assertion": "Assert.Equal(0, replacementCalls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 192,
+      "assertion": "Assert.NotNull(originalOptions);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 240,
+      "assertion": "Assert.NotNull(provider.GetRequiredService<IBusControl>());",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "line": 241,
+      "assertion": "IHostedService validator = Assert.Single(provider.GetServices<IHostedService>(),",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 58,
+      "assertion": "if (preCanceled) Assert.True(canceled.IsCanceled);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 59,
+      "assertion": "else Assert.False(canceled.IsCompleted);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 60,
+      "assertion": "Assert.False(live.IsCompleted);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 62,
+      "assertion": "OperationCanceledException error = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 64,
+      "assertion": "Assert.Equal(caller.Token, error.CancellationToken);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 65,
+      "assertion": "Assert.True(canceled.IsCanceled);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 66,
+      "assertion": "Assert.False(provider.Ready.Task.IsCompleted);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 67,
+      "assertion": "Assert.False(live.IsCompleted);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 68,
+      "assertion": "Assert.Equal(0, delivery.Calls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 69,
+      "assertion": "Assert.Equal(0, canceledPipeCalls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 70,
+      "assertion": "Assert.Equal(1, provider.Calls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 71,
+      "assertion": "Assert.Equal(CancellationToken.None, provider.Token);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 72,
+      "assertion": "Assert.Equal(address, provider.Address);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 77,
+      "assertion": "Assert.True(provider.Ready.Task.IsCompletedSuccessfully);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 78,
+      "assertion": "Assert.Equal(1, delivery.Calls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 79,
+      "assertion": "Assert.Equal(TestContext.Current.CancellationToken, delivery.Token);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 80,
+      "assertion": "Assert.Equal(0, canceledPipeCalls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 81,
+      "assertion": "Assert.True(canceled.IsCanceled);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 127,
+      "assertion": "Assert.False(operation.IsCompleted);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 128,
+      "assertion": "Assert.Equal(0, delivery.Calls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 132,
+      "assertion": "Assert.False(operation.IsCompleted);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 133,
+      "assertion": "Assert.Equal(1, delivery.Calls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 134,
+      "assertion": "Assert.Equal(TestContext.Current.CancellationToken, delivery.Token);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 135,
+      "assertion": "Assert.Equal(route.EndsWith(\"-pipe\", StringComparison.Ordinal) ? 1 : 0, pipeCalls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 136,
+      "assertion": "Assert.Equal(typeof(Output), delivery.MessageType);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 137,
+      "assertion": "Assert.Equal(invocation.ExpectedFormalType, delivery.InputType);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 138,
+      "assertion": "Assert.Same(invocation.ExpectedArgument, delivery.Input);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 140,
+      "assertion": "EventHubMessageSendContext<Output> observed = Assert.IsType<EventHubMessageSendContext<Output>>(delivery.Context);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 141,
+      "assertion": "Assert.Same(lease.Context, observed.GetPayload<ConsumeContext>());",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 142,
+      "assertion": "Assert.Equal(lease.ConversationId, observed.ConversationId);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 143,
+      "assertion": "Assert.Equal(lease.CorrelationId, observed.InitiatorId);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 144,
+      "assertion": "Assert.Equal(\"incoming\", observed.Headers.Get<string>(\"Application\"));",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 147,
+      "assertion": "Assert.True(operation.IsCompletedSuccessfully);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 148,
+      "assertion": "Assert.Equal(1, delivery.Calls);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 194,
+      "assertion": "case \"single\": Assert.Equal(new Output(17, \"typed\"), Assert.IsType<Output>(input)); break;",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 195,
+      "assertion": "case \"batch\": Assert.Equal(new Output(17, \"typed\"), Assert.Single(Assert.IsAssignableFrom<IEnumerable<Output>>(input))); break;",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 196,
+      "assertion": "case \"values\": Assert.Equal(new InitializationValues(17, \"initialized\"), Assert.IsType<InitializationValues>(input)); break;",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 197,
+      "assertion": "case \"batch-values\": Assert.Equal(new InitializationValues(17, \"initialized\"), Assert.IsType<InitializationValues>(Assert.Single(Assert.IsAssignableFrom<IEnumerable<object>>(input)))); break;",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "line": 246,
+      "assertion": "MessageType = Assert.Single(targetMethod.GetGenericArguments());",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBuiltContextCapture.cs",
+      "sha256": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081",
+      "line": 31,
+      "assertion": "public IEventHubReceiveEndpointContext Context => Assert.Single(_contexts);",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBuiltContextCapture.cs",
+      "sha256": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081",
+      "line": 80,
+      "assertion": "var context = Assert.IsAssignableFrom<ReceiveEndpointContext>(Assert.Single(args!));",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBuiltContextCapture.cs",
+      "sha256": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081",
+      "line": 89,
+      "assertion": "Assert.Same(Capture._limits, context.GetOrAddPayload(() => Capture._limits));",
+      "review": "Personally reviewed within complete fixture flow; contract assessment in REVIEW.json."
+    }
+  ]
+}

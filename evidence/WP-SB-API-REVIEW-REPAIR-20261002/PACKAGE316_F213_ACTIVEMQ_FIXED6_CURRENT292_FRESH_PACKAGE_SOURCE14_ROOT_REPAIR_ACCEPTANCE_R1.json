@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-06T02:52:24.875223+00:00",
+  "status": "ROOT_BOUNDED_F213_REPAIR_ACCEPTED_WITH_INDEPENDENT_SOURCE_NATIVE_PUBLICATION_PROOFS",
+  "finding": "F-SB-API-213",
+  "master_before_sha256": "ea278ac11fca12b55b80b5a33dbdeed1f683116f6f48a6605e7c9cef22ffbea6",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package314-activemq-fixed-root-native-publication-capture-r1",
+      "manifest_sha256": "90c6c2ae447fa00621274530d014b8b316d84870bbf75ea7b6d6315bf8e2d78a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package314-ensure-topic-fixed6-publication-independent-runtime-r1",
+      "manifest_sha256": "906b9fc22457b9af6f0b7d1586dfcfdaeb49e233b3ccc8a3911661555e3c1f6b"
+    }
+  ],
+  "native": {
+    "true_fixed_focused": 6,
+    "whole": 292,
+    "failed": 0,
+    "skipped": 0,
+    "focused_subset_not_additive": true
+  },
+  "root_authority": "Wholeactualfixed6 5ffacb; wholeindpeer3abe5c; wholeproposed322dd703a/inverse326 and helper265Collector5f6bb4. Sourcepeer11c999/a9a888 separately. Physical14/PDB2/Req134TestXMLOriginal310byteequal/currentNuGetexact/canonicalruntime. Whole292mechanical only, no wholehuman claims. Former104 nowtwoexactcauses+publicaggregate identity actuallyreached.",
+  "identity_rebase": "Exactly14existingSourceidentities/PDB/currentrebase refs. Oldnorms/status/native/XML/history185 and Root308 evidence retained unchanged. EnsureTopic and Delete2 normative acceptance remains separate; no newOriginalsource credit here.",
+  "known_findings": 213,
+  "bounded_dispositions_before": 211,
+  "bounded_dispositions_after": 212,
+  "master_count_preserved": 18971,
+  "Original_remaining_preserved": 460,
+  "grade": null,
+  "whole_API_closed": false
+}

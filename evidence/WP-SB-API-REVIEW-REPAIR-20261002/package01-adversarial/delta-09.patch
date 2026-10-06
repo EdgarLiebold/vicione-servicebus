@@ -1,0 +1,25 @@
+--- baseline/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs
++++ freeze/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs
+@@ -40,12 +40,19 @@
+     }
+ 
+     /// <summary>Writes diagnostic information to the probe context.</summary>
+-    /// <param name="context">The probe context receiving checkpoint-container URI and name.</param>
++    /// <param name="context">The probe context receiving the credential-free checkpoint-container URI and name.</param>
+     public void Probe(ProbeContext context)
+     {
+         var scope = context.CreateFilterScope("configureTopology");
+-        scope.Add("Uri", _blobContainerClient.Uri);
+-        scope.Add("Name", _blobContainerClient.Name);
++        var endpoint = new UriBuilder(_blobContainerClient.Uri)
++        {
++            Query = string.Empty,
++            Fragment = string.Empty,
++            UserName = string.Empty,
++            Password = string.Empty
++        };
++        scope.Add("Uri", endpoint.Uri);
++        scope.Add("Name", new BlobUriBuilder(endpoint.Uri).BlobContainerName);
+     }
+ 
+     /// <summary>Creates the checkpoint container when it does not already exist.</summary>

@@ -1,0 +1,19 @@
+--- frozen-corrected-Registrar
++++ CaptureOwnerBeforeDependencies
+@@ -394,11 +394,14 @@
+             // Allocate the capability-correct owner before activation, then let DI capture it
+             // after the successfully created definition and its constructor dependencies.
+             DefinitionOwner<TDefinition> owner = DefinitionOwner<TDefinition>.Create();
+-            owner.Value = ActivatorUtilities.CreateInstance<TDefinition>(provider);
+             return owner;
+         });
+         Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
+-            Bind<TBus>.Create(provider.GetRequiredService<DefinitionOwner<TDefinition>>().Value));
++        {
++            DefinitionOwner<TDefinition> owner = provider.GetRequiredService<DefinitionOwner<TDefinition>>();
++            owner.Value = ActivatorUtilities.CreateInstance<TDefinition>(provider);
++            return Bind<TBus>.Create(owner.Value);
++        });
+         Collection.AddSingleton<Bind<TBus, T>>(provider =>
+             Bind<TBus>.Create<T>(provider.GetRequiredService<Bind<TBus, TDefinition>>().Value));
+     }

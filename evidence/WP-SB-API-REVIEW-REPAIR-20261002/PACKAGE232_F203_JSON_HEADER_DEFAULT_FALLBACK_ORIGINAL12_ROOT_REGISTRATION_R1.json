@@ -1,0 +1,61 @@
+{
+  "utc": "2026-10-05T20:08:10.573799+00:00",
+  "status": "CONFIRMED_FINITE_NATIVE_ORIGINAL_HEALTHY6_PASSED_REPAIR_PENDING",
+  "finding": "F-SB-API-203",
+  "severity": "Medium",
+  "title": "JsonTransportHeaders public Get throws for valid incompatible header instead of returning documented caller default",
+  "source_owner": "src/ViciOne.ServiceBus/Transports/Headers/JsonTransportHeaders.cs",
+  "original_source_sha256": "588d208eace6a2d1185f5514e508c202d4af1738e5d2ec873189bc6dfe2ab5b2",
+  "related_distinct_owner_finding": "F-SB-API-134 repaired DictionarySendHeaders only; independently confirmed JsonTransportHeaders\u2192frozen metadata ObjectDeserializer route is distinct. No repair/runtime credit transferred.",
+  "native_receipt": {
+    "phase": "package232-json-header-original12-native-r1",
+    "command": [
+      "dotnet",
+      "test",
+      "--project",
+      "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "--configuration",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "--filter-class",
+      "ViciOne.ServiceBus.Tests.Transports.JsonTransportHeaderConversionTests",
+      "--results-directory",
+      "artifacts/results-package232-json-header-original12-r1",
+      "--output",
+      "Detailed"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 2,
+    "started_utc": "2026-10-05T19:59:06.798174+00:00",
+    "completed_utc": "2026-10-05T19:59:10.901464+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package232-json-header-original12-native-r1.log",
+    "log_sha256": "0f340415b4427a287cb75ad24790be082092714a304ec92a38847e2a061596a9"
+  },
+  "actual_counts": {
+    "total": 12,
+    "passed": 6,
+    "failed": 6,
+    "skipped": 0
+  },
+  "capture": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package232-json-header-original12-source-bound-capture-r1",
+    "BEFORE": "93648bd6f9a92952b7d32cd0e593dafa2ce4fa8f7cd963bea68c2f2a3150f1f6",
+    "AFTER": "0f05243ca43d358c88177d8eee7cbbc3c7064764d2d475b426582de739063d0c",
+    "PRE": "961f9400a416a4065300977f0dbd1f9d12aeaf4dfaa583cd92b88ab59a477360"
+  },
+  "independent_result_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package232-json-header-original12-independent-scanner-qualification-r1",
+    "REPORT_sha256": "165ff675e8dc1e5bca8a3b0fb9cfc7a4f3814924e6268b8756ac6ce0a85ccf4d",
+    "MANIFEST_sha256": "f4ffc0c60d7beae4caffd3d6a8e878a3bd01f3e7073ebb82dafd0b9124225f83",
+    "all_payloads_verified": true
+  },
+  "positive_controls": "All six complete compatible-representation/absent/raw-null cases pass. Every incompatible candidate also completes those exact prerequisites, actual provider/write/attributed-target-read IO/JSON/OCE identity/count assertions and malformed/Undefined-error visibility before first finite oracle.",
+  "first_finite_failures": "Each class/native,text,element candidate fails Assert.Null at actualL49; each struct variant fails at actualL58. Exact builtin JsonException comes from selected target conversion; fallback equality/reference and later raw assertions are unreached and receive no Original credit.",
+  "source_cause_boundary": "Both public Get overloads promise default for absent/unconvertible headers but directly route through frozen deserializer GetValue/DeserializeObject, whose builtin selected int/List conversion raises incompatible JSON error. Provider and serialization/converter errors must stay visible.",
+  "Root_personal_review": "Own whole2443fd867 and whole16sources992a50/edf917/e1bb3b; own whole native162L a29ed3; own whole independent report6f7590 and schema-aware MAN/source/capture/log checks.",
+  "historical_current_capture_boundary": "Original232 Source/native frozen before Rabbit229 Product4; no all6654 current-equality assertion after unrelated Rabbit source mutation. SelectedHeader16 sources unchanged now.",
+  "repair_design_required": "Header-bound compatibility fallback without broad JsonException swallowing; preserve malformed data/provider/write/arbitrary attributed reader failures, caller fallback identity and raw header retention. Independently adversarial review each change and actual public negative controls.",
+  "repair_accepted": false,
+  "whole_API_review_closed": false
+}

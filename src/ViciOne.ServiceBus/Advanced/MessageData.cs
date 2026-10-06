@@ -9,7 +9,7 @@ public static class MessageData
     /// <summary>Creates a populated value that will be stored according to the configured message-data policy when sent.</summary>
     /// <typeparam name="T">The reference type carried by the message-data property.</typeparam>
     /// <param name="value">The value to attach to the outgoing message.</param>
-    /// <returns>A populated message-data value whose repository address is assigned during send processing.</returns>
+    /// <returns>A populated, addressless value that send processing transforms according to the configured storage policy.</returns>
     public static Serialization.MessageData<T> FromValue<T>(T value)
         where T : class
     {

@@ -1,0 +1,8 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE322_TESTING43_NINE_LOCAL_CLASS_CONSTRUCTOR_SOURCE_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "d7c3f565a72c355e3ec578d6e32e80ac573d75d179d9e10ad4e24dba2b59f348"
+  },
+  "master_after_sha256": "1abedc3436b34b834c410a9e129c2717ff7b05232746cae276e03ea250656c1b",
+  "row_count": 18980
+}

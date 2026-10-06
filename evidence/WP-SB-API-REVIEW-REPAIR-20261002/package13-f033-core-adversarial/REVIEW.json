@@ -1,0 +1,100 @@
+{
+  "status": "SCOPED_CORE_SOURCE_PUBLIC_PACKAGE_AND_MUTATION_EVIDENCE_ACCEPTED",
+  "finding": "F-SB-API-033",
+  "read_by": "azure_test_scope",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE13_F033_CORE_FREEZE.json",
+    "sha256": "2d90714efbebf769c2bb24ba8b6d18d11e20a1ac7520341afbf27543eb2ee243",
+    "bytes": 17124
+  },
+  "correction": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE13_F033_CORE_BINDING_CORRECTION.json",
+    "sha256": "6210a724ae94074a381472e700603ecb9d0d4651c0471127461e892e040ec2b0",
+    "bytes": 788
+  },
+  "source": {
+    "path": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+    "original_sha256": "4ac00b8633c77db1ce1c1add7585c734b42885c51955a61e5a83cfb96330d016",
+    "corrected_sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+    "public_signatures_unchanged": true,
+    "contract": "Acquisition remains provider-owned outside try; context getter/pipeline failure captured; transferred scope released once with existing async-preferred arbiter; sole exceptions EDI-preserved; dual exact ordered direct Aggregate(primary,cleanup). No direct container-owned consumer disposal."
+  },
+  "blockers": [],
+  "native_evidence": {
+    "original_final_modes": 10,
+    "original_causal_red": 5,
+    "original_positive": 5,
+    "original_guard_failure": 0,
+    "corrected_modes_green": 10,
+    "compiled_mutants": 6,
+    "mutation_negative_routes": 6,
+    "mutation_positive_routes": 6,
+    "mutation_baseline_green": 10,
+    "mutation_rollback_green": 10,
+    "accepted_case_observations": 52,
+    "accepted_expected_causal_red_observations": 11,
+    "accepted_positive_observations": 41,
+    "accepted_guard_failures": 0,
+    "excluded_r1_entire_case_observations": 10,
+    "excluded_r1_typed_setup_failures": 3,
+    "compiler_error_preservation_claim": false
+  },
+  "public_route_review": [
+    "Both consumers use the same four C# source bodies and csproj bytes. Corrected feed/lock selects only new Core bytes; original feed selects immutable Package12 corrected graph with F033 original ScopeFactory.",
+    "Default AddViciOneServiceBus and typed AddViciOneServiceBus<IScopeBus> retain proper static typed Limits/UsingInMemory overloads. Common helper only registers real DI-owned AddConsumer<SyncConsumer/AsyncConsumer> and endpoint name; no private reflection, IVT or direct internal invocation.",
+    "Two sequential real sends per case: consumer entered, alive across gated await, disposal count zero before release; first exact expected observer outcome, second actual success on same bus; drain then exact created/disposed/terminal/call/success/fault counts.",
+    "Raw invocation count precedes any idempotent guard. Dual-interface async consumer rejects sync disposal and awaits genuinely incomplete cleanup; positive gate release and completed-cleanup/terminal counters verify correct async ordering.",
+    "Exact direct two leaves preserve operation/cleanup references and order; operation-only stack survives. Pure dependency-OCE is wrapped as ConsumerCanceledException with exact inner reference/token; mixed OCE plus cleanup remains ordered Aggregate.",
+    "Harness independently attempts release-all-gates, stop, observer disconnect, provider async disposal and LogContext restoration. Primary remains first with sole EDI. Explicit logger LogContext avoids separately open F019; no F019 acceptance is inferred."
+  ],
+  "independent_provenance": {
+    "owned_inputs": 32,
+    "source_effects": 128,
+    "actual_logs_and_exact_receipts": 32,
+    "selected_package_chains": 4,
+    "PE_images": 22,
+    "PDB_source_checksum_conditions": 280,
+    "PDB_frame_conditions": 160,
+    "PDB_consumer_conditions": 8,
+    "PDB_public_route_conditions": 112,
+    "public_route_source_inputs": 56,
+    "count_note": "Conditions repeat source paths across images; 280 is not 280 distinct sources. Public56 source paths overlap frame16; no summed unique-family claim.",
+    "own_original_rollback_checkpoint": {
+      "read_by": "azure_test_scope",
+      "status": "ALL_6209_ORIGINAL_TRACKED_HASHES_MATCH",
+      "started_utc": "2026-10-03T04:19:30.451758+00:00",
+      "completed_utc": "2026-10-03T04:19:34.450339+00:00",
+      "coverage_sha256": "b6e08ca2e4e17207892048c10ec95af971469cff1b3251a5e1ba0bf5a62b3fe5",
+      "checked": 6209,
+      "mismatches": [],
+      "new_identity_source_removed": true,
+      "limits": "Readonly checkpoint; does not forbid later separately controlled mutation work."
+    },
+    "frozen_original_bus_registration_context_sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825",
+    "proofs": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package13-f033-core-adversarial/INDEPENDENT_SOURCE_EFFECTS_AND_PACKAGES.json",
+        "sha256": "b03dd7c2dc57e193bb163537951ef2e26ef1d8b0c4432dad73de56ec6abe0d36",
+        "bytes": 74396
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package13-f033-core-adversarial/INDEPENDENT_PDB_SOURCE_BINDING.json",
+        "sha256": "6694b7c0d06fda63356b022207044f5584c7c44fa3beb590a71f6d679763df06",
+        "bytes": 262420
+      }
+    ]
+  },
+  "exclusion_review": "Entire old R1 ten observations excluded from final52. Three typed MaxBodyBytes setup faults match archived type-erasing common helper and final generic-overload fix; three default causal old reds are historical only. Immutable correction6210a724… removes mistaken inherited compiler-error phrase; no rejected compiler receipt exists or is claimed.",
+  "compatibility": "No public signature/type changes. The intentional behavioral correction exposes both original body and cleanup faults as existing ordered Aggregate instead of erasing body failure; sole failure behavior and transferred scope ownership remain compatible.",
+  "whole_F033_closed": false,
+  "whole_API_closed": false,
+  "limits": [
+    "F033 Core transferred-scope operation/release arbitration only. SignalR provider/manager/nested custom request-handle obligations remain OPEN.",
+    "Ten NuGet-only console modes are bounded independent public cases, not canonical Core766 test-owner closure or a whole API grade. No symbol CLOSED or whole-F033 acceptance.",
+    "Dependency-cancellation controls use their own actually cancelled token while CLI caller remains active. Active caller-cancellation timing, acquisition failure, borrowed/existing scope, custom SPI context-getter failure, nested aggregate inputs and parallel scopes are not newly runtime-proved.",
+    "Only .NET10.0.10 X64 runtime and selected Extensions10.0.12 dependency graph observed; no ARM, cloud, load, leak/heap stress or alternate container/SDK guarantee.",
+    "WaitAsync bounds observation and does not universally cancel underlying stop/disposal. Correct runs and accepted kills have no deadline guard failures. DI cleanup continuation after another dependency throws is not guaranteed.",
+    "Owned current bytes are rechecked; imported BusRegistrationContext binds own FULL frozen F/Git and selected PDB separately because later F031 changes current file. No whole-current-Core provenance claim.",
+    "Root reading claims and canonical closure are not transferred to this reviewer. No native operations, product writes, test writes or CSV promotions were performed by this reviewer."
+  ]
+}

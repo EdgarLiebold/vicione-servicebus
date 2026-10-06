@@ -1,0 +1,18 @@
+{
+  "status": "EMBEDDED_PORTABLE_PDB_DOCUMENT_TABLE48_EXACT_ORIGINAL_FACTORY_SHA256",
+  "dll_sha256": "5c0a3eaff274c68b3e753db1ccf5f3fbafdfdcf4be03bd84210d6650396073f6",
+  "embedded_pdb_sha256": "8d770d077cbcce424ad0590afdc4737c67cc9c2df5771f3931fbba613b31d258",
+  "embedded_pdb_bytes": 28776,
+  "document_count": 38,
+  "factory_document": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs",
+    "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+    "checksum": "befc6519928c8c7db1b6eb3bfb46938bbd4f902099f544da20d265c6cd30571a"
+  },
+  "source_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-original-provenance/freeze/00-Saga-EntityFrameworkSagaRepositoryContextFactory.cs",
+  "source_sha256": "befc6519928c8c7db1b6eb3bfb46938bbd4f902099f544da20d265c6cd30571a",
+  "method": "PE embedded debug entry17 -> MPDB raw-deflate -> metadata streams -> Document table48 -> Name/HashAlgorithm/Hash columns",
+  "limits": [
+    "Static checksum evidence binds original factory to exact tested archive DLL; no full compiler/PDB method-body or every source-document review claimed."
+  ]
+}

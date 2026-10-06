@@ -1,0 +1,175 @@
+"""Serial compiled F031 shared endpoint mutants; source and public oracle always restored."""
+import csv
+import hashlib
+import json
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+W = Path('/Users/edgar.liebold/Downloads/ViciOne Suite 2.0')
+O = W / 'repositories/vicione-servicebus'
+R = Path('/private/tmp/vicione-servicebus-api-review-20261001')
+M = R / 'mutations/source-main'
+F = R / 'frozen-repository'
+E = O / 'evidence/WP-SB-API-REVIEW-REPAIR-20261002'
+RUN = W / 'SERVICEBUS_API_REVIEW_AND_REPAIR/run_operation.py'
+C = R / 'repair-consumers/package14-f031/corrected'
+OUT = C / 'bin/Release/net10.0'
+APP = 'SharedEndpoint.PublicConsumer.dll'
+DLLS = ['ViciOne.ServiceBus.dll', 'ViciOne.ServiceBus.Abstractions.dll']
+DEPENDENCY_DLL = 'ViciOne.ServiceBus.Sagas.dll'
+PATHS = {
+    'results': 'src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs',
+    'host': 'src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs',
+    'host_xml': 'src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs',
+    'batch': 'src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs',
+    'batch_options': 'src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs',
+    'registration': 'src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs',
+    'connector': 'src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs',
+    'identity': 'src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs',
+    'trace': 'src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs',
+    'journal_telemetry': 'src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs',
+    'journal_writer': 'src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs',
+    'journal_registration': 'src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs',
+    'transport_registration': 'src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs',
+    'endpoint_context': 'src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs',
+    'combined_endpoint': 'src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs',
+    'scope_factory': 'src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs',
+    'owned_lifetime': 'src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs',
+    'inmemory_factory': 'src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs',
+}
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+original = {key: (F / rel).read_bytes() if (F / rel).exists() else None for key, rel in PATHS.items()}
+for key, rel in PATHS.items():
+    assert ((M / rel).read_bytes() if (M / rel).exists() else None) == original[key], rel
+corrected = {key: (O / rel).read_text() for key, rel in PATHS.items()}
+runtime = {dll: (OUT / dll).read_bytes() for dll in DLLS}
+oracle = {str(p): sha(p) for p in C.iterdir() if p.is_file()}
+oracle[str(OUT / APP)] = sha(OUT / APP)
+dependency_hash = sha(OUT / DEPENDENCY_DLL)
+result = dict(status='RUNNING', oracle_hashes=oracle, controls=[], mutants=[], unchanged_capability_dependency=dict(path=str(OUT / DEPENDENCY_DLL), sha256=dependency_hash))
+
+
+def native(label, cwd, command, expected=0):
+    phase = 'package14-f031-core-mut-' + label
+    completed = subprocess.run([sys.executable, str(RUN), phase, str(cwd), '--', *command],
+                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    receipt = next(json.loads(line) for line in reversed((E / 'VERIFICATION_LOG.jsonl').read_text().splitlines())
+                   if json.loads(line)['phase'] == phase)
+    assert sha(receipt['log']) == receipt['log_sha256']
+    print(phase, receipt['exit_code'], flush=True)
+    if completed.returncode != expected or receipt['exit_code'] != expected:
+        raise RuntimeError(completed.stdout[-7000:])
+    return receipt
+
+
+def build(label, sources):
+    for key, rel in PATHS.items():
+        (M / rel).write_text(sources[key])
+    receipt = native(label + '-build', M,
+        ['dotnet', 'build', 'src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj', '-c', 'Release', '--no-restore', '-warnaserror'])
+    folder = R / 'repair-evidence/package14-f031-core-binaries' / label
+    folder.mkdir(parents=True, exist_ok=False)
+    source_hashes = {}
+    for key, rel in PATHS.items():
+        snapshot = folder / (key + '.cs.txt')
+        snapshot.write_bytes((M / rel).read_bytes())
+        source_hashes[rel] = dict(path=str(snapshot), sha256=sha(snapshot))
+    binaries = []
+    for dll in DLLS:
+        compiled = M / 'artifacts/sdk/bin' / dll.removesuffix('.dll') / 'release' / dll
+        snapshot = folder / dll
+        shutil.copyfile(compiled, snapshot)
+        shutil.copyfile(compiled, OUT / dll)
+        binaries.append(dict(path=str(snapshot), sha256=sha(snapshot)))
+    return dict(receipt=receipt, binaries=binaries, source_snapshots=source_hashes)
+
+
+def case(label, name='all', expected=0):
+    receipt = native(label + '-' + name, C,
+        ['dotnet', 'bin/Release/net10.0/' + APP, name, '00:00:20', '00:01:00'], expected)
+    actual = json.loads(Path(receipt['log']).read_text())
+    if expected:
+        assert actual['count'] == actual['failures'] == 1
+        failed = actual['cases'][0]
+        assert failed['case'] == name and not failed['assertions_passed']
+        assert not failed['bounded_guard_failure']
+        types = {'first-category-restored': 'Xunit.Sdk.EqualException',
+            'category-order-reversed': 'Xunit.Sdk.EqualException',
+            'shared-qos-ownership-weakened': 'Xunit.Sdk.NotNullException',
+            'mixed-topology-check-weakened': 'Xunit.Sdk.NotNullException'}
+        assert failed['exception_type'] == types[label], failed
+        if failed['exception_type'] == 'Xunit.Sdk.NotNullException':
+            assert failed['Message'] == 'Assert.NotNull() Failure: Value is null', failed
+        else:
+            assert 'Collections differ' in failed['Message'], failed
+        assert 'EndpointCases.cs:line' in failed['StackTrace'], failed
+    else:
+        assert actual['failures'] == 0 and all(x['assertions_passed'] for x in actual['cases'])
+    for binary in current_binary['binaries']:
+        loaded = next(x for x in actual['runtime']['loadedProductAssemblies'] if Path(x['path']).name == Path(binary['path']).name)
+        assert loaded['sha256'] == binary['sha256']
+    dependency = next(x for x in actual['runtime']['loadedProductAssemblies'] if Path(x['path']).name == DEPENDENCY_DLL)
+    assert dependency['sha256'] == dependency_hash
+    return dict(receipt=receipt, actual=actual)
+
+
+def mutation(name):
+    sources = dict(corrected)
+    context = sources['endpoint_context']
+    combined = sources['combined_endpoint']
+    if name == 'first-category-restored':
+        sources['endpoint_context'] = original['endpoint_context'].decode()
+        return sources, ['mixed-typed'], ['dedicated-saga']
+    if name == 'category-order-reversed':
+        before = '            .OrderBy(x => x.Kind.Order)'
+        assert context.count(before) == 1
+        sources['endpoint_context'] = context.replace(before, '            .OrderByDescending(x => x.Kind.Order)')
+        return sources, ['mixed-reverse'], ['same-kind-reverse']
+    if name == 'shared-qos-ownership-weakened':
+        before = '        return owners > 1'
+        assert combined.count(before) == 1
+        sources['combined_endpoint'] = combined.replace(before, '        return owners >= 1')
+        return sources, ['mixed-saga-qos'], ['mixed-compatible']
+    if name == 'mixed-topology-check-weakened':
+        before = '        else if (_definitions.All(x => x.ConfigureConsumeTopology == false))'
+        assert combined.count(before) == 1
+        sources['combined_endpoint'] = combined.replace(before, '        else if (_definitions.Any(x => x.ConfigureConsumeTopology == false))')
+        return sources, ['mixed-topology-conflict'], ['mixed-compatible']
+    raise ValueError(name)
+
+
+try:
+    current_binary = build('corrected', corrected)
+    result['corrected_binary'] = current_binary
+    result['controls'].append(case('corrected'))
+    for name in ['first-category-restored', 'category-order-reversed', 'shared-qos-ownership-weakened', 'mixed-topology-check-weakened']:
+        sources, negatives, positives = mutation(name)
+        current_binary = build(name, sources)
+        rejection = [case(name, negative, 1) for negative in negatives]
+        controls = [case(name, positive) for positive in positives]
+        result['mutants'].append(dict(name=name, binary=current_binary, rejections=rejection,
+            positive_controls=controls, status='KILLED_BY_EXACT_F031_SHARED_ENDPOINT_ASSERTION'))
+    current_binary = build('rollback', corrected)
+    result['rollback_binary'] = current_binary
+    result['rollback'] = case('rollback')
+    result['status'] = 'FOUR_COMPILED_SHARED_ENDPOINT_MUTANTS_KILLED_WITH_POSITIVE_CONTROLS_FOURTEEN_BASELINE_AND_ROLLBACK_GREEN'
+finally:
+    for key, rel in PATHS.items():
+        if original[key] is None:
+            (M / rel).unlink(missing_ok=True)
+        else:
+            (M / rel).write_bytes(original[key])
+    for dll in DLLS:
+        (OUT / dll).write_bytes(runtime[dll])
+    result['oracle_hashes_preserved'] = all(sha(p) == expected for p, expected in oracle.items())
+    result['runtime_restored'] = all((OUT / dll).read_bytes() == content for dll, content in runtime.items())
+    rows = list(csv.DictReader((R / 'FILE_COVERAGE.csv').open()))
+    result['original_files_checked'] = len(rows)
+    result['original_mismatches'] = [row['path'] for row in rows if sha(M / row['path']) != row['sha256']]
+    result['new_identity_source_removed'] = not (M / PATHS['identity']).exists()
+    (E / 'PACKAGE14_F031_MUTATIONS.json').write_text(json.dumps(result, indent=2) + '\n')
+    assert result['oracle_hashes_preserved'] and result['runtime_restored'] and not result['original_mismatches']
+    assert result['original_files_checked'] == 6209 and result['new_identity_source_removed']
+    assert sha(OUT / DEPENDENCY_DLL) == dependency_hash

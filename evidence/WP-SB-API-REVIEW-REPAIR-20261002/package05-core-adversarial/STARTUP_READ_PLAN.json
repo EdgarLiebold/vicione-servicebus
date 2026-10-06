@@ -1,0 +1,46 @@
+{
+  "inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Transports/Receiving/BaseReceiveEndpointContext.cs",
+      "bytes": 17526,
+      "sha256": "5b6ed52649ef4d734d055d50848f190b945e569ae72bf0900415683927b160ff"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Transports/Receiving/BaseReceiveContext.cs",
+      "bytes": 13603,
+      "sha256": "0b3256e68a15d4dc9a338ba8810d9d32547484f4d7a1d0c01953466af9d40514"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/ReceiveEndpointConfiguration.cs",
+      "bytes": 7519,
+      "sha256": "85a2fa03af1f7ea69178a1d9904d3e834f3252dcc3f576f8660a1a4fb2f94ae9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "bytes": 14552,
+      "sha256": "001a5f302aea41f3ff95804997c93644310ec45a41f571a508c15e529f5dc94f"
+    }
+  ],
+  "batches": [
+    {
+      "artifact": "READ_STARTUP_001.txt",
+      "sha256": "55c656d2b9c56d74756c61584c140c64198142e8593361da03986a1dcc29b9e1",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_STARTUP_002.txt",
+      "sha256": "3a27d042f293ffd4490317cbacc201d658ee90a57a596cce33f6b26f569c00b4",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_STARTUP_003.txt",
+      "sha256": "3313ebedd4d18cda8fa32a29f9b56502adbd5c4e03c8dcc84ed93ec6a9ea8b84",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_STARTUP_004.txt",
+      "sha256": "d96e5c8ce1901c1ff4c744d07790ff633cc0d107fbabfa7d8326f0a84e3822bd",
+      "read_status": "FULL"
+    }
+  ]
+}

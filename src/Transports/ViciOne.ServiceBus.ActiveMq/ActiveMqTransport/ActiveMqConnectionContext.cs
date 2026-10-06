@@ -154,7 +154,14 @@ public class ActiveMqConnectionContext :
     /// <returns>A task that completes after connection and executor cleanup.</returns>
     public async ValueTask DisposeAsync()
     {
-        TransportLogMessages.DisconnectHost(Description);
+        try
+        {
+            TransportLogMessages.DisconnectHost(Description);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics must not prevent owned cleanup or replace its result.
+        }
         var failures = new ActiveMqCleanupFailures();
 
         await failures.CaptureAsync(
@@ -169,7 +176,14 @@ public class ActiveMqConnectionContext :
                 exception => LogWarning(exception, "Dispose Connection Executor Faulted: {Host}", Description))
             .ConfigureAwait(false);
 
-        TransportLogMessages.DisconnectedHost(Description);
+        try
+        {
+            TransportLogMessages.DisconnectedHost(Description);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics must not prevent owned cleanup or replace its result.
+        }
         failures.ThrowIfAny("One or more ActiveMQ connection cleanup stages failed.");
     }
 

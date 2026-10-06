@@ -1,0 +1,167 @@
+{
+  "utc": "2026-10-05T19:55:56.262315+00:00",
+  "status": "TEST_ONLY_ROOT_APPLICATION_NO_NATIVE_OR_PRODUCT_FINDING",
+  "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-oracles-proposed-r1",
+  "author_report_sha256": "4ccee3989b5fcc48a54fa49f23ac1bf23ee317f8314cd8e0592e067e62047c36",
+  "author_manifest_sha256": "25eef778832c577e900117114d9d333814d9ac1bfcb49967489cee272bcd52dd",
+  "independent_peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsonheaders12-independent-source-peer-r1",
+  "peer_report_sha256": "d47c982dcef7789c3d7e6cedfbbefa674972fb10923119deb9b4f5150e6b6a2c",
+  "peer_manifest_sha256": "11d15e0255869eac1e5aed43332da738e35b0e3ef0bdabc48abb781253b3f328",
+  "root_personal_read": {
+    "test244": "3fd867",
+    "source16": [
+      "992a50",
+      "edf917",
+      "e1bb3b"
+    ],
+    "peer_report": "1ee870"
+  },
+  "test": {
+    "relative": "tests/ViciOne.ServiceBus.Tests/Transports/JsonTransportHeaderConversionTests.cs",
+    "sha256": "e4bc60af55b2e696da830d32933c7b19d19f06541613ba68b428a4426d77c0dc",
+    "lines": 244,
+    "methods": [
+      {
+        "name": "Get_CompatibleValuesAndFailureBoundaries_PreservePublicContract",
+        "cases": 6,
+        "variantKey": "compatible-representations-and-primary-failure-preservation"
+      },
+      {
+        "name": "Get_ValidIncompatibleGuid_ReturnsExactCallerFallback",
+        "cases": 6,
+        "variantKey": "valid-incompatible-representations-preserve-caller-fallback"
+      }
+    ],
+    "total_cases": 12,
+    "baseline_absent": true,
+    "old_fixture_unchanged": true
+  },
+  "requirements": {
+    "relative": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "before_sha256": "6352e18c631fee4cef6bf189758d99c525e4a1c8e2b60085085298306ffc8df2",
+    "before_rows": 4658,
+    "after_sha256": "394ffee2c90af4032eb4ee5a7226453e42d752464e92cf1f931d22f63b65bb18",
+    "after_rows": 4660,
+    "unchanged_prefix": true,
+    "additions": 2,
+    "merge_latest_only": "Root must preserve any subsequent canonical rows and append these exact two unique obligations once."
+  },
+  "source_guards": [
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Headers/JsonTransportHeaders.cs",
+      "sha256": "588d208eace6a2d1185f5514e508c202d4af1738e5d2ec873189bc6dfe2ab5b2",
+      "lines": 80,
+      "own_whole_read_receipt": "4baee4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus/Transports/Headers/JsonTransportHeaders.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Transports/DictionaryHeaderProvider.cs",
+      "sha256": "165fbf18c710bc03bbfb6cd8a9b7ba944574d9b245df37807b646c8b4cc82d45",
+      "lines": 34,
+      "own_whole_read_receipt": "fa8261",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus.Abstractions/Transports/DictionaryHeaderProvider.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Transports/IHeaderProvider.cs",
+      "sha256": "6949ccfc616af39f46b77b4d6ad7af2f479ee49e5495f1d9cc0c1e6ba9ebfc01",
+      "lines": 18,
+      "own_whole_read_receipt": "4baee4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus.Abstractions/Transports/IHeaderProvider.cs"
+    },
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Transports/TransportValueFormattingTests.cs",
+      "sha256": "3501cc8e2523321ce5868732402ef72b4a57df2e9682c841cfbf9fdce20b96f4",
+      "lines": 226,
+      "own_whole_read_receipt": "4baee4",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/tests/ViciOne.ServiceBus.Tests/Transports/TransportValueFormattingTests.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Serialization/Metadata/ServiceBusMetadataJson.cs",
+      "sha256": "33234f12f3008ad3f9ba90707a838cdc408941f43981e402dd36aef571d8ad03",
+      "lines": 26,
+      "own_whole_read_receipt": "e2b975",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus/Serialization/Metadata/ServiceBusMetadataJson.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Serialization/Serializers/SystemTextJsonMessageSerializer.cs",
+      "sha256": "c8f2a6751ea1b36431298f544b4e54b4ba8b23faa5e2e0093fa5c0c4d7e36e3d",
+      "lines": 191,
+      "own_whole_read_receipt": "e2b975",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus/Serialization/Serializers/SystemTextJsonMessageSerializer.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Serialization/SerializerContextExtensions.cs",
+      "sha256": "711a44653b961fd1ad2c49d87a5696c7e5437f60f225a021acba7999937cbbe8",
+      "lines": 386,
+      "own_whole_read_receipt": "e2b975",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus.Abstractions/Serialization/SerializerContextExtensions.cs"
+    },
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+      "lines": 46,
+      "own_whole_read_receipt": "e2b975",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj"
+    },
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/GlobalUsings.cs",
+      "sha256": "ae580d7c99fba34f66ce0f433556ed9996fe28a409a049e9f9309a9bfaabed39",
+      "lines": 5,
+      "own_whole_read_receipt": "e2b975",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/tests/ViciOne.ServiceBus.Tests/GlobalUsings.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Serialization/Json/SystemTextJsonSerializerOptions.cs",
+      "sha256": "929a76f1652802099170a8690f88ac40c4b7c8fffa9135a07c0eaee2f290c842",
+      "lines": 47,
+      "own_whole_read_receipt": "0a69ad",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus/Serialization/Json/SystemTextJsonSerializerOptions.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Serialization/Json/Converters/InterfaceJsonConverter.cs",
+      "sha256": "c769c66c38cac9b585f69304e91c7d6ff7ce6bf352bda0d25821c7fb9a5ea1b0",
+      "lines": 38,
+      "own_whole_read_receipt": "0a69ad",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus/Serialization/Json/Converters/InterfaceJsonConverter.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Initializers/TypeConverters/TypeConverterCache.cs",
+      "sha256": "9d314f71f6df711cb5c618f736be754c624e1b6699ebe970d74ef3acc12ca703",
+      "lines": 183,
+      "own_whole_read_receipt": "0a69ad",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus/Initializers/TypeConverters/TypeConverterCache.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Initializers/TypeConverters/StringTypeConverter.cs",
+      "sha256": "a350a082fbb70bad8bbe854141ff872f0b006b8e8e6539a22fc3e3d79b4100c1",
+      "lines": 23,
+      "own_whole_read_receipt": "0a69ad",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus/Initializers/TypeConverters/StringTypeConverter.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Serialization/Json/Converters/SystemTextJsonConverterFactory.cs",
+      "sha256": "2bb72e011df2ef4db72ba276863d5fb3de4e6d790657b3aa5694df5af9bc4dc4",
+      "lines": 160,
+      "own_whole_read_receipt": "a8b1de",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus/Serialization/Json/Converters/SystemTextJsonConverterFactory.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Serialization/Json/SystemTextJsonExtensions.cs",
+      "sha256": "c2089c75ea70b5edb226399ab761baad0f8f7b8fde40847bd0725e7f04b6e284",
+      "lines": 62,
+      "own_whole_read_receipt": "a8b1de",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus/Serialization/Json/SystemTextJsonExtensions.cs"
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Initializers/TypeConverters/IntTypeConverter.cs",
+      "sha256": "edcc9ca3e86b4a477598f8afb88f6cfb76adabd657fba33de33026e972fd09ca",
+      "lines": 119,
+      "own_whole_read_receipt": "a8b1de",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package229-jsontransportheaders-public-fallback12-research-r1/source-snapshots/src/ViciOne.ServiceBus/Initializers/TypeConverters/IntTypeConverter.cs"
+    }
+  ],
+  "limits": [
+    "Only exact two public Get overloads and selected six representation/target combinations; no compilation/native/Finding forecast.",
+    "All precondition controls and first reached assertions require actual Original execution."
+  ]
+}

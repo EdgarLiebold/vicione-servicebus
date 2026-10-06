@@ -8,7 +8,7 @@ public class ServiceBusEntityNameValidator :
     IEntityNameValidator
 {
     const int MaxLength = 260;
-    static readonly Regex _regex = new Regex(@"^[A-Za-z0-9\-_\.:\/\$]+$", RegexOptions.Compiled);
+    static readonly Regex _regex = new Regex(@"\A[A-Za-z0-9\-_\.:\/\$]+\z", RegexOptions.Compiled);
 
     /// <summary>Gets the shared entity-path validator.</summary>
     public static IEntityNameValidator Validator => Cached.EntityNameValidator;

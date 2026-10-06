@@ -44,7 +44,10 @@ public static class SignalRBackplaneExtensions
         }
 
         var settings = new SignalRBackplaneSettings<THub>(
-            new RequestTimeout(options.RemoteGroupOperationTimeout));
+            new RequestTimeout(options.RemoteGroupOperationTimeout))
+        {
+            BusType = configurator.BusType
+        };
 
         configurator.Services.AddSingleton(settings);
         configurator.Services.TryAddSingleton<IBackplaneScopeProvider, DependencyInjectionBackplaneScopeProvider>();

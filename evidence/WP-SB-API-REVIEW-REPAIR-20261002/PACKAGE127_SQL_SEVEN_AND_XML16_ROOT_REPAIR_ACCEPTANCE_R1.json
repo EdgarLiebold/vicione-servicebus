@@ -1,0 +1,105 @@
+{
+  "utc": "2026-10-04T19:35:15.798546+00:00",
+  "decision": "ROOT_ACCEPT_SEVEN_SQL_REPAIRS_AND_ONE_OBSERVER_XML_FINDING_AFTER_ADVERSARIAL_CURRENT_NATIVE_AND_FRESH_PACK_REVIEW",
+  "accepted_known_before": 102,
+  "accepted_known_after": 110,
+  "findings": [
+    "F-SB-API-106",
+    "F-SB-API-107",
+    "F-SB-API-108",
+    "F-SB-API-109",
+    "F-SB-API-110",
+    "F-SB-API-111",
+    "F-SB-API-112",
+    "F-SB-API-114"
+  ],
+  "research_and_source_applications": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE114_SQL_SEVEN_ORIGINAL_FINDING_REGISTRATION_R1.json",
+      "sha256": "b46aec5fbc577c40632539497bafa278ccd791ea0514a590dd5098ebda256e90"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE118_SQL_SEVEN_PRODUCT_AND_UPGRADE14_ROOT_APPLICATION_R1.json",
+      "sha256": "54528e012e91e2a4b840988b7743dfa2615e2a0a2f9cc8a218bf30a28ee97467"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE119_PG_R3_ACL_AND_ROLLBACK_ROOT_APPLICATION_R1.json",
+      "sha256": "7fce47af856b0fd8b0938ab8a7ff9f886b71b8317184129021433344ab67aa7b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE120_XML16_AND_FSQ5_ROOT_SOURCE_APPLICATION_R1.json",
+      "sha256": "ba331de829a081fc2da143b56bd37622dff73dd892d74ec6873bb58b6b188dfa"
+    }
+  ],
+  "current_independent_reports": {
+    "mssql24": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package118-sqlserver-fixed24-independent-r1/REPORT.json",
+      "sha256": "d8e2fba1b4f28ea096f508e1c42ce4cff99301c411096781bc86bb0ca24c44ba"
+    },
+    "pg28": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package119-postgresql-r3-fixed28-independent-r1/REPORT.json",
+      "sha256": "40cb236d833b6a2766ac013d90a8e95a3cc13e73e1c587b8e9f83741c26b89cd"
+    },
+    "mssql8": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package122-sqlserver-broader8-independent-r1/REPORT.json",
+      "sha256": "9ef404196c0625981e63667f8d5edf84ac5b1e99f714f6c752236cb3d07d6bf4"
+    },
+    "pg14": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package122-postgresql-broader14-independent-r1/REPORT.json",
+      "sha256": "a0164a2d655181a5b69b4361eba3ee9d89de7b85ce95fe5c98e805018eba9fa7"
+    },
+    "sql263": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package120-sql-shared263-independent-r1/REPORT.json",
+      "sha256": "6b9f837ff5fb700898184fd76552014da5dc3d4c5a177758369a3adfd5176d79"
+    },
+    "xml16": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package120-fanout4-xml16-independent-r1/REPORT.json",
+      "sha256": "17901d9a1e67ba50ef206767f3637849f3420900a2ece911d2599a8187913a4a"
+    },
+    "fresh4": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package123-fresh-abs-sql-four-independent-r1/REPORT.json",
+      "sha256": "1651375e395b8f65944a06221814cd5e1950d1135f9f7889b06fdd3ecd3c5c82"
+    }
+  },
+  "validation": {
+    "original_sql": {
+      "cases": 38,
+      "passed": 20,
+      "finite_failed": 18,
+      "qualification": "Immutable original17/21 realDB epochs independently source/PDB-bound; never equated to current runtime."
+    },
+    "fixed_sql": {
+      "cases": 52,
+      "passed": 52,
+      "failed": 0,
+      "skipped": 0,
+      "meaningful_added_cases": 14
+    },
+    "broader_sql": {
+      "cases": 22,
+      "passed": 22,
+      "scope": "Existing actual DB provisioning, binary send/publish/receive, PG routing and fault/dead-letter queues."
+    },
+    "shared_sql_unit": {
+      "cases": 263,
+      "passed": 263
+    },
+    "fresh_packages": 4,
+    "compiled_published_XML_nodes": 16,
+    "SQLServer_fractional_delay_XML_remarks": 2
+  },
+  "root_personal_review": [
+    "Prior complete original SQL38 qualifications/research plans and exact four products/two complete additive-test deltas; independent SourceR2/R3 complete reports.",
+    "Current complete fixed52 independent reports personally read, actual all52 native outcomes observed through own execution receipts.",
+    "28ca16 complete five current120/122 reports; own all22 native outcomes shown without truncation, no claim whole263/322 raw personally read.",
+    "b5ed6d entire fresh4 ZIP/publishedXML/source/PDB/native binding report."
+  ],
+  "causal_products_fresh_equal_to_fixed_native52": true,
+  "limits": [
+    "Seven SQL Findings and sixteen XML member-node corrections accepted within supported real local DB behavior; no production role membership/cloud/deployment claim.",
+    "Independent technical peer reviews are not formal external Developer Red Team release signoff.",
+    "F103/F104/F105/F113 own current native160/fresh2 package review remains separate pending acceptance.",
+    "Whole public/protected/inherited API review remains PARTIAL, not global A+; no release, commit or push."
+  ],
+  "whole_api_status": "PARTIAL"
+}

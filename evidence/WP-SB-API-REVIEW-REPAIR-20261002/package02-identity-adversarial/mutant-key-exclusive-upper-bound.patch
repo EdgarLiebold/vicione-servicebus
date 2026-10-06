@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs
++++ src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs
+@@ -29,7 +29,7 @@
+             throw new ArgumentException("The key identifier must contain well-formed UTF-16.", nameof(keyId), exception);
+         }
+ 
+-        if (keyIdByteCount > ushort.MaxValue)
++        if (keyIdByteCount >= ushort.MaxValue)
+             throw new ArgumentException("The key identifier cannot exceed 65535 UTF-8 bytes.", nameof(keyId));
+ 
+         if (keyMaterial.Length is not (16 or 24 or 32))

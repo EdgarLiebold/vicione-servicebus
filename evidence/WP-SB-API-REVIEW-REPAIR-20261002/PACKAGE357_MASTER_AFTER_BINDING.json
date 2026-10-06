@@ -1,0 +1,10 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE357_CLIENT3_RECYCLE1_DEPLOY1_RABBIT_RECORD14_DELEGATE5_SOURCE24_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "363830234f4bec7325fb48ec5a312776e8eb8ea02e485f63a9ec9b282700ab63"
+  },
+  "master_after_sha256": "b4f3fbd15b329d1ff65a3e39ee397c8cf8acc9306cf270ff630b5ae87f63ef65",
+  "master_rows": 19137,
+  "original_accepted": 18275,
+  "original_remaining": 294
+}

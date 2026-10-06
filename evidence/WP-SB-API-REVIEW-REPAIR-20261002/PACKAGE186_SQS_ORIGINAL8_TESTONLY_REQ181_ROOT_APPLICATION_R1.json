@@ -1,0 +1,25 @@
+{
+  "utc": "2026-10-05T13:51:08.452229+00:00",
+  "status": "TESTONLY_ORIGINAL8_APPLIED_NO_PRODUCT_CHANGE_NO_FINDING_CLASSIFICATION",
+  "test": {
+    "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsConfiguredPipelinesAndSendTopologyTests.cs",
+    "sha256": "a971b5031a48431ac7f9d8b96dfc4bfa9050d414d5081dae8172f15d201710d7"
+  },
+  "requirements": {
+    "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+    "before_rows": 179,
+    "current_rows": 181,
+    "sha256": "f8ca1076a4cf3fab9805c861b7f18ee9c9f0d4a575e516e73ab60f488ed9ccbd",
+    "prefix_unchanged": true
+  },
+  "proposal_manifest_sha256": "473f5add63d41acde0bd0b40834e61f12da2ffa6a7aa1e81a62fc5edb025911f",
+  "root_personal_whole_source_prior_receipts": [
+    "131691",
+    "5127e9",
+    "6f32fd"
+  ],
+  "independent_test_peer_sha256": "df4e362e331bdcc9373309e7b72d141510446585642acb872dc775b4ce7907d3",
+  "capture_peer_sha256": "84063b967ea464f90605f2649effe977bae1d1e1f48d9d748c3b3660a0fbf315",
+  "product_source_changes": 0,
+  "native_executed": false
+}

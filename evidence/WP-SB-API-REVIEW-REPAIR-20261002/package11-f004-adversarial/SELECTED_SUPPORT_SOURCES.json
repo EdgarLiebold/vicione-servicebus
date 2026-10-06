@@ -1,0 +1,26 @@
+{
+  "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs": {
+    "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/selected-source-support/src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+    "sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93",
+    "original_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+    "bytes": 2163
+  },
+  "src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs": {
+    "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/selected-source-support/src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+    "sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf",
+    "original_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+    "bytes": 1320
+  },
+  "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs": {
+    "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/selected-source-support/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+    "sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+    "original_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+    "bytes": 5363
+  },
+  "src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs": {
+    "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/selected-source-support/src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+    "sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca",
+    "original_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+    "bytes": 727
+  }
+}

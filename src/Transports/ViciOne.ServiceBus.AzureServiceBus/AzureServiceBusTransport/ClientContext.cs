@@ -35,14 +35,14 @@ public interface ClientContext :
     /// <returns>A task that completes when the processor has started.</returns>
     Task StartAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Stops and disposes the configured message or session processor.</summary>
+    /// <summary>Requests a stop of processing for the configured message or session processor.</summary>
     /// <param name="cancellationToken">The token that cancels processor shutdown.</param>
-    /// <returns>A task that completes when the processor has stopped and its resources have been released.</returns>
+    /// <returns>A task that completes after the processor stop attempt; stop failures are logged rather than propagated.</returns>
     Task ShutdownAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Stops the configured message or session processor from receiving new deliveries.</summary>
-    /// <param name="cancellationToken">The token that cancels the stop request.</param>
-    /// <returns>A task that completes when the processor has stopped.</returns>
+    /// <summary>Requests closure of the configured message or session processor.</summary>
+    /// <param name="cancellationToken">The token that cancels the close request.</param>
+    /// <returns>A task that completes after the processor close attempt; close failures are logged rather than propagated.</returns>
     Task CloseAsync(CancellationToken cancellationToken = default);
 
     /// <summary>Reports a non-transient client failure so the supervised context can be recycled.</summary>

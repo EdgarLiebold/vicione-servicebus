@@ -1,0 +1,91 @@
+{
+  "status": "ROOT_ACCEPTED_CURRENT_METADATA_DELTA_ONLY_NO_GLOBAL_GRADE",
+  "actor": "/root",
+  "utc": "2026-10-04T02:04:04.755414+00:00",
+  "candidate": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE35_CURRENT_METADATA_RECONCILIATION_R1.json",
+    "bytes": 61377,
+    "sha256": "0968539887faf2f7f7daf89a64e7b380de0b9e6f702dbd2ea3f15c7f9a67c31c"
+  },
+  "peer_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-status-adversarial-preparation-r1/current-metadata-r2/REVIEW.md",
+    "bytes": 1683,
+    "sha256": "fe3b2f2b08be3bdffb06480670f4e267607c0e926201e64f90c084af70e8d5ca"
+  },
+  "peer_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-status-adversarial-preparation-r1/current-metadata-r2/MANIFEST.json",
+    "bytes": 1667,
+    "sha256": "1791b01f991fa26e56d21edacd17bab7ee4f43b36f879418238e8ad74d04ff14"
+  },
+  "peer_binding_full_root_read": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/final-status-adversarial-preparation-r1/current-metadata-r2/ACTUAL_METADATA_DELTA_BINDING.json",
+    "bytes": 3559,
+    "sha256": "031db0b36422f89e37503b3f6fbfce1e8b3dad64efde2740fce15e1da29293cf"
+  },
+  "fresh_physical_checks": [
+    {
+      "actual_file": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+        "bytes": 89173,
+        "sha256": "08a8f263c175cf0f2c454372b3a019b215509da5ecc4507ae0995c5573720772"
+      },
+      "declared_after_fields_verified": [
+        "additional_finding_status",
+        "package04_f018",
+        "package05_core",
+        "package04_public_adversarial_final",
+        "package05_diagnostic_supplement",
+        "targeted_disposition_current",
+        "package28_outbox_composition_progress",
+        "package30_f042_progress",
+        "package31_f042_progress",
+        "package32_f042_progress",
+        "package33_f042_mutation_progress"
+      ]
+    },
+    {
+      "actual_file": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/ADDITIONAL_FINDINGS.json",
+        "bytes": 11829,
+        "sha256": "0bd370bd2245ae64b981edaf91c947d928fe5d9869edcbbc61af14cd2c234096"
+      },
+      "declared_after_fields_verified": [
+        "F-SB-API-036",
+        "F-SB-API-037",
+        "F-SB-API-038",
+        "F-SB-API-041"
+      ]
+    }
+  ],
+  "accepted_references_fresh": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F038_ROOT_ACCEPTANCE_R1.json",
+      "bytes": 2697,
+      "sha256": "6098bc86601162c41f2f8463aceddbea43e0a5ac3c2bb90e42ad9adc9da27af0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE19_F034_F041_ROOT_ACCEPTANCE.json",
+      "bytes": 2442,
+      "sha256": "a28ce26e1ee4ee00baf2970660cda698dfe1ecd98e71bb40d4d179380e656094"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE25_F030_ROOT_CONTRACT_DISPOSITION_ACCEPTANCE_R1.json",
+      "bytes": 2740,
+      "sha256": "ee74a25117d4a914155a9d4f2023f9ed3c6e385af9117db53ebdb8d4367c79d4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_05_ROOT_SCOPED_REVIEW_ACCEPTANCE.json",
+      "bytes": 5009,
+      "sha256": "653dd5036606719fd27660ac91e6ff34be1fb2cb7225e653706dbb7b684ed5a4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE33_F042_TARGETED_ROOT_ACCEPTANCE_R1.json",
+      "bytes": 10448,
+      "sha256": "6125be2c7166eebe463088935c98076f9131692e2e0c4f968cf0ea972c0c1aec"
+    }
+  ],
+  "scope": "Root personally read both peer reports and complete 3559-byte delta binding; all five peer manifest artifacts and five Root reference files machine hash verified; all candidate non-timestamp after fields match actual live metadata. Subsequent Root read progress and runner preparation are separately recorded. No new product/test/runtime/whole-owner or personal reading credit from metadata.",
+  "F036_F037_root_targeted_acceptance_pending": true,
+  "current_unit_pending": true,
+  "whole_API_Aplus": false
+}

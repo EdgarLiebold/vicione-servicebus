@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-06T00:57:56.047277+00:00",
+  "status": "SOURCE_PEER_APPROVED_PRODUCT1_APPLIED_NATIVE_PENDING",
+  "findings": [
+    "F206",
+    "F207"
+  ],
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package282-codefix-token-position-keyword-product1-proposed-r1/REPORT.json",
+    "sha256": "37a3feba6375d7b7ac5a0f004c011aa7765416f5e48e2078e7fe6d36c8b5a17e"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package282-codefix-product1-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "b1c0a9f5e574ddbb4a55b8c5461f3211b390b022a0fe380fb0545d999503a696"
+  },
+  "source": {
+    "path": "src/ViciOne.ServiceBus.Analyzers/CancellationTokenOverloadMethodAnalyzer.cs",
+    "before_sha256": "40d0ef6500d2363b9cc7b62387853cf8c334947191f446064c6c1a96cf58fa0f",
+    "after_sha256": "d73fc15af257ec056a1c298646d2ec2c3c9407a68b4af8a9b36cc9c04d0d2bfe",
+    "before_lines": 400,
+    "after_lines": 410,
+    "two_causal_sites": "Additional-parameter matching exports the exact matched index to diagnostic payload; available context identifiers escape reserved/contextual C# keywords before forming the token expression.",
+    "physical_literal_replacements": 5,
+    "inverse": "Apply exact five inverse replacements in reverse order to restore original400 bytes."
+  },
+  "exact5_literal_inverse": true,
+  "test121_and_Req15_unchanged": true,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package287-codefix-product1-root-before-r1",
+  "native_credit": 0,
+  "grade": null,
+  "closed": false
+}

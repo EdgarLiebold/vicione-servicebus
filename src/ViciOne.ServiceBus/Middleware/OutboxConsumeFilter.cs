@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Consumers;
 using ViciOne.ServiceBus.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Middleware;
@@ -32,20 +34,30 @@ public class OutboxConsumeFilter<TContext, TMessage> :
         context.CreateFilterScope("outbox");
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Runs the supplied consume pipeline through the scoped outbox context factory.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
-        await using IConsumeScopeContext<TMessage> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);
+        IConsumeScopeContext<TMessage> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);
 
-        var contextFactory = scope.GetService<IOutboxContextFactory<TContext>>();
-        if (contextFactory == null)
-            throw new ConsumerException($"Unable to resolve outbox context factory for type '{TypeCache<TContext>.ShortName}'.");
+        Exception? operationFailure = null;
+        try
+        {
+            var contextFactory = scope.GetService<IOutboxContextFactory<TContext>>();
+            if (contextFactory == null)
+                throw new ConsumerException($"Unable to resolve outbox context factory for type '{TypeCache<TContext>.ShortName}'.");
 
-        var pipe = new OutboxMessagePipe<TMessage>(_options, scope, next);
+            var pipe = new OutboxMessagePipe<TMessage>(_options, scope, next);
 
-        await contextFactory.SendAsync(scope.Context, _options, pipe).ConfigureAwait(false);
+            await contextFactory.SendAsync(scope.Context, _options, pipe).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await OwnedConsumerLifetime.ReleaseAfterOperationAsync(scope, operationFailure).ConfigureAwait(false);
     }
 }

@@ -1,0 +1,96 @@
+{
+  "utc": "2026-10-05T15:15:29.058934+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_ACTIVEMQ626_DECLARATION_OR_LOCAL_SOURCE_FACTS_ELEVEN_HELD",
+  "reviewed_original_contracts": 637,
+  "accepted_source_contracts": 626,
+  "held": 11,
+  "held_contracts": [
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.Configuration.ActiveMqBusFactoryConfigurator.Publish(System.Type,System.Action{ViciOne.ServiceBus.ActiveMq.IActiveMqMessagePublishTopologyConfigurator})",
+      "reason": "Exact summary says publishes a message, but concrete body only resolves publish topology and invokes optional configuration callback; no message parameter or send task. Documentation-purpose contradiction held."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.Configuration.ActiveMqHostConfiguration.Build",
+      "reason": "Concrete endpoint/factory build and child-agent acquisition/partial-failure ownership remain separate genuine runtime workflow obligations; this source/declaration packet does not prove start/readiness/stop success."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.Configuration.ActiveMqReceiveEndpointBuilder.CreateReceiveEndpointContext",
+      "reason": "Concrete endpoint/factory build and child-agent acquisition/partial-failure ownership remain separate genuine runtime workflow obligations; this source/declaration packet does not prove start/readiness/stop success."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.Configuration.ActiveMqReceiveEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+      "reason": "Concrete endpoint/factory build and child-agent acquisition/partial-failure ownership remain separate genuine runtime workflow obligations; this source/declaration packet does not prove start/readiness/stop success."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.Configuration.ActiveMqReceiveEndpointConfiguration.CreateReceiveEndpointContext",
+      "reason": "Concrete endpoint/factory build and child-agent acquisition/partial-failure ownership remain separate genuine runtime workflow obligations; this source/declaration packet does not prove start/readiness/stop success."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.Configuration.ActiveMqRegistrationBusFactory.CreateBus(ViciOne.ServiceBus.Configuration.IBusRegistrationContext,System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.IBusInstanceSpecification},System.String)",
+      "reason": "Concrete endpoint/factory build and child-agent acquisition/partial-failure ownership remain separate genuine runtime workflow obligations; this source/declaration packet does not prove start/readiness/stop success."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.IActiveMqBusFactoryConfigurator.Publish(System.Type,System.Action{ViciOne.ServiceBus.ActiveMq.IActiveMqMessagePublishTopologyConfigurator})",
+      "reason": "Exact summary says publishes a message, but concrete body only resolves publish topology and invokes optional configuration callback; no message parameter or send task. Documentation-purpose contradiction held."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.Topology.PublishEndpointBrokerTopologyBuilder.BuildBrokerTopology",
+      "reason": "Exact current XML says immutable snapshot, but constructor materializes arrays and getters expose same caller-mutable slots with original entity references. Documentation-only contradiction held; no remote/lifetime defect inferred."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.ActiveMq.Topology.ReceiveEndpointBrokerTopologyBuilder.BuildTopologyLayout",
+      "reason": "Exact current XML says immutable snapshot, but constructor materializes arrays and getters expose same caller-mutable slots with original entity references. Documentation-only contradiction held; no remote/lifetime defect inferred."
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.ActiveMq.CachedMessageProducer",
+      "reason": "Type XML says reports each operation as cache usage, but actual property getters/setters and synchronous Close/Dispose do not invoke Used; selected concrete properties document that distinction. Exact type-purpose wording held as documentation candidate, not a provider/cache lifetime finding."
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.ActiveMq.Topology.ActiveMqBrokerTopology",
+      "reason": "Exact current XML says immutable snapshot, but constructor materializes arrays and getters expose same caller-mutable slots with original entity references. Documentation-only contradiction held; no remote/lifetime defect inferred."
+    }
+  ],
+  "author_source_scope": {
+    "whole148_source_lines": 8670,
+    "all637_norms": true,
+    "report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package216-activemq637-current185-contract-context-r1/REPORT.json",
+    "sha256": "3f92562ceb359ad3f778a76704cf4cd2a1fa9a3b7d0b970810012d4625c1ffec"
+  },
+  "independent_scope": {
+    "whole148_source_lines": 8670,
+    "all637_norms_and_exact22_overlay": true,
+    "report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package216-activemq637-norm22-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "240b91202aeb810a93cd113bd5a1e1deb8d9377858423790b8f60160b1bdb796"
+  },
+  "root_scope": {
+    "reports": "373ef7/6dcc86",
+    "whole_exact22_corrected_norms_and11holds": "76fef9",
+    "actual_PDB_and_package_counterproof": "0d0dfd/198575",
+    "actual_PDB_documents": 157,
+    "selected148_source_byte_equal_current_frozen_and_PDB": true,
+    "actual_package_CRC_and_XML637": true,
+    "exact_original_CSV_and_Master_disjoint": true,
+    "root_personally_whole148_or637": false
+  },
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package216-activemq637-norm22-precision-overlay-r1/PER_ID637_CURRENT_CONTRACT_CONTEXT_CORRECTED.json",
+    "sha256": "fee05bb4407a0cb3ce7d7fed45e5dac4e3cfba3a64237235cc8bb67f94e8022f"
+  },
+  "counts": {
+    "raw_before": 10123,
+    "raw_after": 10749,
+    "original_canonical_before": 9261,
+    "original_canonical_after": 9887,
+    "original_denominator": 18569,
+    "original_remaining_after": 8682
+  },
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_member_review_closed": false,
+  "limits": [
+    "Declaration and local source facts only; not broker readiness/send/settlement/cancellation/lifetime success.",
+    "Six documentation contradictions and five concrete construction/lifetime workflows remain held;188 omitted concrete methods remain open.",
+    "Twenty-two corrections are dossier precision only, no new product findings.",
+    "Historical typed tuple stays historical; actual185 Source/PDB/XML physical counterproof is not fresh compiler-surface extraction or native proof."
+  ]
+}

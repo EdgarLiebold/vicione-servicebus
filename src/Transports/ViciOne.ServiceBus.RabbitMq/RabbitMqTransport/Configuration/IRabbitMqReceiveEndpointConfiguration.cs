@@ -8,7 +8,7 @@ public interface IRabbitMqReceiveEndpointConfiguration :
     IReceiveEndpointConfiguration,
     IRabbitMqEndpointConfiguration
 {
-    /// <summary>Gets the immutable receive settings used to declare broker topology.</summary>
+    /// <summary>Gets the receive settings used to declare broker topology.</summary>
     ReceiveSettings Settings { get; }
 
     /// <summary>Builds and attaches the receive endpoint to a running host.</summary>

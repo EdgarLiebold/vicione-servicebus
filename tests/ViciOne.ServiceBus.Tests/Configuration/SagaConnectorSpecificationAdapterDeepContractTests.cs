@@ -424,6 +424,162 @@ public sealed class SagaConnectorSpecificationAdapterDeepContractTests
         Assert.Equal(0, untouchedBuilder.AddCalls);
     }
 
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(2, false)]
+    [InlineData(3, false)]
+    [InlineData(3, true)]
+    [RequirementCoverage("REQ-VSB-CONFIGURATION-OBSERVER-LIFECYCLE", "saga-constructor-rolls-back-acquired-observer-handles")]
+    public void Constructor_PartialObserverConnectionsAreRolledBackWithoutLosingFailures(int failureAt, bool cleanupThrows)
+    {
+        ISagaMessageSpecification<AdapterSaga>[] sources =
+        [
+            new SagaConnector<AdapterSaga, AdapterMessage>.SagaMessageSpecification(),
+            new SagaConnector<AdapterSaga, OtherMessage>.SagaMessageSpecification(),
+            new SagaConnector<AdapterSaga, ThirdMessage>.SagaMessageSpecification(),
+        ];
+        var primary = new IOException("Saga observer connection admission failed");
+        var cleanup = new IOException("Saga observer connection cleanup failed");
+        var state = new ConstructorConnectionState(failureAt, primary, cleanupThrows ? cleanup : null);
+        ISagaMessageSpecification<AdapterSaga>[] delegated = sources.Select(source =>
+        {
+            var proxy = DispatchProxy.Create<ISagaMessageSpecification<AdapterSaga>, ConstructorMessageSpecificationProxy>();
+            var implementation = (ConstructorMessageSpecificationProxy)(object)proxy;
+            implementation.Source = source;
+            implementation.State = state;
+            return proxy;
+        }).ToArray();
+        SagaSpecification<AdapterSaga>? constructed = null;
+        ConnectHandle? observedHandle = null;
+        var observer = new RecordingSagaObserver();
+        try
+        {
+            Exception? failure = Record.Exception(() => constructed = new SagaSpecification<AdapterSaga>(delegated));
+            Assert.Equal(failureAt == 0 ? 3 : failureAt, state.ConnectCalls);
+            Assert.Equal(failureAt == 0 ? 3 : failureAt - 1, state.Handles.Count);
+            SagaConfigurationObservable supplied = Assert.IsType<SagaConfigurationObservable>(state.Observer);
+            if (failureAt == 0)
+            {
+                Assert.Null(failure);
+                Assert.NotNull(constructed);
+                observedHandle = constructed.ConnectSagaConfigurationObserver(observer);
+            }
+            else
+            {
+                Assert.Null(constructed);
+                Assert.NotNull(failure);
+                if (failure is AggregateException aggregate)
+                    Assert.Same(primary, Assert.Single(aggregate.Flatten().InnerExceptions, cause => ReferenceEquals(cause, primary)));
+                else
+                    Assert.Same(primary, failure);
+                // The real constructor supplied this observer through the public connector SPI.
+                observedHandle = supplied.Connect(observer);
+            }
+
+            foreach (ISagaMessageSpecification<AdapterSaga> source in sources)
+                Assert.Empty(source.Validate());
+
+            Assert.Equal(failureAt == 0 ? 3 : 0, observer.MessageCalls);
+            Assert.All(state.Handles, handle => Assert.Equal(failureAt == 0 ? 0 : 1, handle.DisconnectCalls));
+            if (failureAt != 0)
+            {
+                if (cleanupThrows)
+                {
+                    var aggregate = Assert.IsType<AggregateException>(failure);
+                    IReadOnlyList<Exception> causes = aggregate.Flatten().InnerExceptions;
+                    Assert.Equal(2, causes.Count);
+                    Assert.Same(primary, Assert.Single(causes, cause => ReferenceEquals(cause, primary)));
+                    Assert.Same(cleanup, Assert.Single(causes, cause => ReferenceEquals(cause, cleanup)));
+                }
+                else
+                    Assert.Same(primary, failure);
+            }
+        }
+        finally
+        {
+            try
+            {
+                observedHandle?.Dispose();
+            }
+            finally
+            {
+                foreach (ConstructorConnectionHandle handle in state.Handles)
+                    handle.DisconnectWithoutInjectedFailure();
+            }
+        }
+    }
+
+    private sealed class ConstructorConnectionState(int failureAt, Exception primary, Exception? cleanup)
+    {
+        public int FailureAt { get; } = failureAt;
+        public Exception Primary { get; } = primary;
+        public Exception? Cleanup { get; } = cleanup;
+        public int ConnectCalls { get; set; }
+        public ISagaConfigurationObserver? Observer { get; set; }
+        public List<ConstructorConnectionHandle> Handles { get; } = [];
+    }
+
+    private class ConstructorMessageSpecificationProxy : DispatchProxy
+    {
+        public ISagaMessageSpecification<AdapterSaga> Source { get; set; } = null!;
+        public ConstructorConnectionState State { get; set; } = null!;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+            if (targetMethod.Name == nameof(ISagaConfigurationObserverConnector.ConnectSagaConfigurationObserver))
+            {
+                State.ConnectCalls++;
+                var observer = (ISagaConfigurationObserver)args![0]!;
+                State.Observer ??= observer;
+                if (State.ConnectCalls == State.FailureAt)
+                    throw State.Primary;
+                ConnectHandle connected = Source.ConnectSagaConfigurationObserver(observer);
+                var handle = new ConstructorConnectionHandle(connected, State.Handles.Count == 0 ? State.Cleanup : null);
+                State.Handles.Add(handle);
+                return handle;
+            }
+
+            try
+            {
+                return targetMethod.Invoke(Source, args);
+            }
+            catch (TargetInvocationException wrapper) when (wrapper.InnerException is not null)
+            {
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(wrapper.InnerException).Throw();
+                throw;
+            }
+        }
+    }
+
+    private sealed class ConstructorConnectionHandle(ConnectHandle inner, Exception? cleanup) : ConnectHandle
+    {
+        int _disconnected;
+        bool _injectCleanup = true;
+        public int DisconnectCalls { get; private set; }
+
+        public void Disconnect()
+        {
+            if (Interlocked.Exchange(ref _disconnected, 1) != 0)
+                return;
+            DisconnectCalls++;
+            inner.Disconnect();
+            if (_injectCleanup && cleanup is not null)
+                throw cleanup;
+        }
+
+        public void Dispose() => Disconnect();
+
+        public void DisconnectWithoutInjectedFailure()
+        {
+            _injectCleanup = false;
+            Disconnect();
+        }
+    }
+
+    private sealed record ThirdMessage;
+
+
     private static string[] PublicDeclaredMethodNames(Type type) =>
         type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
             .Select(method => method.Name)

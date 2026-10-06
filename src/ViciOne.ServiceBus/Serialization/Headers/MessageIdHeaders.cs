@@ -49,7 +49,7 @@ public sealed class MessageIdHeaders :
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
 
         if (key.Equals(nameof(MessageContext.MessageId), StringComparison.OrdinalIgnoreCase))
-            return _messageId as T;
+            return _messageId as T ?? defaultValue;
 
         return defaultValue;
     }
@@ -68,7 +68,7 @@ public sealed class MessageIdHeaders :
         {
             return _messageId is T result
                 ? result
-                : default;
+                : defaultValue;
         }
 
         return defaultValue;

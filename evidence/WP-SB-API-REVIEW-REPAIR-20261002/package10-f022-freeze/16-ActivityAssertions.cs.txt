@@ -1,0 +1,220 @@
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Monitoring;
+using ViciOne.ServiceBus.Providers.Persistence;
+using ViciOne.ServiceBus.Operations;
+using ViciOne.ServiceBus.Serialization;
+using Xunit;
+
+namespace ViciOneReview.ActivityOwnership;
+
+public static class ActivityAssertions
+{
+    public static async Task RunAsync(string mode, TimeSpan timeout, CancellationToken caller)
+    {
+        bool delivery = mode.StartsWith("delivery-", StringComparison.Ordinal);
+        bool formatter = mode is "admission-formatter-sampled" or "admission-stop-fault" or "delivery-formatter-sampled";
+        bool sampled = mode is not "admission-no-listener" and not "admission-unsampled" and not "delivery-unsampled";
+        string operation = delivery ? "durable send deliver" : "durable send admit";
+        string value = Guid.NewGuid().ToString("N");
+        var received = new TaskCompletionSource<(string Value, byte[] Body)>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        int receiveCount = 0;
+        string queue = "owned-activity-" + Guid.NewGuid().ToString("N");
+        string address = "loopback://owned-activity/" + queue;
+        var hostile = new FormattingUri(address);
+        Uri destination = formatter || !sampled ? hostile : new Uri(address);
+        byte[] body = delivery
+            ? Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new { message = new { value }, messageTypes = new[] { MessageUrn.ForTypeString<ReviewMessage>() } }))
+            : "{}"u8.ToArray();
+        var message = new SerializedDurableSend
+        {
+            Id = new DurableSendId(Guid.NewGuid()), ContractIdentity = new("review.activity-owner", 1),
+            DestinationAddress = destination, ContentType = "application/json", Body = body,
+        };
+        Assert.Same(message, message.Validate());
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UseReliableMessaging(reliable =>
+            {
+                reliable.UseInMemoryStore();
+                reliable.Store(new ReliableStoreLimits { MaximumStoredCount = mode == "admission-capacity" ? 1 : 10, MaximumStoredBytes = 4096 });
+                reliable.Delivery(options => { options.MaximumAttempts = 3; });
+                reliable.Retention(TimeSpan.FromDays(1));
+                reliable.AddMessageContract<ReviewMessage>("review.activity-owner");
+            });
+            configuration.UsingInMemory((_, transport) =>
+            {
+                transport.Host(new Uri("loopback://owned-activity/"));
+                if (delivery) transport.ReceiveEndpoint(queue, endpoint => endpoint.Handler<ReviewMessage>(context =>
+                {
+                    Interlocked.Increment(ref receiveCount);
+                    received.TrySetResult((context.Message.Value, context.Advanced().ReceiveContext.Body.ToArray()));
+                    context.Advanced().AddConsumeTask(release.Task);
+                    return Task.CompletedTask;
+                }));
+            });
+        });
+        StoreObservation? observation = null;
+        if (delivery)
+        {
+            ServiceDescriptor original = Assert.Single(services.Where(x => x.ServiceType == typeof(IOutboxStore<IBus>)));
+            var factory = Assert.IsAssignableFrom<Func<IServiceProvider, object>>(original.ImplementationFactory);
+            Assert.Equal(ServiceLifetime.Singleton, original.Lifetime);
+            services.Remove(original);
+            services.AddSingleton<IOutboxStore<IBus>>(provider => observation = new StoreObservation(
+                Assert.IsAssignableFrom<IOutboxStore<IBus>>(factory(provider)), message.Id));
+        }
+        ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        var started = new ConcurrentQueue<Activity>();
+        var stopped = new ConcurrentQueue<Activity>();
+        int samples = 0, stopFaults = 0;
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = (ref ActivityCreationOptions<System.Diagnostics.ActivityContext> options) => Sample(options.Name),
+            SampleUsingParentId = (ref ActivityCreationOptions<string> options) => Sample(options.Name),
+            ActivityStarted = activity =>
+            {
+                if (activity.OperationName != operation) return;
+                started.Enqueue(activity);
+                if (formatter) hostile.Arm();
+            },
+            ActivityStopped = activity =>
+            {
+                if (activity.OperationName != operation) return;
+                stopped.Enqueue(activity);
+                if (mode == "admission-stop-fault")
+                { Interlocked.Increment(ref stopFaults); throw new InvalidOperationException("owned-stop-listener-fault"); }
+            },
+        };
+        ActivitySamplingResult Sample(string name)
+        {
+            if (name != operation) return ActivitySamplingResult.None;
+            Interlocked.Increment(ref samples);
+            return sampled ? ActivitySamplingResult.AllDataAndRecorded : ActivitySamplingResult.None;
+        }
+        using var ambient = new Activity("owned-caller").Start();
+        IHostedService[] hosted = [];
+        IBusControl? ownedBus = null;
+        bool busStopped = false, hostedStopped = false;
+        await OwnedLifetime.RunAsync(async () =>
+        {
+            IDurableSendAdmission<IBus> admission = provider.GetRequiredService<IDurableSendAdmission<IBus>>();
+            IOutboxStore<IBus> store = provider.GetRequiredService<IOutboxStore<IBus>>();
+            SerializedDurableSend? preexisting = null;
+            if (mode == "admission-capacity")
+            {
+                preexisting = message with { Id = new DurableSendId(Guid.NewGuid()) };
+                Assert.Equal(DurableSendAdmissionDisposition.Accepted, (await admission.AdmitAsync(preexisting, caller)).Disposition);
+            }
+            if (mode != "admission-no-listener") ActivitySource.AddActivityListener(listener);
+            if (delivery)
+            {
+                ownedBus = provider.GetRequiredService<IBusControl>();
+                await ownedBus.StartAsync(caller).WaitAsync(timeout, caller);
+            }
+            if (mode == "admission-cancel")
+            {
+                using var canceled = new CancellationTokenSource(); canceled.Cancel();
+                OperationCanceledException failure = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                    () => admission.AdmitAsync(message, canceled.Token));
+                Assert.Equal(canceled.Token, failure.CancellationToken);
+                Assert.Equal(0, (await store.GetSnapshotAsync(caller)).StoredCount);
+            }
+            else if (mode == "admission-capacity")
+            {
+                await Assert.ThrowsAsync<DurableSendCapacityExceededException>(() => admission.AdmitAsync(message, caller));
+                var claims = await store.ClaimDueAsync(DateTimeOffset.UtcNow.AddMinutes(1), 1, TimeSpan.FromMinutes(1), caller);
+                Assert.Equal(preexisting!.Id, Assert.Single(claims).Message.Id);
+                Assert.Equal(1, (await store.GetSnapshotAsync(caller)).StoredCount);
+            }
+            else
+            {
+                DurableSendAdmissionResult accepted = await admission.AdmitAsync(message, caller).WaitAsync(timeout, caller);
+                Assert.Equal(DurableSendAdmissionDisposition.Accepted, accepted.Disposition);
+                Assert.Equal(message.Id, accepted.Id);
+                Assert.Equal(1, accepted.StoredCount); Assert.Equal(body.Length, accepted.StoredBytes);
+                if (delivery)
+                {
+                    Assert.NotNull(observation);
+                    Assert.StartsWith("ViciOne.ServiceBus.Providers.Persistence.InMemoryReliableStore", observation.InnerType, StringComparison.Ordinal);
+                    hosted = provider.GetServices<IHostedService>().ToArray();
+                    Assert.True(hosted.Length >= 3);
+                    foreach (var service in hosted) await service.StartAsync(caller).WaitAsync(timeout, caller);
+                    var actual = await received.Task.WaitAsync(timeout, caller);
+                    Assert.Equal(value, actual.Value); Assert.Equal(body, actual.Body);
+                    release.TrySetResult();
+                    var retirement = await observation.Retired.Task.WaitAsync(timeout, caller);
+                    Assert.Equal(message.Id, retirement.Id); Assert.NotEqual(Guid.Empty, retirement.Generation);
+                    DurableSendStoreSnapshot snapshot = await store.GetSnapshotAsync(caller);
+                    Assert.Equal(0, snapshot.StoredCount); Assert.Equal(0, snapshot.StoredBytes);
+                    Assert.NotNull(ownedBus);
+                    await ownedBus.StopAsync(CancellationToken.None).WaitAsync(timeout); busStopped = true;
+                    await StopHostedAsync(); hostedStopped = true;
+                    Assert.Equal(1, Volatile.Read(ref receiveCount));
+                }
+                else
+                {
+                    DurableSendStoreSnapshot snapshot = await store.GetSnapshotAsync(caller);
+                    Assert.Equal(1, snapshot.StoredCount); Assert.Equal(body.Length, snapshot.StoredBytes);
+                    var claim = Assert.Single(await store.ClaimDueAsync(DateTimeOffset.UtcNow.AddMinutes(1), 1, TimeSpan.FromMinutes(1), caller));
+                    Assert.Equal(message.Id, claim.Message.Id); Assert.Equal(body, claim.Message.Body.ToArray());
+                    Assert.Same(destination, claim.Message.DestinationAddress);
+                }
+            }
+            Assert.Same(ambient, Activity.Current);
+            Assert.False(ambient.IsStopped);
+            await provider.DisposeAsync().AsTask().WaitAsync(timeout);
+            if (sampled)
+            {
+                Activity actual = Assert.Single(started); Assert.True(actual.IsStopped);
+                Assert.Same(actual, Assert.Single(stopped)); Assert.Equal(operation, actual.OperationName);
+                Assert.Equal(1, samples);
+            }
+            else
+            {
+                Assert.Empty(started); Assert.Empty(stopped);
+                Assert.Equal(mode == "admission-no-listener" ? 0 : 1, samples);
+            }
+            if (!delivery && !sampled) Assert.Equal(0, hostile.Calls);
+            Assert.Equal(formatter ? 1 : 0, hostile.Failures);
+            Assert.Equal(mode == "admission-stop-fault" ? 1 : 0, stopFaults);
+            Assert.Same(ambient, Activity.Current);
+            Assert.False(ambient.IsStopped);
+        }, () => { release.TrySetResult(); return Task.CompletedTask; },
+            () => ownedBus is not null && !busStopped ? ownedBus.StopAsync(CancellationToken.None).WaitAsync(timeout) : Task.CompletedTask,
+            () => hostedStopped ? Task.CompletedTask : StopHostedAsync(),
+            () => provider.DisposeAsync().AsTask().WaitAsync(timeout),
+            () => { foreach (var activity in started) if (!activity.IsStopped) activity.Dispose(); return Task.CompletedTask; });
+        Task StopHostedAsync() => OwnedLifetime.RunAsync(() => Task.CompletedTask,
+            hosted.Reverse().Select<IHostedService, Func<Task>>(service =>
+                () => service.StopAsync(CancellationToken.None).WaitAsync(timeout)).ToArray());
+    }
+    public sealed record ReviewMessage(string Value);
+    private sealed class FormattingUri(string address) : Uri(address)
+    {
+        private int _armed;
+        public int Failures;
+        public int Calls;
+        public void Arm() => Volatile.Write(ref _armed, 1);
+        public override string ToString()
+        {
+            Interlocked.Increment(ref Calls);
+            if (Interlocked.Exchange(ref _armed, 0) != 0)
+            { Interlocked.Increment(ref Failures); throw new FormatException("owned-valid-URI-formatter-fault"); }
+            return base.ToString();
+        }
+    }
+}

@@ -98,7 +98,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
         CREATE TABLE IF NOT EXISTS "{0}".queue
         (
             id          bigint          not null primary key default nextval('"{0}".topology_seq'),
-            updated     timestamptz     not null default (now() at time zone 'utc'),
+            updated     timestamptz     not null default (now()),
 
             name        text            not null,
             type        integer         not null,
@@ -118,7 +118,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
         CREATE TABLE IF NOT EXISTS "{0}".topic
         (
             id          bigint      not null primary key default nextval('"{0}".topology_seq'),
-            updated     timestamptz not null default (now() at time zone 'utc'),
+            updated     timestamptz not null default (now()),
 
             name        text        not null
         );
@@ -129,7 +129,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
         CREATE TABLE IF NOT EXISTS "{0}".topic_subscription
         (
             id              bigint       not null primary key default nextval('"{0}".topology_seq'),
-            updated         timestamptz  not null default (now() at time zone 'utc'),
+            updated         timestamptz  not null default (now()),
 
             source_id       bigint       not null references "{0}".topic (id) ON DELETE CASCADE,
             destination_id  bigint       not null references "{0}".topic (id) ON DELETE CASCADE,
@@ -151,7 +151,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
         CREATE TABLE IF NOT EXISTS "{0}".queue_subscription
         (
             id              bigint       not null primary key default nextval('"{0}".topology_seq'),
-            updated         timestamptz  not null default (now() at time zone 'utc'),
+            updated         timestamptz  not null default (now()),
 
             source_id       bigint       not null references "{0}".topic (id) ON DELETE CASCADE,
             destination_id  bigint       not null references "{0}".queue (id) ON DELETE CASCADE,
@@ -192,7 +192,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
             response_address     text,
             fault_address        text,
 
-            sent_time            timestamptz NOT NULL DEFAULT (now() at time zone 'utc'),
+            sent_time            timestamptz NOT NULL DEFAULT (now()),
 
             headers              jsonb,
             host                 jsonb
@@ -232,6 +232,36 @@ internal sealed class PostgreSqlDatabaseMigrator :
         SELECT "{0}".create_index_if_not_exists('message_delivery_transport_message_id_ndx',
                 'CREATE INDEX IF NOT EXISTS message_delivery_transport_message_id_ndx ON "{0}".message_delivery (transport_message_id);');
 
+        -- Save only the four supported topology signatures. A recreated routine must retain
+        -- its existing owner, explicit EXECUTE grants, grant options, and PUBLIC revocation.
+        CREATE TEMP TABLE vicione_topology_routine_acl ON COMMIT DROP AS
+        SELECT p.oid AS original_oid, p.proname::text AS routine_name,
+               pg_catalog.oidvectortypes(p.proargtypes) AS argument_types,
+               p.proowner AS owner_oid,
+               COALESCE(p.proacl, pg_catalog.acldefault('f', p.proowner)) AS privileges
+        FROM pg_catalog.pg_proc p
+        WHERE p.oid = ANY (ARRAY[
+            to_regprocedure('"{0}".create_queue(text,integer,integer)')::oid,
+            to_regprocedure('"{0}".create_topic(text)')::oid,
+            to_regprocedure('"{0}".create_topic_subscription(text,text,integer,text,jsonb)')::oid,
+            to_regprocedure('"{0}".create_queue_subscription(text,text,integer,text,jsonb)')::oid]);
+
+        DO $topology_return_upgrade$
+        DECLARE
+            routine_oid oid;
+        BEGIN
+            FOR routine_oid IN
+                SELECT p.oid
+                FROM pg_catalog.pg_proc p
+                JOIN pg_temp.vicione_topology_routine_acl saved ON saved.original_oid = p.oid
+                WHERE saved.routine_name <> 'create_queue'
+                    AND p.prorettype = 'pg_catalog.int4'::regtype
+            LOOP
+                EXECUTE format('DROP FUNCTION %s RESTRICT', routine_oid::regprocedure);
+            END LOOP;
+        END
+        $topology_return_upgrade$;
+
         DO $cleanup$
         DECLARE
             routine_oid oid;
@@ -249,7 +279,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
         $cleanup$;
 
         CREATE FUNCTION "{0}".create_queue(queue_name text, auto_delete integer DEFAULT NULL, max_delivery_count integer DEFAULT NULL)
-            RETURNS integer
+            RETURNS bigint
         AS
         $$
         DECLARE
@@ -261,20 +291,20 @@ internal sealed class PostgreSqlDatabaseMigrator :
 
             INSERT INTO "{0}".queue (name, type, auto_delete, max_delivery_count) VALUES (queue_name, 1, auto_delete, COALESCE(max_delivery_count, 10))
                 ON CONFLICT ON CONSTRAINT unique_queue DO
-                UPDATE SET updated = (now() at time zone 'utc'),
+                UPDATE SET updated = (now()),
                            auto_delete = COALESCE(create_queue.auto_delete, excluded.auto_delete),
                            max_delivery_count = COALESCE(create_queue.max_delivery_count, excluded.max_delivery_count, 10)
                 RETURNING queue.id INTO v_queue_id;
 
             INSERT INTO "{0}".queue (name, type, auto_delete, max_delivery_count) VALUES (queue_name, 2, auto_delete, COALESCE(max_delivery_count, 10))
                 ON CONFLICT ON CONSTRAINT unique_queue DO
-                UPDATE SET updated = (now() at time zone 'utc'),
+                UPDATE SET updated = (now()),
                            auto_delete = COALESCE(create_queue.auto_delete, excluded.auto_delete),
                            max_delivery_count = COALESCE(create_queue.max_delivery_count, excluded.max_delivery_count, 10);
 
             INSERT INTO "{0}".queue (name, type, auto_delete, max_delivery_count) VALUES (queue_name, 3, auto_delete, COALESCE(max_delivery_count, 10))
                 ON CONFLICT ON CONSTRAINT unique_queue DO
-                UPDATE SET updated = (now() at time zone 'utc'),
+                UPDATE SET updated = (now()),
                            auto_delete = COALESCE(create_queue.auto_delete, excluded.auto_delete),
                            max_delivery_count = COALESCE(create_queue.max_delivery_count, excluded.max_delivery_count, 10);
 
@@ -284,7 +314,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
         $$ LANGUAGE plpgsql;
 
         CREATE OR REPLACE FUNCTION "{0}".create_topic(topic_name text)
-            RETURNS integer
+            RETURNS bigint
         AS
         $$
         DECLARE
@@ -296,7 +326,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
 
             INSERT INTO "{0}".topic (name) VALUES (topic_name)
                 ON CONFLICT ON CONSTRAINT unique_topic DO
-                UPDATE SET updated = (now() at time zone 'utc')
+                UPDATE SET updated = (now())
                 RETURNING topic.id INTO v_topic_id;
 
             RETURN v_topic_id;
@@ -306,7 +336,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
 
         CREATE OR REPLACE FUNCTION "{0}".create_topic_subscription(source_topic_name text, destination_topic_name text, type integer,
             routing_key text DEFAULT '', filter jsonb DEFAULT '{{}}')
-            RETURNS integer
+            RETURNS bigint
         AS
         $$
         DECLARE
@@ -333,7 +363,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
             INSERT INTO "{0}".topic_subscription (source_id, destination_id, sub_type, routing_key, filter)
                 VALUES (v_source_id, v_destination_id, type, COALESCE(create_topic_subscription.routing_key, ''), COALESCE(create_topic_subscription.filter, '{{}}'::jsonb))
                 ON CONFLICT ON CONSTRAINT unique_topic_subscription DO
-                UPDATE SET updated = (now() at time zone 'utc')
+                UPDATE SET updated = (now())
                 RETURNING topic_subscription.id INTO v_topic_subscription_id;
 
             RETURN v_topic_subscription_id;
@@ -343,7 +373,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
 
         CREATE OR REPLACE FUNCTION "{0}".create_queue_subscription(source_topic_name text, destination_queue_name text, type integer,
             routing_key text DEFAULT '', filter jsonb DEFAULT '{{}}')
-            RETURNS integer
+            RETURNS bigint
         AS
         $$
         DECLARE
@@ -370,7 +400,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
             INSERT INTO "{0}".queue_subscription (source_id, destination_id, sub_type, routing_key, filter)
                 VALUES (v_source_id, v_destination_id, type, COALESCE(create_queue_subscription.routing_key, ''), COALESCE(create_queue_subscription.filter, '{{}}'::jsonb))
                 ON CONFLICT ON CONSTRAINT unique_queue_subscription DO
-                UPDATE SET updated = (now() at time zone 'utc')
+                UPDATE SET updated = (now())
                 RETURNING queue_subscription.id INTO v_queue_subscription_id;
 
             RETURN v_queue_subscription_id;
@@ -460,7 +490,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
                 RAISE EXCEPTION 'Queue not found: %', queue_name;
             END IF;
 
-            v_now := (now() at time zone 'utc');
+            v_now := (now());
             v_enqueue_time := v_now + lock_duration;
 
             RETURN QUERY WITH msgs AS (
@@ -561,7 +591,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
                 RAISE EXCEPTION 'Queue not found: %', queue_name;
             END IF;
 
-            v_now := (now() at time zone 'utc');
+            v_now := (now());
             v_enqueue_time := v_now + lock_duration;
 
             RETURN QUERY WITH msgs AS (
@@ -654,7 +684,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
                     AND NOT EXISTS(SELECT FROM "{0}".message_delivery md WHERE md.transport_message_id = v_transport_message_id);
 
                 INSERT INTO "{0}".queue_metric_capture (captured, queue_id, consume_count, error_count, dead_letter_count)
-                    VALUES (now() at time zone 'utc', v_queue_id, 1, 0, 0);
+                    VALUES (now(), v_queue_id, 1, 0, 0);
 
             END IF;
 
@@ -680,7 +710,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
             END IF;
 
             INSERT INTO "{0}".queue_metric_capture (captured, queue_id, consume_count, error_count, dead_letter_count)
-                VALUES (now() at time zone 'utc', v_queue_id, 0, 0, 0);
+                VALUES (now(), v_queue_id, 0, 0, 0);
 
             RETURN v_queue_id;
         END;
@@ -722,13 +752,13 @@ internal sealed class PostgreSqlDatabaseMigrator :
             END IF;
 
             UPDATE "{0}".message_delivery md
-                SET enqueue_time = (now() at time zone 'utc') + duration
+                SET enqueue_time = (now()) + duration
                 WHERE md.message_delivery_id = renew_message_lock.message_delivery_id AND md.lock_id = renew_message_lock.lock_id
                 RETURNING md.message_delivery_id, md.queue_id INTO v_message_delivery_id, v_queue_id;
 
             IF v_queue_id IS NOT NULL THEN
                 INSERT INTO "{0}".queue_metric_capture (captured, queue_id, consume_count, error_count, dead_letter_count)
-                    VALUES (now() at time zone 'utc', v_queue_id, 0, 0, 0);
+                    VALUES (now(), v_queue_id, 0, 0, 0);
             END IF;
 
             RETURN v_message_delivery_id;
@@ -754,7 +784,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
                 RAISE EXCEPTION 'Queue not found: %', queue_name;
             END IF;
 
-            v_enqueue_time := (now() at time zone 'utc');
+            v_enqueue_time := (now());
 
             UPDATE "{0}".message_delivery md
                 SET enqueue_time = v_enqueue_time, queue_id = v_queue_id, lock_id = NULL, consumer_id = NULL,
@@ -766,7 +796,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
 
             IF v_source_queue_id IS NOT NULL THEN
                 INSERT INTO "{0}".queue_metric_capture (captured, queue_id, consume_count, error_count, dead_letter_count)
-                    VALUES (now() at time zone 'utc', v_source_queue_id, 0,
+                    VALUES (now(), v_source_queue_id, 0,
                     CASE WHEN queue_type = 2 THEN 1 ELSE 0 END, CASE WHEN queue_type = 3 THEN 1 ELSE 0 END);
             END IF;
 
@@ -784,7 +814,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
             v_enqueue_time          timestamptz;
             v_queue_id              bigint;
         BEGIN
-            v_enqueue_time := (now() at time zone 'utc');
+            v_enqueue_time := (now());
             IF delay > INTERVAL '0 seconds' THEN
                 v_enqueue_time = v_enqueue_time + delay;
             END IF;
@@ -796,7 +826,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
 
             IF v_queue_id IS NOT NULL THEN
                 INSERT INTO "{0}".queue_metric_capture (captured, queue_id, consume_count, error_count, dead_letter_count)
-                    VALUES (now() at time zone 'utc', v_queue_id, 0, 0, 0);
+                    VALUES (now(), v_queue_id, 0, 0, 0);
             END IF;
 
             RETURN v_message_delivery_id;
@@ -845,7 +875,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
                 raise exception 'Queue not found';
             end if;
 
-            v_enqueue_time := (now() at time zone 'utc');
+            v_enqueue_time := (now());
             IF delay > INTERVAL '0 seconds' THEN
                 v_enqueue_time = v_enqueue_time + delay;
             END IF;
@@ -904,7 +934,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
                 RAISE EXCEPTION 'Topic not found';
             END IF;
 
-            v_enqueue_time := (now() at time zone 'utc');
+            v_enqueue_time := (now());
             IF delay > INTERVAL '0 seconds' THEN
                 v_enqueue_time = v_enqueue_time + delay;
             END IF;
@@ -965,7 +995,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
         DECLARE
             v_payload   json;
         BEGIN
-            IF NEW.enqueue_time <= (now() at time zone 'utc') THEN
+            IF NEW.enqueue_time <= (now()) THEN
                 v_payload = json_build_object(
                     'message_delivery_id', NEW.message_delivery_id,
                     'enqueue_time', to_char(NEW.enqueue_time, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')
@@ -1047,7 +1077,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
 
             WITH metrics AS (
                 DELETE FROM "{0}".queue_metric
-                    WHERE duration = interval '1 minute' AND start_time < (now() at time zone 'utc') - interval '8 hours'
+                    WHERE duration = interval '1 minute' AND start_time < (now()) - interval '8 hours'
                        RETURNING *
                 )
             INSERT INTO "{0}".queue_metric (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
@@ -1064,7 +1094,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
 
             WITH metrics AS (
                 DELETE FROM "{0}".queue_metric
-                    WHERE duration = interval '1 hour' AND start_time < (now() at time zone 'utc') - interval '48 hours'
+                    WHERE duration = interval '1 hour' AND start_time < (now()) - interval '48 hours'
                        RETURNING *
                 )
             INSERT INTO "{0}".queue_metric (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
@@ -1080,7 +1110,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
                            dead_letter_count = queue_metric.dead_letter_count + excluded.dead_letter_count;
 
             DELETE FROM "{0}".queue_metric
-                WHERE start_time < (now() at time zone 'utc') - interval '90 days';
+                WHERE start_time < (now()) - interval '90 days';
 
             RETURN 0;
         END;
@@ -1114,9 +1144,9 @@ internal sealed class PostgreSqlDatabaseMigrator :
         AS
         $$
         BEGIN
-            WITH expired AS (SELECT q.id, q.name, (now() at time zone 'utc') - make_interval(secs => q.auto_delete) as expires_at
+            WITH expired AS (SELECT q.id, q.name, (now()) - make_interval(secs => q.auto_delete) as expires_at
                              FROM "{0}".queue q
-                             WHERE q.type = 1 AND q.auto_delete IS NOT NULL AND (now() at time zone 'utc') - make_interval(secs => q.auto_delete) > updated),
+                             WHERE q.type = 1 AND q.auto_delete IS NOT NULL AND (now()) - make_interval(secs => q.auto_delete) > updated),
                  metrics AS (SELECT qm.queue_id, MAX(start_time) as start_time
                              FROM "{0}".queue_metric qm
                                       INNER JOIN expired q2 on q2.id = qm.queue_id
@@ -1162,7 +1192,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
                 RAISE EXCEPTION 'Queue not found: %', queue_name;
             END IF;
 
-            v_enqueue_time := (now() at time zone 'utc') + delay;
+            v_enqueue_time := (now()) + delay;
 
             UPDATE "{0}".message_delivery md
             SET enqueue_time      = v_enqueue_time,
@@ -1203,7 +1233,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
                 RAISE EXCEPTION 'Dead-Letter Queue not found: %', queue_name;
             END IF;
 
-            v_current_time := (now() at time zone 'utc');
+            v_current_time := (now());
 
             UPDATE "{0}".message_delivery md
             SET queue_id = v_target_queue_id
@@ -1219,7 +1249,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
 
             IF v_count > 0 THEN
                 INSERT INTO "{0}".queue_metric_capture (captured, queue_id, consume_count, error_count, dead_letter_count)
-                    VALUES (now() at time zone 'utc', v_source_queue_id, 0, 0, v_count);
+                    VALUES (now(), v_source_queue_id, 0, 0, v_count);
             END IF;
 
             RETURN v_count;
@@ -1270,7 +1300,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
                 RAISE EXCEPTION 'Queue type not found: %', target_queue_type;
             END IF;
 
-            v_enqueue_time := (now() at time zone 'utc') + delay;
+            v_enqueue_time := (now()) + delay;
 
             UPDATE "{0}".message_delivery md
             SET enqueue_time       = v_enqueue_time,
@@ -1299,9 +1329,9 @@ internal sealed class PostgreSqlDatabaseMigrator :
                SUM(x.message_error)                          as errored,
                SUM(x.message_dead_letter)                    as dead_lettered,
                SUM(x.message_locked)                         as locked,
-               COALESCE(SUM(x.consume_count), 0)::bigint     as consume_count,
-               COALESCE(SUM(x.error_count), 0)::bigint       as error_count,
-               COALESCE(SUM(x.dead_letter_count), 0)::bigint as dead_letter_count,
+               COALESCE(MAX(x.consume_count), 0)::bigint     as consume_count,
+               COALESCE(MAX(x.error_count), 0)::bigint       as error_count,
+               COALESCE(MAX(x.dead_letter_count), 0)::bigint as dead_letter_count,
                COALESCE(MAX(x.duration), 0)::int             as count_duration,
                MAX(x.queue_max_delivery_count)               as queue_max_delivery_count
 
@@ -1315,20 +1345,20 @@ internal sealed class PostgreSqlDatabaseMigrator :
                      CASE
                          WHEN q.type = 1
                              AND md.message_delivery_id IS NOT NULL
-                             AND md.enqueue_time <= (now() at time zone 'utc') THEN 1
+                             AND md.enqueue_time <= (now()) THEN 1
                          ELSE 0 END                                       as message_ready,
                      CASE
                          WHEN q.type = 1
                              AND md.message_delivery_id IS NOT NULL
                              AND md.lock_id IS NULL
-                             AND md.enqueue_time > (now() at time zone 'utc') THEN 1
+                             AND md.enqueue_time > (now()) THEN 1
                          ELSE 0 END                                       as message_scheduled,
                      CASE
                          WHEN q.type = 1
                              AND md.message_delivery_id IS NOT NULL
                              AND md.lock_id IS NOT NULL
                              AND md.delivery_count >= 1
-                             AND md.enqueue_time > (now() at time zone 'utc') THEN 1
+                             AND md.enqueue_time > (now()) THEN 1
                          ELSE 0 END                                       as message_locked,
                      CASE
                          WHEN q.type = 2
@@ -1352,7 +1382,7 @@ internal sealed class PostgreSqlDatabaseMigrator :
                                   FROM "{0}".queue_metric qm
                                            INNER JOIN "{0}".queue q2 on qm.queue_id = q2.id
                                   WHERE q2.type = 1
-                                    AND qm.start_time >= (now() at time zone 'utc') - interval '1 minutes'
+                                    AND qm.start_time >= (now()) - interval '1 minutes'
                                   ORDER BY qm.queue_id, qm.start_time DESC) qm ON qm.queue_id = q.id) x
         GROUP BY x.queue_name;
 
@@ -1367,6 +1397,100 @@ internal sealed class PostgreSqlDatabaseMigrator :
             FROM "{0}".queue_subscription qs
                      LEFT JOIN "{0}".queue q on qs.destination_id = q.id
                      LEFT JOIN "{0}".topic t on qs.source_id = t.id;
+
+        -- CREATE TABLE IF NOT EXISTS does not replace defaults in retained schemas.
+        ALTER TABLE "{0}".queue ALTER COLUMN updated SET DEFAULT now();
+        ALTER TABLE "{0}".topic ALTER COLUMN updated SET DEFAULT now();
+        ALTER TABLE "{0}".topic_subscription ALTER COLUMN updated SET DEFAULT now();
+        ALTER TABLE "{0}".queue_subscription ALTER COLUMN updated SET DEFAULT now();
+        ALTER TABLE "{0}".message ALTER COLUMN sent_time SET DEFAULT now();
+
+        DO $restore_topology_privileges$
+        DECLARE
+            saved record;
+            privilege record;
+            routine_identity text;
+            current_oid oid;
+            grantee_name text;
+            migration_role text := current_user;
+            restored_count integer;
+        BEGIN
+            CREATE TEMP TABLE vicione_topology_privilege_replay ON COMMIT DROP AS
+            SELECT saved_acl.original_oid, acl.grantor, acl.grantee, acl.is_grantable, false AS restored
+            FROM pg_temp.vicione_topology_routine_acl saved_acl,
+                LATERAL pg_catalog.aclexplode(saved_acl.privileges) acl;
+
+            FOR saved IN SELECT * FROM pg_temp.vicione_topology_routine_acl
+            LOOP
+                routine_identity := format('%I.%I(%s)', '{0}', saved.routine_name, saved.argument_types);
+                current_oid := to_regprocedure(routine_identity)::oid;
+                IF current_oid <> saved.original_oid THEN
+                    EXECUTE format('ALTER FUNCTION %s OWNER TO %I', routine_identity,
+                        pg_catalog.pg_get_userbyid(saved.owner_oid));
+
+                    -- Remove newly applied default grants before replaying the saved effective ACL.
+                    FOR privilege IN
+                        SELECT DISTINCT acl.grantee
+                        FROM pg_catalog.pg_proc p,
+                            LATERAL pg_catalog.aclexplode(COALESCE(p.proacl, pg_catalog.acldefault('f', p.proowner))) acl
+                        WHERE p.oid = current_oid
+                    LOOP
+                        grantee_name := CASE WHEN privilege.grantee = 0 THEN 'PUBLIC'
+                            ELSE format('%I', pg_catalog.pg_get_userbyid(privilege.grantee)) END;
+                        EXECUTE format('REVOKE ALL PRIVILEGES ON FUNCTION %s FROM %s', routine_identity, grantee_name);
+                    END LOOP;
+
+                    -- Replay grant chains only when the original grantor already has the
+                    -- grant option. SET ROLE retains the actual grantor/revocation semantics.
+                    WHILE EXISTS (SELECT 1 FROM pg_temp.vicione_topology_privilege_replay
+                        WHERE original_oid = saved.original_oid AND NOT restored)
+                    LOOP
+                        restored_count := 0;
+                        FOR privilege IN
+                            SELECT replay.* FROM pg_temp.vicione_topology_privilege_replay replay
+                            WHERE replay.original_oid = saved.original_oid AND NOT replay.restored
+                                AND pg_catalog.has_function_privilege(replay.grantor, current_oid, 'EXECUTE WITH GRANT OPTION')
+                        LOOP
+                            grantee_name := CASE WHEN privilege.grantee = 0 THEN 'PUBLIC'
+                                ELSE format('%I', pg_catalog.pg_get_userbyid(privilege.grantee)) END;
+                            EXECUTE format('SET LOCAL ROLE %I', pg_catalog.pg_get_userbyid(privilege.grantor));
+                            EXECUTE format('GRANT EXECUTE ON FUNCTION %s TO %s%s', routine_identity, grantee_name,
+                                CASE WHEN privilege.is_grantable THEN ' WITH GRANT OPTION' ELSE '' END);
+                            EXECUTE format('SET LOCAL ROLE %I', migration_role);
+                            UPDATE pg_temp.vicione_topology_privilege_replay
+                            SET restored = true
+                            WHERE original_oid = saved.original_oid AND grantor = privilege.grantor
+                                AND grantee = privilege.grantee;
+                            restored_count := restored_count + 1;
+                        END LOOP;
+                        IF restored_count = 0 THEN
+                            RAISE EXCEPTION 'The topology function EXECUTE grant chain could not be restored for %', routine_identity;
+                        END IF;
+                    END LOOP;
+
+                    -- GRANT may only warn: verify the effective ACL instead of trusting replay bookkeeping.
+                    IF EXISTS (
+                        WITH expected_acl AS (
+                            SELECT acl.grantor, acl.grantee, acl.privilege_type, acl.is_grantable
+                            FROM pg_catalog.aclexplode(saved.privileges) acl
+                        ), actual_acl AS (
+                            SELECT acl.grantor, acl.grantee, acl.privilege_type, acl.is_grantable
+                            FROM pg_catalog.pg_proc p,
+                                LATERAL pg_catalog.aclexplode(COALESCE(p.proacl, pg_catalog.acldefault('f', p.proowner))) acl
+                            WHERE p.oid = current_oid
+                        )
+                        SELECT 1 FROM (
+                            (SELECT * FROM expected_acl EXCEPT SELECT * FROM actual_acl)
+                            UNION ALL
+                            (SELECT * FROM actual_acl EXCEPT SELECT * FROM expected_acl)
+                        ) acl_delta
+                    ) THEN
+                        RAISE EXCEPTION 'The topology function EXECUTE ACL was not preserved for %', routine_identity;
+                    END IF;
+                END IF;
+            END LOOP;
+        END
+        $restore_topology_privileges$;
 
         SET ROLE none;
         """;
@@ -1426,10 +1550,15 @@ internal sealed class PostgreSqlDatabaseMigrator :
         await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
         string notifyChannelPrefix = PostgreSqlNotificationChannel.CreatePrefix(schema);
-        var command = new CommandDefinition(
-            string.Format(CreateInfrastructureSql, schema, role, notifyChannelPrefix), cancellationToken: cancellationToken);
+        await using (var transaction = await connection.Connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false))
+        {
+            var command = new CommandDefinition(
+                string.Format(CreateInfrastructureSql, schema, role, notifyChannelPrefix),
+                transaction: transaction, cancellationToken: cancellationToken);
 
-        await connection.Connection.ExecuteScalarAsync<int>(command).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(command).ConfigureAwait(false);
+            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        }
 
         var columnTypeCommand = new CommandDefinition(BodyExactColumnTypeSql, new { Schema = schema }, cancellationToken: cancellationToken);
         bool? columnIsJson = await connection.Connection.ExecuteScalarAsync<bool?>(columnTypeCommand).ConfigureAwait(false);

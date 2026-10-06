@@ -1,0 +1,104 @@
+{
+  "status": "SCOPED_ACCEPT_F022_FROZEN_PRODUCT_PUBLIC_ORACLE_RUNNER_AND_R2_COUNTERPROOFS",
+  "reviewer_role": "Independent internal adversarial readonly reviewer, not external product team or PO release",
+  "freeze_sha256": "74225b35b438aaf9a6e4cee0100a9db52f2ba35d618871ae04836e6c692c5010",
+  "utc": "2026-10-03T03:05:37.744686+00:00",
+  "blocking_findings": [],
+  "source_result": "Exactly two analogous catch cleanups dispose the actual started local Activity via existing isolated helper before None. No public API/XML, URI acceptance, storage/dispatch policy or metric-schema change.",
+  "owned_inputs_full_count": 25,
+  "route_dependencies_full_personal_hash_reused": 28,
+  "source_snapshots_independently_bound": 54,
+  "actual_receipts_independently_journal_log_bound": 47,
+  "historical_exclusions": [
+    "Initial compiler setup 13 errors and second setup 5 errors are read and excluded",
+    "Initial r1 oracle and mutant runs are preserved historical; final r2 oracle is the acceptance basis"
+  ],
+  "native_r2": {
+    "original": {
+      "actual_cases": 10,
+      "causal_red": 3,
+      "positive_green": 7,
+      "red_assertion": "TrueException at exact own Activity.IsStopped assertion, final ActivityAssertions.cs:182; after actual operation/positive drain/storage witnesses"
+    },
+    "corrected_selected_package": {
+      "actual_cases": 10,
+      "all_green": true,
+      "core_loaded_sha256": "9b8c888fd94afa2510633079d4c481a92fd08f6eec69a74bdfcf2647e5b9428a"
+    },
+    "mutant_frame_baseline": {
+      "actual_cases": 10,
+      "all_green": true
+    },
+    "mutants": [
+      {
+        "name": "admission-cleanup-omitted",
+        "causal_exception": "Xunit.Sdk.TrueException",
+        "causal_assertion_or_fault": "Assert.True() Failure\nExpected: True\nActual:   False",
+        "paired_positive_green": true,
+        "source_reconstructed_exactly": true,
+        "actual_loaded_binary_bound": true
+      },
+      {
+        "name": "delivery-cleanup-omitted",
+        "causal_exception": "Xunit.Sdk.TrueException",
+        "causal_assertion_or_fault": "Assert.True() Failure\nExpected: True\nActual:   False",
+        "paired_positive_green": true,
+        "source_reconstructed_exactly": true,
+        "actual_loaded_binary_bound": true
+      },
+      {
+        "name": "caller-activity-disposed",
+        "causal_exception": "Xunit.Sdk.FalseException",
+        "causal_assertion_or_fault": "Assert.False() Failure\nExpected: False\nActual:   True",
+        "paired_positive_green": true,
+        "source_reconstructed_exactly": true,
+        "actual_loaded_binary_bound": true
+      },
+      {
+        "name": "unsafe-listener-disposal",
+        "causal_exception": "System.InvalidOperationException",
+        "causal_assertion_or_fault": "owned-stop-listener-fault",
+        "paired_positive_green": true,
+        "source_reconstructed_exactly": true,
+        "actual_loaded_binary_bound": true
+      }
+    ],
+    "mutant_frame_rollback": {
+      "actual_cases": 10,
+      "all_green": true
+    }
+  },
+  "binary_provenance": {
+    "selected_package_chains": 4,
+    "zip_cache_output_loaded_byte_equality": true,
+    "embedded_PE_PDB_Source_matches54": true,
+    "packed_public_core_XML_byte_equal": true,
+    "only_changed_package_core_source_document": "ServiceBusInstrumentation.cs",
+    "compile_provenance_is_not_full_semantic_owner_read": true
+  },
+  "public_oracle_assessment": {
+    "no_IVT_source_inclusion_project_refs_private_reflection": true,
+    "store_observation": "Transparent public interface descriptor decorator invokes original real concrete-store registration factory, delegates all 11 operations including tokens/results/faults; retirement signal occurs only after actual true/exact ID/nonempty generation. Underlying concrete store remains DI-owned.",
+    "delivery": "Actual normal in-memory dispatcher, configured receiver and registered hosted lifecycle; formatter armed only at real delivery ActivityStarted, throws once, transport subsequently formats normally; positive exact payload/body, real retirement/store zero, drained callback count1.",
+    "ownership": "Own activity start/stop identity/IsStopped, caller Current identity and caller IsStopped=false before and after disposal. Provider disposal is not the sole lifecycle oracle; original selected package remains red after disposal.",
+    "faults": "Plain/no-listener/unsampled, exact capacity failure, exact cancelled-token and hostile stop-listener controls included; business/store witnesses precede lifecycle assertion.",
+    "finally": "All cleanup delegates attempted even on body assertion fault; gate released, successful recorded bus/host tasks joined, provider disposal awaited, any leaked captured activity compensating cleanup follows evidence. General noncooperative guard teardown outside claimed scope."
+  },
+  "resolved_review_question": "r1 caller mutant TrueException only observed own leak; final r2 actual log is FalseException at ambient.IsStopped line178, positively discriminating caller disposal. Preliminary warning is resolved without new changes.",
+  "limits": [
+    "Scope: F022 two Activity metadata-fault ownership corrections only, normal public admission and actual process-local InMemory delivery in the recorded .NET 10.0.10 X64 environment.",
+    "No whole Core766 owner read/test grade, API-grade, discovery, cloud/DB/broker/ARM, restart or durable backend promise. This readonly reviewer invokes no native operations.",
+    "Previous selected package frame contains earlier reviewed repairs and original F022 instrumentation; it is not the entire pristine frozen repository. Independently compared package PDB source rows differ only in F022 instrumentation.",
+    "Fresh previous/corrected selected package chains are verified; mutants are strict compiled DLL substitution into the fixed final r2 public consumer, not newly restored NuGet packages per mutant. The final output has the selected corrected package DLLs restored.",
+    "Timeout/guard/setup/compile failures are never causal reds/PASS. WaitAsync does not cancel/join an arbitrary noncooperative underlying task, so general guard-path task cleanup and host cancellation are not demonstrated. Recorded accepted cases finish without guard failures.",
+    "Actual admission cancellation is pre-cancelled caller admission, with exact token/type and positive empty store; it does not prove every concurrent delivery/host-cancellation race.",
+    "Real receive count one after successful full lifecycle stop is a positive witness for these three actual delivery cases, not an exactly-once or cross-restart transport guarantee.",
+    "The source helper safely isolates the demonstrated formatter and ActivityStopped-listener failures. Additional nested hostile listener combinations and retained-resource growth are not graded.",
+    "Recorded NuGet restore commands do not enforce --locked-mode; final retained 20-node lock graphs/content hashes, strict no-restore builds and selected-package/cache/output/actual-loaded bindings are verified."
+  ],
+  "new_native_runs_by_reviewer": 0,
+  "product_fixture_runner_writes_by_reviewer": 0,
+  "whole_grade": null,
+  "symbol_CLOSED_count": 0,
+  "reference_readclosure": "READ_CLOSURE.json"
+}

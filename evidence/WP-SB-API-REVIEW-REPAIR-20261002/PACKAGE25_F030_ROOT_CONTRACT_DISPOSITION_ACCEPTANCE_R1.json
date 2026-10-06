@@ -1,0 +1,57 @@
+{
+  "status": "ROOT_ACCEPTED_CONTRACT_AMENDED_AND_RUNTIME_GUARD_VERIFIED_SHARED_FINAL_PENDING",
+  "finding": "F-SB-API-030",
+  "utc": "2026-10-03T21:36:22.441354+00:00",
+  "original_startup_requirement_implemented": false,
+  "explicit_norm_disposition_not_oracle_correction": true,
+  "independent_reviews_FULL_read": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package25-f030-current-native-qualification/MANIFEST.json",
+      "sha256": "cf789f0f9ba228035cab29f15be6ab6290751d341be5f2b1c8fb8b6e743f5331",
+      "all_artifacts_bytes_hash_verified": 36
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package25-f030-contract-disposition-review-r2/MANIFEST.json",
+      "sha256": "6fb169e5d92385f905c1b6cf1a47f28af623461776fac8c56d22a2980435e27c",
+      "all_artifacts_bytes_hash_verified": 13
+    }
+  ],
+  "root_source_owner8_personally_FULL_prior_exact_hash_reused": true,
+  "root_six_target_product_sources_personally_FULL": true,
+  "root_three_actual_logs_FULL": true,
+  "root_public_XML_three_members_FULL": true,
+  "root_nine_actual_PDB_structural_and_source_bindings_FULL": true,
+  "root_actual_physical_package_count": 20,
+  "root_actual_physical_payload_members": 290,
+  "root_actual_loaded_products": [
+    {
+      "name": "ViciOne.ServiceBus",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package25-f030-current/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "sha256": "fabe24ebc6c66cb80476f81449930cdd6ce09b1c580e9c7bfd8f1858873e6a56"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Abstractions",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package25-f030-current/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "c651e3df23a4e4f9c2006a3a61617edfbb38e840eeedaba2aeac195e7acc62c4"
+    }
+  ],
+  "current_native8_pass": 8,
+  "historical_custom_long_controls_not_current_recompilation": true,
+  "historical_six_diagnostic_mutants_not_current_range_mutant_proof": true,
+  "new_norm_inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/vicione-architecture/work/CURRENT_ORDER.yaml",
+      "sha256": "779f444e96088041787704ca976b5e5cd6529320f0e69438bc216ce83e65a7eb",
+      "bytes": 315645
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/api/batch-time-limits.md",
+      "sha256": "fef9610759ba3eac46ba28b5f968fb4603fd229ef20899bf660e100a0a4d457b",
+      "bytes": 3141
+    }
+  ],
+  "arbitrary_custom_provider_range_prevalidation_claimed": false,
+  "root_Core766_FULL": false,
+  "current_full_unit_green": false,
+  "whole_API_Aplus": false
+}

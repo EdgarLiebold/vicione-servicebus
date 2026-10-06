@@ -1,0 +1,146 @@
+{
+  "utc": "2026-10-06T05:28:24.415011+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_SOURCE24_DECLARATIVE_SIGNATURES_ONLY",
+  "author9": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package343-abstractions-delegate5-type4-bounded-local-contracts-proposed-r1/MANIFEST.json",
+    "sha256": "d5ebf57b12fbf40d67f15c25d52b2f58c6f8bf8abafb479f8dddd20f8d91fdf6"
+  },
+  "author15": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package343-abstractions-delegate-compiler15-declarative-contracts-proposed-r1/MANIFEST.json",
+    "sha256": "6b409ce3be8380c327c77553b534de23b14c26276ace0f924696d088342f92e9"
+  },
+  "independent9": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package343-abstractions9-independent-scanner-source-peer-r1/MANIFEST.json",
+    "sha256": "24dcc454749523676c9b5e8d547a2a2262037e4332e0afe3ee97c0eb14859d6b"
+  },
+  "independent15": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package343-delegate15-independent-source-peer-r1/MANIFEST.json",
+    "sha256": "0ce39f8e4c0c6212fc47f64ecdf1cb5b35d4067b950b8d9167e6e528224b0146"
+  },
+  "root_whole_sources_receipts": [
+    "5fb9d6",
+    "7b541e",
+    "e1bf8c",
+    "c5842f"
+  ],
+  "root_full_norms9_receipt": "e2e0bc",
+  "root_full_norms15_receipt": "fcb274",
+  "root_full_actual_type_blocks_receipt": "d1b734",
+  "root_peer_reports_receipts": [
+    "52bd2e",
+    "656ce5"
+  ],
+  "root_current_source_and_frozen342_PDB_rejoin": true,
+  "source7_lines": 1824,
+  "interface_helper_lines": 10,
+  "original_accepted_before": 18209,
+  "original_accepted_after": 18233,
+  "original_remaining_after": 336,
+  "master_before": {
+    "sha256": "789baa3cd9a5e54e82bfb0e529e15c9b89031cb6a77b285d5addc4d4a64bec3f",
+    "rows": 19071
+  },
+  "new_members": [
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.GroupCallback`2.Invoke(System.Collections.Generic.IEnumerable{`0})"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.OrderCallback`1.Invoke(System.Collections.Generic.IEnumerable{`0})"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.RequestCallback.Invoke(System.Int32,System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.RequestCallback`1.Invoke(System.Int32,System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.ResultCallback`1.Invoke(`0,System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "T:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguratorDependencyExtensions"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "T:ViciOne.ServiceBus.NewIdParsers.Base32Parser"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "T:ViciOne.ServiceBus.Util.ActiveRequest"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "T:ViciOne.ServiceBus.Util.RequestRateAlgorithm"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.GroupCallback`2.#ctor(System.Object,System.IntPtr)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.GroupCallback`2.BeginInvoke(System.Collections.Generic.IEnumerable{`0},System.AsyncCallback,System.Object)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.GroupCallback`2.EndInvoke(System.IAsyncResult)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.OrderCallback`1.#ctor(System.Object,System.IntPtr)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.OrderCallback`1.BeginInvoke(System.Collections.Generic.IEnumerable{`0},System.AsyncCallback,System.Object)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.OrderCallback`1.EndInvoke(System.IAsyncResult)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.RequestCallback.#ctor(System.Object,System.IntPtr)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.RequestCallback.BeginInvoke(System.Int32,System.Threading.CancellationToken,System.AsyncCallback,System.Object)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.RequestCallback.EndInvoke(System.IAsyncResult)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.RequestCallback`1.#ctor(System.Object,System.IntPtr)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.RequestCallback`1.BeginInvoke(System.Int32,System.Threading.CancellationToken,System.AsyncCallback,System.Object)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.RequestCallback`1.EndInvoke(System.IAsyncResult)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.ResultCallback`1.#ctor(System.Object,System.IntPtr)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.ResultCallback`1.BeginInvoke(`0,System.Threading.CancellationToken,System.AsyncCallback,System.Object)"
+    ],
+    [
+      "ViciOne.ServiceBus.Abstractions",
+      "M:ViciOne.ServiceBus.Util.RequestRateAlgorithm.ResultCallback`1.EndInvoke(System.IAsyncResult)"
+    ]
+  ],
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "administrative_preflight_precision": "e512df path lookup expected historical /_/ but frozen342 actual absolute paths; failed before mkdir/any writes. Correct normalized path map 7fa43c; no source/compiler/test finding.",
+  "limits": "5 delegate Invoke and4 type local signatures plus15 individual compiler constructor/APM signatures only; no runtime binding, raw-pointer safety, callback execution, IL/MethodDef absence or owner lifecycle closure. Actual Microsoft PNSE policy externally verified; no project APM execution. Historical320 reflected epoch remains explicit; current342 source-checksum binding verified separately."
+}

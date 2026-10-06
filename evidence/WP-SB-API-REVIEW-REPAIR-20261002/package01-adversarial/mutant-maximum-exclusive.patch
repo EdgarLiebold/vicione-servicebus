@@ -1,0 +1,11 @@
+--- freeze/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/HostSettings.cs
++++ maximum-exclusive/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/HostSettings.cs
+@@ -47,7 +47,7 @@
+         set
+         {
+             ArgumentOutOfRangeException.ThrowIfLessThan(value, TimeSpan.FromMilliseconds(1), nameof(RetryMinBackoff));
+-            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, TimeSpan.FromMinutes(5), nameof(RetryMinBackoff));
++            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(value, TimeSpan.FromMinutes(5), nameof(RetryMinBackoff));
+             _retryMinBackoff = value;
+         }
+     }

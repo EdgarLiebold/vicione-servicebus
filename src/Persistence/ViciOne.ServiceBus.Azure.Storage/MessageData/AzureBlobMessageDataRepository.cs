@@ -148,10 +148,17 @@ public sealed class AzureBlobMessageDataRepository :
 
         try
         {
-            LogContext.Debug?.Log(
-                "GET Message Data: {Address} ({Blob})",
-                PublicBlobAddress(address),
-                blobClient.Name);
+            try
+            {
+                LogContext.Debug?.Log(
+                    "GET Message Data: {Address} ({Blob})",
+                    PublicBlobAddress(address),
+                    blobClient.Name);
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics do not change the message-data outcome.
+            }
 
             global::Azure.Response<BlobDownloadStreamingResult> response = await blobClient
                 .DownloadStreamingAsync(cancellationToken: cancellationToken)
@@ -226,7 +233,14 @@ public sealed class AzureBlobMessageDataRepository :
         }
 
         Uri address = PublicBlobAddress(blobClient.Uri);
-        LogContext.Debug?.Log("PUT Message Data: {Address} ({Blob})", address, blobClient.Name);
+        try
+        {
+            LogContext.Debug?.Log("PUT Message Data: {Address} ({Blob})", address, blobClient.Name);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics do not change the message-data outcome.
+        }
 
         return address;
     }

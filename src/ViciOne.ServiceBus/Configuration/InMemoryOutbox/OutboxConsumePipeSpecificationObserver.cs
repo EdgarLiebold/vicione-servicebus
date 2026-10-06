@@ -80,7 +80,7 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
             .Invoke(this, [configurator]);
     }
 
-    /// <summary>Consumes r configured.</summary>
+    /// <summary>Accepts consumer-wide configuration without modifying it.</summary>
     /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     public void ConsumerConfigured<TConsumer>(IConsumerConfigurator<TConsumer> configurator)
@@ -88,7 +88,7 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
     {
     }
 
-    /// <summary>Consumes r message configured.</summary>
+    /// <summary>Adds the outbox consume filter to the configured consumer message pipeline.</summary>
     /// <typeparam name="TConsumer">The consumer implementation used by the member.</typeparam>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="configurator">The configurator to update.</param>

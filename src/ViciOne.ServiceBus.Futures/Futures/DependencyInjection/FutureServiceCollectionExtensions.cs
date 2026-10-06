@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.Advanced.Registration;
@@ -132,9 +133,27 @@ internal static class FutureServiceCollectionExtensions
             ArgumentNullException.ThrowIfNull(collection);
             ArgumentNullException.ThrowIfNull(registrar);
             collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConsumerKind, FutureConsumerKind>());
-            collection.TryAddSingleton<TFuture>();
+            FutureRegistration<TFuture>? builtInRegistration = null;
+            if (typeof(TFuture).IsGenericType && typeof(TFuture).GetGenericTypeDefinition() == typeof(RequestConsumerFuture<,>))
+            {
+                // The built-in companion future has one definition owned by this registrar.
+                // Supply it explicitly without registering a global untyped definition alias.
+                collection.TryAddSingleton<TFuture>(provider =>
+                {
+                    IFutureDefinition<TFuture> definition = registrar.GetDefinition<IFutureDefinition<TFuture>>(provider)
+                        ?? throw new InvalidOperationException($"No future definition was registered for {TypeCache<TFuture>.ShortName}.");
+                    return builtInRegistration != null
+                        ? builtInRegistration.GetStateMachine(provider, definition)
+                        : ActivatorUtilities.CreateInstance<TFuture>(provider, definition);
+                });
+            }
+            else
+                collection.TryAddSingleton<TFuture>();
 
-            return registrar.GetOrAddRegistration<IFutureRegistration>(typeof(TFuture), _ => new FutureRegistration<TFuture>(registrar));
+            IFutureRegistration registration = registrar.GetOrAddRegistration<IFutureRegistration>(typeof(TFuture),
+                _ => new FutureRegistration<TFuture>(registrar));
+            builtInRegistration = registration as FutureRegistration<TFuture>;
+            return registration;
         }
     }
 
@@ -150,9 +169,55 @@ internal static class FutureServiceCollectionExtensions
             ArgumentNullException.ThrowIfNull(registrar);
             var registration = base.Register(collection, registrar);
 
-            registrar.AddDefinition<IFutureDefinition<TFuture>, TDefinition>();
+            Type definitionType = typeof(TDefinition);
+            if (definitionType.IsGenericType
+                && (definitionType.GetGenericTypeDefinition() == typeof(RequestConsumerFutureDefinition<,,,>)
+                    || definitionType.GetGenericTypeDefinition() == typeof(RequestConsumerFutureDefinition<,,,,>))
+                && UsesBuiltInDefinitionRegistration(registrar))
+            {
+                Type consumerType = definitionType.GetGenericArguments()[1];
+                var createArguments = typeof(FutureDefinitionRegistrar<TFuture, TDefinition>)
+                    .GetMethod(nameof(CreateCompanionArguments), BindingFlags.Static | BindingFlags.NonPublic)!
+                    .MakeGenericMethod(consumerType)
+                    .CreateDelegate<Func<IContainerRegistrar, Func<IServiceProvider, object[]>>>();
+                ((DependencyInjectionContainerRegistrar)registrar)
+                    .AddDefinitionWithArguments<IFutureDefinition<TFuture>, TDefinition>(createArguments(registrar));
+            }
+            else
+                registrar.AddDefinition<IFutureDefinition<TFuture>, TDefinition>();
 
             return registration;
+        }
+
+        static Func<IServiceProvider, object[]> CreateCompanionArguments<TConsumer>(IContainerRegistrar registrar)
+            where TConsumer : class, IConsumer
+        {
+            return provider =>
+            [
+                registrar.GetDefinition<IConsumerDefinition<TConsumer>>(provider)
+                ?? throw new InvalidOperationException($"No consumer definition was registered for {TypeCache<TConsumer>.ShortName}.")
+            ];
+        }
+
+        static bool UsesBuiltInDefinitionRegistration(IContainerRegistrar registrar)
+        {
+            if (registrar is not DependencyInjectionContainerRegistrar)
+                return false;
+
+            // An external override or interface reimplementation remains on its public SPI.
+            InterfaceMapping map = registrar.GetType().GetInterfaceMap(typeof(IContainerRegistrar));
+            for (int i = 0; i < map.InterfaceMethods.Length; i++)
+            {
+                if (map.InterfaceMethods[i].Name != nameof(IContainerRegistrar.AddDefinition))
+                    continue;
+
+                Type? declaringType = map.TargetMethods[i].DeclaringType;
+                return declaringType == typeof(DependencyInjectionContainerRegistrar)
+                    || declaringType is { IsGenericType: true }
+                    && declaringType.GetGenericTypeDefinition() == typeof(DependencyInjectionContainerRegistrar<>);
+            }
+
+            return false;
         }
     }
 }

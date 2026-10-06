@@ -1,0 +1,58 @@
+{
+  "status": "F021_FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+  "utc": "2026-10-03T20:56:19.241165+00:00",
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F021_IDENTITY_SOURCE_FREEZE_R2.json",
+      "sha256": "b0eb9eb618d87418d65d7f83d338c18ce3333704d54d6e6bc117b3b9f2f3bc0b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F021_MIGRATION_SOURCE_FREEZE_R3.json",
+      "sha256": "ed3be21178b0cefb9ed4de0491d12823608eb13216529409993a994297566dbd"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F021_EPOCHS_R6.json",
+      "sha256": "63515bac59fb9571f7439632792e3904b9ca893bd2f6d12ac5cbfb1de5d3f0bd"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F021_IDENTITY_MUTATIONS_R1.json",
+      "sha256": "adc331ef8430d46ed7f302e1a27d195ba2e4c63c8e91c9140d6deb3876c4394f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F021_ROOT_ACTUAL_MUTANT_READ_R1.json",
+      "sha256": "f5c8626cd167639e6b5457561b5d37f390e41b771c8fa0a767fcf89c827e9a80"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package23-f021-migration-native-qualification-r2/FINAL_MANIFEST.json",
+      "sha256": "d8336b813d87f9178ac7463c12f6aedb97af071cd20499f61530b3cd66db1c16"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package23-f021-epochs-runner-preflight-r1/actual-r6/FINAL_ACTUAL_R6_EPOCH_QUALIFICATION.json",
+      "sha256": "556031b32766406294b7f41c27b7a2c9af2ac424d7fe3901dc2dcffd1491bda3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package23-f021-identity-mutations-final-native-qualification-r1/FINAL_MANIFEST.json",
+      "sha256": "422adb73d896f4883ff58fcacd828e7f45b3dbb6445cd7aec10eb17297a1de56"
+    }
+  ],
+  "current_product_and_migration_docs_hash_equal": true,
+  "root_personal_read": "Own full five identity sources, entire migration helper/docs, complete migration10 and epoch10 owners, all actual epoch14 contract JSON and actual26 mutation receipts, six complete finite assertion failure blocks, all positive controls, complete independent migration/epoch/mutation final reports; same-actor whole unchanged collateral source reuse. No borrowed Core766 read credit.",
+  "migration_public_unique_cases": 29,
+  "actual_epoch_journeys": 6,
+  "actual_epoch_processes": 14,
+  "compiled_mutants_killed": 6,
+  "positive_controls_pass": 6,
+  "baseline29_and_rollback29_green": true,
+  "mutant_actual_receipts": 26,
+  "mutation_source_frame": {
+    "original": 75,
+    "new": 3,
+    "total": 78
+  },
+  "invariants": 92,
+  "independent_final_artifacts_all27_sha_verified": true,
+  "production_data_migration_executed": false,
+  "unobserved_native_library_telemetry_claim": false,
+  "canonical_core_owner766_full": false,
+  "whole_API_Aplus": false
+}

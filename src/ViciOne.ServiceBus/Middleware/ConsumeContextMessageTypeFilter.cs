@@ -62,7 +62,7 @@ public class ConsumeContextMessageTypeFilter :
         return GetMessagePipe<T>().Filter.ConnectPipe(key, pipe);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Dispatches the consume context through the registered message pipelines and their continuation policy.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -79,13 +79,43 @@ public class ConsumeContextMessageTypeFilter :
         async Task SendAsync()
         {
             var outputTasks = new List<Task>(outputPipes.Length);
-            for (var i = 0; i < outputPipes.Length; i++)
+            try
             {
-                var outputTask = outputPipes[i].SendAsync(context, _empty);
-                if (outputTask.Status == TaskStatus.RanToCompletion)
-                    continue;
+                for (var i = 0; i < outputPipes.Length; i++)
+                {
+                    var outputTask = outputPipes[i].SendAsync(context, _empty);
+                    if (outputTask.Status == TaskStatus.RanToCompletion)
+                        continue;
 
-                outputTasks.Add(outputTask);
+                    outputTasks.Add(outputTask);
+                }
+            }
+            catch (Exception admissionFailure)
+            {
+                Task joinedTask = Task.WhenAll(outputTasks);
+                try
+                {
+                    await joinedTask.ConfigureAwait(false);
+                }
+                catch (Exception outputFailure)
+                {
+                    var failures = new List<Exception> { admissionFailure };
+                    if (joinedTask.Exception is { } joinedFailures)
+                    {
+                        foreach (Exception failure in joinedFailures.InnerExceptions)
+                        {
+                            if (!ReferenceEquals(admissionFailure, failure))
+                                failures.Add(failure);
+                        }
+                    }
+                    else if (!ReferenceEquals(admissionFailure, outputFailure))
+                        failures.Add(outputFailure);
+
+                    if (failures.Count > 1)
+                        throw new AggregateException(failures);
+                }
+
+                throw;
             }
 
             await Task.WhenAll(outputTasks).ConfigureAwait(false);

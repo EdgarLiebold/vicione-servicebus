@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "ViciOne.ServiceBus": {
+        "type": "Direct",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "2IwkWCNm6pA3oQRT6lA3UwnuhDlOsQepyBgMZGpWgHp1xuIvZZ6ReC3SSptvd5VXaN7MjPPi0jnuUn7zcDVQXw==",
+        "dependencies": {
+          "FastExpressionCompiler": "5.4.1",
+          "ViciOne.ServiceBus.Abstractions": "1.0.0"
+        }
+      },
+      "ViciOne.ServiceBus.Abstractions": {
+        "type": "Direct",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA=="
+      },
+      "ViciOne.ServiceBus.SignalR": {
+        "type": "Direct",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "/Nf88XTjoYaj6OGW1+fB2M5zkgT9eE9JK1QXjcx8ku8QNexAJX29lawFi8ZXes82xMoUDBVNXUcj7T57RzMYMA==",
+        "dependencies": {
+          "FastExpressionCompiler": "5.4.1",
+          "ViciOne.ServiceBus": "1.0.0"
+        }
+      },
+      "xunit.v3.assert": {
+        "type": "Direct",
+        "requested": "[4.0.0, )",
+        "resolved": "4.0.0",
+        "contentHash": "QxYfC+98lCMe7Kl9iWDUeUn+gmiPJ2Sz/r+trSdp1mvKyDMXj8S1kYdfkFNJSHyUSQ6KWomenSDgfWhGpR8zEQ=="
+      },
+      "FastExpressionCompiler": {
+        "type": "Transitive",
+        "resolved": "5.4.1",
+        "contentHash": "nqMykMspK5cQd35Y8ulQzAujxCcCwZVUne32pC5xNpXqrbPCuKOPMWkKHJ3LveAZPm6dsVvump0TJ1SZ9RzfTQ=="
+      }
+    }
+  }
+}

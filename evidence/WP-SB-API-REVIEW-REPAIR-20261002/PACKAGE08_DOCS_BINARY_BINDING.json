@@ -1,0 +1,47 @@
+{
+  "status": "FRESH_PACKAGES_CACHE_XML_AND_RUNTIME_DLLS_VERIFIED",
+  "bindings": [
+    {
+      "package": "ViciOne.ServiceBus.Abstractions",
+      "entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+      "cache_matches": true,
+      "runtime_matches": true
+    },
+    {
+      "package": "ViciOne.ServiceBus.Abstractions",
+      "entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.xml",
+      "sha256": "1182e961a8760ac22f822533ae1ff9247402fecd5490a1fbbf09631d6acbdd02",
+      "cache_matches": true,
+      "runtime_matches": false
+    },
+    {
+      "package": "ViciOne.ServiceBus",
+      "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+      "sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+      "cache_matches": true,
+      "runtime_matches": true
+    },
+    {
+      "package": "ViciOne.ServiceBus",
+      "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+      "sha256": "beda69a21e970ddfdecc08bd744fe237cf78bdf35a51e57c1c980a789556e1c8",
+      "cache_matches": true,
+      "runtime_matches": false
+    },
+    {
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+      "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec",
+      "cache_matches": true,
+      "runtime_matches": true
+    },
+    {
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+      "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.xml",
+      "sha256": "907e8d3052ba3ed26713592df1f003c0ac0760e374a10070a9d99e8c7fe59128",
+      "cache_matches": true,
+      "runtime_matches": false
+    }
+  ]
+}

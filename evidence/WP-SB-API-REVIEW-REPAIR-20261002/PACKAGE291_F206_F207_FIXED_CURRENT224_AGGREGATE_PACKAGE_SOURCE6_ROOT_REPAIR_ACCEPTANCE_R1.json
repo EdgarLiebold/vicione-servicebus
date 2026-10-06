@@ -1,0 +1,39 @@
+{
+  "utc": "2026-10-06T01:13:13.646258+00:00",
+  "status": "F206_F207_FIXED_BOUNDED_REVIEWED_WITH_CURRENT_SOURCE6_REBASE",
+  "findings": [
+    "F-SB-API-206",
+    "F-SB-API-207"
+  ],
+  "actual_native": {
+    "original4_fixed": 4,
+    "whole_codefix": 48,
+    "whole_analyzers": 176,
+    "disjoint_total": 224,
+    "failed": 0,
+    "skipped": 0,
+    "subset4_not_added_twice": true
+  },
+  "capture": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package287-codefix-fixed-root-native-publication-capture-r2/REPORT.json",
+    "sha256": "07cfc4ac60baa921b6d5d04bfef68b365e2b350eeba12761e0f412386bc031d4"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package282-codefix-product1-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "b1c0a9f5e574ddbb4a55b8c5461f3211b390b022a0fe380fb0545d999503a696"
+  },
+  "independent_result_publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package287-codefix-fixed-native-publication-test-independent-qualification-r1/REPORT.json",
+    "sha256": "6125bbbd6cb9640aa4209e41b4554967b565bab73c9a37e3723789d195230483",
+    "role": "Productauthor disclosed; independent of Testauthor, distinctRuntime ProductSourcepeer mandatory"
+  },
+  "current_source6_rebase": "Only6existing Analyzer source SHA and actualPDB bindings replaced; allnorms/status/native/XML andother18889oldrows preserved exact. No new acceptedOriginal IDs or nativecreditfromsource rebase.",
+  "master_before_sha256": "a2472a966f561f3d110af0656d7d357d3029999dcf9c687ddadd9dfa38e20ca8",
+  "native_frame_limit": "CodefixTestpairedPDB qualified; Analyzer176 native-log result only, not separatelycapturedAnalyzerTestframe. Selected21 nofullloadedclosure. Actual1aggregateNuGet2DLL, standaloneXML unchanged, no separateCodefixNuGet.",
+  "known_findings_before": 208,
+  "known_dispositions_before": 205,
+  "known_dispositions_after": 207,
+  "Original_remaining": 536,
+  "whole_API_closed": false,
+  "grade": null
+}

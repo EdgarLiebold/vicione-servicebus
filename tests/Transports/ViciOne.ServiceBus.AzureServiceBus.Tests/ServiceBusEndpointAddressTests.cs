@@ -7,6 +7,22 @@ public sealed class ServiceBusEndpointAddressTests
 {
     static readonly Uri Host = new("sb://localhost/test-scope");
 
+    [Theory]
+    [InlineData("\n")]
+    [InlineData("\r\n")]
+    [InlineData("\0")]
+    [RequirementCoverage("REQ-VSB-ASB-ENDPOINT-ADDRESS", "asb-entity-name-rejects-final-lf-crlf-nul")]
+    public void EntityNameValidation_RejectsUnsupportedTrailingCharacters(string suffix)
+    {
+        var validator = global::ViciOne.ServiceBus.AzureServiceBus.Topology.ServiceBusEntityNameValidator.Validator;
+        Assert.True(validator.IsValidEntityName("orders"));
+        validator.ThrowIfInvalidEntityName("orders");
+
+        string invalid = "orders" + suffix;
+        Assert.False(validator.IsValidEntityName(invalid));
+        Assert.Throws<ConfigurationException>(() => validator.ThrowIfInvalidEntityName(invalid));
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-ENDPOINT-ADDRESS", "custom-namespace-port-survives-host-and-entity-address-projection")]
     public void CustomPort_RemainsOnScopedHostAndEveryEntityAddressForm()

@@ -1,0 +1,57 @@
+{
+  "root_actual_crc_and_build_payload_equality": true,
+  "packages": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package30-f042-r1/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "14948e27a173003bbfa39397153a105875609ab0f35b94863bd6d3b92b87b30f",
+      "bytes": 1500975,
+      "payloads": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "423da7672c71d2cada483bca6a1991286c8bf234f3627c0ec6a620617edc1336",
+          "bytes": 3018240
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "a0036bf5c37d56760ba4a9ee63de635f793f4aa160a87bdb062979e80f222071",
+          "bytes": 2475096
+        }
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package30-f042-r1/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "f76e8429315ce5c6dda9c62ed93962ae9128ac5a893370d726bfbd19e6b488eb",
+      "bytes": 458582,
+      "payloads": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "c651e3df23a4e4f9c2006a3a61617edfbb38e840eeedaba2aeac195e7acc62c4",
+          "bytes": 770560
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.xml",
+          "sha256": "8b9ea899c03cb5d26ef056e80c222da26514080928eb6771d62ad9e66b181651",
+          "bytes": 1363313
+        }
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package30-f042-r1/corrected/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "sha256": "628ea17a5c567ae40e3babb6c9b0c7a12fce4c66640b39aa97a4271bca9aa317",
+      "bytes": 200223,
+      "payloads": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "sha256": "0ec6ff9b8314bc19a22514ed6864de6c42458ded5a8d1d00d1651da0a5952332",
+          "bytes": 422400
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.xml",
+          "sha256": "5da9280ac7d22b4d57752d3034715c68295d0382ad26c0d7672d96cf3879ab30",
+          "bytes": 104101
+        }
+      ]
+    }
+  ],
+  "source_peer_manifest_sha256": "79291f2e88566f34530762ddf663a7de4050aa37598ca042b55662b00926b005"
+}

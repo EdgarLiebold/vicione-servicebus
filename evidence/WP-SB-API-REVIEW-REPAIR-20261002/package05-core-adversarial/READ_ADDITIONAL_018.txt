@@ -1,0 +1,122 @@
+READ {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json", "start_line": 2521, "end_line": 2640, "kind": "proof"}
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "b777da827aa411960d1cf28b7e0b7b18b08aaa599dc13429332a44d12441a488"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "status": "KILLED_BY_CAUSAL_ASSERTION"
+    },
+    {
+      "name": "batch-fractional-compare",
+      "binary": {
+        "receipt": {
+          "phase": "package05-mut-r3-batch-fractional-compare-build",
+          "command": [
+            "dotnet",
+            "build",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T01:30:13.414711+00:00",
+          "completed_utc": "2026-10-03T01:30:18.050531+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-fractional-compare-build.log",
+          "log_sha256": "6f8808ce500bb2e78d76b0b6ab5540d2e9ce7e7dde069e248155edadcd21adef"
+        },
+        "binaries": [
+          {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-binaries/r3/batch-fractional-compare/ViciOne.ServiceBus.dll",
+            "sha256": "690dd7a238182d04c95c77faa8f9806d7a37f4608c1b69400847be7e5064c1d1"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package05-binaries/r3/batch-fractional-compare/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          }
+        ],
+        "sources": {
+          "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+          "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+          "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+          "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs": "9b38a0f799213873f7f69fffbb80a84f6a7644d89b97fcd522d2a51a9c16ed70",
+          "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+        }
+      },
+      "rejection": {
+        "receipt": {
+          "phase": "package05-mut-r3-batch-fractional-compare-batch-system-fraction",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/CorePackage05.PublicConsumer.dll",
+            "batch-system-fraction",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T01:30:18.183161+00:00",
+          "completed_utc": "2026-10-03T01:30:19.082053+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-fractional-compare-batch-system-fraction.log",
+          "log_sha256": "3c826cfa1a040b1629b84cfb01a887823c052c8f49eb88c083ba9ad74ef448aa"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "batch-system-fraction",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.NullException",
+              "Message": "Assert.Null() Failure: Value is not null\nExpected: null\nActual:   ViciOne.ServiceBus.ConfigurationException: Batch timing at endpoint 'loopback://localhost/owned-batch-timer-956c8bd60ba84f29bd84fa28ef5d91a3': Batch.TimeLimit (49.17:02:47.2940001) exceeds the System timer range of 4294967294 whole milliseconds. Set Batch.TimeLimit to a positive supported duration or attach a TimeProvider whose timer supports this interval.\n   at ViciOne.ServiceBus.Batching.Runtime.BatchCollectorBase`1.CollectIntoBatchAsync(ConsumeContext`1 context, BatchConsumer`1 currentBatch, Activity currentActivity) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs:line 100\n   at ViciOne.ServiceBus.Batching.Runtime.BatchCollector`1.AddAsync(ConsumeContext`1 context, Activity currentActivity) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs:line 215\n   at ViciOne.ServiceBus.Util.TaskExecutor.CompletionWorkItem`1.ExecuteAsync() in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Util/TaskExecutor.cs:line 350\n   at ViciOne.ServiceBus.Util.TaskExecutor.ExecuteAsync[T](Func`1 method, CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Util/TaskExecutor.cs:line 120\n   at ViciOne.ServiceBus.Batching.Runtime.BatchCollectorBase`1.CollectCoreAsync(ConsumeContext`1 context, Activity currentActivity, CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs:line 135\n   at ViciOne.ServiceBus.Batching.Runtime.BatchConsumerFactory`1.SendAsync[TInputMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumerFactory.cs:line 49\n   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.Advanced.Middleware.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 51\n   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.Advanced.Middleware.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 76\n   at ViciOne.ServiceBus.Middleware.TeeFilter`1.<>c__DisplayClass5_0.<<SendAsync>g__SendAsync|1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Middleware/TeeFilter.cs:line 45\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendToOutputAsync(IPipe`1 next, ConsumeContext`1 pipeContext) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs:line 95\n   at ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendToOutputAsync(IPipe`1 next, ConsumeContext`1 pipeContext) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs:line 114\n   at ViciOne.ServiceBus.Middleware.DeserializeFilter.SendAsync(ReceiveContext context, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Middleware/DeserializeFilter.cs:line 72\n   at ViciOne.ServiceBus.Middleware.RescueFilter`2.ViciOne.ServiceBus.Advanced.Middleware.IFilter<TContext>.SendAsync(TContext context, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Middleware/RescueFilter.cs:line 47",
+              "StackTrace": "   at Xunit.Assert.Null(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 88\n   at ViciOneReview.CorePackage05.BatchTimerAssertions.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/BatchTimerAssertions.cs:line 103\n--- End of stack trace from previous location ---\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.CorePackage05.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.CorePackage05.BatchTimerAssertions.RunAsync(String variant, TimeSpan operationTimeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/BatchTimerAssertions.cs:line 59\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/Program.cs:line 38",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1,
+          "runtime": {
+            "framework": ".NET 10.0.10",
+            "processArchitecture": "X64",
+            "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+            "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+            "loadedProductAssemblies": [
+              {
+                "name": "ViciOne.ServiceBus",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+                "sha256": "690dd7a238182d04c95c77faa8f9806d7a37f4608c1b69400847be7e5064c1d1"
+              },
+              {
+                "name": "ViciOne.ServiceBus.Abstractions",
+                "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+                "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+              }
+            ]
+          }
+        }
+      },
+      "positive_control": {
+        "receipt": {
+          "phase": "package05-mut-r3-batch-fractional-compare-batch-system-maximum",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/CorePackage05.PublicConsumer.dll",
+            "batch-system-maximum",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T01:30:19.167242+00:00",
+          "completed_utc": "2026-10-03T01:30:19.922375+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-fractional-compare-batch-system-maximum.log",
+          "log_sha256": "48637d17092494c057bf57c94a2d7aa738d31638ce6f4e57e156ee886293f26d"
+        },
+

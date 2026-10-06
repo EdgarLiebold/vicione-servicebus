@@ -1,0 +1,230 @@
+{
+  "status": "ACCEPT_SCOPED_F031_CODE_AND_BOUNDED_PUBLIC_NATIVE_EVIDENCE",
+  "read_by": "azure_test_scope",
+  "utc": "2026-10-03T04:52:46.000538+00:00",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE14_F031_FREEZE.json",
+    "sha256": "dd8260a0f701f3a9c47cf8efe4232e13b12a54c3bbd24cd30d411e85f23fdb2b",
+    "bytes": 18405
+  },
+  "scope": "Single private method CreateConsumerKindEndpointDefinition; retain every selected category and stable Kind.Order. Fourteen public NuGet Console cases; four strict compiled single-source mutants. No whole Core closure.",
+  "blockers": [],
+  "pending_physical_bindings": [],
+  "source_contract": {
+    "original": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825",
+      "bytes": 18461
+    },
+    "corrected": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+      "bytes": 18371
+    },
+    "cause": "Old GroupBy/First retained only first category endpoint definitions. Handler registration loop already included all categories: missing saga callback and shared QoS/topology guard is the proven cause, not missing saga message dispatch.",
+    "fix": "Stable OrderBy on all selected registrations followed by existing DelegateEndpointDefinition/Combine. Zero-registration fallback and explicit global definition precedence remain unchanged; no public signature change.",
+    "validation": "All endpoint plans eagerly composed before ReceiveEndpoint/global callback. Combined definition rejects local QoS on shared ownership and topology disagreement; successful local callbacks execute Consumer before Saga, stable within category.",
+    "compatibility": "Existing same-category order, category owner arbitration, explicit global override, default and single typed bus generic overload routes retain behavior. Invalid mixed definitions now fail at configuration as intended; Saga and Abstractions packages unchanged."
+  },
+  "public_oracle": {
+    "route": "Ordinary AddViciOneServiceBus/AddViciOneServiceBus<ISharedBus>, required conservative limits retained in typed generic lambda, AddConsumer and AddSaga().InMemoryRepository, normal UsingInMemory/ConfigureEndpoints, normal DI BuildServiceProvider/IBusInstance resolution, actual endpoint Send and PostConsume terminal observer.",
+    "positive_assertions": "Actual message index/address and saga actual correlation business assertions, terminal/fault counts, single public materialization callback, exact local/global ordered definition callbacks; no reflection/IVT/source-project reference.",
+    "negative_assertions": "Required ConfigurationException or exact EndpointQosConfigurationException with endpoint and owner detail, topology marker, zero global endpoint materialization callbacks. Mutants weaken those guards and cause exact NotNull failure.",
+    "cleanup": "OwnedLifetime independently attempts bus stop, observer disposal, provider disposal and static Saga Probe/LogContext restoration after captured primary; sole failure uses EDI and dual failures remain ordered aggregate. Start ownership flag set before await. No guard exception can become an accepted assertion pass.",
+    "limits": "No actual effective QoS16/21/4 introspection; no saga repository persistence/reload test, multiple typed buses or parallel Probe execution."
+  },
+  "native_evidence": {
+    "original_cases": 14,
+    "original_causal_red": 9,
+    "original_positive": 5,
+    "corrected_cases": 14,
+    "corrected_green": 14,
+    "baseline_green": 14,
+    "rollback_green": 14,
+    "compiled_mutant_variants": 4,
+    "mutant_negative": 4,
+    "mutant_positive": 4,
+    "accepted_native_observations": 64,
+    "accepted_expected_causal_assertion_failures": 13,
+    "accepted_positive_observations": 51,
+    "guard_failures": 0,
+    "setup_compiler_errors_excluded": [
+      6,
+      1,
+      2
+    ],
+    "actual_receipts": 29,
+    "actual_logs": 29,
+    "notes": "Repeated observations of fourteen scenarios; not64 distinct tests. Six mutation-frame strict builds all0warnings/0errors. Compiled Core/Abstractions DLL substitution; no per-mutant fresh pack claim."
+  },
+  "mutants": [
+    {
+      "name": "first-category-restored",
+      "negative": {
+        "case": "mixed-typed",
+        "assertions_passed": false,
+        "exception_type": "Xunit.Sdk.EqualException",
+        "Message": "Assert.Equal() Failure: Collections differ\n                                    \u2193 (pos 1)\nExpected: string[]     [\"consumer\", \"saga\"]\nActual:   List<string> [\"consumer\"]",
+        "StackTrace": "   at Xunit.Assert.Equal[T](T expected, T actual, IEqualityComparer`1 comparer) in /_/src/xunit.v3.assert/Asserts/EqualityAsserts.cs:line 234\n   at Xunit.Assert.Equal[T](IEnumerable`1 expected, IEnumerable`1 actual) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 557\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 82\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "positive": {
+        "case": "dedicated-saga",
+        "assertions_passed": true
+      },
+      "compiled_source_single_effect": true,
+      "loaded_binaries": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/ViciOne.ServiceBus.dll",
+          "sha256": "cef54156343e75efe2bbaf9970b833760ab42126ae2873fd871b328c03794634"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+        }
+      ],
+      "dependency_preserved": true
+    },
+    {
+      "name": "category-order-reversed",
+      "negative": {
+        "case": "mixed-reverse",
+        "assertions_passed": false,
+        "exception_type": "Xunit.Sdk.EqualException",
+        "Message": "Assert.Equal() Failure: Collections differ at index 0\n           \u2193 (pos 0)\nExpected: \"consumer\"\nActual:   \"saga\"\n           \u2191 (pos 0)",
+        "StackTrace": "   at Xunit.Assert.Equal[T](T expected, T actual, IEqualityComparer`1 comparer) in /_/src/xunit.v3.assert/Asserts/EqualityAsserts.cs:line 154\n   at Xunit.Assert.Equal[T](IEnumerable`1 expected, IEnumerable`1 actual) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 557\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 82\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "positive": {
+        "case": "same-kind-reverse",
+        "assertions_passed": true
+      },
+      "compiled_source_single_effect": true,
+      "loaded_binaries": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/ViciOne.ServiceBus.dll",
+          "sha256": "f8e17a90c5d31c06ccf2bdea72ccb6fc3c3af1d7f7d1b5bebfd74a0f244063b5"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+        }
+      ],
+      "dependency_preserved": true
+    },
+    {
+      "name": "shared-qos-ownership-weakened",
+      "negative": {
+        "case": "mixed-saga-qos",
+        "assertions_passed": false,
+        "exception_type": "Xunit.Sdk.NotNullException",
+        "Message": "Assert.NotNull() Failure: Value is null",
+        "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 50\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "positive": {
+        "case": "mixed-compatible",
+        "assertions_passed": true
+      },
+      "compiled_source_single_effect": true,
+      "loaded_binaries": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/ViciOne.ServiceBus.dll",
+          "sha256": "5f4aa4e77e35cad5c6b58ab8947e4800fa9a0ac63c98f703ad9cece650ca23a4"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+        }
+      ],
+      "dependency_preserved": true
+    },
+    {
+      "name": "mixed-topology-check-weakened",
+      "negative": {
+        "case": "mixed-topology-conflict",
+        "assertions_passed": false,
+        "exception_type": "Xunit.Sdk.NotNullException",
+        "Message": "Assert.NotNull() Failure: Value is null",
+        "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 50\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "positive": {
+        "case": "mixed-compatible",
+        "assertions_passed": true
+      },
+      "compiled_source_single_effect": true,
+      "loaded_binaries": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/ViciOne.ServiceBus.dll",
+          "sha256": "79e4b3ebd43e2958f14a858ee0ad06b6777c57ea0f414515360f8af0bb4d29ac"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+        }
+      ],
+      "dependency_preserved": true
+    }
+  ],
+  "independent_binding": {
+    "owned_inputs": 34,
+    "source_frame_inputs": 18,
+    "public_owner_inputs": 14,
+    "runners": 2,
+    "source_effect_conditions": 108,
+    "selected_package_chains": 6,
+    "public_route_inputs": 84,
+    "pe_image_paths": 20,
+    "pdb_checksum_conditions": 320,
+    "all_original_M_sources_restored": 6209,
+    "coverage_sha256": "e4ea3c9b1ad3487f867a5d6963663553af238f7d2f51a927c50a01f0ab6354d5",
+    "checkpoint_started_utc": "2026-10-03T04:50:45.960871+00:00",
+    "checkpoint_completed_utc": "2026-10-03T04:50:49.110372+00:00",
+    "frozen_original_equals_git_HEAD": true,
+    "oracle_preserved": true,
+    "selected_runtime_restored": true,
+    "sagas_dependency_preserved": true,
+    "pdb_semantics": "320 SHA256 document binding conditions include overlaps between18frame and84 public-route sources.20 DLL paths include repeated equal binary hashes. Core/Abstractions embedded portable PDB and consumer CodeView-matched sidecar PDB checks are static, bounded; no whole assembly source closure."
+  },
+  "limits": [
+    "No retained QoS-value runtime assertion.",
+    "Single typed bus route only; no public two-bus isolation claim.",
+    "Saga business correlation and terminal assertions only, no persistence/reload/lifecycle completion.",
+    "Active deadline and guard detection, no intentional caller cancellation schedule or universally cancelable cleanup guarantee.",
+    "No parallel State.Probe, canonical Core766 full owner, wholeAPI/ARM/cloud grade, CLOSED symbol or transfer of Root personal read closure.",
+    "Reviewer executed only readonly Python/Git/hash/ZIP/PE/PDB checks; no .NET native operation or product/test/global CSV write."
+  ],
+  "proof_artifacts": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-adversarial/READ_CLOSURE.json",
+      "sha256": "5043a497cd24779d83fb2bfcb48357d639b2a4413a00ca95fa63e72534156669",
+      "bytes": 196269
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-adversarial/READ_CLOSURE_METADATA_SUPPLEMENT.json",
+      "sha256": "db9c986f802d3be2dc9aedebe00c870092169d7c08b1702a171299997b9c9e56",
+      "bytes": 11616
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-adversarial/INDEPENDENT_SOURCE_EFFECTS_PACKAGES_AND_RECEIPTS.json",
+      "sha256": "39b763af40888b5e0a105b3f77670532471b54e0dd6bbc5ffb86f56d2367a83c",
+      "bytes": 160398
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-adversarial/INDEPENDENT_PDB_SOURCE_BINDING.json",
+      "sha256": "ef66ad53ec95c6e5916c4027bede0fbb7774d0c8de014a7cb26523a4bf5e0f3a",
+      "bytes": 299547
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-adversarial/INDEPENDENT_6209_ROLLBACK_CHECK.json",
+      "sha256": "b993233c1f9a03358fae3c2c9a6ea45f14d05872daa7d53272099b2ec89e69ef",
+      "bytes": 475
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-adversarial/verify_bindings.py",
+      "sha256": "8d94b3b9a73b5be66d47b15dfca5f12ac6e2cb1f6ac024cb66e18a34676e5dd9",
+      "bytes": 13976
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "utc": "2026-10-05T06:46:59.033395+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED_TWO_BOUNDED_REPAIRS_DEFAULT_ORIGINAL_FAMILY_EXTENSION",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package169-load-outbox-fixed-default-created-original118-prior117-neighbors2263-fresh2-independent-r1/REPORT.json",
+    "sha256": "fe50839abafc15255e2d2e7c6a9d13a3a434a7ab742ab879ab2081a1d09e7d2e",
+    "manifest_sha256": "ad68c05f26e8eb0a7eff5fd3769b1ca80ef189fef1cacc95870e0ff3235815ca",
+    "freeze_sha256": "d1bde8c30a7c52c41f4a651a3a2e4a714301c19b98c8082329d57697adf7926e"
+  },
+  "independent_root_checks": {
+    "all_manifest_entries": 3343,
+    "all_frozen_files": 3324,
+    "live_source_files_checked": 3261,
+    "live_source_changes_exact_authorized170_overlay": [
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorSpecificationAdapterDeepContractTests.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Middleware/SagaRepositoryLifecycleDeepContractTests.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/DefaultSagaFactory.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+    ],
+    "actual_SDK_receipts": 6,
+    "fresh_ZIP_CRC_and_DLL_XML": 2
+  },
+  "root_human_scope": "Whole qualification algorithm112 fd7ea0; actual firstDefaultIO375/context and current Load3/Outbox4/Custom1 native lines69932b/c0d048, complete focused qualification precision/fresh2/preservation report a57fb3. Earlier whole actual approved Load412/Outbox198 product and independent literal-delta preflights retained. All3343manifest, all3324snapshot, source live exact170overlay and actual6receipts+physical2ZIP checked this call.",
+  "accepted": [
+    "F-SB-API-154",
+    "F-SB-API-155"
+  ],
+  "accepted_finding_count_before": 152,
+  "accepted_finding_count_after": 154,
+  "known_findings": 155,
+  "default_created_existing_F152_extension": {
+    "case": "ViciOne.ServiceBus.Tests.Configuration.SagaInstanceFactoryDeepContractTests.DefaultSend_CreatedDebugDoesNotPreventDownstreamProgressAsync(loggerThrows: True)",
+    "classification": "CAUSAL_PRODUCT_DEFAULT_FACTORY_CREATED_DEBUG_FAILURE_EXISTING_F152_FAMILY",
+    "first_failure": "Source375 Assert.Null(failure) receives unique IOException Default saga Created diagnostic failure after public async wrapper terminal and manually released completion TCS completed successfully.",
+    "reached": [
+      "Actual public DefaultSagaFactory.SendAsync with valid correlated concrete message, selected structuredCreated single/Debug/correlation and hostile ThrowCount1; fixture logger.ThrownFailure identity equals unique expected IOException.",
+      "Actual public wrapper joined and timeout excluded; wrapper terminal and fixture completion TCS successful before375."
+    ],
+    "unreached": [
+      "Actual returned downstream-task identity, pipe.Count1/context/result/source metadata assertions after375"
+    ],
+    "source_cause": "DefaultSagaFactory.SendAsync44 calls proxy.LogCreated synchronously before next.SendAsync47; diagnostic exception exits first, so downstream is not invoked. Same captured public wrapper produces native unique IOException.",
+    "healthy_control": "loggerThrows:false proves real downstream invoked once; public task pending on completion TCS; exact returned TCS task; all saga/message/receive/serializer identity assertions passed.",
+    "precision": "The released fixture completion TCS in hostile case is not evidence the downstream ran; exact returned-task/pipe assertions are unreached. Original family F152 remains open for this sibling until actual fix qualifies.",
+    "cleanup": "Finally releases/joins completion task and observes actual wrapper even terminal fault; timeout excluded; exact ambient LogContext restored. No transport/durable/wholeSaga claim."
+  },
+  "custom_SPI_strengthening_F153": [
+    "ViciOne.ServiceBus.Tests.Sagas.SagaStateQueryRuntimeExtensionDeepContractTests.Transition_SelectedTokenPreservesDelegatedCreateProxySideEffectsAsync"
+  ],
+  "limits": [
+    "Original169 has1genuine DefaultCreated failure; no overallgreen/A+/wholeAPI claim.",
+    "170live source changes4 explicitly accounted; snapshot169 independently historical bound, no assertion live169DLL equals subsequently rebuilt170DLL.",
+    "F152 remains pending broader owning-lifecycle review; Added170 original not yet qualified.",
+    "No canonical member acceptance increment by native passing test count."
+  ]
+}

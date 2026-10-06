@@ -1,0 +1,244 @@
+{
+  "status": "ROOT_REGISTERED_THREE_DISTINCT_PUBLISHED_DOC_CAUSES_SIX_NODES_AND_ONE_NONFINDING_PRECISION",
+  "utc": "2026-10-05T18:31:55.660813+00:00",
+  "original_current_XML": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.xml",
+    "sha256": "9d2c0d9bbe164be085a7e9a958fe39393207ac7e3bb534e431c53449e27c6160"
+  },
+  "source_author_proposal": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package225-core-local-purpose-provider-doc7-product-proposed-r1/REPORT.json",
+    "sha256": "8922e720f78dbe695c3a8751ba2e2d9b261dfc6944d7d4190d063d939b06685c"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package225-core-doc7-independent-source-peer-r1/REPORT.json",
+    "sha256": "5a220371ada90e325fd4bcdacfc349c78a922b8f213fad431ad38586a93b2907"
+  },
+  "root_own_whole7_sources_receipt": "195f30 (305 lines)",
+  "root_own_whole_InterceptFilter_support_receipt": "e9cd6d (33 lines)",
+  "root_whole_patch_receipt": "179081",
+  "root_individual7_clauses": "5b4209",
+  "root_peer_whole_report_receipt": "282d26",
+  "findings": [
+    {
+      "id": "F-SB-API-199",
+      "title": "Composite predicate class XML incorrectly describes composite pipeline stages",
+      "severity": "Low",
+      "original_nodes": [
+        {
+          "ordinal721": 101,
+          "assembly": "ViciOne.ServiceBus",
+          "id": "T:ViciOne.ServiceBus.Configuration.CompositeFilter`1",
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/CompositeFilter.cs",
+          "relative": "src/ViciOne.ServiceBus/Configuration/CompositeFilter.cs",
+          "source_sha256": "e9171a4b298380fa5fc4f0feb8ef636ef164568443f49a4ef668a6f6a8076494",
+          "physical_lines": 23,
+          "actual196_PDB_document": {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/CompositeFilter.cs",
+            "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "e9171a4b298380fa5fc4f0feb8ef636ef164568443f49a4ef668a6f6a8076494",
+            "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+          },
+          "actual196_XML_node": "<member name=\"T:ViciOne.ServiceBus.Configuration.CompositeFilter`1\">\n            <summary>Processes composite pipeline stages.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n        </member>\n        ",
+          "element": "summary",
+          "param": null,
+          "before": "Processes composite pipeline stages.",
+          "after": "Combines inclusion and exclusion predicates for values of the specified type.",
+          "literal_before": "<summary>Processes composite pipeline stages.</summary>",
+          "source_contract_check": "Matches combines Includes.MatchesAny and Excludes.DoesNotMatchAny; this class is a value predicate, not pipeline stages.",
+          "whole_authority": "Own whole220 review in sealed Core721; fresh rereads source a4c051/e6985f/930017 and supporting whole InterceptFilter 930017.",
+          "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package225-core-local-purpose-provider-doc7-product-proposed-r1/proposed/src/ViciOne.ServiceBus/Configuration/CompositeFilter.cs",
+          "proposed_sha256": "23cdaa318ec52a7f570afff318721beeff113a1352b678bdb94298b65c71575c",
+          "literal_after": "<summary>Combines inclusion and exclusion predicates for values of the specified type.</summary>",
+          "expected_compiled_member_after": "<member name=\"T:ViciOne.ServiceBus.Configuration.CompositeFilter`1\">\n            <summary>Combines inclusion and exclusion predicates for values of the specified type.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n        </member>\n        ",
+          "literal_inverse_exact": true,
+          "nonXML_bytes_equal": true,
+          "API_runtime_bytes_changed": false,
+          "native_count": 0,
+          "finding_registered": false
+        }
+      ]
+    },
+    {
+      "id": "F-SB-API-200",
+      "title": "Consumer connector retained array XML incorrectly promises immutable view",
+      "severity": "Low",
+      "original_nodes": [
+        {
+          "ordinal721": 126,
+          "assembly": "ViciOne.ServiceBus",
+          "id": "P:ViciOne.ServiceBus.Configuration.ConsumerConnector`1.Connectors",
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerConnector.cs",
+          "relative": "src/ViciOne.ServiceBus/Configuration/ConsumerConnector.cs",
+          "source_sha256": "7c95e39e3546fde71b099762b32f54b935ad6b51b8fd2119991b6a73b36287fe",
+          "physical_lines": 80,
+          "actual196_PDB_document": {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ConsumerConnector.cs",
+            "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "7c95e39e3546fde71b099762b32f54b935ad6b51b8fd2119991b6a73b36287fe",
+            "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+          },
+          "actual196_XML_node": "<member name=\"P:ViciOne.ServiceBus.Configuration.ConsumerConnector`1.Connectors\">\n            <summary>Gets an immutable view of the discovered message connectors.</summary>\n        </member>\n        ",
+          "element": "summary",
+          "param": null,
+          "before": "Gets an immutable view of the discovered message connectors.",
+          "after": "Gets a read-only view of the discovered message connectors.",
+          "literal_before": "<summary>Gets an immutable view of the discovered message connectors.</summary>",
+          "source_contract_check": "Connectors returns the retained _connectors array through IReadOnlyList; read-only interface does not guarantee immutable array storage or elements.",
+          "whole_authority": "Own whole220 review in sealed Core721; fresh rereads source a4c051/e6985f/930017 and supporting whole InterceptFilter 930017.",
+          "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package225-core-local-purpose-provider-doc7-product-proposed-r1/proposed/src/ViciOne.ServiceBus/Configuration/ConsumerConnector.cs",
+          "proposed_sha256": "73d5c708d1f16f5fd1ff9f288d22f12f50a81a9043fad40727439656140e236f",
+          "literal_after": "<summary>Gets a read-only view of the discovered message connectors.</summary>",
+          "expected_compiled_member_after": "<member name=\"P:ViciOne.ServiceBus.Configuration.ConsumerConnector`1.Connectors\">\n            <summary>Gets a read-only view of the discovered message connectors.</summary>\n        </member>\n        ",
+          "literal_inverse_exact": true,
+          "nonXML_bytes_equal": true,
+          "API_runtime_bytes_changed": false,
+          "native_count": 0,
+          "finding_registered": false
+        }
+      ]
+    },
+    {
+      "id": "F-SB-API-201",
+      "title": "Four scoped endpoint-provider constructor parameters incorrectly describe DI service resolution",
+      "severity": "Low",
+      "original_nodes": [
+        {
+          "ordinal721": 566,
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedConsumePublishEndpointProvider.#ctor(ViciOne.ServiceBus.Advanced.IPublishEndpointProvider,ViciOne.ServiceBus.ConsumeContext,System.IServiceProvider)",
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedConsumePublishEndpointProvider.cs",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopedConsumePublishEndpointProvider.cs",
+          "source_sha256": "8f6a6b6394123ea035fe6c98caebf88383125877799a0c69e7b32f3046a5eb7d",
+          "physical_lines": 44,
+          "actual196_PDB_document": {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedConsumePublishEndpointProvider.cs",
+            "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8f6a6b6394123ea035fe6c98caebf88383125877799a0c69e7b32f3046a5eb7d",
+            "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+          },
+          "actual196_XML_node": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedConsumePublishEndpointProvider.#ctor(ViciOne.ServiceBus.Advanced.IPublishEndpointProvider,ViciOne.ServiceBus.ConsumeContext,System.IServiceProvider)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"provider\">The service provider used to resolve dependencies.</param>\n            <param name=\"consumeContext\">The consume context.</param>\n            <param name=\"serviceProvider\">The service provider.</param>\n        </member>\n        ",
+          "element": "param",
+          "param": "provider",
+          "before": "The service provider used to resolve dependencies.",
+          "after": "The underlying publish endpoint provider.",
+          "literal_before": "<param name=\"provider\">The service provider used to resolve dependencies.</param>",
+          "source_contract_check": "Ctor provider is IPublishEndpointProvider; separate serviceProvider is IServiceProvider. Borrowed provider is used for publish endpoint acquisition and observer connection.",
+          "whole_authority": "Own whole220 review in sealed Core721; fresh rereads source a4c051/e6985f/930017 and supporting whole InterceptFilter 930017.",
+          "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package225-core-local-purpose-provider-doc7-product-proposed-r1/proposed/src/ViciOne.ServiceBus/DependencyInjection/ScopedConsumePublishEndpointProvider.cs",
+          "proposed_sha256": "21bfe41f5668b33812f912fb8d0ada9679be603d9b49c63d524fb859a6a14ac9",
+          "literal_after": "<param name=\"provider\">The underlying publish endpoint provider.</param>",
+          "expected_compiled_member_after": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedConsumePublishEndpointProvider.#ctor(ViciOne.ServiceBus.Advanced.IPublishEndpointProvider,ViciOne.ServiceBus.ConsumeContext,System.IServiceProvider)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"provider\">The underlying publish endpoint provider.</param>\n            <param name=\"consumeContext\">The consume context.</param>\n            <param name=\"serviceProvider\">The service provider.</param>\n        </member>\n        ",
+          "literal_inverse_exact": true,
+          "nonXML_bytes_equal": true,
+          "API_runtime_bytes_changed": false,
+          "native_count": 0,
+          "finding_registered": false
+        },
+        {
+          "ordinal721": 568,
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedConsumeSendEndpointProvider.#ctor(ViciOne.ServiceBus.ISendEndpointProvider,ViciOne.ServiceBus.ConsumeContext,System.IServiceProvider)",
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedConsumeSendEndpointProvider.cs",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopedConsumeSendEndpointProvider.cs",
+          "source_sha256": "e7842042d63a5079977cc3b5e4016473547d73a3a9f51c3bbb0a4bafcf640a7f",
+          "physical_lines": 47,
+          "actual196_PDB_document": {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedConsumeSendEndpointProvider.cs",
+            "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "e7842042d63a5079977cc3b5e4016473547d73a3a9f51c3bbb0a4bafcf640a7f",
+            "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+          },
+          "actual196_XML_node": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedConsumeSendEndpointProvider.#ctor(ViciOne.ServiceBus.ISendEndpointProvider,ViciOne.ServiceBus.ConsumeContext,System.IServiceProvider)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"provider\">The service provider used to resolve dependencies.</param>\n            <param name=\"consumeContext\">The consume context.</param>\n            <param name=\"scope\">The scope.</param>\n        </member>\n        ",
+          "element": "param",
+          "param": "provider",
+          "before": "The service provider used to resolve dependencies.",
+          "after": "The underlying send endpoint provider.",
+          "literal_before": "<param name=\"provider\">The service provider used to resolve dependencies.</param>",
+          "source_contract_check": "Ctor provider is ISendEndpointProvider; separate scope is IServiceProvider. Borrowed provider is used for send endpoint acquisition and observer connection.",
+          "whole_authority": "Own whole220 review in sealed Core721; fresh rereads source a4c051/e6985f/930017 and supporting whole InterceptFilter 930017.",
+          "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package225-core-local-purpose-provider-doc7-product-proposed-r1/proposed/src/ViciOne.ServiceBus/DependencyInjection/ScopedConsumeSendEndpointProvider.cs",
+          "proposed_sha256": "d7fa8188d58875e12a268fe1a399d87824003fbc5e6bf891024b76dec3e3bf29",
+          "literal_after": "<param name=\"provider\">The underlying send endpoint provider.</param>",
+          "expected_compiled_member_after": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedConsumeSendEndpointProvider.#ctor(ViciOne.ServiceBus.ISendEndpointProvider,ViciOne.ServiceBus.ConsumeContext,System.IServiceProvider)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"provider\">The underlying send endpoint provider.</param>\n            <param name=\"consumeContext\">The consume context.</param>\n            <param name=\"scope\">The scope.</param>\n        </member>\n        ",
+          "literal_inverse_exact": true,
+          "nonXML_bytes_equal": true,
+          "API_runtime_bytes_changed": false,
+          "native_count": 0,
+          "finding_registered": false
+        },
+        {
+          "ordinal721": 570,
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedPublishEndpointProvider.#ctor(ViciOne.ServiceBus.Advanced.IPublishEndpointProvider,System.IServiceProvider)",
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedPublishEndpointProvider.cs",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopedPublishEndpointProvider.cs",
+          "source_sha256": "0b635dfd8d510926c051136a69d21320b04ab74a728cffa37a40ad59a3fbb876",
+          "physical_lines": 37,
+          "actual196_PDB_document": {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedPublishEndpointProvider.cs",
+            "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "0b635dfd8d510926c051136a69d21320b04ab74a728cffa37a40ad59a3fbb876",
+            "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+          },
+          "actual196_XML_node": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedPublishEndpointProvider.#ctor(ViciOne.ServiceBus.Advanced.IPublishEndpointProvider,System.IServiceProvider)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"provider\">The service provider used to resolve dependencies.</param>\n            <param name=\"serviceProvider\">The service provider.</param>\n        </member>\n        ",
+          "element": "param",
+          "param": "provider",
+          "before": "The service provider used to resolve dependencies.",
+          "after": "The underlying publish endpoint provider.",
+          "literal_before": "<param name=\"provider\">The service provider used to resolve dependencies.</param>",
+          "source_contract_check": "Ctor provider is IPublishEndpointProvider; separate serviceProvider is IServiceProvider; endpoint lookup remains a separate asynchronous method.",
+          "whole_authority": "Own whole220 review in sealed Core721; fresh rereads source a4c051/e6985f/930017 and supporting whole InterceptFilter 930017.",
+          "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package225-core-local-purpose-provider-doc7-product-proposed-r1/proposed/src/ViciOne.ServiceBus/DependencyInjection/ScopedPublishEndpointProvider.cs",
+          "proposed_sha256": "e51741703c39d988fbdb37ea2f1c074152f157a9094001c01e2474f3b49c493d",
+          "literal_after": "<param name=\"provider\">The underlying publish endpoint provider.</param>",
+          "expected_compiled_member_after": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedPublishEndpointProvider.#ctor(ViciOne.ServiceBus.Advanced.IPublishEndpointProvider,System.IServiceProvider)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"provider\">The underlying publish endpoint provider.</param>\n            <param name=\"serviceProvider\">The service provider.</param>\n        </member>\n        ",
+          "literal_inverse_exact": true,
+          "nonXML_bytes_equal": true,
+          "API_runtime_bytes_changed": false,
+          "native_count": 0,
+          "finding_registered": false
+        },
+        {
+          "ordinal721": 576,
+          "assembly": "ViciOne.ServiceBus",
+          "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedSendEndpointProvider.#ctor(ViciOne.ServiceBus.ISendEndpointProvider,System.IServiceProvider)",
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedSendEndpointProvider.cs",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopedSendEndpointProvider.cs",
+          "source_sha256": "8920fd55e4a50ed258792e168d465da5585d8d58beded49baada793df06e0d42",
+          "physical_lines": 39,
+          "actual196_PDB_document": {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedSendEndpointProvider.cs",
+            "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8920fd55e4a50ed258792e168d465da5585d8d58beded49baada793df06e0d42",
+            "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+          },
+          "actual196_XML_node": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedSendEndpointProvider.#ctor(ViciOne.ServiceBus.ISendEndpointProvider,System.IServiceProvider)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"provider\">The service provider used to resolve dependencies.</param>\n            <param name=\"serviceProvider\">The service provider.</param>\n        </member>\n        ",
+          "element": "param",
+          "param": "provider",
+          "before": "The service provider used to resolve dependencies.",
+          "after": "The underlying send endpoint provider.",
+          "literal_before": "<param name=\"provider\">The service provider used to resolve dependencies.</param>",
+          "source_contract_check": "Ctor provider is ISendEndpointProvider; separate serviceProvider is IServiceProvider; endpoint lookup remains a separate asynchronous method.",
+          "whole_authority": "Own whole220 review in sealed Core721; fresh rereads source a4c051/e6985f/930017 and supporting whole InterceptFilter 930017.",
+          "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package225-core-local-purpose-provider-doc7-product-proposed-r1/proposed/src/ViciOne.ServiceBus/DependencyInjection/ScopedSendEndpointProvider.cs",
+          "proposed_sha256": "6b54d72331599e0cf5f6558855e86f5b05480fecabd0387c6cb489ec48f455b3",
+          "literal_after": "<param name=\"provider\">The underlying send endpoint provider.</param>",
+          "expected_compiled_member_after": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedSendEndpointProvider.#ctor(ViciOne.ServiceBus.ISendEndpointProvider,System.IServiceProvider)\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"provider\">The underlying send endpoint provider.</param>\n            <param name=\"serviceProvider\">The service provider.</param>\n        </member>\n        ",
+          "literal_inverse_exact": true,
+          "nonXML_bytes_equal": true,
+          "API_runtime_bytes_changed": false,
+          "native_count": 0,
+          "finding_registered": false
+        }
+      ]
+    }
+  ],
+  "nonfinding_precision": {
+    "id": "T:ViciOne.ServiceBus.Configuration.InterceptPipeSpecification`1",
+    "reason": "Adds a fork may describe an adjacent branch; it promises no parallel execution. Clear sequential purpose improvement approved, not counted as a confirmed defect."
+  },
+  "known_reconciliation": "All198 known entries exactIDs/owners not present; F059 actual four endpoint/configuration owners and object-param words differ, F147 Send-specific copytemplate differs, other immutable transport collections distinct owned surfaces.",
+  "new_finding_count": 3,
+  "native_cases_added": 0,
+  "whole_API_review_closed": false
+}

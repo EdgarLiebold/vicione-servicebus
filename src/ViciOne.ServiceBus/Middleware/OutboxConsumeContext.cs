@@ -17,13 +17,14 @@ public interface OutboxConsumeContext :
     /// <summary>If true, the message was already consumed.</summary>
     bool IsMessageConsumed { get; }
 
-    /// <summary>If true, the outbox messages have already been dispatched.</summary>
+    /// <summary>Gets whether the owning implementation requires no further inline outbox delivery.</summary>
+    /// <remarks>Reliable providers may delegate actual delivery to a separate owner; true is not proof of destination receipt.</remarks>
     bool IsOutboxDelivered { get; }
 
     /// <summary>The number of delivery attempts for this message.</summary>
     int ReceiveCount { get; }
 
-    /// <summary>The last sequence number produced from the outbox.</summary>
+    /// <summary>Gets the recorded inline delivery position, or null when no position is recorded or used.</summary>
     long? LastSequenceNumber { get; }
 
     /// <summary>Sets consumed.</summary>

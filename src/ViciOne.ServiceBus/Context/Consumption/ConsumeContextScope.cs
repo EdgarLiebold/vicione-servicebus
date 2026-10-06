@@ -136,13 +136,22 @@ public class ConsumeContextScope<TMessage> :
     /// <inheritdoc />
     public TMessage Message => _context.Message;
 
-    /// <inheritdoc />
+    /// <summary>Forwards a consumed notification using this typed payload scope as the consume context.</summary>
+    /// <param name="duration">The duration forwarded to the source notification.</param>
+    /// <param name="consumerType">The consumer type forwarded to the source notification.</param>
+    /// <param name="cancellationToken">The token forwarded to the source notification.</param>
+    /// <returns>The task returned by the source notification.</returns>
     public virtual Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
         return NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    /// <inheritdoc />
+    /// <summary>Forwards a faulted notification using this typed payload scope as the consume context.</summary>
+    /// <param name="duration">The duration forwarded to the source notification.</param>
+    /// <param name="consumerType">The consumer type forwarded to the source notification.</param>
+    /// <param name="exception">The original exception forwarded to the source notification.</param>
+    /// <param name="cancellationToken">The token forwarded to the source notification.</param>
+    /// <returns>The task returned by the source notification.</returns>
     public virtual Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
         return NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);

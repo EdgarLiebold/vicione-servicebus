@@ -1,0 +1,158 @@
+{
+  "utc": "2026-10-05T05:53:19.442096+00:00",
+  "actor": "/root",
+  "status": "CURRENT167_QUALIFICATION_VERIFIED_EXISTING_F152_EXTENDED_CREATED",
+  "qualifier": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package167-created-fixture-r2-typed-load-original3-fresh2-independent-r1/REPORT.json",
+    "sha256": "f503fe1fe56af6c14786e758f6fb2f2e3f2250fdd065470ba088f9502e5d477d"
+  },
+  "manifest_verified": 3340,
+  "frozen_live_files_verified": 3323,
+  "actual_closed_receipts": [
+    {
+      "phase": "package167-created-fixture-typed-load-original-strict-core-build-r1",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "-warnaserror",
+        "-bl:artifacts/log/package167-created-fixture-typed-load-original-strict-core-build-r1.binlog"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T05:32:45.492153+00:00",
+      "completed_utc": "2026-10-05T05:33:43.609967+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package167-created-fixture-typed-load-original-strict-core-build-r1.log",
+      "log_sha256": "1b0d1384318cf034f9dabaa9ba0f12185178b6483ae0f909274ab171d62467e4"
+    },
+    {
+      "phase": "package167-created-fixture-typed-load-transition-original-native-r1",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests",
+        "ViciOne.ServiceBus.Tests.Sagas.SagaStateQueryRuntimeExtensionDeepContractTests",
+        "ViciOne.ServiceBus.Tests.Saga.InMemoryRepository.InMemorySagaRepositoryContextTests",
+        "--minimum-expected-tests",
+        "41",
+        "--output",
+        "Detailed",
+        "--results-directory",
+        "artifacts/results-package167-created-fixture-typed-load-transition-original-native-r1"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 2,
+      "started_utc": "2026-10-05T05:34:18.591265+00:00",
+      "completed_utc": "2026-10-05T05:34:22.392364+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package167-created-fixture-typed-load-transition-original-native-r1.log",
+      "log_sha256": "ef9ad3430c103f3563a53148919b5c18d8705fc6912400fe8a747c7bfefb8ad5"
+    },
+    {
+      "phase": "package167-requirement-projection-native1-r1",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.Tests.Requirements.RequirementCoverageProjectionTests",
+        "--minimum-expected-tests",
+        "1",
+        "--output",
+        "Detailed",
+        "--results-directory",
+        "artifacts/results-package167-requirement-projection-native1-r1"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T05:37:18.097761+00:00",
+      "completed_utc": "2026-10-05T05:37:21.695521+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package167-requirement-projection-native1-r1.log",
+      "log_sha256": "287b715dbf44f738ce8045be4014b61041f54a9981e23fccb3207c159c670603"
+    },
+    {
+      "phase": "package167-fresh-core-pack-r1",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--output",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package167-fresh-two/packages"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T05:39:07.171082+00:00",
+      "completed_utc": "2026-10-05T05:39:08.921075+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package167-fresh-core-pack-r1.log",
+      "log_sha256": "1a097afa3f2d9429be3fb1f408621c32c3e5ffd1b8629bc5f643aad3dbca4f93"
+    },
+    {
+      "phase": "package167-fresh-sagas-pack-r1",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--output",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package167-fresh-two/packages"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T05:39:46.598876+00:00",
+      "completed_utc": "2026-10-05T05:39:48.819596+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package167-fresh-sagas-pack-r1.log",
+      "log_sha256": "51d3a08d0b8ea1def767af24f567dd2d1b8c383324cc30b88e5ecdcca8641afd"
+    }
+  ],
+  "native": {
+    "total": 90,
+    "passed": 84,
+    "failed": 6,
+    "skipped": 0,
+    "causal_product_failures": 4,
+    "ambiguous_unqualified_load_failures": 2
+  },
+  "fresh2_physical_crc_dll_xml_equal": true,
+  "created_causal_context": {
+    "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Created\", loggerThrows: True)",
+    "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+    "first_failure": "Source871 Assert.Null(operationFailure) receives unique Created InvalidOperationException diagnostic.",
+    "reached": [
+      "Real selected structured diagnostic single; Debug level; exact saga CorrelationId; hostile ThrowCount1",
+      "Valid concrete InMemory message input correlation guard; real factory invocation1; exact input callback reference"
+    ],
+    "unreached": [
+      "Next continuation/context/state assertions after871",
+      "Later repository persistence assertions"
+    ],
+    "source_cause": "FactoryMethodSagaFactory.SendAsync proxy.LogCreated at55 synchronously throws before actual next.SendAsync",
+    "healthy_control": "Same emission/loggerThrows:false passes full continuation and applicable persistence assertions.",
+    "prior166_precision": "Created both cases in166 failed earlier852 fixture; current realinput correction now makes healthyCreatedpass and hostilecase reach actuallogger. Do not retroactively upgrade166 fixture outcomes."
+  },
+  "limits": [
+    "No new finding from ambiguous Load cancellation-release outcomes. R3 causal correction requires fresh native.",
+    "No finding acceptance or new API member acceptance from this registration.",
+    "Root reads exact first failure semantic contexts; independent peer owns full native89 read. Prior 166 native remains historical."
+  ]
+}

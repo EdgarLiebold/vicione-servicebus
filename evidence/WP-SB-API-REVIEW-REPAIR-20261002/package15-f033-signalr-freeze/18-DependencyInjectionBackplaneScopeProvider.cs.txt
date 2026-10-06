@@ -1,0 +1,61 @@
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.SignalR.Contracts;
+
+namespace ViciOne.ServiceBus.SignalR.Runtime;
+
+/// <summary>Resolves scoped bus collaborators without retaining them in the singleton lifetime manager.</summary>
+internal sealed class DependencyInjectionBackplaneScopeProvider :
+    IBackplaneScopeProvider
+{
+    readonly IServiceScopeFactory _serviceScopeFactory;
+
+    /// <summary>Initializes the provider with the application's scope factory.</summary>
+    public DependencyInjectionBackplaneScopeProvider(IServiceScopeFactory serviceScopeFactory)
+    {
+        _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
+    }
+
+    /// <summary>Creates and fully resolves one operation scope.</summary>
+    public async ValueTask<IBackplaneScope<THub>> CreateScopeAsync<THub>()
+        where THub : Hub
+    {
+        AsyncServiceScope serviceScope = _serviceScopeFactory.CreateAsyncScope();
+        try
+        {
+            return new BackplaneScope<THub>(serviceScope);
+        }
+        catch (Exception operationFailure)
+        {
+            await BackplaneOperationLifetime.ReleaseAfterOperationAsync(serviceScope, null, operationFailure)
+                .ConfigureAwait(false);
+            throw;
+        }
+    }
+
+    sealed class BackplaneScope<THub> :
+        IBackplaneScope<THub>
+        where THub : Hub
+    {
+        readonly AsyncServiceScope _serviceScope;
+
+        public BackplaneScope(AsyncServiceScope serviceScope)
+        {
+            _serviceScope = serviceScope;
+            PublishEndpoint = ServiceProvider.GetRequiredService<IPublishEndpoint>();
+            GroupCommandClient = ServiceProvider.GetRequiredService<IRequestClient<GroupCommand<THub>>>();
+        }
+
+        IServiceProvider ServiceProvider => _serviceScope.ServiceProvider;
+
+        public IPublishEndpoint PublishEndpoint { get; }
+
+        public IRequestClient<GroupCommand<THub>> GroupCommandClient { get; }
+
+        public ValueTask DisposeAsync()
+        {
+            return _serviceScope.DisposeAsync();
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+  "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+  "before_sha256": "200faf06c504e69bf3849aa2d4531fcbc15b749b355b4aeee08f17ccaaf2e058",
+  "root_read": "FULL_WHOLE_SOURCE",
+  "known_finding": "F035",
+  "endpoint_sibling_status": "SOURCE_DERIVED_UNVERIFIED_PENDING_ORIGINAL_NATIVE_CAUSAL_ORACLE",
+  "planned_changes": [
+    "Only generic registrar AddDefinition plus private closed DefinitionOwner variants: plain has no cleanup interfaces, async-only implements only IAsyncDisposable, sync/dual implements IDisposable+IAsyncDisposable and prefers actual async under asynchronous disposal.",
+    "TryAddTransient private owner factory allocates proper runtime owner BEFORE ActivatorUtilities activation; assigns successfully created value; DI captures helper AFTER dependencies. Existing ordinary singleton Bind concrete/aliases unchanged; each materialized concrete gets fresh transient owner.",
+    "Generic endpoint overload: unique private key per registration, AddKeyedTransient real TDefinition with unchanged settings/no-settings activation, ordinary concrete singleton Bind resolves GetRequiredKeyedService; interface aliases still select last concrete registration.",
+    "No default registrar change, no public Bind/API change, no public disposable type, no ownership of supplied settings or caller Bind.Value or DI constructor dependencies."
+  ],
+  "compatibility_limits": [
+    "Endpoint branch uses standard Microsoft DI keyed-service support (actual package 10.0.12); do not claim arbitrary alternative IServiceProvider support.",
+    "Keep default alias raw invocation baseline distinct from typed exact single invocation.",
+    "Failed constructor attempts produce no successfully owned definition; standard provider cleanup exception short-circuits remaining entries.",
+    "Controlled closed-provider capture countercase does not establish general concurrent resolve/dispose guarantees."
+  ],
+  "verification": [
+    "Same complete paired 46-case public oracle; current previous packages confirm exact causal runtime failure separately from setup/guards.",
+    "After minimal source patch: warnings-as-errors core build and new immutable NuGet feed, same 46 public cases.",
+    "Compiled single-effect variants each causal negative and meaningful positive control, whole 46 baseline/rollback; strict serial native + finally restore all source/runtime inputs.",
+    "Independent adversarial whole changed source/public owner preflight and final frozen source/PE/PDB/receipts review before acceptance."
+  ],
+  "native_qualification": false,
+  "canonical_core_owner_transfer": false
+}

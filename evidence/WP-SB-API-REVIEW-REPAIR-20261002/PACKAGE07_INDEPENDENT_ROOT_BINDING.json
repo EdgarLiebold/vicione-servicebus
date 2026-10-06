@@ -1,0 +1,8 @@
+{
+  "status": "ALL_NINE_NATIVE_CAUSES_RECEIPTS_AND_BINARY_SNAPSHOTS_VERIFIED",
+  "mutation_result_sha256": "d7205d19e0f205488702cc2c1aa7f28c326c2c0158f9ed91fdf393cb23c9513d",
+  "original_files": 6209,
+  "mismatches": [],
+  "oracle_hashes_preserved": true,
+  "limits": "Historical field coreDll in benchmark console receipts hashes typeof(IBus).Assembly, physically ViciOne.ServiceBus.Abstractions.dll. Use PACKAGE07_PUBLIC_BINDING.json for exact physical Core and Abstractions names; no incorrect core-binary binding inferred."
+}

@@ -1,0 +1,43 @@
+{
+  "phase": "before first native consumer restore/build",
+  "Root_FULL_previous6": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/NuGet.Config",
+      "sha256": "8e23ab760d0af1ddc5f97ffb7297751ee5e6e10f674666f325e6ce3c54686de8",
+      "bytes": 572,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs",
+      "sha256": "df37b07121be8673184a0cc51939dd79e76b63f0571d3a604689fb7d7b655135",
+      "bytes": 6321,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/Components.cs",
+      "sha256": "a686aa8cd8d52694544a0b92247cadec1d07b02dc9c25cacfe501ab427782ce1",
+      "bytes": 5055,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs",
+      "sha256": "a60f58ca987373f35e188be2b943ad72ada9f41ed2627ef8081c993851ae4298",
+      "bytes": 800,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/SharedEndpoint.PublicConsumer.csproj",
+      "sha256": "231bb93385e9f9eb343bfc877bf4c7ed8f27bd223b3a80b0766c6f9d44745d03",
+      "bytes": 955,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/Program.cs",
+      "sha256": "8efb46d5fd7ec809600d52bc1bf1902ac8384aac466a98221d4a49e3016fbcd0",
+      "bytes": 3360,
+      "Root_personally_FULL": true
+    }
+  ],
+  "corrected_exact_own_reuse": "5 files identical bytes;NuGet config onlyselectedfreshfeed differs",
+  "canonicalCoreOwner": "not altered or accepted"
+}

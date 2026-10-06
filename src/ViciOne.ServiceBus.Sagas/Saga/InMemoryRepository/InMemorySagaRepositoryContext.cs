@@ -62,7 +62,7 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
             try
             {
                 SagaConsumeContext<TSaga, TMessage> consumeContext =
-                    await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Add).ConfigureAwait(false);
+                    await _factory.CreateSagaConsumeContextAsync(_sagas, GetOperationConsumeContext(operationCancellationToken, cancellationToken), instance, SagaConsumeContextMode.Add).ConfigureAwait(false);
                 releaseLease = true;
                 return consumeContext;
             }
@@ -75,7 +75,7 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         await _sagas.MarkInUseAsync(operationCancellationToken).ConfigureAwait(false);
         try
         {
-            return await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Add).ConfigureAwait(false);
+            return await _factory.CreateSagaConsumeContextAsync(_sagas, GetOperationConsumeContext(operationCancellationToken, cancellationToken), instance, SagaConsumeContextMode.Add).ConfigureAwait(false);
         }
         finally
         {
@@ -102,7 +102,7 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
                     return default;
 
                 SagaConsumeContext<TSaga, TMessage> consumeContext =
-                    await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
+                    await _factory.CreateSagaConsumeContextAsync(_sagas, GetOperationConsumeContext(operationCancellationToken, cancellationToken), instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
                 releaseLease = true;
                 return consumeContext;
             }
@@ -118,7 +118,7 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
             if (_sagas[instance.CorrelationId] != null)
                 return default;
 
-            return await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
+            return await _factory.CreateSagaConsumeContextAsync(_sagas, GetOperationConsumeContext(operationCancellationToken, cancellationToken), instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
         }
         finally
         {
@@ -171,11 +171,16 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
             }
         }
 
+        ConsumeContext<TMessage> operationContext = cancellationToken.CanBeCanceled
+            && operationCancellationToken != _context.CancellationToken
+                ? new OperationConsumeContext(_context, operationCancellationToken)
+                : _context;
+
         while (true)
         {
             try
             {
-                return await _factory.CreateSagaConsumeContextAsync(_sagas, _context, saga.Instance, SagaConsumeContextMode.Load)
+                return await _factory.CreateSagaConsumeContextAsync(_sagas, operationContext, saga.Instance, SagaConsumeContextMode.Load)
                     .ConfigureAwait(false);
             }
             catch (SagaInstanceRemovedException)
@@ -281,6 +286,24 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         where T : class
     {
         return _factory.CreateSagaConsumeContextAsync(_sagas, consumeContext, instance, mode);
+    }
+
+    ConsumeContext<TMessage> GetOperationConsumeContext(CancellationToken operationCancellationToken, CancellationToken cancellationToken) =>
+        cancellationToken.CanBeCanceled && operationCancellationToken != _context.CancellationToken
+            ? new OperationConsumeContext(_context, operationCancellationToken)
+            : _context;
+
+    sealed class OperationConsumeContext : ConsumeContextProxy<TMessage>
+    {
+        readonly CancellationToken _operationCancellationToken;
+
+        public OperationConsumeContext(ConsumeContext<TMessage> context, CancellationToken cancellationToken)
+            : base(context)
+        {
+            _operationCancellationToken = cancellationToken;
+        }
+
+        public override CancellationToken CancellationToken => _operationCancellationToken;
     }
 
     void ReleaseInitialDictionaryLease()

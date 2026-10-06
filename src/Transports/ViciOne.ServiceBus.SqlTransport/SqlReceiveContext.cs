@@ -25,7 +25,7 @@ public sealed class SqlReceiveContext :
     public SqlReceiveContext(SqlTransportMessage message, SqlReceiveEndpointContext context, ReceiveSettings settings, ClientContext clientContext,
         ConnectionContext connectionContext, SqlReceiveLockContext lockContext)
         : base(
-            (message ?? throw new ArgumentNullException(nameof(message))).DeliveryCount > 0,
+            (message ?? throw new ArgumentNullException(nameof(message))).DeliveryCount > 1,
             context ?? throw new ArgumentNullException(nameof(context)),
             settings ?? throw new ArgumentNullException(nameof(settings)),
             clientContext ?? throw new ArgumentNullException(nameof(clientContext)),
@@ -67,7 +67,7 @@ public sealed class SqlReceiveContext :
     public long DeliveryMessageId => TransportMessage.MessageDeliveryId;
     /// <summary>Gets the instant at which the transport record was enqueued.</summary>
     public DateTimeOffset EnqueueTime => TransportMessage.EnqueueTime;
-    /// <summary>Gets the number of prior delivery attempts.</summary>
+    /// <summary>Gets the delivery attempt count, including the current attempt.</summary>
     public int DeliveryCount => TransportMessage.DeliveryCount;
 
     /// <summary>Gets the optional partition key retained with the record.</summary>

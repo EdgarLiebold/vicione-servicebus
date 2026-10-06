@@ -1,0 +1,12 @@
+{
+  "status": "EXACT_ADVERSARIAL_QUALIFIED_BASELINE_APPLIED_NATIVE_R2_PENDING",
+  "utc": "2026-10-03T20:49:49.660693+00:00",
+  "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/api/packed-public-api.txt",
+  "sha256": "e6f246add57089d65de9f78c2b8d38fd6a3f5f73117792e7eea1dff9fbe02719",
+  "original_preserved": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package24-f003-baseline-candidate-r1/ORIGINAL.txt",
+  "preflight": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package24-f003-current-gate-adversarial-r1/FINAL_F003_BASELINE_CANDIDATE_R1_PREFLIGHT.json",
+  "preflight_sha256": "fef38065371bb05abe34567c8fe57e89703d298bfb7f5244571d4490a98f08c3",
+  "gate_source_changed": false,
+  "tool_source_changed": false,
+  "locks_changed": false
+}

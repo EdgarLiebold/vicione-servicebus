@@ -1,0 +1,537 @@
+{
+  "status": "ROOT_PERSONAL_FULL_LOSSLESS_ARCHITECTURE42_AND_STATIC_CONTEXT231",
+  "utc": "2026-10-04T06:39:16.819410+00:00",
+  "read_by": "/root",
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/MANIFEST.json",
+    "sha256": "eb025e465e0925e81cd097f27f8b6528faed57c48f840bbf35e72c8251237bdf"
+  },
+  "displays": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0000.txt",
+      "sha256": "0c649e1bcabc3e686eb9608a5e5331bb592929c7aadead9815990772c18072b5",
+      "bytes": 13965,
+      "root_full_untruncated_display": "6ee7f9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0001.txt",
+      "sha256": "e171201eb4240370a41f233d0f5cbff51a4fd4faf0acc328554b38403b7cfad7",
+      "bytes": 13920,
+      "root_full_untruncated_display": "aea148"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0002.txt",
+      "sha256": "0952fd9aba18e09ab9d2b08471e782a7f8c4518b84ce02a3012184677258f09c",
+      "bytes": 13961,
+      "root_full_untruncated_display": "f66761"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0003.txt",
+      "sha256": "6eace3a18a2e3310c1a83b9e1c0b2801017f2605a1ebb71e9549daa84c919e2f",
+      "bytes": 13996,
+      "root_full_untruncated_display": "1780e2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0004.txt",
+      "sha256": "07c5651d6bb490d364595277b62ae869e4295c97d490be26ffb04d2986bf9a9f",
+      "bytes": 13932,
+      "root_full_untruncated_display": "3c51c1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0005.txt",
+      "sha256": "ab1b169dd12b8821f6e78946e2de448cd0f35b6ceb708aa5e12fdaf90ec2326b",
+      "bytes": 13968,
+      "root_full_untruncated_display": "c60e94"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0006.txt",
+      "sha256": "0bbbb1d51a9cb89ab6b657f0e2413c0ea2918993afbcdb520a0c3be0188b5a66",
+      "bytes": 13936,
+      "root_full_untruncated_display": "1642ba"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0007.txt",
+      "sha256": "f972f94163357c64607b41b84ccdfd09bc8e1df1641e8a89c0c310c071ff5605",
+      "bytes": 13962,
+      "root_full_untruncated_display": "e22e2b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0008.txt",
+      "sha256": "d10850a67e3ca47d389035eee0680d7bb640432af28ac17bc7f7a9f508431278",
+      "bytes": 13954,
+      "root_full_untruncated_display": "fb72bb"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0009.txt",
+      "sha256": "487f9047b85f71214fbad5cdafe7b5479c08c2f7cbd5bf645af1e341829cdeb0",
+      "bytes": 13980,
+      "root_full_untruncated_display": "190375"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0010.txt",
+      "sha256": "352fa70b18b02472d3dfd46da635903c730201358939d19c496017a992450f5f",
+      "bytes": 13956,
+      "root_full_untruncated_display": "dab8e6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0011.txt",
+      "sha256": "20f7c509b48d63b456158c1a52d3d2068a27c4789cef5466f0aa3d254c541169",
+      "bytes": 13990,
+      "root_full_untruncated_display": "25bcfc"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0012.txt",
+      "sha256": "1824cc5ccf19374b6b8d18ea3639c62a627fbba49be5808a56b8e0806eb5e79b",
+      "bytes": 13923,
+      "root_full_untruncated_display": "0b0676"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0013.txt",
+      "sha256": "edc75eaa263ccf09e33bd9aa631cd2c4c11cf0bc176560183c8d04f1d2fe9012",
+      "bytes": 13897,
+      "root_full_untruncated_display": "926699"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0014.txt",
+      "sha256": "e96840760b45fc0475e2ffc988d4acc610508a3cb2e74561e7914fdfca3e345d",
+      "bytes": 13889,
+      "root_full_untruncated_display": "3fde6a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0015.txt",
+      "sha256": "a3ab85c8b15424782928a860bb7b164fe2b89a7507d2aa1d11033bd13b8b8706",
+      "bytes": 13969,
+      "root_full_untruncated_display": "3fde6a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0016.txt",
+      "sha256": "2b0133f03a0c590be067619dfc06ae622fa65b87d4cb0e5fb3d95893104edd13",
+      "bytes": 13998,
+      "root_full_untruncated_display": "7b7e0b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0017.txt",
+      "sha256": "dd5a899a12d3d37e54a3bcbcef9bfbadfbe6ac974964c96ec512b1f5cae2fd2e",
+      "bytes": 13874,
+      "root_full_untruncated_display": "7b7e0b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0018.txt",
+      "sha256": "9db1aa77fbc63f620e02d0904fb5f1cba5cd47a9dc6f111f50873a9abc48fab8",
+      "bytes": 13961,
+      "root_full_untruncated_display": "62f766"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0019.txt",
+      "sha256": "ef07397249fb91ebc94c3e1aeca88725ae69e05ff12efe541e4234584df4bf98",
+      "bytes": 13887,
+      "root_full_untruncated_display": "62f766"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0020.txt",
+      "sha256": "3c1f24b76e5ca9fda0df68e3994405dd8452242421509ba56080c2302c3cb7be",
+      "bytes": 13986,
+      "root_full_untruncated_display": "506970"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0021.txt",
+      "sha256": "59e2656cedf79cedb445ca1f3d0dbf397d56129e1eb903e809aff4e06691fc2a",
+      "bytes": 13997,
+      "root_full_untruncated_display": "506970"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0022.txt",
+      "sha256": "badee607d7cd559183a05961868393da4a253e46ca9862b21c89746eae04cec9",
+      "bytes": 13999,
+      "root_full_untruncated_display": "326f9e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0023.txt",
+      "sha256": "4d0ffbcf821bbd70f069be8764288397e663c7aede4d4fdaa1f2c038ff994116",
+      "bytes": 13884,
+      "root_full_untruncated_display": "326f9e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0024.txt",
+      "sha256": "6ae5c05ad9e00f81c89ee463b51a8279855999cd4d11ed6d60a9a9ec7e2ae081",
+      "bytes": 13912,
+      "root_full_untruncated_display": "2155df"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0025.txt",
+      "sha256": "564c517fc2d6b9e33212b5aa1edd48c7fef87e90e78c55b2410e14a455cbd7ea",
+      "bytes": 13981,
+      "root_full_untruncated_display": "2155df"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0026.txt",
+      "sha256": "0eb8e24e73cf25847015a2442ee21761b8c9aebfa9ceb68f695db7c91ffb21da",
+      "bytes": 13916,
+      "root_full_untruncated_display": "584162"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0027.txt",
+      "sha256": "35bae7805065ba216dd95078a9b6ed0a9eb1b18703551c55bf307e674a9c13af",
+      "bytes": 13987,
+      "root_full_untruncated_display": "584162"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0028.txt",
+      "sha256": "f73261bcf7d24f21c84b94b779dc42cf70e9bc64bc85e7aa6b249cf85d323c00",
+      "bytes": 13872,
+      "root_full_untruncated_display": "0f54aa"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0029.txt",
+      "sha256": "e8f7c4ebfd9368eb542d46d683c9817104fb5531e35adf86886ace7d6748d3ae",
+      "bytes": 13748,
+      "root_full_untruncated_display": "0f54aa"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0030.txt",
+      "sha256": "bcba357e49569017a78fadb845ede7271dca3864077c46c2d628818443f1f026",
+      "bytes": 13886,
+      "root_full_untruncated_display": "028cf6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0031.txt",
+      "sha256": "31de84dfec5ea0102c13653d426b3f392f58d4dce356437b631715281349307b",
+      "bytes": 13672,
+      "root_full_untruncated_display": "028cf6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0032.txt",
+      "sha256": "522f75e27505f14763c795e44261302e70f31ea1ed1721e61202cc153a8c4983",
+      "bytes": 13948,
+      "root_full_untruncated_display": "e6839d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0033.txt",
+      "sha256": "539eea1055cd1e4896c5c18317f9e1daaefeeea5a4bdc5eff8ef4f2d5fe6abee",
+      "bytes": 13943,
+      "root_full_untruncated_display": "e6839d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0034.txt",
+      "sha256": "875e4a470326c75630548849ba8edc55717bb4bcbfa5c730deea8b8933b72d38",
+      "bytes": 13934,
+      "root_full_untruncated_display": "41bc0e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0035.txt",
+      "sha256": "74f95bb58fcf33b6f0a074d6a516df7d4e4d897651641044551dec5d9f239ba1",
+      "bytes": 13922,
+      "root_full_untruncated_display": "41bc0e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0036.txt",
+      "sha256": "34aa07daeea6365b8e9315ab82d0d1031587871ddd892a651498d360f74cb65f",
+      "bytes": 13922,
+      "root_full_untruncated_display": "37bd4c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0037.txt",
+      "sha256": "e673e7e8bed1954b68880fdcb785e55ea2f5dd95b04915929a0ca1419bf4c838",
+      "bytes": 13924,
+      "root_full_untruncated_display": "37bd4c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0038.txt",
+      "sha256": "7c76b518ec42b7b6ef6a8fe63fa2a43eaa96fb8989befc710065ad6136752930",
+      "bytes": 13945,
+      "root_full_untruncated_display": "a9857e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0039.txt",
+      "sha256": "87d5a667708283fccc21e8439bfcbbd13fda05c8fb6db325f7de1fa073cc7e24",
+      "bytes": 13984,
+      "root_full_untruncated_display": "a9857e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0040.txt",
+      "sha256": "7b9791130269d7cea63418b27e913096b3496aca470c0b4c2210dc95d3aad957",
+      "bytes": 13874,
+      "root_full_untruncated_display": "b1a432"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0041.txt",
+      "sha256": "10a7ac9f136e63c19adcf47cea990f5db42e35c2ba6677585af1f5fa383806ee",
+      "bytes": 13957,
+      "root_full_untruncated_display": "b1a432"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0042.txt",
+      "sha256": "46d2d8327f31d5cf21e9b1b7ca5c1e71c343d9f985c9f632e12f7156419ef172",
+      "bytes": 13985,
+      "root_full_untruncated_display": "d5bda3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0043.txt",
+      "sha256": "ce77e48eba4bbb7a19a18ff170a1f59fa04a96bc728c26cf387331e617634d4b",
+      "bytes": 13839,
+      "root_full_untruncated_display": "d5bda3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0044.txt",
+      "sha256": "8a1e9802c490b13a65e9bde34969e5dc74ad0777e3780086160013811c35ea0f",
+      "bytes": 13948,
+      "root_full_untruncated_display": "53e941"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0045.txt",
+      "sha256": "005bc4a8e28ce03d7ec066ee58807a09f053383bfa2370bfc900f51db8d66999",
+      "bytes": 13958,
+      "root_full_untruncated_display": "53e941"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0046.txt",
+      "sha256": "8b194998318b17f5bd041077a53238ce3a868bf7d2319f8ed8737664b8035632",
+      "bytes": 13980,
+      "root_full_untruncated_display": "fa5e73"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0047.txt",
+      "sha256": "491604848ad35737b810621c7e055c4356cd698e11394dbc81d4d6ff8610cf72",
+      "bytes": 13994,
+      "root_full_untruncated_display": "fa5e73"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0048.txt",
+      "sha256": "bd0d96516746cb236f0b73d6e39deb019ab5ac2ea4977ef415c95a345e884705",
+      "bytes": 13946,
+      "root_full_untruncated_display": "defbbe"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0049.txt",
+      "sha256": "429ed4ef49ade4e4a779dbf2e18052a225a2665f8aeee63249a7bc41f88e0102",
+      "bytes": 13972,
+      "root_full_untruncated_display": "defbbe"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0050.txt",
+      "sha256": "163588789e9636e212ddf64703fe1e4838db2894b4e91043fd666c59b617e7f2",
+      "bytes": 13934,
+      "root_full_untruncated_display": "d59958"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0051.txt",
+      "sha256": "37a0e4b0b38ee18343b4523b62486c3e9450a095ee155cf624ec1433234b89ed",
+      "bytes": 13939,
+      "root_full_untruncated_display": "d59958"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0052.txt",
+      "sha256": "3c439e1c391ec8521c91e61c1ed6bf2415bbbe954d95d3472df9dfcdd59059e4",
+      "bytes": 13947,
+      "root_full_untruncated_display": "ce0e99"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0053.txt",
+      "sha256": "09912bc814221720cee50a7afb8f5d5e906b0c2881e09e31be10fcad268a1b77",
+      "bytes": 13920,
+      "root_full_untruncated_display": "ce0e99"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0054.txt",
+      "sha256": "24a0043bada32bd63252b14e0128a78b4e88fa4d8d05a21c968f668d9e62a533",
+      "bytes": 13965,
+      "root_full_untruncated_display": "84939e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0055.txt",
+      "sha256": "f854482b33b153f28d468046cf689913dc4231bf662ecf5db1eb59d5c1d1cea2",
+      "bytes": 13952,
+      "root_full_untruncated_display": "84939e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0056.txt",
+      "sha256": "80da88de64fd2626b2dc5c08d6c7e2b59059738d9f2e15329118f82d14705af2",
+      "bytes": 13976,
+      "root_full_untruncated_display": "63ed95"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0057.txt",
+      "sha256": "c3c7185b3f1b3cdae7f4cd0abe97550edc1d87b22547a4d5b5246e432c5e75cd",
+      "bytes": 14000,
+      "root_full_untruncated_display": "63ed95"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0058.txt",
+      "sha256": "78c5990f4eb50ff9097fa7715356f08be048d432798269e4e78fa97296df9812",
+      "bytes": 13971,
+      "root_full_untruncated_display": "9972fd"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LITERALS-0059.txt",
+      "sha256": "99f7c9f12154bebbe22453344fb1ad847039a92270562022b32b249474a9d40f",
+      "bytes": 3653,
+      "root_full_untruncated_display": "9972fd"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0000.txt",
+      "sha256": "5255014415e304d2e8c74ac2a13c17a26f3602e7a8a32ccf39b83f42e7fbf6ba",
+      "bytes": 13631,
+      "root_full_untruncated_display": "084a3a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0001.txt",
+      "sha256": "ae6c7f55d8381189b3a4e0bb5f6ae3ae94484c17aaacd2799fc22b8e2a248ccf",
+      "bytes": 13675,
+      "root_full_untruncated_display": "084a3a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0002.txt",
+      "sha256": "e47d448ea3872a86bdc8a03bdbc5ae37a6fcc63d237bcb670af4aeefee1a73a0",
+      "bytes": 13418,
+      "root_full_untruncated_display": "f62757"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0003.txt",
+      "sha256": "1da76943b53999016a910ccc21c560c564e9d9ae1165ad0e136cc94e0b53a4cd",
+      "bytes": 12920,
+      "root_full_untruncated_display": "f62757"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0004.txt",
+      "sha256": "61259f0e9502158d963c29a82e414aceae015871621594e4030efa4eca662982",
+      "bytes": 13569,
+      "root_full_untruncated_display": "9f9807"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0005.txt",
+      "sha256": "f743e367c76152945290a9ced95befbbbe25903795a79cc61d12b8d0273e090a",
+      "bytes": 13925,
+      "root_full_untruncated_display": "9f9807"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0006.txt",
+      "sha256": "0e93f964bed85b15bd19bd461386e3195b4ea72eeee8f42f7a54c12397c39b36",
+      "bytes": 12632,
+      "root_full_untruncated_display": "e4e6bc"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0007.txt",
+      "sha256": "240e90cd9192b9d2b0553c9c19d1aba44da4382106d9368ce3039ce2827b85e7",
+      "bytes": 13703,
+      "root_full_untruncated_display": "e4e6bc"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0008.txt",
+      "sha256": "92bc7a459eb7a29ae85d75795aed72147ab765327e964d86d16f6462f66321cf",
+      "bytes": 13570,
+      "root_full_untruncated_display": "6bcccd"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0009.txt",
+      "sha256": "33a5770f2d26d03ebffa726cf6b1172a807b9a6c7cd8639effaf1959d866af0c",
+      "bytes": 13448,
+      "root_full_untruncated_display": "6bcccd"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0010.txt",
+      "sha256": "ed12e7faaaec7975e15b32318c1c04d69f5b84826f8a5c449c486e39e3159610",
+      "bytes": 13550,
+      "root_full_untruncated_display": "7b1576"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0011.txt",
+      "sha256": "182e8221d86fcc7b22ab414b07540b7eda0382ab1de3e3c706d2bdc0e17d9654",
+      "bytes": 13401,
+      "root_full_untruncated_display": "7b1576"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0012.txt",
+      "sha256": "6f984fcbff675cf19acb2aa8964875fde3cfb151058cc90f76a4d4fc724d9dae",
+      "bytes": 13588,
+      "root_full_untruncated_display": "581eaf"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0013.txt",
+      "sha256": "c2dbcb61d3a0466a6f7e8f3089b5d99c2562b24c5830256ac69ead6aae3215b4",
+      "bytes": 12412,
+      "root_full_untruncated_display": "581eaf"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0014.txt",
+      "sha256": "b5fc1999c8a2e07a24f74d28a25e6ef823bc5eb569c940a3d595a58c3faf9c96",
+      "bytes": 12976,
+      "root_full_untruncated_display": "65d872"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0015.txt",
+      "sha256": "307c5e1c58c5279ff52cb531dba39af17082a8470e9bae07b6d3422a8c42e280",
+      "bytes": 13595,
+      "root_full_untruncated_display": "65d872"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0016.txt",
+      "sha256": "d56f4b7fd35cb2338f3d13526ab91e75ba5e1bb28615cb51c1d7782860e50479",
+      "bytes": 13692,
+      "root_full_untruncated_display": "49f135"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0017.txt",
+      "sha256": "03749bde0b1f1bda66378de12b4dd4b4cb9976bfaee52039cc5ca048693b783c",
+      "bytes": 13377,
+      "root_full_untruncated_display": "49f135"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0018.txt",
+      "sha256": "7cef0d7f489d2e5d37074c94ba4502c1c6f253cb5d9324b6d5b1c5e27e53da38",
+      "bytes": 12868,
+      "root_full_untruncated_display": "241bf2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0019.txt",
+      "sha256": "e51c5153b457ad559cc737d8cdde3ef048d501748c9e9de66360ff9418fcdc84",
+      "bytes": 13593,
+      "root_full_untruncated_display": "241bf2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0020.txt",
+      "sha256": "d5aeaaf14fbb931883fd73d3b18e5b39caf34a3804f217a2e2199ea9c85f9250",
+      "bytes": 11650,
+      "root_full_untruncated_display": "6c71e2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0021.txt",
+      "sha256": "8864adf1dcefdb31901c0946368ab12b7faa5d6bfcd3b904243f2439f1b764e9",
+      "bytes": 13104,
+      "root_full_untruncated_display": "6c71e2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0022.txt",
+      "sha256": "4aeb362fbc3c5b05bab2faa1b7580004a9a2916ece66ef01a14e6e6615845542",
+      "bytes": 12741,
+      "root_full_untruncated_display": "435118"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0023.txt",
+      "sha256": "2f98f7d1487f5f2eddec342b382a6da6810bbdcb713fbc795ad022adf73d935a",
+      "bytes": 12768,
+      "root_full_untruncated_display": "435118"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0024.txt",
+      "sha256": "9615a30512d84a03fc186f36ded605bcaa16f274e87d06f27e4832f2c60e60c6",
+      "bytes": 13267,
+      "root_full_untruncated_display": "beab8f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/architecture42-root-lossless-read-r1/LAYOUT-0025.txt",
+      "sha256": "735e712f78f8994c098478da693d90f0ca39159bdc154b8bd676c6b8edce4c3e",
+      "bytes": 4082,
+      "root_full_untruncated_display": "beab8f"
+    }
+  ],
+  "owner_count": 42,
+  "owner_bytes": 595170,
+  "owner_lines": 10618,
+  "static_context_count": 231,
+  "exact_prior_root_context_reuse": 64,
+  "exact_prior_root_core_literal_reuse": 458,
+  "fresh_all273_bytes_and86pack_hash_recheck_output": "7014c6",
+  "planning_reports_whole_output": "2f0496",
+  "no_foreign_actor_full_transferred": true,
+  "limits": "Own full ordered lossless source reading, including prior personally read exact hash reuse. No native/compiler/symbol/global API grade or full read of dynamic scanner subjects is asserted. CODEC large raw print13a621 was truncated and receives no independent raw full credit; complete human-view86packs supply full ordered closure."
+}

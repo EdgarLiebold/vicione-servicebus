@@ -13,7 +13,7 @@ public class TypeSet
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="allTypes">The all types.</param>
-    /// <param name="filter">The filter to add to the pipeline.</param>
+    /// <param name="filter">The optional predicate that selects discovered types.</param>
     public TypeSet(IEnumerable<AssemblyScanTypeInfo> allTypes, Func<Type, bool>? filter = null)
     {
         _allTypes = allTypes;

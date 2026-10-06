@@ -1,0 +1,39 @@
+using System.Runtime.ExceptionServices;
+
+namespace ViciOne.ServiceBus.SignalR.Runtime;
+
+/// <summary>Releases backplane operation owners without losing operation or release failures.</summary>
+internal static class BackplaneOperationLifetime
+{
+    /// <summary>Releases the request before the scope and propagates every selected outcome.</summary>
+    public static async Task ReleaseAfterOperationAsync(
+        IAsyncDisposable scope,
+        IDisposable? request,
+        Exception? operationFailure)
+    {
+        List<Exception>? failures = operationFailure is null ? null : [operationFailure];
+
+        try
+        {
+            request?.Dispose();
+        }
+        catch (Exception exception)
+        {
+            (failures ??= []).Add(exception);
+        }
+
+        try
+        {
+            await scope.DisposeAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            (failures ??= []).Add(exception);
+        }
+
+        if (failures is { Count: 1 })
+            ExceptionDispatchInfo.Capture(failures[0]).Throw();
+        if (failures is { Count: > 1 })
+            throw new AggregateException("Backplane operation and release encountered multiple failures.", failures);
+    }
+}

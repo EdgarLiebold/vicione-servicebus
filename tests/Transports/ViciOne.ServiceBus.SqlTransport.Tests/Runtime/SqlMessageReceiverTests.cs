@@ -87,6 +87,33 @@ public sealed class SqlMessageReceiverTests
     }
 
     [Theory]
+    [InlineData(1, false, null)]
+    [InlineData(2, true, 1)]
+    [RequirementCoverage("REQ-VSB-SQL-FIRST-DELIVERY", "fetched-attempt-count-agrees-with-redelivery-metadata")]
+    public async Task FetchedDelivery_AttemptCountAgreesWithRedeliveredAndHeaderAsync(
+        int deliveryCount, bool redelivered, int? redeliveryCount)
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        SqlTransportMessage message = Message();
+        message.DeliveryCount = deliveryCount;
+        await using var harness = new ReceiverHarness([message]);
+
+        await harness.Dispatcher.DispatchCompleted.WaitAsync(cancellationToken);
+        await harness.Client.SecondReceiveEntered.WaitAsync(cancellationToken);
+        await harness.StopAsync(cancellationToken);
+
+        SqlReceiveContext context = Assert.IsType<SqlReceiveContext>(harness.Dispatcher.LastContext);
+        Assert.Same(message, context.TransportMessage);
+        Assert.Equal(message.TransportMessageId, context.TransportMessageId);
+        Assert.Equal(deliveryCount, context.DeliveryCount);
+        Assert.Equal(redelivered, context.Redelivered);
+        Assert.Equal(redeliveryCount, context.TransportHeaders.Get(MessageHeaders.RedeliveryCount, default(int?)));
+        Assert.Equal((1, 1), (harness.Dispatcher.DispatchCount, harness.Client.DeleteCallCount));
+        Assert.Equal((0, 0), (harness.Client.MoveCallCount, harness.Client.UnlockCallCount));
+        Assert.True(harness.Receiver.Stopped.IsCancellationRequested);
+    }
+
+    [Theory]
     [InlineData(false, 1, 0)]
     [InlineData(true, 0, 1)]
     [RequirementCoverage("REQ-VSB-SQL-RECEIVER-LIFECYCLE", "expired-message-uses-configured-terminal-path")]

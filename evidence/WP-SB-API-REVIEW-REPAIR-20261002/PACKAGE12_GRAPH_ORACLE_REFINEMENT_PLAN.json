@@ -1,0 +1,23 @@
+{
+  "previous_phase": "package12-graph-public-previous-eight",
+  "actual_r1_cases": 8,
+  "actual_r1_failures": 6,
+  "causal_shared_construction_red": 2,
+  "invalid_registration_positive": 2,
+  "excluded_oracle_expectation_failures": 4,
+  "corrections": [
+    "Original address normalizes nonroot virtual host without trailing slash; assert exact canonical escaped Uri",
+    "Configure callback is invoked before wrapped construction try; assert exact public propagated InvalidOperationException marker"
+  ],
+  "before_sources": [
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_GRAPH_ORACLE_R1_previous.cs.txt",
+      "sha256": "8f2adb7c2e7e7482fee278005fc61515769984f147c167224d84acf067673a69"
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_GRAPH_ORACLE_R1_corrected.cs.txt",
+      "sha256": "8f2adb7c2e7e7482fee278005fc61515769984f147c167224d84acf067673a69"
+    }
+  ],
+  "require": "repeat full original/corrected eight on identical final oracle; no product patch for test mistakes"
+}

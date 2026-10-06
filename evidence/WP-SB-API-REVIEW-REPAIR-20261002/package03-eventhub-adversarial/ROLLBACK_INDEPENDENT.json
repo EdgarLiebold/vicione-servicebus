@@ -1,0 +1,17 @@
+{
+  "status": "HASH_ONLY_ROLLBACK_VERIFIED",
+  "read_by": "azure_test_scope",
+  "coverage_sha256": "1a6eeb3deac1f6b0bb6b00cc69991dc5b2f3c1b04f28299b4b797cdd35f7f023",
+  "count": 6209,
+  "mismatches": [],
+  "new_fixture_absence": {
+    "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs": true,
+    "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs": true,
+    "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs": true,
+    "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBuiltContextCapture.cs": true
+  },
+  "limits": [
+    "Machine byte/SHA check only; not personal FULL reading 6209 files",
+    "No native operation executed"
+  ]
+}

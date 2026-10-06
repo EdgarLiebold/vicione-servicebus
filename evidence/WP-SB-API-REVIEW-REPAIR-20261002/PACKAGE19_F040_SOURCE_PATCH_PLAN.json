@@ -1,0 +1,35 @@
+{
+  "status": "ROOT_SOURCE_FULL_AND_NATIVE_ORIGINAL_CAUSE_QUALIFIED_PREAUTHOR_PLAN",
+  "finding": {
+    "id": "F-SB-API-040",
+    "severity": "High",
+    "classification": "CONFIRMED_CONTRACT_DEFECT",
+    "title": "InMemory escaped input names declare a different queue and exchange than receiving and sending use",
+    "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "source": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs",
+    "source_original_sha256": "05814107628e3345f1c13d360f77a40bad8e1742d9b1cb954d07bb1b2bce5873",
+    "exact_native_oracle_tests": [
+      "default-backtick",
+      "default-space",
+      "default-percent",
+      "default-unicode",
+      "typed-backtick",
+      "typed-space",
+      "typed-percent",
+      "typed-unicode"
+    ],
+    "actual_original_cases_receipt": "package19-transport-public-previous-ten",
+    "actual_original_receipt_log_sha256": "36faa946776ac0c75d4b6f2f1bd41eb98a93ed404948d31c8c3456ba87ba2009",
+    "positive_controls": [
+      "default-ascii",
+      "typed-ascii"
+    ],
+    "status": "CONFIRMED_NATIVE_FINITE_TOPOLOGY_REPAIR_PENDING",
+    "proof_limit": "Actual public bus Start/GetProbeResult exposes8 duplicate raw/escaped queue identities;2 ASCII normal formal SendOptions/canonical+short queue deliveries verified. Negative probes precede anysend; no timeoutfindingcredit. Core29a selected beforetransportchange; other previousrepairs retained."
+  },
+  "change": "Use existing InMemoryEndpointAddress(host,input).Name exactly once, identical host/decode parser to normal sender, preserve all consume topology application and unsupported emptyname rejection.",
+  "RootWhole": true,
+  "all8actual_failureblocks_personally_FULL": true,
+  "rootOwnerRead": "PACKAGE19_TRANSPORT_ROOT_PRE_NATIVE_BINDING_R3.json",
+  "whole_API_closed": false
+}

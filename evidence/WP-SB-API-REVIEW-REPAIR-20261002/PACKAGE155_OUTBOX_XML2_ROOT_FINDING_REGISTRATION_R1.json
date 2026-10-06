@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-04T23:18:47.592291+00:00",
+  "decision": "CONFIRM_F130_OUTBOX_DESTINATION_SEND_XML_DEFECT",
+  "confirmed_before": 129,
+  "confirmed_after": 130,
+  "accepted_unchanged": 127,
+  "finding": {
+    "id": "F-SB-API-130",
+    "severity": "Low",
+    "title": "Outbox consume factory and filter incorrectly document sending to a destination",
+    "classification": "CONFIRMED_SOURCE_XML_CONTRACT_DEFECT",
+    "status": "SOURCE_REPAIRED_ADVERSARIAL_NO_BLOCK_CURRENT_COMPILED_XML_PACK_PENDING",
+    "source_owners": [
+      "src/ViciOne.ServiceBus/Middleware/IOutboxContextFactory.cs",
+      "src/ViciOne.ServiceBus/Middleware/OutboxConsumeFilter.cs"
+    ],
+    "actual_XML_nodes": 2,
+    "author": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-outbox-factory-filter-summary-xml2-product-proposal-r2/REPORT.json",
+      "sha256": "d7cf974f292ed1d808bf97e8800925d50527a35750a881a6129f9855b0908cba"
+    },
+    "adversarial_review": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package155-outbox-factory-filter-summary-xml2-independent-scanner-r1/REPORT.json",
+      "sha256": "600b6f655ca8fa8f1289680321ef0425c7b9aa7fa12efeb17963f393aaf2e1f4"
+    },
+    "causal_contract": "Both methods coordinate incoming consume scope and provider-specific outbox/inbox next pipeline, with no direct destination-send input or universal next invocation/durable guarantee.",
+    "root_cause_read": "053ecf",
+    "source_application": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE155_OBSERVER_PRODUCT_CONTROL4_SAGA_XML2_OUTBOX_XML2_ROOT_APPLICATION_R1.json",
+      "sha256": "c75c543b38b6706a37be5527a5a9ec955b9cb0aebe4b029f44c8df9af2efc150"
+    },
+    "whole_API_member_review_closed": false
+  },
+  "whole_API_closed": false
+}

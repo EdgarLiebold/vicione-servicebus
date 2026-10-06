@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-05T00:27:17.633326+00:00",
+  "actor": "/root",
+  "status": "ROOT_APPLIED_ADVERSARIAL_NO_BLOCK_ORIGINAL_OUTBOX6_AND_RECURRING_XML4",
+  "freeze_before": "7923f6ca45d50cd7f3cb50b435dc309dbf202d0e7cc268d3cad1d1c9c7ada426",
+  "files": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxSchedulingLifecycleTests.cs",
+      "before_sha256": "3036673729382c61637cd657a937037fcfefda2f18221f3deb610b931a28344a",
+      "after_sha256": "1025336d56a84ed785020733fb8602d1268a6ab6484423347d8faf804d80c4f6"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Scheduling/ScheduleRecurringMessageCommand.cs",
+      "before_sha256": "b1435ec965823758dbd6839ee650549d743a945eb01f2b55d36c423cdbf3c953",
+      "after_sha256": "018524d7844bc3188e9f1e978bf4cf0ee1944781bd5d55b8b9b9638fc176e669"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "a9bd6b6f371a91f33f2ac30a0b71f50b2651d527524dc9e63215f8c03eec0b86",
+      "after_sha256": "e5a7877defb71aca8c84738a6bb0506712f7f10106dfaf29554fc33f40e83642"
+    }
+  ],
+  "requirements_before": 4619,
+  "requirements_after": 4621,
+  "proposal_manifests": {
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package159-public-outbox-cancellation-diagnostics6-oracles-proposed-r1": "aa095b8fb691788d79e549e3ad08a3d443ffb70ff12a85bdae8c55b2138148fb",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package159-recurring-getter-xml4-product-proposed-r1": "e4c0e72a2884f3c62ba7815fbf4866a607d7bd424c6b5b7dfeaab9f9e98c6b92"
+  },
+  "adversarial_peers": {
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package159-public-outbox-cancellation-diagnostics6-independent-runtime-r1/REPORT.json": "1b23f2c73c9250121a09a62f76d2620f5c125a3040931662b86d47d15858d5f8",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package159-recurring-getter-xml4-independent-runtime-r1/REPORT.json": "d00c4a4a117ed8881d250897dcbc962b9a10f4f4313cc30680c0adb2c723de94"
+  },
+  "root_review": [
+    "New189insertion e8eb95;old289whole7e0d5e; exactfixturehookdelta706dc6;Product272wholecd7868;peerwhole3cccc8;all12pinspreflightverified",
+    "Recurringbefore/proposed58actualnodesandpeerverified;4XMLonlyinverse",
+    "Both originaltest289 andfixturedefault unchangedbyteinverse; actualownedgatesalwaysfinallyreleased/joined, exactambientrestored; finiteoracle no timeoutcredit"
+  ],
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package159-root-before-r1",
+  "SDK_after": false,
+  "CLOSED": false
+}

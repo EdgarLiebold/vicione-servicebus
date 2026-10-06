@@ -1,0 +1,725 @@
+{
+  "status": "READ_FULL_SCOPE",
+  "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "tree": "a69acad1df9167725c06e2dd127b7f927bbe4298",
+  "read_by": "azure_test_scope",
+  "role": "independent internal adversarial helper, not author and not external product role",
+  "owner_files": 42,
+  "original_tracked_owner_files": 38,
+  "new_fixture_files": 4,
+  "shared_inputs_count": 35,
+  "text_files_personally_full": 76,
+  "binary_hash_only": 1,
+  "files": [
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "793b6d43bd6a12b072918a1338bf1e912dff6a8fa5501c72c962d57e9f06fd3e",
+      "bytes": 767,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Global API aliases and shared test imports; F012 accesses public ConnectionContext/SharedConnectionContext directly, without private-field introspection.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/AzureServiceBusTransport/ServiceBusReceiveLockContextTests.cs",
+      "sha256": "756afaa1910df1f20f7e237cbc539afe9b84b3bbaba8cef6bd5c3f9652f0794b",
+      "bytes": 7820,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusReceiveLockContextTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/AzureServiceBusTransportMetadataTests.cs",
+      "sha256": "cab8a023e6970b10e2738d7ae0a5e0028cb32c8350109be5b0611a9124abdcad",
+      "bytes": 5441,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for AzureServiceBusTransportMetadataTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureFunctionsTestExtensionsBoundaryTests.cs",
+      "sha256": "4a58b951f107d5c20244677648755ba68cc1d4eb8eab7a0d4c1db7afe02d127a",
+      "bytes": 7692,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for AzureFunctionsTestExtensionsBoundaryTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTestHarnessBoundaryTests.cs",
+      "sha256": "403bbaba29e77afac83550f117aec3e0b5e5b590d4e11aacd24e41843960eba0",
+      "bytes": 13338,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for AzureServiceBusTestHarnessBoundaryTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTestHarnessOptionsStartupTests.cs",
+      "sha256": "8006f4b7e085629fb07b4503cc6474c7035fb2bae9f1cf2d1f5b8959057a2f96",
+      "bytes": 10938,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for AzureServiceBusTestHarnessOptionsStartupTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTransportOptionsStartupTests.cs",
+      "sha256": "fe0c3b37ef5d01e9ceeb0d28e76f576a88aedd7009ef3bc3ee2ff200cc7e8f48",
+      "bytes": 1528,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for AzureServiceBusTransportOptionsStartupTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/ServiceBusSessionBatchConfigurationTests.cs",
+      "sha256": "cc195ecc177674b108f8b4272b59827ca5206d780a0a2ab254e61d2c407e3fa9",
+      "bytes": 10037,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusSessionBatchConfigurationTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/ServiceBusSessionBatchOptionsTests.cs",
+      "sha256": "10b62487014fffdd91e8ef601c8232d9c366ee4bab28941d8af1ebc1a6713687",
+      "bytes": 2504,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusSessionBatchOptionsTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/CrossTransportDurableSendTests.cs",
+      "sha256": "20fc0fd1861d61f7c7510d8d14a048271c56d8b0bd99d177a4bbd4fef302ed07",
+      "bytes": 3992,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for CrossTransportDurableSendTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/MessageReceiverIsolationTests.cs",
+      "sha256": "0e8b00bbbe4e44c4bf4929c88c011f44fa15558b2ed116a88c198e5e0c63ccbd",
+      "bytes": 20692,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for MessageReceiverIsolationTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/MessageSessionSagaRepositoryTests.cs",
+      "sha256": "77389d8eabc1ef6253b3720943d4c59c627b9fb24938071ba7dc457124565df5",
+      "bytes": 10268,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for MessageSessionSagaRepositoryTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "sha256": "b1827009b4276a3fa9930eefa6d9b290f0d9b3325e8e75a41dce994d6b4b667a",
+      "bytes": 73120,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Full current requirement values personally read. Four F012 rows point to all four new theory methods and the expected host-config/topology categories.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "46bcc769213a58dc57c3a92d2b1cad02232dac83ebbdff26c407b223ab7a1774",
+      "bytes": 1238,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Compiled owner invokes shared verifier and asserts complete manifest/attribute projection; current unfiltered receipt has no projection failure.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientFaultShutdownTests.cs",
+      "sha256": "17b5850e163561e92438c76a393baf93079205c0bf4bf655052e0cb29d6c53ec",
+      "bytes": 12776,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Shutdown/error handling and owned resource cleanup conventions; F012 does not change client ownership.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusConnectionContextTests.cs",
+      "sha256": "3ff2bfde07a526ff30d0ccadfce812a4fed5ab4d120f2720b2dfb7a0dc54d60b",
+      "bytes": 15919,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Public ConnectionContext administration behavior and fake SDK response conventions; supports input/result forwarding review.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusEndpointAddressTests.cs",
+      "sha256": "1c5cb48ca5dd98773a601ab03d895a55bce11ce99520c45b8361c43abf103bf8",
+      "bytes": 3527,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusEndpointAddressTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusEndpointConfigurationTests.cs",
+      "sha256": "ad39a55433c211b7725f986abdf826971f75c9ad386d7502e00aaad2d52f5d46",
+      "bytes": 5072,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusEndpointConfigurationTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusHeaderProviderTests.cs",
+      "sha256": "632a8517bca3bafbd436da57cd6ba069b47d6359c96b681224aec2947f586d77",
+      "bytes": 6822,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusHeaderProviderTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusHostAndNameValidationTests.cs",
+      "sha256": "4e9932feddb70c4acf4d9149c0b70f97628e3d92931fe8e7feeb7d03b8da5332",
+      "bytes": 28204,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusHostAndNameValidationTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusHostRetryPolicyTests.cs",
+      "sha256": "1ebaecfd59b6360810543647d57e46f19f3d4a312c4b32b797e0505bace5253b",
+      "bytes": 11906,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusHostRetryPolicyTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageBodyTests.cs",
+      "sha256": "41c942a4cb2a3ff4332a718239a1dbee39959d93d76061b0778fd84aee91f8d1",
+      "bytes": 3096,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusMessageBodyTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusPublishValidationTests.cs",
+      "sha256": "255ed06eddcc69f3334c4e3c6eb634bc0637b43d366c9fa915e1cf28269e24e3",
+      "bytes": 10514,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusPublishValidationTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusQueueOptionsTests.cs",
+      "sha256": "c9a62dfe3a813d4173d52d99ce55bd0f511fdeb17f6a3423acc7cfe42a1877ca",
+      "bytes": 4841,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusQueueOptionsTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusReceiveTransportPropertiesTests.cs",
+      "sha256": "6e3493fb4a96e2fa7e087941ecf7afee9dff9382b797f5ed96926c785583e59e",
+      "bytes": 5050,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusReceiveTransportPropertiesTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusReceiverErrorCallbackTests.cs",
+      "sha256": "40a511f43c92fd0be763ea4cde9d27542c6d97d3eed4b9100268427399349f98",
+      "bytes": 17861,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusReceiverErrorCallbackTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusScheduleCancellationCapabilityTests.cs",
+      "sha256": "9c26ad4c53a7f72ea752e28d11ef791df90d90c6fc1368bab2f771d9788acdff",
+      "bytes": 1022,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusScheduleCancellationCapabilityTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSendFailureClassifierTests.cs",
+      "sha256": "34466bb54bdeba0b13233db1a49109a9e8d96013de71ec13c88cf01b5a13dffa",
+      "bytes": 11172,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusSendFailureClassifierTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSessionSagaProbeTests.cs",
+      "sha256": "fee2e98f8885279f1f5a4da13fe52fe9b14ae6328330279b57f01818d90bef2d",
+      "bytes": 2214,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusSessionSagaProbeTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSettlementCancellationTests.cs",
+      "sha256": "77bf2094093b2b67d876012b964274644239b4923a87b379714a4567c728837d",
+      "bytes": 2016,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Public settlement cancellation and exact token propagation countercontrols; no completion-state sleeps needed in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSubscriptionOptionsTests.cs",
+      "sha256": "28187f11c4db4fd49f0d965a79893ad263d08a71f459ba17885e03e6cbc785ec",
+      "bytes": 10474,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusSubscriptionOptionsTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSubscriptionReconciliationRaceTests.cs",
+      "sha256": "d161f6f43dca75aa20b8c44c34483f55d7e139bb7569ca0f20ca7d91932ae9ad",
+      "bytes": 8021,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusSubscriptionReconciliationRaceTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusTimeProviderTests.cs",
+      "sha256": "9a5ba2732964e037c25cbdaec5db6ca125cbe0c5de7de35e0c86c5ead91d6ecc",
+      "bytes": 5449,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusTimeProviderTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusTopologyLoggingTests.cs",
+      "sha256": "2d06fc5ba3d41fa0be7ba46d8d3da74a44adfc8c0cd3f1afe65b7f2603be702b",
+      "bytes": 3711,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusTopologyLoggingTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusTopologyTests.cs",
+      "sha256": "eb626f3a441bafcec6712e621fe8cfdc9ce13f19684c376d43aeb52d99affa54",
+      "bytes": 57126,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for ServiceBusTopologyTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/SubscriptionProcessorBehaviorTests.cs",
+      "sha256": "498aab679f4410bad0fb02507df6b2f99ae4ea4e18e99b259300a2319e39ffc0",
+      "bytes": 19009,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing owner contract countercases fully read for SubscriptionProcessorBehaviorTests; conventions retain public API routes, bounded asynchronous waits, strict fakes and exact behavioral assertions. No edits in F012.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+      "sha256": "b12b81a46e099582644c05165ee384fb394431fc36b517e2a980eceac592a6e3",
+      "bytes": 1635,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/packages.lock.json",
+      "sha256": "60d92ca6379fd226c386e8ef735ee9f15da2fb31cb8d288249a51e27ad0b96e9",
+      "bytes": 23868,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Entire pinned package lock values personally read; reproducibility input only, not newly restored NuGet evidence.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs",
+      "sha256": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+      "bytes": 12448,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Existing ownership/retry regression conventions use public SDK clients and factories; caller-owned lifecycle remains separate from F012 token-source ownership.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs",
+      "sha256": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+      "bytes": 3638,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Session expiry/renewal regression conventions rely on callback session deadline and SDK model factories; no F012 scope changes.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusFamilyRegressionTests.cs",
+      "sha256": "fc71620d49be733688a2f4854b76ba69445c03effbeba7e1cee7807775815a60",
+      "bytes": 13429,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Public topology and configuration countercases; the unfiltered owner retains the known F038 automatic nested-queue identity failure at line 131.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSharedAdministrationLeaseTests.cs",
+      "sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+      "bytes": 19760,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Four theories / 18 cases; gated strict SPI fakes preserve actual linked token, exact inputs, results/fault identity, and cleanup of both owned Tasks. Every assertion reviewed separately in ASSERTIONS.json.",
+      "fresh_personal_read": true
+    }
+  ],
+  "shared_inputs": [
+    {
+      "path": ".github/workflows/native-tests.yml",
+      "sha256": "2041926c8fc20c6f73cb1ea4fbee766b1be1eaaad5a18da47fd5a5ee27e75a6c",
+      "bytes": 9639,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "CI native test workflow and execution profiles read; one Release owner run does not establish every CI/package profile.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "Directory.Build.props",
+      "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf",
+      "bytes": 2886,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Ancestor build properties apply to owner/projects; target framework and test build conventions read in full.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "Directory.Build.targets",
+      "sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1",
+      "bytes": 10658,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Ancestor targets apply metadata/generated build behavior; read in full without executing MSBuild.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "Directory.Packages.props",
+      "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e",
+      "bytes": 5677,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Central package pins read in full, including SDK/framework dependencies; no package restore or upgrade performed.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "NuGet.config",
+      "sha256": "3f6cda87abdfbc3e7f7a80906f21b11009ac811c70834dfdbc4840db01a9ce93",
+      "bytes": 838,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Repository restore/feed settings read in full; locked up-to-date restore receipts do not prove a fresh feed restore.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "sha256": "ac102688f92ab8ee214af159e05703a6d0bc43dde268efe78c4ca41e82f45091",
+      "bytes": 7678,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Unit solution project membership read; F012 evidence is the Azure owner, not all solution owners.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "ViciOne.ServiceBus.snk",
+      "sha256": "d8556825164fad48714aa53b243a704787add3646fcaef42c1740eba37e9f303",
+      "bytes": 596,
+      "read_status": "BINARY_BYTES_HASH_ONLY",
+      "kind": "binary",
+      "semantic_notes": "Binary signing key bytes/hash checked; no claim of text/semantic FULL read.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "global.json",
+      "sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93",
+      "bytes": 63,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "SDK and runner selection read in full; native commands were executed by Root, not this reviewer.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "signing.props",
+      "sha256": "71a2cc9a5b04a60ea4093aa41824f275ad7cf5d87f4a8866a09990450ec2e411",
+      "bytes": 293,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Signing configuration applies to project closure; key contents retained private and only bytes/hash bound.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "src/Directory.Build.props",
+      "sha256": "be8359cbeaf46760b90b3755da645aeb7b4a786af8f0fd6db9396d21f6e67911",
+      "bytes": 1400,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Ancestor build properties apply to owner/projects; target framework and test build conventions read in full.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ViciOne.ServiceBus.ActiveMq.csproj",
+      "sha256": "fcca3b4eaca3e1d5b4978b6aa46330fb3d3574edbbb132e005b5967f7a5fd883",
+      "bytes": 1283,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj",
+      "sha256": "3ad12d318872e121d8e3be1661c0d72182cb0158452667d45e264cc0bf1d9597",
+      "bytes": 1481,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj",
+      "sha256": "7d09a90d76b1b2a0cb203e25a5679008c9040292041fc7b5d71cd66255c8df2a",
+      "bytes": 1434,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "sha256": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb",
+      "bytes": 9185,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+      "sha256": "3f04063a3393b887bc0d1b666c73e7f4375e73860b8d6b7640960d559913adad",
+      "bytes": 1739,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+      "sha256": "8fe3e90f79ab15806ba2fd38e37e717f02a75eafa5b4c05f08b9ee63dd57ea18",
+      "bytes": 1131,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+      "sha256": "5594cd1825e0998de96fa6d78a5995ad36e949fa54cdcd75cf02de181877d023",
+      "bytes": 936,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+      "sha256": "a6d0faa1c1f4065a2a95f49d92ff643cab6de89f9b5c62bb30980b60009e7a77",
+      "bytes": 1380,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+      "sha256": "1e90e8eedf73e374ffb0a4bb145fd4d1cf4a94cdd05b65c29d440a41f8b90603",
+      "bytes": 1651,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3",
+      "bytes": 9852,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Directory.Build.props",
+      "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+      "bytes": 3303,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Ancestor build properties apply to owner/projects; target framework and test build conventions read in full.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Directory.Build.targets",
+      "sha256": "3a866a9a26434dcca1aaf6d61a8d2afc84960f21ceee810b5b825f1ecdd7fdb1",
+      "bytes": 12496,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Ancestor targets apply metadata/generated build behavior; read in full without executing MSBuild.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+      "sha256": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206",
+      "bytes": 10901,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Shared configuration resolution provides local test settings and environment overrides; F012 uses no broker configuration.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+      "sha256": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83",
+      "bytes": 18211,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Shared options distinguish enabled transport/integration settings and timeout defaults; F012 inherits owner bounded timeout/cancellation conventions.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+      "sha256": "d78d054d54468692e35500dca6c90e706e6a77bfcbb7d1878bcb4bc97fba4e9e",
+      "bytes": 915,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Passive shared requirement metadata attribute carries contract row identity/category/status to tests.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs",
+      "sha256": "130f488a8ff8ddc7d43561f77f6188e5d3088de109aef1ba588c454e73180c66",
+      "bytes": 13208,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Strict JSON shape, canonical values, duplicate/missing/extra row checks and unique reflected method matching in both directions; theories count as Fact-derived methods.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+      "sha256": "954d1e414f5ad15239213b69d4d6e0dd7bb71fff95d8ce81616f49f991d11656",
+      "bytes": 956,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json",
+      "sha256": "aef4c037696049b2f689024c6407dab31fe6d8d65594580bde74917261ac7d76",
+      "bytes": 4300,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Entire pinned package lock values personally read; reproducibility input only, not newly restored NuGet evidence.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ApiSurfaceGlobalUsings.cs",
+      "sha256": "35832a2f279237fbe0e7adc762bbeb566d3f5b1b998389ceb04e3d0b9777c8e1",
+      "bytes": 638,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Global API aliases and shared test imports; F012 accesses public ConnectionContext/SharedConnectionContext directly, without private-field introspection.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+      "sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+      "bytes": 2971,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Shared deterministic durable-send driver used by cross-transport owner tests; no F012 modifications.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+      "sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96",
+      "bytes": 1102,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Shared durable sender factory supplies fake ownership/storage boundary for cross-transport tests; no F012 modifications.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+      "sha256": "f79459b8d6dc2fd119935f425fa0284caa4592a8cb04fb79fd2e732d8db76f2d",
+      "bytes": 632,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "project",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json",
+      "sha256": "43949251eee801841536031e9d9f8405b562e4db8d409b84bb73e217e54226ef",
+      "bytes": 7327,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Entire pinned package lock values personally read; reproducibility input only, not newly restored NuGet evidence.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/testconfig.json",
+      "sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "bytes": 66,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Entire shared local transport defaults read; no live broker required by the new SPI fixture.",
+      "fresh_personal_read": true
+    },
+    {
+      "path": "tests/testsettings.json",
+      "sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7",
+      "bytes": 1300,
+      "read_status": "READ_FULL_PERSONALLY_OBSERVED",
+      "kind": "text",
+      "semantic_notes": "Entire shared test settings read; no execution performed by this reviewer.",
+      "fresh_personal_read": true
+    }
+  ],
+  "numbered_read_batches": 54,
+  "batch_receipt": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_PROGRESS.json",
+  "current_sha_rechecked_after_read": true,
+  "tracked_owner_minus_read_scope": [],
+  "read_scope_minus_tracked_owner": [
+    "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs",
+    "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusFamilyRegressionTests.cs",
+    "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs",
+    "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSharedAdministrationLeaseTests.cs"
+  ],
+  "limits": [
+    "Personally reread current full text; the prior other-role manifest supplied scope paths only. Signing binary is hash-only.",
+    "This does not replace Root/test author personal review obligations, or expand adversarial assertion audit to every owner test.",
+    "No builds, tests, restore or product writes by this reviewer. No global symbol/package/profile CLOSED claim."
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "utc": "2026-10-05T22:45:06.285504+00:00",
+  "status": "INDEPENDENT_SOURCE_REVIEWED_XML4_ONLY_PRODUCT3_APPLIED_STRICT_FRESH_PUBLICATION_PENDING",
+  "family": "F-SB-API-147",
+  "proposal": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-xml-only-proposed-r1/REPORT.json",
+    "sha256": "8375082e8787ef5f9c804e49da012e08b83e1f0c8911c487732f222ca9c97952"
+  },
+  "source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "f1057108acd30e471a537b73241a831cad4ac4ba3fab83a4e414f0d0aaf89534"
+  },
+  "root_own_authority": "Whole85/5317 and9/493 before sources; selected3/295 actual body contexts personally read0832fc/049b55. Own all4 exactbefore/afterXMLclausesproposal4eb52e and wholeindependentReport5549d2. Literalinverse/nonXML/publicdecl bytes checked. No human authority borrowed.",
+  "changes": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/ConfigureSqlTopologyFilter.cs",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/ConfigureSqlTopologyFilter.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-xml-only-proposed-r1/before/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/ConfigureSqlTopologyFilter.cs",
+      "before_sha256": "0c6fbbb73bce94582010f7c99807bdf7fb72a1e6c0b10c412a1b8ea34495e044",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-xml-only-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Middleware/ConfigureSqlTopologyFilter.cs",
+      "proposed_sha256": "2447d5e14d569c8ab20dd36fcbafa7be3e8287488f5a52f38ef6bc3457438e18",
+      "before": "<summary>Sends a message to the configured destination.</summary>",
+      "after": "<summary>Ensures the configured SQL topology exists, then invokes the next client pipeline stage.</summary>",
+      "node_count": 1,
+      "exact_original_ids": [
+        "M:ViciOne.ServiceBus.SqlTransport.Middleware.ConfigureSqlTopologyFilter`1.SendAsync(ViciOne.ServiceBus.SqlTransport.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.SqlTransport.ClientContext})"
+      ],
+      "source_lines": 118,
+      "own_whole_read_receipt": "0832fc",
+      "literal_inverse_and_nonXML_public_declaration_bytes_exact": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-xml-only-proposed-r1/before/src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+      "before_sha256": "b1283d75470a6446f57b4bc6f551340fff4e9bc7bf7af8ff0c372df7eacc6b43",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-xml-only-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSqlReceiveEndpointContext.cs",
+      "proposed_sha256": "44c62aedeb3beb084e403eae37fcd5b885a907392ac5ef97a77e1a967c8e65f6",
+      "before": "<param name=\"configuration\">The callback used to configure the component.</param>",
+      "after": "<param name=\"configuration\">The SQL receive-endpoint configuration used by this context.</param>",
+      "node_count": 1,
+      "exact_original_ids": [
+        "M:ViciOne.ServiceBus.SqlTransport.QueueSqlReceiveEndpointContext.#ctor(ViciOne.ServiceBus.SqlTransport.Configuration.ISqlHostConfiguration,ViciOne.ServiceBus.SqlTransport.Configuration.ISqlReceiveEndpointConfiguration,ViciOne.ServiceBus.SqlTransport.Topology.BrokerTopology)"
+      ],
+      "source_lines": 97,
+      "own_whole_read_receipt": "0832fc",
+      "literal_inverse_and_nonXML_public_declaration_bytes_exact": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlPublishTopologyConfigurationExtensions.cs",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlPublishTopologyConfigurationExtensions.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-xml-only-proposed-r1/before/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlPublishTopologyConfigurationExtensions.cs",
+      "before_sha256": "d75bfb74aa8e188ddf6428046fab566a158e00f046afca61ce12544c4e54b097",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-xml-only-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlPublishTopologyConfigurationExtensions.cs",
+      "proposed_sha256": "e47d119b62693462ff9cea79ac76e85b5e8f56f34e47e748b30697019a907fcf",
+      "before": "<param name=\"filter\">The filter to add to the pipeline.</param>",
+      "after": "<param name=\"filter\">An optional predicate that selects valid message types from the matching namespace.</param>",
+      "node_count": 2,
+      "exact_original_ids": [
+        "M:ViciOne.ServiceBus.Providers.Transports.SqlPublishTopologyConfigurationExtensions.AddPublishMessageTypesFromNamespaceContaining(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator,System.Type,System.Action{ViciOne.ServiceBus.Providers.Transports.ISqlMessagePublishTopologyConfigurator,System.Type},System.Func{System.Type,System.Boolean})",
+        "M:ViciOne.ServiceBus.Providers.Transports.SqlPublishTopologyConfigurationExtensions.AddPublishMessageTypesFromNamespaceContaining``1(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator,System.Action{ViciOne.ServiceBus.Providers.Transports.ISqlMessagePublishTopologyConfigurator,System.Type},System.Func{System.Type,System.Boolean})"
+      ],
+      "source_lines": 80,
+      "own_whole_read_receipt": "049b55",
+      "literal_inverse_and_nonXML_public_declaration_bytes_exact": true
+    }
+  ],
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package258-sql-purpose-doc4-root-before-r1",
+  "before_DLL_sha256": "393a4dce75b082c837326f356625cc6163cfae88b403edc3b6604c7a23706096",
+  "before_XML_sha256": "197a1763708dd36507ce7a73fe73bf3307986752d10fe52b494124fc3e5f856e",
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

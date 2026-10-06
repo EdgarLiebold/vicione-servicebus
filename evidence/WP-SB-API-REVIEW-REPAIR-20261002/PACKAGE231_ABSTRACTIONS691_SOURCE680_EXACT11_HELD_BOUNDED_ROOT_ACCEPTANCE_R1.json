@@ -1,0 +1,115 @@
+{
+  "utc": "2026-10-05T19:44:50.488088+00:00",
+  "status": "ROOT_ACCEPTED_SOURCE680_EXACT11_HELD_NO_NATIVE_OR_GLOBAL_GRADE",
+  "selected_original_canonical": 691,
+  "accepted_original_canonical": 680,
+  "exact_held": 11,
+  "held_members": [
+    {
+      "ordinal": 70,
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.Supervisor.Add(ViciOne.ServiceBus.Advanced.Middleware.IAgent)",
+      "reason": "Guards agent, then reads/non-null validates its Ready and Completed Task references before admission. Under agent lock rejects stopping supervisor, assigns increasing id, updates active/total/peak counts, and invokes SetReady. Completed continuation removes only successful child completion and observes faulted completion; canceled/faulted agents remain retained. Custom getter/SetReady failures and registration ownership remain operative obligations.",
+      "runtime_obligation": "This individual method callback/Task/error/cancellation/payload/ownership contract remains a distinct concrete runtime obligation; no native proof inferred."
+    },
+    {
+      "ordinal": 73,
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.Supervisor.StopSupervisorAsync(ViciOne.ServiceBus.Advanced.Middleware.StopSupervisorContext)",
+      "reason": "Zero children sets completion success. One transfers child.Completed then awaits child.StopAsync(context). Multiple captures all Completed tasks, transfers WhenAll, then admits each StopAsync sequentially into Task array and awaits WhenAll; finally awaits supervisor.Completed. A later synchronous StopAsync/getter failure can bypass join of earlier admitted work, so ownership/error-drain invariant is explicitly held pending supported public control and known-finding reconciliation. No enforced None token/parallel error-order policy invented.",
+      "runtime_obligation": "This individual method callback/Task/error/cancellation/payload/ownership contract remains a distinct concrete runtime obligation; no native proof inferred."
+    },
+    {
+      "ordinal": 332,
+      "id": "M:ViciOne.ServiceBus.Middleware.AsyncDelegateFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+      "reason": "Current/package200 summary claims configured-destination sending; actual body performs the individual callback/context-copy/projection/local-pipeline contract. Same F-SB-API-147 template cause candidate extension, no new Finding registered; Root disposition pending.",
+      "runtime_obligation": "This individual method callback/Task/error/cancellation/payload/ownership contract remains a distinct concrete runtime obligation; no native proof inferred."
+    },
+    {
+      "ordinal": 345,
+      "id": "M:ViciOne.ServiceBus.Middleware.CopyContextPipe.SendAsync(ViciOne.ServiceBus.Advanced.SendContext)",
+      "reason": "Current/package200 summary claims configured-destination sending; actual body performs the individual callback/context-copy/projection/local-pipeline contract. Same F-SB-API-147 template cause candidate extension, no new Finding registered; Root disposition pending.",
+      "runtime_obligation": "This individual method callback/Task/error/cancellation/payload/ownership contract remains a distinct concrete runtime obligation; no native proof inferred."
+    },
+    {
+      "ordinal": 347,
+      "id": "M:ViciOne.ServiceBus.Middleware.DelegateFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+      "reason": "Current/package200 summary claims configured-destination sending; actual body performs the individual callback/context-copy/projection/local-pipeline contract. Same F-SB-API-147 template cause candidate extension, no new Finding registered; Root disposition pending.",
+      "runtime_obligation": "This individual method callback/Task/error/cancellation/payload/ownership contract remains a distinct concrete runtime obligation; no native proof inferred."
+    },
+    {
+      "ordinal": 351,
+      "id": "M:ViciOne.ServiceBus.Middleware.FilterPipe`1.SendAsync(`0)",
+      "reason": "Current/package200 summary claims configured-destination sending; actual body performs the individual callback/context-copy/projection/local-pipeline contract. Same F-SB-API-147 template cause candidate extension, no new Finding registered; Root disposition pending.",
+      "runtime_obligation": "This individual method callback/Task/error/cancellation/payload/ownership contract remains a distinct concrete runtime obligation; no native proof inferred."
+    },
+    {
+      "ordinal": 356,
+      "id": "M:ViciOne.ServiceBus.Middleware.MergePipe`2.SendAsync(`1)",
+      "reason": "Current/package200 summary claims configured-destination sending; actual body performs the individual callback/context-copy/projection/local-pipeline contract. Same F-SB-API-147 template cause candidate extension, no new Finding registered; Root disposition pending.",
+      "runtime_obligation": "This individual method callback/Task/error/cancellation/payload/ownership contract remains a distinct concrete runtime obligation; no native proof inferred."
+    },
+    {
+      "ordinal": 366,
+      "id": "M:ViciOne.ServiceBus.Middleware.PublishPipe.SendAsync``1(ViciOne.ServiceBus.Advanced.PublishContext{``0},System.Threading.CancellationToken)",
+      "reason": "Current/package200 summary claims configured-destination sending; actual body performs the individual callback/context-copy/projection/local-pipeline contract. Same F-SB-API-147 template cause candidate extension, no new Finding registered; Root disposition pending.",
+      "runtime_obligation": "This individual method callback/Task/error/cancellation/payload/ownership contract remains a distinct concrete runtime obligation; no native proof inferred."
+    },
+    {
+      "ordinal": 376,
+      "id": "M:ViciOne.ServiceBus.Middleware.SendPipe.SendAsync``1(ViciOne.ServiceBus.Advanced.SendContext{``0},System.Threading.CancellationToken)",
+      "reason": "Current/package200 summary claims configured-destination sending; actual body performs the individual callback/context-copy/projection/local-pipeline contract. Same F-SB-API-147 template cause candidate extension, no new Finding registered; Root disposition pending.",
+      "runtime_obligation": "This individual method callback/Task/error/cancellation/payload/ownership contract remains a distinct concrete runtime obligation; no native proof inferred."
+    },
+    {
+      "ordinal": 379,
+      "id": "M:ViciOne.ServiceBus.Middleware.SplitFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+      "reason": "Current/package200 summary claims configured-destination sending; actual body performs the individual callback/context-copy/projection/local-pipeline contract. Same F-SB-API-147 template cause candidate extension, no new Finding registered; Root disposition pending.",
+      "runtime_obligation": "This individual method callback/Task/error/cancellation/payload/ownership contract remains a distinct concrete runtime obligation; no native proof inferred."
+    },
+    {
+      "ordinal": 681,
+      "id": "M:ViciOne.ServiceBus.Transports.PublishSendPipeAdapter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+      "reason": "Current/package200 summary claims configured-destination sending; actual body performs the individual callback/context-copy/projection/local-pipeline contract. Same F-SB-API-147 template cause candidate extension, no new Finding registered; Root disposition pending.",
+      "runtime_obligation": "This individual method callback/Task/error/cancellation/payload/ownership contract remains a distinct concrete runtime obligation; no native proof inferred."
+    }
+  ],
+  "author_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package227-abstractions-method691-current-contract-context-r1/REPORT.json",
+    "sha256": "6ac45d629c682b04990b87f2ba0e8bc808e4f900af9051188bdba8e2a58cc363",
+    "own_source_authority": "141whole10187L:135exactownhistoricalSourceSHAreuse+6currentpersonalwhole; all691individualnorms"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package227-abstractions691-independent-source-peer-r1/REPORT.json",
+    "sha256": "e277913595941fe11342323db76117fd53db1ee7371dda9e7c09f9f4d180ccae",
+    "MANIFEST_sha256": "454569395833197c262061ffef97183895fad0995c4ce29855954c6864f2ac67",
+    "own_source_authority": "Fresh141whole10187L +5wholehelpers802L +all691individualnorms; zerohistoricalhumanreuse"
+  },
+  "mandatory_corrected_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package227-abstractions-method691-nested-norm2-sync-overlay-r2/PER_ID691_WITH_NORM2_AND_NESTED_SYNC.json",
+    "sha256": "7a1a1d52940b5baafd613c2abf9ba4f80141a7599c386faa6425f61c2bd53900",
+    "primary_two_norms_and_nested_two_synchronized": true
+  },
+  "current_source_reconciliation": "All141currentSources equal two-party reviewed baseline except9literalXML summaries Root230; executable bytes and nonSummaryXML preserved by exactinverse. 680 excludesall9affectedsummaryMethods; othermethods of same9owners retain reviewed bodies, with freshRoot230PDBchecksums recorded. Doc9publicationseparate pendingindependentfinal;2Supervisoroperationsremainheld.",
+  "actual_current_PDB_provenance": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package230-abstractions-pipeline-doc9-fresh-publication-root-proof-r1/METADATA_AND_SOURCE_BINDINGS700.json",
+    "sha256": "e53c5b55ad0714ee767e77c053d4b85434b2061b04fed777f4d91cdb415766de",
+    "DLL_sha256": "ff333abaea32f8f96b6ad11eccfc859c912af6ef06993b33d6ff2db334b48cd0",
+    "compiled_checksum_only_not_human_review": true
+  },
+  "Root_review": "OwnwholeauthorREPORT338806/independentREPORT716342/overlayREPORT28861a andmanifest/allactualid/source/disjointchecks. Root doesnot claimthirdpersonalwhole141/all691; twoindependentauthorsupplysemanticread. OwnDoc9503/9clausesreviewalready230.",
+  "generated_boundaries": "238implicitXMLabsences and233synthesized noauthoredbody distinguished in retainedrowdata; declaration/compiler-source context only, no freshABI/native/equalitybehavior grade.",
+  "native_count_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "master_before": {
+    "sha256": "d5934ac3a188d93e51dbbd43b10dc551aca7e43df593e672704b1ae74acb6ce9",
+    "rows": 13367,
+    "original_accepted": 12505,
+    "original_remaining": 6064
+  },
+  "expected_after": {
+    "rows": 14047,
+    "original_accepted": 13185,
+    "original_remaining": 5384
+  },
+  "preserve_every_prior_row_object_and_order": true
+}

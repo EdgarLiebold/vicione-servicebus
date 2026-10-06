@@ -1,0 +1,70 @@
+{
+  "utc": "2026-10-05T00:59:44.094820+00:00",
+  "actor": "/root",
+  "status": "CURRENT_REPAIR_ROOT_ACCEPTED_BOUNDED",
+  "findings": [
+    "F-SB-API-136",
+    "F-SB-API-137"
+  ],
+  "accepted_before": 134,
+  "accepted_after": 136,
+  "confirmed_current": 137,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-outbox-fixed84-scope-original19-output-original14-neighbors377-fresh2-independent-r1/REPORT.json",
+    "sha256": "bcca1ba1f949f1ee5ef74ac060c7e934070a8014e550c6c320f333f47e648533"
+  },
+  "root_MAN_verified": 3345,
+  "physical_packages_CRC_DLL_XML": [
+    "ViciOne.ServiceBus.1.0.0.nupkg",
+    "ViciOne.ServiceBus.Sagas.1.0.0.nupkg"
+  ],
+  "current_XML_unchanged": true,
+  "actual_fixed_scope": {
+    "findings": [
+      "F-SB-API-136",
+      "F-SB-API-137"
+    ],
+    "actual_unchanged_test_source": "source/tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxSchedulingLifecycleTests.cs",
+    "actual_fixed_case_IDs": [
+      "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxSchedulingLifecycleTests.SchedulerCleanupWarning_DoesNotChangeTheContainedFailureOutcomeAsync(commit: False, loggerThrows: False)",
+      "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxSchedulingLifecycleTests.SchedulerCleanupWarning_DoesNotChangeTheContainedFailureOutcomeAsync(commit: True, loggerThrows: True)",
+      "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxSchedulingLifecycleTests.SchedulerCleanupWarning_DoesNotChangeTheContainedFailureOutcomeAsync(commit: True, loggerThrows: False)",
+      "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxSchedulingLifecycleTests.SchedulerCleanupWarning_DoesNotChangeTheContainedFailureOutcomeAsync(commit: False, loggerThrows: True)",
+      "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxSchedulingLifecycleTests.Discard_WaitsForStartedCancellationWhenALaterProviderCallThrowsSynchronouslyAsync(laterSyncFailure: True)",
+      "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxSchedulingLifecycleTests.Discard_WaitsForStartedCancellationWhenALaterProviderCallThrowsSynchronouslyAsync(laterSyncFailure: False)"
+    ],
+    "original159": {
+      "total": 84,
+      "passed": 81,
+      "failed": 3
+    },
+    "current160": {
+      "total": 84,
+      "passed": 84,
+      "failed": 0
+    },
+    "reached_after_repair": [
+      "pending first cancellation keeps public discard pending until provider gate released; all true cancellation tasks terminal before completion",
+      "later synchronous provider failure exact diagnostic observed after joining started task",
+      "both hostile-warning commit/discard operations stay successful with exact contained provider fault, task terminal and expected deferred delivery/ClearToSend state"
+    ],
+    "source_changes": "Two exact source changes: join already admitted tasks on later synchronous cancellation failure; contain warning diagnostic exceptions in both policy-contained scheduler failure branches.",
+    "limits": [
+      "No new all-provider-all-cancellation or noncooperative forced-deadline guarantee",
+      "PendingTaskCollection caller cancellation can interrupt wait; held same-token original/fixed regression used noncanceled caller.",
+      "No new runtime scenario for multiple simultaneous provider cleanup failures."
+    ]
+  },
+  "root_read": "Root fullREPORT023657, all84 named actualrecords b91276; Scope19whole8f57ca/Output14whole3ffcb8; neighbors377 SDKsummary c5743d (no Root377 wholecase/testbody claim), child all494raw read.",
+  "source_peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-outbox-join-warning-product-independent-runtime-r1/REPORT.json",
+  "limits": [
+    "Pure frozen Python qualification, no SDK/native/repo mutations.",
+    "Selected494 contains5realfinite ORIGINAL failures; no cleanCore/wholeAPI grade.",
+    "Only first original assertion and earlier reached assertions credited; later expectations explicitly unreached.",
+    "DictionaryF134 not160 retested or repaired by this proof.",
+    "Selected7 runtime DLLs equal canonicalframes; not all loaded dependencies.",
+    "Physical/generated checksum binding grants no humanwhole-source/APIgrade transfer.",
+    "Exactone physical CoreRequirements resource payload, resource names not decoded.",
+    "Two fresh ZIPs equal this current frozenepoch; no all-package-release claim."
+  ]
+}

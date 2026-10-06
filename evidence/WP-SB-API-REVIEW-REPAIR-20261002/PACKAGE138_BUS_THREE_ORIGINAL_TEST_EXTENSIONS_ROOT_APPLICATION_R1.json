@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-04T20:17:43.801313+00:00",
+  "decision": "APPLY_THREE_BUS_WARNING_ORIGINAL_TEST_EXTENSIONS_AFTER_INDEPENDENT_SOURCE_NO_BLOCK",
+  "author_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package133-bus-three-warning-diagnostic-oracles-proposed-r1/MANIFEST.json",
+    "sha256": "1f0418326e1385d6045261df622a96be45c2cb7217e521a3bfe25542a33861a1"
+  },
+  "independent_source_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package133-bus-warning3-independent-source-r1/REPORT.json",
+    "sha256": "e3733e57ea884fe58ab28d9974d6e12fc1e8d9a41d192af46ae6267dba5bc565"
+  },
+  "before": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusFactoryConfiguratorTests.cs",
+      "sha256": "fb08fbaf2b4d8e50f7758557ccac1f0291f8fa36d3e1f16b89363280e3f59a4b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs",
+      "sha256": "0c98429ceb20e85846fd6b628600c6cf1d72af6f4a79f0552f75a9c4e26cc38e"
+    }
+  ],
+  "root_review": "ExactbothchangedTestdeltas36096f and authorreport468283 pluscompletepeer531901, explicitfalsehealthy/truehostile eachthreecases; exactprimary+secondaryidentity+retry andsafeambientfinally preserved. No originalnativeFinding proof at apply.",
+  "product_changes": 0,
+  "requirements_delta": 0,
+  "original_cases_total": 6,
+  "after": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusFactoryConfiguratorTests.cs",
+      "sha256": "6f9ec8d0c1889b5f32bb0f1ce75f967a3bba5c790367643b93260406b6152335"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs",
+      "sha256": "1d2ee1806b90ac14154a2825bb76905194934fbed27d9acd1d2d033d5ea1fc85"
+    }
+  ]
+}

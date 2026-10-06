@@ -1,0 +1,173 @@
+import ast
+import csv
+import hashlib
+import json
+import shutil
+import subprocess
+from pathlib import Path
+
+W = Path('/Users/edgar.liebold/Downloads/ViciOne Suite 2.0')
+O = W / 'repositories/vicione-servicebus'
+R = Path('/private/tmp/vicione-servicebus-api-review-20261001')
+M = R / 'mutations/source-main'
+F = R / 'frozen-repository'
+E = O / 'evidence/WP-SB-API-REVIEW-REPAIR-20261002'
+RUN = W / 'SERVICEBUS_API_REVIEW_AND_REPAIR/run_operation.py'
+C = R / 'repair-consumers/package18-f035/corrected'
+OUT = C / 'bin/Release/net10.0'
+APP = 'DefinitionLifetime.PublicConsumer.dll'
+DLL = 'ViciOne.ServiceBus.dll'
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+prior_ast = ast.parse((W / 'SERVICEBUS_API_REVIEW_AND_REPAIR/package14_f031_mutations.py').read_text())
+PATHS = ast.literal_eval(next(n.value for n in prior_ast.body if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'PATHS' for t in n.targets)))
+PATHS.update(log_context='src/ViciOne.ServiceBus/Advanced/LogContext.cs', bus_log_context='src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs', contract_identity='src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs', message_data='src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs', encryption='src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs', encryption_provider='src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs')
+PATHS.update(batch_snapshot='src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs', batch_contract='src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs')
+PATHS.update(definition_registrar='src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs')
+original = {key: (F / rel).read_bytes() if (F / rel).exists() else None for key, rel in PATHS.items()}
+assert all(((M / rel).read_bytes() if (M / rel).exists() else None) == original[key] for key, rel in PATHS.items()), 'Initial mutation frame must exactly match frozen original'
+corrected = {key: (O / rel).read_text() for key, rel in PATHS.items()}
+runtime = (OUT / DLL).read_bytes()
+oracle = {str(p): sha(p) for p in C.iterdir() if p.is_file()}
+oracle[str(OUT / APP)] = sha(OUT / APP)
+constants = {str(p): sha(p) for p in OUT.glob('*.dll') if p.name != DLL}
+result = dict(status='RUNNING', oracle_hashes=oracle, constant_dependencies=constants, frame=PATHS, controls=[], mutants=[])
+
+def replace_once(text, before, after):
+    assert text.count(before) == 1, (before, text.count(before))
+    return text.replace(before, after, 1)
+
+def mutation(name):
+    texts = dict(corrected)
+    source = texts['definition_registrar']
+    if name == 'DropKnownDefinitionOwner':
+        source = replace_once(source, 'Bind<TBus>.Create(provider.GetRequiredService<DefinitionOwner<TDefinition>>().Value)', 'Bind<TBus>.Create(ActivatorUtilities.CreateInstance<TDefinition>(provider))')
+    elif name == 'ReuseKnownOwnerSingleton':
+        source = replace_once(source, 'TryAddTransient<DefinitionOwner<TDefinition>>', 'TryAddSingleton<DefinitionOwner<TDefinition>>')
+    elif name == 'PreferSyncForDual':
+        source = replace_once(source, 'if (Value is IAsyncDisposable asynchronous)', 'if (Value is IAsyncDisposable asynchronous && Value is not IDisposable)')
+    elif name == 'DropAsyncOnlyCleanup':
+        source = replace_once(source, '? ((IAsyncDisposable)Value).DisposeAsync()', '? ValueTask.CompletedTask')
+    elif name == 'AsyncOnlyAdvertisesSync':
+        source = replace_once(source, 'DefinitionOwner<TDefinition>, IAsyncDisposable', 'DefinitionOwner<TDefinition>, IAsyncDisposable, IDisposable')
+        source = replace_once(source, '        public ValueTask DisposeAsync() =>', '        public void Dispose() => throw new InvalidOperationException("Use DisposeAsync");\n\n        public ValueTask DisposeAsync() =>')
+    elif name == 'CollapseKnownAliases':
+        source = replace_once(source, 'Collection.AddSingleton<Bind<TBus, T>>(provider =>', 'Collection.TryAddSingleton<Bind<TBus, T>>(provider =>')
+    elif name == 'DropNullEndpointOwner':
+        source = replace_once(source, 'Bind<TBus>.Create(provider.GetRequiredKeyedService<TDefinition>(definitionKey))', 'Bind<TBus>.Create(settings == null ? ActivatorUtilities.CreateInstance<TDefinition>(provider) : provider.GetRequiredKeyedService<TDefinition>(definitionKey))')
+    elif name == 'DropExplicitEndpointOwner':
+        source = replace_once(source, 'Bind<TBus>.Create(provider.GetRequiredKeyedService<TDefinition>(definitionKey))', 'Bind<TBus>.Create(settings != null ? ActivatorUtilities.CreateInstance<TDefinition>(provider, settings) : provider.GetRequiredKeyedService<TDefinition>(definitionKey))')
+    elif name == 'ShareEndpointKey':
+        source = replace_once(source, 'var definitionKey = new object();', 'var definitionKey = typeof(TDefinition);')
+    elif name == 'IgnoreExplicitSettings':
+        source = replace_once(source, ': ActivatorUtilities.CreateInstance<TDefinition>(provider, settings));\n        Collection.AddSingleton<Bind', ': ActivatorUtilities.CreateInstance<TDefinition>(provider));\n        Collection.AddSingleton<Bind')
+    elif name == 'CollapseEndpointAliases':
+        source = replace_once(source, 'Collection.AddSingleton<Bind<TBus, IEndpointDefinition<T>>>(provider =>', 'Collection.TryAddSingleton<Bind<TBus, IEndpointDefinition<T>>>(provider =>')
+    elif name == 'CaptureOwnerBeforeDependencies':
+        source = replace_once(source, '            owner.Value = ActivatorUtilities.CreateInstance<TDefinition>(provider);\n', '')
+        source = replace_once(source, '''        Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
+            Bind<TBus>.Create(provider.GetRequiredService<DefinitionOwner<TDefinition>>().Value));''', '''        Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
+        {
+            DefinitionOwner<TDefinition> owner = provider.GetRequiredService<DefinitionOwner<TDefinition>>();
+            owner.Value = ActivatorUtilities.CreateInstance<TDefinition>(provider);
+            return Bind<TBus>.Create(owner.Value);
+        });''')
+    else:
+        raise ValueError(name)
+    texts['definition_registrar'] = source
+    assert sum(texts[k] != corrected[k] for k in texts) == 1
+    return texts
+
+def install(texts):
+    for key, rel in PATHS.items():
+        path = M / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        payload = texts[key].encode()
+        if not path.exists() or path.read_bytes() != payload:
+            path.write_bytes(payload)
+
+def operation(suffix, cwd, args, expected=0):
+    phase = 'package18-f035-mut-' + suffix
+    completed = subprocess.run(['python3', str(RUN), phase, str(cwd), '--', *args], check=False)
+    assert completed.returncode == expected, (phase, completed.returncode, expected)
+    receipt = next(json.loads(line) for line in reversed((E / 'VERIFICATION_LOG.jsonl').read_text().splitlines()) if json.loads(line)['phase'] == phase)
+    assert receipt['exit_code'] == expected and sha(receipt['log']) == receipt['log_sha256']
+    text = Path(receipt['log']).read_text()
+    if 'build' in args:
+        assert '0 Warnung(en)' in text and '0 Fehler' in text
+    return receipt
+
+def build(name, texts):
+    install(texts)
+    receipt = operation(name + '-build', M, ['dotnet', 'build', 'src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj', '-c', 'Release', '--no-restore', '-warnaserror'])
+    directory = R / 'repair-evidence/package18-f035-binaries' / name
+    directory.mkdir(parents=True, exist_ok=False)
+    snapshots = []
+    for index, (key, rel) in enumerate(PATHS.items()):
+        snapshot = directory / ('source-' + str(index) + '.txt')
+        snapshot.write_bytes((M / rel).read_bytes())
+        snapshots.append(dict(key=key, relative=rel, path=str(snapshot), sha256=sha(snapshot), current_source_sha256=hashlib.sha256(texts[key].encode()).hexdigest()))
+    binary = M / 'artifacts/sdk/bin/ViciOne.ServiceBus/release' / DLL
+    shutil.copy2(binary, directory / DLL)
+    # Product Release images carry their portable PDB embedded in the PE.
+    shutil.copy2(binary, OUT / DLL)
+    return dict(name=name, build=receipt, binary=dict(path=str(directory / DLL), sha256=sha(directory / DLL)), source_snapshots=snapshots)
+
+def case(suffix, mode, expected=0, assertion=None):
+    receipt = operation(suffix, C, ['dotnet', 'bin/Release/net10.0/' + APP, mode, '00:00:12'], expected)
+    text = Path(receipt['log']).read_text()
+    if mode == 'all':
+        assert text.count('\nPASS ') == 46 and 'TOTAL 46 PASS 0 FAIL' in text and '\nFAIL ' not in text
+    elif expected == 0:
+        assert '\nPASS ' + mode in text and '\nFAIL ' not in text
+    else:
+        headers = [line for line in text.splitlines() if line.startswith('FAIL ')]
+        assert len(headers) == 1 and headers[0].startswith('FAIL ' + mode + ' ' + assertion + ':'), headers
+        assert 'TimeoutException' not in text and 'AggregateException' not in headers[0]
+    for path, digest in {**oracle, **constants}.items():
+        assert sha(path) == digest, path
+    return receipt
+
+variants = [
+    ('DropKnownDefinitionOwner', 'typed-sync', 'default-sync', 'Xunit.Sdk.EqualException'),
+    ('ReuseKnownOwnerSingleton', 'repeat-materialized', 'typed-dual', 'Xunit.Sdk.NotSameException'),
+    ('PreferSyncForDual', 'typed-dual', 'typed-sync', 'Xunit.Sdk.EqualException'),
+    ('DropAsyncOnlyCleanup', 'async-gated', 'typed-sync', 'Xunit.Sdk.TrueException'),
+    ('AsyncOnlyAdvertisesSync', 'async-only-disposed-capture', 'typed-async', 'Xunit.Sdk.IsTypeException'),
+    ('CollapseKnownAliases', 'repeat-lazy', 'typed-dual', 'Xunit.Sdk.EqualException'),
+    ('DropNullEndpointOwner', 'typed-endpoint-null-sync', 'typed-endpoint-explicit-sync', 'Xunit.Sdk.EqualException'),
+    ('DropExplicitEndpointOwner', 'typed-endpoint-explicit-dual', 'typed-endpoint-null-dual', 'Xunit.Sdk.EqualException'),
+    ('ShareEndpointKey', 'endpoint-two-settings-materialized', 'typed-endpoint-explicit-dual', 'Xunit.Sdk.SameException'),
+    ('IgnoreExplicitSettings', 'typed-endpoint-explicit-plain', 'typed-endpoint-null-plain', 'Xunit.Sdk.SameException'),
+    ('CollapseEndpointAliases', 'endpoint-lazy-settings', 'typed-endpoint-explicit-dual', 'Xunit.Sdk.EqualException'),
+    ('CaptureOwnerBeforeDependencies', 'typed-dual', 'typed-plain', 'Xunit.Sdk.EqualException')
+]
+
+try:
+    stage = build('corrected', corrected)
+    stage['all_cases'] = case('corrected-fortysix', 'all')
+    result['controls'].append(stage)
+    for name, negative, positive, assertion in variants:
+        stage = build(name, mutation(name))
+        stage['negative'] = case(name + '-' + negative, negative, 1, assertion)
+        stage['positive'] = case(name + '-' + positive, positive)
+        result['mutants'].append(stage)
+    stage = build('rollback', corrected)
+    stage['all_cases'] = case('rollback-fortysix', 'all')
+    result['controls'].append(stage)
+    result['status'] = 'TWELVE_STRICT_COMPILED_SINGLE_EFFECT_MUTANTS_KILLED_WITH_GREEN_CONTROLS'
+finally:
+    for key, rel in PATHS.items():
+        path = M / rel
+        if original[key] is None:
+            path.unlink(missing_ok=True)
+        else:
+            path.write_bytes(original[key])
+    (OUT / DLL).write_bytes(runtime)
+    assert (OUT / DLL).read_bytes() == runtime and sha(OUT / DLL) == hashlib.sha256(runtime).hexdigest()
+    assert all(sha(path) == digest for path, digest in {**oracle, **constants}.items())
+    rows = list(csv.DictReader((R / 'FILE_COVERAGE.csv').open()))
+    mismatches = [row['path'] for row in rows if sha(M / row['path']) != row['sha256']]
+    assert not mismatches, mismatches
+    result['mutation_tree_original_files_verified'] = len(rows)
+    result['oracle_and_runtime_restored'] = True
+    (E / 'PACKAGE18_F035_MUTATIONS.json').write_text(json.dumps(result, indent=2) + '\n')

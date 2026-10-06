@@ -124,11 +124,23 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
 
         if (topicInfo.Existing)
         {
-            LogContext.Debug?.Log("Existing topic {Topic} {TopicArn}", topicInfo.EntityName, topicInfo.Arn);
+            try
+            {
+                LogContext.Debug?.Log("Existing topic {Topic} {TopicArn}", topicInfo.EntityName, topicInfo.Arn);
+            }
+            catch (Exception)
+            {
+            }
             return topicInfo;
         }
 
-        LogContext.Debug?.Log("Created topic {Topic} {TopicArn}", topicInfo.EntityName, topicInfo.Arn);
+        try
+        {
+            LogContext.Debug?.Log("Created topic {Topic} {TopicArn}", topicInfo.EntityName, topicInfo.Arn);
+        }
+        catch (Exception)
+        {
+        }
 
         return topicInfo;
     }
@@ -136,8 +148,14 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
     static async Task DeclareAsync(ClientContext context, QueueSubscription subscription, CancellationToken cancellationToken)
     {
         var created = await context.CreateQueueSubscriptionAsync(subscription.Source, subscription.Destination, cancellationToken).ConfigureAwait(false);
-        LogContext.Debug?.Log(created ? "Created subscription {Topic} to {Queue}" : "Existing subscription {Topic} to {Queue}",
-            subscription.Source, subscription.Destination);
+        try
+        {
+            LogContext.Debug?.Log(created ? "Created subscription {Topic} to {Queue}" : "Existing subscription {Topic} to {Queue}",
+                subscription.Source, subscription.Destination);
+        }
+        catch (Exception)
+        {
+        }
     }
 
     internal static async Task<QueueInfo> DeclareAsync(ClientContext context, Queue queue, CancellationToken cancellationToken)
@@ -145,11 +163,23 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
         var queueInfo = await context.CreateQueueAsync(queue, cancellationToken).ConfigureAwait(false);
         if (queueInfo.Existing)
         {
-            LogContext.Debug?.Log("Existing queue {Queue} {QueueArn} {QueueUrl}", queueInfo.EntityName, queueInfo.Arn, queueInfo.Url);
+            try
+            {
+                LogContext.Debug?.Log("Existing queue {Queue} {QueueArn} {QueueUrl}", queueInfo.EntityName, queueInfo.Arn, queueInfo.Url);
+            }
+            catch (Exception)
+            {
+            }
             return queueInfo;
         }
 
-        LogContext.Debug?.Log("Created queue {Queue} {QueueArn} {QueueUrl}", queueInfo.EntityName, queueInfo.Arn, queueInfo.Url);
+        try
+        {
+            LogContext.Debug?.Log("Created queue {Queue} {QueueArn} {QueueUrl}", queueInfo.EntityName, queueInfo.Arn, queueInfo.Url);
+        }
+        catch (Exception)
+        {
+        }
 
         return queueInfo;
     }

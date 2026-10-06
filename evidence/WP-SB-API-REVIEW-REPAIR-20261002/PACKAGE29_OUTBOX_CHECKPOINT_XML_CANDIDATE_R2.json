@@ -1,0 +1,64 @@
+{
+  "status": "XML_ONLY_SOURCE_CANDIDATE_NOT_PACKED",
+  "utc": "2026-10-03T21:58:51.058164+00:00",
+  "finding_scope": "F001 additional 10 emitted XML member corrections: 7 proxy members, 2 public interface getters, 1 process-local override",
+  "changed_paths": [
+    "src/ViciOne.ServiceBus/Middleware/Outbox/OutboxConsumeContextProxy.cs",
+    "src/ViciOne.ServiceBus/Middleware/Outbox/InMemory/InMemoryOutboxConsumeContext.cs",
+    "src/ViciOne.ServiceBus/Middleware/OutboxConsumeContext.cs"
+  ],
+  "runtime_non_xml_bytes_equal_HEAD": true,
+  "root_causal_paths_personally_full_read": [
+    "src/ViciOne.ServiceBus/Middleware/Outbox/OutboxConsumeContextProxy.cs",
+    "src/ViciOne.ServiceBus/Middleware/Outbox/InMemory/InMemoryOutboxConsumeContext.cs",
+    "src/ViciOne.ServiceBus/Middleware/OutboxConsumeContext.cs",
+    "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/DbContextOutboxConsumeContext.cs",
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs",
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableInboxContext.cs",
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ReliableMessaging/EntityFrameworkReliableInboxContext.cs"
+  ],
+  "sources": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/Outbox/OutboxConsumeContextProxy.cs",
+      "bytes": 7177,
+      "sha256": "9817211d35b8ba07e09fa09a1921251478d76d4e7f33d174a0e65e23774ca3b9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/Outbox/InMemory/InMemoryOutboxConsumeContext.cs",
+      "bytes": 9596,
+      "sha256": "8f332a2267a892980b43f9c60b8ce2343e14a4fc2d9dfea9ac0117ddbb052324"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxConsumeContext.cs",
+      "bytes": 3041,
+      "sha256": "c8ae87515e534c26736dbafe99765bc3c96291418a49436788d266741ee1ab97"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "bytes": 6104,
+      "sha256": "69df491d234a51e9b8722e65ae90fafcaa72e3518b03d5d3cb2c796a33226d2d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/DbContextOutboxConsumeContext.cs",
+      "bytes": 15148,
+      "sha256": "b401ceb57d5ba5d8140e45b36a275ee12f1630fc85044d043fa92ee3b31e281d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs",
+      "bytes": 10345,
+      "sha256": "152d185032cee3ade09fdb1d83af32a8d14e778b68968224fd0d5579725b6079"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableInboxContext.cs",
+      "bytes": 8666,
+      "sha256": "24c1b98ccaa38b5320d04cf9e19339ef5d3ff1614cfb9bd944732bbb683758ff"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ReliableMessaging/EntityFrameworkReliableInboxContext.cs",
+      "bytes": 6260,
+      "sha256": "195ccab4d3ea442a2e4be9da0b047a68110d93797e30f0bbd4e5c812e613a631"
+    }
+  ],
+  "supersedes": "PACKAGE29_OUTBOX_CHECKPOINT_XML_CANDIDATE_R1.json"
+}

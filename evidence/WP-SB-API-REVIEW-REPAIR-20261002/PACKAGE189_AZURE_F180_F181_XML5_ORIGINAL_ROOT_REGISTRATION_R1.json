@@ -1,0 +1,150 @@
+{
+  "utc": "2026-10-05T14:49:18.376833+00:00",
+  "status": "TWO_AZURE_ORIGINAL_XML_CAUSES_ROOT_REGISTERED_REPAIR_PENDING",
+  "counts": {
+    "known_before": 179,
+    "known_after": 181,
+    "accepted_before": 176,
+    "accepted_after": 176
+  },
+  "findings": [
+    {
+      "id": "F-SB-API-180",
+      "severity": "Low",
+      "title": "Azure endpoint topology XML incorrectly promises an isolated copy despite shared message send and publish topology",
+      "nodes": [
+        {
+          "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+          "id": "T:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration",
+          "node": "summary",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusEndpointConfiguration.cs",
+          "original_API_COVERAGE_index": 3151,
+          "before_text": "Adds an isolated Azure Service Bus topology configuration to endpoint configuration.",
+          "proposed_text": "Adds Azure Service Bus topology configuration to endpoint configuration.",
+          "actual_source_contract": "Protected root construction stores the supplied topology; child construction shares message/send/publish topology through the actual topology copy constructor. No universal isolation.",
+          "actual185_before_xml": "<member name=\"T:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration\">\n            <summary>Adds an isolated Azure Service Bus topology configuration to endpoint configuration.</summary>\n        </member>\n        ",
+          "source_sha256": "6cfe879f06701982ddaa5a1d455d58b26db4f1ef95c9d73aa8f9a4f8c2f40ac4",
+          "native_count": 0,
+          "grade": null,
+          "closed": false,
+          "proposed_source_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package217-azure-copy-array-xml5-product-proposal-r1/proposed/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusEndpointConfiguration.cs",
+          "proposed_source_sha256": "a668ca6d092e549eaae30e1d3c2eaadcd7463f5c7f33b692b4429bc1cf704659",
+          "exact_summary_literal_before_count": 1,
+          "exact_summary_literal_after_count": 1,
+          "all_sibling_xml_nodes_unchanged": true,
+          "public_declaration_and_runtime_bytes_unchanged": true
+        },
+        {
+          "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+          "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration.CreateEndpointConfiguration(System.Boolean)",
+          "node": "summary",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusEndpointConfiguration.cs",
+          "original_API_COVERAGE_index": 2154,
+          "before_text": "Creates a child endpoint configuration and copies the current topology conventions into it.",
+          "proposed_text": "Creates a child endpoint configuration with separate consume topology and shared message, send, and publish topology.",
+          "actual_source_contract": "New ServiceBusTopologyConfiguration(Topology) retains three parent references and creates a new ServiceBusConsumeTopology; base child endpoint creates pipe/serialization/transport configuration under its own rules.",
+          "actual185_before_xml": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusEndpointConfiguration.CreateEndpointConfiguration(System.Boolean)\">\n            <summary>Creates a child endpoint configuration and copies the current topology conventions into it.</summary>\n            <param name=\"isBusEndpoint\">Whether the child configures the bus endpoint.</param>\n            <returns>The child endpoint configuration.</returns>\n        </member>\n        ",
+          "source_sha256": "6cfe879f06701982ddaa5a1d455d58b26db4f1ef95c9d73aa8f9a4f8c2f40ac4",
+          "native_count": 0,
+          "grade": null,
+          "closed": false,
+          "proposed_source_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package217-azure-copy-array-xml5-product-proposal-r1/proposed/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusEndpointConfiguration.cs",
+          "proposed_source_sha256": "a668ca6d092e549eaae30e1d3c2eaadcd7463f5c7f33b692b4429bc1cf704659",
+          "exact_summary_literal_before_count": 1,
+          "exact_summary_literal_after_count": 1,
+          "all_sibling_xml_nodes_unchanged": true,
+          "public_declaration_and_runtime_bytes_unchanged": true
+        },
+        {
+          "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+          "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusBusConfiguration.CreateEndpointConfiguration(System.Boolean)",
+          "node": "summary",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/IServiceBusBusConfiguration.cs",
+          "original_API_COVERAGE_index": 2129,
+          "before_text": "Creates a child endpoint configuration with an isolated copy of the current topology settings.",
+          "proposed_text": "Creates a child endpoint configuration. The built-in implementation creates separate consume topology and shares message, send, and publish topology.",
+          "actual_source_contract": "Bodyless SPI declares bool=false. Actual ServiceBusBusConfiguration inherits the concrete endpoint method and uses it for its bus endpoint. Summary explicitly scopes the sharing detail to that built-in implementation.",
+          "actual185_before_xml": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusBusConfiguration.CreateEndpointConfiguration(System.Boolean)\">\n            <summary>Creates a child endpoint configuration with an isolated copy of the current topology settings.</summary>\n            <param name=\"isBusEndpoint\">Whether the child represents the bus endpoint.</param>\n            <returns>The child endpoint configuration.</returns>\n        </member>\n        ",
+          "source_sha256": "c1077e88ae1d734590c088ce3b132caf075d6d056d2214def9207ed083f62cde",
+          "native_count": 0,
+          "grade": null,
+          "closed": false,
+          "proposed_source_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package217-azure-copy-array-xml5-product-proposal-r1/proposed/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/IServiceBusBusConfiguration.cs",
+          "proposed_source_sha256": "fe9172fc01028d2fe535124edb412896230ce69c5aea88899ab703b92f39ae91",
+          "exact_summary_literal_before_count": 1,
+          "exact_summary_literal_after_count": 1,
+          "all_sibling_xml_nodes_unchanged": true,
+          "public_declaration_and_runtime_bytes_unchanged": true
+        }
+      ]
+    },
+    {
+      "id": "F-SB-API-181",
+      "severity": "Low",
+      "title": "Azure broker topology XML incorrectly promises immutable views while exposing mutable arrays",
+      "nodes": [
+        {
+          "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+          "id": "T:ViciOne.ServiceBus.AzureServiceBus.Topology.ServiceBusBrokerTopology",
+          "node": "summary",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusBrokerTopology.cs",
+          "original_API_COVERAGE_index": 3317,
+          "before_text": "Provides an immutable snapshot of Azure Service Bus entity declarations and relationships.",
+          "proposed_text": "Provides Azure Service Bus entity declarations and relationships in mutable arrays.",
+          "actual_source_contract": "Constructor ToArray materializes five sequences without cloning entity references. Public array getters expose the same arrays; probe reads those arrays. No immutable or deep-copy guarantee.",
+          "actual185_before_xml": "<member name=\"T:ViciOne.ServiceBus.AzureServiceBus.Topology.ServiceBusBrokerTopology\">\n            <summary>Provides an immutable snapshot of Azure Service Bus entity declarations and relationships.</summary>\n        </member>\n        ",
+          "source_sha256": "97b2d70dc74d8c2e01506c26b211c9774b74598c44b48acb0850dcda1e6be35a",
+          "native_count": 0,
+          "grade": null,
+          "closed": false,
+          "proposed_source_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package217-azure-copy-array-xml5-product-proposal-r1/proposed/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusBrokerTopology.cs",
+          "proposed_source_sha256": "1b11f97f8ee4a95288643dd0ad9eeeb3ccc619c271da9800818deaf67f51a665",
+          "exact_summary_literal_before_count": 1,
+          "exact_summary_literal_after_count": 1,
+          "all_sibling_xml_nodes_unchanged": true,
+          "public_declaration_and_runtime_bytes_unchanged": true
+        },
+        {
+          "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+          "id": "M:ViciOne.ServiceBus.AzureServiceBus.Topology.BrokerTopologyBuilder.BuildBrokerTopology",
+          "node": "summary",
+          "relative_path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/BrokerTopologyBuilder.cs",
+          "original_API_COVERAGE_index": 2560,
+          "before_text": "Builds an immutable view over the collected entity relationships.",
+          "proposed_text": "Materializes the collected entity declarations and relationships into a topology with mutable arrays.",
+          "actual_source_contract": "Actual body passes the five accumulated entity collections to the topology constructor; the returned topology exposes materialized mutable arrays.",
+          "actual185_before_xml": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Topology.BrokerTopologyBuilder.BuildBrokerTopology\">\n            <summary>Builds an immutable view over the collected entity relationships.</summary>\n            <returns>The complete Azure Service Bus broker topology.</returns>\n        </member>\n        ",
+          "source_sha256": "8ab63f5bcf5f860487106d6d1e49411e4c5f8af15f5da7f4e763733aa3d6a5c8",
+          "native_count": 0,
+          "grade": null,
+          "closed": false,
+          "proposed_source_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package217-azure-copy-array-xml5-product-proposal-r1/proposed/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/BrokerTopologyBuilder.cs",
+          "proposed_source_sha256": "62d17c55d6574955c8ab7b01af1e6c75b50d138f3cff3b114eccc0a3168940f7",
+          "exact_summary_literal_before_count": 1,
+          "exact_summary_literal_after_count": 1,
+          "all_sibling_xml_nodes_unchanged": true,
+          "public_declaration_and_runtime_bytes_unchanged": true
+        }
+      ]
+    }
+  ],
+  "root_original_review": {
+    "whole_current7_sources_886_lines": [
+      "cc17c6",
+      "c57f73"
+    ],
+    "exact_summary5_delta": "68df89",
+    "actual185_package_CRC_XML5_current7_and_literal_inverse4": "3d8b12",
+    "independent_peer_report_whole": "280566"
+  },
+  "proposal_manifest_sha256": "93544a90c2a3e5e54e4e83e47566b5d504bf8ed240ea907a3689d6d08f2b0385",
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package217-azure-xml5-independent-qualification-peer-r1/REPORT.json",
+    "sha256": "ebe2dd6a4e7a0f7c5427ac19831c52efc1953e8f0893a7d2848fa1f2cb874a54"
+  },
+  "reconciliation": "Different Azure owners from prior runtime snapshot/callback/entity-deployment findings; these are actual published XML discrepancies, not administrative matrix precision corrections.",
+  "native_count": 0,
+  "grade": null,
+  "whole_api_closed": false,
+  "repair_application_pending": true
+}

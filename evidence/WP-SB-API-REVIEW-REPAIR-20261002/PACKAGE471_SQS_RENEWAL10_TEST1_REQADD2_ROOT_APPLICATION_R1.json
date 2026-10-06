@@ -1,0 +1,21 @@
+{
+  "status": "ROOT_APPLIED_PUBLIC_SQS_RENEWAL10_TEST1_REQ194_ADD2_TO196_ORIGINAL_NATIVE_PENDING",
+  "authorR1": "7d7436d9c70edfc6e331d202ac3f5a82afd6917dff5028d2fdde95a91ea832ee",
+  "mandatoryR2": "d4f53e9c098109971a5cc5beb9faf1a19d0bbae89da6d0f9d2d4349857620d65",
+  "differentwholepeer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package451-sqs-renewal10-independent-test-source-peer-r2/REPORT.json",
+    "sha256": "0a5a2207992ee28b4eb4472c4ea9f7aaefa2406d448385eeec0794656440c38b"
+  },
+  "beforeMAN": "14b4e30862fd772f0a6760b59493e2c1728c8277a5cc8a27fb8100f906578cba",
+  "test_after": "af739de802e62d0852556f6d199ed3d54e57354eff1fa4b8f40816854fd31294",
+  "Req_after": "66a66bc361e7c40138d55ac411be276916eb6e808b7663065b9cae3b280e279a",
+  "all194fullobjects_literalinverse_equal": true,
+  "root_personal": "Whole460 ba70c3/c0dacd, entireR2+peer13d981",
+  "limits": [
+    "No code Finding/native prediction. Public genuine renewal and settlement tasks joined before final raw snapshot; no callback notification-as-worker completion.",
+    "Primary/unknown cleanup/timeouts visible; supported AWS facade outcomes only, no real AWS cloud.",
+    "Product470SQS3 changes outside20guard list, Source pointers precise/current Root graph must fresh compile."
+  ],
+  "native_credit": 0,
+  "grade": null
+}

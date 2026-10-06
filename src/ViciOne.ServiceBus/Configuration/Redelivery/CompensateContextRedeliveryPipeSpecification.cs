@@ -32,7 +32,7 @@ public class CompensateContextRedeliveryPipeSpecification<TLog> :
 
         var policy = new ConsumeContextRetryPolicy<CompensateContext<TLog>, RetryCompensateContext<TLog>>(retryPolicy, CancellationToken.None, Factory);
 
-        builder.AddFilter(new ActivityRedeliveryRetryFilter<CompensateContext<TLog>>(policy, _observers));
+        builder.AddFilter(new ActivityRedeliveryRetryFilter<CompensateContext<TLog>>(policy, _observers, ReplaceMessageId));
     }
 
     /// <summary>Validates the current configuration.</summary>

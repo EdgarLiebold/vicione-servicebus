@@ -81,9 +81,9 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
         }
     }
 
-    /// <summary>Gets or sets the receive log context.</summary>
+    /// <summary>Gets the receive log context derived from <see cref="LogContext" />.</summary>
     public ILogContext? ReceiveLogContext { get; private set; }
-    /// <summary>Gets or sets the send log context.</summary>
+    /// <summary>Gets the send log context derived from <see cref="LogContext" />.</summary>
     public ILogContext? SendLogContext { get; private set; }
 
     /// <summary>Connects endpoint configuration observer.</summary>
@@ -99,12 +99,30 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
     /// <returns>A handle that disconnects the registration.</returns>
     public ConnectHandle ConnectReceiveEndpointContext(ReceiveEndpointContext context)
     {
-        var consume = context.ReceivePipe.ConnectConsumeObserver(_consumeObservers);
-        var receive = context.ConnectReceiveObserver(_receiveObservers);
-        var publish = context.ConnectPublishObserver(_publishObservers);
-        var send = context.ConnectSendObserver(_sendObservers);
+        var handles = new List<ConnectHandle>(4);
+        try
+        {
+            handles.Add(context.ReceivePipe.ConnectConsumeObserver(_consumeObservers));
+            handles.Add(context.ConnectReceiveObserver(_receiveObservers));
+            handles.Add(context.ConnectPublishObserver(_publishObservers));
+            handles.Add(context.ConnectSendObserver(_sendObservers));
 
-        return new MultipleConnectHandle(consume, receive, publish, send);
+            return new MultipleConnectHandle(handles);
+        }
+        catch (Exception connectionFailure)
+        {
+            try
+            {
+                new MultipleConnectHandle(handles.Where(handle => handle is not null)).Disconnect();
+            }
+            catch (Exception cleanupFailure)
+            {
+                throw new AggregateException("Observer connection and registration cleanup both failed.",
+                    connectionFailure, cleanupFailure);
+            }
+
+            throw;
+        }
     }
 
     /// <summary>Validates the current configuration.</summary>
@@ -257,7 +275,7 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
     }
 
     /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <param name="configuration">The receive endpoint configuration to add.</param>
     protected void Add(TConfiguration configuration)
     {
         _endpoints.Add(configuration);

@@ -1,0 +1,218 @@
+{
+  "status": "BOUNDED_NUGET_PUBLIC_SUPPLEMENT_ACCEPTED",
+  "reviewer": "azure_test_scope",
+  "independence": "Internal read-only adversarial helper; not fixture, transformation, runner or product patch author. Prior original EventHub review is own independent personal reading, reused only at identical SHA. Does not assume external Product Team role or replace Lead review.",
+  "freeze_sha256": "82a7dd58775947e474a31c64f57028ce01f1418e2dc8f57f2af157dfcd9ca90e",
+  "original_product_freeze_sha256": "827aff14744d9383e0e18c584035ef729dfa820b1436c00a9870b882bd26d8a0",
+  "scope": {
+    "owned_inputs": 10,
+    "public_test_methods": 10,
+    "actual_console_cases": 70,
+    "groups": {
+      "closing": 10,
+      "policy": 28,
+      "producer": 32
+    },
+    "locked_packages": 37,
+    "archive_cache_runtime_dlls": 36,
+    "selected_product_packages": 4
+  },
+  "blocking_findings": [],
+  "new_confirmed_findings": [],
+  "test_antipattern_counts": {
+    "Critical": 0,
+    "High": 0,
+    "Medium": 0,
+    "Low": 0
+  },
+  "oracle_transformation": {
+    "status": "EXACT_BYTE_PROJECTION",
+    "independent_reconstruction": "All canonical text retained byte-for-byte after removing precisely two infrastructure using lines, complete Theory/InlineData/RequirementCoverage attribute lines and replacing exact timeout accessor and framework token access. Capture helper byte-identical. Seventy canonical InlineData tuples bijectively equal seventy explicit awaited invocations and seventy ordered PASS log records. No parser/discovery claim.",
+    "case_failure_semantics": "RunAsync awaits action, records failure instead of incrementing pass, total check is exact70 and any failure returns exit2. Top-level argument failures cannot yield success. Custom Record awaits task and returns actual exception; null action/task would produce captured NRE and cannot satisfy these exact oracles as success."
+  },
+  "contracts": {
+    "F013": {
+      "cases": 10,
+      "proof": "Actual protected Azure SDK closing callback exercised without startup; cleanup-entry race must be won, operation remains pending until released, exact callback order/count, single exception identity, canceled task status/token and ordered aggregate identities asserted. Null application callback explicitly covered by no-app.",
+      "teardown": "Unconditionally release gate, await termination without canceled caller token, observe already joined expected failure, release client twice. Body assertion retains responsibility for exact result; expected teardown faults are not promoted to passes."
+    },
+    "F014": {
+      "cases": 19,
+      "proof": "Normal public AddViciOneServiceBus DI bus/rider build and composition validator; nine named invalid policies fail before SDK callback with actionable property/provider/bus/Set diagnostic; three inherited guards retained; five independent CancellationTokenSource timer constructors and valid builds include fractional whole-millisecond maximum; selected/unselected builds both normal positive.",
+      "boundary": "Build/startup validation and native timer constructor only; SDK processor or broker receive not started."
+    },
+    "F016": {
+      "cases": 9,
+      "proof": "One actual normally built context observed through public registration factory/specification; later seven configurator changes cannot change exact nine-field policy snapshot, selected MessageLimits payload identity checked; two retained/replaced option callback cases create real SDK client and assert generation original identifier/entity/group/not-running/callback counts.",
+      "adapter": "Host DispatchProxy forwards public interface only, observes ConnectReceiveEndpointContext and explicitly projects conservative MessageLimits because internal interface is unavailable. It never creates second context, supplies ReceiveSettings or replaces client factory. Invariant exact one context prevents prior DoubleReceivePipeSetup issue.",
+      "teardown": "Always release client inside pipe; stop supervisor then SDK client and dispose normal provider. Cleanup failures propagate to runner failure."
+    },
+    "F017": {
+      "cases": 32,
+      "proof": "Eight public produce overloads, pre-cancel and later-cancel caller tasks with exact caller token/status; shared acquisition remains unresolved/live, source token None, caller pipe never runs; live waiter alone forwards once. Sixteen ready/pending positives await real fake-provider delivery gate, assert exact overload/formal generic type/input identity/content, actual downstream token, consume payload/conversation/correlation/header metadata and single invocation.",
+      "teardown": "Provider and delivery gates released in finally; actual wrapper and downstream tasks joined/observed before consuming in-memory bus lease is stopped with None. Fresh queue and fixture per case, serial runner."
+    }
+  },
+  "native_receipts": {
+    "fresh_pack": {
+      "phase": "package03-eventhub-fresh-pack",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/Transports/ViciOne.ServiceBus.EventHubs/ViciOne.ServiceBus.EventHubs.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-o",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package03-eventhub",
+        "-p:PackageVersion=1.0.0",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:11:34.336454+00:00",
+      "completed_utc": "2026-10-03T00:11:36.714035+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-fresh-pack.log",
+      "log_sha256": "db3bcb683cde148a4aa02a8281c7129773bdd3f158734b18b621da5a937130e9"
+    },
+    "build_r5": {
+      "phase": "package03-eventhub-public-build-r5",
+      "command": [
+        "dotnet",
+        "build",
+        "EventHubPublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:39:09.438334+00:00",
+      "completed_utc": "2026-10-03T00:39:14.246790+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public-build-r5.log",
+      "log_sha256": "36a0ecff39dc99a0d8ac7fa8de0c7c3f2687a1a5f854a67e41c819d998645f35"
+    },
+    "run_r5": {
+      "phase": "package03-eventhub-public-run70-r5",
+      "command": [
+        "dotnet",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/EventHubPublicContracts.dll",
+        "20"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:39:14.382012+00:00",
+      "completed_utc": "2026-10-03T00:39:15.307524+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public-run70-r5.log",
+      "log_sha256": "98145a9076aecf62671338c5aec569eea1c205eabea7e37545ffbe3baa710a19"
+    },
+    "strict_build_observed": "exit0, zero warnings, zero errors",
+    "result": {
+      "total": 70,
+      "passed": 70,
+      "failed": 0,
+      "failures": [],
+      "eventHubDll": "e9ccaacdc6cdc36c1f3ebf1a9e5a5ca0ea2733855f05c5ba1d546db8e064b8ac",
+      "coreDll": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+      "abstractionsDll": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+    },
+    "all_case_logs_full_read": true,
+    "excluded": "r1-r4 diagnostic metadata labels and intermediate compiler failures not used for final binding; no new package mutation execution claimed."
+  },
+  "package_binding": {
+    "status": "INDEPENDENTLY_VERIFIED",
+    "selected_packages": [
+      {
+        "package": "ViciOne.ServiceBus.EventHubs",
+        "version": "1.0.0",
+        "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package03-eventhub/ViciOne.ServiceBus.EventHubs.1.0.0.nupkg",
+        "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus.eventhubs/1.0.0/vicione.servicebus.eventhubs.1.0.0.nupkg",
+        "nupkg_sha256": "b22c2820fe592ec6a5b63c1f78c4e0dad511d0ea9106c6916571a7b11fe07e1b",
+        "contentHash_sha512": "Ew7cmTrA1avf9T4THKx3P+K0rBHsaBwZhXPjsqDCT9zezMMNpRdZTmD5bpTiMPURnsUKePNJu60PExFEU3TrbQ==",
+        "member": "lib/net10.0/ViciOne.ServiceBus.EventHubs.dll",
+        "dll_sha256": "e9ccaacdc6cdc36c1f3ebf1a9e5a5ca0ea2733855f05c5ba1d546db8e064b8ac",
+        "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.EventHubs.dll",
+        "independent_selected_cache_nupkg_identical": true,
+        "independent_sha512_matches_lock_and_cache_sidecar": true,
+        "independent_zip_cache_runtime_dll_identical": true
+      },
+      {
+        "package": "ViciOne.ServiceBus",
+        "version": "1.0.0",
+        "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package03-eventhub/ViciOne.ServiceBus.1.0.0.nupkg",
+        "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg",
+        "nupkg_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+        "contentHash_sha512": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+        "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+        "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+        "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+        "independent_selected_cache_nupkg_identical": true,
+        "independent_sha512_matches_lock_and_cache_sidecar": true,
+        "independent_zip_cache_runtime_dll_identical": true
+      },
+      {
+        "package": "ViciOne.ServiceBus.Abstractions",
+        "version": "1.0.0",
+        "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package03-eventhub/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+        "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg",
+        "nupkg_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+        "contentHash_sha512": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+        "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+        "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+        "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+        "independent_selected_cache_nupkg_identical": true,
+        "independent_sha512_matches_lock_and_cache_sidecar": true,
+        "independent_zip_cache_runtime_dll_identical": true
+      },
+      {
+        "package": "ViciOne.ServiceBus.Sagas",
+        "version": "1.0.0",
+        "selected_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package03-eventhub/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+        "cache_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/restored-packages/vicione.servicebus.sagas/1.0.0/vicione.servicebus.sagas.1.0.0.nupkg",
+        "nupkg_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+        "contentHash_sha512": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+        "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+        "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "independent_selected_cache_nupkg_identical": true,
+        "independent_sha512_matches_lock_and_cache_sidecar": true,
+        "independent_zip_cache_runtime_dll_identical": true
+      }
+    ],
+    "graph": "All37 lock hashes equal assets and own-cache metadata; every raw archive SHA512 equals sidecar. Four unsigned product archive SHA512 equals lock independently.33 signed third-party packages have signature entry and distinct normalized content hash by NuGet design; metadata binding checked, no fresh signature verification.36 selected runtime DLLs byte-identical to own-cache extraction and nupkg members. System.Reflection.TypeExtensions4.7.0 selects _._ compile/runtime placeholders and correctly has no deps runtime asset.",
+    "runtime_path_precision": "Program observes typeof(EventHubProcessorContext).Assembly.Location. Core and Abstractions are explicitly hashed app-output file paths, independently equal selected package members and normal deps-bound graph; their loaded Assembly.Location is not separately logged. No custom AssemblyLoadContext/load hook exists in owned inputs. typeof(IBus) is not used to label Core.",
+    "SDK_DI": "Declared net10.0 with ordinary Microsoft.Extensions.DependencyInjection10.0.12/abstractions10.0.12, EH SDK/Processor5.12.2, Blobs12.29.2, Core1.55.0, xunit.v3.assert4.0.0. Assets record SdkAnalysisLevel10.0.300; no broader SDK patch matrix inferred. No project references and no ancestor build/package configs found.",
+    "official_hash_semantics": "https://github.com/NuGet/NuGet.Client/blob/dev/src/NuGet.Core/NuGet.Packaging/PackageArchiveReader.cs"
+  },
+  "nonblocking_limits": [
+    {
+      "location": "Program.cs:5–9,90–93",
+      "detail": "CLI argument supplies20-second per-WaitAsync timeout and live CanBeCanceled owned caller token. No global CancelAfter/watchdog or actual cancellation of that shared run token; synchronous DI build and some bus calls are not individually wrapped. Actual70completed in receipt interval without timeout. Do not describe this as a global process deadline proof."
+    },
+    {
+      "location": "Supplement source methods",
+      "detail": "Null application callback is covered. Null returned producer/task, provider acquisition failure, malformed global runtime inputs and hostile DI/teardown faults are not additional executed cases. Existing actual failure identity/cancellation/cleanup cases remain preserved; no universal SPI/null-path closure claimed."
+    },
+    {
+      "location": "Product proof reuse",
+      "detail": "Original four production and four native fixture hashes unchanged. Earlier independent thirty actual product mutants and182native owner cases remain separate evidence, not seventy fresh NuGet mutants or182NuGet console cases."
+    }
+  ],
+  "limits": [
+    "Bounded public console consumer proof only; no whole API/A+ or release approval",
+    "No native commands, restore, build, tests, mutation or product writes by reviewer",
+    "No actual EventHub/cloud/Azurite interaction in these seventy cases; original native owner separate",
+    "No ARM64/512MiB/no-swap/performance evidence, OS/SDK matrix or final all-package profile claim",
+    "Signed third-party normalized hash reconstructed/signature validation not performed",
+    "Complete owned input reading supports but does not replace Lead personal scope review"
+  ],
+  "artifacts": {
+    "READ_CLOSURE.json": "a7d3c6ce4045cf16ac2800dd1437a105db3ba6331392ae475f7744412da8a591",
+    "ORACLE_TRANSFORMATION.json": "5e2391946bd8765c2cba833abf640363eee5f23c81fffee70b66d42d1de542b9",
+    "PACKAGE_BINDING_CHECK.json": "c104c0309c20b800ee5036b6b60b2221daffde6c542c30ab548d416497259e63",
+    "SDK_DI_GRAPH_CHECK.json": "c62832c51dab511c6a7e8df9fd9851efc60f79df5d019693b5a6a281b4fd511d",
+    "PRODUCT_REUSE_CHECK.json": "69729afd6b13a39446573c5e7e3ef5461ca9dd2f319e8b611ea89df1a45936d1"
+  }
+}

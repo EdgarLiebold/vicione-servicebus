@@ -1,0 +1,13 @@
+{
+  "actor": "/root",
+  "utc": "2026-10-04T00:54:39.218536+00:00",
+  "status": "ALLEGED_FIFTH_STALE_ORACLE_FALSE_ACTIVITY_CONTRACT_UNCHANGED",
+  "independent_manifest_sha256": "e439fdf25187705da0c76957af9a89f3248e5419b9ea3369252427e09a45a2a4",
+  "independent_review_sha256": "bee6ceb933a0552b8e5768ffab0362d065820a87ca398ae426573a098538a3ab",
+  "root_personally_full_review_bindings_manifest_and_activity_product_owner": true,
+  "fresh_all21_artifacts9_current_and8_git_head_binding": true,
+  "canonical_patch_needed": false,
+  "reason": "Courier Activity owner explicitly returns completed ValueTask after cleanup, including failed cleanup; held concurrent callers share the original failure. Current Consume owner separately keeps a single sticky disposal task.",
+  "native_test_credit": false,
+  "root_core766_personal_read_credit": false
+}

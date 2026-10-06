@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Configuration;
@@ -1044,6 +1045,62 @@ public sealed class DependencyInjectionConfigurationContractTests
         Assert.Equal(1, observer.PostCreateCount);
         Assert.Equal(1, observer.CreateFaultedCount);
         Assert.Same(specificationFailure, observer.ObservedFailure);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DI-FACTORY-CONTRACT", "construction-failure-survives-observer-and-logger-failures")]
+    public async Task TransportBusFactory_PreservesConstructionFailureWhenObserverAndLoggerFailAsync()
+    {
+        var specificationFailure = new InvalidOperationException("unique specification failure");
+        var observationFailure = new InvalidOperationException("unique observation failure");
+        var diagnosticFailure = new InvalidOperationException("unique diagnostic failure");
+        var specification = new RecordingBusInstanceSpecification(specificationFailure);
+        var observer = new ThrowingCreationFaultObserver(observationFailure);
+        var logger = new ThrowingObservationWarningLogger(observationFailure, diagnosticFailure);
+        var previousContext = LogContext.Current;
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            var services = new ServiceCollection();
+            services.AddViciOneServiceBusTestHarness();
+            services.AddSingleton<IBusObserver>(observer);
+            services.AddSingleton(Bind<IBus>.Create<IBusInstanceSpecification>(specification));
+            await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true });
+
+            ConfigurationException actual = Assert.Throws<ConfigurationException>(() =>
+                provider.GetRequiredService<IBusControl>());
+
+            Assert.Same(specificationFailure, actual.InnerException);
+            Assert.Equal(1, specification.ValidationCount);
+            Assert.Equal(1, specification.ConfigureCount);
+            Assert.Equal(1, observer.PostCreateCount);
+            Assert.Equal(1, observer.CreateFaultedCount);
+            Assert.Same(specificationFailure, observer.ObservedFailure);
+            Assert.Equal(1, logger.WarningCount);
+            Assert.Same(observationFailure, logger.ObservedFailure);
+        }
+        finally
+        {
+            LogContext.Current = previousContext;
+        }
+    }
+
+    private sealed class ThrowingObservationWarningLogger(Exception expectedObservation, Exception diagnosticFailure) : ILogger
+    {
+        public int WarningCount { get; private set; }
+        public Exception? ObservedFailure { get; private set; }
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+        {
+            if (logLevel != LogLevel.Warning || !ReferenceEquals(exception, expectedObservation))
+                return;
+
+            WarningCount++;
+            ObservedFailure = exception;
+            throw diagnosticFailure;
+        }
     }
 
     private static T CreateConfigurationProxy<T>(List<object> specifications)

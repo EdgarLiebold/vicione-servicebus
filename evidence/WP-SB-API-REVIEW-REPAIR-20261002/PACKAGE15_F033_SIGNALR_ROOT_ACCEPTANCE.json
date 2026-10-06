@@ -1,0 +1,31 @@
+{
+  "status": "ROOT_SCOPED_F033_CORE_AND_SIGNALR_ACCEPTED_SHARED_FINAL_PENDING",
+  "finding": "F-SB-API-033",
+  "root_personally_FULL": "54 product/shared source preauthor bodies; complete22 public owner inputs with exact same-body reuse; all runner bodies; final review TXT+JSON (truncated middle repaired240..405); own252effects/62receipts/6packagechains binding",
+  "freeze_sha256": "23a798b6c06e282f661e13f005bacd71b8cd67d33b8cac39600aaf09f050e4d2",
+  "review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-adversarial/REVIEW.json",
+  "review_sha256": "1276d8c8ef2488c9b8845d2e39451bea846be740729dbb193e4b67dd2792be80",
+  "manifest_sha256": "95e38a222b1924dd31a1fccec3df514688ecdbd21d3cf54a280aeed466119cec",
+  "owned_current_and_snapshot_verified": 46,
+  "artifacts_verified": 7,
+  "original": {
+    "causal_red": 17,
+    "positive": 24,
+    "guards": 0
+  },
+  "corrected": 41,
+  "compiled_mutants": 10,
+  "baseline": 41,
+  "rollback": 41,
+  "Core_companion_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE13_F033_CORE_ROOT_ACCEPTANCE.json",
+  "limits": [
+    "Bounded public NuGet console with one normal InMemory bus and controlled public SPI collaborators; actual SignalR serialization/client delivery and normal remote-group request/ack control. No HTTP/TCP/cross-node deployment guarantee.",
+    "No universal completion for throwing enumerable/custom synchronous fanout SPI: separate candidate SIGNALR-FANOUT-SYNC-001 UNVERIFIED remains open.",
+    "No whole Core766 canonical test-owner reading, whole SignalR canonical suite, whole API/A+ grade, ARM/heap/cloud benchmark or CLOSED symbol.",
+    "The exact Microsoft framework runtime was10.0.10 X64; Core nuspec10.0.12 dependencies unchanged and SDK pruned. No assumed Microsoft NuGet10.0.12 runtime.",
+    "SignalR mutation runtime uses strictly compiled DLL substitutions with embedded PDB; no individual mutant NuGet-pack claim.",
+    "DI scope release may itself contain complex cleanup; F033 guarantees caught selected primary/request/scope failures, not universal best-effort disposal of unknown DI objects."
+  ],
+  "whole_API_CLOSED": false,
+  "utc": "2026-10-03T05:46:35.779278+00:00"
+}

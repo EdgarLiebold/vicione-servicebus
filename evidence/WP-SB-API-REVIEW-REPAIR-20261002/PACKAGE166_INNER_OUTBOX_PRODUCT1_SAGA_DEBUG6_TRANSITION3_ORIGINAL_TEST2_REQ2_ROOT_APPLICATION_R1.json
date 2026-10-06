@@ -1,0 +1,118 @@
+{
+  "utc": "2026-10-05T05:16:01.873256+00:00",
+  "actor": "/root",
+  "status": "ROOT_APPLIED_PRODUCT1_TEST2_REQ1_NATIVE_PENDING",
+  "findings_repaired": [
+    "F-SB-API-151"
+  ],
+  "changed_files": [
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "before_sha256": "c0ef95912363f64d6387ad963437350e11443d22ddecb663cc03286f5ed68aa4",
+      "after_sha256": "8190d61b9ef84f54c84900d26050981476e601b11e440392daa72bbb6041cae1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/SagaRepositoryLifecycleDeepContractTests.cs",
+      "before_sha256": "68533cbefe72078d2331bbdc027340d1b7f5aa4a3e297ef853970298855641c7",
+      "after_sha256": "7a8c08dd0a14715cd43c49e49180f0735a161d72c699d3e07a4c10bac9661f4f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaStateQueryRuntimeExtensionDeepContractTests.cs",
+      "before_sha256": "7f7eab437793460ca512637ecd8e5bc90721fbfce0c882197773f8093443b56a",
+      "after_sha256": "6804f583901a3ab2f5ba441ef7940ce7aefd9b5d501485f2d4b573a732e7a1cd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "7a06500ab893f4fa55c5f36873314fc33ab6082582e1963ff005f95b33f918ca",
+      "after_sha256": "0422f11ca32487e429605bcd9e90a7e81ff81cb3f7c421b98d91c976c204ac73"
+    }
+  ],
+  "requirements_before": 4641,
+  "requirements_after": 4643,
+  "requirements_prefix_preserved": true,
+  "additive_cases": {
+    "saga_debug": 6,
+    "transition": 3
+  },
+  "authors_and_independent_adversarial_reviews": [
+    {
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-inner-outbox-primary-restore-product-proposed-r1/REPORT.json",
+        "sha256": "75dacc86ab63ef9434ebdac9e9cf821253678113c018ca1a0b3a00bcc4c0dfaf"
+      },
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-inner-outbox-primary-restore-product-proposed-r1/MANIFEST.json",
+        "sha256": "d762d572844f9ca1ad768c5dbfc461ca719eec9a63ce56656e0ba992dd81662c"
+      },
+      "files_verified": 6
+    },
+    {
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-inner-outbox-primary-restore-independent-runtime-r1/REPORT.json",
+        "sha256": "346cefbdfb145dd6560e1fbfdd38b4895831d025a1326b8f8bde25895fefec8a"
+      },
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package165-inner-outbox-primary-restore-independent-runtime-r1/MANIFEST.json",
+        "sha256": "46ed39b13d06bcd8bb5ee36232dfdefc08ca505dc0896256004554f66b2b4a2a"
+      },
+      "files_verified": 1
+    },
+    {
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-saga-debug-workflow-original6-oracles-proposed-r1/REPORT.json",
+        "sha256": "c3a5a45d21cbf52bf386ce625ba54bcd82166dccf0a1c84e34e371464d485b2b"
+      },
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-saga-debug-workflow-original6-oracles-proposed-r1/MANIFEST.json",
+        "sha256": "cdc7402699543fc4ca1365ba4c0e42aa348958d234e6c43b34585b23e0ff5c16"
+      },
+      "files_verified": 5
+    },
+    {
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-saga-debug-original6-independent-scanner-r1/REPORT.json",
+        "sha256": "61ee82fdbf6e63edf0fc3fee326a8da418a243d67ac9b9b7eb6de01646d19cdd"
+      },
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-saga-debug-original6-independent-scanner-r1/MANIFEST.json",
+        "sha256": "4cedba09e0354378188b3e9538126242c78f462706828d71d03fe879524f3666"
+      },
+      "files_verified": 2
+    },
+    {
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package169-transition-caller-token-original3-oracles-proposed-r2/REPORT.json",
+        "sha256": "2ebf99a0314bb6a1884a9eb531708bd2def4af7b82977f262151602c0c5dcf2e"
+      },
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package169-transition-caller-token-original3-oracles-proposed-r2/MANIFEST.json",
+        "sha256": "ac6b9701b83841314d49912676869a064b6e9880e93738e19e947654c9d3de87"
+      },
+      "files_verified": 6
+    },
+    {
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package169-transition-original3-independent-scanner-r2/REPORT.json",
+        "sha256": "e3e342478c0bdc4898e55351dd49de04df014d24ecf2edcc1b6c1a9ed720be29"
+      },
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package169-transition-original3-independent-scanner-r2/MANIFEST.json",
+        "sha256": "72db50e007cd64984c47aecaf05b1d6dbe9a694a45ac5daa29f65004246f1141"
+      },
+      "files_verified": 1
+    }
+  ],
+  "root_read_authority": "Product whole186 and literal patch0226b4; genuine full SagaDebug122 and TransitionR2 158 additions c6c6fb/b092ad; both peerReports whole502666; StateMachineExtensions wholeed6a27. Existing whole contexts explicitly peer authority; no invented Root whole1258/585 claim. Required research/skill gates recorded in each authored proposal.",
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE165_INNER_OUTBOX_PIPELINE_RESTORE_ORIGINAL_ROOT_FINDING_REGISTRATION_R1.json",
+    "sha256": "76392eebb2afe9071bf01bbf2b57a60893e13e7e88b663dd92c7d60dc34b7b50"
+  },
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-root-before-r1",
+  "limits": [
+    "Only inner synchronous restoration handle released; borrowed outer scope unchanged.",
+    "Saga diagnostic and Transition causes remain hypotheses until actual finite native failures; no Finding registration from proposed expectations.",
+    "No R1 blocked Transition Test applied.",
+    "No wholeAPI or global A+ closure."
+  ],
+  "CLOSED": false
+}

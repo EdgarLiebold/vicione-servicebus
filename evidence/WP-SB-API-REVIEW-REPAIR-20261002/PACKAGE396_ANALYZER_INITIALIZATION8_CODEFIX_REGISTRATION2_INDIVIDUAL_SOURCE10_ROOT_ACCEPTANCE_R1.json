@@ -1,0 +1,67 @@
+{
+  "utc": "2026-10-06T09:15:09.751465+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_INDIVIDUAL_SOURCE10_DIFFERENT_PEER",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package392-analyzer-initialization-codefix10-root-individual-contracts-proposed-r1/REPORT.json",
+    "sha256": "f10d17830d1ebbb6a30c67994c1348b0c91e6d3e7b469cac9682b19dba57717f"
+  },
+  "author_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package392-analyzer-initialization-codefix10-root-individual-contracts-proposed-r1/MANIFEST.json",
+    "sha256": "bcdfbdee0ba0095efd723fda0370287286bc9a6dd1b6cd0f31cf3b10b6dc5a02"
+  },
+  "independent_adversarial_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package392-analyzer-codefix10-independent-source-norm-peer-r1/REPORT.json",
+    "sha256": "dc64acfdebd8fdc30029a7480c33348cd1f17917d1743b8d115e49bdd17501cf"
+  },
+  "independent_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package392-analyzer-codefix10-independent-source-norm-peer-r1/MANIFEST.json",
+    "sha256": "34a01a31ad1d41407ed9ec8ddf8fec1f76ea3fdea8c6ee5c20a147dd9e128ccb"
+  },
+  "own_peer10_comparisons": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package392-analyzer-codefix10-independent-source-norm-peer-r1/OWN_INDIVIDUAL_COMPARISONS10.json",
+    "sha256": "d38a6a6037b494cbf535c2e6d7af99e06d6e0376a2bdb4ae453d86a78840c885"
+  },
+  "Root_whole_source10_1976_reads": [
+    "207491",
+    "1a3f92",
+    "3da96c+7435ae",
+    "fd72ac+e3160f",
+    "3a3719+f0ab83"
+  ],
+  "Root_whole_peer_report_read": "31a24f",
+  "Root_whole_peer_comparisons_read": "7e2810",
+  "Source10_current_hashes_guarded": true,
+  "Source10_actual_compiled_PDB_XML_unique": true,
+  "original_indices": [
+    14264,
+    14266,
+    14268,
+    14270,
+    14272,
+    14274,
+    14276,
+    14278,
+    14297,
+    14300
+  ],
+  "norms10": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package392-analyzer-initialization-codefix10-root-individual-contracts-proposed-r1/INDIVIDUAL_CONTRACTS10.json",
+    "sha256": "d621af5620353b3ef397307a35142abb2ee5e1c31e422599a2152b23aba32c16"
+  },
+  "canonical_added": 10,
+  "native_cases_added": 0,
+  "Product_Test_Tool_changes": false,
+  "grade": null,
+  "whole_API_closed": false,
+  "remaining_obligations": [
+    "Deferred analyzer callbacks/action transformation and output verification remain separate; no universal Native/callback grade imported."
+  ],
+  "master_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "3345d2c020b060f18b16b96708c7a674d756e977fd74860ffbe99b71a9bbf4c9"
+  },
+  "STATE_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+    "sha256": "e8d9fc9c62350f929fd66f8b663271255ae5809f1c5db0be1914ca37a0022c28"
+  }
+}

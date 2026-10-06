@@ -1,0 +1,51 @@
+{
+  "utc": "2026-10-06T04:06:16.475545+00:00",
+  "status": "ROOT_APPLIED_INDEPENDENTLY_REVIEWED_TESTONLY_ORIGINAL8_COMPILER_NATIVE_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package321-rabbit-channel-initialization-original8-testonly-proposed-r2/REPORT.json",
+    "sha256": "1adfa1796c1eaaafec807f1e05e8be7fe55dbeca78d931da7e0ef7f8ab949a48"
+  },
+  "author_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package321-rabbit-channel-initialization-original8-testonly-proposed-r2/MANIFEST.json",
+    "sha256": "9ea72b94480412729d90093a0f5bfa958778c45a2c65ddbfb8c9a02efcedc47f"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package321-rabbit-initialization8-independent-source-peer-r2/REPORT.json",
+    "sha256": "ad2ad0d4548c1bf20ea5a75e737c608bc7bd9df1014d95c7111369cf6e154c7c"
+  },
+  "independent_peer_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package321-rabbit-initialization8-independent-source-peer-r2/MANIFEST.json",
+    "sha256": "3ccded7e0afdd99c6fb0a7fb4f9607089e8c7c296f84401c33ec186c703248df"
+  },
+  "root_own_read": "EntireR2Test334b25bfc, entireactualConnection139679606 and IChannelCleanup policy d4a3e1; completepeer4b47dd. Root is integration writer, not author of334 code.",
+  "test": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqChannelInitializationOwnershipTests.cs",
+    "sha256": "242cda278aea4ab056328b94b43a753410dc0bc936357bcef83b47db16d8938c"
+  },
+  "requirement_before": "d2868f730a7048128c9a6c38882d34ea7fb04f441646dc39f59f146f5642baf6",
+  "requirement_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+    "sha256": "1c6cc5e3b65c1480eed691b5abe856c159241abed270b52f06daececeb77c8fd"
+  },
+  "unchanged_catalog_prefix": 290,
+  "appended_only": [
+    {
+      "requirementId": "REQ-VSB-RABBITMQ-CONNECTION-LIFECYCLE",
+      "variantKey": "acquired-channel-initialization-preserves-primary-and-retires-owned-channel",
+      "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+      "testType": "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.RabbitMqChannelInitializationOwnershipTests",
+      "testMethod": "Create_InitializationOwnsAcquiredChannelAndPreservesPrimaryAsync"
+    }
+  ],
+  "source_product_changes": 0,
+  "Native_run": 0,
+  "FindingID": null,
+  "whole_API_closed": false,
+  "grade": null,
+  "limits": [
+    "No SDK/compile/native execution",
+    "No FindingID/native forecast",
+    "No generic connection/channel shutdown, cancellation, concurrent lifecycle or ABI/global grade",
+    "Global318/320 Sourcefreeze respected; Root-only apply after gate/peer"
+  ]
+}

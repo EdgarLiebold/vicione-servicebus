@@ -1,0 +1,27 @@
+{
+  "status": "ACTUAL_STRICT_BUILD_AND_PACK_PASS_TWO_EXACT_XML_CONTRACTS_VERIFIED",
+  "utc": "2026-10-03T21:17:00.149376+00:00",
+  "package": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package27-saga-xml-r1/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+    "sha256": "e76e49708bd9a319c405c9b34e11b75bab005b11310c5d8a024969289660c486"
+  },
+  "packed_xml_sha256": "bfd9c88a7129a8747e531c5f727eed99235fa92d9dbefac334b17f009cf7f7a8",
+  "packed_runtime_dll_sha256": "55af061bf1655fef32f0ebfd8eeb3724d8c59a54e09a2e559253ee1215066f8c",
+  "package_crc_verified": true,
+  "exact_current_build_payloads": true,
+  "members": [
+    {
+      "id": "M:ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator`2.OnMissingInstance(System.Func{ViciOne.ServiceBus.Sagas.IMissingInstanceConfigurator{`0,`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`1}}})",
+      "emitted_member_xml": "<member name=\"M:ViciOne.ServiceBus.Sagas.IEventCorrelationConfigurator`2.OnMissingInstance(System.Func{ViciOne.ServiceBus.Sagas.IMissingInstanceConfigurator{`0,`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`1}}})\">\n            <summary>\n            Configures the message pipeline used when a non-initial event has no matching saga instance.\n            </summary>\n            <remarks>\n            Without a configured missing-instance pipeline, the event completes through an empty pipeline.\n            Initial-state events use the configured saga factory instead. The callback may select discard, fault, or custom behavior.\n            An explicitly selected fault or an exception from custom behavior propagates to the surrounding receive pipeline;\n            its configured error policy determines subsequent fault reporting and error-transport handling.\n            </remarks>\n            <param name=\"getBehavior\">The callback building the missing-instance pipeline from the supplied configurator.</param>\n            <returns>The event correlation configurator produced by the operation.</returns>\n            <exception cref=\"T:System.ArgumentNullException\"><paramref name=\"getBehavior\" /> is null.</exception>\n            <exception cref=\"T:System.InvalidOperationException\"><paramref name=\"getBehavior\" /> returns null.</exception>\n        </member>\n        ",
+      "sha256": "cbee3c47203e01517429d27eb061d90d36d1a8a5873ae8ce03808a1a8b0b823b"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Sagas.IMissingInstanceConfigurator`2.Fault",
+      "emitted_member_xml": "<member name=\"M:ViciOne.ServiceBus.Sagas.IMissingInstanceConfigurator`2.Fault\">\n            <summary>Creates a pipeline that throws <see cref=\"T:ViciOne.ServiceBus.SagaException\" /> when no saga instance is found.</summary>\n            <remarks>The surrounding receive pipeline determines fault reporting and error-transport handling.</remarks>\n            <returns>The pipe produced by the operation.</returns>\n        </member>\n        ",
+      "sha256": "41851a6a6e09984efa1fb0064a33b42a2eed4402ae59c6c8277e5c6aa2cb06ee"
+    }
+  ],
+  "runtime_changes": false,
+  "new_behavioral_tests_for_doc_only_delta": false,
+  "final_peer_binding_pending": true
+}

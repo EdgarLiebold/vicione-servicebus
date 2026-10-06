@@ -1,0 +1,2152 @@
+{
+  "status": "ROOT_VERIFIED_119_COMPLETE_RAW_READS_MERGED_WITH_ALL_PRIOR63_ROWS_PRESERVED",
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-scheduling-persistence-test-read/FINAL_MANIFEST.json",
+    "sha256": "982b8c6f528d04b7ad6ae042ccf9c59e59c6340a78a6d030f2d46e9301230397"
+  },
+  "before_ledger_sha256": "52bd1ae9b68e0916b3a89e264bec6298d4b4a95327bd49ab00c9f4bc71bcfad4",
+  "after_ledger_sha256": "2bb2f9937fbd48d6d1e5040e03d8960b34d573d7db9edb34cf58a4884034cc9a",
+  "before_status_counts": {
+    "PENDING": 710,
+    "READ_FULL_SEMANTIC_REVIEW_PARTIAL": 5499
+  },
+  "after_status_counts": {
+    "PENDING": 591,
+    "READ_FULL_SEMANTIC_REVIEW_PARTIAL": 5618
+  },
+  "original_F_INPUT_GIT_bindings": [
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Infrastructure/AmazonS3TestBucket.cs",
+      "sha256": "1fc3406f0b56dcc7372c65efae6871c04c2ff58c236c4e8f0ef16e26caafb4d9",
+      "original_git_blob": "924cd0985050ee71725289f109daf10740a29145",
+      "bytes": 4358
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/MessageData/AmazonS3MessageDataRepositoryTests.cs",
+      "sha256": "8baabc1835bb05c557100a39dee47df64e9a2e66c9efc3027f1009410f33ee01",
+      "original_git_blob": "aa5d229eae6be1bd6ea6114e48c37f335784c982",
+      "bytes": 24041
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Requirements/AmazonS3LocalIntegrationRequirements.json",
+      "sha256": "5502843884e78affb7a297ae452ebb572dc965514da44fc456510ec64b38a141",
+      "original_git_blob": "1d034c93b4c2378b58a252f41e493f659d6148bd",
+      "bytes": 4504
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "c629510121927378cab68422721032ce90706aa737367eb2c7230591d403c1ea",
+      "original_git_blob": "c745ea261bccc8e3f87e844209d0a014e3144443",
+      "bytes": 1379
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.csproj",
+      "sha256": "4ab1dd416f537ae5b510542f33f40747b34579a2fc453fb3716843675e35bef2",
+      "original_git_blob": "e34b42762426310b3bd5baedd24d05c82062e14d",
+      "bytes": 1141
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "46df372db0f9225e84a1a7b4e7ba7e925a61eab95824334a2cf4b8a122914a4b",
+      "original_git_blob": "80602558f6ddd5771bec5fd82816aeb112956c19",
+      "bytes": 16389
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataConfigurationTests.cs",
+      "sha256": "c1e72d626044f19e633cfbc66eaa62ed5b5da5ef0a42799fa68cfa825ed64466",
+      "original_git_blob": "780639e664f582952aa7637c86cb0119103d0191",
+      "bytes": 15357
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/MessageData/AmazonS3MessageDataObserverTests.cs",
+      "sha256": "d7235da4eec9cd5ff83a2c59138bd1d671eb0d79880878b1db0e6791cfaef966",
+      "original_git_blob": "8ad0a2570dfd61f5d2a86bd9aa5289bbc42b88c8",
+      "bytes": 27105
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/Requirements/AmazonS3Requirements.json",
+      "sha256": "b8efd9687ce08eb26e7b55f2e1a4a98408d6ac61815c67664c449b520d123986",
+      "original_git_blob": "5cb8eac319d03bd28050131671df3440f5d26ee3",
+      "bytes": 7157
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "ae34f127c0423bfdbfd505a4e025ea1c0597f75d53831e920ed9043d0e7daadb",
+      "original_git_blob": "2b8ccea7024d92305a3e6672ec29cb8e10882ffe",
+      "bytes": 1307
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+      "sha256": "3808c5366244f1ca5f258b99d58581343495e773ac48dde7ea5185244c6260ed",
+      "original_git_blob": "bbe544c1bb0e78cb9959c4991764d2e4fc0fac29",
+      "bytes": 1076
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/packages.lock.json",
+      "sha256": "46df372db0f9225e84a1a7b4e7ba7e925a61eab95824334a2cf4b8a122914a4b",
+      "original_git_blob": "80602558f6ddd5771bec5fd82816aeb112956c19",
+      "bytes": 16389
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/Infrastructure/AzureBlobTestContainer.cs",
+      "sha256": "89bd98800859bbfbf92dcd8a48f6f51c178ddae412f71465ac76f2e75683a9a7",
+      "original_git_blob": "c925981573b8780599b530045a968e33a45a5752",
+      "bytes": 1851
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/MessageData/AzureBlobMessageDataRepositoryTests.cs",
+      "sha256": "2aaa63d5ceb51eb92a4458ced178d557b805780e7e332cfef1c285dee840200b",
+      "original_git_blob": "dcef0f84051f0254d86f5c1b7988cbb024fd6739",
+      "bytes": 7701
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/Requirements/AzureStorageLocalIntegrationRequirements.json",
+      "sha256": "fb5b2a587d72e16c151a71087dfc80e548ba1fa6b765a27534ec44d673404f27",
+      "original_git_blob": "ca81757ce0b2d9ea51422a5b114eba3a5a000d66",
+      "bytes": 2375
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "bb0066c5b05df5e33a82830983a23b8b2a196835b2b81a373fc838d261114e2d",
+      "original_git_blob": "31ca7b036ad6968cd8aa9c577b9eb1289cdd5b36",
+      "bytes": 1404
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.csproj",
+      "sha256": "a944186a0403dc58270685d5d9ce6e300f92b9ff74bcb7214a733e47ef77868b",
+      "original_git_blob": "8077c4340ea1689ff4bb08a0034ae274b90a38b8",
+      "bytes": 1178
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "e078295de5b87a3e624b903a18e8faf800f1ade250fd83d61554b2a3f3c57ba2",
+      "original_git_blob": "25a2c18d6fcb7535dfdefe5892e80bf59cf0a3e6",
+      "bytes": 19273
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/Configuration/AzureBlobStorageConfigurationTests.cs",
+      "sha256": "3ec6aace2cee347ccde667c3d14e3101056a34669c8ec352c2864a95bf6298e0",
+      "original_git_blob": "cf042214bb9cec495f7c98fd98d687aba6218d4c",
+      "bytes": 7734
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/MessageData/AzureBlobMessageDataRepositoryTests.cs",
+      "sha256": "793d31a41ec3f0de0ffc3140b67e0e5b3175dddac56e8eb562e4db6a5b1bbdfe",
+      "original_git_blob": "d73dbff14d2b571b1cc50faead0044ec5a2f1139",
+      "bytes": 27508
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/MessageData/AzureStorageMessageDataTimeProviderTests.cs",
+      "sha256": "c5c5daeca4b0a1cc85eb94084637385e6f1d520d01b62958e720d5e248ef78e7",
+      "original_git_blob": "3dc9ac95672808f68bc11a5cf64328cc4f435ca4",
+      "bytes": 7652
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/Requirements/AzureStorageRequirements.json",
+      "sha256": "f3f5959403f7e9d8810a209862357c41c5fbbb93b9470e945bcc8b2dd2ba12df",
+      "original_git_blob": "99f4de4654a9c2aedc3874b6b4b3c199df6e3487",
+      "bytes": 8585
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "b5aff7206c60ecee60d9ec430f38c331a7872bbc4da930030feb5f6375500f41",
+      "original_git_blob": "55c4525975934fe72c3e2b43a4d89efd6d64c419",
+      "bytes": 1332
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/ViciOne.ServiceBus.Azure.Storage.Tests.csproj",
+      "sha256": "f50d98f8bf3a2e693b3b2dc297c9b4c85451b55fbeb96f2ba8fc89e0fd45ba72",
+      "original_git_blob": "a770e407c8d62b598abfe94e2e3dff8eb9330929",
+      "bytes": 1058
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/packages.lock.json",
+      "sha256": "9f8393f0b774fe0ae34bf0e21cabe99cc7fd63a66c61db173fd0b34686762b01",
+      "original_git_blob": "e63ab396c40cb33bda0c4a6abd48b1e3e052d251",
+      "bytes": 19284
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Courier/AzureTableRoutingSlipFuturePersistenceTests.cs",
+      "sha256": "96cd55580ea2abdc20b1df78870fb7affc412d8b378c763355cf5ddc99028b78",
+      "original_git_blob": "388279f6b3512169082bc09c17b80c9dc1baa773",
+      "bytes": 11121
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Futures/AzureTableFuturePersistenceTests.cs",
+      "sha256": "13bf6b0e153633fe30bd5e184a69f6240590b86489a8d77af5a482d62f4d16e8",
+      "original_git_blob": "07a274cb84eb53c92d80771ee63a1577ba216756",
+      "bytes": 28757
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Infrastructure/AzureTableTestTable.cs",
+      "sha256": "3c3c3c74bd516afa8fc6f1024e9dc66061b913dc647da55e17344ed65718576b",
+      "original_git_blob": "23a35df20380a7f71319081edffe77caa375cacf",
+      "bytes": 2250
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/JobService/AzureTableJobServiceIntegrationTests.cs",
+      "sha256": "b205f605b20151f178f344b1925da11ec05f9864c51457db714fe42581f5edf2",
+      "original_git_blob": "659424fa0e795f10a813a51cf1a2ab3db56dd419",
+      "bytes": 36172
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/JobService/AzureTableJobServiceRepositoryConfigurationTests.cs",
+      "sha256": "c6ea18c31b165894dd2b5458f0ea85cefd2e01a17912e32bc19944490475a652",
+      "original_git_blob": "a60b1151d52744be6da8b1d5f0c6869a0cb31cf5",
+      "bytes": 5445
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs",
+      "sha256": "34a7856acdcbdb21e9a0e6748d242c79496fec510945ef30cce477f5800d1e41",
+      "original_git_blob": "52a15f67b1644155e04918abf515b681584cb520",
+      "bytes": 27554
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/AzureTableLocalIntegrationRequirements.json",
+      "sha256": "009cc1e84bb42b01a40b51c83657e34df23153d4667dfcf9c239af63eb8b6ad5",
+      "original_git_blob": "4239c91f8644b648af092690ce437bc332ccd86c",
+      "bytes": 15349
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "f1ce61b3f29127792f311be4d94b7fa0fcf115db0de998afa84b997933a9f76e",
+      "original_git_blob": "ccc1cfd74422132645daae24b0277107dad80d91",
+      "bytes": 1384
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaConcurrencyTests.cs",
+      "sha256": "ab9ee11b985215def19f128735dc727fe0ef0239e0915f710ca384755dfb80a6",
+      "original_git_blob": "e08b12c8818861867ce633f2e469211454786ba8",
+      "bytes": 12143
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaEntityConversionIntegrationTests.cs",
+      "sha256": "52033d10d2ddb140e3f83c60cc114ff4a6d64b37634649ae24760a299a4fa129",
+      "original_git_blob": "a523c274132f2cc3dd8329f68d18fa8cbe1b9d05",
+      "bytes": 5093
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaIntegrityTests.cs",
+      "sha256": "5683073cf758f9579ea2aeb93d7e151176bf748d43fda51344e89840e0566f17",
+      "original_git_blob": "2e2b57161bd2911a2d3ed8214063a076f90451cc",
+      "bytes": 15349
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaRepositoryIntegrationTests.cs",
+      "sha256": "4a7c57d97a63a8d9e1cafdb2e168140b6c8c3e8fec04608068f4292bb07e4a7d",
+      "original_git_blob": "c6d527b28e2082c5abcff49ea5fbc868ce82913c",
+      "bytes": 14122
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaStorageBoundaryTests.cs",
+      "sha256": "b21c537ab8ab0a6b0ef23392e12140d800a5ea6b0dd1ffc1e8b537dda705135c",
+      "original_git_blob": "98c99ca3c959cedf737108f5e26a77465015345b",
+      "bytes": 7989
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.csproj",
+      "sha256": "97be89dac4e4ce3a34bb83ed323ec85081d941795aa532e1fd1c82580b2168bc",
+      "original_git_blob": "3b255dca04d4d485fda94351362b6a2e416cc6de",
+      "bytes": 2120
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "ec24801a2d8574936cfecb413f920f838d777e47539e02b9be30f63aa1529bf8",
+      "original_git_blob": "715e82171b0af377858608aeff317f7dc458fa65",
+      "bytes": 21495
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Configuration/AzureTableConfigurationContractTests.cs",
+      "sha256": "0a4121ced7bda1adc281036fbff81739b295e33297c2ed7e42c4595f510829af",
+      "original_git_blob": "cde62bb71785764bcf37b4ed2e81c7f1b7740ed3",
+      "bytes": 26555
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalOptionsTests.cs",
+      "sha256": "e63d4b98fb018e7e95dfaf6a48bf55fadda0926c926662562f994f3bd96c869f",
+      "original_git_blob": "3484f7f213a24a3bc621a533c2476a99daf7cfb3",
+      "bytes": 10961
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs",
+      "sha256": "59ae0228851a899cbdaaabe1ae70689a9b389fb89df2ae1afc0a663f47f90459",
+      "original_git_blob": "c417885c5cf529fd050b3f1f2c56b19c55fb7f22",
+      "bytes": 8811
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/AzureTableRequirements.json",
+      "sha256": "396cf820fe679811c00c6570d8d243261117631f8f48e9eaff35f0da30d966c6",
+      "original_git_blob": "881b04b172d062b076703701a09c603d3b6080b6",
+      "bytes": 15194
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "582a3fd8ef87e46ef22321ca9283029c46abd5eb2c389df2692d2e96785f4cf4",
+      "original_git_blob": "0f043365d94c7a26e4453b731e145a6dd523194a",
+      "bytes": 1312
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/AzureTableEntityConverterTests.cs",
+      "sha256": "99e667e3748147628ce0dd2ba0932d9ccf188cd1230eff7c0a099d520b2a3f24",
+      "original_git_blob": "742f62659deeed3f1e30c5265c02f321eeca2d36",
+      "bytes": 25383
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/AzureTableSagaKeyFormatterTests.cs",
+      "sha256": "4973ebe40d9cbe0fd945f17fff7d3a902093f2a797585419509cdb4c6540efbe",
+      "original_git_blob": "2056dccde456083861658a9bebb683a1eaffbc49",
+      "bytes": 3648
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/AzureTableSagaRepositoryBoundaryTests.cs",
+      "sha256": "8c90af07eee986c528cd6d921fce0eaba6a4400325b9c5008da5b7f3ff6f824c",
+      "original_git_blob": "e123948adb96a36ad62598a5ca999457a45e1f94",
+      "bytes": 30408
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+      "sha256": "5d6a6ab3ae7cbfb0aba7dc252a03c4e510db592e39a13f73c892d67c213071f6",
+      "original_git_blob": "9c7902571d6e282f4b205858a0029c8fd7746f87",
+      "bytes": 1312
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/packages.lock.json",
+      "sha256": "59b77f202bdc7816e25ffa7e2e280dd2f1c0a6cb79d9c6e3d0a6a7d3cb1e7118",
+      "original_git_blob": "f37275f81907783aaeaf974d3ce7c78d30c826bd",
+      "bytes": 20012
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Infrastructure/DynamoDbTestTable.cs",
+      "sha256": "c5995057860a4d6add0628178f2e8bc1f0eabc183cd9cabe62dba73f5784cf0d",
+      "original_git_blob": "0ea9d8856ddbe202b225e9bd605652168755d485",
+      "bytes": 5193
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Requirements/DynamoDbLocalIntegrationRequirements.json",
+      "sha256": "eccbebd002053beadcca00adf24c8a78f9a6bca209ac348c0a8942c9bd26c617",
+      "original_git_blob": "a959098f91829bd9edfa72eaac5aeb891ae87669",
+      "bytes": 3384
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "45b72057b0b30ba7745b33b49a949071dfc2d69aaf07e7539a632dda616f3936",
+      "original_git_blob": "c06af56a01c7306259a8a1c28fdc88ec1d28467f",
+      "bytes": 1375
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Saga/DynamoDbSagaConcurrencyTests.cs",
+      "sha256": "6a2771e84ac45434ead61958e1e8f94f6c50afc8bfc0f73d192f613c1a4484d1",
+      "original_git_blob": "b59f6ee34a25c34385c8227fd4d0d9bcebcd57c6",
+      "bytes": 15014
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Saga/DynamoDbSagaConfigurationTests.cs",
+      "sha256": "417dacd2555c246869df6119f69fc6122086ed77d4ab8c612624a317ab5eebb3",
+      "original_git_blob": "f45e04903f24237d672d61d1a67051ac09681e65",
+      "bytes": 2896
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Saga/DynamoDbSagaExpirationTests.cs",
+      "sha256": "51d8177f847e889907776a60ec91931f2fd7192baeb790c5cf4f0d745c6eaa66",
+      "original_git_blob": "143f0c9f2038f3124e87e186b2e5a8c0a7e6589b",
+      "bytes": 3475
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Saga/DynamoDbSagaPersistenceTests.cs",
+      "sha256": "05be3495d62c3013f633ae693cd1d050430a37445a30b1ac5ea347c6e3a52933",
+      "original_git_blob": "95ad9c3f875fe537f2554e92534feaee3c2709f9",
+      "bytes": 8484
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.csproj",
+      "sha256": "8a86356936843e1480b29b341c1ca63b517f61475baf72d5ac79fa0976e6e6c8",
+      "original_git_blob": "59a1123cd2d4763d95c33caffe21df18c161f37f",
+      "bytes": 1575
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "9be76f61b67dd6ddbab9ed26fdc08f75fbc65745b770c0fe3dcddb157abbbbc2",
+      "original_git_blob": "12eee14d0527bafa60fb85214ac9bf40588068ab",
+      "bytes": 18521
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Requirements/DynamoDbRequirements.json",
+      "sha256": "c08c103f1b15814e89b6ca75fb547a7e7f06923841ecab349e3a60e7da264d22",
+      "original_git_blob": "ec339ba02032406cf3b213aeec1cea629567ae8f",
+      "bytes": 8427
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "5b0d4d4626d62918090b53af85c39973d98d79c6a906f8819e4ab8b4edac7d02",
+      "original_git_blob": "5b72842675c61cb2924f25e93ffa967deeccd70b",
+      "bytes": 1303
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbRegistrationValidationTests.cs",
+      "sha256": "6a17d3db5b607c986bad09d194f9d2bd4677e61192e60a142652d9ee8efef9f0",
+      "original_git_blob": "d958de30ac4059c1d05fafc15af7d50895e8ea19",
+      "bytes": 11491
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbSagaFailureBoundaryTests.cs",
+      "sha256": "6447f425252e98e808477abd6020ab0672e48c382d7b7aa3dfafe2db67609e27",
+      "original_git_blob": "aaa35bb964e02d529fb3e3e8d6781e8bf856c7b6",
+      "bytes": 37077
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbSagaRepositoryConfigurationTests.cs",
+      "sha256": "168a74734ecbc59da0342c48adca4f607dd8afda377f3bd4700fff2b158bfdb0",
+      "original_git_blob": "81377117b52e4cc6e99fa8a599e8b1ba94d54cb2",
+      "bytes": 18760
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/ViciOne.ServiceBus.DynamoDb.Tests.csproj",
+      "sha256": "bdc220a9fe0ebcf82e1bf7cd26ae82884ffbe19ac564f4f12bdc48d5c6e5ddfd",
+      "original_git_blob": "7a6277651fa964380443ae064a420821b77a4fa5",
+      "bytes": 1269
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/packages.lock.json",
+      "sha256": "463045c4274ff96288c99e2ad242b72c4f5420e8eff2c0b3e0b0a37433ff0089",
+      "original_git_blob": "323a8ddff6dda4181eb1221b8251782b311f83e7",
+      "bytes": 18251
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "18dab8a33c92d5859b9de0bc49ebaa3934af5935cceb94f5a0a787f5208df06f",
+      "original_git_blob": "608cda584553d2c95d0f952f7b3ed78e11f221f9",
+      "bytes": 908
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkDeferredBusIntegrationTests.cs",
+      "sha256": "e5838a970e7dab72788549032bb74ec2ad3ecbf1843e608a73770a7af8d69ba5",
+      "original_git_blob": "50a907b41374303b55172882eaf6635f7443cc44",
+      "bytes": 11078
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyRetryTests.cs",
+      "sha256": "1c75693a0481112cd5774121214d6599b9ae171d332622673d590044288eedaf",
+      "original_git_blob": "1b3b8ee5401609f7e11fcb5477b654efeb7f600a",
+      "bytes": 9590
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkFuturePersistenceTests.cs",
+      "sha256": "309a89cefc43808b4a895a689be380c18e78fbd375f313d35fdb67b86105fd2f",
+      "original_git_blob": "ce3fd26371703e0f83132002e5db2a635b9a3e80",
+      "bytes": 29055
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkJobServiceIntegrationTests.cs",
+      "sha256": "3f3b245e4fe0391501e25900b065747b2bd85f0fa51fdfaaf6fbc6ddd0d31ddf",
+      "original_git_blob": "adfa0eda2f7750588240eb987a5da66487dc4cf1",
+      "bytes": 26173
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkRoutingSlipFuturePersistenceTests.cs",
+      "sha256": "b0a9d4b74d2caef21b3be87cd00c2eca20fbde62a9c47779b492b867a506bd23",
+      "original_git_blob": "be1d6ee268a9a540c06883c71645cc3d71b9e457",
+      "bytes": 11391
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkTransactionalOutboxSourceTests.cs",
+      "sha256": "ec6a5c9e05d10f1bdc308978b75571c978c5370c2ae8d0fe662077fbd4aa6c0a",
+      "original_git_blob": "d218b32752f8dd413aced18be5d0e626ec8317a2",
+      "bytes": 34344
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/InboxOutboxConcurrencyTests.cs",
+      "sha256": "1890795e235f74a6b6d93ec8ea820b960bf39a715f3187466dce0c281e3876ab",
+      "original_git_blob": "0aa71944751d09c8b638cada57e2672447be2af2",
+      "bytes": 16693
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/QuartzTransactionalOutboxTests.cs",
+      "sha256": "2138cbfb02b69c01e61cc50ecd9a219881db3a4e6d1dca2b2fc8f78dd79aed56",
+      "original_git_blob": "fe73966faa758207f9f8731320ffdaf9138804f1",
+      "bytes": 14998
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ReliableTransactionalOutboxTests.cs",
+      "sha256": "d488ae0966f092e70e06041ca3670e59d6038fa833f8412ecfd1b925ac50f5e6",
+      "original_git_blob": "c40d23d009415b86f538b12506c8f647520a54e7",
+      "bytes": 24362
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ScopedOutboxFilterTests.cs",
+      "sha256": "09a891ea3bdd142c55ca2696997466f4fb886bb1b2a3c2e5ea61e535aad2c654",
+      "original_git_blob": "388f779e2ca9209243f7d503528151abe612c5bc",
+      "bytes": 15695
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/TransactionalOutboxFaultTests.cs",
+      "sha256": "caada907c566e07d4d462a85c38578743a2d9dd62c0629e3577b5f517d8b4095",
+      "original_git_blob": "099342e7268718df8203c18d01009ea312f6f4ce",
+      "bytes": 16200
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/TransactionalOutboxRequestSagaTests.cs",
+      "sha256": "e0d9a733466abe1a2fee0fd963c7c350a92f178b1442711bc4df6a574efbd15e",
+      "original_git_blob": "989662e43457ba7b0f1b67d1699526083cc736f4",
+      "bytes": 23500
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/GlobalUsings.cs",
+      "sha256": "62cc542c5b7347739f5a337f7c0cbe07b41b84ba3ed83ff55835f116d058a480",
+      "original_git_blob": "d8e6efe7cc91aa7ba9838588d39079ac5740c944",
+      "bytes": 97
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Infrastructure/PostgreSqlTestDatabase.cs",
+      "sha256": "f3fb3e919c5ba4d3a38d7df9321857d363a96f472d8793945e55c2d6d18fc5a1",
+      "original_git_blob": "39cc8733d381701e4b8b4df567037de38468b414",
+      "bytes": 3457
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/MessageJournal/EntityFrameworkMessageJournalStoreTests.cs",
+      "sha256": "c1e5fa5b80ecabf45a197ab04f8f8816d4b6d9740a5f56dfdecf8aaed62423d9",
+      "original_git_blob": "141a1f5304f2477f46b3b57fb00ee865281043ef",
+      "bytes": 11704
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Outbox/ConsumerOutboxRecoveryTests.cs",
+      "sha256": "58b1742bc8f699e833488b4b5321676dd44fc9e0c4991e616807e413cf9a3751",
+      "original_git_blob": "524c89d13e3a2cffd94d3d74646bc46da1ab78bb",
+      "bytes": 32064
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Outbox/PostgreSqlReliableAdmissionTests.cs",
+      "sha256": "421488d3bbfcf1127c0cbe89f94244d66956091f5aed159c2d959dec10097d6b",
+      "original_git_blob": "17b3aed5963cc4dce59a9b7bed0ce4a669dbacd4",
+      "bytes": 11066
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Requirements/EntityFrameworkLocalIntegrationRequirements.json",
+      "sha256": "8d18c941def72a7997139f88ca4a231ec684e5a595f85b3b02c95b86db6c4955",
+      "original_git_blob": "79bb8826497686b0bc390b7d0353d2a145447d67",
+      "bytes": 28285
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "4793c4333b359d9e03030cc448e81267129296bc35096870f3012193fc26cdb7",
+      "original_git_blob": "cea2b22941791a2ed94d562651690f6461b85a56",
+      "bytes": 1302
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Saga/PostgreSqlPessimisticSagaLockTests.cs",
+      "sha256": "cd4d2239a20b98964936c3f4fe622abd59dc7329764bf9f42c4bb93d98421309",
+      "original_git_blob": "5400affa221c73a8d0ba885bb0ff9b8472735ffc",
+      "bytes": 4445
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Saga/PostgreSqlPessimisticSagaQueryCustomizationTests.cs",
+      "sha256": "86261e11b87e929bb67a0a22a3c8adfa3a9738897255cf8ad1523d35763e50c3",
+      "original_git_blob": "a93503c6ff649d411d135d3a7f4c9600ae044ac4",
+      "bytes": 11222
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Saga/PostgreSqlReadOnlySagaTests.cs",
+      "sha256": "e4b7b290dbf1c2e36b3182a89821b086894dc47d689f3007a027387f62459c64",
+      "original_git_blob": "3c1a7244665b1706c8da070c9b49c61eac356e4a",
+      "bytes": 6936
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Saga/PostgreSqlSagaConcurrencyTests.cs",
+      "sha256": "933424386cebf939d6567ba765ac22fbbe619e72b28adeb34444fba8bb64ced5",
+      "original_git_blob": "ad7124b3e67ca71d7cc1567a36d73d08615d4a30",
+      "bytes": 16117
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Saga/PostgreSqlSagaRepositoryIntegrationTests.cs",
+      "sha256": "457ad81e04b98a73e0987c6dde8802d2583a984adffbd60a47631758c817da93",
+      "original_git_blob": "c6025f12fba6ab83cf6732309e5e2b1841ad29eb",
+      "bytes": 18885
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.csproj",
+      "sha256": "fef1c3e57895c2fefb27bedb5ad09adbec837d03b4023bb0536f04efee1015ed",
+      "original_git_blob": "f1e5a9a8d63e97878d24d8c11f85d21ad6a2bd71",
+      "bytes": 2462
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "d4d528c5377db5181b5bfb97c3103ddfad1b4311b5e99ebbe90e724b6e50006f",
+      "original_git_blob": "76d4219e15608ea1ad5e0931a80736182e718bbb",
+      "bytes": 23603
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "1db6c20c1e230044ab8cd65cc0987439f583c726a4f03504fe6ca5dabeb782b9",
+      "original_git_blob": "e084973370666ef4a28be45eeb75262188ca8d5e",
+      "bytes": 815
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkJobServiceConfigurationTests.cs",
+      "sha256": "399622ffb3d049e88279e2579a4053a650c33db2c5cfbc1f61b850c3889b6f55",
+      "original_git_blob": "9cdf561d41039b56937bb6e1e949e6dd8f60663f",
+      "bytes": 4499
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOptionsStartupValidationTests.cs",
+      "sha256": "6eeb77d6adc60f95abb344aa271d462495fba602f823a56918da82693abe10e8",
+      "original_git_blob": "a620c819923a1efe720989cd9a70a701c2b1f89b",
+      "bytes": 2804
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkProviderConfigurationTests.cs",
+      "sha256": "cc13bf4f970c8f166b0e26b9285c3a63292beddd85242def538ff6297ad48d40",
+      "original_git_blob": "3b66706558fc232c0a7ff05ca5cdbb230f45678b",
+      "bytes": 32479
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkPublicArgumentValidationTests.cs",
+      "sha256": "065dce00e9fa5dac2d5e0470f0b80040dccf0acf3ddfbc4a8d1df4fb1a800e56",
+      "original_git_blob": "d14f15b796b8c9948d580f3761f8ca525a39a993",
+      "bytes": 4937
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkTestDatabaseNameTests.cs",
+      "sha256": "32708cd4a79feae8734c499bc3ae0969ba72de051b15d499535db6236a39879f",
+      "original_git_blob": "cbb28e573d7be5ecf16076794787e6a932c93d77",
+      "bytes": 1899
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkTimeProviderTests.cs",
+      "sha256": "bcddbd9dcc1f4cda31350ba2dd17783fa9609bf7b072ee74fc1d2ab2ff8feeec",
+      "original_git_blob": "96615bc84607d6858860d6ab8c0bfb67069dfc0f",
+      "bytes": 3171
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/JsonConversionContractTests.cs",
+      "sha256": "de7e0134a8627915730a75c647fff940f1e9fd4c79cbe04b95a60593c692d3ae",
+      "original_git_blob": "a3990f188e55a43d95172d0c75d3501fb850ffc5",
+      "bytes": 8684
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/DurableSend/EntityFrameworkDurableSendDurabilityTests.cs",
+      "sha256": "3bf352027da460cc6a4871ab4cfd9f1fe160fd81ee5c0aaa2c9cba89bd3ef6b8",
+      "original_git_blob": "414a87187fe28d6bfe759787798f809c662753ec",
+      "bytes": 7021
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/DurableSend/EntityFrameworkReliableStoreTests.cs",
+      "sha256": "bb6697997d80ec287b3671ffcb2576450853358c60ad05a10440dfefcb9f2ea6",
+      "original_git_blob": "f6e6b38f61121c5f860c6eb63cedabef0c658ffa",
+      "bytes": 91897
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyTests.cs",
+      "sha256": "31ccd19879c7ed675498412408d8c5ebde58e5790beb0645822e6e8f2b03ed46",
+      "original_git_blob": "4ab9e746b1c8ef519ce38679f78935df87aaa43c",
+      "bytes": 16629
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/MessageJournal/EntityFrameworkMessageJournalModelTests.cs",
+      "sha256": "a2ec9c00423bb8ef966ef7e338615e0b1cfd2492be2d2410525d2df2393d5782",
+      "original_git_blob": "889bf16dd72f191fbb0dbb6d9a63bcf69ab11295",
+      "bytes": 27246
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/BusOutboxDeliveryTelemetryTests.cs",
+      "sha256": "2c746bb1071327ae4af830f20d3008204af0889fd8366bc6f1d208f240857f01",
+      "original_git_blob": "f62ce8fc8c40e8d2d772cae8e5856a90cdd4198d",
+      "bytes": 5252
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/BusOutboxReliabilityStateTests.cs",
+      "sha256": "37e4b1839ceb5457871ad570fc67975dfca4a5aa6ae102bf5642c2dc490665ce",
+      "original_git_blob": "495666fa0f2cedab5247e5c0d478506c9384da35",
+      "bytes": 30950
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/ClassicEfOutboxCancellationTests.cs",
+      "sha256": "0c266ad56e231a700e0dc839b254a5f3bd1ed1a71a4c70087a16f322ba40f68e",
+      "original_git_blob": "292ca4f3a71fb357e44f2ee90dec1cd2b44f10a4",
+      "bytes": 18765
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkOutboxOperationsTests.cs",
+      "sha256": "9dc3428bb806943ef9e6b4b9175797eb7b678e8c593f82fdb1fe9e86ec3d39be",
+      "original_git_blob": "619c159e98fcb39bd49a9cf33518eacde45b4c0a",
+      "bytes": 26036
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkOutboxWriteCoordinatorTests.cs",
+      "sha256": "a10b06255690d70fcd6969dd22beb8e234c1831b347ca5425f4e3958c7bba3fa",
+      "original_git_blob": "580d3497a38db72e4991dcf5dec7321d5090a98c",
+      "bytes": 60891
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkReliableInboxPipelineTests.cs",
+      "sha256": "ffd9cdcd8d15d97fd049f4a69a842b6c516139055fc5c06bcbfe33dd76ccf04e",
+      "original_git_blob": "5707db656cd679324fa92656b4666613d11316a3",
+      "bytes": 64780
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkReliableMessagingRegistrationTests.cs",
+      "sha256": "ec11dff5eeae15f3d43339037fd646e8c36b6fd1b186fe7d662f82049fc637a4",
+      "original_git_blob": "32734479a0cce55ea45353ea09e4b17a3bc22f95",
+      "bytes": 14391
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkScopedBusContextProviderTests.cs",
+      "sha256": "eda9456ad244db864f04b8d5003853f810dbdb9523274fa742503c066fb11eac",
+      "original_git_blob": "4b4379f2fd70f8f8b042d8768b50f9d2ffd9a55f",
+      "bytes": 16261
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkTransactionalOutboxSourceTests.cs",
+      "sha256": "d565057bfd90899d368bc16669895d8a91725e932f316018037f8ed12e91a689",
+      "original_git_blob": "4c193bbe4885ba4db3048dd3d25167ec326d2074",
+      "bytes": 27718
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkTransactionalScopedBusContextTests.cs",
+      "sha256": "d7f02a27a67ffcdddd8c7783bd20f9797190c183c4da0be0be17869ea420a670",
+      "original_git_blob": "005ca112aaa2e72d7a37b3d4925701da71ddfee6",
+      "bytes": 48860
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/InboxCleanupServiceTests.cs",
+      "sha256": "ac9151e911cd0117cf680383fdee255cad48b74d30dd16e32191345cdbee641a",
+      "original_git_blob": "4536b694dbf6f32399eb6ead612248948a174666",
+      "bytes": 15113
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/MessagePackOutboxReplayTests.cs",
+      "sha256": "ecca53658b2793b4736bff71d2d4192c9724fb6aa9dd23224d9dd8f526abc4fe",
+      "original_git_blob": "0296cb823ed2f39bdd70e93395cf70607f999326",
+      "bytes": 8275
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/OutboxMessageFactoryTests.cs",
+      "sha256": "4e2cb25a0d0d2285f88b8728f713f23acb7a470f7fb845b02f72efe10892708d",
+      "original_git_blob": "083a6003a9f4ecbdf0833d37f3063f0e0ae1fe79",
+      "bytes": 11615
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/OutboxMessageTests.cs",
+      "sha256": "c5f3753c5744ea8ac9d5e579ea427ccf591bf58a411e91db14c815a8ed69bf20",
+      "original_git_blob": "e9a7c14328816bf2e9d963986b2f175d08113e59",
+      "bytes": 4546
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/EntityFrameworkRequirements.json",
+      "sha256": "27fd27db57d19388ef6e59e69c34f9ba9c35e63d829ca1ca5e3262efe1d1b298",
+      "original_git_blob": "dca133f11e94ed3f3c213d9113b5637015119c78",
+      "bytes": 102569
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "eecd0f7428421a48bf2c9f104820723764154af8ab61f18fb84240e95f1d6711",
+      "original_git_blob": "f12a188c8717777484474ef61a0a3e27910da572",
+      "bytes": 1236
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/DbContextSagaRepositoryContextTests.cs",
+      "sha256": "c8276bc3644962990c62e92f61d616406c703aabd0c89cb77d2f4102104ebc92",
+      "original_git_blob": "713906839a1685cdfbaeb0498213dd7f2b619044",
+      "bytes": 19453
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/EntityFrameworkSagaRepositoryFactoryTests.cs",
+      "sha256": "c50837c059b52f9538d19c286a9a0719909e872b344968529d89bd74e6ea1d8e",
+      "original_git_blob": "20113b1b9198a41512b8feb57cae339779442db6",
+      "bytes": 25088
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/EntityFrameworkSagaRollbackFailureTests.cs",
+      "sha256": "e82bb899fc49f571f26d7f310d476e49729d513204db0aa4a5c52e57619c1330",
+      "original_git_blob": "27ccefa32a66488e9785fa5893eca188c13a3298",
+      "bytes": 8941
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/SagaClassMapTests.cs",
+      "sha256": "c6d4ac87e2551f1de5337de754f3ac2d94f71a937ab83280d61bfbf52012c064",
+      "original_git_blob": "561a79102dc5f52f9db56d99afe00c73dd3c7531",
+      "bytes": 7603
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/SqliteOptimisticSagaConcurrencyTests.cs",
+      "sha256": "c3690aea62dd525bf966aa0346dd9f54eeb31d8e5e7d9d757eb7d64f0bd5aec3",
+      "original_git_blob": "c958494b7a288a08c78fa863e5139a8c3d8a4bae",
+      "bytes": 11997
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/SqlLockStatementProviderTests.cs",
+      "sha256": "2a562f5604fce0c227c4c07548523cefb0cb28009dcbca607fe82c49cb006903",
+      "original_git_blob": "396536941a8788a7f74fa2a2c1dd1fa84627ece0",
+      "bytes": 24674
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj",
+      "sha256": "9bd99c90560e9786a2f4a147d052acaa1628a636c8d9c1e4f7cbec5f51d52ecc",
+      "original_git_blob": "87a86ac3f2148a519b477bd4e43b88fe7015d1d3",
+      "bytes": 1902
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/packages.lock.json",
+      "sha256": "f0a75551e91331583dea2d3e541366645678ac696bfe6235aa59cb8355df8aef",
+      "original_git_blob": "dc1a047a25d4498df1db32947593ed717ad8370e",
+      "bytes": 33064
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzConfigurationContractTests.cs",
+      "sha256": "90a52d6370e11896c451d93e85dc5141660a0f23d88a8819c4aa70bf63c6daae",
+      "original_git_blob": "45023ac054a5ef495976db36f422a8ed0562d7f1",
+      "bytes": 7327
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzEndpointDefinitionTests.cs",
+      "sha256": "bf2b0493dc8f6ab44bafb59c934d801059704063a4ae44ce1f110741cc8aa8af",
+      "original_git_blob": "1403b7beb8efe8035b21668b6928267598950742",
+      "bytes": 4010
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzEndpointOptionsTests.cs",
+      "sha256": "cf367cd1290d7d196cf603266883c68b0ff7701c4b159c730597a80fb37ff196",
+      "original_git_blob": "9ba4f3bf0bd759e415f0bf76c496a03110156880",
+      "bytes": 866
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzOptionsValidationTests.cs",
+      "sha256": "dcb213af6b0cba3a7903767bddf501d95de29d6305fa829645ef5a7841a4ae56",
+      "original_git_blob": "b3911dbaf6922910a3b968fafd17cb1fc1976158",
+      "bytes": 2173
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulerLeaseTests.cs",
+      "sha256": "4c016c1d8fbd426336ee17dc41c9bf76d2153070a5fb9a143ebb77a0760817dc",
+      "original_git_blob": "234ea7a9bdc9ca623215089ec85271142e3fe20a",
+      "bytes": 10652
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulerNamespaceTests.cs",
+      "sha256": "2aa56c92a4ebd772c2ac52881af61711489ac16df6b602b195c9d2fbab9aa1d7",
+      "original_git_blob": "bd69fdc10aba3689d3b54e33f9650c4499cbcc30",
+      "bytes": 1892
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulerOptionsTests.cs",
+      "sha256": "e8d73999ad3594c3f1505902a463e86a65610f2ae854deed86eb0ab2acb1757b",
+      "original_git_blob": "7f061b73236ff786699583fb5713d668fb21b7d8",
+      "bytes": 9421
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulingExtensionsTests.cs",
+      "sha256": "cc53de1298178f3ff50bdf654802c7dbba4539a77640bee8deff6374424b8ba8",
+      "original_git_blob": "335a3b173d80ef8d6f70d85dab5e33570e1c1017",
+      "bytes": 6449
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/DirectQuartzSchedulerLifecycleObserverTests.cs",
+      "sha256": "cfcbe6bb387fdcab271b739351df9e6b6d5efb1d1288da8668599f9d97fd0470",
+      "original_git_blob": "f283a7df69b9105aad276e61f7f26d2ec4e4213f",
+      "bytes": 26153
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/JobService/QuartzJobServiceFaultIntegrationTests.cs",
+      "sha256": "f9693d0f0c09e7a7143b5888cedd89ea3d677dd62c18232b075bcd9626f61d0b",
+      "original_git_blob": "2ae885dfa67c49fd1dc5cdbc9924810b1f454602",
+      "bytes": 11919
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/JobService/QuartzJobServiceLifecycleIntegrationTests.cs",
+      "sha256": "a156fbf23632b737451d1c66fff42a4917b1b10773cf68fd0fc1da52c75b6f55",
+      "original_git_blob": "4c4e44450c601e3f9f7e4651415250f137b66b31",
+      "bytes": 21523
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/JobService/QuartzJobServiceSuspectAttemptIntegrationTests.cs",
+      "sha256": "ee416872727dd7a2d5ff64a89f1f44fdc60d3f2bc07d3bb312549af50ed18841",
+      "original_git_blob": "2ed2b33efebf816a51a1b592ff629346a5e8ab05",
+      "bytes": 19552
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzChainedSchedulingIntegrationTests.cs",
+      "sha256": "a4c2bc945c1a31704fe3b0ce74bfb45805b8715c1874af4f073bf00a6dd544ed",
+      "original_git_blob": "5e6ee56e86aa03a2ca390faf11003c2a9ba83249",
+      "bytes": 7645
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzContainerIntegrationTests.cs",
+      "sha256": "21ee07eacdeb6b1c6d7862120591ac651334b0ac46a9ffb0ca2e3a9d1c1b0d6b",
+      "original_git_blob": "26f8c69e683ca7179af319b8829fe545d53e43ae",
+      "bytes": 24105
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzCourierRedeliveryIntegrationTests.cs",
+      "sha256": "f41e454b5cd5618a0c0b812a1e833f3b1609c70983badbdc02d47f68024f0771",
+      "original_git_blob": "11df608a88e1e731943c9e318401ff7b2c9d50fe",
+      "bytes": 10195
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzExplicitRedeliveryIntegrationTests.cs",
+      "sha256": "a92c8dcb76afde994fcf185356993a887b8dc99c2353892d83a468bb7627d6b5",
+      "original_git_blob": "5cb9c93c560c325ab2985f43b2cd425b3cd7a28d",
+      "bytes": 5183
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzIntegrationCollection.cs",
+      "sha256": "7b0721373f7774f8f7948d9c5553e4f9b731854558c749b08f4f4de78588b0c3",
+      "original_git_blob": "02cea41101dec0c2677fbcf4fd8f007be46d4ff5",
+      "bytes": 235
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzMessagePackSchedulingTests.cs",
+      "sha256": "7fd4bec8306c6e848c7cad3beed15cc2b10906973cd8f78d9bcbbea9f5af8025",
+      "original_git_blob": "fff183504e7d993f4cdd208c052f6596f87936ec",
+      "bytes": 6248
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzMessageTypeListTests.cs",
+      "sha256": "6749a1466801a8d5aed09dcd974f2f73181d629eb50c2fefb44cfc3a6ab3d5fa",
+      "original_git_blob": "6f217b59068fc2161428e8a92483e7f665162c4b",
+      "bytes": 2354
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzMissingSagaRedeliveryIntegrationTests.cs",
+      "sha256": "483a91764b3ab714622d483267388443703595c37cb7197fb5b9cc600fa350bd",
+      "original_git_blob": "f79598c6fe7bd0e610b6334b365c742d89f62caf",
+      "bytes": 5741
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzMultiBusIntegrationTests.cs",
+      "sha256": "21beb623618e40f4a2ccb5799aff3db71a42f4daea18bf6d25fa8a8a055c5336",
+      "original_git_blob": "c2c81daf91ff55ee26c9366c7196ef5089c802ff",
+      "bytes": 9831
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzNestedRequestIntegrationTests.cs",
+      "sha256": "ea4936fbdcc15fc385f922a87f0356f923faa59625cb936d33eac05f3c03a823",
+      "original_git_blob": "dcc5d34623d0c512db12082ba4aca2aaaa50b0b7",
+      "bytes": 10036
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzOutboxSchedulingIntegrationTests.cs",
+      "sha256": "5a2f85417f94633254792de01ce3ba2ae4ee23e687836c1f6232e610b2dfc2bc",
+      "original_git_blob": "3583f6ceebb2aa6deb073143309449b064caae10",
+      "bytes": 4569
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzPersistentStoreAcceptanceTests.cs",
+      "sha256": "18a88565d020df2c82ce31f8cce2dfb6789dce67c0566883df2f92dbbf42dec5",
+      "original_git_blob": "ab729578c351381e5b14ceea28490b624b86a25c",
+      "bytes": 10040
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzRecurringDeliveryIntegrationTests.cs",
+      "sha256": "1a727fbe14b424f064a5e448bd36c08a494a0f9ab836676aad39ca2ac42c0571",
+      "original_git_blob": "5edbb072b37deec3cc806c50912da6bf0d0eb403",
+      "bytes": 5634
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaIdRequestIntegrationTests.cs",
+      "sha256": "1c252427a6f904d46f5e5645e11d326ab1205c077c51fff8164a51ee1f093b45",
+      "original_git_blob": "22dfdc8d4e94a671ce2fb20b11c176da399369fc",
+      "bytes": 37397
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaRequestGenerationIntegrationTests.cs",
+      "sha256": "abdee3915b26f58199491841a616de2f761a74596ad4b0f45beaf7b96bd5c654",
+      "original_git_blob": "48606c698405c1c3e16d79a8029f1b4f30445cf9",
+      "bytes": 23643
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaRequestTimeoutIntegrationTests.cs",
+      "sha256": "9c601dd75f719b5a53a3dd9e756f61f634dbf0297e843963fba8ddd110d2227d",
+      "original_git_blob": "21a56f280e05c19d091a4a8a8f9008ba103251c3",
+      "bytes": 11122
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaSchedulingIntegrationTests.cs",
+      "sha256": "48cc9edbd479f7cb976d929483ab692669c237b5212461a2ea62ac85b1e1158c",
+      "original_git_blob": "40ec54a523c6f72315f85534bd25456ed1ab454d",
+      "bytes": 22546
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduleSerializationBoundaryTests.cs",
+      "sha256": "035fcfaecc370bbea2a38d2253ecd9faee010333d0c1e44d4049055aeebc85dd",
+      "original_git_blob": "018b3f239ffc20adb9679a4889a8ba13e9c81854",
+      "bytes": 6866
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduleTimingIntegrationTests.cs",
+      "sha256": "08ed0e49016ae9f4b6159204dbf3db294b8719fad3ef5bd932edaf6220d78d96",
+      "original_git_blob": "15590e61ccdd6cdcf6c07989f30730c46ba90c7b",
+      "bytes": 8421
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduledMessageContextTests.cs",
+      "sha256": "ddc2791bc8236f1297dde4b4f703688257991764ad2cab6a7c354b76f8327753",
+      "original_git_blob": "b3a05c816db219385a767cad81cd1ad2c8a418aa",
+      "bytes": 21082
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduledMessageJobTests.cs",
+      "sha256": "70697bc53685503aabd806da50f88e82037f1ffd889f66e253d76a695ec7fc7d",
+      "original_git_blob": "ba41673702e1ba571d92ad7c454c7145161cf690",
+      "bytes": 16307
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduledMessageSendPipeTests.cs",
+      "sha256": "891521c46acc7c921e9e2ac70f34563bb038f18d8805000a532d05ca822d55d9",
+      "original_git_blob": "5001cfb306599db75d8f355efb653db22c3c92b6",
+      "bytes": 12062
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduledRedeliveryIntegrationTests.cs",
+      "sha256": "74221a210ea5d1567cb45890e6e5e1f3eb3fd08f373ef2db916fad17cf3b8a84",
+      "original_git_blob": "0cf1eb9c05af0c043967c529cd17fa2f17e51f1e",
+      "bytes": 7310
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduledRedeliveryScopeTests.cs",
+      "sha256": "1fe2318aa99b10c344648fda807d1ef690a26995a27b19f59f8f28590f2115e1",
+      "original_git_blob": "cf17fe22d069ca139ed77e9d0f7910bac52ad882",
+      "bytes": 5064
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSchedulerLifecycleObserverTests.cs",
+      "sha256": "74e48896e8752fe5192b1022096fca6beba8c21cc87f9dd57b73b9b83b6e1b38",
+      "original_git_blob": "1f444434e899c11c04c6b4402f0e04ecb8123887",
+      "bytes": 20003
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSchedulingCommandValidationTests.cs",
+      "sha256": "ceee90d2f75f9d3fcdd238529fd3a22a136e68d1abad57fec0cf16f213c84f6f",
+      "original_git_blob": "91e42aaccf6651b348ad4197608c28d8ba515936",
+      "bytes": 15813
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzTriggerKeyTests.cs",
+      "sha256": "272d7599d68abb873ec6d450d2fd9178dda90579c1fc42f9119668b5b8fd5d82",
+      "original_git_blob": "394dc98d7dbb0a978aabc7f8aa7e97b677c64590",
+      "bytes": 4944
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/RecurringReplacementIntegrityTests.cs",
+      "sha256": "cd9edc7f384e95e4df289a13b2752018e70a5e2c6bd3914997cd11a7e077fd5a",
+      "original_git_blob": "1230626fbf72b75d2acb61c232d744939afc5477",
+      "bytes": 16441
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/ScheduledMessageExpirationTests.cs",
+      "sha256": "07ebd1839f50e1877f9aa823249e0fbf998838ccbb09a76e68906c8c4fcd5920",
+      "original_git_blob": "bde067b947d2410fd0e3329f500af8ba9980791a",
+      "bytes": 1927
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/SchedulerCommandIntegrationTests.cs",
+      "sha256": "33a2dacd738038d0b3800cd28bc8475df8f50a95aa0f056c425d88332e4a66a3",
+      "original_git_blob": "df137229178b5266bf4c87ed0c5a5db83d7a037f",
+      "bytes": 35107
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/InheritedBehaviorDispositionTests.cs",
+      "sha256": "c68b6762f240d76d35e1fe14991d965936641b12f5a38f2fc72f22d16cbb8451",
+      "original_git_blob": "fd63d427858fd695bef66974fa675e4bc5c24191",
+      "bytes": 6743
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "sha256": "94bc2685911d8ec37fb34337e0c35024bac8d14218f3f6832a37897ec91c89fb",
+      "original_git_blob": "ccb7ccd35e13de62d89458994f6256f5c11f7b2e",
+      "bytes": 69418
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/QuartzIntegrationRequirements.json",
+      "sha256": "7565d338788aca51b5afc94518c9d24bbd2454b50c45961d73f6fa5431561f90",
+      "original_git_blob": "ac268117fd7ec3235bce95472b044eeee3ced266",
+      "bytes": 58545
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "6d96dfdee5ab35fd3e86dbfaf234c596d559438c2b19f1e1034aa1abcc9b76e7",
+      "original_git_blob": "65a6a04ffec0b455e9f4a36d8373d970284baeba",
+      "bytes": 1214
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Testing/ConsumeCompletionObserver.cs",
+      "sha256": "3e53b10d2a4fffa8c3eae55f62b363d54f82e76e2aa6c291671a633a95ec0320",
+      "original_git_blob": "afe0a8050d61c24f7fd878f6f4ca84c676e50c9b",
+      "bytes": 1478
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Testing/QuartzJobServiceTestBus.cs",
+      "sha256": "f5c4dafea784d81cc336c638b9ca20e414bd5cd07de7817f816dc0d519382fa7",
+      "original_git_blob": "8c6d74c471dd755bccb96bb0dc2ba5a5773e133d",
+      "bytes": 1573
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Testing/QuartzTestBus.cs",
+      "sha256": "a493b6d44b5767f20d313cfcde664b7cc2156c19a67d3f3fbf1cd990b1c99719",
+      "original_git_blob": "3509dd1f36052a6bd5209bee6654cb9fa98a45ca",
+      "bytes": 3811
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Testing/ScheduledMessageCapture.cs",
+      "sha256": "9cecfb4e188808e9fe0b9a02cb9c4aee2a589ab44dac7f96e2c105291cdb7e17",
+      "original_git_blob": "8597b7d51cd600a545579ab004d7f52af9a2a059",
+      "bytes": 1630
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Testing/ScheduledMessageSequenceCapture.cs",
+      "sha256": "b82c3ea746e56aa1df4d72014203a52a90c5f4f07f10386d91277988049ef946",
+      "original_git_blob": "88d0be82e2f892d42b7768c9562a3be8f2513bbe",
+      "bytes": 2371
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/ViciOne.ServiceBus.Quartz.Tests.csproj",
+      "sha256": "53e60b7368de1e22ef228ef1bceea67af344d51824bf2237a3cbee76ecb78be1",
+      "original_git_blob": "3667e12998fdf3371533f497d70e1955ca3e09c0",
+      "bytes": 2067
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/packages.lock.json",
+      "sha256": "e4420f6290c629973f97263cc808a2091a32d822525020a9a8e37c3b815fbd4e",
+      "original_git_blob": "61fe8c42eb114621216140895dc26e1586b18c55",
+      "bytes": 22220
+    }
+  ],
+  "lossless_interval_counterproof": [
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "46df372db0f9225e84a1a7b4e7ba7e925a61eab95824334a2cf4b8a122914a4b",
+      "parts": [
+        0,
+        1
+      ],
+      "whole_bytes": 16389
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.csproj",
+      "sha256": "a944186a0403dc58270685d5d9ce6e300f92b9ff74bcb7214a733e47ef77868b",
+      "parts": [
+        2
+      ],
+      "whole_bytes": 1178
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "e078295de5b87a3e624b903a18e8faf800f1ade250fd83d61554b2a3f3c57ba2",
+      "parts": [
+        3,
+        4
+      ],
+      "whole_bytes": 19273
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/ViciOne.ServiceBus.Azure.Storage.Tests.csproj",
+      "sha256": "f50d98f8bf3a2e693b3b2dc297c9b4c85451b55fbeb96f2ba8fc89e0fd45ba72",
+      "parts": [
+        5
+      ],
+      "whole_bytes": 1058
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.Tests/packages.lock.json",
+      "sha256": "9f8393f0b774fe0ae34bf0e21cabe99cc7fd63a66c61db173fd0b34686762b01",
+      "parts": [
+        6,
+        7
+      ],
+      "whole_bytes": 19284
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Courier/AzureTableRoutingSlipFuturePersistenceTests.cs",
+      "sha256": "96cd55580ea2abdc20b1df78870fb7affc412d8b378c763355cf5ddc99028b78",
+      "parts": [
+        8
+      ],
+      "whole_bytes": 11121
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Futures/AzureTableFuturePersistenceTests.cs",
+      "sha256": "13bf6b0e153633fe30bd5e184a69f6240590b86489a8d77af5a482d62f4d16e8",
+      "parts": [
+        9,
+        10,
+        11
+      ],
+      "whole_bytes": 28757
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/JobService/AzureTableJobServiceIntegrationTests.cs",
+      "sha256": "b205f605b20151f178f344b1925da11ec05f9864c51457db714fe42581f5edf2",
+      "parts": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "whole_bytes": 36172
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/JobService/AzureTableJobServiceRepositoryConfigurationTests.cs",
+      "sha256": "c6ea18c31b165894dd2b5458f0ea85cefd2e01a17912e32bc19944490475a652",
+      "parts": [
+        16
+      ],
+      "whole_bytes": 5445
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/AzureTableLocalIntegrationRequirements.json",
+      "sha256": "009cc1e84bb42b01a40b51c83657e34df23153d4667dfcf9c239af63eb8b6ad5",
+      "parts": [
+        17,
+        18
+      ],
+      "whole_bytes": 15349
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "f1ce61b3f29127792f311be4d94b7fa0fcf115db0de998afa84b997933a9f76e",
+      "parts": [
+        19
+      ],
+      "whole_bytes": 1384
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaConcurrencyTests.cs",
+      "sha256": "ab9ee11b985215def19f128735dc727fe0ef0239e0915f710ca384755dfb80a6",
+      "parts": [
+        20,
+        21
+      ],
+      "whole_bytes": 12143
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaEntityConversionIntegrationTests.cs",
+      "sha256": "52033d10d2ddb140e3f83c60cc114ff4a6d64b37634649ae24760a299a4fa129",
+      "parts": [
+        22
+      ],
+      "whole_bytes": 5093
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaIntegrityTests.cs",
+      "sha256": "5683073cf758f9579ea2aeb93d7e151176bf748d43fda51344e89840e0566f17",
+      "parts": [
+        23,
+        24
+      ],
+      "whole_bytes": 15349
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaRepositoryIntegrationTests.cs",
+      "sha256": "4a7c57d97a63a8d9e1cafdb2e168140b6c8c3e8fec04608068f4292bb07e4a7d",
+      "parts": [
+        25,
+        26
+      ],
+      "whole_bytes": 14122
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Saga/AzureTableSagaStorageBoundaryTests.cs",
+      "sha256": "b21c537ab8ab0a6b0ef23392e12140d800a5ea6b0dd1ffc1e8b537dda705135c",
+      "parts": [
+        27
+      ],
+      "whole_bytes": 7989
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.csproj",
+      "sha256": "97be89dac4e4ce3a34bb83ed323ec85081d941795aa532e1fd1c82580b2168bc",
+      "parts": [
+        28
+      ],
+      "whole_bytes": 2120
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "ec24801a2d8574936cfecb413f920f838d777e47539e02b9be30f63aa1529bf8",
+      "parts": [
+        29,
+        30
+      ],
+      "whole_bytes": 21495
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Configuration/AzureTableConfigurationContractTests.cs",
+      "sha256": "0a4121ced7bda1adc281036fbff81739b295e33297c2ed7e42c4595f510829af",
+      "parts": [
+        31,
+        32,
+        33
+      ],
+      "whole_bytes": 26555
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/AzureTableRequirements.json",
+      "sha256": "396cf820fe679811c00c6570d8d243261117631f8f48e9eaff35f0da30d966c6",
+      "parts": [
+        34,
+        35
+      ],
+      "whole_bytes": 15194
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "582a3fd8ef87e46ef22321ca9283029c46abd5eb2c389df2692d2e96785f4cf4",
+      "parts": [
+        36
+      ],
+      "whole_bytes": 1312
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/AzureTableEntityConverterTests.cs",
+      "sha256": "99e667e3748147628ce0dd2ba0932d9ccf188cd1230eff7c0a099d520b2a3f24",
+      "parts": [
+        37,
+        38,
+        39
+      ],
+      "whole_bytes": 25383
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/AzureTableSagaKeyFormatterTests.cs",
+      "sha256": "4973ebe40d9cbe0fd945f17fff7d3a902093f2a797585419509cdb4c6540efbe",
+      "parts": [
+        40
+      ],
+      "whole_bytes": 3648
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Saga/AzureTableSagaRepositoryBoundaryTests.cs",
+      "sha256": "8c90af07eee986c528cd6d921fce0eaba6a4400325b9c5008da5b7f3ff6f824c",
+      "parts": [
+        41,
+        42,
+        43
+      ],
+      "whole_bytes": 30408
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+      "sha256": "5d6a6ab3ae7cbfb0aba7dc252a03c4e510db592e39a13f73c892d67c213071f6",
+      "parts": [
+        44
+      ],
+      "whole_bytes": 1312
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/packages.lock.json",
+      "sha256": "59b77f202bdc7816e25ffa7e2e280dd2f1c0a6cb79d9c6e3d0a6a7d3cb1e7118",
+      "parts": [
+        45,
+        46
+      ],
+      "whole_bytes": 20012
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Infrastructure/DynamoDbTestTable.cs",
+      "sha256": "c5995057860a4d6add0628178f2e8bc1f0eabc183cd9cabe62dba73f5784cf0d",
+      "parts": [
+        47
+      ],
+      "whole_bytes": 5193
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Requirements/DynamoDbLocalIntegrationRequirements.json",
+      "sha256": "eccbebd002053beadcca00adf24c8a78f9a6bca209ac348c0a8942c9bd26c617",
+      "parts": [
+        48
+      ],
+      "whole_bytes": 3384
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "45b72057b0b30ba7745b33b49a949071dfc2d69aaf07e7539a632dda616f3936",
+      "parts": [
+        49
+      ],
+      "whole_bytes": 1375
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Saga/DynamoDbSagaConcurrencyTests.cs",
+      "sha256": "6a2771e84ac45434ead61958e1e8f94f6c50afc8bfc0f73d192f613c1a4484d1",
+      "parts": [
+        50,
+        51
+      ],
+      "whole_bytes": 15014
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Saga/DynamoDbSagaConfigurationTests.cs",
+      "sha256": "417dacd2555c246869df6119f69fc6122086ed77d4ab8c612624a317ab5eebb3",
+      "parts": [
+        52
+      ],
+      "whole_bytes": 2896
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Saga/DynamoDbSagaExpirationTests.cs",
+      "sha256": "51d8177f847e889907776a60ec91931f2fd7192baeb790c5cf4f0d745c6eaa66",
+      "parts": [
+        53
+      ],
+      "whole_bytes": 3475
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/Saga/DynamoDbSagaPersistenceTests.cs",
+      "sha256": "05be3495d62c3013f633ae693cd1d050430a37445a30b1ac5ea347c6e3a52933",
+      "parts": [
+        54
+      ],
+      "whole_bytes": 8484
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.csproj",
+      "sha256": "8a86356936843e1480b29b341c1ca63b517f61475baf72d5ac79fa0976e6e6c8",
+      "parts": [
+        55
+      ],
+      "whole_bytes": 1575
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "9be76f61b67dd6ddbab9ed26fdc08f75fbc65745b770c0fe3dcddb157abbbbc2",
+      "parts": [
+        56,
+        57
+      ],
+      "whole_bytes": 18521
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Requirements/DynamoDbRequirements.json",
+      "sha256": "c08c103f1b15814e89b6ca75fb547a7e7f06923841ecab349e3a60e7da264d22",
+      "parts": [
+        58
+      ],
+      "whole_bytes": 8427
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "5b0d4d4626d62918090b53af85c39973d98d79c6a906f8819e4ab8b4edac7d02",
+      "parts": [
+        59
+      ],
+      "whole_bytes": 1303
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbRegistrationValidationTests.cs",
+      "sha256": "6a17d3db5b607c986bad09d194f9d2bd4677e61192e60a142652d9ee8efef9f0",
+      "parts": [
+        60
+      ],
+      "whole_bytes": 11491
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbSagaFailureBoundaryTests.cs",
+      "sha256": "6447f425252e98e808477abd6020ab0672e48c382d7b7aa3dfafe2db67609e27",
+      "parts": [
+        61,
+        62,
+        63,
+        64
+      ],
+      "whole_bytes": 37077
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbSagaRepositoryConfigurationTests.cs",
+      "sha256": "168a74734ecbc59da0342c48adca4f607dd8afda377f3bd4700fff2b158bfdb0",
+      "parts": [
+        65,
+        66
+      ],
+      "whole_bytes": 18760
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/ViciOne.ServiceBus.DynamoDb.Tests.csproj",
+      "sha256": "bdc220a9fe0ebcf82e1bf7cd26ae82884ffbe19ac564f4f12bdc48d5c6e5ddfd",
+      "parts": [
+        67
+      ],
+      "whole_bytes": 1269
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/packages.lock.json",
+      "sha256": "463045c4274ff96288c99e2ad242b72c4f5420e8eff2c0b3e0b0a37433ff0089",
+      "parts": [
+        68,
+        69
+      ],
+      "whole_bytes": 18251
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "18dab8a33c92d5859b9de0bc49ebaa3934af5935cceb94f5a0a787f5208df06f",
+      "parts": [
+        70
+      ],
+      "whole_bytes": 908
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkDeferredBusIntegrationTests.cs",
+      "sha256": "e5838a970e7dab72788549032bb74ec2ad3ecbf1843e608a73770a7af8d69ba5",
+      "parts": [
+        71
+      ],
+      "whole_bytes": 11078
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyRetryTests.cs",
+      "sha256": "1c75693a0481112cd5774121214d6599b9ae171d332622673d590044288eedaf",
+      "parts": [
+        72
+      ],
+      "whole_bytes": 9590
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkFuturePersistenceTests.cs",
+      "sha256": "309a89cefc43808b4a895a689be380c18e78fbd375f313d35fdb67b86105fd2f",
+      "parts": [
+        73,
+        74,
+        75
+      ],
+      "whole_bytes": 29055
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkJobServiceIntegrationTests.cs",
+      "sha256": "3f3b245e4fe0391501e25900b065747b2bd85f0fa51fdfaaf6fbc6ddd0d31ddf",
+      "parts": [
+        76,
+        77,
+        78
+      ],
+      "whole_bytes": 26173
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkRoutingSlipFuturePersistenceTests.cs",
+      "sha256": "b0a9d4b74d2caef21b3be87cd00c2eca20fbde62a9c47779b492b867a506bd23",
+      "parts": [
+        79
+      ],
+      "whole_bytes": 11391
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkTransactionalOutboxSourceTests.cs",
+      "sha256": "ec6a5c9e05d10f1bdc308978b75571c978c5370c2ae8d0fe662077fbd4aa6c0a",
+      "parts": [
+        80,
+        81,
+        82
+      ],
+      "whole_bytes": 34344
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/InboxOutboxConcurrencyTests.cs",
+      "sha256": "1890795e235f74a6b6d93ec8ea820b960bf39a715f3187466dce0c281e3876ab",
+      "parts": [
+        83,
+        84
+      ],
+      "whole_bytes": 16693
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/QuartzTransactionalOutboxTests.cs",
+      "sha256": "2138cbfb02b69c01e61cc50ecd9a219881db3a4e6d1dca2b2fc8f78dd79aed56",
+      "parts": [
+        85,
+        86
+      ],
+      "whole_bytes": 14998
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ReliableTransactionalOutboxTests.cs",
+      "sha256": "d488ae0966f092e70e06041ca3670e59d6038fa833f8412ecfd1b925ac50f5e6",
+      "parts": [
+        87,
+        88,
+        89
+      ],
+      "whole_bytes": 24362
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ScopedOutboxFilterTests.cs",
+      "sha256": "09a891ea3bdd142c55ca2696997466f4fb886bb1b2a3c2e5ea61e535aad2c654",
+      "parts": [
+        90,
+        91
+      ],
+      "whole_bytes": 15695
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/EntityFrameworkCoreIntegration/TransactionalOutboxFaultTests.cs",
+      "sha256": "caada907c566e07d4d462a85c38578743a2d9dd62c0629e3577b5f517d8b4095",
+      "parts": [
+        92,
+        93
+      ],
+      "whole_bytes": 16200
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/GlobalUsings.cs",
+      "sha256": "62cc542c5b7347739f5a337f7c0cbe07b41b84ba3ed83ff55835f116d058a480",
+      "parts": [
+        94
+      ],
+      "whole_bytes": 97
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Outbox/ConsumerOutboxRecoveryTests.cs",
+      "sha256": "58b1742bc8f699e833488b4b5321676dd44fc9e0c4991e616807e413cf9a3751",
+      "parts": [
+        95,
+        96,
+        97
+      ],
+      "whole_bytes": 32064
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Outbox/PostgreSqlReliableAdmissionTests.cs",
+      "sha256": "421488d3bbfcf1127c0cbe89f94244d66956091f5aed159c2d959dec10097d6b",
+      "parts": [
+        98
+      ],
+      "whole_bytes": 11066
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Requirements/EntityFrameworkLocalIntegrationRequirements.json",
+      "sha256": "8d18c941def72a7997139f88ca4a231ec684e5a595f85b3b02c95b86db6c4955",
+      "parts": [
+        99,
+        100,
+        101
+      ],
+      "whole_bytes": 28285
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "4793c4333b359d9e03030cc448e81267129296bc35096870f3012193fc26cdb7",
+      "parts": [
+        102
+      ],
+      "whole_bytes": 1302
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Saga/PostgreSqlPessimisticSagaLockTests.cs",
+      "sha256": "cd4d2239a20b98964936c3f4fe622abd59dc7329764bf9f42c4bb93d98421309",
+      "parts": [
+        103
+      ],
+      "whole_bytes": 4445
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Saga/PostgreSqlPessimisticSagaQueryCustomizationTests.cs",
+      "sha256": "86261e11b87e929bb67a0a22a3c8adfa3a9738897255cf8ad1523d35763e50c3",
+      "parts": [
+        104
+      ],
+      "whole_bytes": 11222
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Saga/PostgreSqlReadOnlySagaTests.cs",
+      "sha256": "e4b7b290dbf1c2e36b3182a89821b086894dc47d689f3007a027387f62459c64",
+      "parts": [
+        105
+      ],
+      "whole_bytes": 6936
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Saga/PostgreSqlSagaConcurrencyTests.cs",
+      "sha256": "933424386cebf939d6567ba765ac22fbbe619e72b28adeb34444fba8bb64ced5",
+      "parts": [
+        106,
+        107
+      ],
+      "whole_bytes": 16117
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Saga/PostgreSqlSagaRepositoryIntegrationTests.cs",
+      "sha256": "457ad81e04b98a73e0987c6dde8802d2583a984adffbd60a47631758c817da93",
+      "parts": [
+        108,
+        109
+      ],
+      "whole_bytes": 18885
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.csproj",
+      "sha256": "fef1c3e57895c2fefb27bedb5ad09adbec837d03b4023bb0536f04efee1015ed",
+      "parts": [
+        110
+      ],
+      "whole_bytes": 2462
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "d4d528c5377db5181b5bfb97c3103ddfad1b4311b5e99ebbe90e724b6e50006f",
+      "parts": [
+        111,
+        112,
+        113
+      ],
+      "whole_bytes": 23603
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzConfigurationContractTests.cs",
+      "sha256": "90a52d6370e11896c451d93e85dc5141660a0f23d88a8819c4aa70bf63c6daae",
+      "parts": [
+        114
+      ],
+      "whole_bytes": 7327
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzEndpointDefinitionTests.cs",
+      "sha256": "bf2b0493dc8f6ab44bafb59c934d801059704063a4ae44ce1f110741cc8aa8af",
+      "parts": [
+        115
+      ],
+      "whole_bytes": 4010
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzEndpointOptionsTests.cs",
+      "sha256": "cf367cd1290d7d196cf603266883c68b0ff7701c4b159c730597a80fb37ff196",
+      "parts": [
+        116
+      ],
+      "whole_bytes": 866
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzOptionsValidationTests.cs",
+      "sha256": "dcb213af6b0cba3a7903767bddf501d95de29d6305fa829645ef5a7841a4ae56",
+      "parts": [
+        117
+      ],
+      "whole_bytes": 2173
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulerLeaseTests.cs",
+      "sha256": "4c016c1d8fbd426336ee17dc41c9bf76d2153070a5fb9a143ebb77a0760817dc",
+      "parts": [
+        118
+      ],
+      "whole_bytes": 10652
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulerNamespaceTests.cs",
+      "sha256": "2aa56c92a4ebd772c2ac52881af61711489ac16df6b602b195c9d2fbab9aa1d7",
+      "parts": [
+        119
+      ],
+      "whole_bytes": 1892
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulerOptionsTests.cs",
+      "sha256": "e8d73999ad3594c3f1505902a463e86a65610f2ae854deed86eb0ab2acb1757b",
+      "parts": [
+        120
+      ],
+      "whole_bytes": 9421
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulingExtensionsTests.cs",
+      "sha256": "cc53de1298178f3ff50bdf654802c7dbba4539a77640bee8deff6374424b8ba8",
+      "parts": [
+        121
+      ],
+      "whole_bytes": 6449
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/DirectQuartzSchedulerLifecycleObserverTests.cs",
+      "sha256": "cfcbe6bb387fdcab271b739351df9e6b6d5efb1d1288da8668599f9d97fd0470",
+      "parts": [
+        122,
+        123,
+        124
+      ],
+      "whole_bytes": 26153
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/JobService/QuartzJobServiceFaultIntegrationTests.cs",
+      "sha256": "f9693d0f0c09e7a7143b5888cedd89ea3d677dd62c18232b075bcd9626f61d0b",
+      "parts": [
+        125,
+        126
+      ],
+      "whole_bytes": 11919
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/JobService/QuartzJobServiceLifecycleIntegrationTests.cs",
+      "sha256": "a156fbf23632b737451d1c66fff42a4917b1b10773cf68fd0fc1da52c75b6f55",
+      "parts": [
+        127,
+        128
+      ],
+      "whole_bytes": 21523
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/JobService/QuartzJobServiceSuspectAttemptIntegrationTests.cs",
+      "sha256": "ee416872727dd7a2d5ff64a89f1f44fdc60d3f2bc07d3bb312549af50ed18841",
+      "parts": [
+        129,
+        130
+      ],
+      "whole_bytes": 19552
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzChainedSchedulingIntegrationTests.cs",
+      "sha256": "a4c2bc945c1a31704fe3b0ce74bfb45805b8715c1874af4f073bf00a6dd544ed",
+      "parts": [
+        131
+      ],
+      "whole_bytes": 7645
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzContainerIntegrationTests.cs",
+      "sha256": "21ee07eacdeb6b1c6d7862120591ac651334b0ac46a9ffb0ca2e3a9d1c1b0d6b",
+      "parts": [
+        132,
+        133,
+        134
+      ],
+      "whole_bytes": 24105
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzCourierRedeliveryIntegrationTests.cs",
+      "sha256": "f41e454b5cd5618a0c0b812a1e833f3b1609c70983badbdc02d47f68024f0771",
+      "parts": [
+        135
+      ],
+      "whole_bytes": 10195
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzExplicitRedeliveryIntegrationTests.cs",
+      "sha256": "a92c8dcb76afde994fcf185356993a887b8dc99c2353892d83a468bb7627d6b5",
+      "parts": [
+        136
+      ],
+      "whole_bytes": 5183
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzIntegrationCollection.cs",
+      "sha256": "7b0721373f7774f8f7948d9c5553e4f9b731854558c749b08f4f4de78588b0c3",
+      "parts": [
+        137
+      ],
+      "whole_bytes": 235
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzMessagePackSchedulingTests.cs",
+      "sha256": "7fd4bec8306c6e848c7cad3beed15cc2b10906973cd8f78d9bcbbea9f5af8025",
+      "parts": [
+        138
+      ],
+      "whole_bytes": 6248
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzMessageTypeListTests.cs",
+      "sha256": "6749a1466801a8d5aed09dcd974f2f73181d629eb50c2fefb44cfc3a6ab3d5fa",
+      "parts": [
+        139
+      ],
+      "whole_bytes": 2354
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzMissingSagaRedeliveryIntegrationTests.cs",
+      "sha256": "483a91764b3ab714622d483267388443703595c37cb7197fb5b9cc600fa350bd",
+      "parts": [
+        140
+      ],
+      "whole_bytes": 5741
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzMultiBusIntegrationTests.cs",
+      "sha256": "21beb623618e40f4a2ccb5799aff3db71a42f4daea18bf6d25fa8a8a055c5336",
+      "parts": [
+        141
+      ],
+      "whole_bytes": 9831
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzNestedRequestIntegrationTests.cs",
+      "sha256": "ea4936fbdcc15fc385f922a87f0356f923faa59625cb936d33eac05f3c03a823",
+      "parts": [
+        142
+      ],
+      "whole_bytes": 10036
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzOutboxSchedulingIntegrationTests.cs",
+      "sha256": "5a2f85417f94633254792de01ce3ba2ae4ee23e687836c1f6232e610b2dfc2bc",
+      "parts": [
+        143
+      ],
+      "whole_bytes": 4569
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzPersistentStoreAcceptanceTests.cs",
+      "sha256": "18a88565d020df2c82ce31f8cce2dfb6789dce67c0566883df2f92dbbf42dec5",
+      "parts": [
+        144
+      ],
+      "whole_bytes": 10040
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzRecurringDeliveryIntegrationTests.cs",
+      "sha256": "1a727fbe14b424f064a5e448bd36c08a494a0f9ab836676aad39ca2ac42c0571",
+      "parts": [
+        145
+      ],
+      "whole_bytes": 5634
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaIdRequestIntegrationTests.cs",
+      "sha256": "1c252427a6f904d46f5e5645e11d326ab1205c077c51fff8164a51ee1f093b45",
+      "parts": [
+        146,
+        147,
+        148,
+        149
+      ],
+      "whole_bytes": 37397
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaRequestGenerationIntegrationTests.cs",
+      "sha256": "abdee3915b26f58199491841a616de2f761a74596ad4b0f45beaf7b96bd5c654",
+      "parts": [
+        150,
+        151,
+        152
+      ],
+      "whole_bytes": 23643
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaRequestTimeoutIntegrationTests.cs",
+      "sha256": "9c601dd75f719b5a53a3dd9e756f61f634dbf0297e843963fba8ddd110d2227d",
+      "parts": [
+        153
+      ],
+      "whole_bytes": 11122
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSagaSchedulingIntegrationTests.cs",
+      "sha256": "48cc9edbd479f7cb976d929483ab692669c237b5212461a2ea62ac85b1e1158c",
+      "parts": [
+        154,
+        155
+      ],
+      "whole_bytes": 22546
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduleSerializationBoundaryTests.cs",
+      "sha256": "035fcfaecc370bbea2a38d2253ecd9faee010333d0c1e44d4049055aeebc85dd",
+      "parts": [
+        156
+      ],
+      "whole_bytes": 6866
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduleTimingIntegrationTests.cs",
+      "sha256": "08ed0e49016ae9f4b6159204dbf3db294b8719fad3ef5bd932edaf6220d78d96",
+      "parts": [
+        157
+      ],
+      "whole_bytes": 8421
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduledMessageContextTests.cs",
+      "sha256": "ddc2791bc8236f1297dde4b4f703688257991764ad2cab6a7c354b76f8327753",
+      "parts": [
+        158,
+        159
+      ],
+      "whole_bytes": 21082
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduledMessageJobTests.cs",
+      "sha256": "70697bc53685503aabd806da50f88e82037f1ffd889f66e253d76a695ec7fc7d",
+      "parts": [
+        160,
+        161
+      ],
+      "whole_bytes": 16307
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduledMessageSendPipeTests.cs",
+      "sha256": "891521c46acc7c921e9e2ac70f34563bb038f18d8805000a532d05ca822d55d9",
+      "parts": [
+        162,
+        163
+      ],
+      "whole_bytes": 12062
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduledRedeliveryIntegrationTests.cs",
+      "sha256": "74221a210ea5d1567cb45890e6e5e1f3eb3fd08f373ef2db916fad17cf3b8a84",
+      "parts": [
+        164
+      ],
+      "whole_bytes": 7310
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzScheduledRedeliveryScopeTests.cs",
+      "sha256": "1fe2318aa99b10c344648fda807d1ef690a26995a27b19f59f8f28590f2115e1",
+      "parts": [
+        165
+      ],
+      "whole_bytes": 5064
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSchedulerLifecycleObserverTests.cs",
+      "sha256": "74e48896e8752fe5192b1022096fca6beba8c21cc87f9dd57b73b9b83b6e1b38",
+      "parts": [
+        166,
+        167
+      ],
+      "whole_bytes": 20003
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzSchedulingCommandValidationTests.cs",
+      "sha256": "ceee90d2f75f9d3fcdd238529fd3a22a136e68d1abad57fec0cf16f213c84f6f",
+      "parts": [
+        168,
+        169
+      ],
+      "whole_bytes": 15813
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/QuartzTriggerKeyTests.cs",
+      "sha256": "272d7599d68abb873ec6d450d2fd9178dda90579c1fc42f9119668b5b8fd5d82",
+      "parts": [
+        170
+      ],
+      "whole_bytes": 4944
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/RecurringReplacementIntegrityTests.cs",
+      "sha256": "cd9edc7f384e95e4df289a13b2752018e70a5e2c6bd3914997cd11a7e077fd5a",
+      "parts": [
+        171,
+        172
+      ],
+      "whole_bytes": 16441
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/ScheduledMessageExpirationTests.cs",
+      "sha256": "07ebd1839f50e1877f9aa823249e0fbf998838ccbb09a76e68906c8c4fcd5920",
+      "parts": [
+        173
+      ],
+      "whole_bytes": 1927
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Integration/SchedulerCommandIntegrationTests.cs",
+      "sha256": "33a2dacd738038d0b3800cd28bc8475df8f50a95aa0f056c425d88332e4a66a3",
+      "parts": [
+        174,
+        175,
+        176,
+        177
+      ],
+      "whole_bytes": 35107
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/InheritedBehaviorDispositionTests.cs",
+      "sha256": "c68b6762f240d76d35e1fe14991d965936641b12f5a38f2fc72f22d16cbb8451",
+      "parts": [
+        178
+      ],
+      "whole_bytes": 6743
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "sha256": "94bc2685911d8ec37fb34337e0c35024bac8d14218f3f6832a37897ec91c89fb",
+      "parts": [
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185
+      ],
+      "whole_bytes": 69418
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/QuartzIntegrationRequirements.json",
+      "sha256": "7565d338788aca51b5afc94518c9d24bbd2454b50c45961d73f6fa5431561f90",
+      "parts": [
+        186,
+        187,
+        188,
+        189,
+        190,
+        191
+      ],
+      "whole_bytes": 58545
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "6d96dfdee5ab35fd3e86dbfaf234c596d559438c2b19f1e1034aa1abcc9b76e7",
+      "parts": [
+        192
+      ],
+      "whole_bytes": 1214
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Testing/ConsumeCompletionObserver.cs",
+      "sha256": "3e53b10d2a4fffa8c3eae55f62b363d54f82e76e2aa6c291671a633a95ec0320",
+      "parts": [
+        193
+      ],
+      "whole_bytes": 1478
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Testing/QuartzJobServiceTestBus.cs",
+      "sha256": "f5c4dafea784d81cc336c638b9ca20e414bd5cd07de7817f816dc0d519382fa7",
+      "parts": [
+        194
+      ],
+      "whole_bytes": 1573
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Testing/QuartzTestBus.cs",
+      "sha256": "a493b6d44b5767f20d313cfcde664b7cc2156c19a67d3f3fbf1cd990b1c99719",
+      "parts": [
+        195
+      ],
+      "whole_bytes": 3811
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Testing/ScheduledMessageCapture.cs",
+      "sha256": "9cecfb4e188808e9fe0b9a02cb9c4aee2a589ab44dac7f96e2c105291cdb7e17",
+      "parts": [
+        196
+      ],
+      "whole_bytes": 1630
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Testing/ScheduledMessageSequenceCapture.cs",
+      "sha256": "b82c3ea746e56aa1df4d72014203a52a90c5f4f07f10386d91277988049ef946",
+      "parts": [
+        197
+      ],
+      "whole_bytes": 2371
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/ViciOne.ServiceBus.Quartz.Tests.csproj",
+      "sha256": "53e60b7368de1e22ef228ef1bceea67af344d51824bf2237a3cbee76ecb78be1",
+      "parts": [
+        198
+      ],
+      "whole_bytes": 2067
+    },
+    {
+      "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/packages.lock.json",
+      "sha256": "e4420f6290c629973f97263cc808a2091a32d822525020a9a8e37c3b815fbd4e",
+      "parts": [
+        199,
+        200
+      ],
+      "whole_bytes": 22220
+    }
+  ],
+  "root_personal_all119_semantic_notes_read": true,
+  "root_personal119_raw_bodies_read": false,
+  "canonical_owner_grade_transferred": false,
+  "runtime_closed": 0,
+  "limits": "TeamcompleteRAW_FULL only; original files all182 verified, peer own119bodyreads. FullAPI/native/canonicalowner grade remainopen. PassiveCoresemanticreconstruction separate, no rawFULLcount increment."
+}

@@ -1,0 +1,60 @@
+{
+  "status": "RESEARCH_PLAN_BEFORE_PRODUCT_CHANGE",
+  "utc": "2026-10-03T02:27:23.477025+00:00",
+  "reader": "/root",
+  "personally_full_sources": [
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "46e4802ba192be64b6f817feb04de970aefc612a66592b4f3219889c5616bd6e",
+      "bytes": 22238,
+      "read_status": "ROOT_PERSONALLY_FULL_CURRENT_TEXT"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+      "sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb",
+      "bytes": 1640,
+      "read_status": "ROOT_PERSONALLY_FULL_CURRENT_TEXT"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "bytes": 5633,
+      "read_status": "ROOT_PERSONALLY_FULL_CURRENT_TEXT"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendAdmission.cs",
+      "sha256": "c16c5ed64e9ae5c0a9f197b81305ee8120acd77bea809d73083845137908b373",
+      "bytes": 4490,
+      "read_status": "ROOT_PERSONALLY_FULL_CURRENT_TEXT"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "sha256": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+      "bytes": 7884,
+      "read_status": "ROOT_PERSONALLY_FULL_CURRENT_TEXT"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "bytes": 8551,
+      "read_status": "ROOT_PERSONALLY_FULL_CURRENT_TEXT"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "sha256": "94c9fb781e42f0e164f62730684a18f2ec7df7d35cf7067171a086182dc56bed",
+      "bytes": 2062,
+      "read_status": "ROOT_PERSONALLY_FULL_CURRENT_TEXT"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/InMemoryTransport/DurableSend/InMemoryDurableSendDispatcher.cs",
+      "sha256": "bd806c8273112f200fb82cd2a1d39e8263f95c78b1e58beda22facbd93a0fc77",
+      "bytes": 5068,
+      "read_status": "ROOT_PERSONALLY_FULL_CURRENT_TEXT"
+    }
+  ],
+  "finding": "F022",
+  "implementation": "Only retain own started Activity outside metadata try; safe-dispose on any later fault before returning None, admission and analogous delivery. No acceptance/type/storage/config/schema changes.",
+  "native_plan": "New bounded NuGet consumer: four historical normal public admission cases plus capacity/cancel/hostileStop controls; actual sampled+unsampled+oneShotFormatting Uri delivery with real registered hosted lifecycle, actual dispatch+receiver, deterministic store0 snapshot after all worker/bus ownedtasks joined. No fake dispatcher/private reflection.",
+  "test_scope": "New isolated console owner; source paths/owned Consumer/helpers/readclosure finalized before authoring tests; canonical Core766 not changed or accepted.",
+  "adversarial": "Separate reviewer for each source/oracle/runner mutation; no original Finding closure until actual native controls accepted."
+}

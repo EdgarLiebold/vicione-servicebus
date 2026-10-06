@@ -24,7 +24,7 @@ public class RabbitMqEndpointConfiguration :
     /// <summary>Gets the RabbitMQ topology configuration scoped to this endpoint.</summary>
     public new IRabbitMqTopologyConfiguration Topology { get; }
 
-    /// <summary>Creates a child endpoint configuration with cloned RabbitMQ topology.</summary>
+    /// <summary>Creates a child endpoint configuration with new consume topology and retained parent message, send, and publish topology references.</summary>
     /// <param name="isBusEndpoint">Whether the child belongs to the bus endpoint.</param>
     /// <returns>The new child endpoint configuration.</returns>
     public IRabbitMqEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)

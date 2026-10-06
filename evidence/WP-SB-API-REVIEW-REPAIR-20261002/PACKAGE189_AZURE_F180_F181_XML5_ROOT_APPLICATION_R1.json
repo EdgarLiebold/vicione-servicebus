@@ -1,0 +1,53 @@
+{
+  "utc": "2026-10-05T14:51:54.681577+00:00",
+  "status": "ADVERSARIALLY_REVIEWED_XML5_IN_FOUR_SOURCES_APPLIED_FRESH_XML_PENDING",
+  "findings": [
+    "F-SB-API-180",
+    "F-SB-API-181"
+  ],
+  "changes": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/IServiceBusBusConfiguration.cs",
+      "before_sha256": "c1077e88ae1d734590c088ce3b132caf075d6d056d2214def9207ed083f62cde",
+      "after_sha256": "fe9172fc01028d2fe535124edb412896230ce69c5aea88899ab703b92f39ae91"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusEndpointConfiguration.cs",
+      "before_sha256": "6cfe879f06701982ddaa5a1d455d58b26db4f1ef95c9d73aa8f9a4f8c2f40ac4",
+      "after_sha256": "a668ca6d092e549eaae30e1d3c2eaadcd7463f5c7f33b692b4429bc1cf704659"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/BrokerTopologyBuilder.cs",
+      "before_sha256": "8ab63f5bcf5f860487106d6d1e49411e4c5f8af15f5da7f4e763733aa3d6a5c8",
+      "after_sha256": "62d17c55d6574955c8ab7b01af1e6c75b50d138f3cff3b114eccc0a3168940f7"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Topology/ServiceBusBrokerTopology.cs",
+      "before_sha256": "97b2d70dc74d8c2e01506c26b211c9774b74598c44b48acb0850dcda1e6be35a",
+      "after_sha256": "1b11f97f8ee4a95288643dd0ad9eeeb3ccc619c271da9800818deaf67f51a665"
+    }
+  ],
+  "exact_summary_nodes": 5,
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE189_AZURE_F180_F181_XML5_ORIGINAL_ROOT_REGISTRATION_R1.json",
+    "sha256": "2fd7458f65138c66789297c6629f5c722f05ab2cd21515ed9a5406069d15d618"
+  },
+  "proposal_manifest_sha256": "93544a90c2a3e5e54e4e83e47566b5d504bf8ed240ea907a3689d6d08f2b0385",
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package217-azure-xml5-independent-qualification-peer-r1/REPORT.json",
+    "sha256": "ebe2dd6a4e7a0f7c5427ac19831c52efc1953e8f0893a7d2848fa1f2cb874a54"
+  },
+  "root_review": {
+    "whole7_before_source_886_lines": [
+      "cc17c6",
+      "c57f73"
+    ],
+    "whole_literal5_delta": "68df89",
+    "actual_archive_XML5_counterproof": "3d8b12",
+    "whole_peer": "280566"
+  },
+  "non_document_source_and_public_declarations_preserved": true,
+  "tests_or_requirements_changed": false,
+  "fresh_compiled_XML_and_package_pending": true,
+  "global_Aplus": false
+}

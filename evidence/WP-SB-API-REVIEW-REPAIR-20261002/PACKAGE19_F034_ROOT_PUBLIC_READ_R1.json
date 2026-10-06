@@ -1,0 +1,95 @@
+{
+  "status": "ROOT_WHOLE_FRESH_BOUNDED_PUBLIC_OWNER_BEFORE_NATIVE_STATIC_ADVERSARIAL_PENDING",
+  "utc": "2026-10-03T08:55:26.212415+00:00",
+  "sources": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/ActivityOwnership.PublicConsumer.csproj",
+      "sha256": "483efa2320e44deb0f60598ab0598de0b406f2aad97bb18fe819942dbd75a282",
+      "bytes": 1039,
+      "root_read": "PERSONAL_FRESH_FULL_COMPLETE_BODY_PRINTED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/Cases.cs",
+      "sha256": "6a145d009d975ba22f01df5156873d4dec04fe94d7248f3519c7a58dca8cf63d",
+      "bytes": 4192,
+      "root_read": "PERSONAL_FRESH_FULL_COMPLETE_BODY_PRINTED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/Models.cs",
+      "sha256": "0293859ef996974145e08b3623e9d9f3a70b6c9c9f5d18f941c30c714de3898d",
+      "bytes": 7475,
+      "root_read": "PERSONAL_FRESH_FULL_COMPLETE_BODY_PRINTED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/NuGet.Config",
+      "sha256": "2053e33dbe8542bb482a7358806ccb547e38fe4e386fa22ae9dac9b4b9c43546",
+      "bytes": 572,
+      "root_read": "PERSONAL_FRESH_FULL_COMPLETE_BODY_PRINTED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/OwnedLifetime.cs",
+      "sha256": "57121c85d071a911ebe455a3eee60e5efb2132e7dade5b6ca07d9b2b9a79f53a",
+      "bytes": 1918,
+      "root_read": "PERSONAL_FRESH_FULL_COMPLETE_BODY_PRINTED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/Program.cs",
+      "sha256": "45327fe8582dcc0ce8068a62a7e8941cc61777503737d75896ec65f93a9ecee9",
+      "bytes": 2329,
+      "root_read": "PERSONAL_FRESH_FULL_COMPLETE_BODY_PRINTED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/previous/RuntimeOwner.cs",
+      "sha256": "86d83cf0bdf0545f22034c2c4bcd99b69b0b61e8060295b98859e17e79590341",
+      "bytes": 11649,
+      "root_read": "PERSONAL_FRESH_FULL_COMPLETE_BODY_PRINTED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/ActivityOwnership.PublicConsumer.csproj",
+      "sha256": "483efa2320e44deb0f60598ab0598de0b406f2aad97bb18fe819942dbd75a282",
+      "bytes": 1039,
+      "root_read": "EXACT_OWN_PREVIOUS_FULL_PAIRED_BODY_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/Cases.cs",
+      "sha256": "6a145d009d975ba22f01df5156873d4dec04fe94d7248f3519c7a58dca8cf63d",
+      "bytes": 4192,
+      "root_read": "EXACT_OWN_PREVIOUS_FULL_PAIRED_BODY_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/Models.cs",
+      "sha256": "0293859ef996974145e08b3623e9d9f3a70b6c9c9f5d18f941c30c714de3898d",
+      "bytes": 7475,
+      "root_read": "EXACT_OWN_PREVIOUS_FULL_PAIRED_BODY_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/NuGet.Config",
+      "sha256": "53e1aab82979e5469859b39500f8f278090d29717b6b29229545e14aa0727053",
+      "bytes": 573,
+      "root_read": "CONFIG_ONLY_SELECTEDFEED_PATH_DELTA_FULL"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/OwnedLifetime.cs",
+      "sha256": "57121c85d071a911ebe455a3eee60e5efb2132e7dade5b6ca07d9b2b9a79f53a",
+      "bytes": 1918,
+      "root_read": "EXACT_OWN_PREVIOUS_FULL_PAIRED_BODY_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/Program.cs",
+      "sha256": "45327fe8582dcc0ce8068a62a7e8941cc61777503737d75896ec65f93a9ecee9",
+      "bytes": 2329,
+      "root_read": "EXACT_OWN_PREVIOUS_FULL_PAIRED_BODY_REUSE"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/RuntimeOwner.cs",
+      "sha256": "86d83cf0bdf0545f22034c2c4bcd99b69b0b61e8060295b98859e17e79590341",
+      "bytes": 11649,
+      "root_read": "EXACT_OWN_PREVIOUS_FULL_PAIRED_BODY_REUSE"
+    }
+  ],
+  "paired_unchanged": true,
+  "cases": 32,
+  "lock": "absent_pending_restore_complete_read_before_behavior",
+  "analysis": "Owned cleanup/task joining independently attempted; actual endpoint multiset assertion precedesStart; typepayload+native correlatedreceipts; actualchildprocess percase. Inline assertionquality/gapanalysis32cases noemptychecks orabsenceTimePASS; generated-concrete lookupcounts not original behavioral defect oracle. Definition/pre-cancel/customselector actualSDK expected results remain unqualified untilnative.",
+  "limits": "No canonical766 FULL/edit/testgrade transfer, no native outcomes yet"
+}

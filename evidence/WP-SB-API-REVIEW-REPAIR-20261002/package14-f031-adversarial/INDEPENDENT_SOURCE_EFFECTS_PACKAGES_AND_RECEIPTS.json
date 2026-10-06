@@ -1,0 +1,2972 @@
+{
+  "status": "VERIFIED",
+  "source_effect_count": 108,
+  "source_effects": [
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "bytes": 2662,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/results.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "bytes": 2641,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/host.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "bytes": 1550,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/host_xml.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/batch.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/batch_options.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "bytes": 4762,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "bytes": 5099,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/connector.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "bytes": 281,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/identity.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/trace.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/journal_telemetry.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/journal_writer.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/journal_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/transport_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+      "bytes": 18371,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/endpoint_context.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+      "sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432",
+      "bytes": 5011,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/combined_endpoint.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "bytes": 2132,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/scope_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "bytes": 1829,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/owned_lifetime.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "bytes": 3639,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/corrected/inmemory_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "bytes": 2662,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/results.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "bytes": 2641,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/host.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "bytes": 1550,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/host_xml.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/batch.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/batch_options.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "bytes": 4762,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "bytes": 5099,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/connector.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "bytes": 281,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/identity.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/trace.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/journal_telemetry.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/journal_writer.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/journal_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/transport_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825",
+      "bytes": 18461,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/endpoint_context.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+      "sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432",
+      "bytes": 5011,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/combined_endpoint.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "bytes": 2132,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/scope_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "bytes": 1829,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/owned_lifetime.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "first-category-restored",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "bytes": 3639,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/first-category-restored/inmemory_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "bytes": 2662,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/results.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "bytes": 2641,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/host.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "bytes": 1550,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/host_xml.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/batch.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/batch_options.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "bytes": 4762,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "bytes": 5099,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/connector.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "bytes": 281,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/identity.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/trace.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/journal_telemetry.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/journal_writer.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/journal_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/transport_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "9b44a243943374fe155d9d893579dc32dfb551e8b6d3c6ba14f42f3b1cc6d5ee",
+      "bytes": 18381,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/endpoint_context.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_CHANGED_MUTANT_NUMBERED_TEXT"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+      "sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432",
+      "bytes": 5011,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/combined_endpoint.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "bytes": 2132,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/scope_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "bytes": 1829,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/owned_lifetime.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "category-order-reversed",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "bytes": 3639,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/category-order-reversed/inmemory_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "bytes": 2662,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/results.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "bytes": 2641,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/host.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "bytes": 1550,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/host_xml.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/batch.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/batch_options.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "bytes": 4762,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "bytes": 5099,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/connector.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "bytes": 281,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/identity.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/trace.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/journal_telemetry.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/journal_writer.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/journal_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/transport_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+      "bytes": 18371,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/endpoint_context.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+      "sha256": "10d38b31b5501c205e9e2a389474e82ee220e576f70f39b5ae10827936ddc7ca",
+      "bytes": 5012,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/combined_endpoint.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_CHANGED_MUTANT_NUMBERED_TEXT"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "bytes": 2132,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/scope_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "bytes": 1829,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/owned_lifetime.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-qos-ownership-weakened",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "bytes": 3639,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/shared-qos-ownership-weakened/inmemory_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "bytes": 2662,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/results.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "bytes": 2641,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/host.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "bytes": 1550,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/host_xml.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/batch.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/batch_options.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "bytes": 4762,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "bytes": 5099,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/connector.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "bytes": 281,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/identity.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/trace.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/journal_telemetry.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/journal_writer.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/journal_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/transport_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+      "bytes": 18371,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/endpoint_context.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+      "sha256": "b76445baa4934ad3d8ff56555b0dda92b702df6878d7283334b29f0ddaf12acb",
+      "bytes": 5011,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/combined_endpoint.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_CHANGED_MUTANT_NUMBERED_TEXT"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "bytes": 2132,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/scope_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "bytes": 1829,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/owned_lifetime.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "mixed-topology-check-weakened",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "bytes": 3639,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/mixed-topology-check-weakened/inmemory_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "bytes": 2662,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/results.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "bytes": 2641,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/host.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "bytes": 1550,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/host_xml.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/batch.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/batch_options.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "bytes": 4762,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "bytes": 5099,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/connector.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "bytes": 281,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/identity.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/trace.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/journal_telemetry.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/journal_writer.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/journal_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/transport_registration.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+      "bytes": 18371,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/endpoint_context.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+      "sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432",
+      "bytes": 5011,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/combined_endpoint.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "bytes": 2132,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/scope_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "bytes": 1829,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/owned_lifetime.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "bytes": 3639,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package14-f031-core-binaries/rollback/inmemory_factory.cs.txt",
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_PERSONAL_FULL_EXACT_SHA_REUSE"
+    }
+  ],
+  "selected_package_chains": [
+    {
+      "consumer": "previous",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package14-f031/previous/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "5ff8dc1ce7fa4d2490d11bafe51a821c0af5ec593b1eb707de6658432548df6e",
+      "raw_zip_sha512_base64": "N+4QC65xpQhBB2YDk+CVuAwfAq42dpuF6JXVVs7NSwUWh9uEgQhkc/pZYVwrWPhelebm1SrJWi9/u8rUwRXCCA==",
+      "lock_contentHash": "N+4QC65xpQhBB2YDk+CVuAwfAq42dpuF6JXVVs7NSwUWh9uEgQhkc/pZYVwrWPhelebm1SrJWi9/u8rUwRXCCA==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/restored-packages/vicione.servicebus/1.0.0",
+      "runtime": {
+        "name": "ViciOne.ServiceBus",
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+        "sha256": "0442ad59262067ac79e3724e2f19249d3ed20c823d62ca7170bee9d3287eedf0"
+      },
+      "independently_verified": true
+    },
+    {
+      "consumer": "previous",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package14-f031/previous/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "3e362398bf1e256571e48b58c61b1b2ff64b2a8e9d0946d93a398a17b4407114",
+      "raw_zip_sha512_base64": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "lock_contentHash": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/restored-packages/vicione.servicebus.abstractions/1.0.0",
+      "runtime": {
+        "name": "ViciOne.ServiceBus.Abstractions",
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+        "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+      },
+      "independently_verified": true
+    },
+    {
+      "consumer": "previous",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package14-f031/previous/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "b6e739cf2d1903fc467e5514b72482714495a69a3fa8259355b8996dea7d40c4",
+      "raw_zip_sha512_base64": "2JwHYb25/RBHHNitKMQwIRPZuFkr+NRShOttYRFRKDcB0HKZ/4UkeUDsjGIu4dFSsjG1USknZ36xWF8J1XulAg==",
+      "lock_contentHash": "2JwHYb25/RBHHNitKMQwIRPZuFkr+NRShOttYRFRKDcB0HKZ/4UkeUDsjGIu4dFSsjG1USknZ36xWF8J1XulAg==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/restored-packages/vicione.servicebus.sagas/1.0.0",
+      "runtime": {
+        "name": "ViciOne.ServiceBus.Sagas",
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+      },
+      "independently_verified": true
+    },
+    {
+      "consumer": "corrected",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package14-f031/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "0e9da3771dc03743ece00217671864a01f4409a4d30f74915e8f9532f4c389ba",
+      "raw_zip_sha512_base64": "2IwkWCNm6pA3oQRT6lA3UwnuhDlOsQepyBgMZGpWgHp1xuIvZZ6ReC3SSptvd5VXaN7MjPPi0jnuUn7zcDVQXw==",
+      "lock_contentHash": "2IwkWCNm6pA3oQRT6lA3UwnuhDlOsQepyBgMZGpWgHp1xuIvZZ6ReC3SSptvd5VXaN7MjPPi0jnuUn7zcDVQXw==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/restored-packages/vicione.servicebus/1.0.0",
+      "runtime": {
+        "name": "ViciOne.ServiceBus",
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+        "sha256": "1872fcba94846a8705c9367ab7217d06a74db951b80a36c47a79dac0c95d2bab"
+      },
+      "independently_verified": true
+    },
+    {
+      "consumer": "corrected",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package14-f031/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "3e362398bf1e256571e48b58c61b1b2ff64b2a8e9d0946d93a398a17b4407114",
+      "raw_zip_sha512_base64": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "lock_contentHash": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/restored-packages/vicione.servicebus.abstractions/1.0.0",
+      "runtime": {
+        "name": "ViciOne.ServiceBus.Abstractions",
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+        "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+      },
+      "independently_verified": true
+    },
+    {
+      "consumer": "corrected",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package14-f031/corrected/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "b6e739cf2d1903fc467e5514b72482714495a69a3fa8259355b8996dea7d40c4",
+      "raw_zip_sha512_base64": "2JwHYb25/RBHHNitKMQwIRPZuFkr+NRShOttYRFRKDcB0HKZ/4UkeUDsjGIu4dFSsjG1USknZ36xWF8J1XulAg==",
+      "lock_contentHash": "2JwHYb25/RBHHNitKMQwIRPZuFkr+NRShOttYRFRKDcB0HKZ/4UkeUDsjGIu4dFSsjG1USknZ36xWF8J1XulAg==",
+      "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/restored-packages/vicione.servicebus.sagas/1.0.0",
+      "runtime": {
+        "name": "ViciOne.ServiceBus.Sagas",
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+      },
+      "independently_verified": true
+    }
+  ],
+  "actual_receipt_count": 29,
+  "selected_exact_ledger_receipts": [
+    {
+      "phase": "package14-f031-original-sagas-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:16:10.038135+00:00",
+      "completed_utc": "2026-10-03T04:16:21.092195+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-original-sagas-build.log",
+      "log_sha256": "2180c67a2ffca9bd9282be3d7948dd2dbe9b28a063811002fc07c126f4f334d0"
+    },
+    {
+      "phase": "package14-f031-original-sagas-pack",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-o",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package14-f031/previous"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:17:04.401915+00:00",
+      "completed_utc": "2026-10-03T04:17:07.055923+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-original-sagas-pack.log",
+      "log_sha256": "b5284f83e660179ad7458e4fa40f2897fc5713fbdaec15ea1b8c2410ee171cac"
+    },
+    {
+      "phase": "package14-f031-corrected-core-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:18:55.708610+00:00",
+      "completed_utc": "2026-10-03T04:19:08.599196+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-corrected-core-build.log",
+      "log_sha256": "8a12b2aa09d5482cc03b0827d29fdb7d1febb65d934e4488be8bac0bd615a2fc"
+    },
+    {
+      "phase": "package14-f031-corrected-core-pack",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-o",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package14-f031/corrected"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:23:27.671842+00:00",
+      "completed_utc": "2026-10-03T04:23:30.452926+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-corrected-core-pack.log",
+      "log_sha256": "04a0c9146854b77382d9ac23743ec106ff85e2147488abf79a301ff16702998b"
+    },
+    {
+      "phase": "package14-f031-public-previous-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "--configfile",
+        "NuGet.Config"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:24:21.945657+00:00",
+      "completed_utc": "2026-10-03T04:24:26.707479+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-restore.log",
+      "log_sha256": "6c24544d4d029fe65a2e83a4c1fafde8fa74bf21bf86a010b9b2f9a30d9ef56a"
+    },
+    {
+      "phase": "package14-f031-public-previous-build",
+      "command": [
+        "dotnet",
+        "build",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "/p:TreatWarningsAsErrors=true"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:24:58.438582+00:00",
+      "completed_utc": "2026-10-03T04:25:01.932450+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build.log",
+      "log_sha256": "d27a15ccc87e22523e2d8563ae160b2882b0abe87a6fc0357073ea59d36359c8"
+    },
+    {
+      "phase": "package14-f031-public-previous-build-r2",
+      "command": [
+        "dotnet",
+        "build",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "/p:TreatWarningsAsErrors=true"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:25:40.830023+00:00",
+      "completed_utc": "2026-10-03T04:25:43.832413+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build-r2.log",
+      "log_sha256": "8c5bc0a110ad70fc8e9a1e5172c4791134192e5a6d712de26fa239d6e4c4d8a3"
+    },
+    {
+      "phase": "package14-f031-public-previous-build-r3",
+      "command": [
+        "dotnet",
+        "build",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "/p:TreatWarningsAsErrors=true"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:27:12.207490+00:00",
+      "completed_utc": "2026-10-03T04:27:15.746242+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build-r3.log",
+      "log_sha256": "02364003441f24dc202bb7ec46d7befdba14fbe425cc2030dceffceb6c1bcac2"
+    },
+    {
+      "phase": "package14-f031-public-previous-build-r4",
+      "command": [
+        "dotnet",
+        "build",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "/p:TreatWarningsAsErrors=true"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:30:14.212523+00:00",
+      "completed_utc": "2026-10-03T04:30:18.617873+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build-r4.log",
+      "log_sha256": "7692abebd0a96a5bc0a53c7d85d395075fc68fb839b5b42298a9c544d26d5f83"
+    },
+    {
+      "phase": "package14-f031-public-previous-fourteen",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:30:55.246341+00:00",
+      "completed_utc": "2026-10-03T04:30:56.215955+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-fourteen.log",
+      "log_sha256": "813c18159e8bfa6d19ba161d9a37bf549d1fdea7c7d4ef35c2bdef1ae808fbce"
+    },
+    {
+      "phase": "package14-f031-public-corrected-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "--configfile",
+        "NuGet.Config"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:31:13.185671+00:00",
+      "completed_utc": "2026-10-03T04:31:14.915789+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-corrected-restore.log",
+      "log_sha256": "8445d691b65ff9ed8ab5191c7c47aee25130f5b93a429b2b870b5f52c9d5580b"
+    },
+    {
+      "phase": "package14-f031-public-corrected-build",
+      "command": [
+        "dotnet",
+        "build",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "/p:TreatWarningsAsErrors=true"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:31:45.015063+00:00",
+      "completed_utc": "2026-10-03T04:31:49.983249+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-corrected-build.log",
+      "log_sha256": "3541849395407a6528927959e37382cf71a99077f21f9436876dfaab0ea6aa13"
+    },
+    {
+      "phase": "package14-f031-public-corrected-fourteen",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:32:33.194490+00:00",
+      "completed_utc": "2026-10-03T04:32:34.190957+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-corrected-fourteen.log",
+      "log_sha256": "ba9e61b8844eba7243995bb506dab037a763dd25a765b7de8638a814331359c4"
+    },
+    {
+      "phase": "package14-f031-core-mut-corrected-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:03.994153+00:00",
+      "completed_utc": "2026-10-03T04:42:21.469171+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-corrected-build.log",
+      "log_sha256": "0395e6a5a9d0bd3894412f9cd92c940658206c851885769058f0fa7de1fea162"
+    },
+    {
+      "phase": "package14-f031-core-mut-corrected-all",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:21.641373+00:00",
+      "completed_utc": "2026-10-03T04:42:22.851962+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-corrected-all.log",
+      "log_sha256": "97a448ed895797dae10cfefeef0c321150413be67008a3033ebefad560698cea"
+    },
+    {
+      "phase": "package14-f031-core-mut-first-category-restored-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:23.040616+00:00",
+      "completed_utc": "2026-10-03T04:42:38.125749+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-first-category-restored-build.log",
+      "log_sha256": "83461a506f29208fe128baeb765823dd2fa4333f203ef3ded70d7946562ee81a"
+    },
+    {
+      "phase": "package14-f031-core-mut-first-category-restored-mixed-typed",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-typed",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:42:38.291066+00:00",
+      "completed_utc": "2026-10-03T04:42:39.240635+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-first-category-restored-mixed-typed.log",
+      "log_sha256": "27db0efe0a2e5987d76501ecb2af394c0b380eba38737932e56c80a1d1c80e15"
+    },
+    {
+      "phase": "package14-f031-core-mut-first-category-restored-dedicated-saga",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "dedicated-saga",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:39.351227+00:00",
+      "completed_utc": "2026-10-03T04:42:40.322996+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-first-category-restored-dedicated-saga.log",
+      "log_sha256": "9ab86debabde1f7a856d8b5f04302830f189031ed50bc1c28a992e7fdb5339af"
+    },
+    {
+      "phase": "package14-f031-core-mut-category-order-reversed-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:40.572684+00:00",
+      "completed_utc": "2026-10-03T04:42:53.068124+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-category-order-reversed-build.log",
+      "log_sha256": "2a3356658d9615d82effe5fec2daac6cc01c127823828e8ad266c78e5ff4a631"
+    },
+    {
+      "phase": "package14-f031-core-mut-category-order-reversed-mixed-reverse",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-reverse",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:42:53.222019+00:00",
+      "completed_utc": "2026-10-03T04:42:54.125973+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-category-order-reversed-mixed-reverse.log",
+      "log_sha256": "47236828fd59a66369c0ab7bcc4d14114030d0e660b1a1a2fec6056ea87dd241"
+    },
+    {
+      "phase": "package14-f031-core-mut-category-order-reversed-same-kind-reverse",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "same-kind-reverse",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:54.230773+00:00",
+      "completed_utc": "2026-10-03T04:42:55.079374+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-category-order-reversed-same-kind-reverse.log",
+      "log_sha256": "980a1f46097d1bf9ecceefbb3db0cea0bd5d3127fd5d54b48aae66dcb5f99ca6"
+    },
+    {
+      "phase": "package14-f031-core-mut-shared-qos-ownership-weakened-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:55.188954+00:00",
+      "completed_utc": "2026-10-03T04:43:03.235166+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-shared-qos-ownership-weakened-build.log",
+      "log_sha256": "77811fd283541c50a864c982af199d163be01d8db4404180ca66335d842b3222"
+    },
+    {
+      "phase": "package14-f031-core-mut-shared-qos-ownership-weakened-mixed-saga-qos",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-saga-qos",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:43:03.384309+00:00",
+      "completed_utc": "2026-10-03T04:43:04.004215+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-shared-qos-ownership-weakened-mixed-saga-qos.log",
+      "log_sha256": "f0c1eea75f2ce9a0d2bb20c9e17ee3edc1a7bf5757682dde0a1b5d785585a827"
+    },
+    {
+      "phase": "package14-f031-core-mut-shared-qos-ownership-weakened-mixed-compatible",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-compatible",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:43:04.102511+00:00",
+      "completed_utc": "2026-10-03T04:43:04.951840+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-shared-qos-ownership-weakened-mixed-compatible.log",
+      "log_sha256": "5a9bb47614b7eb4501e68f99de8bb1221e602969b03d7c045d99929ad0d305f5"
+    },
+    {
+      "phase": "package14-f031-core-mut-mixed-topology-check-weakened-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:43:05.055745+00:00",
+      "completed_utc": "2026-10-03T04:43:14.359793+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-mixed-topology-check-weakened-build.log",
+      "log_sha256": "0c66d22e1bd96ecc7743fa1eeec9cb89df8ae07020bac8f8fcddbfb311d3f687"
+    },
+    {
+      "phase": "package14-f031-core-mut-mixed-topology-check-weakened-mixed-topology-conflict",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-topology-conflict",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:43:14.559728+00:00",
+      "completed_utc": "2026-10-03T04:43:15.224604+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-mixed-topology-check-weakened-mixed-topology-conflict.log",
+      "log_sha256": "7d195fd7ac9e0eeb691f45efa60c5a409ecda76de88c7e584327d78d35b303f3"
+    },
+    {
+      "phase": "package14-f031-core-mut-mixed-topology-check-weakened-mixed-compatible",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-compatible",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:43:15.332518+00:00",
+      "completed_utc": "2026-10-03T04:43:16.330761+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-mixed-topology-check-weakened-mixed-compatible.log",
+      "log_sha256": "05bdd1de8483d853beed63aa019c8d2d03f1eb2645c7491669e9919d38ba5c0a"
+    },
+    {
+      "phase": "package14-f031-core-mut-rollback-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:43:16.469977+00:00",
+      "completed_utc": "2026-10-03T04:43:22.084207+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-rollback-build.log",
+      "log_sha256": "f314f0f98e5cd0d15a3072d2d1c5787fa415654f22ea4d51f5cfaf71b6c021b1"
+    },
+    {
+      "phase": "package14-f031-core-mut-rollback-all",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:43:22.226676+00:00",
+      "completed_utc": "2026-10-03T04:43:23.231820+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-rollback-all.log",
+      "log_sha256": "97a448ed895797dae10cfefeef0c321150413be67008a3033ebefad560698cea"
+    }
+  ],
+  "actual_native_logs": [
+    {
+      "phase": "package14-f031-original-sagas-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:16:10.038135+00:00",
+      "completed_utc": "2026-10-03T04:16:21.092195+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-original-sagas-build.log",
+      "log_sha256": "2180c67a2ffca9bd9282be3d7948dd2dbe9b28a063811002fc07c126f4f334d0",
+      "bytes": 687,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-original-sagas-pack",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-o",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package14-f031/previous"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:17:04.401915+00:00",
+      "completed_utc": "2026-10-03T04:17:07.055923+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-original-sagas-pack.log",
+      "log_sha256": "b5284f83e660179ad7458e4fa40f2897fc5713fbdaec15ea1b8c2410ee171cac",
+      "bytes": 171,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-corrected-core-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:18:55.708610+00:00",
+      "completed_utc": "2026-10-03T04:19:08.599196+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-corrected-core-build.log",
+      "log_sha256": "8a12b2aa09d5482cc03b0827d29fdb7d1febb65d934e4488be8bac0bd615a2fc",
+      "bytes": 496,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-corrected-core-pack",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-o",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package14-f031/corrected"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:23:27.671842+00:00",
+      "completed_utc": "2026-10-03T04:23:30.452926+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-corrected-core-pack.log",
+      "log_sha256": "04a0c9146854b77382d9ac23743ec106ff85e2147488abf79a301ff16702998b",
+      "bytes": 166,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-public-previous-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "--configfile",
+        "NuGet.Config"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:24:21.945657+00:00",
+      "completed_utc": "2026-10-03T04:24:26.707479+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-restore.log",
+      "log_sha256": "6c24544d4d029fe65a2e83a4c1fafde8fa74bf21bf86a010b9b2f9a30d9ef56a",
+      "bytes": 218,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-public-previous-build",
+      "command": [
+        "dotnet",
+        "build",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "/p:TreatWarningsAsErrors=true"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:24:58.438582+00:00",
+      "completed_utc": "2026-10-03T04:25:01.932450+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build.log",
+      "log_sha256": "d27a15ccc87e22523e2d8563ae160b2882b0abe87a6fc0357073ea59d36359c8",
+      "bytes": 5220,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "phase": "package14-f031-public-previous-build-r2",
+      "command": [
+        "dotnet",
+        "build",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "/p:TreatWarningsAsErrors=true"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:25:40.830023+00:00",
+      "completed_utc": "2026-10-03T04:25:43.832413+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build-r2.log",
+      "log_sha256": "8c5bc0a110ad70fc8e9a1e5172c4791134192e5a6d712de26fa239d6e4c4d8a3",
+      "bytes": 914,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "phase": "package14-f031-public-previous-build-r3",
+      "command": [
+        "dotnet",
+        "build",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "/p:TreatWarningsAsErrors=true"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:27:12.207490+00:00",
+      "completed_utc": "2026-10-03T04:27:15.746242+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build-r3.log",
+      "log_sha256": "02364003441f24dc202bb7ec46d7befdba14fbe425cc2030dceffceb6c1bcac2",
+      "bytes": 2442,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "OWN_PRIOR_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "phase": "package14-f031-public-previous-build-r4",
+      "command": [
+        "dotnet",
+        "build",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "/p:TreatWarningsAsErrors=true"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:30:14.212523+00:00",
+      "completed_utc": "2026-10-03T04:30:18.617873+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build-r4.log",
+      "log_sha256": "7692abebd0a96a5bc0a53c7d85d395075fc68fb839b5b42298a9c544d26d5f83",
+      "bytes": 293,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-public-previous-fourteen",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:30:55.246341+00:00",
+      "completed_utc": "2026-10-03T04:30:56.215955+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-fourteen.log",
+      "log_sha256": "813c18159e8bfa6d19ba161d9a37bf549d1fdea7c7d4ef35c2bdef1ae808fbce",
+      "bytes": 15834,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-public-corrected-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "--configfile",
+        "NuGet.Config"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:31:13.185671+00:00",
+      "completed_utc": "2026-10-03T04:31:14.915789+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-corrected-restore.log",
+      "log_sha256": "8445d691b65ff9ed8ab5191c7c47aee25130f5b93a429b2b870b5f52c9d5580b",
+      "bytes": 219,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-public-corrected-build",
+      "command": [
+        "dotnet",
+        "build",
+        "SharedEndpoint.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "/p:TreatWarningsAsErrors=true"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:31:45.015063+00:00",
+      "completed_utc": "2026-10-03T04:31:49.983249+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-corrected-build.log",
+      "log_sha256": "3541849395407a6528927959e37382cf71a99077f21f9436876dfaab0ea6aa13",
+      "bytes": 294,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-public-corrected-fourteen",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:32:33.194490+00:00",
+      "completed_utc": "2026-10-03T04:32:34.190957+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-corrected-fourteen.log",
+      "log_sha256": "ba9e61b8844eba7243995bb506dab037a763dd25a765b7de8638a814331359c4",
+      "bytes": 1866,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-corrected-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:03.994153+00:00",
+      "completed_utc": "2026-10-03T04:42:21.469171+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-corrected-build.log",
+      "log_sha256": "0395e6a5a9d0bd3894412f9cd92c940658206c851885769058f0fa7de1fea162",
+      "bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-corrected-all",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:21.641373+00:00",
+      "completed_utc": "2026-10-03T04:42:22.851962+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-corrected-all.log",
+      "log_sha256": "97a448ed895797dae10cfefeef0c321150413be67008a3033ebefad560698cea",
+      "bytes": 1866,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-first-category-restored-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:23.040616+00:00",
+      "completed_utc": "2026-10-03T04:42:38.125749+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-first-category-restored-build.log",
+      "log_sha256": "83461a506f29208fe128baeb765823dd2fa4333f203ef3ded70d7946562ee81a",
+      "bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-first-category-restored-mixed-typed",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-typed",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:42:38.291066+00:00",
+      "completed_utc": "2026-10-03T04:42:39.240635+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-first-category-restored-mixed-typed.log",
+      "log_sha256": "27db0efe0a2e5987d76501ecb2af394c0b380eba38737932e56c80a1d1c80e15",
+      "bytes": 2923,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-first-category-restored-dedicated-saga",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "dedicated-saga",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:39.351227+00:00",
+      "completed_utc": "2026-10-03T04:42:40.322996+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-first-category-restored-dedicated-saga.log",
+      "log_sha256": "9ab86debabde1f7a856d8b5f04302830f189031ed50bc1c28a992e7fdb5339af",
+      "bytes": 1162,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-category-order-reversed-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:40.572684+00:00",
+      "completed_utc": "2026-10-03T04:42:53.068124+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-category-order-reversed-build.log",
+      "log_sha256": "2a3356658d9615d82effe5fec2daac6cc01c127823828e8ad266c78e5ff4a631",
+      "bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-category-order-reversed-mixed-reverse",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-reverse",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:42:53.222019+00:00",
+      "completed_utc": "2026-10-03T04:42:54.125973+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-category-order-reversed-mixed-reverse.log",
+      "log_sha256": "47236828fd59a66369c0ab7bcc4d14114030d0e660b1a1a2fec6056ea87dd241",
+      "bytes": 2876,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-category-order-reversed-same-kind-reverse",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "same-kind-reverse",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:54.230773+00:00",
+      "completed_utc": "2026-10-03T04:42:55.079374+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-category-order-reversed-same-kind-reverse.log",
+      "log_sha256": "980a1f46097d1bf9ecceefbb3db0cea0bd5d3127fd5d54b48aae66dcb5f99ca6",
+      "bytes": 1165,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-shared-qos-ownership-weakened-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:42:55.188954+00:00",
+      "completed_utc": "2026-10-03T04:43:03.235166+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-shared-qos-ownership-weakened-build.log",
+      "log_sha256": "77811fd283541c50a864c982af199d163be01d8db4404180ca66335d842b3222",
+      "bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-shared-qos-ownership-weakened-mixed-saga-qos",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-saga-qos",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:43:03.384309+00:00",
+      "completed_utc": "2026-10-03T04:43:04.004215+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-shared-qos-ownership-weakened-mixed-saga-qos.log",
+      "log_sha256": "f0c1eea75f2ce9a0d2bb20c9e17ee3edc1a7bf5757682dde0a1b5d785585a827",
+      "bytes": 2554,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-shared-qos-ownership-weakened-mixed-compatible",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-compatible",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:43:04.102511+00:00",
+      "completed_utc": "2026-10-03T04:43:04.951840+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-shared-qos-ownership-weakened-mixed-compatible.log",
+      "log_sha256": "5a9bb47614b7eb4501e68f99de8bb1221e602969b03d7c045d99929ad0d305f5",
+      "bytes": 1164,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-mixed-topology-check-weakened-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:43:05.055745+00:00",
+      "completed_utc": "2026-10-03T04:43:14.359793+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-mixed-topology-check-weakened-build.log",
+      "log_sha256": "0c66d22e1bd96ecc7743fa1eeec9cb89df8ae07020bac8f8fcddbfb311d3f687",
+      "bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-mixed-topology-check-weakened-mixed-topology-conflict",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-topology-conflict",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T04:43:14.559728+00:00",
+      "completed_utc": "2026-10-03T04:43:15.224604+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-mixed-topology-check-weakened-mixed-topology-conflict.log",
+      "log_sha256": "7d195fd7ac9e0eeb691f45efa60c5a409ecda76de88c7e584327d78d35b303f3",
+      "bytes": 2563,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-mixed-topology-check-weakened-mixed-compatible",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "mixed-compatible",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:43:15.332518+00:00",
+      "completed_utc": "2026-10-03T04:43:16.330761+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-mixed-topology-check-weakened-mixed-compatible.log",
+      "log_sha256": "05bdd1de8483d853beed63aa019c8d2d03f1eb2645c7491669e9919d38ba5c0a",
+      "bytes": 1164,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-rollback-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:43:16.469977+00:00",
+      "completed_utc": "2026-10-03T04:43:22.084207+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-rollback-build.log",
+      "log_sha256": "f314f0f98e5cd0d15a3072d2d1c5787fa415654f22ea4d51f5cfaf71b6c021b1",
+      "bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    },
+    {
+      "phase": "package14-f031-core-mut-rollback-all",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/SharedEndpoint.PublicConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T04:43:22.226676+00:00",
+      "completed_utc": "2026-10-03T04:43:23.231820+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-core-mut-rollback-all.log",
+      "log_sha256": "97a448ed895797dae10cfefeef0c321150413be67008a3033ebefad560698cea",
+      "bytes": 1866,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_ACTUAL_LOG_TEXT"
+    }
+  ],
+  "observations": [
+    {
+      "phase": "package14-f031-public-previous-fourteen",
+      "count": 14,
+      "failures": 9,
+      "cases": [
+        {
+          "case": "dedicated-saga",
+          "assertions_passed": true
+        },
+        {
+          "case": "same-kind-callbacks",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-callbacks",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.EqualException",
+          "Message": "Assert.Equal() Failure: Collections differ\n                                    \u2193 (pos 1)\nExpected: string[]     [\"consumer\", \"saga\"]\nActual:   List<string> [\"consumer\"]",
+          "StackTrace": "   at Xunit.Assert.Equal[T](T expected, T actual, IEqualityComparer`1 comparer) in /_/src/xunit.v3.assert/Asserts/EqualityAsserts.cs:line 234\n   at Xunit.Assert.Equal[T](IEnumerable`1 expected, IEnumerable`1 actual) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 557\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 82\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/Program.cs:line 23",
+          "bounded_guard_failure": false
+        },
+        {
+          "case": "same-kind-qos",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-consumer-qos",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.NotNullException",
+          "Message": "Assert.NotNull() Failure: Value is null",
+          "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 50\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/Program.cs:line 23",
+          "bounded_guard_failure": false
+        },
+        {
+          "case": "mixed-saga-qos",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.NotNullException",
+          "Message": "Assert.NotNull() Failure: Value is null",
+          "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 50\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/Program.cs:line 23",
+          "bounded_guard_failure": false
+        },
+        {
+          "case": "mixed-topology-conflict",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.NotNullException",
+          "Message": "Assert.NotNull() Failure: Value is null",
+          "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 50\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/Program.cs:line 23",
+          "bounded_guard_failure": false
+        },
+        {
+          "case": "mixed-compatible",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.EqualException",
+          "Message": "Assert.Equal() Failure: Collections differ\n                                    \u2193 (pos 1)\nExpected: string[]     [\"consumer\", \"saga\"]\nActual:   List<string> [\"consumer\"]",
+          "StackTrace": "   at Xunit.Assert.Equal[T](T expected, T actual, IEqualityComparer`1 comparer) in /_/src/xunit.v3.assert/Asserts/EqualityAsserts.cs:line 234\n   at Xunit.Assert.Equal[T](IEnumerable`1 expected, IEnumerable`1 actual) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 557\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 82\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/Program.cs:line 23",
+          "bounded_guard_failure": false
+        },
+        {
+          "case": "mixed-reverse",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.EqualException",
+          "Message": "Assert.Equal() Failure: Collections differ\n                                    \u2193 (pos 1)\nExpected: string[]     [\"consumer\", \"saga\"]\nActual:   List<string> [\"consumer\"]",
+          "StackTrace": "   at Xunit.Assert.Equal[T](T expected, T actual, IEqualityComparer`1 comparer) in /_/src/xunit.v3.assert/Asserts/EqualityAsserts.cs:line 234\n   at Xunit.Assert.Equal[T](IEnumerable`1 expected, IEnumerable`1 actual) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 557\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 82\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/Program.cs:line 23",
+          "bounded_guard_failure": false
+        },
+        {
+          "case": "mixed-typed",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.EqualException",
+          "Message": "Assert.Equal() Failure: Collections differ\n                                    \u2193 (pos 1)\nExpected: string[]     [\"consumer\", \"saga\"]\nActual:   List<string> [\"consumer\"]",
+          "StackTrace": "   at Xunit.Assert.Equal[T](T expected, T actual, IEqualityComparer`1 comparer) in /_/src/xunit.v3.assert/Asserts/EqualityAsserts.cs:line 234\n   at Xunit.Assert.Equal[T](IEnumerable`1 expected, IEnumerable`1 actual) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 557\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 82\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/Program.cs:line 23",
+          "bounded_guard_failure": false
+        },
+        {
+          "case": "mixed-concurrency-consumer",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.NotNullException",
+          "Message": "Assert.NotNull() Failure: Value is null",
+          "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 50\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/Program.cs:line 23",
+          "bounded_guard_failure": false
+        },
+        {
+          "case": "mixed-concurrency-saga",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.NotNullException",
+          "Message": "Assert.NotNull() Failure: Value is null",
+          "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 50\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/Program.cs:line 23",
+          "bounded_guard_failure": false
+        },
+        {
+          "case": "global-override",
+          "assertions_passed": true
+        },
+        {
+          "case": "same-kind-reverse",
+          "assertions_passed": true
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "0442ad59262067ac79e3724e2f19249d3ed20c823d62ca7170bee9d3287eedf0"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/previous/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "package14-f031-public-corrected-fourteen",
+      "count": 14,
+      "failures": 0,
+      "cases": [
+        {
+          "case": "dedicated-saga",
+          "assertions_passed": true
+        },
+        {
+          "case": "same-kind-callbacks",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-callbacks",
+          "assertions_passed": true
+        },
+        {
+          "case": "same-kind-qos",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-consumer-qos",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-saga-qos",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-topology-conflict",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-compatible",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-reverse",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-typed",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-concurrency-consumer",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-concurrency-saga",
+          "assertions_passed": true
+        },
+        {
+          "case": "global-override",
+          "assertions_passed": true
+        },
+        {
+          "case": "same-kind-reverse",
+          "assertions_passed": true
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "1872fcba94846a8705c9367ab7217d06a74db951b80a36c47a79dac0c95d2bab"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "package14-f031-core-mut-corrected-all",
+      "count": 14,
+      "failures": 0,
+      "cases": [
+        {
+          "case": "dedicated-saga",
+          "assertions_passed": true
+        },
+        {
+          "case": "same-kind-callbacks",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-callbacks",
+          "assertions_passed": true
+        },
+        {
+          "case": "same-kind-qos",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-consumer-qos",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-saga-qos",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-topology-conflict",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-compatible",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-reverse",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-typed",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-concurrency-consumer",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-concurrency-saga",
+          "assertions_passed": true
+        },
+        {
+          "case": "global-override",
+          "assertions_passed": true
+        },
+        {
+          "case": "same-kind-reverse",
+          "assertions_passed": true
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "11636e65cd489ed3ba75caef7d4f44e13ed101ee30c1ec711a81fa116da075c9"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "package14-f031-core-mut-first-category-restored-mixed-typed",
+      "count": 1,
+      "failures": 1,
+      "cases": [
+        {
+          "case": "mixed-typed",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.EqualException",
+          "Message": "Assert.Equal() Failure: Collections differ\n                                    \u2193 (pos 1)\nExpected: string[]     [\"consumer\", \"saga\"]\nActual:   List<string> [\"consumer\"]",
+          "StackTrace": "   at Xunit.Assert.Equal[T](T expected, T actual, IEqualityComparer`1 comparer) in /_/src/xunit.v3.assert/Asserts/EqualityAsserts.cs:line 234\n   at Xunit.Assert.Equal[T](IEnumerable`1 expected, IEnumerable`1 actual) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 557\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 82\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/Program.cs:line 23",
+          "bounded_guard_failure": false
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "cef54156343e75efe2bbaf9970b833760ab42126ae2873fd871b328c03794634"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "package14-f031-core-mut-first-category-restored-dedicated-saga",
+      "count": 1,
+      "failures": 0,
+      "cases": [
+        {
+          "case": "dedicated-saga",
+          "assertions_passed": true
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "cef54156343e75efe2bbaf9970b833760ab42126ae2873fd871b328c03794634"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "package14-f031-core-mut-category-order-reversed-mixed-reverse",
+      "count": 1,
+      "failures": 1,
+      "cases": [
+        {
+          "case": "mixed-reverse",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.EqualException",
+          "Message": "Assert.Equal() Failure: Collections differ at index 0\n           \u2193 (pos 0)\nExpected: \"consumer\"\nActual:   \"saga\"\n           \u2191 (pos 0)",
+          "StackTrace": "   at Xunit.Assert.Equal[T](T expected, T actual, IEqualityComparer`1 comparer) in /_/src/xunit.v3.assert/Asserts/EqualityAsserts.cs:line 154\n   at Xunit.Assert.Equal[T](IEnumerable`1 expected, IEnumerable`1 actual) in /_/src/xunit.v3.assert/Asserts/CollectionAsserts.cs:line 557\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 82\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/Program.cs:line 23",
+          "bounded_guard_failure": false
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "f8e17a90c5d31c06ccf2bdea72ccb6fc3c3af1d7f7d1b5bebfd74a0f244063b5"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "package14-f031-core-mut-category-order-reversed-same-kind-reverse",
+      "count": 1,
+      "failures": 0,
+      "cases": [
+        {
+          "case": "same-kind-reverse",
+          "assertions_passed": true
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "f8e17a90c5d31c06ccf2bdea72ccb6fc3c3af1d7f7d1b5bebfd74a0f244063b5"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "package14-f031-core-mut-shared-qos-ownership-weakened-mixed-saga-qos",
+      "count": 1,
+      "failures": 1,
+      "cases": [
+        {
+          "case": "mixed-saga-qos",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.NotNullException",
+          "Message": "Assert.NotNull() Failure: Value is null",
+          "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 50\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/Program.cs:line 23",
+          "bounded_guard_failure": false
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "5f4aa4e77e35cad5c6b58ab8947e4800fa9a0ac63c98f703ad9cece650ca23a4"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "package14-f031-core-mut-shared-qos-ownership-weakened-mixed-compatible",
+      "count": 1,
+      "failures": 0,
+      "cases": [
+        {
+          "case": "mixed-compatible",
+          "assertions_passed": true
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "5f4aa4e77e35cad5c6b58ab8947e4800fa9a0ac63c98f703ad9cece650ca23a4"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "package14-f031-core-mut-mixed-topology-check-weakened-mixed-topology-conflict",
+      "count": 1,
+      "failures": 1,
+      "cases": [
+        {
+          "case": "mixed-topology-conflict",
+          "assertions_passed": false,
+          "exception_type": "Xunit.Sdk.NotNullException",
+          "Message": "Assert.NotNull() Failure: Value is null",
+          "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.SharedEndpoint.EndpointCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 50\n--- End of stack trace from previous location ---\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.SharedEndpoint.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.SharedEndpoint.EndpointCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/EndpointCases.cs:line 26\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/Program.cs:line 23",
+          "bounded_guard_failure": false
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "79e4b3ebd43e2958f14a858ee0ad06b6777c57ea0f414515360f8af0bb4d29ac"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "package14-f031-core-mut-mixed-topology-check-weakened-mixed-compatible",
+      "count": 1,
+      "failures": 0,
+      "cases": [
+        {
+          "case": "mixed-compatible",
+          "assertions_passed": true
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "79e4b3ebd43e2958f14a858ee0ad06b6777c57ea0f414515360f8af0bb4d29ac"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "package14-f031-core-mut-rollback-all",
+      "count": 14,
+      "failures": 0,
+      "cases": [
+        {
+          "case": "dedicated-saga",
+          "assertions_passed": true
+        },
+        {
+          "case": "same-kind-callbacks",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-callbacks",
+          "assertions_passed": true
+        },
+        {
+          "case": "same-kind-qos",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-consumer-qos",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-saga-qos",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-topology-conflict",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-compatible",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-reverse",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-typed",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-concurrency-consumer",
+          "assertions_passed": true
+        },
+        {
+          "case": "mixed-concurrency-saga",
+          "assertions_passed": true
+        },
+        {
+          "case": "global-override",
+          "assertions_passed": true
+        },
+        {
+          "case": "same-kind-reverse",
+          "assertions_passed": true
+        }
+      ],
+      "runtime": {
+        "framework": ".NET 10.0.10",
+        "processArchitecture": "X64",
+        "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+        "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+        "loadedProductAssemblies": [
+          {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "11636e65cd489ed3ba75caef7d4f44e13ed101ee30c1ec711a81fa116da075c9"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+          },
+          {
+            "name": "ViciOne.ServiceBus.Sagas",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+            "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+          }
+        ]
+      }
+    }
+  ],
+  "accepted_native_observation_count": 64,
+  "accepted_negative_count": 13,
+  "original_context": {
+    "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825",
+    "bytes": 18461,
+    "frozen_equals_git_HEAD": true
+  },
+  "oracle_preserved": true,
+  "runtime_restored_to_selected_packages": true,
+  "unchanged_sagas_dependency": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package14-f031/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+    "sha256": "619d44ee367c3cead4e4e01aa112c156ac5442e59bdb8a29a67a43a7ccb0a058"
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "utc": "2026-10-05T08:20:43.112566+00:00",
+  "actor": "root",
+  "qualified172_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE172_F157_XML_TWO_FIXED_TRANSPORT_THREE_ORIGINAL_F152_AZURE_EXTENSION_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "36542659cdda2832748ae7899c2fe4ce3d57021d7624728e1bf3f5e6e85ad892"
+  },
+  "root_whole_exact_patches_and_report_reads": "9220af Core3+Azure1+peers;284e74 entire Original12+multistop1 patches/reports;64ff91 multiStop peer;51dbe0 provider peer. Root independent all7 literal patch reconstructions568581, all8 peer/author MAN sets guarded before writing.",
+  "source_plan": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package173-root-application-preflight-r1/SOURCE_PLAN.json",
+    "sha256": "35bb63e00a2c63667793e9aad1b5b53b3c0a67bcefed820e0bee7c6b241b166f"
+  },
+  "peer_additional": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package181-dynamo-ef-insert-diagnostics12-independent-scanner-r1/REPORT.json",
+    "sha256": "ce0f920f9838fd812441d5d18fb3e126125961af8e3dc217891147e94311093f"
+  },
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpointDispatcherFactory.cs",
+      "before_sha256": "6428d2eb154c57aea6c7a14ee366f18368f9b30d2e45c5f7da237af8d70d77b0",
+      "after_sha256": "21b5fd3e788c22dc595633fd15ba4a2898045a7933a11f3cfbbf41734c8e7587",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package182-transport-three-repairs-product-proposed-r1/proposed/src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpointDispatcherFactory.cs"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs",
+      "before_sha256": "8cd620e7c5a4f47343b740f92c67a646a89b1b9d78ea5b25e0bb2565ae180966",
+      "after_sha256": "9c3ae2d9e4976a94b3f4c4ab5ba9132d53438197568ebba8fed0f8e34c0efb19",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package182-transport-three-repairs-product-proposed-r1/proposed/src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Hosting/TransportPipeContextSupervisor.cs",
+      "before_sha256": "25d6dd3b6d5d367edb8b8124a3f46f9f845dd76a9e7180297ae2e44c9390a7bb",
+      "after_sha256": "177ca94caa46399cc8f210138ecc24dfabf9635730dccca726e2b276590787cb",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package182-transport-three-repairs-product-proposed-r1/proposed/src/ViciOne.ServiceBus/Transports/Hosting/TransportPipeContextSupervisor.cs"
+    },
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.Azure.Table/Saga/AzureTableSagaRepositoryContext.cs",
+      "before_sha256": "1989c817cdff4807191cab9b0e67b492dfe6f700c868a0f1faa32b460e4ca71d",
+      "after_sha256": "634e25bd6e4ee699863e38b4ce86788f23bcf4d4a00a97aca24c4fc32dc12dcc",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package182-azure-insert-owned-diagnostics-product-proposed-r1/proposed/src/Persistence/ViciOne.ServiceBus.Azure.Table/Saga/AzureTableSagaRepositoryContext.cs"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorShutdownTests.cs",
+      "before_sha256": "b5b988b4b9ba669c6253423d93b64aed3291e7c62ff598a915b3030d8b029f5c",
+      "after_sha256": "b584ffcfbf65bb015592a0928fe94d3cb636d3f8e90d1deb27f72327d084eef1",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package182-transport-stop-multiple-failure-control-proposed-r1/proposed/tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorShutdownTests.cs"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbSagaFailureBoundaryTests.cs",
+      "before_sha256": "e01d708ea4e97ec4ea8bf00e4254759db5631d6e9828f735780c950aa86c522c",
+      "after_sha256": "ce216bdfed3699f56492ac35d7ff23329bb251bb08c81ee5400861f2fb801c18",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package181-dynamo-ef-insert-diagnostics12-oracles-proposed-r1/proposed/tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Saga/DynamoDbSagaFailureBoundaryTests.cs"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/DbContextSagaRepositoryContextTests.cs",
+      "before_sha256": "c8276bc3644962990c62e92f61d616406c703aabd0c89cb77d2f4102104ebc92",
+      "after_sha256": "b63be48a54517886059c42ff6b7e658e46f0a09d13913638ae66eb131bfbb561",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package181-dynamo-ef-insert-diagnostics12-oracles-proposed-r1/proposed/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/DbContextSagaRepositoryContextTests.cs"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "bb83bf2578a49ca756607038d7cea1d14bd03641d1339ea5713d6effda9abb09",
+      "after_sha256": "a1b9081cf9d0903875475e3e6511d90960d3e8ec60b690aea1524009567ba067",
+      "old_rows": 4654,
+      "after_rows": 4655,
+      "ADD_only": [
+        {
+          "requirementId": "REQ-VSB-PIPE-CONTEXT-SHUTDOWN",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testMethod": "TransportStopMultipleFailures_RetainsBothCausesAndStopsOwnedContextsAsync",
+          "testType": "ViciOne.ServiceBus.Tests.Middleware.Lifecycle.PipeContextSupervisorShutdownTests",
+          "variantKey": "transport-stop-retains-multiple-phase-failures"
+        }
+      ],
+      "all_old_prefix_exact": true
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/Requirements/DynamoDbRequirements.json",
+      "before_sha256": "26b805927951e61da120e48acb4229510fed3f8d6995f229be9b665879714441",
+      "after_sha256": "723fa8252a7bc25dc2117d0179be57e99349f8a34c2ec7659282f388f3bf8d0e",
+      "old_rows": 26,
+      "after_rows": 27,
+      "ADD_only": [
+        {
+          "requirementId": "REQ-VSB-AWS-DYNAMODB-SAGA-FAILURE",
+          "variantKey": "insert-debug-preserves-sdk-context-concurrency-and-primary",
+          "testAssembly": "ViciOne.ServiceBus.DynamoDb.Tests",
+          "testType": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests",
+          "testMethod": "Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync"
+        }
+      ],
+      "all_old_prefix_exact": true
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/EntityFrameworkRequirements.json",
+      "before_sha256": "27fd27db57d19388ef6e59e69c34f9ba9c35e63d829ca1ca5e3262efe1d1b298",
+      "after_sha256": "8a9646e7d74a85527e1b3476feb868321c1a9fe2f2bd62c82591c751b31ea263",
+      "old_rows": 275,
+      "after_rows": 276,
+      "ADD_only": [
+        {
+          "requirementId": "REQ-VSB-EF-SAGA-INSERT-RACE",
+          "variantKey": "insert-debug-preserves-persisted-context-and-verified-race",
+          "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+          "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.DbContextSagaRepositoryContextTests",
+          "testMethod": "Insert_DebugDiagnosticsPreservePersistedOutcomeAsync"
+        }
+      ],
+      "all_old_prefix_exact": true
+    }
+  ],
+  "guard_all_before_write": true,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package173-root-before-r1",
+  "runtime_status": "APPLIED_SOURCE_ONLY_STRICT_NATIVE_FRESH_PACK_PENDING",
+  "findings": [
+    160,
+    161,
+    162
+  ],
+  "F152_scope": "Azure owning3 diagnostic calls; other provider Original12 remains original Product unchanged. Global SagaLog public SPI untouched.",
+  "current_Original6_methods_and_helpers_unchanged": true,
+  "whole_API_closed": false
+}

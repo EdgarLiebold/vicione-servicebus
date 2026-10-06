@@ -1,0 +1,58 @@
+{
+  "utc": "2026-10-05T08:53:57.956789+00:00",
+  "actor": "root",
+  "files": [
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/DbContextSagaRepositoryContext.cs",
+      "before_sha256": "e9fa214f13eb57a774d52d6972aa87759163e56be76b0cf22651c5d7cd629108",
+      "after_sha256": "ef70913773080ea05ee0e046fefbcc68a2272a34e04152e6b8501cb8fc17c4e4",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-dynamo-ef-owned-insert-diagnostics-product-proposed-r1/proposed/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/DbContextSagaRepositoryContext.cs",
+      "patch": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-dynamo-ef-owned-insert-diagnostics-product-proposed-r1/DbContextSagaRepositoryContext.patch"
+    },
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.DynamoDb/Saga/DynamoDbSagaRepositoryContext.cs",
+      "before_sha256": "80b68c33f5b1a6c04626b82422d7e2f34b19ea9ad0852de55d003875d4dc3a34",
+      "after_sha256": "a0670abfee7cda6b25d96cb156fc2d51afff4da84c4f5b1285139167b75c2433",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-dynamo-ef-owned-insert-diagnostics-product-proposed-r1/proposed/src/Persistence/ViciOne.ServiceBus.DynamoDb/Saga/DynamoDbSagaRepositoryContext.cs",
+      "patch": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-dynamo-ef-owned-insert-diagnostics-product-proposed-r1/DynamoDbSagaRepositoryContext.patch"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/LegacySagaIntegrationTests.cs",
+      "before_sha256": "a52719e36f5195f870e02e0923f684e3dc06b19a007734af0b8c0b84dea081ba",
+      "after_sha256": "746b3a359b765c64a9435e7ba42bf7293d7c711135f50248c9f3d5cf55667bdb",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package184-saga-connect-subscribe-debug4-oracles-proposed-r2/proposed/tests/ViciOne.ServiceBus.Tests/Sagas/LegacySagaIntegrationTests.cs",
+      "patch": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package184-saga-connect-subscribe-debug4-oracles-proposed-r2/TEST_DELTA.patch"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/HostHandleApiTests.cs",
+      "before_sha256": "3eee8f5d5532ae10aae2a83919b75037fab4b7ba7cef7370b6333fd0ffa9041c",
+      "after_sha256": "e1c30b01e6b81a7db920a00e0316b46b33dde8e256f19c8e996c5e935fac72e6",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-host-consumer-stop4-oracles-proposed-r1/proposed/tests/ViciOne.ServiceBus.Tests/Transports/HostHandleApiTests.cs",
+      "patch": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-host-consumer-stop4-oracles-proposed-r1/HostHandleApiTests_TEST_DELTA.patch"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+      "before_sha256": "aac760c52eee27b218da3f60b9006f1b484fa72ff4173367690f2c57d32c85fe",
+      "after_sha256": "c52245b80bfba363b1180424566ec3f35efa3c04037f722730a0a38b702ea215",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-host-consumer-stop4-oracles-proposed-r1/proposed/tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+      "patch": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package185-host-consumer-stop4-oracles-proposed-r1/ConsumerAgentTests_TEST_DELTA.patch"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "a1b9081cf9d0903875475e3e6511d90960d3e8ec60b690aea1524009567ba067",
+      "after_sha256": "6352e18c631fee4cef6bf189758d99c525e4a1c8e2b60085085298306ffc8df2",
+      "proposal": "Root merge latest4655 +canonicalADD3",
+      "rows_before": 4655,
+      "rows_after": 4658
+    }
+  ],
+  "root_preflight": "aeb7b4 exact all6 author/peer manifests/allcurrentpins/all5 literal patches independently reconstructed. Whole product proposed490ff2 +wholeactual6c25b7; OriginalSaga patch51ea55/actuald8e0c5+type63f551 and fullpeerdb09ad; HostConsumer fullnewpatch/report4f5d57 +actualwholecc3ba8/peerdb09ad.",
+  "qualification_prerequisite": {
+    "173_root_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE173_TRANSPORT_THREE_FIXED_F152_AZURE_FIXED_PROVIDER_FIVE_ORIGINAL_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "e13eb819d80bf4b1d26550977499ef6ec1289e2eca42e74b4d293a8c4b341ac4"
+  },
+  "scope": "Dynamo/EF product2 guards only own optional insert diagnostics, no testchange; Core actual Original8 across legacySaga4 andHostConsumer4, Test3owners +canonicalReqADD3; Host/Consumer/ConfigSagaProduct still unchanged Original.",
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package174-root-before-r1",
+  "current_native_or_whole_API_claim": false,
+  "precision": "New Consumer control uses existing OperationTimeout5sec, healthy/hostile source same5sec terminal observations; no invented10sec claim."
+}

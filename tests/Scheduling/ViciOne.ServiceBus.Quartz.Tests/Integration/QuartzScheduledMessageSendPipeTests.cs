@@ -22,6 +22,60 @@ public sealed class QuartzScheduledMessageSendPipeTests
     private static readonly DateTimeOffset CurrentTime = new(2038, 7, 6, 5, 4, 3, TimeSpan.Zero);
     private static readonly Uri DestinationAddress = new("loopback://localhost/scheduled-destination");
 
+    [Theory]
+    [InlineData(true, true)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [RequirementCoverage("REQ-VSB-QUARTZ-DELIVERY", "transient-clock-failure-is-not-permanent-persisted-data")]
+    public async Task ValidPayload_DoesNotClassifyTransientClockFailureAsPermanentDataAsync(bool expires, bool firstReadFails)
+    {
+        var marker = new IOException("exact configured clock failure");
+        var clock = new RecoveringClock(CurrentTime, firstReadFails ? marker : null);
+        var data = new JobDataMap
+        {
+            [QuartzJobDataKeys.DestinationAddress] = DestinationAddress.ToString(),
+            [QuartzJobDataKeys.MessageIdSeed] = "018f6738-7d4a-7b21-86e2-bdfbb3ed5f90"
+        };
+        if (expires)
+            data[QuartzJobDataKeys.ExpirationTime] = CurrentTime.AddMinutes(3).ToString("O");
+        var metadata = new QuartzScheduledMessageContext(CreateExecutionContext(data), ServiceBusMetadataJson.ObjectDeserializer);
+        ISerialization serialization = new SerializationConfiguration().CreateSerializerCollection();
+        var original = new MessageSendContext<ScheduledPayload>(new ScheduledPayload("healthy-persisted-payload"))
+        {
+            Serializer = serialization.GetMessageSerializer()
+        };
+        var pipe = new QuartzScheduledMessageSendPipe(original.ContentType!, metadata,
+            original.Body.GetRequiredTransportText(), DestinationAddress,
+            [MessageUrn.ForTypeString<ScheduledPayload>()], clock);
+        var first = new RoutingSendContext<SerializedTransportMessage>(SerializedTransportMessage.Instance)
+        {
+            Serialization = serialization
+        };
+
+        Exception? error = await Record.ExceptionAsync(() => pipe.SendAsync(first));
+        if (expires && firstReadFails)
+        {
+            Assert.Same(marker, error);
+            Assert.IsNotType<InvalidScheduledMessageDataException>(error);
+            Assert.Equal(1, clock.Reads);
+            var recovered = new RoutingSendContext<SerializedTransportMessage>(SerializedTransportMessage.Instance)
+            {
+                Serialization = serialization
+            };
+            await pipe.SendAsync(recovered);
+            Assert.Equal(TimeSpan.FromMinutes(3), recovered.TimeToLive);
+            Assert.NotNull(recovered.Serializer);
+            Assert.Equal(2, clock.Reads);
+        }
+        else
+        {
+            Assert.Null(error);
+            Assert.Equal(expires ? TimeSpan.FromMinutes(3) : (TimeSpan?)null, first.TimeToLive);
+            Assert.NotNull(first.Serializer);
+            Assert.Equal(expires ? 1 : 0, clock.Reads);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-DELIVERY", "transport-context-rehydration")]
     public async Task SendAsync_RestoresMessageAndTransportMetadataAsync()
@@ -208,6 +262,18 @@ public sealed class QuartzScheduledMessageSendPipeTests
         };
 
         return new JobExecutionContextImpl(null!, bundle, new NoOpJob());
+    }
+
+    private sealed class RecoveringClock(DateTimeOffset utcNow, Exception? firstFailure) : TimeProvider
+    {
+        public int Reads { get; private set; }
+        public override DateTimeOffset GetUtcNow()
+        {
+            Reads++;
+            if (Reads == 1 && firstFailure is not null)
+                throw firstFailure;
+            return utcNow;
+        }
     }
 
     private sealed class NoOpJob : global::Quartz.IJob

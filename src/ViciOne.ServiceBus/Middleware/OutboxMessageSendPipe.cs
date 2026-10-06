@@ -29,7 +29,7 @@ public class OutboxMessageSendPipe :
         _destinationAddress = destinationAddress;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Reconstructs the stored outbox message metadata and serialized body in the send context.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(SendContext context)

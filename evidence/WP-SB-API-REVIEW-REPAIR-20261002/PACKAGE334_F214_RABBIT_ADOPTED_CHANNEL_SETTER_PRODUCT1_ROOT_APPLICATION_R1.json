@@ -1,0 +1,30 @@
+{
+  "utc": "2026-10-06T04:20:35.965122+00:00",
+  "status": "INDEPENDENT_SOURCE_REVIEWED_PRODUCT1_APPLIED_FIXED_NATIVE_PENDING",
+  "finding": "F-SB-API-214",
+  "registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE334_F214_RABBIT_ADOPTED_CHANNEL_SETTER_ORIGINAL8_ROOT_FINDING_REGISTRATION_R1.json",
+    "sha256": "23060a90212dce1315c267c482373889d18969773e6575d2e2c9d757d914d216"
+  },
+  "proposal": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package334-rabbit-channel-setter-initialization-product1-root-proposed-r1",
+    "manifest_sha256": "0cfb8eeb536aceda14284ab4c7d3425198abe5dae73bc1236c3a0f2bf9f759da"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package334-rabbit-channel-initialization-independent-runtime-product-source-peer-r1",
+    "manifest_sha256": "e7362b3c9db78f563e60c35250a134a2c1bca870b26e59e5bf1fd71ab3d2d0c4"
+  },
+  "change": {
+    "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqConnectionContext.cs",
+    "before_sha256": "5bf399bf2bca9a87cd3385eae62521be137dd70e938d4c813934ea10a898ca62",
+    "after_sha256": "7a8ce4f3302b64113c3059e8207172810e8124f0497e5a146a494f6560fb659c",
+    "before_lines": 139,
+    "after_lines": 146,
+    "literal_inverse_exact": true,
+    "patch_sha256": "133cd6316ed9cc7f26c471b8fde330f5323a2fc5d1136aaa3535737002c62670"
+  },
+  "preservation": "Acquisition/options/caller token/lease unchanged. Setter failure awaits existing best-effort Channel cleanup under lease, then bare throw preserves local primary. Public declarations/XML/Test334/catalog291 unchanged. No constructor rollback or arbitrary cancellation/concurrency closure.",
+  "fixed_native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

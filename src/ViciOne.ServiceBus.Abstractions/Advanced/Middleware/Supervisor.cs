@@ -119,7 +119,17 @@ public class Supervisor :
 
                     var stopTasks = new Task[context.Agents.Count];
                     for (var i = 0; i < context.Agents.Count; i++)
-                        stopTasks[i] = context.Agents[i].StopAsync(context);
+                    {
+                        try
+                        {
+                            stopTasks[i] = context.Agents[i].StopAsync(context)
+                                ?? Task.FromException(new InvalidOperationException("The agent must expose a stop task."));
+                        }
+                        catch (Exception exception)
+                        {
+                            stopTasks[i] = Task.FromException(exception);
+                        }
+                    }
 
                     await Task.WhenAll(stopTasks).ConfigureAwait(false);
                     break;

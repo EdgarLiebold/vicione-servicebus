@@ -187,7 +187,14 @@ public sealed class MessageTypeCache<T> :
     string IMessageTypeCache.DiagnosticAddress => _diagnosticAddress.Value;
     IReadOnlyList<PropertyInfo> IMessageTypeCache.Properties => _properties ??= PropertyListFactory();
     bool IMessageTypeCache.IsValidMessageType => _isValidMessageType.Value;
-    string? IMessageTypeCache.InvalidMessageTypeReason => _invalidMessageTypeReason;
+    string? IMessageTypeCache.InvalidMessageTypeReason
+    {
+        get
+        {
+            _ = _isValidMessageType.Value;
+            return _invalidMessageTypeReason;
+        }
+    }
 
     IReadOnlyList<Type> IMessageTypeCache.MessageTypes =>
         _messageTypes ??= Array.AsReadOnly(GetMessageTypes().ToArray());

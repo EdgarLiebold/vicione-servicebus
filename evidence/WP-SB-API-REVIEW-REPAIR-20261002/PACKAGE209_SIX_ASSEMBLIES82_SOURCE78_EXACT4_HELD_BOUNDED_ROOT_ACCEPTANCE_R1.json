@@ -1,0 +1,49 @@
+{
+  "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACTS_EXACT_HOLDS_RETAINED",
+  "utc": "2026-10-05T18:47:46.961009+00:00",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package224-six-assemblies82-current205-local-source-context-r1/REPORT.json",
+    "sha256": "fe04903475847ca6dc53c584a91259ef4ec60cf2fec995bafc17567219487996"
+  },
+  "mandatory_overlay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package224-two-observer-norm-precision-overlay-r2/REPORT.json",
+    "sha256": "4ae6e8f9c427dbfb1ed58f504f0bc01cce0655bdcd31f8c18eecf1438796ffcf"
+  },
+  "independent": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package224-six-assemblies82-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "c2801db7ca66072eaff28419f94648fb89c72e35f30ca6a69b054ddc6d12f0b7"
+  },
+  "semantic_authority": "Root genuine whole43/6213 + individual82, independent genuine whole43/6213 + individual82 and mandatory observer precisionR2.",
+  "canonical_source_accepted": 78,
+  "held_exact": [
+    {
+      "ordinal": 19,
+      "id": "M:ViciOne.ServiceBus.Mediator.MediatorRequestHandler`1.#ctor",
+      "reason": "Implicit ctor compiled identity"
+    },
+    {
+      "ordinal": 20,
+      "id": "M:ViciOne.ServiceBus.Mediator.MediatorRequestHandler`2.#ctor",
+      "reason": "Implicit ctor compiled identity"
+    },
+    {
+      "ordinal": 37,
+      "id": "M:ViciOne.ServiceBus.MessagePack.MessagePackSerializerFactory.#ctor",
+      "reason": "Implicit ctor compiled identity"
+    },
+    {
+      "ordinal": 45,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.Registration.SagaStateMachineRegistration`2.Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "reason": "Registration diagnostic ordering Original runtime pending"
+    }
+  ],
+  "original_canonical_before": 12427,
+  "original_canonical_after": 12505,
+  "original_remaining_after": 6064,
+  "raw_before": 13289,
+  "raw_after": 13367,
+  "native_cases_added": 0,
+  "global_grade": null,
+  "whole_API_member_review_closed": false,
+  "history": "Prior complete Master objects/order unchanged; no coherent loaded/runtime claim."
+}

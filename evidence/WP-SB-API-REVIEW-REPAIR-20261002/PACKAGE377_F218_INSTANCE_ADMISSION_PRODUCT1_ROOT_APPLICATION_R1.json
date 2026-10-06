@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-06T07:36:53.956429+00:00",
+  "status": "ROOT_APPLIED_INDEPENDENTLY_SOURCE_REVIEWED_F218_PRODUCT1_FIXED_NATIVE_PENDING",
+  "finding": "F-SB-API-218",
+  "source_change": {
+    "relative": "src/ViciOne.ServiceBus/Configuration/InstanceConnector.cs",
+    "before_sha256": "b5fadafbccfafd1c79ba42141582e9d1d23f7b806a9a8a4e613cb526ffc5fd58",
+    "after_sha256": "b4014f607afcb464f48af76e339122ff34b039f8b9b76dbf97a73dceefec074d",
+    "before_lines": 109,
+    "after_lines": 126,
+    "restore_before_literal": "        catch (Exception)\n        {\n            foreach (var handle in handles)\n                handle.Dispose();\n            throw;\n        }\n",
+    "remove_after_literal": "        catch (Exception admissionFailure)\n        {\n            List<Exception>? cleanupFailures = null;\n            foreach (var handle in handles)\n            {\n                try\n                {\n                    handle.Dispose();\n                }\n                catch (Exception cleanupFailure)\n                {\n                    (cleanupFailures ??= []).Add(cleanupFailure);\n                }\n            }\n\n            if (cleanupFailures is not null)\n            {\n                cleanupFailures.Insert(0, admissionFailure);\n                throw new AggregateException(\"Instance admission and registration cleanup failed.\", cleanupFailures);\n            }\n\n            throw;\n        }\n",
+    "inverse_entire_source_exact": true
+  },
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package373-instance-admission-cleanup-product1-proposed-r1/MANIFEST.json",
+    "sha256": "9908c8ff805c37ace290026a9180e59475336fcc0f6270d0363636cd043022e0"
+  },
+  "independent_adversarial_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package373-instance-product1-independent-runtime-source-peer-r1/MANIFEST.json",
+    "sha256": "74b479d52fef96ef34e7ae0d19c267363c72ebd3461cdee1575d0ee8c76a12d8"
+  },
+  "qualified_original": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package374-instance-original6-independent-qualification-r1/MANIFEST.json",
+    "sha256": "0433cb716ebc4e0eadbb259826358754f252ef54e827e345fc618cdc268d9134"
+  },
+  "Root_whole_product_before109": "983792",
+  "Root_whole_proposed126": "a0f513",
+  "Root_whole_inverse_and7guard": "5abf41",
+  "Root_whole_peer": "5e5e2e",
+  "unchanged_Test351_Req4670": true,
+  "only_product_one_catch_changed": true,
+  "native_count": 0,
+  "whole_API_closed": false
+}

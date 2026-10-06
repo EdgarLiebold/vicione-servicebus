@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
 
 namespace ViciOne.ServiceBus.Serialization;
 
@@ -112,9 +113,21 @@ public sealed class DictionarySendHeaders :
         where T : class
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
-        return _headers.TryGetValue(key, out object? value) && value is not null
-            ? ServiceBusMetadataJson.ObjectDeserializer.DeserializeObject(value, defaultValue)
-            : defaultValue;
+        if (!_headers.TryGetValue(key, out object? value) || value is null)
+            return defaultValue;
+
+        object? preparedValue = HeaderValueConversion.PrepareHeaderValue<T>(value, out bool incompatible, out bool useBuiltInFallback);
+        if (incompatible)
+            return defaultValue;
+
+        try
+        {
+            return ServiceBusMetadataJson.ObjectDeserializer.DeserializeObject(preparedValue, defaultValue);
+        }
+        catch (JsonException) when (useBuiltInFallback)
+        {
+            return defaultValue;
+        }
     }
 
     /// <summary>Gets a value-type header value or the supplied fallback.</summary>
@@ -126,9 +139,21 @@ public sealed class DictionarySendHeaders :
         where T : struct
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
-        return _headers.TryGetValue(key, out object? value) && value is not null
-            ? ServiceBusMetadataJson.ObjectDeserializer.DeserializeObject(value, defaultValue)
-            : defaultValue;
+        if (!_headers.TryGetValue(key, out object? value) || value is null)
+            return defaultValue;
+
+        object? preparedValue = HeaderValueConversion.PrepareHeaderValue<T>(value, out bool incompatible, out bool useBuiltInFallback);
+        if (incompatible)
+            return defaultValue;
+
+        try
+        {
+            return ServiceBusMetadataJson.ObjectDeserializer.DeserializeObject(preparedValue, defaultValue);
+        }
+        catch (JsonException) when (useBuiltInFallback)
+        {
+            return defaultValue;
+        }
     }
 
     /// <summary>Enumerates the valid headers as strongly validated header values.</summary>

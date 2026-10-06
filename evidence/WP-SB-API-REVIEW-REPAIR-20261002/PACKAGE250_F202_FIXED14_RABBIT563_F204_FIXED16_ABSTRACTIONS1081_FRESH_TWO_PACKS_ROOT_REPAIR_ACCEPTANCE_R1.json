@@ -1,0 +1,80 @@
+{
+  "utc": "2026-10-05T21:53:15.358910+00:00",
+  "status": "F202_AND_F204_LOCAL_REPAIRS_ROOT_ACCEPTED_INDEPENDENTLY_REVIEWED_WHOLE_API_OPEN",
+  "F202": {
+    "original": "Genuine unchanged public endpoint route healthycontrol passes, configured middleware case failed prior repair; original202 registration retained.",
+    "repair": "Reviewed Product4 composes configured connection specs around actual endpoint channel creation via endpoint-local facade borrowing current recyclable host supervisor. Single per-call Next admission; admitted work drained even early middleware return/fault; exact primary/cancellation causes preserved under reviewed policy.",
+    "actual_targeted": {
+      "cases": 14,
+      "pass": 14,
+      "failed": 0,
+      "skipped": 0
+    },
+    "actual_whole_module": {
+      "cases": 563,
+      "pass": 563,
+      "failed": 0,
+      "skipped": 0,
+      "focused14_are_subset_not_additive": true
+    },
+    "source_application": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE229_F202_RABBIT_CONNECTION_PRODUCT4_ROOT_APPLICATION_R2.json",
+    "current_source_revalidation51": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE248_RABBIT51_NORMS4_GENERATION_CONTEXT4_SOURCE_REBASE_ROOT_ACCEPTANCE_R1.json",
+      "sha256": "3c8940ca75766ee31cc41f32e54d0b3afadb93d649a6b0bc530aa6ce0b543d6a"
+    },
+    "limits": "No broker/cloud delivery or arbitrary middleware cooperation guarantee; same-canceled-admitted Task identity dedup branch remains Source-only. Existing lifecycle/code ownership constraints and globalAPI holds persist."
+  },
+  "F204": {
+    "original": "Original16=15P1F; failSecond true first finite assertion proved public Stop completed while preceding admitted child Stop Task still pending; no timeout used as defect oracle.",
+    "repair": "Exact10 added implementation lines wrap every many-child synchronous Stop call as fault Task (same primary Exception, nullTask defensive), then original WhenAll drains all admitted children. Original zero/single/getter/Add/readiness/Agent cancellation policy preserved.",
+    "actual_targeted": {
+      "cases": 16,
+      "pass": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    "actual_whole_module": {
+      "cases": 1081,
+      "pass": 1081,
+      "failed": 0,
+      "skipped": 0,
+      "focused16_are_subset_not_additive": true
+    },
+    "source_application": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE242_F204_SUPERVISOR_PRODUCT1_ROOT_APPLICATION_R1.json",
+    "limits": "No universal Add rollback, failed child Completed success, multi-error Aggregate policy or allSPI implementation grade; both historicalSource audit-held SupervisorIDs remain separately held."
+  },
+  "independent_result_and_pack_reviews": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package242-supervisor-fixed16-whole1081-independent-qualification-r1/REPORT.json",
+      "sha256": "c6999634ea3af6d63afaf8bf69c3376b0e4298ffacee61ff994359fca1040b33",
+      "manifest_sha256": "c14872b960ba6d0728de2b962119ce097871c16befb4e1402bd090e80cf7967e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package246-rabbit563-fresh2-independent-runtime-qualification-r1/REPORT.json",
+      "sha256": "f086668f8fb27f421823394223540f375e45a2ad2d7e2e654dfd50fb47005ef9",
+      "manifest_sha256": "10aceadc52c7d068f2f62e358b6a4adf7b0be00468927fb49dc89eb1cd263210"
+    }
+  ],
+  "root_fresh_pack_proof": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package246-fresh-abstractions-rabbit-pack-root-proof-r1/REPORT.json",
+    "sha256": "b6b3ec60bbcd05d5a3dd865d0fc1d2540974c8b0e2328089e55917d753102ebb"
+  },
+  "strict_builds": "Both respective current module strict builds0W0E, exactboundactual DLL/XML in freshly packed1.0.0/net10.0 archives independently checked.",
+  "root_personal_review": "Source/test/application authority retained exactSHA; whole qualification reports personally read (Rabbit report central14cases recovered fully003194 after3a5bc8 truncation), all peers/manifests guarded. Root mechanical actual563/1081 case counts/subsets are not own humanwhole563/1081 body-read claims.",
+  "known_registered_findings": 204,
+  "bounded_registered_dispositions_accepted_after": 204,
+  "master_unchanged_sha256": "92ab6f0ac51a8dfcde6dd35722972d4699374a1cfe8d5058f1960e097f316f1a",
+  "original_source_only_accepted": 15214,
+  "original_remaining": 3355,
+  "F147_further_confirmed_jobservice_doc3_extension": "Q249 exactXMLproposal pending independentSourcepeer and Rootapply/freshpublication; prior F147 dispositions retained historical, no claim this newextension fixed.",
+  "whole_API_closed": false,
+  "grade": null,
+  "final_gates_pending": [
+    "remaining individualAPI runtime/compiler/documentation obligations",
+    "fresh final23unit modules",
+    "fresh31package/APIpublication gates",
+    "18journeys",
+    "4executedconsumer checks"
+  ],
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-f202-f204-root-state-po-before-r1"
+}

@@ -1,0 +1,92 @@
+{
+  "status": "CURRENT_NATIVE_R1_RED__NINE_FILES_ROOT_CORRECTION_SOURCE_REVIEW_PENDING__SCANNER_CLOSURE_PENDING",
+  "actual_operations": [
+    {
+      "phase": "package38-current-unit-strict-build-r2",
+      "command": [
+        "dotnet",
+        "build",
+        "ViciOne.ServiceBus.Tests.Unit.slnx",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-04T05:02:49.036990+00:00",
+      "completed_utc": "2026-10-04T05:03:57.013353+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package38-current-unit-strict-build-r2.log",
+      "log_sha256": "af6c4e3946d60093d6175793debb35253c9e347dd4491e90021bac04e2777b5a"
+    },
+    {
+      "phase": "package38-current-unit-unfiltered-r1",
+      "command": [
+        "dotnet",
+        "test",
+        "--solution",
+        "ViciOne.ServiceBus.Tests.Unit.slnx",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--results-directory",
+        "artifacts/test-results/package38-current-unit-r1",
+        "--minimum-expected-tests",
+        "4900",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 2,
+      "started_utc": "2026-10-04T05:04:35.747980+00:00",
+      "completed_utc": "2026-10-04T05:10:54.229700+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package38-current-unit-unfiltered-r1.log",
+      "log_sha256": "bf22559c91785822c9e54e2e6e8d55541fe5c7c737f2ad7b478af5756b3bed9d"
+    },
+    {
+      "phase": "package39-original-provider-probe-restore-r1",
+      "command": [
+        "dotnet",
+        "restore",
+        "ProviderDefinitionProbe.csproj",
+        "--configfile",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/NuGet.config"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-tools/provider-definition-composition-r1",
+      "exit_code": 0,
+      "started_utc": "2026-10-04T05:17:57.104258+00:00",
+      "completed_utc": "2026-10-04T05:17:58.958856+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package39-original-provider-probe-restore-r1.log",
+      "log_sha256": "7972aef3b1d8f7f2dc5236c8a67f358fac09adf46ced352364b1a13c2fc311d3"
+    },
+    {
+      "phase": "package39-original-provider-probe-strict-build-r1",
+      "command": [
+        "dotnet",
+        "build",
+        "ProviderDefinitionProbe.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-tools/provider-definition-composition-r1",
+      "exit_code": 1,
+      "started_utc": "2026-10-04T05:19:33.319004+00:00",
+      "completed_utc": "2026-10-04T05:19:38.421344+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package39-original-provider-probe-strict-build-r1.log",
+      "log_sha256": "92d12a49ac2ccf45f8a28d6091206e5bcd8dc5a107ab3f0374249be4783ced26"
+    }
+  ],
+  "unit_result": {
+    "total": 12386,
+    "passed": 12376,
+    "failed": 10,
+    "skipped": 0
+  },
+  "current_correction": "Two reflection setups; typed Courier lookup assertions; two async helper names; two public migration records separated without API/body changes. Architecture local-message provenance patch pending responsible Root project read closure.",
+  "provider_probe": "Private strict build failed because DI implementation package was omitted; Root added existing pinned 10.0.12 reference; adversarial source R3 pending. No runtime defect confirmed.",
+  "whole_API_complete": false,
+  "A_plus_release_claim": false
+}

@@ -1,0 +1,109 @@
+{
+  "utc": "2026-10-05T01:45:22.679056+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED_TWO_BOUNDED_REPAIRS_CURRENT_NATIVE_AND_PUBLISHED_XML",
+  "accepted_before": 138,
+  "accepted_after": 140,
+  "known_findings": 141,
+  "finding_ids": [
+    "F-SB-API-134",
+    "F-SB-API-140"
+  ],
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package162-header-fixed30-outbox-routing-schedule-original48-neighbors2304-fresh2-independent-r1/REPORT.json",
+    "sha256": "f7d50a7d072c499d4f5373e91a6acbbde3ab921b286198fb8194283a363af8f4"
+  },
+  "root_MAN_verified": 3345,
+  "root_read_authority": "b1352e all report semantic fields;3ab94c all6actualSDKreceipts+fresh2/ZIPCRC/DLLXMLexactframe and exactCoreXMLonechangednode;805104 all30 target caseIDs/args/results; c673f1 Original48allcaseIDs/first4fullfailureblocks, eac180 complete2Schedule failureblocks. Root does not claim2304human wholeTestbody review.",
+  "qualified_read_precision": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package162-header-fixed30-outbox-routing-schedule-original48-neighbors2304-fresh2-independent-r1/read-scope-precision-erratum-r1/REPORT.json",
+    "sha256": "1be4789c0cc6dd0f98da0f018b1c2b745cd1821e757a287c417de9f244443ed7"
+  },
+  "native": {
+    "Header25": 25,
+    "real_default_adapters4": 4,
+    "compiled_requirement_projection1": 1,
+    "disjoint_neighbors2304": 2304,
+    "fixed_target_failures": 0,
+    "skips": 0
+  },
+  "header_reached_oracles": [
+    "Numeric exact42 fallback/null",
+    "Reference exact fallback identity/null",
+    "3sourceforms preserve compatible Guid/text/numeric27 and malformedJsonException propagation",
+    "Owned case-insensitive/URI/object dictionary healthy forms then exact caller fallback/null; undefinedJsonElement InvalidOperationException remains visible",
+    "9 custom read IO/JsonException/OCE cases preserve exact causes/read1/token at root,List<T>,Dictionary; internally3forms percase",
+    "Existing exact custom write IO/JsonException/OCE unaffected"
+  ],
+  "XML_only_change": [
+    "T:ViciOne.ServiceBus.Middleware.SetSerializerFilter`1"
+  ],
+  "artifacts": [
+    {
+      "filename": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "dc65528103e2853fe300644ac8c157de4ea8a84203cfa3f475467c8ce3d0512e",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.dll",
+        "lib/net10.0/ViciOne.ServiceBus.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/1ee3d927f9264902a03b5f9aeb047c1a.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "559ad8e8e168872ab9d1d537189062ccf2defbf67560807aa4d6ddddd2d26b80",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "2d475dae8054fa6db249074e35755ebedf3932b15c66a25ed7723060b70dee52",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "7f43279f4891e74fdf7d8a7c87516925ec2852f64fa48d8050ac09dd7566de2f"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "bec4b4adb7b4260246a98f877385ef12b1f1980c79dabedf47d72a86a18889b2",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.Sagas.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/34978397794e4ea2be7b88af44644022.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "44653cc7da4f3572584d3a4c07aa091e75e435f096e5b791ec64425bcc41a145",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+          "sha256": "22e3987d347f2917266b1cf8306efaa4a35713742c2d65a9a44e7e278a52808e",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "29368ece6e497d9e4fda9fa79c549e1a93c0db4d32881c511014da23eb160e21"
+    }
+  ],
+  "limits": [
+    "No SDK/native/Repo mutation by peer; all checks read frozen162 bytes after ACK.",
+    "6finiteOriginal failures retained; no clean wholeCore/wholeAPI grade.",
+    "2304 unique executed neighbor IDs/counts verified mechanically; no2304 human Testbody coverage or allAPI semantics transferred.",
+    "Only7 selectedruntimeDLLs bound equal canonicalframes, notallloadeddependencies.",
+    "Req4632 exactsingle managedpayload matched, resource names notdecoded.",
+    "MTP may elide stringargument displays intrinsically; preserve actual logged IDs only.",
+    "Fresh2 belong to frozen162epoch; no global release claim.",
+    "ScheduleDelay setter doc remains unchanged and pending its separately approved correction; noF141closure in162.",
+    "Header fallback/native evidence is bounded to25cases and explicit trusted conversion paths; arbitrary external DTO/converter graphs not universally closed."
+  ],
+  "CLOSED": false
+}

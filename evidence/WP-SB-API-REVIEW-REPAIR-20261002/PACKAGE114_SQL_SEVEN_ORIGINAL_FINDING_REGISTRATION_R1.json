@@ -1,0 +1,129 @@
+{
+  "utc": "2026-10-04T18:35:29.378733+00:00",
+  "decision": "REGISTER_SEVEN_CAUSAL_SQL_PRODUCT_DEFECTS_ORIGINAL_38_NOT_INFRA_FAILURES",
+  "root_reads": [
+    "9fb2b1/da4784 complete independent SQL reports and concrete seven-family researchplan",
+    "4412bb compact actual38 outcomes and finite assertion causes"
+  ],
+  "original_actual_runtime_epoch": "103 captured runtime; current canonical Core F103 excluded",
+  "actual_total": 38,
+  "passed": 20,
+  "failed": 18,
+  "skipped": 0,
+  "findings": [
+    {
+      "id": "F-SB-API-106",
+      "severity": "Medium",
+      "title": "SQL Server loses Unicode routing and fetched metadata",
+      "source_owner": "SqlServerDatabaseMigrator.cs",
+      "classification": "CONFIRMED_CONTRACT_DEFECT",
+      "status": "CONFIRMED_FINITE_NATIVE_PRODUCT_FAILURE_REPAIR_PENDING",
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package112-sqlserver-original17-owned-tunnel-independent-r1/REPORT.json",
+        "sha256": "eb2a8031d48aa7cd7e893cd9eb708b0ef52105c0c68990cab09048c3f05f3641"
+      },
+      "failed_cases": 3,
+      "positive_controls": 3,
+      "causal_boundary": "varchar/text intermediate procedure parameters and result tables narrow persisted Unicode metadata",
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-107",
+      "severity": "Medium",
+      "title": "SQL Server truncates fractional delivery delay",
+      "source_owner": "SqlServerClientContext.cs",
+      "classification": "CONFIRMED_CONTRACT_DEFECT",
+      "status": "CONFIRMED_FINITE_NATIVE_PRODUCT_FAILURE_REPAIR_PENDING",
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package112-sqlserver-original17-owned-tunnel-independent-r1/REPORT.json",
+        "sha256": "eb2a8031d48aa7cd7e893cd9eb708b0ef52105c0c68990cab09048c3f05f3641"
+      },
+      "failed_cases": 2,
+      "positive_controls": 4,
+      "causal_boundary": "1900ms becomes one-second persisted delay; zero/1000ms controls pass",
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-108",
+      "severity": "High",
+      "title": "SQL Server Send and Delete overflow procedure return status at bigint delivery IDs",
+      "source_owner": "SqlServerDatabaseMigrator.cs",
+      "classification": "CONFIRMED_CONTRACT_DEFECT",
+      "status": "CONFIRMED_FINITE_NATIVE_PRODUCT_FAILURE_REPAIR_PENDING",
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package112-sqlserver-original17-owned-tunnel-independent-r1/REPORT.json",
+        "sha256": "eb2a8031d48aa7cd7e893cd9eb708b0ef52105c0c68990cab09048c3f05f3641"
+      },
+      "failed_cases": 2,
+      "positive_controls": 2,
+      "causal_boundary": "SELECT retains bigint but following RETURN identity narrows stored-procedure status to int",
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-109",
+      "severity": "Medium",
+      "title": "SQL Server second schema misses twelve required indexes",
+      "source_owner": "SqlServerDatabaseMigrator.cs",
+      "classification": "CONFIRMED_CONTRACT_DEFECT",
+      "status": "CONFIRMED_FINITE_NATIVE_PRODUCT_FAILURE_REPAIR_PENDING",
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package112-sqlserver-original17-owned-tunnel-independent-r1/REPORT.json",
+        "sha256": "eb2a8031d48aa7cd7e893cd9eb708b0ef52105c0c68990cab09048c3f05f3641"
+      },
+      "failed_cases": 1,
+      "positive_controls": 0,
+      "causal_boundary": "index-name checks see first schema indexes; two object-scoped index controls exist",
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-110",
+      "severity": "High",
+      "title": "PostgreSQL topology APIs narrow bigint identities",
+      "source_owner": "PostgreSqlDatabaseMigrator.cs;PostgreSqlClientContext.cs",
+      "classification": "CONFIRMED_CONTRACT_DEFECT",
+      "status": "CONFIRMED_FINITE_NATIVE_PRODUCT_FAILURE_REPAIR_PENDING",
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package112-postgresql-original21-owned-tunnel-independent-r1/REPORT.json",
+        "sha256": "4e75ca89c2a77864e82b49e228ea00c289ab6e0ebc812276941ec80921011640"
+      },
+      "failed_cases": 5,
+      "positive_controls": 5,
+      "causal_boundary": "four create functions return integer and TouchQueue reads int? although actual IDs are bigint",
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-111",
+      "severity": "High",
+      "title": "PostgreSQL non-UTC sessions shift stored message and lock instants",
+      "source_owner": "PostgreSqlDatabaseMigrator.cs",
+      "classification": "CONFIRMED_CONTRACT_DEFECT",
+      "status": "CONFIRMED_FINITE_NATIVE_PRODUCT_FAILURE_REPAIR_PENDING",
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package112-postgresql-original21-owned-tunnel-independent-r1/REPORT.json",
+        "sha256": "4e75ca89c2a77864e82b49e228ea00c289ab6e0ebc812276941ec80921011640"
+      },
+      "failed_cases": 4,
+      "positive_controls": 4,
+      "causal_boundary": "now() at time zone utc loses zone then session assignment shifts absolute timestamptz instant",
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-112",
+      "severity": "Medium",
+      "title": "PostgreSQL queue metrics multiply latest counters by pending deliveries",
+      "source_owner": "PostgreSqlDatabaseMigrator.cs",
+      "classification": "CONFIRMED_CONTRACT_DEFECT",
+      "status": "CONFIRMED_FINITE_NATIVE_PRODUCT_FAILURE_REPAIR_PENDING",
+      "original_native_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package112-postgresql-original21-owned-tunnel-independent-r1/REPORT.json",
+        "sha256": "4e75ca89c2a77864e82b49e228ea00c289ab6e0ebc812276941ec80921011640"
+      },
+      "failed_cases": 1,
+      "positive_controls": 2,
+      "causal_boundary": "latest queue-level metric is repeated by message_delivery join; pending2 consumes1→2",
+      "whole_API_member_review_closed": false
+    }
+  ],
+  "source_fix_applied": false,
+  "whole_api_grade": "PARTIAL"
+}

@@ -1,0 +1,11 @@
+--- a/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs
++++ b/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs
+@@ -31,7 +31,7 @@
+     {
+         _client = client;
+         _administrationClient = administrationClient;
+-        _ownsClient = true;
++        _ownsClient = false;
+         Endpoint = new Uri($"sb://{_client.FullyQualifiedNamespace}");
+     }
+ 

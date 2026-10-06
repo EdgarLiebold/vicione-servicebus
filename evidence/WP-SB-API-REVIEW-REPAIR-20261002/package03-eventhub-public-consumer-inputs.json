@@ -1,0 +1,30 @@
+{
+  "cases": 70,
+  "source_transforms": [
+    {
+      "canonical_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "canonical_sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "consumer_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubClosingRegressionTests.cs",
+      "consumer_sha256": "4dafff623c158ac522e5dbd503b384ad127328eef10fc36372d5550b62315643"
+    },
+    {
+      "canonical_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "canonical_sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "consumer_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubReceivePolicyRegressionTests.cs",
+      "consumer_sha256": "0f8809be0d7a4a06fea86bf609744dbb6457a2de424d60eaac23b323e16fe33c"
+    },
+    {
+      "canonical_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "canonical_sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "consumer_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "consumer_sha256": "a3bbc162f53c8a096e98727ce535b36d67e98174e7565e69d6e90134a72192f0"
+    },
+    {
+      "canonical_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBuiltContextCapture.cs",
+      "canonical_sha256": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081",
+      "consumer_source": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubBuiltContextCapture.cs",
+      "consumer_sha256": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081"
+    }
+  ],
+  "runtime_projection": "Explicit CLI timeout/live owned run token and ordinary await-catch Record; original assertion/callback bodies retained."
+}

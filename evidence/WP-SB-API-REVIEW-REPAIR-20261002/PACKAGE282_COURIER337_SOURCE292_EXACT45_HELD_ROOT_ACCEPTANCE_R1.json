@@ -1,0 +1,87 @@
+{
+  "utc": "2026-10-06T00:40:13.639233+00:00",
+  "status": "COURIER_SOURCE292_ROOT_ACCEPTED_EXACT45_HELD_WHOLE_API_OPEN",
+  "mandatory_evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package264-courier337-current-source-individual-contracts-r1/REPORT.json",
+      "sha256": "c3e82ed689dffa4c0bdf800927e8b315d548b62239c744d7746cbbbd33afec06"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package264-courier337-nine-norm-precision-overlay-r3/REPORT.json",
+      "sha256": "ce73532d534bd5b0d9cf1b3854170d5ea80f23aac0d18236eca7633e9c20ed43"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package264-courier337-independent-scanner-source-peer-r1/REPORT.json",
+      "sha256": "3c9311946682d1e9516bbd49754439621eb4f693efd6c7bd111dd12efba9f63b"
+    }
+  ],
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package264-courier337-nine-norm-precision-overlay-r3/PER_ID337_CURRENT_SOURCE_CONTRACTS.json",
+    "sha256": "ef708442924d6f92f0357f68567f3dec638bd7ffe6cb07e283e59b0edcc91438"
+  },
+  "basis": "Qualifier own whole60/3669 +25/2808 and all337 norms; Scanner own independent60/3669 +25/2808 +2/143 all337 and nine exact norm corrections. Root wholly read reports9760f5/a63cfa, allnine4aa7ac, exact45held54ee8f/0c74b5. Collective authority, no invented Root whole60 credit.",
+  "mandatory_norm9_literal_reconstruction": true,
+  "before_master_sha256": "ec4b3e8230e15033bac9b1f6eb696370dca188aa7402ab03b9f0fae72cc5afb9",
+  "before_rows": 18603,
+  "source_original_appended": 292,
+  "expected_after_rows": 18895,
+  "held_counts": {
+    "implicit_identity": 4,
+    "documentation": 9,
+    "operative": 32,
+    "total": 45
+  },
+  "held_ordinals": [
+    10,
+    18,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    63,
+    64,
+    67,
+    70,
+    76,
+    85,
+    86,
+    87,
+    88,
+    93,
+    94,
+    95,
+    96,
+    124,
+    125,
+    126,
+    130,
+    132,
+    134,
+    136,
+    137,
+    138,
+    163,
+    164
+  ],
+  "actual_PDB146_all_physical_checksums": true,
+  "actual_XML786_selected333_and4_exactheldabsent": true,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "Product_Test_Req_SDK_changes": false
+}

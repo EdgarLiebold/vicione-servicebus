@@ -1,0 +1,9 @@
+{
+  "utc": "2026-10-06T07:28:08.161920+00:00",
+  "prior_failure": "3e2b06 correct normative value key is proposed_after_member_contract. Stopped after report and backups but before Master/STATE/PO writes; exact before Master SHA reverified550084",
+  "all_four_actual_fields_verified": true,
+  "acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE373_F216_F217_FIXED10_CORE7896_STRICT_FRESH_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "0160024b534b72c170659f2979e7f51c088f449ed11b05e06359ec89efd89c38"
+  }
+}

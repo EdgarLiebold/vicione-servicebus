@@ -1,0 +1,47 @@
+{
+  "utc": "2026-10-06T00:34:23.851125+00:00",
+  "status": "ANALYZERS_CODEFIXES_SOURCE34_ACCEPTED_EXACT20_HELD_WHOLE_API_OPEN",
+  "author_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package270-analyzers44-codefixes10-current-individual-source-contracts-r1/REPORT.json",
+    "sha256": "5e1553ae1ac77b7d67c8778658a1cce469455c648b9dd9a7b012ddb51d482f45"
+  },
+  "independent_root_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package270-analyzers54-independent-root-source-peer-r1/REPORT.json",
+    "sha256": "3113e3be1a8b9e2b241b5617fc9a3391d59997b9c25ade4fe8fd369c9f956afd"
+  },
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package270-analyzers44-codefixes10-current-individual-source-contracts-r1/PER_ID54_CURRENT_SOURCE_CONTRACT_MATRIX.json",
+    "sha256": "ff26c52e5ac04ff47f408c3272aa3bef236de66ece6005674cf841d4a941c705"
+  },
+  "authority": "Runtime author own whole10/1966 +6/1070 all54; independent Root actual own whole16/3036, individually all54 norms and exact20 holds, actual Source/PDB/XML/OriginalCSV disjoint f69039. No extra Root source authority borrowed.",
+  "before_master_sha256": "650df96c5708fe8fb4fd17adc0a34db195ea5f3287a2c009fb8c027af2659419",
+  "before_rows": 18569,
+  "source_original_added": 34,
+  "expected_after_rows": 18603,
+  "held_ordinals": [
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    44,
+    46,
+    47,
+    49
+  ],
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "Product_Test_Req_SDK_changes": false
+}

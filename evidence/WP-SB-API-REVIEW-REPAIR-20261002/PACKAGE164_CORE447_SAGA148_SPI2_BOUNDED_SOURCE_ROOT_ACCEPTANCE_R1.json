@@ -1,0 +1,73 @@
+{
+  "utc": "2026-10-05T02:52:56.493600+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED_447_CORE_PLUS148_SAGA_AND2_SCHEDULE_SPI_BOUNDED_SOURCE_CONTRACTS",
+  "accepted_before": 6169,
+  "accepted_after": 6766,
+  "new_source_contracts": 597,
+  "counts": {
+    "core_source413": 413,
+    "core_bodyless_SPI34": 34,
+    "saga148": 148,
+    "schedule_callback_SPI_accessors2": 2,
+    "core_remaining_held47": 47
+  },
+  "root_genuine_semantic_reads": {
+    "core95_shared_owner_contexts": [
+      "e3d85b",
+      "449e28",
+      "c987cf",
+      "187be2"
+    ],
+    "core340_lossless_local_norms": [
+      "88d438",
+      "a96503",
+      "84f211",
+      "8ac747",
+      "ab08ea",
+      "4e1c52"
+    ],
+    "core_precision_overlay7": "9f2105 complete common context and7local clauses, parent actual164 cause b4ede1 remains held for Send",
+    "core_current4_overlay": "0e24ed actual all4 full local norms/currentsource bindings",
+    "saga148": "64118e0..34;ed76a735..79;4ae31180..114 capped94/95 recovered c60911 together115..147; allindividualID/localcontract/holds/distinctlimits genuinely read. Eight whole sources personally read by child; Root does not claim1269wholelines.",
+    "scheduleSPI2": "Root whole23/17 original owners e89e1f and approved declarationchanges1cd8be; exactsetter/getter declaredID/nativeReceived interfaceWrite+settingsRead b4ede1.",
+    "typed_match": "Root mechanical494+148 historical exactsignature/detail/owner8c3169, revalidated here; not live current comprehensive metadata.",
+    "historical_XML7_precision": "91d899 peerReport and immutable7original/corrected label overlay; no oldXML ascurrentclaim"
+  },
+  "evidence_manifests_verified": {
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package162-core-middleware-scheduling494-contract-dossier-r1": 12,
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package163-saga-request-schedule148-contract-context-r2": 5,
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package163-core494-context13-precision-overlay-r1": 4,
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-core494-four-bounded-constructor-probe-current-overlay-r1": 6,
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-core494-original-typed-facts-xml7-precision-r1": 5
+  },
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/REPORT.json",
+    "sha256": "b56750e89f523b997efdec5830b5dc41ab5e9872321bdeb83bb4b533f6633f03"
+  },
+  "four_repair_root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE164_F146_F149_FOUR_REPAIRS_CURRENT_NATIVE_XML44_FRESH2_ROOT_REPAIR_ACCEPTANCE_R1.json",
+    "sha256": "4835e3e7f4f5c958665d6d34b77c51985a97b2550458d5907d43974bfb5beb6d"
+  },
+  "source_dossiers": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package162-core-middleware-scheduling494-contract-dossier-r1/PER_ORIGINAL_MEMBER494_CONTRACTS.json",
+      "sha256": "4b1c55e5d5dc5cf380a2949e90815f803df42749ebccc77362600b757395ae31"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package163-saga-request-schedule148-contract-context-r2/PER_MEMBER_CONTRACT_MATRIX.json",
+      "sha256": "3037077f74a04680cf9d17e333f5c49a5fcb76e7d6c6abc72bde4c4534c212a3"
+    }
+  ],
+  "limits": [
+    "Independent child whole95/8 source reads retained as their authority; Root ownallmembernorms does not impersonate wholeowner reads.",
+    "Current sources exactly qualified164 frozen snapshots; approvals163+164 literal changes explicitly bridged.",
+    "No Native2402 transferred to597 source contracts.",
+    "Core47 held stay outside this source acceptance, including parentSend and innerOutboxSend.",
+    "Saga30 historical holds resolved narrowly by qualified163Delay and qualified164Callback/TTL/Cancel repairs; no allSPI/runtime universal proof.",
+    "Original typed signatures preserved as historical; current optionalcallback metadata explicitly overlaid outer Action nullable.",
+    "No global A+/wholeAPI/release closure."
+  ],
+  "native_credit": 0,
+  "CLOSED": false
+}

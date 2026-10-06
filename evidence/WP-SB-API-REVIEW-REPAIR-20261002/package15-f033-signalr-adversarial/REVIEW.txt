@@ -1,0 +1,13 @@
+Scoped F033 SignalR review accepted against immutable Freeze23a798b6c06e282f661e13f005bacd71b8cd67d33b8cac39600aaf09f050e4d2.
+
+Personally FULL46owned inputs (43exact own FULL reuses/fresh current+snapshot hashes;3fresh runner reads),62source-route inputs (51own exact reuse/11fresh complete neighbor sources), original two changed SignalR sources, complete changed deltas,62actual native logs/receipts. Root personal readings are not transferred. Complete structured metadata uses exact independently reconstructed252source-effect rows and exact personally FULL native-payload reuse.
+
+The resolution provider preserves failure while awaiting its created scope. Five manager owners preserve selected operation outcomes and always call ordered release. The helper attempts synchronous request release before awaited scope release despite request failure; sole exception identity/stack survives and multiple failures stay direct primary/request/scope order. No public signature changed. The actual public DI graph and real normal group-request/ack route are exercised; controlled HubConnectionContext receives the actual serialized invocation/body.
+
+Original final41cases:17causal assertion reds/24positives/0guards; corrected41green. Ten strictly compiled single-effect variants have exact expected assertion reds and green positives;41baseline/41rollback. R11 wrong positive really failed and is excluded: nine unchanged pairs retained, tenth freshly built with unaffected publish-success. Restore/compiler/DI/missing-assets/external-PDB setup attempts R1–R10 are excluded from kill claims.
+
+Independent ZIP→SHA512Lock→ownCache→loadedDLL checks passed six selected package chains.20PE/PDB images yield151source-SHA256 conditions (18embedded product images,2CodeView-matched public app sidecars). Core1872fc…/Abs52f7a3… constant. Unchanged Core nuspec Microsoft dependencies10.0.12 are SDK-pruned; actual Microsoft runtime DLLs10.0.10 physically hash-bound. project.assets reading is targeted metadata, not FULL SDK/asset closure.
+
+Independent M6209check05:40:36–05:40:39UTC, CSV a6c3e9c9f38f0774f5b60ac395e5dc9fefae2e66d7b9e0b2bc6f2d7cac3a02e6:0mismatches/new helper+identity removed. Oracle/selectedSignalRDLL/CoreAbs restored.
+
+SIGNALR-FANOUT-SYNC-001 remains separately UNVERIFIED with public causal/positive gate plan: synchronous customSPI failure during lazy fanout can precede joining created prefix tasks. No F033 universal completion claim. No HTTP/cross-node/cloud/ARM/heap/whole canonical Core766/wholeAPI grade or CLOSED transfer. All review operations were readonly;0native/product/test/CSVwrites.

@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-06T02:25:31.247817+00:00",
+  "status": "ROOT_BOUNDED_F211_REPAIR_ACCEPTED_WITH_INDEPENDENT_SOURCE_NATIVE_PUBLICATION_PROOFS",
+  "finding": "F-SB-API-211",
+  "master_before_sha256": "b9cbc2c1e12f20f333485e824c4b3671413a2af6b05138c76dfb7ab454e24619",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package306-activemq-fixed-root-native-publication-capture-r1",
+      "manifest_sha256": "fd0a7229967588e8810345c711afbd23a322a764348b0591c926ac1e545bd302"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package306-fixed10-publication-independent-qualification-r1",
+      "manifest_sha256": "49269334355a60d34a57e4afcf88788a708e5cc7384090e4e765dc51d59cb14b"
+    }
+  ],
+  "native": {
+    "true_fixed_focused": 10,
+    "whole": 286,
+    "failed": 0,
+    "skipped": 0,
+    "focused_subset_not_additive": true
+  },
+  "root_authority": "Whole actual fixed10 7eb170 and independent report11c862. Product326 inverse2 to whole312 7463ef separately Source-peer a647c323. Actual whole286 mechanical only, no wholehuman review/ABI/fullprovider lifecycle promotion. Source and Req133 physically bound through independently reparsed current DLL/PDB; current NuGet DLL/XML and unchanged XML verified.",
+  "identity_rebase": "Exactly14 existing Session source identities/PDB/currentrebase references; all previous contracts/status/native/XML/185history preserved. DeleteQueue/DeleteTopic and EnsureTopic operative contracts remain independently held.",
+  "known_findings_before": 211,
+  "bounded_dispositions_before": 210,
+  "bounded_dispositions_after": 211,
+  "master_count_preserved": 18949,
+  "Original_remaining_preserved": 482,
+  "grade": null,
+  "whole_API_closed": false
+}

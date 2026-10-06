@@ -1,0 +1,53 @@
+{
+  "utc": "2026-10-05T09:06:01.987373+00:00",
+  "actor": "root",
+  "scope": "270 bounded current source/declaration rows195 original canonical75 accessor sidecars:62get13set. Native0 appended, type/abstract roles do not transfer inherited/body implementation/runtime proof.",
+  "semantic_evidence": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package174-saga270-root-bounded-current-contracts-r1/ROOT270_CURRENT_SOURCE_NORMS.json",
+    "sha256": "9e0b3b7a28de32cd28f85fe0f88722456925951298763cdd2383c6a6b41b9842"
+  },
+  "root_read_scope": "All273 membernorms c11be1/7320c1/66631f/6e7d6c recovered0cbf01/ce23e0; all89 ownercontexts10f506 recovered194096. Whole actual directSagaLog1247f61d3, helper64/container154044ff0, threeprecision26cd84. No Root whole89 source reread claim.",
+  "peer_scope": "Selected120 independent peer, exact three literal norm corrections peer, 11abstract+4direct helper bounded declaration/direct-propagation peer. Full peerreports26cd84/5296e3.",
+  "root_checks": "5b5267 all5 manifests/all270Sourcepins/all75 actualXML canonical-property mapping; qualified173 physical SourcePDB bindings7e688d, current173XML node matching perrow. Earlier informal75getter label corrected: actual62get13set.",
+  "held": [
+    {
+      "ordinal": 35,
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.Registration.SagaStateMachineRegistration`2.Configure(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Configuration.IRegistrationContext)",
+      "norm": "Public Configure validates endpoint then registration context. Resolves ISagaStateMachine<TInstance> from actual context, creates DI saga repository and optional decorator, creates configurator, configures provider-key definition before global/local callbacks, connects all DI event/state observers, emits Info, attaches endpoint specification last. Borrowed services are not disposed here; callback/log/observer exceptions remain visible. Each invocation currently repeats observer connections and ignores returned handles.",
+      "obligations": [
+        "Repeated endpoint Configure connects same DI observers on same provider-owned machine without storing handles; install-once semantics need real two-endpoint workflow proof, not current observer service dedup test."
+      ]
+    },
+    {
+      "ordinal": 189,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.Schedule``1(System.Linq.Expressions.Expression{System.Func{ViciOne.ServiceBus.Sagas.ISchedule{`0,``0}}},System.Linq.Expressions.Expression{System.Func{`0,System.Nullable{System.Guid}}},System.Action{ViciOne.ServiceBus.Sagas.IScheduleConfigurator{`0,``0}})",
+      "norm": "Protected Schedule callback overload creates fresh StateMachineScheduleConfigurator<TInstance,TMessage>, invokes optional configureSchedule once (default null) BEFORE property/token route validation, then calls required-settings overload with that exact configurator. Void result; callback effects are not transactional. Installed schedule delivery remains a separate obligation.",
+      "obligations": [
+        "Installed-delivery/cancellation/callback mutation obligations are not proved merely by schedule declaration/XML/PDB; existing mismatch controls only bounded named routes."
+      ]
+    },
+    {
+      "ordinal": 190,
+      "id": "M:ViciOne.ServiceBus.Sagas.ViciOneServiceBusStateMachine`1.Schedule``1(System.Linq.Expressions.Expression{System.Func{ViciOne.ServiceBus.Sagas.ISchedule{`0,``0}}},System.Linq.Expressions.Expression{System.Func{`0,System.Nullable{System.Guid}}},ViciOne.ServiceBus.Sagas.IScheduleSettings{`0,``0})",
+      "norm": "Protected Schedule required-settings overload resolves the reflected property and constructs the retained StateMachineSchedule, initializes the machine property/backing field and declares its Received event. It then declares/configures AnyReceived correlation: invoke settings.Received when supplied, otherwise retrieve the actual event registration and RegisterCorrelation(this). Only after correlation configuration completes does it install the exact DuringAny handler. A correlation callback failure leaves preceding property/event effects and prevents handler installation; configuration is not transactional. The installed handler requires current token, rejects supplied mismatched token with contained Debug, raises Received with context token, and clears the saga token only if unchanged. Installed-delivery and callback-race obligations remain distinct from this declaration-order contract.",
+      "obligations": [
+        "Installed-delivery/cancellation/callback mutation obligations are not proved merely by schedule declaration/XML/PDB; existing mismatch controls only bounded named routes."
+      ]
+    }
+  ],
+  "counts_before": {
+    "raw": 7948,
+    "original": 7334,
+    "accessor": 585
+  },
+  "counts_after": {
+    "raw": 8218,
+    "original": 7529,
+    "r2_canonical": 7558,
+    "accessor": 660,
+    "original_remaining": 11040,
+    "unique_accessor_original_parents": 546
+  },
+  "whole_API_closed": false,
+  "fresh_declared168_NEW4_proof_pending": true
+}

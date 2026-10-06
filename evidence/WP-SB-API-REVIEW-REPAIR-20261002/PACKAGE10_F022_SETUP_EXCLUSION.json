@@ -1,0 +1,8 @@
+{
+  "excluded_phase": "package10-f022-previous-build",
+  "actual_exit": 1,
+  "actual_compiler_errors": 13,
+  "cause": "Missing public ViciOne.ServiceBus.Operations namespace in console fixture; unresolved enum/snapshot/query types cascaded interface signature errors. Not product proof or mutation kill.",
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-setup-exclusion",
+  "correction": "Add correct public namespace to both identical owners. Additional assertion counts zero formatting calls in admission no-listener/unsampled controls; delivery may legitimately format endpoints. Assertions of actual ownership unchanged."
+}

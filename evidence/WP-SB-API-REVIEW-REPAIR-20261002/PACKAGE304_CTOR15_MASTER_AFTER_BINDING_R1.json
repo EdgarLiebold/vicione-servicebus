@@ -1,0 +1,9 @@
+{
+  "acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE304_SQS10_AZURE4_AZURETESTING1_LOCAL_CONSTRUCTOR_SOURCE15_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "37347982c38e63b60e427082dd97649e223e70d40bc3130b990681ef3eb05ac1"
+  },
+  "master_after_sha256": "0073c6a747e481a64d7df09b714926837549b091106bf1f408b75555e1e97652",
+  "count": 18937,
+  "Original_remaining": 494
+}

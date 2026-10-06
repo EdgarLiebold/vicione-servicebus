@@ -1,0 +1,107 @@
+{
+  "utc": "2026-10-05T01:03:08.656776+00:00",
+  "actor": "/root",
+  "status": "SOURCE_PEERED_APPLIED_NATIVE_PENDING",
+  "after_freeze160": "87dbdddba2d33301e0f5c69b36d8974f3034aedb47d73d4bbca935cb8d1d988a",
+  "registered_repairs": [
+    "F-SB-API-138",
+    "F-SB-API-139"
+  ],
+  "original_qualification160_sha256": "bcca1ba1f949f1ee5ef74ac060c7e934070a8014e550c6c320f333f47e648533",
+  "source_peers": [
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-scope-primary-cleanup-product-proposed-r1/REPORT.json",
+      "author_sha256": "23fedce8e0cd9434e6373e6b591c157f97bbc0011a46a509b71aec7f4b541695",
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-scope-primary-cleanup-product-independent-runtime-r1/REPORT.json",
+      "peer_sha256": "9c500b928c57adbed1432c9742ff652ad0cb602974a89712b1530265bd19e0ad"
+    },
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-output-continuation-product-proposed-r1/REPORT.json",
+      "author_sha256": "3a98c504613fdfba71fbbf468227454c82846594828d31e6f71c72965044c322",
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-output-continuation-product-independent-runtime-r1/REPORT.json",
+      "peer_sha256": "6bc8e80e78c96906f781c70fdf8aabdc3a93ec8a7bf553e981eb07fa08e5fed5"
+    },
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-dictionary-header-safe-conversion-proposed-r3/REPORT.json",
+      "author_sha256": "0e15f7a3335d015469ab1fbe3ffc0476bebb4a90f185828a014e7d7d7f3d386c",
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-dictionary-header-independent-scanner-r3/REPORT.json",
+      "peer_sha256": "bdc24fa0734786fb88ff05ad263b363cb77fde52780aba211c4cd49e27752593",
+      "applied": "TEST15_ONLY_NOT_PRODUCT"
+    }
+  ],
+  "all_six_MAN_checked": "b4d701 whole6MAN 6+1+4+1+8+1 entries verified",
+  "changes": [
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopeConsumeFilter.cs",
+      "before_sha256": "397dd2a1795980cb18b3b0dd629c730e1ae8cde6f88cc82bb58a528a47961166",
+      "current_sha256": "fcb8b5faafe05cad64ad2269ba652734e4fb921425627dfb73b885256fadf4c9",
+      "before_lines": 36,
+      "current_lines": 48,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package161-root-before-r1/src/ViciOne.ServiceBus/Middleware/ScopeConsumeFilter.cs"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopeMessageFilter.cs",
+      "before_sha256": "e7bb7b862afaadb94026315aecb5b723fd7136440d12eb665edc550c41f64ec7",
+      "current_sha256": "78782ab10546b3b2129f3a775d7fbc9985d78ff70438f4898c8fbb9a19933668",
+      "before_lines": 38,
+      "current_lines": 50,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package161-root-before-r1/src/ViciOne.ServiceBus/Middleware/ScopeMessageFilter.cs"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs",
+      "before_sha256": "50d4a5dcbf726ef643bfc20113541cbcc12feb9f50f62c9094f17f21e1d00c3d",
+      "current_sha256": "203cbd2e3ab347e04ec92109aca2f64de4792e046159f9aaedf7efa100d01426",
+      "before_lines": 160,
+      "current_lines": 160,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package161-root-before-r1/src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/DictionarySendHeadersTests.cs",
+      "before_sha256": "eea0faf3705e17212557c65e1816c9577d05658ed62920b002292b98ccae6053",
+      "current_sha256": "987ca4973347baad46d79330dcfc504969c9b583607dad3124147166da2526e3",
+      "before_lines": 271,
+      "current_lines": 478,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package161-root-before-r1/tests/ViciOne.ServiceBus.Tests/Serialization/DictionarySendHeadersTests.cs"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "33b5befa00432256be23d8c00911e50ede09f0f21d3ca4fca84983e74f525034",
+      "current_sha256": "a39d3d087756c882da032f241f00bebf16352d4957d68d1223aa70fe9673d844",
+      "before_lines": 32363,
+      "current_lines": 32384,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package161-root-before-r1/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+    }
+  ],
+  "requirement_additions": [
+    {
+      "requirementId": "REQ-VSB-SEND-HEADERS",
+      "variantKey": "valid-incompatible-json-representations-preserve-fallback",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Serialization.DictionarySendHeadersTests",
+      "testMethod": "IncompatibleJsonRepresentations_ReturnTheFallbackAndPreserveCompatibleReads"
+    },
+    {
+      "requirementId": "REQ-VSB-SEND-HEADERS",
+      "variantKey": "custom-root-and-nested-read-failures-remain-visible",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Serialization.DictionarySendHeadersTests",
+      "testMethod": "CustomReadFailures_PreserveTheExactCauseAcrossNativeTextAndJsonHeaders"
+    },
+    {
+      "requirementId": "REQ-VSB-SEND-HEADERS",
+      "variantKey": "owned-dictionary-representation-fallback-preserves-valid-shapes",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Serialization.DictionarySendHeadersTests",
+      "testMethod": "OwnedDictionaryRepresentations_ReturnExactFallbackAndPreserveTheirValidShapes"
+    }
+  ],
+  "requirement_count": 4626,
+  "dictionary_product_unchanged_original": "e76eee2740b6734252e0d72e607cf962219465e4a4753d1dea2d2b23c6a0adf6",
+  "root_read": "191dcb3Productpatches+wholeSharedLifetime/ScopedFilter; a8b2282peers whole. Header15 additive207 source8af075 whole, peer7f7122 whole, Product1f33ee whole notapplied.",
+  "administrative_preflight": "First bda706 failed during pure additive inverse join verification (list chunks instead of flattened strings). Corrected before any backups/Repo mutations. No product finding.",
+  "limits": [
+    "DictionaryProduct remains original; wholeclass25 verifies earlier10plusnew15 before repair.",
+    "Scope2/Output1 current fixed native/compiled qualification pending.",
+    "No wholeCore/APIA+ grade."
+  ]
+}

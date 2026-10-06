@@ -1,0 +1,4 @@
+{
+  "status": "EIGHT_VALIDATED_MUTANTS_RETAINED_NINTH_RECHECK_PENDING",
+  "cause": "Relation test uses direct Assert.Equal(expectedFailure,result.Failed), so actual EqualException rather than ThrowsException; no assertion or product source changes. Retain eight independently built valid rows on identical frozen consumer bytes, run remaining nine with exact corrected expected category and full corrected/rollback42."
+}

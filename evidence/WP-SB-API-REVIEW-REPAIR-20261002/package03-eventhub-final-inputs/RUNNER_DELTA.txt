@@ -1,0 +1,64 @@
+--- /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package03_eventhub_mutations.py
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-final-inputs/run.py
+@@ -1,7 +1,7 @@
+ #!/usr/bin/env python3
+ """Run causal EventHub mutants in the owned isolated original checkout.
+ 
+-F016 generation tests are excluded until their separate setup correction is native verified.
++F016 generation tests use their separately native-verified eleven-mutant proof.
+ """
+ import hashlib
+ import json
+@@ -10,7 +10,7 @@
+ import subprocess
+ import sys
+ 
+-W = Path(__file__).resolve().parent.parent
++W = Path('/Users/edgar.liebold/Downloads/ViciOne Suite 2.0')
+ D = W / 'SERVICEBUS_API_REVIEW_AND_REPAIR'
+ O = W / 'repositories/vicione-servicebus'
+ R = Path('/private/tmp/vicione-servicebus-api-review-20261001')
+@@ -26,7 +26,7 @@
+ PROJECT = OWNER + 'ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj'
+ NEW_TESTS = [OWNER + 'EventHubIntegration/' + name for name in (
+     'EventHubClosingRegressionTests.cs', 'EventHubReceivePolicyRegressionTests.cs',
+-    'EventHubDeferredCallerCancellationRegressionTests.cs')]
++    'EventHubDeferredCallerCancellationRegressionTests.cs', 'EventHubBuiltContextCapture.cs')]
+ PROJECTION = OWNER + 'Requirements/EventHubLocalIntegrationRequirements.json'
+ METHODS = {
+     'closing': ['Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync'],
+@@ -38,7 +38,7 @@
+                       'PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync'],
+ }
+ COUNTS = {'closing': 10, 'validation': 19, 'producer-fast': 24}
+-RUN_PREFIX = 'package03-eh-r2-'
++RUN_PREFIX = 'package03-eh-r3-'
+ 
+ 
+ def sha(data):
+@@ -94,14 +94,14 @@
+     regressions = {path: (O / path).read_bytes() for path in NEW_TESTS}
+     assert all((M / path).read_bytes() == data for path, data in originals.items())
+     assert all(not (M / path).exists() for path in NEW_TESTS)
+-    previous = E / 'PACKAGE03_EVENTHUB_MUTATIONS.json'
++    previous = E / 'PACKAGE03_EVENTHUB_MUTATIONS_FINAL_INPUTS.json'
+     resume = '--resume-owned-unchanged-inputs' in sys.argv
+     if previous.exists() and not resume:
+         preserved = E / 'PACKAGE03_EVENTHUB_MUTATIONS_ATTEMPT1.json'
+         assert not preserved.exists()
+         preserved.write_bytes(previous.read_bytes())
+     result = {'status': 'RUNNING', 'findings': ['F013', 'F014', 'F017'], 'checks': [], 'mutants': [],
+-              'excluded': 'F016 original setup double-generates receive contexts; separate corrected oracle pending.'}
++              'excluded': 'F016 generation cases are separately verified; this run selects the 19 F013/F014/F017 mutants against final input bytes.'}
+     if resume:
+         previous_result = json.loads(previous.read_text())
+         assert previous_result['status'] == 'RUNNING' and len(previous_result['mutants']) == 12
+@@ -180,7 +180,7 @@
+         for path in NEW_TESTS: (M / path).unlink(missing_ok=True)
+         result['original_inputs_restored'] = all((M / p).read_bytes() == b for p, b in originals.items())
+         result['new_fixtures_removed'] = all(not (M / p).exists() for p in NEW_TESTS)
+-        (E / 'PACKAGE03_EVENTHUB_MUTATIONS.json').write_text(json.dumps(result, indent=2) + '\n')
++        (E / 'PACKAGE03_EVENTHUB_MUTATIONS_FINAL_INPUTS.json').write_text(json.dumps(result, indent=2) + '\n')
+     assert result['original_inputs_restored'] and result['new_fixtures_removed']
+ 
+ 

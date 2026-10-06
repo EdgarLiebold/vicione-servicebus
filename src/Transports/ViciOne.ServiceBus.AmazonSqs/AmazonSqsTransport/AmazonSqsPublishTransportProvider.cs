@@ -24,7 +24,7 @@ public class AmazonSqsPublishTransportProvider :
 
     /// <summary>Gets the Amazon SNS transport used to publish a message type.</summary>
     /// <typeparam name="T">The message type.</typeparam>
-    /// <param name="publishAddress">An optional address override supplied by the publish operation.</param>
+    /// <param name="publishAddress">An optional publish address; ignored by this provider.</param>
     /// <param name="cancellationToken">The token used to cancel transport creation.</param>
     /// <returns>The publish send transport.</returns>
     public Task<ISendTransport> GetPublishTransportAsync<T>(Uri? publishAddress, CancellationToken cancellationToken = default)

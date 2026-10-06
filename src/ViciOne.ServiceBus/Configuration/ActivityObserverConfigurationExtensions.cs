@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -42,24 +43,38 @@ public static class ActivityObserverConfigurationExtensions
             _handles.Add(handle);
         }
 
-        public void Dispose()
+        public void Dispose() => Retire(dispose: true);
+
+        public void Disconnect() => Retire(dispose: false);
+
+        void Retire(bool dispose)
         {
+            if (_disposed)
+                return;
+
             _disposed = true;
-
-            for (var i = 0; i < _handles.Count; i++)
-                _handles[i].Dispose();
-
+            ConnectHandle[] handles = _handles.ToArray();
             _handles.Clear();
-        }
+            List<Exception>? failures = null;
+            foreach (ConnectHandle handle in handles)
+            {
+                try
+                {
+                    if (dispose)
+                        handle.Dispose();
+                    else
+                        handle.Disconnect();
+                }
+                catch (Exception exception)
+                {
+                    (failures ??= new List<Exception>()).Add(exception);
+                }
+            }
 
-        public void Disconnect()
-        {
-            _disposed = true;
-
-            for (var i = 0; i < _handles.Count; i++)
-                _handles[i].Disconnect();
-
-            _handles.Clear();
+            if (failures?.Count == 1)
+                ExceptionDispatchInfo.Capture(failures[0]).Throw();
+            if (failures?.Count > 1)
+                throw new AggregateException("One or more activity observer registrations could not be released.", failures);
         }
 
         public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)

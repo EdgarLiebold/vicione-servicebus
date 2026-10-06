@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-06T07:10:42.431077+00:00",
+  "status": "ROOT_REGISTERED_F217_ACTUAL_ORIGINAL6_CONSUMER_FAILED_ADMISSION_RETIREMENT_DEFECT_REPAIR_SOURCE_PEER_PENDING",
+  "finding": "F-SB-API-217",
+  "independent_actual_original_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package366-consumer-original6-independent-qualification-r1/REPORT.json",
+    "sha256": "90402324e1d7bcb3c982507324463b96b47a87e4a2efd774c316d83ded9f2eae"
+  },
+  "independent_actual_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package366-consumer-original6-independent-qualification-r1/MANIFEST.json",
+    "sha256": "5848a9b262f6fac660f10aa33cd5d55b8934c74e511c9380adcfc5c5268ac377"
+  },
+  "actual_original_log": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package366-consumer-failed-admission-original6-native-r1.log",
+    "sha256": "904d538d0ed08e5f4738821489b958d60fa3e64031d6fe37f604f69d5dc70897"
+  },
+  "Root_SDK_JOIN": "b17808/session59639 exit2",
+  "Root_complete_raw_receipt": "ec950d",
+  "Root_entire_independent_report": "ec950d",
+  "actual_original": {
+    "total": 6,
+    "passed": 4,
+    "failed": 2,
+    "skipped": 0
+  },
+  "first_finite_cause": "Both public generic-default/runtime-object routes pass actual three admissions/type set/two returned real handles/first actual removal, then second DisposeCalls97 is0 ratherthan1 when firstcleanupthrows. Count0 and orderedcause tree remain unreached. Healthy success and admission-only controls4pass.",
+  "original_producer_req_rows": 4669,
+  "current_req_rows": 4669,
+  "historical_producer_not_relabeled": true,
+  "new_unique_findings": 1,
+  "known_total": 217,
+  "bounded_closed": 215,
+  "master_sha256_unchanged": "a73ebb4fde240dd744806cea0c0cbe0831211d6483c3017eba997a8e4413be36",
+  "whole_API_closed": false,
+  "different_agent_each_Product_Test_change_required": true
+}

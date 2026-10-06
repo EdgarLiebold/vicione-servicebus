@@ -205,7 +205,8 @@ public static class RecurringJobExtensions
         return jobId;
     }
 
-    /// <summary>Removes a terminal named recurring job and its retained attempts from persistence.</summary>
+    /// <summary>Publishes a request to finalize the specified named recurring job.</summary>
+    /// <remarks>Completing this operation does not acknowledge removal from persistence.</remarks>
     /// <typeparam name="TJob">The recurring job contract type.</typeparam>
     /// <param name="publishEndpoint">The endpoint used to publish the finalization command.</param>
     /// <param name="jobName">The stable application name of the recurring job.</param>

@@ -12,7 +12,7 @@ public class SqlBusTopology :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="hostConfiguration">The host configuration.</param>
-    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <param name="configuration">The SQL topology configuration exposed by the bus topology.</param>
     public SqlBusTopology(ISqlHostConfiguration hostConfiguration, ISqlTopologyConfiguration configuration)
         : base(hostConfiguration, configuration)
     {

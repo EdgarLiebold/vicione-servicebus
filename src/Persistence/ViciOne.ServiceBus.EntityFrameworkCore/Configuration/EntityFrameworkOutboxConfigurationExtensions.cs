@@ -28,8 +28,8 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     }
 
     /// <summary>
-    /// Configures an Entity Framework outbox for a specific MultiBus instance. Bus and DbContext together form
-    /// the durable outbox identity, allowing the same DbContext to host isolated outboxes for multiple buses.
+    /// Configures an Entity Framework outbox for a specific MultiBus instance. Each DbContext type belongs
+    /// to one bus owner; configure a separate DbContext type for each independently registered bus.
     /// </summary>
     /// <typeparam name="TBus">The bus type.</typeparam>
     /// <typeparam name="TDbContext">The EF Core context that stores this bus instance's outbox.</typeparam>
@@ -51,6 +51,7 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// <param name="configurator">The receive endpoint on which the EF Core outbox is enabled.</param>
     /// <param name="context">The registration context used to resolve the DbContext and outbox services.</param>
     /// <param name="configure">An optional callback that configures receive-side outbox behavior.</param>
+    /// <remarks>Uses the bus's configured stable persistence identity. Retained inbox rows created with a CLR-based bus identity require explicit offline migration before upgrading.</remarks>
     public static void UseEntityFrameworkOutbox<TDbContext>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Action<IOutboxOptionsConfigurator>? configure = null)
         where TDbContext : DbContext
@@ -58,12 +59,35 @@ public static class EntityFrameworkOutboxConfigurationExtensions
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(context);
 
-        var observer = new OutboxConsumePipeSpecificationObserver<TDbContext>(configurator, context);
+        string persistenceIdentity = (context as IBusRegistrationIdentity)?.PersistenceIdentity
+            ?? throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Classic EF inbox", "unknown", "The registration context has no stable bus persistence identity.",
+                    "Use AddViciOneServiceBus<TBus>(persistenceIdentity: \"...\", configure) and its matching registration context"));
+        var setter = context as ISetScopedConsumeContext ?? throw new ArgumentException(
+            "The registration context must own the scoped consume context.", nameof(context));
+        var observer = new OutboxConsumePipeSpecificationObserver<TDbContext>(configurator, context, setter, persistenceIdentity);
 
         configure?.Invoke(observer);
 
-        configurator.ConnectConsumerConfigurationObserver(observer);
-        configurator.ConnectSagaConfigurationObserver(observer);
+        ConnectHandle consumerHandle = configurator.ConnectConsumerConfigurationObserver(observer);
+        try
+        {
+            configurator.ConnectSagaConfigurationObserver(observer);
+        }
+        catch (Exception admissionFailure)
+        {
+            try
+            {
+                consumerHandle.Disconnect();
+            }
+            catch (Exception cleanupFailure)
+            {
+                throw new AggregateException("EF outbox observer admission and rollback both failed.", admissionFailure, cleanupFailure);
+            }
+
+            throw;
+        }
     }
 
     /// <summary>Selects SQL Server lock statements for the outbox.</summary>

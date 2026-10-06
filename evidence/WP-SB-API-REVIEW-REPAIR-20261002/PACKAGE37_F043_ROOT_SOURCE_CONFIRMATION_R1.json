@@ -1,0 +1,52 @@
+{
+  "status": "ROOT_SOURCE_CONFIRMED_SCOPED_FANOUT_LIFETIME_DEFECT_NATIVE_REPRODUCTION_AND_FIX_PENDING",
+  "finding": "F-SB-API-043",
+  "actor": "/root",
+  "utc": "2026-10-04T03:00:02.617352+00:00",
+  "source_refs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ServiceBusHubLifetimeManager.cs",
+      "bytes": 28457,
+      "sha256": "c2bccded39dd15fc4bdf4705acec3399ad56bb77eae18dfb02eefb2c47d69f2c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/BackplaneOperationLifetime.cs",
+      "bytes": 1233,
+      "sha256": "9ac92f45b7c85a161c6272d6c4c6f7920f26bf0f549bc75e289c05feb5f4bcfb"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/DependencyInjectionBackplaneScopeProvider.cs",
+      "bytes": 2177,
+      "sha256": "c313bcfe684d2120507f0f4c0c1c70d8fa79a273e269304b870a89dd36635ef5"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/IBackplaneScope.cs",
+      "bytes": 638,
+      "sha256": "abb55ca05195eacf8dfe3e4e73242a508447700f33a026907d0be66e648126f9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/IBackplaneScopeProvider.cs",
+      "bytes": 430,
+      "sha256": "5c5a4a4d21348fbb08ca053563f495dd85e83844f557aaa18ba4174ed0e755aa"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+      "bytes": 2246,
+      "sha256": "71a2cf0a5e52f6301e42236b56acfd4238eb4f753155095684bb62553d337338"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "bytes": 16603,
+      "sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    }
+  ],
+  "root_personally_full": "Current Manager lines1..360 and361..724 separately untruncated; initial whole-file truncated read excluded. Complete current lifetime helper, scope provider/interfaces, IPublishEndpoint and registration configurator personally FULL current context.",
+  "source_conclusion": "Three lazy Task.WhenAll enumerations invoke the publicly replaceable scoped IPublishEndpoint. A first returned pending task is started; a second synchronous PublishAsync exception aborts enumeration before Task.WhenAll joins anything. Existing operation catch then releases the real AsyncServiceScope while the first task is pending.",
+  "protected_contract": "Retain the scoped collaborators until each actually started operation completes; preserve selected admission failure, drain failure and cleanup failure. Stop admission at its first synchronous failure as before.",
+  "limits": [
+    "Source confirmation only, no native/wire-loss/current canonical-suite claim.",
+    "No independently confirmed always-attempt-later-targets requirement.",
+    "Local HubConnectionContext writes are a separate path, no inferred synchronous WriteCore defect.",
+    "No new product/test/runner change yet."
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-04T17:29:15.457172+00:00",
+  "decision": "F095_EVENT_ADMISSION_AND_F099_DEFAULT_COMPANION_REPAIR_ACCEPTED_NEW_TYPED_COMPANION_F103_SEPARATE",
+  "accepted_findings": [
+    "F-SB-API-095",
+    "F-SB-API-099"
+  ],
+  "independent_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package92-future-fixed33-independent-r1/REPORT.json",
+      "sha256": "3db4c37696cdb2ce552e3db385adafbe65f7438889cd1d35c8a6e7dd074f38c3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package98-future-selected-original2-independent-r1/REPORT.json",
+      "sha256": "f57c041631156bb90868576b851ce342036bc52fe1572612ad2970bc323606f6"
+    }
+  ],
+  "root_whole_reviews": [
+    "e9b11a Fixed33 report",
+    "4c614d OriginalSelected2 report",
+    "0481ee OriginalSelected2 whole raw",
+    "6ae66e product10 deltas",
+    "254c94 current registrar whole",
+    "26f4c1 bothactual definitions"
+  ],
+  "native_scope": "Fixed33 original membership/default activation/callback controls passed; extraSharedResponse1 actualgreen. Newtyped1finiteRED remains F103, never claims later typed Bind/address assertions ran.",
+  "fresh_package": "Futures fixed33 fresh package independently CRC/DLL/XML bound; no package change from adding controls.",
+  "before_metadata_sha256": {
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json": "1dd7f1ff26ccc6c71be78451e13ea5aabb36a33b22a9fc60230020809efb22dd",
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/ADDITIONAL_FINDINGS.json": "0df993ea6ac9dc72c335c092d8a17bf81ac83531ed08690f97be55073785154c",
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/PO_BERICHT.txt": "65e2e3dc347287f2a1aa9fd997c886b46c2e013efb41026af2568b9957177c25"
+  },
+  "whole_API_member_review_closed": false
+}

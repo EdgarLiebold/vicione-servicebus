@@ -1,0 +1,14 @@
+{
+  "status": "EXECUTED_ALL_19_KILLED_CORRECTED_ROLLBACK_GREEN",
+  "proof_file": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE03_EVENTHUB_MUTATIONS_FINAL_INPUTS.json",
+  "sha256": "bcaecf5f89423153ffbaebac660cb4145007a0db3cfc56439e0f029fd3291728",
+  "final_regression_hashes": {
+    "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+    "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+    "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+    "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBuiltContextCapture.cs": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081"
+  },
+  "mutants": 19,
+  "original_checkout_hash_verified_files": 6209,
+  "scope": "Native causal assertions; no timeout/compiler/setup error counts as a kill. These nineteen replace the earlier input-binding limitation; F016 eleven remain separate."
+}

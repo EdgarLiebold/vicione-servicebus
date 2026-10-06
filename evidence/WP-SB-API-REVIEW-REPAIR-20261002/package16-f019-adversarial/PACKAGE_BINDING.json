@@ -1,0 +1,58 @@
+[
+  {
+    "consumer": "previous",
+    "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package16-f019/previous/ViciOne.ServiceBus.1.0.0.nupkg",
+    "package_sha256": "0e9da3771dc03743ece00217671864a01f4409a4d30f74915e8f9532f4c389ba",
+    "locked_sha512": "2IwkWCNm6pA3oQRT6lA3UwnuhDlOsQepyBgMZGpWgHp1xuIvZZ6ReC3SSptvd5VXaN7MjPPi0jnuUn7zcDVQXw==",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/vicione.servicebus/1.0.0/lib/net10.0/ViciOne.ServiceBus.dll",
+    "loaded": {
+      "name": "ViciOne.ServiceBus",
+      "version": "1.0.0.0",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "sha256": "1872fcba94846a8705c9367ab7217d06a74db951b80a36c47a79dac0c95d2bab"
+    },
+    "independently_verified": true
+  },
+  {
+    "consumer": "previous",
+    "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package16-f019/previous/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+    "package_sha256": "3e362398bf1e256571e48b58c61b1b2ff64b2a8e9d0946d93a398a17b4407114",
+    "locked_sha512": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/vicione.servicebus.abstractions/1.0.0/lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+    "loaded": {
+      "name": "ViciOne.ServiceBus.Abstractions",
+      "version": "1.0.0.0",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+    },
+    "independently_verified": true
+  },
+  {
+    "consumer": "corrected",
+    "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package16-f019/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+    "package_sha256": "ab3e784b9e49a00979c76fafc7129a7a0106619a19d7f45311236ccfe7f5f77f",
+    "locked_sha512": "UJhtRO4QZUiQ16id0pNd1w3sikpvqh1eIx/bDKATxZobI0uIl+f779EoodMLeo6QU50RgYn5LikoV8sURzEAKw==",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/vicione.servicebus/1.0.0/lib/net10.0/ViciOne.ServiceBus.dll",
+    "loaded": {
+      "name": "ViciOne.ServiceBus",
+      "version": "1.0.0.0",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+      "sha256": "42c94cc77fb013c3b3080dc14a1521ab686b7b123ce5d462c6b7e350451d81b7"
+    },
+    "independently_verified": true
+  },
+  {
+    "consumer": "corrected",
+    "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package16-f019/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+    "package_sha256": "3e362398bf1e256571e48b58c61b1b2ff64b2a8e9d0946d93a398a17b4407114",
+    "locked_sha512": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/vicione.servicebus.abstractions/1.0.0/lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+    "loaded": {
+      "name": "ViciOne.ServiceBus.Abstractions",
+      "version": "1.0.0.0",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+    },
+    "independently_verified": true
+  }
+]

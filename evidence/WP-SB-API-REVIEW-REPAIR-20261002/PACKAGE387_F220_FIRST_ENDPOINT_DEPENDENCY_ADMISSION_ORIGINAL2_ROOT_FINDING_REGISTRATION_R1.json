@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-06T08:28:20.327005+00:00",
+  "status": "ROOT_REGISTERED_DISTINCT_FIRST_RECEIVE_ENDPOINT_DEPENDENCY_ADMISSION_OBSERVER_RETIREMENT_DEFECT",
+  "finding": "F-SB-API-220",
+  "known_before": 219,
+  "known_after": 220,
+  "bounded_dispositions_unchanged": 217,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package384-adddependency2-original-independent-qualification-r1/MANIFEST.json",
+    "sha256": "be913704f8711e7dabd4e9ba6b6c8d5da6d8d33f5430d5fe0ecd658b3abef524"
+  },
+  "Root_whole_actual_raw": "6b53c7 full",
+  "Root_whole_final_Report": "709905",
+  "actual_original": {
+    "total": 2,
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0
+  },
+  "causal_boundary": "Exact public first admission failure identity/no storage/no second acquisition and exact call sequence precede real observable Count43 expected0actual1. Actual returned handle remains attached; releaseAttempt44 unreached. Healthy actual public Ready/Completed callbacks/promises and retirement pass.",
+  "source_owner": "src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/ReceiveEndpointConfiguratorDependencyExtensions.cs",
+  "distinct_owner": "First endpoint dependency graph admission; different from F219 ConsumerSpecification constructor and F217/F218 consume-pipe registration. Later admitted-halfgraph/replay/abandoned-Ready policy deliberately separate, no universal transaction promise.",
+  "canonical_original_index": 11904,
+  "Product_changed_at_registration": false,
+  "whole_API_closed": false
+}

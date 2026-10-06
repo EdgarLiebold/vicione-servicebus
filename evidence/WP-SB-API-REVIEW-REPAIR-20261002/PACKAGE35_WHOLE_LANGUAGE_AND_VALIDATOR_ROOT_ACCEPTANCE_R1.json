@@ -1,0 +1,58 @@
+{
+  "actor": "/root",
+  "utc": "2026-10-04T00:49:58.796510+00:00",
+  "status": "ROOT_BOUNDED_WHOLE_LANGUAGE_VALIDATOR_AND_EIGHT_CAUSAL_NEGATIVES_ACCEPTED_OWNER_PERSONAL_READ_AND_CURRENT_UNIT_PENDING",
+  "independent_qualifications": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-whole-parser-compiled-qualification-r1/MANIFEST.json",
+      "sha256": "8752e836d358293d24d3372ce5ff287448c782df5f8d9fbd9b8bf8c04fda87fe",
+      "all_artifacts_fresh_sha256_and_length_verified": 876,
+      "root_personally_full_review_and_manifest_header": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-whole-parser-negative-source-preflight-r1/MANIFEST.json",
+      "sha256": "01db6ca942e8a429949d8093242ee17773c11be909949b0923e1f37c68a09880",
+      "all_artifacts_fresh_sha256_and_length_verified": 2,
+      "root_personally_full_review_and_manifest_header": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-whole-language-boundary-qualification-r1/MANIFEST.json",
+      "sha256": "8fb174cb0031e2c932fd758a7449f262665052002cdda6cb36f920c267d76468",
+      "all_artifacts_fresh_sha256_and_length_verified": 13,
+      "root_personally_full_review_and_manifest_header": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-whole-parser-negative-native-qualification-r1/MANIFEST.json",
+      "sha256": "8bbf8bfe88a16b53cef48439ff312501f8d1478a0f414a7991e96ffa05269a95",
+      "all_artifacts_fresh_sha256_and_length_verified": 44,
+      "root_personally_full_review_and_manifest_header": true
+    }
+  ],
+  "whole_language_current_and_final_report_sha256": "a9a28f09373f3fba0c1023e07afb65bf3ab04a9a359b85b3ad415e51ca59945a",
+  "same_initial_and_final_report_bytes": true,
+  "bound_inputs": 848,
+  "csharp_full_syntax_parse": 803,
+  "xml_full_parse": 23,
+  "json_full_parse": 16,
+  "requirement_rows_exact_five_string_fields": 4538,
+  "all_reported_csharp_syntax_diagnostics": 0,
+  "disabled_regions": 0,
+  "native_serial_receipts_personally_fully_read": 15,
+  "causal_validator_negative_cases_personally_fully_read_and_accepted": 8,
+  "green_controls": 3,
+  "private_tool_pdb_documents_sha256_verified": 4,
+  "root_private_program_full_read_reused_exact_hash": true,
+  "root_actual_three_generated_sources_personally_full": true,
+  "native_protoc_full_descriptor_qualified": true,
+  "whole_yaml_eof_structure_qualified": true,
+  "capi596_complete_structural_and_crt_binding_qualified": true,
+  "original_current_and_snapshots_all848_unchanged": true,
+  "pure_fixture_builder_exit_credit": false,
+  "limits": [
+    "803 C# syntax passes do not prove C# binding/compilation or runtime correctness.",
+    "Six foreign grammar inputs are separate; Proto/YAML/CAPI qualified, configurations and Markdown require their own full reading.",
+    "MSBuild evaluates exactly762 Compile sources; no complete transitive import or final Csc/generated-source claim.",
+    "Personal Core766 source and ordered mapping closure remains incomplete.",
+    "Current canonical Unit project still has two CS0120 errors; no Unit green or WholeAPI/A+ claim."
+  ]
+}

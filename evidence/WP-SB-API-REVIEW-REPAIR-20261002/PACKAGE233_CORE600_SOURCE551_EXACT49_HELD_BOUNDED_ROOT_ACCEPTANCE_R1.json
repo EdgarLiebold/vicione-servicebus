@@ -1,0 +1,393 @@
+{
+  "utc": "2026-10-05T20:01:46.402728+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_SOURCE551_EXACT49_HELD_NO_NATIVE_OR_GLOBAL_GRADE",
+  "selected_original_canonical": 600,
+  "accepted_original_canonical": 551,
+  "held_members": [
+    {
+      "ordinal": 7,
+      "id": "M:ViciOne.ServiceBus.Configuration.ActivityObserverConfigurationExtensions.ConnectActivityObserver(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator,ViciOne.ServiceBus.Advanced.Observers.IActivityObserver)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Initial and later activity connection handles require genuine custom SPI failure/cleanup proof; no local all-handle rollback.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 8,
+      "id": "M:ViciOne.ServiceBus.Configuration.ActivityObserverConfigurationExtensions.ConnectActivityObserver(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,ViciOne.ServiceBus.Advanced.Observers.IActivityObserver)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Disposed flag precedes sequential handle cleanup; a handle failure can interrupt remaining cleanup.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 13,
+      "id": "M:ViciOne.ServiceBus.Configuration.BusFactoryExtensions.Build(ViciOne.ServiceBus.Configuration.IBusFactory,ViciOne.ServiceBus.Configuration.IBusConfiguration)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Endpoint/host/PostCreate ownership after partial construction is not guaranteed by local Build.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 14,
+      "id": "M:ViciOne.ServiceBus.Configuration.BusFactoryExtensions.Build(ViciOne.ServiceBus.Configuration.IBusFactory,ViciOne.ServiceBus.Configuration.IBusConfiguration,System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ISpecification})",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Dependency-validation and partial construction ownership require genuine custom enumeration/provider proof.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 69,
+      "id": "M:ViciOne.ServiceBus.Configuration.ConsumePipeSpecification.ConsumerConfigured``1(ViciOne.ServiceBus.Configuration.IConsumerConfigurator{``0})",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Malformed consumer configuration observer summary, inconsistent with forwarding callback.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 70,
+      "id": "M:ViciOne.ServiceBus.Configuration.ConsumePipeSpecification.ConsumerMessageConfigured``2(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator{``0,``1})",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Malformed typed consumer/message observer summary, not a consume operation.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 124,
+      "id": "M:ViciOne.ServiceBus.Configuration.DeadLetterExtensions.UseDeadLetter(ViciOne.ServiceBus.Configuration.IPipeConfigurator{ViciOne.ServiceBus.Advanced.ReceiveContext},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ReceiveContext})",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Claims rescue exceptions, whereas configured DeadLetterFilter awaits successful next then routes undelivered/unfaulted messages.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 129,
+      "id": "M:ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter.CompensateActivity``2",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Claims compensation execution; this method returns a formatted compensation endpoint name.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 131,
+      "id": "M:ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter.ExecuteActivity``2",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Claims activity execution; this method returns a formatted execute endpoint name.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 138,
+      "id": "M:ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter.Message``1",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Claims message configuration; this method only returns a formatted message endpoint name.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 139,
+      "id": "M:ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter.Saga``1",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Claims saga configuration; this method only returns a formatted saga endpoint name.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 141,
+      "id": "M:ViciOne.ServiceBus.Configuration.DefaultEndpointNameFormatter.TemporaryEndpoint(System.String)",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Claims temporary endpoint configuration; this method only returns a generated temporary name.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 150,
+      "id": "M:ViciOne.ServiceBus.Configuration.DelayedRedeliveryExtensions.UseDelayedRedelivery``1(ViciOne.ServiceBus.Configuration.IHandlerConfigurator{``0},System.Action{ViciOne.ServiceBus.Configuration.IRedeliveryConfigurator})",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Retry-purpose handler summary does not describe delayed redelivery configuration.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 174,
+      "id": "M:ViciOne.ServiceBus.Configuration.DispatchPipeSpecification`1.Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder{`0})",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Earlier connector effects are not rolled back if later Connect fails.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 251,
+      "id": "M:ViciOne.ServiceBus.Configuration.InstanceConnector`1.ConnectInstance(ViciOne.ServiceBus.Advanced.Middleware.IConsumePipeConnector,System.Object)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Delegated instance connection includes the adjacent partial rollback boundary; actual public proof remains open.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 252,
+      "id": "M:ViciOne.ServiceBus.Configuration.InstanceConnector`1.ConnectInstance``1(ViciOne.ServiceBus.Advanced.Middleware.IConsumePipeConnector,``0,ViciOne.ServiceBus.Configuration.IConsumerSpecification{``0})",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Cleanup Dispose failure can replace admission primary and skip remaining acquired handles; meaningful Original public control needed.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 265,
+      "id": "M:ViciOne.ServiceBus.Configuration.JsonSerializerConfigurationExtensions.UseJsonDeserializer(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator,System.Boolean)",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Raw-JSON deserialization description conflicts with selected SystemTextJson envelope factory.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 266,
+      "id": "M:ViciOne.ServiceBus.Configuration.JsonSerializerConfigurationExtensions.UseJsonDeserializer(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator,System.Boolean)",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Raw-JSON deserialization description conflicts with selected SystemTextJson envelope factory.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 267,
+      "id": "M:ViciOne.ServiceBus.Configuration.JsonSerializerConfigurationExtensions.UseJsonSerializer(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator)",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Raw-JSON serializer description conflicts with selected SystemTextJson envelope factory.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 268,
+      "id": "M:ViciOne.ServiceBus.Configuration.JsonSerializerConfigurationExtensions.UseJsonSerializer(ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator)",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Raw-JSON serializer description conflicts with selected SystemTextJson envelope factory.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 339,
+      "id": "M:ViciOne.ServiceBus.Configuration.OutboxConsumePipeSpecificationObserver`1.ConsumerConfigured``1(ViciOne.ServiceBus.Configuration.IConsumerConfigurator{``0})",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Malformed consumer configured summary; actual callback intentionally does nothing.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 340,
+      "id": "M:ViciOne.ServiceBus.Configuration.OutboxConsumePipeSpecificationObserver`1.ConsumerMessageConfigured``2(ViciOne.ServiceBus.Configuration.IConsumerMessageConfigurator{``0,``1})",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Malformed consumer message configured summary; actual callback appends outbox filter configuration.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 378,
+      "id": "M:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfiguration.Changed(System.String)",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Malformed Changes d summary does not describe recording a late configuration key.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 388,
+      "id": "M:ViciOne.ServiceBus.Configuration.ReceiveEndpointConfigurationExtensions.ReceiveEndpoint(ViciOne.ServiceBus.Configuration.IBusFactoryConfigurator,ViciOne.ServiceBus.Configuration.IEndpointDefinition,System.Action{ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator})",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Current summary claims a management endpoint, but this overload delegates the arbitrary supplied IEndpointDefinition, DefaultEndpointNameFormatter.Instance and optional configuration callback to the bus factory; no inherent management endpoint is selected.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 441,
+      "id": "M:ViciOne.ServiceBus.Configuration.RegistrationExtensions.AddConsumers(ViciOne.ServiceBus.Configuration.IRegistrationConfigurator,System.Type[])",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Type array parameter incorrectly describes state machine types; actual consumer classification delegation. Published member also contains a stray literal character.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 447,
+      "id": "M:ViciOne.ServiceBus.Configuration.ReliableSchedulerConfigurationExtensions.UseTransportScheduler(ViciOne.ServiceBus.Configuration.IReliableMessagingConfigurator)",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Current returns XML says configured transport scheduler, but this IReliableMessagingConfigurator extension calls UseTransportSchedulerAdapter and returns the same supplied configurator, not a scheduler object.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 482,
+      "id": "M:ViciOne.ServiceBus.Configuration.ScheduledRedeliveryConfigurationExtensions.UseScheduledRedelivery``1(ViciOne.ServiceBus.Configuration.IHandlerConfigurator{``0},System.Action{ViciOne.ServiceBus.Configuration.IRetryConfigurator})",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Retry-purpose handler summary does not describe scheduled redelivery configuration.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 531,
+      "id": "M:ViciOne.ServiceBus.Configuration.TransformConfigurationExtensions.UseTransform``1(ViciOne.ServiceBus.Configuration.IConsumePipeConfigurator,System.Func{ViciOne.ServiceBus.Configuration.ITransformSpecificationConfigurator{``0},ViciOne.ServiceBus.Configuration.IConsumeTransformSpecification{``0}})",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Transaction-purpose summary contradicts transform specification registration.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 533,
+      "id": "M:ViciOne.ServiceBus.Configuration.TransformConfigurationExtensions.UseTransform``1(ViciOne.ServiceBus.Configuration.IPipeConfigurator{ViciOne.ServiceBus.ConsumeContext{``0}},System.Func{ViciOne.ServiceBus.Configuration.ITransformSpecificationConfigurator{``0},ViciOne.ServiceBus.Configuration.IConsumeTransformSpecification{``0}})",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Transaction-purpose summary contradicts typed transform specification registration.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 539,
+      "id": "M:ViciOne.ServiceBus.Configuration.TransformSpecification`1.Default``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})",
+      "recommendation": "HELD_DOCUMENTATION_PURPOSE",
+      "held_reason": "Returns-default summary contradicts void property-initializer configuration.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 547,
+      "id": "M:ViciOne.ServiceBus.Configuration.TransportRegistrationBusFactory`1.CreateBus``2(``0,ViciOne.ServiceBus.Configuration.IBusRegistrationContext,System.Action{ViciOne.ServiceBus.Configuration.IBusRegistrationContext,``1},System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.IBusInstanceSpecification})",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Bus creation/observer/specification callbacks have partial side effects and no universal acquired-host rollback.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 553,
+      "id": "M:ViciOne.ServiceBus.Middleware.OutboxMessagePipe`1.SendAsync(ViciOne.ServiceBus.Middleware.OutboxConsumeContext{`0})",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Actual outbox storage, notification, delivery and ambient restoration ownership require operative qualification; local contains only designated diagnostics.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 563,
+      "id": "M:ViciOne.ServiceBus.Transports.BaseHost.Start(System.Threading.CancellationToken)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Starting/already-started logging and partial start rollback have explicit local limits; all-resource/custom callback behavior remains open.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 564,
+      "id": "M:ViciOne.ServiceBus.Transports.BaseHost.StopAsync(System.Threading.CancellationToken)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Sequential shutdown can skip later phases on failure; no unconditional all-resource cleanup.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 565,
+      "id": "M:ViciOne.ServiceBus.Transports.BaseReceiveEndpointContext.ResetAsync(System.Threading.CancellationToken)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "First endpoint-provider release failure can skip later release and lazy reset; transport-provider ownership is delegated.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 566,
+      "id": "M:ViciOne.ServiceBus.Transports.ConsumerAgent`1.ActiveAndActualAgentsCompletedAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Canceled wrapper waits do not prove underlying consume-loop retirement; retained settlement callbacks remain operative.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 567,
+      "id": "M:ViciOne.ServiceBus.Transports.ConsumerAgent`1.DispatchAsync``1(`0,``0,ViciOne.ServiceBus.Transports.ReceiveLockContext)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Concurrent duplicate admission, settlement and cancellation-generation ownership require public operative controls.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 569,
+      "id": "M:ViciOne.ServiceBus.Transports.ConsumerAgent`1.StopAgentAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Completion delegates to Agent/helper; no unconditional underlying-task drain claim.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 573,
+      "id": "M:ViciOne.ServiceBus.Transports.ConsumerAgent`1.TrySetConsumeTask(System.Threading.Tasks.Task)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Unexpected-stop observer may fault on Warning or shutdown; separate raw task and observer lifecycle.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 574,
+      "id": "M:ViciOne.ServiceBus.Transports.ConsumerAgent`1.TrySetManualConsumeTask",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Manual-task source/observer lifetime depends on actual later completion and stop paths.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 582,
+      "id": "M:ViciOne.ServiceBus.Transports.JsonTransportHeaders.Get``1(System.String,System.Nullable{``0})",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Documented cannot-convert fallback conflicts with current codec Guid-to-int route by source inspection only; preserve genuine converter failures. No Original/native proof or new finding ID.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 583,
+      "id": "M:ViciOne.ServiceBus.Transports.JsonTransportHeaders.Get``1(System.String,``0)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Documented cannot-convert fallback conflicts with current codec Guid-to-reference-list route by source inspection only; preserve genuine converter failures. No Original/native proof or new finding ID.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 587,
+      "id": "M:ViciOne.ServiceBus.Transports.ReceiveEndpointCollection.Add(System.String,ViciOne.ServiceBus.Transports.ReceiveEndpoint)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Duplicate admission changes attempted endpoint health; observer-connect effects are not universally rolled back.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 589,
+      "id": "M:ViciOne.ServiceBus.Transports.ReceiveEndpointCollection.ConnectConsumeMessageObserver``1(ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver{``0})",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Lazy MultipleConnectHandle construction does not roll back earlier handles after later connection failure.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 592,
+      "id": "M:ViciOne.ServiceBus.Transports.ReceiveEndpointCollection.Start(System.String,System.Threading.CancellationToken)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Underlying startup success followed by wrapper failure lacks a local acquired-handle rollback.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 593,
+      "id": "M:ViciOne.ServiceBus.Transports.ReceiveEndpointCollection.StartEndpoints(System.Threading.CancellationToken)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Later startup failure retains earlier handles and started flag.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 594,
+      "id": "M:ViciOne.ServiceBus.Transports.ReceiveEndpointCollection.StopEndpointsAsync(System.Threading.CancellationToken)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "First shutdown phase or sync task admission fault can skip remaining work; no unconditional joining.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 598,
+      "id": "M:ViciOne.ServiceBus.Transports.RiderCollection.StartRider(System.String,System.Threading.CancellationToken)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Invalid raw readiness/handle after Start can escape cleanup; caller cancellation and readiness require operative proof.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    },
+    {
+      "ordinal": 599,
+      "id": "M:ViciOne.ServiceBus.Transports.RiderCollection.StartRiders(System.Threading.CancellationToken)",
+      "recommendation": "HELD_RUNTIME_PROOF",
+      "held_reason": "Later rider startup failure retains already-recorded generations; no batch rollback.",
+      "remaining_runtime_obligations": "Meaningful execution, custom SPI/provider outcomes, callback faults/cancellation and task/resource lifetime remain ungraded; no row receives runtime qualification from this local contract dossier."
+    }
+  ],
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package228-core-method600-current207-contract-context-r2/REPORT.json",
+    "sha256": "11b1ae743f04cffa1d2ed48b6e6472036328a4feeafe7e6e500ede0d8d3f8fdf",
+    "own_authority": "Whole158/14256L plus whole38/3942L and all600 individual norms"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package228-core600-independent-scanner-source-peer-r1/REPORT.json",
+    "sha256": "210f00415fcef73eee5ae28e1253bcb0a2178b0df367ecb73be83b533020ed7d",
+    "manifest_sha256": "eb1fbd082a5f05345aaeb31ccbae8e021ff28cd4d87bea61080735626ebaf226",
+    "own_authority": "Independent whole158/14256L plus whole38/3942L and all600 individual norms, explicit truncation recovery"
+  },
+  "required_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package228-core600-norm1-doc-hold2-precision-overlay-r1/CORRECTED_PER_ID600_CURRENT207_CONTRACT_MATRIX.json",
+    "sha256": "b4eb358a20063f6cfa15a3752e8b50cdfa447f8af076386c5808f2ab00c4ce02",
+    "exact287_norm_and388_447_doc_holds": true
+  },
+  "Root_review": "Whole author/peer/overlay reports934cfa/659b2e and exactthreechange clauses; all manifests/current158Sources/support38/PDB/XML600/Original600/masterdisjoint administrative checks. Root does not claim third whole158/600 semantic reading.",
+  "actual_current_source_epoch": {
+    "Core_DLL_sha256": "6946177fb8f6ef702edd90657f714de5b92adeee2abb28dd64e743de4638df0b",
+    "Core_PDB_sha256": "d1e5f796a09dd367047c638ef1cdf200e3d2ba406c2219990bad42082dfc4bf3",
+    "Core_XML_sha256": "f1d562d6f81b9696de4d1cf7479a8999efcd57ce0ddf1d3147571ac21247bd2e",
+    "source_binding": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package232-json-header-original12-source-bound-capture-r1/PRE_SYMBOL_SOURCE_BINDING.json",
+    "source_binding_sha256": "961f9400a416a4065300977f0dbd1f9d12aeaf4dfaa583cd92b88ab59a477360",
+    "limits": "Actual Core identity unchanged207 after strict232; provenance only, no new human review or selected-method native grade."
+  },
+  "master_before": {
+    "sha256": "e643700c4abd515b52eb904b8ac666fd612f5aaf7942580c022e9606cf4da844",
+    "rows": 14056,
+    "original_accepted": 13194,
+    "original_remaining": 5375
+  },
+  "expected_after": {
+    "rows": 14607,
+    "original_accepted": 13745,
+    "original_remaining": 4824
+  },
+  "native_count_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "preserve_every_prior_row_object_and_order": true,
+  "generated_limit": "Seven generated record methods explicitly XML-NA/declaration-only, no fresh ABI/equality/runtime grade.",
+  "helper_limit": "Lazy ValidationResultExtensions forwarding; no blanket materialization/helper/provider policy."
+}

@@ -75,6 +75,14 @@ public sealed class ActivityRegistrationLifecycleTests
         Assert.Equal(1, selector.CompensateEndpointCalls);
         Assert.Same(definition, registration.GetDefinition(context));
         Assert.Equal(1, selector.DefinitionCalls);
+        Assert.Equal(
+            [typeof(IActivityDefinition<TestActivity, Arguments, Log>),
+                typeof(ExecuteActivityEndpointDefinition<TestActivity, Arguments>),
+                typeof(CompensateActivityEndpointDefinition<TestActivity, Log>)],
+            selector.DefinitionRequests);
+        Assert.All(selector.DefinitionProviders, provider => Assert.Same(context, provider));
+        Assert.Equal(1, selector.ExecuteEndpointCalls);
+        Assert.Equal(1, selector.CompensateEndpointCalls);
     }
 
     [Fact]
@@ -99,6 +107,13 @@ public sealed class ActivityRegistrationLifecycleTests
         Assert.Equal(0, selector.CompensateEndpointCalls);
         Assert.Same(definition, registration.GetDefinition(context));
         Assert.Equal(1, selector.DefinitionCalls);
+        Assert.Equal(
+            [typeof(IExecuteActivityDefinition<ExecuteOnlyActivity, Arguments>),
+                typeof(ExecuteActivityEndpointDefinition<ExecuteOnlyActivity, Arguments>)],
+            selector.DefinitionRequests);
+        Assert.All(selector.DefinitionProviders, provider => Assert.Same(context, provider));
+        Assert.Equal(1, selector.ExecuteEndpointCalls);
+        Assert.Equal(0, selector.CompensateEndpointCalls);
     }
 
     [Fact]
@@ -213,7 +228,7 @@ public sealed class ActivityRegistrationLifecycleTests
         Assert.False(activityCompensate.ConfigureConsumeTopology);
         Assert.Single(activityExecute.Specifications);
         Assert.Single(activityCompensate.Specifications);
-        Assert.False(activity.IncludeInConfigureEndpoints);
+        Assert.True(activity.IncludeInConfigureEndpoints);
 
         IReceiveEndpointConfigurator executeEndpoint = EndpointProxy("execute-only", out EndpointRecorder executeRecorder);
         var executeDefinition = new TestExecuteActivityDefinition();
@@ -340,6 +355,10 @@ public sealed class ActivityRegistrationLifecycleTests
 
         public int DefinitionCalls => Volatile.Read(ref _definitionCalls);
 
+        public System.Collections.Concurrent.ConcurrentQueue<Type> DefinitionRequests { get; } = new();
+
+        public System.Collections.Concurrent.ConcurrentQueue<IServiceProvider> DefinitionProviders { get; } = new();
+
         public ManualResetEventSlim DefinitionEntered { get; } = new();
 
         public int ExecuteEndpointCalls => Volatile.Read(ref _executeEndpointCalls);
@@ -359,9 +378,15 @@ public sealed class ActivityRegistrationLifecycleTests
         public T? GetDefinition<T>(IServiceProvider provider)
             where T : class, IDefinition
         {
-            Interlocked.Increment(ref _definitionCalls);
-            DefinitionEntered.Set();
-            ReleaseDefinition.Wait(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+            DefinitionRequests.Enqueue(typeof(T));
+            DefinitionProviders.Enqueue(provider);
+            if (typeof(T) == typeof(IActivityDefinition<TestActivity, Arguments, Log>)
+                || typeof(T) == typeof(IExecuteActivityDefinition<ExecuteOnlyActivity, Arguments>))
+            {
+                Interlocked.Increment(ref _definitionCalls);
+                DefinitionEntered.Set();
+                ReleaseDefinition.Wait(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+            }
             return definition as T;
         }
 

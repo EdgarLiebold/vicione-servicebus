@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-06T14:58:32.978266+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_INDIVIDUAL_SOURCE7_NO_WHOLE_API_GRADE",
+  "indices": [
+    8374,
+    8404,
+    8533,
+    5284,
+    5285,
+    5379,
+    5381
+  ],
+  "root_source_author": "98374cb091a786cb9986435b66ba23f378e403b2ad7d21b023dde3496e71835a",
+  "different_REPORT": "50711264e3fcb802b23dfa661b859771e8dccc6e23a2d7c6b54df5c3bdb7daf3",
+  "different_MAN": "ced13669ce570c640b72fb10a944cd50da649044deca63fd99271d6f4e029919",
+  "mandatory_count_precision": "18f82cb1afab730b04fb1495713ca48732bb11f4cd18d41cf4cb401ec1c9ef35",
+  "Root_personal_peer": "c740db complete; own matrix authored/read earlier and bound individually",
+  "before_manifest": "e49b723288d81cd6b40925bb8691836bbb6f33b5a157bc4da897f312ffcde359",
+  "count_change": {
+    "master": [
+      19397,
+      19404
+    ],
+    "original": [
+      18535,
+      18542
+    ],
+    "original_remaining": [
+      34,
+      27
+    ]
+  },
+  "compiled_scope": "Core3 exact unchangedcurrent463 Root464 PDB/XML; SQL4 exact unchangedcurrent454 Root468 PDB/XML. Specific actual fixed controls and module counts independently qualified; allother provider/concurrency/publish/shutdown obligations remain bounded, no silent historical regrade.",
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_grade": false,
+  "final_fresh_publication_required": true
+}

@@ -413,21 +413,21 @@ internal sealed class JobService(IJobServiceSettings settings) :
 
         string JobTypeName { get; } = string.IsNullOrWhiteSpace(options.JobTypeName) ? jobTypeName : options.JobTypeName;
 
-        public Task PublishConcurrentJobLimitAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken)
+        public async Task PublishConcurrentJobLimitAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken)
         {
             LogContext.Debug?.Log("Job Service type: {JobType}", TypeCache<TJob>.ShortName);
 
-            return PublishSetConcurrentJobLimitAsync(publishEndpoint, JobConcurrencyUpdateKind.Configuration, cancellationToken);
+            await PublishSetConcurrentJobLimitAsync(publishEndpoint, JobConcurrencyUpdateKind.Configuration, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task PublishHeartbeatAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken)
+        public async Task PublishHeartbeatAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken)
         {
-            return PublishSetConcurrentJobLimitAsync(publishEndpoint, JobConcurrencyUpdateKind.Heartbeat, cancellationToken);
+            await PublishSetConcurrentJobLimitAsync(publishEndpoint, JobConcurrencyUpdateKind.Heartbeat, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task PublishJobInstanceStoppedAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken)
+        public async Task PublishJobInstanceStoppedAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken)
         {
-            return PublishSetConcurrentJobLimitAsync(publishEndpoint, JobConcurrencyUpdateKind.InstanceStopped, cancellationToken);
+            await PublishSetConcurrentJobLimitAsync(publishEndpoint, JobConcurrencyUpdateKind.InstanceStopped, cancellationToken).ConfigureAwait(false);
         }
 
         public Guid JobTypeId { get; } = jobTypeId;

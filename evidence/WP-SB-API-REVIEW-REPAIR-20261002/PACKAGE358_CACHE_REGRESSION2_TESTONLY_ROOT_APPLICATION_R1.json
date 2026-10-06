@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-06T06:00:37.557334+00:00",
+  "status": "ROOT_APPLIED_REVIEWED_TESTONLY_REGRESSION2_WITHDRAWN_DEFECT_HYPOTHESIS_NATIVE_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package353-cache-expired-duplicate-original2-testonly-proposed-r2/MANIFEST.json",
+    "sha256": "033a34db1573972c7858322e94044de44f4b83f33c048d72e640d3f3f814c64d"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package353-cache-original2-independent-source-peer-r2/MANIFEST.json",
+    "sha256": "123bb352294f14a2f8860c06eda2d80584b17fd04610492e43941652a5fdf67d"
+  },
+  "Root_whole_Test180_receipts": [
+    "6f22f5 complete Test180 despite reportmetadata middle omission",
+    "db85ef complete Test180 again; source middle omission excluded"
+  ],
+  "Root_whole_Source16_1735_receipts": [
+    "db85ef Keyed82",
+    "aa1f70 Resource368",
+    "d56db4 helpers8",
+    "33e8f1 Creation287/Lifecycle163",
+    "777350 Observers/Resources/Options/Factory"
+  ],
+  "Root_REQ1_and_cleanupdelta_receipt": "2ac1e8",
+  "mandatory_R1_not_applied": true,
+  "withdrawn_source_defect": "CollectExpired removes entry and increments indexVersion; projection retry first releases removed entries before later duplicate validation. No Product finding or failure prediction.",
+  "test_sha256": "75455c54efa1c5388e92ac8f577b73a52c330785e2d7e8dd9b933f073010c430",
+  "requirements_before_sha256": "ba8a1a46cb8fe33aa19c5d46c0d560e601b8c540210e496def5efec5b046f24e",
+  "requirements_after_sha256": "ea7e224bb45923593658bc98c49fe95f23d81759681ae616b1f1f4d71bb4c837",
+  "Req_ADD1": 1,
+  "Product_source_mutations": 0,
+  "native_count": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "master_sha256_unchanged": "b4f3fbd15b329d1ff65a3e39ee397c8cf8acc9306cf270ff630b5ae87f63ef65"
+}

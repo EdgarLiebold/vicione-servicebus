@@ -1,0 +1,44 @@
+{
+  "utc": "2026-10-06T07:49:18.610359+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_F218_INSTANCE_FIXED6_CORE7902_STRICT_FRESH_AND_TWO_PUBLIC_METHODS",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package377-instance-fixed6-independent-qualification-r1/MANIFEST.json",
+    "sha256": "8adf159cb087fea17724a0b3f0a59ce4635c6d6ccaa572da2c5180d003b57b8f"
+  },
+  "independent_product_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package373-instance-product1-independent-runtime-source-peer-r1/MANIFEST.json",
+    "sha256": "74b479d52fef96ef34e7ae0d19c267363c72ebd3461cdee1575d0ee8c76a12d8"
+  },
+  "SourceCtorNorm1": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package377-instance-ctor1-current-scope-precision-proposed-r1/MANIFEST.json",
+    "sha256": "d2a90298a847e887c163f54608a13319f5867f46ddfe1b9893b10d771e582420"
+  },
+  "Root_current_source_P36_XML3_new2": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package379-f218-root-current-source3-research-before-r1/MANIFEST.json",
+    "sha256": "fd900c5b5ecb765a817067b9c36eb738ec6ffb813e3661f172bec5bfbfcb090a"
+  },
+  "Root_whole_original_and_fixed_raw": [
+    "73dfe4",
+    "1fe8ea"
+  ],
+  "Root_finalReport_andNormReport": "990030",
+  "original_before": 18373,
+  "original_after": 18375,
+  "original_remaining": 194,
+  "master_before": 19235,
+  "master_after": 19237,
+  "rebased_source_rows": 3,
+  "known": 218,
+  "bounded_after": 218,
+  "fixed_native6": 6,
+  "Core_module_pass": 7902,
+  "strict_warnings": 0,
+  "strict_errors": 0,
+  "freshCoreNuGet": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package377-F218-strict-fresh-publication-capture-r1/fresh-pack/ViciOne.ServiceBus.1.0.0.nupkg",
+    "sha256": "54cafc7ae02235bcb5e961b826585c0fec88be611c2f81727f413f5cb45ca7fa"
+  },
+  "limits": "Finite ordinary object/generic3contract routes; Native confirms two sentinel-membership once, not aggregate nesting/order/extracause. Orderedprimaryfirst is reviewed Source behavior. No constructor/fullclass/hidden provider sideeffects/asyncdrain/runtime grade. Fresh global23/31/18/4 still pending.",
+  "grade": null,
+  "whole_API_closed": false
+}

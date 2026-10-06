@@ -1,0 +1,17 @@
+{
+  "utc": "2026-10-04T23:50:53.202695+00:00",
+  "decision": "REGISTER_ORIGINAL_NORMAL_RESPOND_CANCELLATION_ADMISSION_DEFECT",
+  "confirmed_before": 132,
+  "confirmed_after": 133,
+  "accepted_unchanged": 132,
+  "original_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package157-fixed-core16-original-respond20-neighbors-fresh2-independent-r1/REPORT.json",
+    "sha256": "41c3f75e63f5870a5f725ca6cb1abf9b72ab932b694dbeb61afee857d051ecb2"
+  },
+  "root_actual_original20_complete_raw_read": "df7534",
+  "root_product_and_factory_complete_read": [
+    "b86607",
+    "3067a0"
+  ],
+  "CLOSED": false
+}

@@ -1,0 +1,52 @@
+{
+  "status": "ROOT_APPLIED_TEST_ONLY_AFTER_DIFFERENT_AUTHOR_PEERS",
+  "utc": "2026-10-06T13:11:57.877951+00:00",
+  "files": [
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Transports/HostOwnedShutdownDrainTests.cs",
+      "before": "b5c1194443b4e8a1c3aa9f2f6861d15322cc2052bcd83434d2c50e336385c139",
+      "after": "a9cb101204247044d4d7252e70a0bc04cd902876ad727caa22e7693023f11e4c"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlPublicContinuationDiagnosticsTests.cs",
+      "before": null,
+      "after": "79ad34914687d2bc1bd8b791c3809d6d93ba58dd6833128d8f65d7a562605e04"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/SqlTransportRequirements.json",
+      "before": "ef32164befb7b593f9dd41f81ec955d3d1ee1bdaec426f518205acd48e214f97",
+      "after": "7cbec367bdaead859f59c995967f1918eea2cfa4d2f304f027567b9e7550e0a5"
+    }
+  ],
+  "pins": [
+    [
+      "package431-host-stop6-later-reset-oracle-testonly-proposed-r2/REPORT.json",
+      "a5a179dcf3e69b9d39b389a25f529c0f21adfd2c3aa607294588e08fb272b9e8"
+    ],
+    [
+      "package431-host-stop6-reset-r2-independent-delta-peer-r1/INDEPENDENT_REPORT.json",
+      "0b14c0be5dfb00c5541155b35e4113d869ce74f23f65f9c1d74071a1f8df8a01"
+    ],
+    [
+      "package426-sql-original8-testonly-proposed-r1/REPORT.json",
+      "2c9f3346ae3c98ac394657232c5eafe2190a35a639d808a955f9dc0b2b4cb330"
+    ],
+    [
+      "package426-sql8-independent-runtime-test-source-peer-r1/REPORT.json",
+      "4c12a0979def338400cedab13097db627ca6a0513a5d20832505321137fb6c6f"
+    ],
+    [
+      "package444-original24-independent-native-qualification-r1/INDEPENDENT_REPORT.json",
+      "7e5094fc4e4003aa945d69461dd343c834d6d026b80911a87f7524100bece5d1"
+    ]
+  ],
+  "source_guards_checked": 38,
+  "root_read": [
+    "SQL whole462 434cb6/aac283",
+    "Host original461 prior whole plus exact inverse and different full8e62cf",
+    "Original444 independent whole604e95"
+  ],
+  "native_credit": 0,
+  "findings_registered": 0,
+  "limits": "Host first62 unchanged. Original444 is immutable historical Test461; later462 needs fresh build. SQL actual Original8 not yet run. Product unchanged; no API count or grade promotion."
+}

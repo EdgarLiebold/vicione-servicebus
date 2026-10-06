@@ -1,0 +1,59 @@
+{
+  "inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKindEndpointContext.cs",
+      "bytes": 1088,
+      "sha256": "6a0e6e67ed13ed4f7ce4aa56fc78de2606bf1fb34add4b4b9ae6360b0bb18913"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKindContext.cs",
+      "bytes": 921,
+      "sha256": "692a19b3b52e86f67b085f3f356b27375ab7a39f032bde967b79a062f194a065"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "bytes": 463,
+      "sha256": "7fa0fd503d34bf8b31fa89d44af32b8a0f5397ff270a3576e0d1b5a1736e5775"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ConfigurationMessages.cs",
+      "bytes": 2491,
+      "sha256": "a065264bf22b087fcb671d1165334f4f504b97109a379bf7c02bcc6966a01f31"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerKind.cs",
+      "bytes": 4961,
+      "sha256": "a380102810512390083e300911f516317acd6507337157ec2a5547da62fe6bf2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "bytes": 4930,
+      "sha256": "3ae4735449c76fb29ca75718ef96f5babef34bd80cd11a3a51ccaea33d822942"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "bytes": 18461,
+      "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825"
+    }
+  ],
+  "batches": [
+    {
+      "artifact": "READ_001.txt",
+      "sha256": "73e17f0703801f15b555453ecaf456554a88349af325ef33f0e152e0c0c473e0",
+      "read_status": "FULL",
+      "basis": "Personal untruncated read; READ_001 reused from same-agent preceding context, READ_002 and READ_003 read in current turn."
+    },
+    {
+      "artifact": "READ_002.txt",
+      "sha256": "00558ab7d2a77989ba274bcc2ec417eae13a80f67b0e5c8d0dc2b58216bb34b5",
+      "read_status": "FULL",
+      "basis": "Personal untruncated read; READ_001 reused from same-agent preceding context, READ_002 and READ_003 read in current turn."
+    },
+    {
+      "artifact": "READ_003.txt",
+      "sha256": "e2b9f4fae55964d013bb92f73f74d8ba716a003f3eb2b0401f336c1574be39c6",
+      "read_status": "FULL",
+      "basis": "Personal untruncated read; READ_001 reused from same-agent preceding context, READ_002 and READ_003 read in current turn."
+    }
+  ]
+}

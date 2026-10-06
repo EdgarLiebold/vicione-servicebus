@@ -1,0 +1,61 @@
+{
+  "utc": "2026-10-05T14:32:04.001192+00:00",
+  "status": "ADVERSARIALLY_REVIEWED_PRODUCT6_APPLIED_FIXED_NATIVE_PENDING",
+  "findings": [
+    "F-SB-API-177",
+    "F-SB-API-178",
+    "F-SB-API-179"
+  ],
+  "changes": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ClientContextFactory.cs",
+      "before_sha256": "de9bad9b439afc2aa3252b8e06a568e8f998e95d00ff8d5b7ca1eb6f8aa3302b",
+      "after_sha256": "6120307a3e55c01dbc0e3d1c504a617777a478086ba1076ed8974e068594e20b"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ClientContextSupervisor.cs",
+      "before_sha256": "2902eb18d1657e0a43e789b6115a5c9164d179d22316d6f4f0826d69c233af6d",
+      "after_sha256": "bcd4a6c5f175bd15d3f95246a3fb438df1bc3a82f2be1ca4d5b952f1f58c49af"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsReceiveEndpointConfiguration.cs",
+      "before_sha256": "b349fdde3ae55cc812e0d4e59667e0f68267fd9eaa299e4ea565abacfcfe902c",
+      "after_sha256": "6a6c673da07bc7c53319f2212a337fd7ef5e5adcafcdd8e915b68d2fcdd34a7d"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueSqsReceiveEndpointContext.cs",
+      "before_sha256": "5181f8db79e70e42afbc9b2e13c9263b2384cb63b5e157c577dfd8b8fd02e671",
+      "after_sha256": "7c34a417cbf798ccfc1b7df26cc355468798483825e4017b24495eff6bfcd1ba"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Topology/QueueSendSettings.cs",
+      "before_sha256": "17f3e7da636c2db254e9072523afc8268776247c9a5886697eff87781c621399",
+      "after_sha256": "7ce5b3ade5fd241268ee2275c691b7eeaf7cffd194a1144412d70ac68780c532"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Middleware/Configuration/PipeConfigurator.cs",
+      "before_sha256": "1eff3899a69d32da3d002a42cb96146c7b08de35e0cb52f8ed9cab4ed1b0bad1",
+      "after_sha256": "3ceb5da4b84704720359cc99774160b5ead449a673fed41cd7ad4e88fab7eca3"
+    }
+  ],
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE187_SQS_F177_METADATA_F178_CONNECTION_F179_XML_ORIGINAL_ROOT_REGISTRATION_R1.json",
+    "sha256": "7e70d6a48b2e95759b37361e44b14e7b02fb4b24c7dc5f380244647af42d9a0a"
+  },
+  "proposal_manifest_sha256": "fa62034c9a6396c0e5ae2e1490ed676bf7c440911795bac273011b1a2a85a0c9",
+  "independent_composition_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package188-sqs-product6-composition-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "076d98e70af628ee8940025653a0550ae78c4ccc406a890608de7290b004de63"
+  },
+  "root_whole_source_reads": [
+    "537ab5",
+    "ebc3b1",
+    "e4dce7"
+  ],
+  "requirements_or_tests_changed": false,
+  "validation_omission": "Separate unconfirmed original-oracle research; not silently closed by this repair.",
+  "continuation_builder": "Specifications apply once into retained builder; no immutable-snapshot promise. Existing custom-spec retained-builder mutation remains possible.",
+  "fixed_native_pending": true,
+  "lifetime_negative_tests_pending": true,
+  "global_Aplus": false
+}

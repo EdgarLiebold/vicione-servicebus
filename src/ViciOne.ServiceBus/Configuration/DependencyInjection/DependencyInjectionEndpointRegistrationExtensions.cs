@@ -71,7 +71,7 @@ public static class DependencyInjectionEndpointRegistrationExtensions
         ArgumentNullException.ThrowIfNull(registrar);
         ArgumentNullException.ThrowIfNull(endpointDefinitionType);
 
-        if (!endpointDefinitionType.IsClass || endpointDefinitionType.IsAbstract
+        if (!endpointDefinitionType.IsClass || endpointDefinitionType.IsAbstract || endpointDefinitionType.ContainsGenericParameters
             || !endpointDefinitionType.TryGetSingleClosedGenericArguments(typeof(IEndpointDefinition<>), out Type[] types))
             throw new ArgumentException($"{TypeCache.GetShortName(endpointDefinitionType)} is not an endpoint definition", nameof(endpointDefinitionType));
 

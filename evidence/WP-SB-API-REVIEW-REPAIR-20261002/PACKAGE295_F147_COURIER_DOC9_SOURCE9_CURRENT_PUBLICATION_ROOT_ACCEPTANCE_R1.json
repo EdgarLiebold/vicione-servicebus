@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-06T01:21:40.029704+00:00",
+  "status": "F147_COURIER_DOC9_ACTUAL_PUBLICATION_SOURCE9_BOUNDED_ROOT_ACCEPTANCE",
+  "current_norms": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package289-courier-doc9-norm2-identifier-precision-r2/SOURCE9_CURRENT_NORMS.json",
+    "sha256": "3b00da6512776770a8bc42bc84cd9a589f7314b980060e5465d563f69cf588fb"
+  },
+  "mandatory_norm2_precision": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package289-courier-doc9-norm2-identifier-precision-r2/REPORT.json",
+    "sha256": "88492ade93497aa1bd2c50bc446117e7b7e0375522d704da9e0fa08119511a56"
+  },
+  "actual_publication": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package289-courier-doc9-root-actual-publication-r1/REPORT.json",
+    "sha256": "42bab995b75ffdc306198b6d962e3a49cd5f8d8e8ece210f049c0e9eb689e473"
+  },
+  "independent_source_publication_norm_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package289-courier-doc9-independent-scanner-final-publication-norm9-peer-r2/REPORT.json",
+    "sha256": "7e8d614eccddb9aa91e2a5e54c84644aabea0618a7ac826153d65fd3fcd9c58a"
+  },
+  "Root_all9norm_personal_read": "a508aa",
+  "source9_Original_appended": 9,
+  "existing_rows6source_identity_rebase": 51,
+  "master_before_sha256": "ff52f3971363d020ee17498e19ee1136fc402a23583ec37198dc29fe274344f3",
+  "master_before_rows": 18895,
+  "master_after_rows": 18904,
+  "Original_before": 18033,
+  "Original_after": 18042,
+  "Original_remaining": 527,
+  "Courier_original45holds_become36": "Doc9 resolved;32operative +4implicit pending separatepeer. No blanket constructor/DI/runtime acceptance.",
+  "preservation": "Existing rows in6sourceowners only sourceSHA/actualPDB/rebaseref updated, allnorm/status/native/XML unchanged. Otheroldrowobjects exact.",
+  "actual_XML9inverse_restores_entire_before": true,
+  "all_other777XMLnodes_unchanged": true,
+  "strict_build_0warnings_0errors_fresh_NuGet_exact_DLL_XML": true,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

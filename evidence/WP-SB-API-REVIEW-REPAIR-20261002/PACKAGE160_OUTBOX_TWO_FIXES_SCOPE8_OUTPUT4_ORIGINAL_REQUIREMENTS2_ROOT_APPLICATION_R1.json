@@ -1,0 +1,101 @@
+{
+  "utc": "2026-10-05T00:45:08.230696+00:00",
+  "actor": "/root",
+  "status": "SOURCE_PEERED_APPLIED_NATIVE_PENDING",
+  "after_freeze159": "6b04541b32a627008199c04e8fe7179f8f724339e625826578bee6938b291c24",
+  "registered_findings": [
+    "F-SB-API-136",
+    "F-SB-API-137"
+  ],
+  "source_peers": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-outbox-join-warning-product-proposed-r1/MANIFEST.json",
+      "sha256": "a2bc1cccd254c511c4e84591459e9a9fe2fa75143541d1fcc4220e6a9b3bc755"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-outbox-join-warning-product-independent-runtime-r1/MANIFEST.json",
+      "sha256": "301287e3c69e41e581ff60937b8c8ae57d8b6ab8747ddd463b337fb19bafd96e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-consume-scope-primary-cleanup8-oracles-proposed-r1/MANIFEST.json",
+      "sha256": "1677e6461b83827f8db818ac544173f31fe412f8a0fe9b68f48d858dcadaf3ba"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-consume-scope-primary-cleanup8-independent-runtime-r1/MANIFEST.json",
+      "sha256": "c1283edfe61c192fa14976ed3d2c320a7cb3515d84429f676914f2080acf6619"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-consume-output-continuation4-oracles-proposed-r1/MANIFEST.json",
+      "sha256": "ae28347ebffc0cf25c35b17cf1335923b56056df2f417959d2f6272c744274ea"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-consume-output-continuation4-independent-runtime-r1/MANIFEST.json",
+      "sha256": "00afe5b311f5a5923e3b35b25361640d97740bc01dfc1886b71a88ebc203e31e"
+    }
+  ],
+  "changes": [
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxMessageSchedulerContext.cs",
+      "before_sha256": "1dafbc46fcf7949220fc5fcc8a041cf3567eb8030be17039514c7f9cb36e0192",
+      "current_sha256": "b79411c55f39c112808a23dc2efb58fb39b8290a06253c45b256d4f63d5a9448",
+      "before_lines": 635,
+      "current_lines": 659,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-root-before-r1/src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxMessageSchedulerContext.cs"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxConsumeContext.cs",
+      "before_sha256": "647fedc48fe37b1f8a8ae1825d2df970e5fafb5dbebcbb3a83c81d73f3cc243c",
+      "current_sha256": "28e1fdce58293daf3c43d7d938dbfb9dd812e5b6a2918df2ca5aa0a47ca9a9c8",
+      "before_lines": 272,
+      "current_lines": 286,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-root-before-r1/src/ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxConsumeContext.cs"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConsumeScopeLifecycleTests.cs",
+      "before_sha256": "515fc0ae8249c220e1cfeef5f0a16b947fea5346a75349a56ff6e57fca7da701",
+      "current_sha256": "3ad07832232da15000dea074fa4b041eb8425b18059faa7ddb73704ca0097598",
+      "before_lines": 576,
+      "current_lines": 709,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-root-before-r1/tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConsumeScopeLifecycleTests.cs"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeOutputObserverContractTests.cs",
+      "before_sha256": "bb109e246e58a85d46d88f0c3789c01aad29b7c22bdd3bfe2f42f034d72c56dd",
+      "current_sha256": "4647e6d790e16abe5273bdc31103ca30a38357b9ba54c0818fecb9d966951f1e",
+      "before_lines": 285,
+      "current_lines": 407,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-root-before-r1/tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeOutputObserverContractTests.cs"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "e5a7877defb71aca8c84738a6bb0506712f7f10106dfaf29554fc33f40e83642",
+      "current_sha256": "33b5befa00432256be23d8c00911e50ede09f0f21d3ca4fca84983e74f525034",
+      "before_lines": 32349,
+      "current_lines": 32363,
+      "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package160-root-before-r1/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+    }
+  ],
+  "requirement_additions": [
+    {
+      "requirementId": "REQ-VSB-CONTAINER-CONSUME-SCOPE",
+      "variantKey": "scope-only-consume-filters-retain-pipeline-and-owned-cleanup-outcomes",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests",
+      "testMethod": "ScopeOnlyConsumeFilters_ReleaseOwnedScopeAndPreserveBothFailureOutcomesAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-CONSUME-OBSERVER",
+      "variantKey": "converted-continuation-task-is-owned-through-held-success-fault-and-cancellation",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests",
+      "testMethod": "ConvertedContinuation_RemainsOwnedThroughCompletionFaultAndCancellationAsync"
+    }
+  ],
+  "requirement_count": 4623,
+  "root_read": "23d6b4 entire255neworacles+Req2; 67a373 actualscope2+outputwhole and untouchedfixturehelpers; 63877c wholeproductpatch/79e3f3 actualPendingTaskCollection whole; wholepeerReports via676924/a30148.",
+  "limits": [
+    "Original Scope8/Output4 Product owners unchanged.",
+    "Two Outbox fixes await actual clean native and independent compiled qualification.",
+    "No whole-Core or APIA+ claim."
+  ]
+}

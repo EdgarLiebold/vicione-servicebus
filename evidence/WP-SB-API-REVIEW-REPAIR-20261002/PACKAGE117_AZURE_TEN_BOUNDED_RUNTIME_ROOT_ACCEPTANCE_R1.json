@@ -1,0 +1,110 @@
+{
+  "utc": "2026-10-04T18:49:34.188307+00:00",
+  "decision": "ACCEPT_TEN_PREVIOUSLY_PENDING_LOCAL_AZURE_RUNTIME_OBLIGATIONS_WITH_CURRENT_NATIVE47",
+  "before": 2083,
+  "after": 2093,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package114-azure47-independent-r1/REPORT.json",
+    "sha256": "35b8a1da7d2c7dbb683a10e8236551df17577fed50327d018b5e9f34786b8ed9"
+  },
+  "source_application_evidence": [
+    "PACKAGE108_F103_CORE_SPI7_IGET_XML_AND_AZURE18_ROOT_APPLICATION_R1.json",
+    "PACKAGE110_AZURE_FACTORY15_ROOT_SOURCE_APPLICATION_R1.json",
+    "PACKAGE113_FUTURE_FIXTURE_DEFAULT_INITIALIZER_XML_AND_AZURE14_ROOT_APPLICATION_R1.json"
+  ],
+  "root_semantic_reads": "Original Source/test preflight recorded in application packets, exact current10 obligations7b24b2, complete current47 compact qualification2ef5c1.",
+  "cases": 47,
+  "passed": 47,
+  "failed": 0,
+  "skipped": 0,
+  "members": [
+    {
+      "ordinal": 89,
+      "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.ClientContextFactory.CreateActiveContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor,ViciOne.ServiceBus.Advanced.Middleware.IPipeContextHandle{ViciOne.ServiceBus.AzureServiceBus.ClientContext},System.Threading.CancellationToken)",
+      "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ClientContextFactory.cs",
+      "current_sha256": "61e98448d7cbe43799876979aef75928a7430a69f7125d079932c9f1ed2dcc15",
+      "precise_remaining_obligation": "Active client lease receives actual handle.Context Task. Pending acquisition uses OrCanceledAsync(caller); already-successful fast path wraps immediately with a potentially canceled lease token rather than universally rejecting acquisition. Need true pending handle success/fault/cancel and real supervisor agent readiness; shared-operation18 does not execute this factory.",
+      "actual_named_route": "Factory active client4"
+    },
+    {
+      "ordinal": 91,
+      "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.ClientContextFactory.CreateContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor)",
+      "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ClientContextFactory.cs",
+      "current_sha256": "61e98448d7cbe43799876979aef75928a7430a69f7125d079932c9f1ed2dcc15",
+      "precise_remaining_obligation": "CreateContext returns AddAsyncContext agent immediately and delegates connection acquisition to actual StartAgent. Need held connection -> agent.Context/Ready, concrete context factory invocation and fault/Stopped outcome. Processor SDK Start is not called by this factory constructor path; do not demand false processor-start or local-dispose oracle.",
+      "actual_named_route": "Factory creation client3"
+    },
+    {
+      "ordinal": 330,
+      "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.Receiver.ActiveAndActualAgentsCompletedAsync(ViciOne.ServiceBus.Advanced.Middleware.StopContext)",
+      "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Receiver.cs",
+      "current_sha256": "f5a3e5458b5417d27bb990a987c57d7be6dbd83671b04e250270c947a7d2f567",
+      "precise_remaining_obligation": "Receiver shutdown awaits client ShutdownAsync, then base consumer lifecycle with actual StopContext budget, then attempts CloseAsync with warning containment. Held actual receive work with uncanceled stop budget needs ordering/join proof; canceled budget retains cooperative base wait semantics and cannot be promised unconditional consumption join. Error callback tests/Core tests do not directly prove Azure ordering.",
+      "actual_named_route": "Receiver shutdown1"
+    },
+    {
+      "ordinal": 331,
+      "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.Receiver.DispatchAsync(Azure.Messaging.ServiceBus.ServiceBusReceivedMessage,ViciOne.ServiceBus.AzureServiceBus.ServiceBusReceiveContext,ViciOne.ServiceBus.AzureServiceBus.MessageLockContext)",
+      "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Receiver.cs",
+      "current_sha256": "f5a3e5458b5417d27bb990a987c57d7be6dbd83671b04e250270c947a7d2f567",
+      "precise_remaining_obligation": "Azure protected dispatch wraps actual message/sequence and ServiceBusReceiveLockContext, then delegates repaired ConsumerAgent. Local lock-expired/error cases exist separately; need accepted real message through this wrapper with held dispatcher, failure/cancellation/settlement ownership. No transfer of Core-only native results.",
+      "actual_named_route": "Processor callback3"
+    },
+    {
+      "ordinal": 341,
+      "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.SendEndpointContextFactory.CreateActiveContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor,ViciOne.ServiceBus.Advanced.Middleware.IPipeContextHandle{ViciOne.ServiceBus.AzureServiceBus.SendEndpointContext},System.Threading.CancellationToken)",
+      "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/SendEndpointContextFactory.cs",
+      "current_sha256": "da870c511bac026931f9832f849aa1b541d6b2c014431fb794f4b1dbcf9269b3",
+      "precise_remaining_obligation": "Active sender lease uses actual context task with OrCanceledAsync only on pending path; completed-success path directly wraps with caller lease token. Need pending readiness/fault/cancel and no premature publication using this real factory, not shared scheduling-operation tests.",
+      "actual_named_route": "Factory active sender4"
+    },
+    {
+      "ordinal": 342,
+      "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.SendEndpointContextFactory.CreateContext(ViciOne.ServiceBus.Advanced.Middleware.ISupervisor)",
+      "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/SendEndpointContextFactory.cs",
+      "current_sha256": "da870c511bac026931f9832f849aa1b541d6b2c014431fb794f4b1dbcf9269b3",
+      "precise_remaining_obligation": "Sender factory acquires namespace connection, creates actual sender/context, awaits configured topology, then resolves context agent. Sender ownership belongs parent SDK client; this method does not promise local sender Dispose upon setup failure. Need readiness gating and exact actual failure, with parent-owned cleanup kept separate.",
+      "actual_named_route": "Factory creation sender4"
+    },
+    {
+      "ordinal": 353,
+      "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusConnectionContext.CreateQueueAsync(Azure.Messaging.ServiceBus.Administration.CreateQueueOptions,System.Threading.CancellationToken)",
+      "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+      "current_sha256": "a6464295ca7b855e8f1bd109a22520f1d606c473924ed9419108217c8a94d2d4",
+      "precise_remaining_obligation": "Queue get-or-create preserves existing QueueProperties; only MessagingEntityNotFound allows creation; AlreadyExists causes reread; other errors/token flow through SDK awaits. Existing admin-probe test proves one exact Get failure/name/token only. Held queue existing/notfound/race outcomes remain pending; F076 Dispose evidence does not resolve them.",
+      "actual_named_route": "Admin queue9"
+    },
+    {
+      "ordinal": 358,
+      "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusConnectionContext.CreateTopicAsync(Azure.Messaging.ServiceBus.Administration.CreateTopicOptions,System.Threading.CancellationToken)",
+      "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+      "current_sha256": "a6464295ca7b855e8f1bd109a22520f1d606c473924ed9419108217c8a94d2d4",
+      "precise_remaining_obligation": "Topic get-or-create performs topic-specific Get/Create/reread on NotFound/AlreadyExists, retaining exact Task<TopicProperties> result/error. Queue analog or topology proxy returning typed tasks is not proof of this actual SDK administration algorithm; targeted runtime remains pending.",
+      "actual_named_route": "Admin topic9"
+    },
+    {
+      "ordinal": 374,
+      "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusMessageReceiver.HandleAsync(Azure.Messaging.ServiceBus.ServiceBusReceivedMessage,System.Threading.CancellationToken)",
+      "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusMessageReceiver.cs",
+      "current_sha256": "272f542653cb629d72c290dd92235d3192e72a9a59f0f2db8c079e2fb475c20b",
+      "precise_remaining_obligation": "Actual trigger wrapper creates ServiceBusReceiveContext, registers caller to context.Cancel, dispatches using NoLockReceiveContext, preserves typed lock/cancellation errors and disposes registration/context in finally. Existing MessageReceiverIsolation public healthy consumer/saga/type selection reaches this method indirectly; missing obligation is held/fault/cancel/context-cleanup, not zero success coverage or live broker settlement.",
+      "actual_named_route": "Trigger5"
+    },
+    {
+      "ordinal": 425,
+      "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusSendTransportContext.SendAsync(ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AzureServiceBus.SendEndpointContext},System.Threading.CancellationToken)",
+      "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusSendTransportContext.cs",
+      "current_sha256": "7e8cd7bb8ad8a260cd8a33ac3019d5c0a9fbac9a17bda0963aeabeb5978f1568",
+      "precise_remaining_obligation": "Pipe-only SendAsync calls configured host RetryAsync around supervisor.SendAsync, supplying SendStopping and caller. Generic Send15 bypasses this overload. Need actual retry classification/attempt/outcome and supervisor/pipe task ownership; host retry policy tests remain narrower independent controls.",
+      "actual_named_route": "Retry5"
+    }
+  ],
+  "limits": [
+    "Local true product lifecycle and SDK/SPI controlled boundaries; no live Azure broker authorization/delivery/service availability proof.",
+    "Completed-ready active factory fastpath may return lease with cancelled token; no universal acquisition-rejection claim.",
+    "Receiver uncancelled stop budget joins actual held shutdown/active dispatch/close. Cancelled budget retains cooperative semantics.",
+    "Default retry transient/permanent/callerCancel/transportStopping/success only; watchdog duration is no performance promise.",
+    "No new finding or fresh package or whole API grade."
+  ],
+  "whole_API_review": "PARTIAL"
+}

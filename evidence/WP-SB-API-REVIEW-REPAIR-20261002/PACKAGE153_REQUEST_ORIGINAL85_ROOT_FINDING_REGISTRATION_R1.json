@@ -1,0 +1,51 @@
+{
+  "utc": "2026-10-04T22:54:30.239544+00:00",
+  "decision": "CONFIRM_ORIGINAL_NATIVE_REQUEST_CANCELLATION_FINDING",
+  "confirmed_before": 127,
+  "confirmed_after": 128,
+  "accepted_unchanged": 125,
+  "finding": {
+    "id": "F-SB-API-128",
+    "severity": "Medium",
+    "classification": "CONFIRMED_NATIVE_CANCELLATION_ADMISSION_CONTRACT_DEFECT",
+    "title": "Saga Request loses context cancellation at endpoint resolution and admits factory/send after cancellation",
+    "source_owners": [
+      "src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestActivity.cs",
+      "src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestActivityImpl.cs"
+    ],
+    "status": "SOURCE_FIXED_ADVERSARIAL_NO_BLOCK_FIXED_NATIVE85_GREEN_FRESH_PACK_REVIEW_PENDING",
+    "original_native": {
+      "total": 85,
+      "passed": 64,
+      "failed": 21,
+      "skipped": 0,
+      "prior55_passed": true,
+      "new30_passed": 9,
+      "new30_failed": 21
+    },
+    "causal_boundary": "Six supplied-token routes fail token equality; six held-resolution routes fail token equality before wait; six successful-resolution cancellation routes send1 instead0; normal address-cancel routes0/1/2 admit factory1 instead0. Faulted address-cancel controls3/4/5 pass.",
+    "proof_limit": "Finite original assertions. Later original assertions not reached are not credited. Send/publish fallback common postresolver guard is source-reviewed; original30 explicit-address native routes do not claim a separate native publish-resolver cancellation proof.",
+    "original_native_qualification": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-request-original85-doc18-independent-r1/REPORT.json",
+      "sha256": "1e4f438c51fe708f1111b47321c135e40ba488bc3590c1bfdc7c57e20b4072fb"
+    },
+    "adversarial_review": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package153-request-token-admission-independent-scanner-r1/REPORT.json",
+      "sha256": "6ace0340267b95fa9646f2da23805ec0011f8d5855d358098993d4627f714ff9"
+    },
+    "source_application": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE153_REQUEST_TOKEN_SOURCE_OLD_ORACLE2_AND_SAGA_DOC4_ROOT_APPLICATION_R1.json",
+      "sha256": "8df35fd414c523395d134c2711d74018f41349f35b87419c5c14ca80908c7eed"
+    },
+    "whole_API_member_review_closed": false
+  },
+  "full3334Manifest_checked": "979940",
+  "root_norm_and_cause_reads": [
+    "879ffe",
+    "ee78bb",
+    "0514f8",
+    "da3535",
+    "01ec39"
+  ],
+  "whole_api_status": "PARTIAL"
+}

@@ -1,0 +1,63 @@
+{
+  "status": "REPAIRED_REVIEWED_ACTUAL_XML15_PUBLICATION_SOURCE_BOUND_TARGETED_ACCEPTANCE",
+  "utc": "2026-10-05T17:40:26.282802+00:00",
+  "finding_ids_closed_current_extension": [
+    "F-SB-API-147",
+    "F-SB-API-193",
+    "F-SB-API-194",
+    "F-SB-API-195",
+    "F-SB-API-196",
+    "F-SB-API-197"
+  ],
+  "root_counterproof": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package200-abstractions-doc15-fresh-root-counterproof-r1/REPORT.json",
+    "sha256": "7c3e97ed42aab0c072e93b0a72bdc03456ebbaef12be61243e316610f0897d6d",
+    "manifest_sha256": "3b37b2a7f983c5f073def12cf799b48abfc1a40694e024318ccb9b78cc40ce48"
+  },
+  "independent_publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package200-doc15-independent-publication-r1/REPORT.json",
+    "sha256": "c101bda8ede476cecb11c36644a2f84d477d0dae75e468a3bcfe979cafd0462d",
+    "manifest_sha256": "e8db2987ca16569b29a021e191aaf2a5e60485d81c317582c300dd33d0c02ada",
+    "own_whole_current_sources": 7,
+    "own_current_source_lines": 475,
+    "actual13_clauses_reviewed": true
+  },
+  "actual_publication": {
+    "package": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/packages-package200-abstractions-doc15-r1/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "1d2e32a828326eeb22ec7b418ed1d30ed90d5a16030e3ec7fb242e3ed9f9db67",
+      "CRC_valid": true
+    },
+    "DLL": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "e71a71d950d85353ee3043ee33009c5966fcfa06cf15006636202f2659f4ca73",
+      "canonical_and_RabbitTest_runtime_exact": true
+    },
+    "XML": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.xml",
+      "sha256": "06d4cb1dd04b64ec1023ac7612582eca954fdce3c04887b59cf32d828dd52bb8",
+      "source_nodes_changed": 15,
+      "emitted_members_changed": 13,
+      "all_other_members_unchanged": true,
+      "literal_member_window_inverse_entire_XML_equal191": true,
+      "original191_sha256": "2c8703ae0d114b1f5bd14d307028095a9646c62fd6730e9c9274beb07532d6dd"
+    },
+    "PDB": {
+      "sha256": "fabbeb98c9991442088d7b6dce163539a511e0c3098c2df504c34a8e683d0cab",
+      "documents": 700,
+      "all_actual_current_checksums_exact": true,
+      "selected7_after_checksums_exact": true,
+      "physical": 700,
+      "virtual_generated": 0
+    }
+  },
+  "public_declarations_and_nonXML_bytes_preserved": true,
+  "original_scope": "Five new owning documentation causes193\u2013197 plus one same-template existingF147 additional node; all prior42 Core Send nodes retained. No case-ID inflation.",
+  "root_reads": "OriginalSource7/475 and exactR2delta retained; actualRoot/peerreports+MANd32898 and allpayloadhashchecks here.",
+  "native_cases_added": 0,
+  "whole_API_review_closed": false,
+  "global_grade": null,
+  "accepted_targeted_findings_before": 190,
+  "accepted_targeted_findings_after": 196,
+  "known_findings": 197
+}

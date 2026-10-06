@@ -1,0 +1,173 @@
+import ast
+import base64
+import csv
+import hashlib
+import json
+import zipfile
+from pathlib import Path
+
+W = Path('/Users/edgar.liebold/Downloads/ViciOne Suite 2.0')
+O = W / 'repositories/vicione-servicebus'
+R = Path('/private/tmp/vicione-servicebus-api-review-20261001')
+E = O / 'evidence/WP-SB-API-REVIEW-REPAIR-20261002'
+D = W / 'SERVICEBUS_API_REVIEW_AND_REPAIR'
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+mp = E / 'PACKAGE19_F034_F041_MUTATIONS.json'
+mut = json.loads(mp.read_text())
+assert mut['status'] == 'FIFTEEN_STRICT_COMPILED_SINGLE_EFFECT_MUTANTS_KILLED_WITH_GREEN_CONTROLS'
+assert len(mut['controls']) == 2 and len(mut['mutants']) == 15
+base = {row['key']: Path(row['path']).read_text() for row in mut['controls'][0]['source_snapshots']}
+assert len(base) == 33
+assert hashlib.sha256(base['endpoint_context'].encode()).hexdigest() == 'd9f43766424936456c0a5e419f858f61119f263c6aaf24daaf3f8b375a7ebdec'
+assert hashlib.sha256(base['context_definition'].encode()).hexdigest() == '08fe1f8affdd36b50a7899e8a8ffec57330feff87100623c16cd28d0509493ec'
+tree = ast.parse((D / 'package19_f034_f041_mutations.py').read_text())
+variants = next(ast.literal_eval(node.value) for node in tree.body if isinstance(node, ast.Assign)
+    and any(isinstance(target, ast.Name) and target.id == 'variants' for target in node.targets))
+variant_map = {name: (negative, positive, finding) for name, negative, positive, finding in variants}
+assert len(variant_map) == 15
+all_receipts = [json.loads(line) for line in (E / 'VERIFICATION_LOG.jsonl').read_text().splitlines()]
+C = R / 'repair-consumers/package19-f034-r6/corrected'
+corrected_lock = json.loads((C / 'packages.lock.json').read_text())['dependencies']['net10.0']
+joined_receipts, stage_microsoft = [], []
+
+def join_receipt(record, phase, cwd, command, exit_code):
+    actual = [row for row in all_receipts if row['phase'] == phase]
+    assert len(actual) == 1
+    actual = actual[0]
+    assert actual['command'] == command and actual['cwd'] == str(cwd) and actual['exit_code'] == exit_code
+    for key, value in actual.items():
+        assert record[key] == value
+    assert sha(actual['log']) == actual['log_sha256']
+    joined_receipts.append(actual)
+    return actual
+
+def bind_microsoft(headers, consumer, locked, count, label):
+    bound = []
+    for name in sorted({row[0] for row in headers if row[0].startswith('Microsoft.Extensions.')}):
+        actual = [row for row in headers if row[0] == name]
+        assert locked[name]['resolved'] == '10.0.12' and len(actual) == count
+        candidates = list((consumer / 'restored-packages' / name.lower() / '10.0.12/lib').glob('*/' + name + '.dll'))
+        hashes = {sha(path): str(path) for path in candidates}
+        assert all(row[3] in hashes and sha(row[2]) == row[3] for row in actual)
+        bound.extend(dict(generation=label, name=row[0], package_version='10.0.12', cache=hashes[row[3]], path=row[2], sha256=row[3]) for row in actual)
+    assert bound
+    return bound
+
+env = dict(corrected=base)
+body = [node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name in ['replace_once', 'mutation']]
+exec(compile(ast.Module(body=body, type_ignores=[]), '<independent-single-effect-proof>', 'exec'), env)
+effects, stage_headers = [], []
+for stage in mut['controls'] + mut['mutants']:
+    expected = base if stage['name'] in ['corrected', 'rollback'] else env['mutation'](stage['name'])
+    source_keys = [row['key'] for row in stage['source_snapshots']]
+    assert len(source_keys) == len(set(source_keys)) == 33 and set(source_keys) == set(base)
+    assert sum(expected[key] != base[key] for key in base) == (0 if stage['name'] in ['corrected', 'rollback'] else 1)
+    join_receipt(stage['build'], 'package19-f034-f041-mut-' + stage['name'] + '-build', R / 'mutations/source-main',
+        ['dotnet', 'build', 'src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj', '-c', 'Release', '--no-restore', '-warnaserror'], 0)
+    build_text = Path(stage['build']['log']).read_text()
+    assert '0 Warnung(en)' in build_text and '0 Fehler' in build_text
+    binaries = {Path(row['path']).stem: row for row in stage['binaries']}
+    assert set(binaries) == {'ViciOne.ServiceBus', 'ViciOne.ServiceBus.Courier'}
+    for row in binaries.values():
+        assert sha(row['path']) == row['sha256']
+    for row in stage['source_snapshots']:
+        digest = hashlib.sha256(expected[row['key']].encode()).hexdigest()
+        assert sha(row['path']) == digest == row['sha256'] == row['current_source_sha256']
+        effects.append(dict(stage=stage['name'], key=row['key'], sha256=digest, changed=expected[row['key']] != base[row['key']]))
+    operations = [stage['all_cases']] if 'all_cases' in stage else [stage['negative'], stage['positive']]
+    for operation in operations:
+        is_negative = 'negative' in stage and operation is stage['negative']
+        mode = 'all' if 'all_cases' in stage else variant_map[stage['name']][0 if is_negative else 1]
+        suffix = stage['name'] + ('-fortyone' if mode == 'all' else '-' + mode)
+        join_receipt(operation, 'package19-f034-f041-mut-' + suffix, C,
+            ['dotnet', 'bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll', mode, '00:00:12'], 1 if is_negative else 0)
+        assert sha(operation['log']) == operation['log_sha256']
+        lines = Path(operation['log']).read_text().splitlines()
+        headers = [line[7:].split(' ', 3) for line in lines if line.startswith('LOADED ')]
+        count = 41 if 'all_cases' in stage else 1
+        stage_microsoft.extend(bind_microsoft(headers, C, corrected_lock, count, suffix))
+        for name, binary in binaries.items():
+            actual = [header for header in headers if header[0] == name]
+            assert len(actual) == count and all(header[3] == binary['sha256'] for header in actual)
+            stage_headers.extend(dict(stage=stage['name'], operation=operation['phase'], name=name, version=header[1], path=header[2], sha256=header[3]) for header in actual)
+        for name in ['ViciOne.ServiceBus.Abstractions']:
+            actual = [header for header in headers if header[0] == name]
+            assert len(actual) == count and all(header[3] == mut['constant_dependencies'][header[2]] for header in actual)
+        if 'negative' in stage and operation is stage['negative']:
+            assert any(line.startswith('FAIL ') for line in lines)
+            assert not any(word in '\n'.join(lines) for word in ['TimeoutException', 'Case and cleanup failed'])
+            assert 'RuntimeOwner.cs:line ' + str(operation['finite_materialization_assertion_line']) in '\n'.join(lines)
+        else:
+            assert sum(line.startswith('PASS ') for line in lines) == count
+            assert not any(line.startswith('FAIL ') for line in lines)
+assert len(effects) == 561 and sum(row['changed'] for row in effects) == 15
+assert len(stage_headers) == 224
+assert len(joined_receipts) == 49 and len({row['phase'] for row in joined_receipts}) == 49
+for path, digest in {**mut['oracle_hashes'], **mut['constant_dependencies']}.items():
+    assert sha(path) == digest
+for name, digest in mut['selected_runtime_hashes'].items():
+    assert sha(C / 'bin/Release/net10.0' / name) == digest
+rows = list(csv.DictReader((R / 'FILE_COVERAGE.csv').open()))
+assert len(rows) == 6209 and all(sha(R / 'mutations/source-main' / row['path']) == row['sha256'] for row in rows)
+for rel in mut['frame'].values():
+    if not (R / 'frozen-repository' / rel).exists():
+        assert not (R / 'mutations/source-main' / rel).exists()
+receipts = [json.loads(line) for line in (E / 'VERIFICATION_LOG.jsonl').read_text().splitlines()
+            if json.loads(line)['phase'].startswith(('package19-f034-r6-', 'package19-f034-f041-mut-'))]
+for receipt in receipts:
+    assert sha(receipt['log']) == receipt['log_sha256']
+    if receipt['exit_code'] == 0 and 'build' in receipt['command']:
+        text = Path(receipt['log']).read_text()
+        assert '0 Warnung(en)' in text and '0 Fehler' in text
+chains, microsoft, selected_headers = [], [], []
+for variant in ['previous', 'corrected']:
+    consumer = R / 'repair-consumers/package19-f034-r6' / variant
+    lock = json.loads((consumer / 'packages.lock.json').read_text())['dependencies']['net10.0']
+    receipt = next(row for row in receipts if row['phase'] == 'package19-f034-r6-public-' + variant + '-fortyone')
+    text = Path(receipt['log']).read_text()
+    assert receipt['exit_code'] == (1 if variant == 'previous' else 0)
+    assert ('TOTAL 24 PASS 17 FAIL' if variant == 'previous' else 'TOTAL 41 PASS 0 FAIL') in text
+    assert not any(word in text for word in ['TimeoutException', 'Case and cleanup failed'])
+    loaded = [line[7:].split(' ', 3) for line in text.splitlines() if line.startswith('LOADED ')]
+    for name in ['ViciOne.ServiceBus', 'ViciOne.ServiceBus.Abstractions', 'ViciOne.ServiceBus.Courier']:
+        pkg = R / 'repair-packages/package19-f034-r5' / variant / (name + '.1.0.0.nupkg')
+        assert base64.b64encode(hashlib.sha512(pkg.read_bytes()).digest()).decode() == lock[name]['contentHash']
+        with zipfile.ZipFile(pkg) as z:
+            digest = hashlib.sha256(z.read('lib/net10.0/' + name + '.dll')).hexdigest()
+        cache = consumer / 'restored-packages' / name.lower() / '1.0.0/lib/net10.0' / (name + '.dll')
+        app = consumer / 'bin/Release/net10.0' / (name + '.dll')
+        actual = [row for row in loaded if row[0] == name]
+        assert len(actual) == 41 and sha(cache) == sha(app) == digest and all(row[3] == digest for row in actual)
+        selected_headers.extend(dict(variant=variant, name=row[0], version=row[1], path=row[2], sha256=row[3]) for row in actual)
+        chains.append(dict(variant=variant, name=name, package=str(pkg), package_sha256=sha(pkg), locked_sha512=lock[name]['contentHash'], cache=str(cache), app=str(app), dll_sha256=digest))
+    microsoft.extend(bind_microsoft(loaded, consumer, lock, 41, variant))
+binding = dict(status='ROOT_EFFECTS_ALL_CHILD_HEADERS_PACKAGES_RECEIPTS_RESTORATION_BOUND_FINAL_ADVERSARIAL_PENDING', effects=effects,
+    stage_headers=stage_headers, selected_headers=selected_headers, selected_package_chains=chains, actual_Microsoft_runtime=microsoft,
+    receipts=receipts, independent_joined_stage_receipts=joined_receipts, actual_stage_Microsoft_runtime=stage_microsoft,
+    original_F034=dict(finite_reds=17, positive=24, guards=0), corrected_cases=41,
+    mutations=dict(F034=13, F041=2), all6209_original_files_restored=True, oracle_and_selected_runtime_restored=True,
+    limits='F034 same Core F040/F041; no F041 oldCourier counterproof credit. F041 captured R4 diagnosis and two strict finite mutants. No canonical Core suite grade, whole API A+, ARM/cloud/heap/CoreLib exact binding.')
+bp = E / 'PACKAGE19_F034_F041_ROOT_BINDING.json'
+assert not bp.exists()
+bp.write_text(json.dumps(binding, indent=2) + '\n')
+directory = E / 'package19-f034-f041-freeze'
+directory.mkdir(exist_ok=False)
+keys = ['execute_registration', 'activity_registration', 'execute_definition', 'compensate_definition', 'endpoint_context', 'context_definition']
+inputs = [O / mut['frame'][key] for key in keys]
+assert all(path.read_text() == base[key] for path, key in zip(inputs, keys))
+inputs += [p for variant in ['previous', 'corrected'] for p in sorted((R / 'repair-consumers/package19-f034-r6' / variant).iterdir()) if p.is_file()]
+inputs += [D / 'run_operation.py', D / 'package19_f034_f041_mutations.py', D / 'package19_f034_f041_bind.py']
+assert len(inputs) == len(set(inputs)) == 25
+owned = []
+for index, path in enumerate(inputs):
+    snapshot = directory / (str(index).zfill(2) + '-' + path.name + '.txt')
+    snapshot.write_bytes(path.read_bytes())
+    owned.append(dict(path=str(path), snapshot=str(snapshot), sha256=sha(path), bytes=path.stat().st_size))
+plans = [dict(path=str(p), sha256=sha(p)) for pattern in ['PACKAGE19_F034*.json', 'PACKAGE19_F041*.json'] for p in sorted(E.glob(pattern)) if p not in [bp, mp]]
+freeze = dict(status='FROZEN_F034_F041_COMBINED_FINAL_ADVERSARIAL_PENDING', owned_inputs=owned,
+    root_binding=dict(path=str(bp), sha256=sha(bp)), mutations=dict(path=str(mp), sha256=sha(mp)), plans_and_exclusions=plans,
+    captured_source_frame=mut['controls'][0]['source_snapshots'], limits=binding['limits'])
+fp = E / 'PACKAGE19_F034_F041_FREEZE.json'
+assert not fp.exists()
+fp.write_text(json.dumps(freeze, indent=2) + '\n')
+print(json.dumps(dict(freeze=str(fp), sha256=sha(fp), owned=len(owned), effects=len(effects), stage_headers=len(stage_headers), selected_headers=len(selected_headers), selected_chains=len(chains))))

@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T03:12:23.843418+00:00",
+  "status": "ROOT_ACCEPTED_SOURCE9_ONLY_OPERATIVE5_GENERATED27_ENUM2_REMAIN_HELD",
+  "master_before_sha256": "56cc2aa9e58a3f4d6ced1eca2e2c8b06191eb7a275af564b81a2a32607d9163d",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package310-testing43-individual-source-contracts-proposed-r1",
+    "manifest_sha256": "b6766493cb7af2d11899f34f17ea660e39361a2d546c333ad17d198267d1e7b1"
+  },
+  "mandatory_overlay": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package310-testing43-delegate16-hold-reason-precision-overlay-r1",
+    "manifest_sha256": "42458771ec8a9f240c575a5bb1ea068b7e068c037f27dc36dc332eb46199d745"
+  },
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package310-testing43-independent-scanner-source-peer-r1",
+    "manifest_sha256": "8bb563c452d4b7cd114ba283cb4b654ce898640497f4ae06d68cc3e3c5432e15"
+  },
+  "root_read": "All9 exact norms50bf15; whole9owners+FilterSet7b207e. Fullpeer4bbc34; actual frozen318 Testing P36 current104 reparse/Source9/individuallyabsent9 XML/Original exactindices currentdisjoint. Historic wrong hold descriptions retained only as labeled prior records.",
+  "Original_before": 18109,
+  "Original_after": 18118,
+  "remaining_before": 460,
+  "remaining_after": 451,
+  "master_before": 18971,
+  "master_after": 18980,
+  "Native_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

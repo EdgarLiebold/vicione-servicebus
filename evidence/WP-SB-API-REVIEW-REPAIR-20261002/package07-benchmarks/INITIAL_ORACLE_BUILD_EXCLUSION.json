@@ -1,0 +1,8 @@
+{
+  "status": "EXCLUDED_NOT_STRICTLY_BUILT",
+  "phase": "package07-public-oracle-build",
+  "reason": "MSB3277: transitive BDN DI6 conflicts with compiled benchmark DI10. Final standalone consumer directly pins Microsoft.Extensions.DependencyInjection10.0.12, verified from actual repository Directory.Packages.props and tool lock. Initial attempted10.0.10 restore-r2 is also excluded.",
+  "excluded_native_prefix": "package07-public-corrected-",
+  "limit": "These initial contract runs are supplementary only; repeat every mode after successful strict r2 build. No product source or product dependency change.",
+  "additional_excluded_phase": "package07-public-oracle-restore-r2"
+}

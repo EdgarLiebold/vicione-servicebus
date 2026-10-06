@@ -1,0 +1,19 @@
+{
+  "status": "TEAM_FULL_READ_PROGRESS_ONLY_RUNTIME_PARTIAL",
+  "utc": "2026-10-03T05:29:29.825762+00:00",
+  "manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/testing-architecture-abstractions-tests-review/FINAL_MANIFEST.json",
+  "manifest_sha256": "3da69df15686a25cb713f1bf357afdf36f964b68220a7df4bef2d3c7f95c1e0f",
+  "all327_artifacts_hash_verified": true,
+  "all285_original_F_INPUT_Git_sources_verified": true,
+  "new_FULL": 190,
+  "before_FULL": 4624,
+  "after_FULL": 4814,
+  "all_prior_rows_preserved": true,
+  "before_ledger": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/TESTING_ARCHITECTURE_ABSTRACTIONS_LEDGER_BEFORE.csv",
+  "before_ledger_sha256": "e4ea3c9b1ad3487f867a5d6963663553af238f7d2f51a927c50a01f0ab6354d5",
+  "after_ledger_sha256": "a6c3e9c9f38f0774f5b60ac395e5dc9fefae2e66d7b9e0b2bc6f2d7cac3a02e6",
+  "Root_read_scope": "FULL FINAL_SUMMARY and FINAL_REFINEMENTS; mechanical entire manifest/source/proposal/prior-row verification; no canonical owner transfer",
+  "CLOSED": 0,
+  "new_findings": 0,
+  "canonical_testowner_transfer": false
+}

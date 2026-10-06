@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-06T02:42:39.500326+00:00",
+  "finding": "F-SB-API-212",
+  "status": "ACTUAL_ORIGINAL6_INDEPENDENTLY_QUALIFIED_REGISTERED_REPAIR_PENDING",
+  "cause": "Two owning RabbitMqConnectionContext optional Disconnect/Disconnected diagnostics can throw before native cleanup admission or after successful cleanup, incorrectly faulting public DisposeAsync.",
+  "distinct_identity": "One Connection disposal owning-diagnostics family across exactlytwo sites, separate RabbitstartupPurge F210 and ActiveMQSessionDeletion F211; native Rabbit Close intentionallysuppressed policy remains unchanged.",
+  "original": {
+    "capture_MAN": "e6016813528d9630ba25339a45aef26839523917a1d4ececd2dc4d5aebdd6f2a",
+    "independent_REPORT": "92fbd422a9afc4adf3324963512b2d3f0f128b30b83a21e53a1bfdd6bfae4531",
+    "independent_MAN": "d972d4a6de20a77ea6d4243bf5f209e67b77e688bd2159e8d9b3fd812dd5146f",
+    "counts": {
+      "total": 6,
+      "passed": 4,
+      "failed": 2,
+      "skipped": 0
+    },
+    "first_failures": "Mode0hostile CloseCalls83=0vs1 before nativework; mode1hostile Null106 uniqueIOException actualProduct113 after realheldClose+Dispose success. Finally143 samefailure. Two distinct nativeDisposePrimary controls preserved, hostilefinalneverexercised there."
+  },
+  "root_authority": "WholeactualProduct1256e36b6; wholeTest250fcb3ee+oneActionliteralR2f54a4c; wholeactualOriginal6raw8b469a and wholeindependentc134bc. Frozen13PDB2/Req290exactPE payload and canonical/runtimeDLL verified separately.",
+  "known_before": 211,
+  "known_after": 212,
+  "bounded_before": 211,
+  "bounded_after": 211,
+  "grade": null,
+  "whole_API_closed": false
+}

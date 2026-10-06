@@ -1,0 +1,12 @@
+{
+  "status": "LEAD_HASH_VERIFIED_DELEGATED_SOURCE_READ_MERGE",
+  "files": 529,
+  "proposal_sha256": "c581b0101368ad22a794f13974fe7b692934fd2713791b84eb8f52e74725dfca",
+  "file_coverage_before_sha256": "103d5f70e4fd4a7855730ccb52b6d0ccd63bc512da3f2674bd8d59ee6b2f496e",
+  "file_coverage_after_sha256": "7f94f2cd2d176194812b944841b254e997b29463083b55d2b6b1da0eee6cf743",
+  "all_original_read_full_rows_preserved": true,
+  "current_full_read_count": 1850,
+  "total_original_files": 6209,
+  "public_symbols_closed_by_merge": 0,
+  "note": "Static source reading only; all runtime, test and package obligations remain open. Frozen original sources and API inventory unchanged."
+}

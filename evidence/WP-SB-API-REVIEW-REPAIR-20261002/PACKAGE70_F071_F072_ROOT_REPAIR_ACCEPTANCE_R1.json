@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-04T14:39:57.835318+00:00",
+  "decision": "F071_F072_BOUNDED_REPAIRS_ROOT_ACCEPTED_CLOSED",
+  "findings": [
+    "F-SB-API-071",
+    "F-SB-API-072"
+  ],
+  "root_review_receipts": [
+    "a6cb7f completeOriginalTopologyR3qualification",
+    "987ff3 completeNative24log",
+    "66a76f completefixedNative24/package/doc5qualification",
+    "previous bdb314 Source2diff and a4c049 actualfilter"
+  ],
+  "independent_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package70-azure-fixed-native24-independent-r1/REPORT.json",
+    "sha256": "b30134c35949359492845e89a2a37b66f33b55ef8e4cbaa88a86b2104f914a12"
+  },
+  "native": {
+    "passed": 24,
+    "failed": 0,
+    "skipped": 0,
+    "log_sha256": "85f1dfe41a377c05fa16dcbd586c9f9363d1cad2bb0027463ced396cd6dca47e"
+  },
+  "strict": "0 warnings,0errors",
+  "fresh_package": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package70-azure-fixed-fresh-pack-r1/packages/ViciOne.ServiceBus.AzureServiceBus.1.0.0.nupkg",
+    "sha256": "8a5416143cbe1072ee8d96c7792c57a6bfc6744ed9bd263a10c47f3ae340e658",
+    "DLL_XML_matches_actual_native24_frame": true
+  },
+  "source": {
+    "F071": "Interface five XMLnodes now accurately describe stop/close attempts and warning containment; no disposal promise. Queue/session actualSDK virtual hooks native16; subscription implementation personally reviewed, no nativeclaim.",
+    "F072": "Allfive stages preserve admittedTasks before syncfailure, stop further admissions and join Task.WhenAll; same unique syncfault identity preserved in nativefive cases; two readiness/eviction positivecontrols passed."
+  },
+  "limits": [
+    "No liveAzure/cloud acceptance proof.",
+    "No blanket global API grade.",
+    "Multiple simultaneous failure ordering not additionally tested."
+  ],
+  "whole_API_review_closed": false
+}

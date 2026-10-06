@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-04T14:41:16.473696+00:00",
+  "decision": "ROOT_SOURCE_NO_BLOCK_NEW_TWO_CASE_CAUSAL_ORACLE_APPLIED_ORIGINAL_NATIVE_PENDING",
+  "root_review": "WholeproposedTest23ef72; actual publicfilter/interface XML wholeb38d3c and fullcandidate/delta663aaf; newtwo finite realpublicFilter/realSPI consecutivechanneljourneys preserve4existingcontrols",
+  "product_modified": false,
+  "source": {
+    "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqPurgeOnStartupFilterTests.cs",
+    "before": "d0098b252affc0a286f0960629b640e75bd4596a14ed818116a7ffe8bb398c25",
+    "after": "9af539461201e7716426a81e141f674d38ed00166797d182f93971501f4aafd4"
+  },
+  "requirements": {
+    "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+    "before": "50c7e2a0c65f2a8ba0bb01f47b300a0a06be331238e78f1ffe26bb5416aaa9e5",
+    "after": "a6b1534ed92c37c636cf66f38f759e324a725e939fe88d8be3a77256f92f82bd",
+    "rows": 278,
+    "exact_replaced": 1
+  },
+  "limits": "Previousone contrary test changed to align existing publicfirststartup/no-reconnect-purge contract; no product finding/native claim yet."
+}

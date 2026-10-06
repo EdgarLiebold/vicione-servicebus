@@ -1,0 +1,857 @@
+{
+  "status": "READ_FULL_SCOPE_BOUNDED_REVIEW_COMPLETE",
+  "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE03_EVENTHUB_FREEZE.json",
+  "freeze_sha256": "827aff14744d9383e0e18c584035ef729dfa820b1436c00a9870b882bd26d8a0",
+  "read_by": "azure_test_scope",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProcessorContext.cs",
+      "sha256": "998db6d69265b24ff6cd2a83a0f67d75f22726b4cc678a194700729e22172946",
+      "bytes": 4664,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/00-EventHubProcessorContext.cs",
+      "semantic_notes": "F013 composed closing catches application fault/cancellation, always awaits internal close, preserves single-fault identity and ordered AggregateException on dual failure. Initializing composition and lease registration/release remain otherwise unchanged."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointConfigurator.cs",
+      "sha256": "89b5f06d34c451480434561d2e8c37ab7ab5a289216b1c6d2f16ada586438bd1",
+      "bytes": 12566,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/01-EventHubReceiveEndpointConfigurator.cs",
+      "semantic_notes": "F014 provider Validate adds five positive-range guards and whole-millisecond native checkpoint timer limit, then preserves inherited validation. F016 captures ConfigureOptions delegate at generation creation before client factory use; normal Build materializes Blob container before future processor creation. Standalone lazy Blob generation is explicitly outside scope."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointBuilder.cs",
+      "sha256": "8a99b99e9145ca25e9f34eb7ed88cbfb0426f34452a8ed6e0c17b087d24c29a5",
+      "bytes": 4261,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/02-EventHubReceiveEndpointBuilder.cs",
+      "semantic_notes": "F016 builder copies all nine ReceiveSettings fields into getter-only nested snapshot and overwrites receive-settings payload with the same snapshot. Snapshot is taken in constructor before ApplySpecifications; whether valid specification-stage settings mutation should be included remains a concrete adjacent contract question."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ConsumeContextEventHubProducerProvider.cs",
+      "sha256": "5e4a0c734e0debfe43a2b80e062217cbc59fe26c918fb2fd41162a7a449ae1c1",
+      "bytes": 7835,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/03-ConsumeContextEventHubProducerProvider.cs",
+      "semantic_notes": "F017 all four deferred typed/batch/value/batch-value core overloads await shared resolution via WaitAsync(caller token), then await actual delivery; four pipe-free overloads delegate. Ready fast path retains direct downstream cancellation contract, shared resolution cancellation remains owned by GetProducer caller. Header transfer adapter unchanged."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs",
+      "sha256": "5d6e7193ec627311b40748959e98e7f1e90e048867841a69d84b95005b3c266d",
+      "bytes": 7803,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/04-EventHubClosingRegressionTests.cs",
+      "semantic_notes": "One theory covers ten closing combinations with exact ordering, internal-entry gate, pending wait, fault object identity, cancellation token/status and ordered dual-fault aggregate. Finally releases gate, joins real closing task without masking primary assertion with expected fault, and releases SDK event lease twice."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0d5329df23111fb663153ce39a23899e73151b125c79e4bcfdd4211cef81dd39",
+      "bytes": 15659,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/05-EventHubReceivePolicyRegressionTests.cs",
+      "semantic_notes": "Six policy theories cover 9 provider-invalid, 3 inherited-invalid, 5 timer-positive, 2 selection-positive, 7 retained-setting mutations and 2 options-replacement cases = 28 cases. Normal public DI/build/composition validation, exact nine-field snapshot and exact conservative MessageLimits payload; client supervisor path tests actual SDK properties without startup. Timeout bounds only, cleanup awaits stop."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "733ade7091f363dbbd6e3309df9bd4c2dd512aa0eb927a92c10a5c1181cdb17b",
+      "bytes": 16117,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/06-EventHubDeferredCallerCancellationRegressionTests.cs",
+      "semantic_notes": "Three producer theories cover eight precanceled, eight later-canceled and sixteen ready/pending positive routes = 32 cases. Genuine held consume context from normal in-memory handler; strict producer SPI verifies exact formal type/argument/token/header transfer and awaits gated delivery. Canceled waiter isolation verified while live waiter and shared source remain pending; finally joins both wrapper tasks and downstream operation."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBuiltContextCapture.cs",
+      "sha256": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081",
+      "bytes": 5052,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/07-EventHubBuiltContextCapture.cs",
+      "semantic_notes": "Capture helper decorates normal public registration factory/specification, forwards public interface calls through DispatchProxy while unwrapping original exception identity, observes exactly one actual production context via ConnectReceiveEndpointContext. Explicit exact MessageLimits payload projection compensates proxy loss of internal runtime host interface; helper neither generates second context nor supplies ReceiveSettings/client factory."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "sha256": "1a9816d52a3a58fb211f024997bdf6beeb13774d68d14c5ccf84ebad96267364",
+      "bytes": 39528,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/08-EventHubLocalIntegrationRequirements.json",
+      "semantic_notes": "Entire 92-row requirement projection personally read; exact parsed equality preserves all 82 Package01 rows and appends ten rows matching all new Closing/Policy/Producer methods, no helper test entry and no duplicates. Formatting expanded old rows without semantic changes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package03_eventhub_mutations.py",
+      "sha256": "b5acd4462157e46deb5ed4cd794ba8dd3d739f83984211b2f0638ddd094efcfc",
+      "bytes": 11750,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/09-package03_eventhub_mutations.py",
+      "semantic_notes": "Frozen mutation runner builds 19 distinct source mutants, requires exact native receipt command/cwd/log SHA, nonzero exit and specific assertion or independently exact fractional timer rejection. F016 intentionally excluded from first suite; resume preserves existing receipts with same owned fixture SHA. Finally restores every owned original and removes new fixtures; whole 6209 validation requires separate receipt."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package03_eventhub_settings_mutations.py",
+      "sha256": "40dd77a759c4983b35b5520b03d0c396df2e0fc2a48033b0c66d545c5962e6e2",
+      "bytes": 7786,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/10-package03_eventhub_settings_mutations.py",
+      "semantic_notes": "Frozen settings runner copies four fixtures including normal context capture, verifies unchanged fixture hashes before each 11 distinct field/live alias/options mutants, exact nine cases and expected count. Boolean failure sentinel is intentionally excluded from numeric count check via type(failures) is int after receipt classifier interruption; all receipts command/log SHA remain bound. Finally restores originals and removes fixtures."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "sha256": "0f853802bb9dea09fe1e3e65c115e53f39f7009b033736b96e514a61495b4f84",
+      "bytes": 29649,
+      "kind": "freeze",
+      "status": "READ_FULL",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub/freeze/11-product-fixes.md",
+      "semantic_notes": "Entire changelog personally read, current hash frozen; exact Package08 baseline delta is one blank plus four bounded F013/F014/F016/F017 lines. Existing source-review/history entries untouched; claims refer completed normal Build generation and per-caller waiting."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "ecd805162a2970979ebb8080228bfe22493418b176f19595cb97d916b129fb47",
+      "bytes": 679,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Global usings expose production public Advanced/Configuration/EventHubs SPI and no private seam. Namespace resolution is shared by all owner tests."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/AssemblyInfo.cs",
+      "sha256": "297bf6453797f1140a21672bec2004e52adebb472b3c2528cbb708b5ac0ce3d5",
+      "bytes": 152,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Assembly disables xUnit parallelization for shared local emulator/SDK tests; no skipped or conditional activation is introduced."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/BatchCheckpointBehaviorTests.cs",
+      "sha256": "b7441ebd5153f5c4cc268b21bd221cf15fab154686c736c4212faf0ddbc1fb4c",
+      "bytes": 10459,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Checkpoint unit-side SDK model-factory tests verify newest-offset fallback order, exhausted failure recovery and canceled full-queue admission without provider writes; task gates and awaited disposal bound accepted events. Distinct positive fallback paths and lifetime/admission token separation are asserted."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBatchAndReliabilityTests.cs",
+      "sha256": "31f72e7ddeaea70340cac431a45d51e06cb9c3a39ad01be91d04765597f9fd52",
+      "bytes": 29991,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Six real local integration tests cover exact 100 ordered same-partition batch, observed first-fault continuation, exact retry metadata, partition health transition, gated checkpoint writes and real custom container/producer options. Canonical fixture plus run markers isolate messages; awaited bus stop and fixture cleanup are shared controls."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubCheckpointStorageTests.cs",
+      "sha256": "050dd5f8e4894cfdd779ec24baa26eac19517d68a94b99a831aacb03b71579be",
+      "bytes": 7324,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Blob SDK fakes cover complete container URI for anonymous/token/shared-key modes, no creation for existing container, canceled token forwarding on creation and exact failure identity. Public virtual SDK methods/model factories define mock convention; no private introspection."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubConfigurationOwnershipTests.cs",
+      "sha256": "456b4fb513c9b9258dd177c21c3939c4be63f59c078886aa3ba052b4471e74d5",
+      "bytes": 10526,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Three ownership tests cover duplicate endpoint pairs, independent groups, rejected host/storage/options replacement and recovering invalid inputs before first build. Positive actual namespace/client identifier, delivery, checkpoint blob and discarded-callback counts bind configuration to real local provider behavior."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredProducerTests.cs",
+      "sha256": "071ed4022007916a9cfaa071fda8c1b1635a9c09b56f184cf6b4ecc24fe1fe03",
+      "bytes": 13675,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Existing deferred producer suite has two eight-case theories for resolution/delivery success/failure and canceled resolution. Held normal consume context and strict public producer SPI assert exact metadata, argument type/identity, headers and pipe overrides. This is adjacent positive fault/cancellation coverage for F017; old teardown helper differs from new explicitly joined cleanup."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubEndpointAndBusBoundaryTests.cs",
+      "sha256": "d51664a440ac6a8e3e0e6bb982d18f06fd619d933b9262a88252b9f5353fc0d3",
+      "bytes": 23046,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Four local integration tests cover dynamic endpoint receiving pre-connect exact envelope, two typed-bus rider routing, inbox/outbox bus-serializer identifiers/cardinality and typed/untyped send-filter payloads with next completion. Run markers, actual provider delivery and awaited stop define the normal public consumer routes."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubHeaderProviderTests.cs",
+      "sha256": "4ef3ecd80c3ac680fd47b4c0f8ebe1a1b4dd6ade913b16d9782f17ed363e27cb",
+      "bytes": 3910,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Four header tests assert null constructor guard, present/blank identifiers, omission of null application values and identifier-case versus exact application-key lookup. SDK EventData public properties are direct positive metadata controls."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubInteropAndContextTests.cs",
+      "sha256": "1d6366afc6998cf43fc7c10acbadc7c1c24667d972a319f5cc9de4621200c234",
+      "bytes": 17768,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Four real SDK/local interop tests verify raw envelopes/default serializer, publish-to-bus source/initiator, provider payload presence and ordered sequence/offset/time for two same-key events. Run-isolated state, actual bus/rider delivery and checkpoint-aware stop are full closure inputs."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubObserverAdmissionTests.cs",
+      "sha256": "987e0c998bfd9ade78800f694fd0d7504226d7aa45945fcbf9d15201902a388d",
+      "bytes": 7571,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Two admission tests with three cases verify observer content-type mutation rejection on single and either batch item, absence of PostSend and exact fault identity/cardinality. Real local provider and awaited bus lifecycle support admission controls independent of F017 waiting boundary."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProcessorContextTests.cs",
+      "sha256": "3c3b204017506c4e4a9730c56e43779a286378c67a3ca94ea6df2771b88237cc",
+      "bytes": 5275,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Three processor lease tests use SDK protected event raisers and public builder callback SPI to verify registration/detachment order across reuse, duplicate lease/null guard and required constructor dependencies. The success-close ordering is a positive compatibility control for F013."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerBatchSenderTests.cs",
+      "sha256": "f727f7c995924225a8654e192dfde0e957593e0f67e274e7022ff62fb90bacc3",
+      "bytes": 23002,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Fifteen batch-send methods with parameterized routing/partial-failure cases assert preflight before provider work, exact mixed-route batch order, route activity tags, rollover cardinality, every SDK model-factory batch disposal, provider confirmation flags and cancellation ownership. Explicit cleanup failure cases protect primary provider cause and continuing already confirmed delivery."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerCacheTests.cs",
+      "sha256": "d57b741effae2b7ca5472d2604fc63d619d0c7eec58a550d714ab7809164f4bf",
+      "bytes": 8026,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Three cache tests verify gated single-flight identity, retry after exact factory fault and cached usage/token/payload delegation plus disposal. These are public producer cache lifetime controls adjacent to shared F017 resolution; no private producer fields are read."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerDeliveryTests.cs",
+      "sha256": "e34a4e464b4ebd729c509371eae681c0a2fb06c7ba1d10a925bde1521dcebe11",
+      "bytes": 17554,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Three real delivery tests assert exact ten-item envelope/cardinality, full single-envelope addresses/structured header and bus-send-observer pre/post stages for a run marker with foreign-message positive isolation. Normal provider resolution and consumer roundtrip define public delivery controls."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerOutcomeTests.cs",
+      "sha256": "b9d402166843f9dd37c79f1e6bccf46772c888ca5281fa4cd202e9b1d908a3bf",
+      "bytes": 16981,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Eight producer-outcome methods cover single/batch observer faults, throwing logger, partial retry only pending contexts, preserved confirmed spans and final exact provider failure. Recorded transport SPI intentionally models confirmation/retry outcomes and is separate from native broker tests; test AsyncLocal logger restored in finally."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerResolutionTests.cs",
+      "sha256": "e185391a3fe4be3e78f8e17f61239d88e7a9629512acdd253db6d9b085466eaf",
+      "bytes": 5367,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Three resolution tests verify null/blank guards, exact topic entity address/cancellation forwarding and harness scope provider resolution. Strict public DispatchProxy rejects unintended calls; canceled token positive forwarding does not claim provider itself ignores cancellation."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceiveAdmissionTests.cs",
+      "sha256": "420acf2343de8d2ebe3f012a97a1fa3b5b009e6acb2dc27b9b78495230a1c8ce",
+      "bytes": 8542,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Five receive admission tests verify capacity release and partial confirmation faults after pending/executor failures, canceled admission, accepted work surviving later stop and faulted accepted work recovery. Public task executor/lock-context SPI fakes directly exercise queue admission ownership."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubSagaAndLifecycleTests.cs",
+      "sha256": "fa05b9a6bf47ee4a196821dd35ba1e711893be7dd90dcf2a3a675e55ed6c1bc2",
+      "bytes": 26185,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Five full local saga/lifecycle tests cover state-derived production, both fault activity arities, callback-delivery ordering for all four partitions and consumer/producer restart generations. Exact initiator IDs, generation counters, close reasons and cardinality are asserted on real canonical fixture delivery."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/PendingConfirmationCancellationTests.cs",
+      "sha256": "5dc028d22fa36cae6b5ef462a13ca7b4312d25d1c38f06cdc9b2d3021a3288b2",
+      "bytes": 5810,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Two concrete pending-confirmation regression controls: delivery cancellation affects one matching partition/offset while other partitions and replacement awaiters complete; processor lifetime cancellation cancels every open confirmation and preserves prior successful/faulted terminal task results, exact token and fault identity. SDK checkpoint delegate throws if incorrectly called."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/ProcessorCheckpointLifecycleTests.cs",
+      "sha256": "3b48a18526d22c7ff0f19d0a5fea973c4c455e4bc4c34a95d15922d08b3c02d5",
+      "bytes": 8919,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Actual ProcessorLockContext and protected SDK partition callbacks: canceled delivery closes without checkpoint while another partition persists its offset and lease is reusable; shutdown waits for an in-flight gated checkpoint before success. Dispose cancels lifetime, joins closing tasks and always disposes lock/CTS; outer log context restored."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Infrastructure/EventHubLocalFixture.cs",
+      "sha256": "2f76967e5ed15630307250200a229784011f0ad37991b211e2c821660c32b2b8",
+      "bytes": 4412,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Canonical local fixture validates EventHubs options, constructs emulator and separate run-owned Blob endpoints, gives each purpose a bounded Azure-valid unique container prefix, configures public host/storage and zero-retry raw producer; Dispose enumerates and deletes only its own prefix with operation timeout."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "9a77e000d6c694fdd8488c0113f70ae6f940b793c85607d6ed83393b2bfcb2fe",
+      "bytes": 1286,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Compiled native Fact/Theory metadata verified against exact embedded JSON resource using shared projection verifier; reflection selects exactly one assignable Fact attribute and assertion reports actual verifier diagnostics."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+      "sha256": "827aab2eb3c7f3c08497c504a20f3ad17cb5ac1109df1d0497d6dd0703f12be6",
+      "bytes": 1780,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Signed native executable MTP xUnit owner includes exact EventHubs provider/testing/Sagas/shared infrastructure references and embedded requirement resource; project has no alternate source discovery or excluded regression fixtures."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "ddca799ea3d91af9c6447df3f3e766d78be38b7586d660c7f58c45e7a30ed361",
+      "bytes": 23136,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Entire net10 lock read: EventHubs/Processor 5.12.2, Blobs 12.29.2, Azure.Core 1.55.0, xUnit4 MTP v2 2.3.3, dependency-injection/extensions 10.0.12, complete project closure and central transitive hashes. Lock existence does not prove fresh offline feed or package publish."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.github/workflows/native-tests.yml",
+      "sha256": "2041926c8fc20c6f73cb1ea4fbee766b1be1eaaad5a18da47fd5a5ee27e75a6c",
+      "bytes": 9639,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "CI native test workflow and execution profiles read; one Release owner run does not establish every CI/package profile.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.props",
+      "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf",
+      "bytes": 2886,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Ancestor build properties apply to owner/projects; target framework and test build conventions read in full.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.targets",
+      "sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1",
+      "bytes": 10658,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Ancestor targets apply metadata/generated build behavior; read in full without executing MSBuild.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Packages.props",
+      "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e",
+      "bytes": 5677,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Central package pins read in full, including SDK/framework dependencies; no package restore or upgrade performed.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/NuGet.config",
+      "sha256": "3f6cda87abdfbc3e7f7a80906f21b11009ac811c70834dfdbc4840db01a9ce93",
+      "bytes": 838,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Repository restore/feed settings read in full; locked up-to-date restore receipts do not prove a fresh feed restore.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.Tests.Unit.slnx",
+      "sha256": "ac102688f92ab8ee214af159e05703a6d0bc43dde268efe78c4ca41e82f45091",
+      "bytes": 7678,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Unit solution project membership read; F012 evidence is the Azure owner, not all solution owners.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.snk",
+      "sha256": "d8556825164fad48714aa53b243a704787add3646fcaef42c1740eba37e9f303",
+      "bytes": 596,
+      "kind": "owner_shared",
+      "status": "HASH_ONLY_BINARY"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/global.json",
+      "sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93",
+      "bytes": 63,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "SDK and runner selection read in full; native commands were executed by Root, not this reviewer.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/signing.props",
+      "sha256": "71a2cc9a5b04a60ea4093aa41824f275ad7cf5d87f4a8866a09990450ec2e411",
+      "bytes": 293,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Signing configuration applies to project closure; key contents retained private and only bytes/hash bound.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Directory.Build.props",
+      "sha256": "be8359cbeaf46760b90b3755da645aeb7b4a786af8f0fd6db9396d21f6e67911",
+      "bytes": 1400,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Ancestor build properties apply to owner/projects; target framework and test build conventions read in full.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ViciOne.ServiceBus.ActiveMq.csproj",
+      "sha256": "fcca3b4eaca3e1d5b4978b6aa46330fb3d3574edbbb132e005b5967f7a5fd883",
+      "bytes": 1283,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj",
+      "sha256": "3ad12d318872e121d8e3be1661c0d72182cb0158452667d45e264cc0bf1d9597",
+      "bytes": 1481,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj",
+      "sha256": "7d09a90d76b1b2a0cb203e25a5679008c9040292041fc7b5d71cd66255c8df2a",
+      "bytes": 1434,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "sha256": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb",
+      "bytes": 9185,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+      "sha256": "3f04063a3393b887bc0d1b666c73e7f4375e73860b8d6b7640960d559913adad",
+      "bytes": 1739,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+      "sha256": "8fe3e90f79ab15806ba2fd38e37e717f02a75eafa5b4c05f08b9ee63dd57ea18",
+      "bytes": 1131,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+      "sha256": "5594cd1825e0998de96fa6d78a5995ad36e949fa54cdcd75cf02de181877d023",
+      "bytes": 936,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+      "sha256": "a6d0faa1c1f4065a2a95f49d92ff643cab6de89f9b5c62bb30980b60009e7a77",
+      "bytes": 1380,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+      "sha256": "1e90e8eedf73e374ffb0a4bb145fd4d1cf4a94cdd05b65c29d440a41f8b90603",
+      "bytes": 1651,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3",
+      "bytes": 9852,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.props",
+      "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+      "bytes": 3303,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Ancestor build properties apply to owner/projects; target framework and test build conventions read in full.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.targets",
+      "sha256": "3a866a9a26434dcca1aaf6d61a8d2afc84960f21ceee810b5b825f1ecdd7fdb1",
+      "bytes": 12496,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Ancestor targets apply metadata/generated build behavior; read in full without executing MSBuild.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+      "sha256": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206",
+      "bytes": 10901,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Shared configuration resolution provides local test settings and environment overrides; F012 uses no broker configuration.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+      "sha256": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83",
+      "bytes": 18211,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Shared options distinguish enabled transport/integration settings and timeout defaults; F012 inherits owner bounded timeout/cancellation conventions.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+      "sha256": "d78d054d54468692e35500dca6c90e706e6a77bfcbb7d1878bcb4bc97fba4e9e",
+      "bytes": 915,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Passive shared requirement metadata attribute carries contract row identity/category/status to tests.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs",
+      "sha256": "130f488a8ff8ddc7d43561f77f6188e5d3088de109aef1ba588c454e73180c66",
+      "bytes": 13208,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Strict JSON shape, canonical values, duplicate/missing/extra row checks and unique reflected method matching in both directions; theories count as Fact-derived methods.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+      "sha256": "954d1e414f5ad15239213b69d4d6e0dd7bb71fff95d8ce81616f49f991d11656",
+      "bytes": 956,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json",
+      "sha256": "aef4c037696049b2f689024c6407dab31fe6d8d65594580bde74917261ac7d76",
+      "bytes": 4300,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Entire pinned package lock values personally read; reproducibility input only, not newly restored NuGet evidence.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ApiSurfaceGlobalUsings.cs",
+      "sha256": "35832a2f279237fbe0e7adc762bbeb566d3f5b1b998389ceb04e3d0b9777c8e1",
+      "bytes": 638,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Global API aliases and shared test imports; F012 accesses public ConnectionContext/SharedConnectionContext directly, without private-field introspection.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+      "sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+      "bytes": 2971,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Shared deterministic durable-send driver used by cross-transport owner tests; no F012 modifications.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+      "sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96",
+      "bytes": 1102,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Shared durable sender factory supplies fake ownership/storage boundary for cross-transport tests; no F012 modifications.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+      "sha256": "f79459b8d6dc2fd119935f425fa0284caa4592a8cb04fb79fd2e732d8db76f2d",
+      "bytes": 632,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "ProjectReference/package/test framework closure fully read; supports public SDK model factory, shared test infrastructure and current runner inputs.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json",
+      "sha256": "43949251eee801841536031e9d9f8405b562e4db8d409b84bb73e217e54226ef",
+      "bytes": 7327,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Entire pinned package lock values personally read; reproducibility input only, not newly restored NuGet evidence.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/testconfig.json",
+      "sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "bytes": 66,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Entire shared local transport defaults read; no live broker required by the new SPI fixture.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/testsettings.json",
+      "sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7",
+      "bytes": 1300,
+      "kind": "owner_shared",
+      "status": "READ_FULL_PRIOR_PERSONAL_HASH_EQUAL",
+      "semantic_notes": "Entire shared test settings read; no execution performed by this reviewer.",
+      "personal_prior_manifest": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-azure-lease-adversarial/READ_CLOSURE.json",
+      "personal_prior_manifest_sha256": "a0150e5f86f6aeb1fdcefd6f4de3cc9bb175d553455fb8c4162ce20426c43751"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.Tests.LocalIntegration.slnx",
+      "sha256": "8de6c55fe3e2c96491a658773f1d3d8a2241387ba605dcd6b898b0411db9d276",
+      "bytes": 4240,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "LocalIntegration solution explicitly contains EventHubs owner and provider/testing/shared infrastructure among other local provider owners; broader solution membership does not turn 182 EventHub cases into full LocalIntegration proof."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/run_broker_category.py",
+      "sha256": "03cdb64a2f8d3f32136d59da5f437d12b89b9b5bb362cc0e22fae489ee2d8969",
+      "bytes": 22043,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Canonical command runner mints/adopts one authenticated run root, ephemeral loopback endpoints and independent credentials, waits actual EventHub startup marker, preserves child exit, captures logs before independently guarded teardown and emits fixture findings/digests. Cleanup findings force nonzero and never replace original failure."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/build/test-infrastructure/eventhubs/config.json",
+      "sha256": "8e45b8d2d316f6cfe613f4cd6844988024707471c9231e4392acd0c311e37a53",
+      "bytes": 1197,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Pinned emulator namespace lists ten concrete four-partition entities including lifecycle/checkpoint/config fixtures and consumer group cg1; public regression policy-eh is broker-free by design and need not appear among emulator entities."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/ViciOne.ServiceBus.EventHubs.csproj",
+      "sha256": "aecf00bf5b18a933639150282451b8f7c2934c2cf04510203e5f9c697a9a31e5",
+      "bytes": 1487,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Signed net10 EventHub package references exact centrally managed Processor/Blobs plus core/Sagas; strong-key friend exposure to local owner is explicit. No public API signature changes introduced in reviewed patch."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs.Testing/ViciOne.ServiceBus.EventHubs.Testing.csproj",
+      "sha256": "9c5890f9872e474d61e020ed0d4b55749fa46b4b78b08147b185f11475002c43",
+      "bytes": 886,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "EventHub testing package net10 nullable with public DI dependency and shared Testing/EventHub project references; owner uses normal public test harness surface."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs",
+      "sha256": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785",
+      "bytes": 2534,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Existing four SDK URI security cases serialize actual checkpoint filter probe, assert sanitized topology plus all scheme/host/port/path retained, all credential canaries removed, and original SDK Uri/Name identity unchanged. Existing F015 positive/negative controls remain meaningful."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/__init__.py",
+      "sha256": "279e14b15b46cf04d45664922571fc5e4a243c955243d7ad440b7b0f84e89f7b",
+      "bytes": 184,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Fixture package initializer documentation confirms orchestration module boundary; no executable mutation or test classification."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/broker_logs.py",
+      "sha256": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2",
+      "bytes": 6906,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Broker log capture obtains timestamped current-project logs before removal, preserves per-run filename and warns capture failures; refusal checker is unrelated EventHub path and explicitly fails vacuous zero-vhost count."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/run_scope.py",
+      "sha256": "1ef7d3cb955828937ec1adb31fcbd4a0a6bcbbc16fbb354388b582e30005f095",
+      "bytes": 3747,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Run roots require exact direct containment, non-symlink root/token, canonical vicione-12hex name and secret equality; handover passes both identity and proof. No arbitrary parent-owned run root is silently adopted."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/outage_protocol.py",
+      "sha256": "f269955b6b7b5f0e2f9c3dec4d0e0fcc8123ab23513c2dbad3f12e40f7263e3b",
+      "bytes": 9205,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Outage controller serializes request/reply schema and verifies actual container state/health; shutdown cancels waits, joins thread, surfaces retained exception/unended thread without throwing. EH run declares no outage but cleanup behavior remains transitive runner input."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/compose_fixture.py",
+      "sha256": "cc2b92ddc68377c2af3cf398c6a5ec041f858cdba42c30a886af51a413e3fe6d",
+      "bytes": 14046,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Compose fixture full lifecycle uses project-scoped docker command, mandatory preclean, ordered readiness, checked removal; EventHub marker readiness is distinct from running state, port projection loopback-only. Broker logs/health control are local emulators, not cloud availability or ARM deployment."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/build/test-infrastructure/compose.yaml",
+      "sha256": "b7e3fff89ac0bb6c3cedd63d31cce72690ddb991aa631e9afd8cb5d2be645ab8",
+      "bytes": 12080,
+      "kind": "owner_shared",
+      "status": "READ_FULL",
+      "semantic_notes": "Whole compose manifest read: pinned EventHub2.2.1 amd64 with pinned Azurite3.36.0 dual account, run-scoped account plus documented emulator metadata account, skipApiVersionCheck and ephemeral loopback mappings; other brokers all distinct. This fixture supports canonical local wire proof, not public Azure or native ARM."
+    }
+  ],
+  "foreign_read_reuse": false,
+  "limits": [
+    "Internal helper, not external product role",
+    "No native builds/tests or product writes",
+    "No runtime/API CLOSED claim"
+  ],
+  "baseline_full_reads": [
+    {
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProcessorContext.cs",
+      "baseline_sha256": "3374984bb7f32b1b08707e61c7ae7283c8edc50e2f92d0eaec9b5d4b08c67d44",
+      "status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointConfigurator.cs",
+      "baseline_sha256": "a821edb1836c23c194f863548b5710a71b6dc48b9b6c7cea3d3b521bef07142e",
+      "status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointBuilder.cs",
+      "baseline_sha256": "26fb65d4cd16008a5cd69c5afd3449780a68345c4c3abda8ce365e5771ccbffb",
+      "status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "comparison_baseline": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ConsumeContextEventHubProducerProvider.cs",
+      "baseline_sha256": "d0fed0b5ae3aa7f29b2ee394abb7f93c422d81b2275a555dc98c2845c0f3427a",
+      "status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    }
+  ],
+  "delta_checks": {
+    "requirements_baseline_sha256": "b861de7665883089a93ad927cf01c8c0f50858d834389424e330c36f2999bc5c",
+    "preserved_rows": 82,
+    "added_rows": 10,
+    "doc_baseline_sha256": "8dd2447fa408919ddd2a0698e0de4ed52abdf14207dc3789bc15432ce86df76f",
+    "doc_delta": "One blank plus four new bounded finding bullets; existing bytes exact prefix.",
+    "raw_formatted_requirements_diff_read": "NOT_FULL; normalized delta below used after full current text read"
+  },
+  "external_inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE03_EVENTHUB_MUTATIONS_FINAL_INPUTS.json",
+      "sha256": "bcaecf5f89423153ffbaebac660cb4145007a0db3cfc56439e0f029fd3291728",
+      "bytes": 42083,
+      "status": "READ_FULL",
+      "representation": "Repeated JSON native receipts rendered through exact complete personally read receipt references; all remaining fields and runner text read fully."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE03_EVENTHUB_SETTINGS_MUTATIONS.json",
+      "sha256": "4cb2077930c0ea1c6a3f18e3e223ea30fd0cf7b6a42145023dc962b94c150c3c",
+      "bytes": 23631,
+      "status": "READ_FULL",
+      "representation": "Repeated JSON native receipts rendered through exact complete personally read receipt references; all remaining fields and runner text read fully."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE03_EVENTHUB_MUTATIONS.json",
+      "sha256": "41e44f33a5fd400487d800a5c16389a53e068a8abd5465bf386fffd12e6e0629",
+      "bytes": 42284,
+      "status": "READ_FULL",
+      "representation": "Repeated JSON native receipts rendered through exact complete personally read receipt references; all remaining fields and runner text read fully."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-final-inputs/run.py",
+      "sha256": "6915df46b9f372fac26065161caa94839b1aae097263587957d97da0551202f2",
+      "bytes": 11846,
+      "status": "READ_FULL",
+      "representation": "Repeated JSON native receipts rendered through exact complete personally read receipt references; all remaining fields and runner text read fully."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-final-inputs/RUNNER_DELTA.txt",
+      "sha256": "dd4693889a7fc18b903d71296478eba7bfac2b16bf9c1eaebe0862daa2e86bfc",
+      "bytes": 3513,
+      "status": "READ_FULL",
+      "representation": "Repeated JSON native receipts rendered through exact complete personally read receipt references; all remaining fields and runner text read fully."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-final-inputs/PLAN.json",
+      "sha256": "049e47ec24391f320b89aaa8235c2521a37012adbe158ab76f627acdba598607",
+      "bytes": 455,
+      "status": "READ_FULL",
+      "representation": "Repeated JSON native receipts rendered through exact complete personally read receipt references; all remaining fields and runner text read fully."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-final-inputs/ROOT_BINDING_CHECK.json",
+      "sha256": "991d3e81fe974e493dd3ca3e2f38c21940b09ad92194724b556ecab367f570f6",
+      "bytes": 1430,
+      "status": "READ_FULL",
+      "representation": "Repeated JSON native receipts rendered through exact complete personally read receipt references; all remaining fields and runner text read fully."
+    }
+  ],
+  "current_hash_recheck": "All 84 closure files, four original baseline reads, freeze and all 88 native log hashes rechecked unchanged before final review.",
+  "read_counts": {
+    "fresh_full_text": 49,
+    "prior_personal_full_hash_equal": 34,
+    "binary_hash_only": 1,
+    "native_logs_personally_full": 88
+  }
+}

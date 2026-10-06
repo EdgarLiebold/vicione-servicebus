@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs
++++ src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs
+@@ -93,7 +93,7 @@
+             {
+                 if (index + 1 >= name.Length || !char.IsLowSurrogate(name[index + 1]))
+                     throw new ArgumentException("A message contract name must contain well-formed UTF-16.", nameof(name));
+-                index++;
++                // mutant: leave low surrogate unconsumed
+                 continue;
+             }
+             if (char.IsLowSurrogate(character))

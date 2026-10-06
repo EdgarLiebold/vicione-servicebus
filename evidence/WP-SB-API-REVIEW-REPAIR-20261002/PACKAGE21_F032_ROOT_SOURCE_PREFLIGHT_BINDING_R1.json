@@ -1,0 +1,12 @@
+{
+  "utc": "2026-10-03T12:16:52.939272+00:00",
+  "status": "ROOT_OWN_POST_DELTA_READ_AND_INDEPENDENT_SOURCE_PREFLIGHT_BOUND",
+  "delta_sources": 17,
+  "root_personal_full_post": "New helper authored and personally reviewed; exact16prior/product-diff personally read. All17current/snapshotSHAchecked.",
+  "review_manifest_sha256": "5593f09771d0006659503d0b6b9da1d3301ac78e437caf869a2b833d5db9728e",
+  "verified_review_artifacts": 4,
+  "blockers": [],
+  "strict_core_build_exit": 0,
+  "strict_core_warnings": 0,
+  "native_public_owner_and_compiled_mutants_pending": true
+}

@@ -1,0 +1,15 @@
+--- src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs
++++ factory-failure-global-fallback/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs
+@@ -74,6 +74,12 @@
+             _duration = null;
+             try { source?.Dispose(); } catch { }
+             try { processMeter?.Dispose(); } catch { }
++            if (!processOwned)
++            {
++                _operations = Process._operations;
++                _duration = Process._duration;
++                _activitySource = Process._activitySource;
++            }
+         }
+     }
+ 

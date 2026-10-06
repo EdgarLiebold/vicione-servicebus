@@ -53,7 +53,7 @@ public static class RegistrationConfiguratorExtensions
 
         if (ConsumerRegistrationMetadata.IsConsumerRegistrationExcluded(consumerType))
             throw new ArgumentException($"{TypeCache.GetShortName(consumerType)} is a saga, and cannot be registered as a consumer", nameof(consumerType));
-        if (!consumerType.IsClass || consumerType.IsAbstract || !ConsumerRegistrationMetadata.IsConsumer(consumerType))
+        if (!consumerType.IsClass || consumerType.IsAbstract || consumerType.ContainsGenericParameters || !ConsumerRegistrationMetadata.IsConsumer(consumerType))
             throw new ArgumentException($"{TypeCache.GetShortName(consumerType)} is not a concrete consumer implementation", nameof(consumerType));
 
         var register = (IRegisterConsumer)(Activator.CreateInstance(typeof(RegisterConsumer<>).MakeGenericType(consumerType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));

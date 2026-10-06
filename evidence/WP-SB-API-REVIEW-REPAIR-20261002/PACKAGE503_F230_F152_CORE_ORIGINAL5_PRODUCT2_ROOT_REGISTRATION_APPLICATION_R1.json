@@ -1,0 +1,56 @@
+{
+  "utc": "2026-10-06T15:36:33.314313+00:00",
+  "status": "ROOT_REGISTERED_F230_AND_F152_DUPLICATE_SCOPE_APPLIED_DIFFERENT_WHOLE_PRODUCT2_FIXED_NATIVE_PENDING",
+  "different_original5": {
+    "REPORT": "bacac305cb33d61a94e1afed6f4b371617e148e575b893dcf290ef5a4ba15611",
+    "MAN": "db02921b28816b95bb95199dbcae944b70e166142206255a8a4a642bbc93ff9f",
+    "counts": {
+      "total": 5,
+      "passed": 2,
+      "failed": 3,
+      "skipped": 0
+    }
+  },
+  "author_REPORT": "b348bacabf701610fedc29f66352c9ee343b3578cfffe3e014040ea087ecf01e",
+  "different_Product_REPORT": "87a76bb063b8ba64820b6412015c910337d67d9b0bc307704d0a7bb066661cb8",
+  "Root_whole_Product2_731": "ae5b38",
+  "Root_whole_Product_peer": "f65409",
+  "Root_whole_Original_peer": "70cd90",
+  "changes": [
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "before_sha256": "c2a8271edf6e4bee150d47b606533e77382e2778289d7c995a3e21a956198b1b",
+      "after_sha256": "ced3f8eab359980762604d3df6fc09a69678ba48134c1e7a6e6fb0dc0a3ada8c",
+      "before_lines": 394,
+      "after_lines": 400,
+      "old_literal": "            context.LogTransportDupe(key);",
+      "new_literal": "            try\n            {\n                context.LogTransportDupe(key);\n            }\n            catch (Exception)\n            {\n            }",
+      "literal_inverse_exact": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpointCollection.cs",
+      "before_sha256": "9aa8fa511535b8b0e3d987730b3027dd8b67363d9571c9b93669320f719863ec",
+      "after_sha256": "599e1a4b1c63b1b4ea54e32bb2560d9bc503d4d6f98ab8ac3aebcb3f1ace3ca0",
+      "before_lines": 310,
+      "after_lines": 331,
+      "old_literal": "        return new MultipleConnectHandle(_endpoints.Values.Select(x => x.ConnectConsumeMessageObserver(observer)));",
+      "new_literal": "        var handles = new List<ConnectHandle>();\n        try\n        {\n            foreach (ReceiveEndpoint endpoint in _endpoints.Values)\n                handles.Add(endpoint.ConnectConsumeMessageObserver(observer));\n\n            return new MultipleConnectHandle(handles);\n        }\n        catch (Exception connectionFailure)\n        {\n            try\n            {\n                new MultipleConnectHandle(handles.Where(handle => handle is not null)).Disconnect();\n            }\n            catch (Exception cleanupFailure)\n            {\n                throw new AggregateException(\"Typed consume observer connection and registration cleanup both failed.\",\n                    connectionFailure, cleanupFailure);\n            }\n\n            throw;\n        }",
+      "literal_inverse_exact": true
+    }
+  ],
+  "before_MAN": "3dcb2b2662a68a2c15cc5953cf944f76250d1caeb4108dd3a797aa1c9ef496f1",
+  "finding_decisions": {
+    "F-SB-API-230": {
+      "severity": "Medium",
+      "title": "Typed endpoint observer admission leaks previously returned registrations after later admission failure",
+      "owner": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpointCollection.cs",
+      "exact_original_id": 8528,
+      "causal_boundary": "Both actual clean495 modes1/2 first193 real connectedCount2 vs expected0 after three actualcalls/two returnedhandles/primaryidentity. Healthy0 passes. Later orderedcleanupfailure/counters unreached on Original.",
+      "family_reconciliation": "Same compensation policy as F124 Host/F156 Saga/F217 Consumer, distinct public typed endpoint-collection owner, therefore distinct new finding."
+    },
+    "F-SB-API-152": "Existing optional product-diagnostic family extension: actual duplicate own R-DUPE throws after retaining delivery; hostilefirstNull62 exactowningIO, healthy actualfallback drain passes. No generation-race/F061 or private worker closure."
+  },
+  "native_credit_added": 0,
+  "grade": null,
+  "global_closed": false
+}

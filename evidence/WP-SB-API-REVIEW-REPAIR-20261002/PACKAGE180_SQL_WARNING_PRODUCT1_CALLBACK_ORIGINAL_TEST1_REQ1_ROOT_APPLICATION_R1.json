@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-05T11:19:55.840049+00:00",
+  "actor": "/root",
+  "scope": "OneownWarning2guardproduct, additiveOriginalCallbackTheory2 Test611to790+179, latestReq164ADD1to165",
+  "plan": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package207-sql-renewal-owned-warning-product-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "before_sha256": "dc68f980c568886b7c2d4c99f510e47260a1f08d77a1e34afe32866e628a9dba",
+      "after_sha256": "42330a4cb291d6002e020e771601d04d74b72b086bfe060c826134aae5cfe7cb",
+      "kind": "OWN_RENEWAL_WARNING2_ONLY_ADD12"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlReceiveLockContextTests.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package206-sql-owned-cancel-callback-original2-oracles-proposed-r2/proposed/tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlReceiveLockContextTests.cs",
+      "before_sha256": "1a0a335fce0650d2dc4c477847e63be573224fe6fc9aa5d3f0c0fc07478bca65",
+      "after_sha256": "c488a7a470efac406d5cd5d8c44b776268b18fcc6bf640ed7102b55a61bf9c9e",
+      "kind": "ORIGINAL_CALLBACK_THEORY2_ADD179"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/SqlTransportRequirements.json",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package180-requirements-add165-proposed.json",
+      "before_sha256": "5e95a2f1d5468c18d76fec938dfe17373fc706d9df1d38da209bb1ec95b9e417",
+      "after_sha256": "79746d962968a2382e664863daa836c1d52d4f6be9ace7df1d6bf6187e431d1e",
+      "kind": "LATEST164_ADD1"
+    }
+  ],
+  "source_preflight": {
+    "four_author_peer_MAN_counts": {
+      "package207-sql-renewal-owned-warning-product-proposed-r1": 4,
+      "package207-sql-renewal-owned-warning-independent-scanner-r1": 2,
+      "package206-sql-owned-cancel-callback-original2-oracles-proposed-r2": 7,
+      "package206-sql-owned-cancel-callback-original2-independent-scanner-r2": 3
+    },
+    "product_non_diagnostic_bytes_equal": true,
+    "old611_test_bytes_preserved": true,
+    "Root_personal": "WholebeforeLock3260f060b+actualRenewSettle ecc2aa and acceptedRESEND6inverse preserved; wholeWarning2patcha7e354 and independentlypeerbdada1 read. WholeCallback178delta+using1 e06145, independentOraclepeer9c00e5 read; all4MAN/literals checked beforemutation.",
+    "no_Fixture_privateRenewTask_or_CTSdisposal_empirical_credit": true
+  },
+  "before_frames": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package180-root-before-r1/frames",
+  "whole_API_closed": false,
+  "native_and_fresh_after_pending": true
+}

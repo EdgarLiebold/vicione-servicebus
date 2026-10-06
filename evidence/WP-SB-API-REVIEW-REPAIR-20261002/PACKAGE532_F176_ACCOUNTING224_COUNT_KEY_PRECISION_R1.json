@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-06T18:17:58.165383+00:00",
+  "kind": "ROOT_ACCOUNTING_KEY_PRECISION_ONLY",
+  "historical_entire_accounting": {
+    "confirmed": 234,
+    "bounded_accepted": 225,
+    "pending": 10,
+    "whole_API_global_closed": false,
+    "evidence": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE532_F176_TEST_HELPER13_NAMING_GLOBAL_FAILURE_REGISTRATION_R1.json",
+      "sha256": "ea3f3ac3da55918170540148f55b8efd778c78c9762702b7c40c90f5e4f08311"
+    },
+    "historical_subtotal_fields_are_not_current": true,
+    "bounded": 224
+  },
+  "historical_entire_state": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package532-f176-accounting224-count-key-precision-before-r1/STATE.json",
+    "sha256": "c9551a811003cd99ac8510f265e1cb3a8a2c9de0290d31298ebc620a916141eb"
+  },
+  "correct_counts": {
+    "confirmed": 234,
+    "bounded_accepted": 224,
+    "pending": 10
+  },
+  "reason": "Root51924c reopening decremented newly introduced bounded key but retained old bounded_accepted225. Existing canonical key now224; redundant new bounded removed. No FindingID, Source/Test/Norm/Native/grade changes."
+}

@@ -1,0 +1,10 @@
+{
+  "scope": "Immutable finalR2 archive/index/attributes peer; no recursive manifest",
+  "files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-final-archive-index-peer-r2/REPORT.json",
+      "sha256": "d522de4e24d63027d21bffdc56118547d3c98e0988c0a12b179ab45006e88644",
+      "bytes": 8927
+    }
+  ]
+}

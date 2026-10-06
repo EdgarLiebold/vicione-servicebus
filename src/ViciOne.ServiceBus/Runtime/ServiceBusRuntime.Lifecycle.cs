@@ -54,7 +54,14 @@ internal sealed partial class ServiceBusRuntime
             }
             catch (OperationCanceledException exception) when (exception.CancellationToken == cancellationToken)
             {
-                LogContext.Warning?.Log(exception, "Bus start canceled: {HostAddress}", _host.Address);
+                try
+                {
+                    LogContext.Warning?.Log(exception, "Bus start canceled: {HostAddress}", _host.Address);
+                }
+                catch
+                {
+                    // Diagnostic logging must not replace the original failure or skip owned cleanup.
+                }
 
                 try
                 {
@@ -63,7 +70,14 @@ internal sealed partial class ServiceBusRuntime
                 }
                 catch (Exception stopException)
                 {
-                    LogContext.Warning?.Log(stopException, "Bus start canceled, bus stop faulted: {HostAddress}", _host.Address);
+                    try
+                    {
+                        LogContext.Warning?.Log(stopException, "Bus start canceled, bus stop faulted: {HostAddress}", _host.Address);
+                    }
+                    catch
+                    {
+                        // Diagnostic logging must not replace the original failure or skip owned cleanup.
+                    }
                 }
 
                 throw;
@@ -83,7 +97,14 @@ internal sealed partial class ServiceBusRuntime
             {
                 if (busHandle != null)
                 {
-                    LogContext.Warning?.Log(exception, "Bus start faulted: {HostAddress}", _host.Address);
+                    try
+                    {
+                        LogContext.Warning?.Log(exception, "Bus start faulted: {HostAddress}", _host.Address);
+                    }
+                    catch
+                    {
+                        // Diagnostic logging must not replace the original failure or skip owned cleanup.
+                    }
 
                     using var stopTimeoutTokenSource = new CancellationTokenSource(StartupCleanupTimeout, _timeProvider);
                     await busHandle.StopAsync(stopTimeoutTokenSource.Token).ConfigureAwait(false);
@@ -95,7 +116,14 @@ internal sealed partial class ServiceBusRuntime
             }
             catch (Exception stopException)
             {
-                LogContext.Warning?.Log(stopException, "Bus start faulted, bus stop faulted: {HostAddress}", _host.Address);
+                try
+                {
+                    LogContext.Warning?.Log(stopException, "Bus start faulted, bus stop faulted: {HostAddress}", _host.Address);
+                }
+                catch
+                {
+                    // Diagnostic logging must not replace the original failure or skip owned cleanup.
+                }
             }
 
             _busState = BusState.Faulted;
@@ -107,8 +135,15 @@ internal sealed partial class ServiceBusRuntime
             }
             catch (Exception observerException)
             {
-                LogContext.Warning?.Log(observerException,
-                    "Bus start-fault observation failed without replacing the startup failure: {HostAddress}", _host.Address);
+                try
+                {
+                    LogContext.Warning?.Log(observerException,
+                        "Bus start-fault observation failed without replacing the startup failure: {HostAddress}", _host.Address);
+                }
+                catch
+                {
+                    // Diagnostic logging must not replace the original failure.
+                }
             }
 
             throw;
@@ -185,11 +220,25 @@ internal sealed partial class ServiceBusRuntime
                 }
                 catch (Exception observerException)
                 {
-                    LogContext.Warning?.Log(observerException,
-                        "Bus stop-fault observation failed without replacing the stop failure: {HostAddress}", _host.Address);
+                    try
+                    {
+                        LogContext.Warning?.Log(observerException,
+                            "Bus stop-fault observation failed without replacing the stop failure: {HostAddress}", _host.Address);
+                    }
+                    catch
+                    {
+                        // Diagnostic logging must not replace the original failure.
+                    }
                 }
 
-                LogContext.Warning?.Log(exception, "Bus stop faulted: {HostAddress}", _host.Address);
+                try
+                {
+                    LogContext.Warning?.Log(exception, "Bus stop faulted: {HostAddress}", _host.Address);
+                }
+                catch
+                {
+                    // Diagnostic logging must not replace the original failure.
+                }
                 _bus._busState = BusState.Faulted;
                 _bus._healthMessage = $"stop faulted: {exception.Message}";
                 throw;

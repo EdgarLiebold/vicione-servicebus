@@ -1,0 +1,89 @@
+{
+  "utc": "2026-10-04T17:22:21.909713+00:00",
+  "root": "/root",
+  "decision": "SIX_KNOWN_REPAIRS_ACCEPTED_BOUNDED_SOURCE_NATIVE_EMITTED_XML_FRESH_PACK_INDEPENDENT_REVIEW",
+  "findings": [
+    "F-SB-API-096",
+    "F-SB-API-097",
+    "F-SB-API-098",
+    "F-SB-API-100",
+    "F-SB-API-101",
+    "F-SB-API-102"
+  ],
+  "independent_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package93-quartz-fixed321-independent-r1/REPORT.json",
+      "sha256": "9ac13e93dc9dda1feb5bbfcd80f3100975981cb332464642ad4f488d9d81d87c",
+      "finding_ids": [
+        "F-SB-API-096"
+      ],
+      "decision": "FIXED_QUARTZ_FULL321_AND_CLOCK_IDENTITY_RETRY_FRESH_PACKAGE_BINDING_NO_BLOCK_BOUNDED",
+      "native": {
+        "total": 321,
+        "passed": 321,
+        "failed": 0,
+        "skipped": 0,
+        "full_module_unfiltered": true,
+        "clock_boundary_cases": 3,
+        "strict": "0W/E"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package96-signalr-fixed125-independent-r1/REPORT.json",
+      "sha256": "0312cebed8674012cae2ba51571474eda2b94be6137842541bd938014ae969a2",
+      "finding_ids": [
+        "F-SB-API-097",
+        "F-SB-API-098"
+      ],
+      "decision": "FIXED_SIGNALR_FULL125_ORIGINAL_OWNER_RACE_REPAIRS_AND_REAL_SELECTED_GROUP_CLIENT_FRESH_PACKAGE_BINDING_NO_BLOCK_BOUNDED",
+      "native": {
+        "total": 125,
+        "passed": 125,
+        "failed": 0,
+        "skipped": 0,
+        "full_module_unfiltered": true,
+        "focused_repaired_and_new_controls": 3,
+        "strict": "0W/E"
+      }
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package95-eventhubs-xml19-native3-independent-r1/REPORT.json",
+      "sha256": "95dbc6e44a2bc4b7f61e5f977c9e6a3debd7173e980836961c6c2ebec30d76f4",
+      "finding_ids": [
+        "F-SB-API-100",
+        "F-SB-API-101",
+        "F-SB-API-102"
+      ],
+      "decision": "EH19_ACTUAL_COMPILED_XML_NATIVE_CACHE3_AND_FRESH_PACKAGE_BINDING_NO_BLOCK_BOUNDED",
+      "native": {
+        "total": 3,
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "strict": "0W/E",
+        "scope": "exact EventHubProducerCacheTests class only"
+      }
+    }
+  ],
+  "root_whole_report_reads": [
+    "857a8a Quartz321 and EventHubs XML19",
+    "fd1f75 SignalR125"
+  ],
+  "root_product_source_and_delta_reads": [
+    "6ae66e FSQ exact10 deltas",
+    "6c1ac2/34cdb5 currentSignalR manager whole",
+    "7c4d71 EH19 independent source",
+    "26f4c1 Definition owners separate future candidate"
+  ],
+  "before_metadata_sha256": {
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json": "4950557bc3c995543393ae497fef06d21bee1aa21c073353fd5aa1b4009566f3",
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/ADDITIONAL_FINDINGS.json": "0190b2a0682f1e760346ed8dc417b9f589f896568fb8fc27c0e959b861948bcd",
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/PO_BERICHT.txt": "a8f18ab6c1a4126839d438ab133ae109e68040cb673db14dd2a4cd26df27b7e4"
+  },
+  "limits": [
+    "Quartz full321 and SignalR full125 are actual local module runs; no distributed production cluster claim.",
+    "EventHubs docs19 are compiled exact XML-only corrections, native3 cache controls not AzureCloud execution.",
+    "Futures F095/F099 remain separate until extra controls qualified; typed companion finiteRED pending independent original qualification.",
+    "Global whole API and final integrated run pending."
+  ]
+}

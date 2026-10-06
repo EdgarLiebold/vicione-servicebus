@@ -1,0 +1,97 @@
+{
+  "utc": "2026-10-05T16:41:49.426905+00:00",
+  "status": "REVIEWED_REPAIRS_F186_TO_F190_ROOT_ACCEPTED_BOUNDED",
+  "findings": [
+    "F-SB-API-186",
+    "F-SB-API-187",
+    "F-SB-API-188",
+    "F-SB-API-189",
+    "F-SB-API-190"
+  ],
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE195_RABBITMQ_F186_TO_F190_XML12_ROOT_APPLICATION_R1.json",
+    "sha256": "c269de0298c363e49b84aeecc874a32620ba4b0ae0991adaf33090860ea6ba33"
+  },
+  "root_actual_package_counterproof": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package195-rabbit-doc12-fresh-root-counterproof-r1/REPORT.json",
+    "sha256": "8e63976ba49f620830207758fe831fde9d34d837205f51359756fc704762390a"
+  },
+  "independent_actual_source_publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package195-rabbit-doc12-independent-runtime-publication-peer-r1/REPORT.json",
+    "sha256": "4a8d72cf952f43f7cd236f80c69873fb3bee9ca9a589ea79a1542f6116309cf9"
+  },
+  "strict_and_pack_receipts": [
+    {
+      "phase": "package195-rabbitmq-doc12-strict-build-r1",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T16:13:22.296352+00:00",
+      "completed_utc": "2026-10-05T16:13:38.287137+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package195-rabbitmq-doc12-strict-build-r1.log",
+      "log_sha256": "1998030e4db21bd3cc8da7d9f91f9f54f4735a040b3d9c435dc6b0edc8ceef67"
+    },
+    {
+      "phase": "package195-rabbitmq-doc12-fresh-pack-r1",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/Transports/ViciOne.ServiceBus.RabbitMq/ViciOne.ServiceBus.RabbitMq.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-warnaserror",
+        "--output",
+        "artifacts/packages-package195-rabbitmq-doc12-r1"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T16:23:51.161521+00:00",
+      "completed_utc": "2026-10-05T16:23:53.886983+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package195-rabbitmq-doc12-fresh-pack-r1.log",
+      "log_sha256": "b3f1825c5f43c6fd5ddb47e55ba390d8fa2229b0d78111460219c2a46e86c7de"
+    }
+  ],
+  "actual_package": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/packages-package195-rabbitmq-doc12-r1/ViciOne.ServiceBus.RabbitMq.1.0.0.nupkg",
+    "sha256": "c7faadf31eb6fe9dcec9a0761505919b44e90e2ac8a7f35a43746af34adee236",
+    "bytes": 252580
+  },
+  "actual_DLL": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll",
+    "sha256": "8904366041363cbaef4aea8c634b98c7db0fe74feae60bfd15c40c365e863696",
+    "bytes": 415744
+  },
+  "actual_XML": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.xml",
+    "sha256": "6147a131c870f3f55a59e1d5db80e942bb5a7c3be641309e2310c4f87258ca6c",
+    "bytes": 426811
+  },
+  "actual_source_bindings": {
+    "documents": 199,
+    "physical": 198,
+    "embedded_generated": 1,
+    "changed_owners": 7
+  },
+  "root_reads": [
+    "68b7d9 actual approvedP36/ZIP/XML12inverse",
+    "698c73 whole independent publication report",
+    "93a42e whole peer manifest",
+    "1c5dc0/e83b08/67dadb whole proposed7 plusR2precise2delta"
+  ],
+  "changed_XML_elements": 12,
+  "emitted_members": 10,
+  "native_cases_added": 0,
+  "protected_header_provider_not_original_denominator": true,
+  "whole_API_closed": false,
+  "global_Aplus": false
+}

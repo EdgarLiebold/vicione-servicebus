@@ -1,0 +1,75 @@
+{
+  "utc": "2026-10-05T23:47:49.039424+00:00",
+  "status": "INDEPENDENTLY_SOURCE_REVIEWED_XML_ONLY_APPLIED_STRICT_PUBLICATION_PENDING",
+  "known_family": "F147 documentation validation/registration scope",
+  "changes": [
+    {
+      "relative": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxOptions.cs",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxOptions.cs",
+      "before_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package267-ef-options-doc1-xml-only-proposed-r1/before/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxOptions.cs",
+      "before_sha256": "0a26e06fe9f27b2666f96c71f0b74fa5e70c1c2ccee1a2b5145af0d9a7445491",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package267-ef-options-doc1-xml-only-proposed-r1/proposed/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxOptions.cs",
+      "proposed_sha256": "5092d2a77dabb407f9ad1e909737860b639ca49ff63e5bfd705a85976f8a49e8",
+      "before": "<summary>Contains validated transaction and locking settings for one EF Core outbox DbContext.</summary>",
+      "after": "<summary>Contains transaction and locking settings for one EF Core outbox DbContext.</summary>",
+      "node_count": 1,
+      "exact_original_ids": [
+        "T:ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxOptions`1"
+      ],
+      "original196_ordinal": 170,
+      "source_lines": 16,
+      "literal_inverse_nonXML_publicdecl_exact": true
+    },
+    {
+      "status": "PROPOSED_XML_ONLY_PRODUCT1_INDEPENDENT_REVIEW_REQUIRED",
+      "known_family": "F147 documentation purpose/registration scope",
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/IEntityFrameworkOutboxConfigurator.cs",
+      "relative": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/IEntityFrameworkOutboxConfigurator.cs",
+      "before_sha256": "c9e56a078d91751d2aafe7f06cb86f287be71f7155b6bc89deb0e32c5d470adf",
+      "proposed_sha256": "e15819b7de087c2951066f010b062e3dfff983f79a2e7531674fc5668b1143fd",
+      "before": "<summary>Disable the inbox cleanup service, removing the hosted service from the service collection.</summary>",
+      "after": "<summary>Prevents registration of the inbox cleanup service during outbox configuration.</summary>",
+      "original196_ordinal": 38,
+      "original_row": {
+        "original_index": 149,
+        "original_row": {
+          "symbol_id": "M:ViciOne.ServiceBus.EntityFrameworkCore.IEntityFrameworkOutboxConfigurator.DisableInboxCleanupService",
+          "assembly": "ViciOne.ServiceBus.EntityFrameworkCore",
+          "source_path": "./vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/IEntityFrameworkOutboxConfigurator.cs",
+          "source_line": "32",
+          "snapshot_diagnostics": "False",
+          "contract": "",
+          "implementation": "",
+          "tests": "",
+          "package_consumer": "",
+          "status": "PENDING",
+          "finding": ""
+        }
+      },
+      "source_root_whole": "Whole29 source journal cb945af2; own helper configurator173 whole17e026; whole interface41 recovered6446e7",
+      "body_or_public_decl_changes": 0,
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    }
+  ],
+  "independent": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package267-ef-options-doc1-independent-runtime-source-peer-r1/REPORT.json",
+      "sha256": "730f04db60dad862356dc10d31f92a12e7345593dbcca0084dac5acc89d24da4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package268-ef-cleanup-doc1-independent-runtime-source-peer-r1/REPORT.json",
+      "sha256": "04969dd7767fd430914798869d3086772b1528487bca13b402911eb5021d322c"
+    }
+  ],
+  "root_whole_before": "Source29/1690 and helper8/525 retained; options16/interface41 andConfigurator173 read, Sourcepeer whole reports15a5be/088d7c",
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package267-ef-doc2-root-before-r1",
+  "XML_nodes": 2,
+  "Product_sources": 2,
+  "body_or_public_decl_changes": 0,
+  "Test_Req_changes": false,
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

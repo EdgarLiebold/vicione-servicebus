@@ -1,0 +1,11 @@
+--- frozen-corrected
++++ wrong-reserved-prefix
+@@ -86,7 +86,7 @@
+         bool hasAllowedPrefix =
+             !bucketName.StartsWith("xn--", StringComparison.Ordinal) &&
+             !bucketName.StartsWith("sthree-", StringComparison.Ordinal) &&
+-            !bucketName.StartsWith("amzn-s3-demo-", StringComparison.Ordinal);
++            !bucketName.StartsWith("amzn_s3_demo_", StringComparison.Ordinal);
+         bool hasAllowedSuffix = ReservedSuffixes.All(
+             suffix => !bucketName.EndsWith(suffix, StringComparison.Ordinal));
+         bool isNotIpAddress = !IPAddress.TryParse(bucketName, out _);

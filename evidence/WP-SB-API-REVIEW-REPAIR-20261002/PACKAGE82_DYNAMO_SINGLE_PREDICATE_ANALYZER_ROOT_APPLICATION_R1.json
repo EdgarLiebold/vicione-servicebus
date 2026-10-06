@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-04T15:56:44.320828+00:00",
+  "decision": "TWO_PREDICATE_OVERLOAD_COMPILER_ANALYZER_FIX_ADVERSARIAL_NO_BLOCK_APPLIED",
+  "before": "f7fad8385b8dbae9855766a35787a0d694f5e2d2a133de6065c54951239fb619",
+  "after": "e01d708ea4e97ec4ea8bf00e4254759db5631d6e9828f735780c950aa86c522c",
+  "delta": "Two Assert.Single(causes.Where(predicate)) -> Assert.Single(causes,predicate) with exactsame ReferenceEqualsprimary/cleanup semantics",
+  "independent_review": "Scanneractualnewhelper1dccba, SOURCE_NO_BLOCK message beforeapplication",
+  "root_scope": "actualtwoassertions dbcf87/819c44 entire newhelper, same orderedExact2causes already verified",
+  "failed_strict_log_sha256": "e5a33d00c9f002208e39c5102437162c00cb071f0e5fb23f177c1816c91a9240",
+  "requirements_unchanged": true
+}

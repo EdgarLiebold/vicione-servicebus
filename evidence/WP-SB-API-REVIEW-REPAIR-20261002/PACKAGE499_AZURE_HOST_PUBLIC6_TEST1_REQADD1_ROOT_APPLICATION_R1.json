@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-06T15:28:35.661883+00:00",
+  "status": "ROOT_APPLIED_DIFFERENT_WHOLE_AZUREHOST_TEST329_LITERAL_ADD1_CURRENT222_PUBLIC6_NATIVE_PENDING",
+  "author_REPORT": "bc304615024151d9d533b53723e7945a9df4a41bdeb45310b26033acafa9b003",
+  "different_REPORT": "617c1ff2d0f85e76fa4c0dc48c132b69bae964026b1e7ee404c3b674017acc80",
+  "mandatory_peer_errata": {
+    "firstNull77": "cd46e754df6ac4a815c01c164ea035c8c89dd3d5ac91232dbbf3171c9cb48a15",
+    "BusHealth65": "ff138ef8906a1da14c2cea72f757175c2ba7f6abbc2f7ee67f34ffe32771bb6f"
+  },
+  "Root_whole_Test329": "81eee2",
+  "Root_whole_peer": "efb7b5",
+  "Root_whole_errata_addition": "252d21",
+  "before_MAN": "613d2d989fff9a8c9778dd1320f819428fa176271b01721ffc0bd8223115aa38",
+  "test": {
+    "relative": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/HostOwningEndpointDiagnosticsTests.cs",
+    "sha256": "5c90282e9f82a275cf4ae5c859e86c66df3db4294d1cf68870595bb76ba5a551",
+    "lines": 329
+  },
+  "Req_latest_merge": {
+    "before221": "59ef086ae159cfbb524dcf3a877b500a10f3930a206177d92910f47409b8bf66",
+    "after222": "03e517eacb370444e4360ec552f784935d9e7d8f4eb5ca38292b32e982f9092a",
+    "addition": {
+      "requirementId": "REQ-VSB-ASB-ENDPOINT-ADOPTION",
+      "variantKey": "optional-owning-connect-debug-preserves-public-build-start-ready-stop",
+      "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.HostOwningEndpointDiagnosticsTests",
+      "testMethod": "ConnectEndpoint_OptionalOwningDebugDoesNotPreventActualEndpointAdoptionAsync"
+    },
+    "literal_insert": ",\n  {\n    \"requirementId\": \"REQ-VSB-ASB-ENDPOINT-ADOPTION\",\n    \"variantKey\": \"optional-owning-connect-debug-preserves-public-build-start-ready-stop\",\n    \"testAssembly\": \"ViciOne.ServiceBus.AzureServiceBus.Tests\",\n    \"testType\": \"ViciOne.ServiceBus.AzureServiceBus.Tests.HostOwningEndpointDiagnosticsTests\",\n    \"testMethod\": \"ConnectEndpoint_OptionalOwningDebugDoesNotPreventActualEndpointAdoptionAsync\"\n  }",
+    "literal_offset": 83221,
+    "full_current221_inverse_exact": true,
+    "entire_old221_rows_exact": true
+  },
+  "Product_changed": false,
+  "native_credit": 0,
+  "grade": null
+}

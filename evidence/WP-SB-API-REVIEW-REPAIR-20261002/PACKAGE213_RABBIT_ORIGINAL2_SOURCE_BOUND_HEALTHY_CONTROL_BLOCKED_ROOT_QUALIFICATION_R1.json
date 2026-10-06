@@ -1,0 +1,100 @@
+{
+  "utc": "2026-10-05T19:23:42.011582+00:00",
+  "status": "ORIGINAL2_0P_2F_HEALTHY_CONTROL_BLOCKED_NO_FINDING_REGISTRATION",
+  "actual_counts": {
+    "total": 2,
+    "passed": 0,
+    "failed": 2,
+    "skipped": 0
+  },
+  "native_receipt": {
+    "phase": "package213-rabbit-connection-wiring-original2-native-r1",
+    "command": [
+      "dotnet",
+      "test",
+      "--project",
+      "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+      "--configuration",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "--filter-class",
+      "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.Configuration.RabbitMqConfiguredConnectionWiringTests",
+      "--results-directory",
+      "artifacts/results-package213-rabbit-connection-wiring-original2-r1",
+      "--output",
+      "Detailed"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 2,
+    "started_utc": "2026-10-05T19:12:51.075655+00:00",
+    "completed_utc": "2026-10-05T19:13:03.467401+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package213-rabbit-connection-wiring-original2-native-r1.log",
+    "log_sha256": "23cc3641862e5016ed734e7fd614e19b6e72a768a26922fc921a0d28d881a918"
+  },
+  "capture": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package213-rabbit-connection-wiring-original2-source-bound-capture-r1",
+    "AFTER_sha256": "2f2de5597db35b1884e99021d52d13ce168693d0e1957e7829c3e1b84d623fac"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package213-rabbit-wiring-original-result-independent-scanner-r2",
+    "REPORT_sha256": "c3a5fd7c7b568096b3a5b4906d1d0663e409519765ebe7096ec8844eaa9ca2ab",
+    "MANIFEST_sha256": "f83021a660f27ac4ee3df4cd893256ddedf083199ce0622f5592d773ff0803b5",
+    "all_manifest_bytes_verified": true
+  },
+  "case_boundaries": [
+    {
+      "case": "configureConnection: False",
+      "outcome": "FAIL",
+      "first_actual_failure": {
+        "line": 93,
+        "type": "TaskCanceledException",
+        "assertion": "await endpointHandle.Ready.WaitAsync(testBound.Token)",
+        "watchdog": "10-second test budget; not finite product defect oracle"
+      },
+      "reached_before_first_failure": [
+        "Public Build captured exact ReceiveEndpoint; registration/callback/filter/create baseline assertions",
+        "Actual channel creation signal; CreateCalls1; actual nonnull agent; token cancellable and not canceled",
+        "CreationTask pending and Ready pending; create release issued"
+      ],
+      "unreached": [
+        "Ready:false/address/endpoint identity",
+        "shutdown event subscription assertions",
+        "held Dispose and endpointStop assertions",
+        "handler removal and borrowed-parent disposal-count assertions"
+      ],
+      "source_only_fixture_precision": "Child default ConsumePipeSpecification.AutoStart=true is not overridden. Unconnected startup availability path requires ReceivePipe.Connected pending. The normal channel pipeline requires topology/payload/QoS/consumer operations that the strict proxy does not implement. Actual inner transport fault was not exposed by this log; do not claim its exact identity.",
+      "eligible_health_control": false
+    },
+    {
+      "case": "configureConnection: True",
+      "outcome": "FAIL",
+      "first_actual_failure": {
+        "line": 78,
+        "type": "Assert.Equal",
+        "expected": 1,
+        "actual": 0,
+        "assertion": "filter.Calls"
+      },
+      "reached_before_first_failure": [
+        "Public configuration callback1 and Build/registration exact assertions",
+        "Pre-start filter0/Create0",
+        "Actual Task.WhenAny(filter.Entered,connection.CreateEntered) returned before finite filter count assertion"
+      ],
+      "unreached": [
+        "CreateCalls0 while filter held",
+        "Ready pending while filter held",
+        "filter release and channel creation assertions",
+        "all readiness and lifecycle/disposal outcome assertions"
+      ],
+      "finite_source_boundary": "Configured connection filter was not called before public endpoint channel-creation admission. With Calls0 the WhenAny cannot have ended through filter.Entered; creation signal is the source-defined other branch. This is a limited source-bound inference, not a native count assertion for all later operations.",
+      "healthy_lifecycle_control_pending": true
+    }
+  ],
+  "root_personal_read": "Current entire original427 test re-read in8dd0da/3c909d; complete ConsumePipeSpecification and current finite ReceiveTransport startup boundary personally read. Independent whole report read. Provenance verifies source identities; not a whole3035-document semantic review.",
+  "next_step": "Q-only minimal public AutoStart=false fixture correction, independent whole-source peer, Root test-only apply and new strict/native capture. Product pipeline finding remains unregistered.",
+  "product_code_changed": false,
+  "finding_registered": false,
+  "healthy_lifecycle_proven": false,
+  "unreached_assertions_not_credited": true
+}

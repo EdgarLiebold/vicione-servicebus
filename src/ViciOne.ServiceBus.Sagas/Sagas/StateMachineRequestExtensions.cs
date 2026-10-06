@@ -588,14 +588,14 @@ public static class StateMachineRequestExtensions
         return binder.Add(activity);
     }
 
-    /// <summary>Cancels the request timeout, and clears the request data from the state instance.</summary>
+    /// <summary>Adds an activity that cancels an active configured timeout and clears the stored request ID when completed or <c>ClearRequestIdOnFaulted</c> is enabled.</summary>
     /// <typeparam name="TInstance">The instance type.</typeparam>
     /// <typeparam name="TData">The data type.</typeparam>
     /// <typeparam name="TRequest">The request type.</typeparam>
     /// <typeparam name="TResponse">The response type.</typeparam>
     /// <param name="binder">The binder.</param>
     /// <param name="request">The request.</param>
-    /// <param name="completed">The completed.</param>
+    /// <param name="completed">Whether to clear the request ID on completion; when <see langword="false" />, clearing depends on <c>ClearRequestIdOnFaulted</c>.</param>
     /// <returns>The event activity binder produced by the operation.</returns>
     public static IEventActivityBinder<TInstance, TData> CancelRequestTimeout<TInstance, TData, TRequest, TResponse>(
         this IEventActivityBinder<TInstance, TData> binder, IRequest<TInstance, TRequest, TResponse> request, bool completed = true)

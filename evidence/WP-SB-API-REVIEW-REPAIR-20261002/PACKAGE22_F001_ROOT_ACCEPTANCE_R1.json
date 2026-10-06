@@ -1,0 +1,41 @@
+{
+  "finding": "F-SB-API-001",
+  "status": "FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+  "created_utc": "2026-10-03T19:25:43.781000+00:00",
+  "scope": "Documented completion boundaries across 38 API source files / 475 emitted XML members; 44 public runtime journeys plus four genuine Classic EF SQLite journeys. JobService source/docs/public member semantics included; native job saga provider execution not newly claimed.",
+  "source_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE22_F001_SOURCE_FREEZE_R6.json",
+    "sha256": "1897c9d0f54e6ae785bf415696834c0c67f57a167a37d4ec6b1791c98c6a8f11"
+  },
+  "root_actual_XML_reconstruction": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE22_F001_ROOT_STRUCTURAL_RECONSTRUCTION_R1.json",
+    "sha256": "a12210c255befaacf6fd5878296ce7ffd49ffb960e11793f581955867e4f2c6e"
+  },
+  "independent_actual_XML_semantics": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f001-independent-source-emitted-qualification/FINAL_R6_SOURCE_ACTUAL_XML_SEMANTIC_QUALIFICATION.json",
+    "sha256": "473fb4025605952dd26c10ab1b65964b5e049cc7c7e8fa0942889bebb991d739"
+  },
+  "sqlite4_independent_actual_native": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package22-f001-sqlite-native-qualification-r5/FINAL_MANIFEST.json",
+    "sha256": "56fbb40975c203679220770727105751824f1d0b1d58927ed42c17756c8c8a2c"
+  },
+  "compiled_preservation_mutants": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE22_F001_PRESERVATION_MUTATIONS_R1.json",
+    "sha256": "91a937535755e2698df4c2ce14bf249a9e745af406712fed27a8d3d80788efcb"
+  },
+  "compiled_independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f001-preservation-mutation-preflight/FINAL_ACTUAL_COMPILED_PRESERVATION_QUALIFICATION.json",
+    "sha256": "8ac80ebf519acad0559af57a7baab256b78ab72eb36168ffc7000d7777e75b37"
+  },
+  "unique_native_positive_cases": 48,
+  "compiled_single_effect_mutants_killed": 3,
+  "positive_mutant_controls": 3,
+  "baseline_and_rollback48_pass": true,
+  "root_own_read_provenance": "Original/current 38 source files personally FULL before XML edits; prior 592 DOM and new 83 DOM/66 ordered mappings personally FULL; actual 475 member semantic DOM independently reconstructed against eight real package XMLs. Root personally read all three finite actual failure blocks and full independent qualification.",
+  "proof_limits": [
+    "No original false XML promises classified as native mutation kills",
+    "No whole API A+ or release acceptance",
+    "Final current all-package/API/full-suite integration remains required"
+  ],
+  "all_original_mutation_source_and_distinct_runtime_owners_restored": true
+}

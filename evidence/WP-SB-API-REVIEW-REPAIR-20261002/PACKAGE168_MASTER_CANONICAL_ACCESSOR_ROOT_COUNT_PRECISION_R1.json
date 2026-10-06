@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-05T06:10:46.927732+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED_ACCOUNTING_PRECISION_ONLY",
+  "peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package168-master7430-canonical-accessor-count-independent-scanner-r1/REPORT.json",
+    "sha256": "5041e2ac9ea9b0bbf4e69b1e67de44162540c915d07e487e540a99bbe16e4f65"
+  },
+  "counts": {
+    "original_canonical_denominator": 18569,
+    "historical_current_r2_basic_denominator": 18598,
+    "original_canonical_accepted": 6922,
+    "historical_current_r2_new_canonical_accepted": 29,
+    "current_canonical_accepted": 6951,
+    "accessor_sidecar_accepted": 479,
+    "master_unique_rows": 7430,
+    "master_declared_accepted_count_field": 7430,
+    "master_declared_denominator_field": 18598,
+    "original_canonical_remaining": 11647,
+    "historical_current_r2_canonical_remaining": 11647,
+    "sidecar_get": 375,
+    "sidecar_set": 104,
+    "sidecar_original_parent_unique": 387,
+    "sidecar_unmapped": 0,
+    "original_duplicate_keys": 0,
+    "master_duplicate_keys": 0
+  },
+  "root_checks": "Whole actualreport855825; originalCSV/master independently joined; all479sidecars match alreadyaccepted canonicalparents;33actualhistoricalbasicinventoryhashes/keyunions independently checked. No semantic/native promotion.",
+  "limits": [
+    "Arithmetic and identity audit only. Existing semantic dispositions and their Native0/runtime bounds remain unchanged; no allAPI/wholeSource/GradeA+/CLOSED transfer.",
+    "R2basicinventory historical18598 denominator (Rootfresh sourceextendedmetadata pending separately). OriginalfrozenAPI18569 unaffected. No futureapi-added methods/publicoverridealias inflation used.",
+    "Root sole POmetrics/admin correction. Do not rewrite historicalacceptedcounts as though old7430 denotedcanonical6951."
+  ]
+}

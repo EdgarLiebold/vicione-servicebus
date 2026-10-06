@@ -1,0 +1,423 @@
+{
+  "status": "EXECUTED_ALL_8_KILLED_CORRECTED_ROLLBACK_GREEN",
+  "source_sha256": "1aec605efe1c9501a24169f415142ee101b05b4c967e032ea7896ba31b2ccf46",
+  "test_sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+  "checks": [
+    {
+      "phase": "package03-lease-isolated-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "--locked-mode",
+        "--disable-parallel"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:49:30.763073+00:00",
+      "completed_utc": "2026-10-02T22:49:34.000265+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-isolated-restore.log",
+      "log_sha256": "d7558ed960c2b2ad78b436a3d1c3781262f5976ca9646ebb7b91265bead3fb6c"
+    },
+    {
+      "phase": "package03-lease-isolated-original",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+        "--minimum-expected-tests",
+        "18",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 2,
+      "started_utc": "2026-10-02T22:49:34.097085+00:00",
+      "completed_utc": "2026-10-02T22:49:47.800551+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-isolated-original.log",
+      "log_sha256": "d4495ab672294a81ce4bd26194cd45f4af2d48f88b6af7d19fb4668a2679a733"
+    },
+    {
+      "phase": "package03-lease-isolated-corrected",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+        "--minimum-expected-tests",
+        "18",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:49:47.893507+00:00",
+      "completed_utc": "2026-10-02T22:49:56.857408+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-isolated-corrected.log",
+      "log_sha256": "d61f8c26c507fc3d40f1dba95f2129583c11c1cdd7f9649327aed0f9e66e16f3"
+    },
+    {
+      "phase": "package03-lease-isolated-rollback",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+        "--minimum-expected-tests",
+        "18",
+        "--max-parallel-test-modules",
+        "1"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:50:43.818108+00:00",
+      "completed_utc": "2026-10-02T22:50:47.565909+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-isolated-rollback.log",
+      "log_sha256": "a212b4aeba911083fa8c16979df778fd20a89d8ce6a5d883fc6ef73e8dd3698c"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "queue-early-linked-disposal",
+      "status": "KILLED_BY_CONTRACT_ASSERTION",
+      "failures": 2,
+      "source_sha256": "b50b3932959b1829e091811efbaf863e62b9a422b081a0c2d1d2b4a6be60fe7a",
+      "test_sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+      "replacements": [
+        {
+          "before": "public async Task<QueueProperties> CreateQueueAsync",
+          "after": "public Task<QueueProperties> CreateQueueAsync",
+          "count": 1
+        },
+        {
+          "before": "return await _context.CreateQueueAsync(createQueueOptions, tokenSource.Token).ConfigureAwait(false);",
+          "after": "return _context.CreateQueueAsync(createQueueOptions, tokenSource.Token);",
+          "count": 1
+        }
+      ],
+      "native_receipt": {
+        "phase": "package03-lease-mutant-queue-early-linked-disposal",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-class",
+          "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+          "--minimum-expected-tests",
+          "18",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T22:49:56.950766+00:00",
+        "completed_utc": "2026-10-02T22:50:04.965880+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-mutant-queue-early-linked-disposal.log",
+        "log_sha256": "1e1fb238335fd2207c39ffe26e3460fa36b393944ecd00f0198b6838757542f8"
+      }
+    },
+    {
+      "name": "topic-early-linked-disposal",
+      "status": "KILLED_BY_CONTRACT_ASSERTION",
+      "failures": 2,
+      "source_sha256": "faa98058d32b29a2147be12e33568d2a3c2f6c2414972b05f074efceaf92ecb5",
+      "test_sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+      "replacements": [
+        {
+          "before": "public async Task<TopicProperties> CreateTopicAsync",
+          "after": "public Task<TopicProperties> CreateTopicAsync",
+          "count": 1
+        },
+        {
+          "before": "return await _context.CreateTopicAsync(createTopicOptions, tokenSource.Token).ConfigureAwait(false);",
+          "after": "return _context.CreateTopicAsync(createTopicOptions, tokenSource.Token);",
+          "count": 1
+        }
+      ],
+      "native_receipt": {
+        "phase": "package03-lease-mutant-topic-early-linked-disposal",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-class",
+          "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+          "--minimum-expected-tests",
+          "18",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T22:50:05.084647+00:00",
+        "completed_utc": "2026-10-02T22:50:10.983729+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-mutant-topic-early-linked-disposal.log",
+        "log_sha256": "f25624ae26a5fbfcf4fd2f1f0901f69b8a37b7ba8c9a2e7f21052a314a0d027b"
+      }
+    },
+    {
+      "name": "create-subscription-early-linked-disposal",
+      "status": "KILLED_BY_CONTRACT_ASSERTION",
+      "failures": 2,
+      "source_sha256": "dd5b310796021e297da271e878906894573b920dfd86ec872641d226a8f85cb8",
+      "test_sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+      "replacements": [
+        {
+          "before": "public async Task<SubscriptionProperties> CreateTopicSubscriptionAsync",
+          "after": "public Task<SubscriptionProperties> CreateTopicSubscriptionAsync",
+          "count": 1
+        },
+        {
+          "before": "return await _context.CreateTopicSubscriptionAsync(createSubscriptionOptions, rule, filter, tokenSource.Token).ConfigureAwait(false);",
+          "after": "return _context.CreateTopicSubscriptionAsync(createSubscriptionOptions, rule, filter, tokenSource.Token);",
+          "count": 1
+        }
+      ],
+      "native_receipt": {
+        "phase": "package03-lease-mutant-create-subscription-early-linked-disposal",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-class",
+          "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+          "--minimum-expected-tests",
+          "18",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T22:50:11.088663+00:00",
+        "completed_utc": "2026-10-02T22:50:16.518588+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-mutant-create-subscription-early-linked-disposal.log",
+        "log_sha256": "f4e9a4f3e784de95a993d8b7d4e037899d723618a8878c3e884333fb3221632f"
+      }
+    },
+    {
+      "name": "delete-subscription-early-linked-disposal",
+      "status": "KILLED_BY_CONTRACT_ASSERTION",
+      "failures": 2,
+      "source_sha256": "1f20572d7359e735170931928e5f460dcfd10684932381bb770bf35b6836a649",
+      "test_sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+      "replacements": [
+        {
+          "before": "public async Task DeleteTopicSubscriptionAsync",
+          "after": "public Task DeleteTopicSubscriptionAsync",
+          "count": 1
+        },
+        {
+          "before": "await _context.DeleteTopicSubscriptionAsync(subscriptionOptions, tokenSource.Token).ConfigureAwait(false);",
+          "after": "return _context.DeleteTopicSubscriptionAsync(subscriptionOptions, tokenSource.Token);",
+          "count": 1
+        }
+      ],
+      "native_receipt": {
+        "phase": "package03-lease-mutant-delete-subscription-early-linked-disposal",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-class",
+          "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+          "--minimum-expected-tests",
+          "18",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T22:50:16.637978+00:00",
+        "completed_utc": "2026-10-02T22:50:23.640431+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-mutant-delete-subscription-early-linked-disposal.log",
+        "log_sha256": "18c58d5e314e9823ab58d79256008f31cd60ac74a52f97a86f4479b54516f552"
+      }
+    },
+    {
+      "name": "caller-link-lost",
+      "status": "KILLED_BY_CONTRACT_ASSERTION",
+      "failures": 4,
+      "source_sha256": "d3b640c7545516534611a4d5a225bbd3df94061415be593752634829aafd3646",
+      "test_sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+      "replacements": [
+        {
+          "before": "CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken)",
+          "after": "CancellationTokenSource.CreateLinkedTokenSource(CancellationToken)",
+          "count": 4
+        }
+      ],
+      "native_receipt": {
+        "phase": "package03-lease-mutant-caller-link-lost",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-class",
+          "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+          "--minimum-expected-tests",
+          "18",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T22:50:23.742923+00:00",
+        "completed_utc": "2026-10-02T22:50:28.910334+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-mutant-caller-link-lost.log",
+        "log_sha256": "775b73985f5970628d4756ab52e7153a3d616a4aadf3a8b7ae9a909b9c0a950d"
+      }
+    },
+    {
+      "name": "lease-link-lost",
+      "status": "KILLED_BY_CONTRACT_ASSERTION",
+      "failures": 4,
+      "source_sha256": "7cd9bce703f1c6133d64313f03310eafbef2dc9b4e1b457dca7a783fedc05010",
+      "test_sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+      "replacements": [
+        {
+          "before": "CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken)",
+          "after": "CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)",
+          "count": 4
+        }
+      ],
+      "native_receipt": {
+        "phase": "package03-lease-mutant-lease-link-lost",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-class",
+          "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+          "--minimum-expected-tests",
+          "18",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T22:50:29.021452+00:00",
+        "completed_utc": "2026-10-02T22:50:33.973982+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-mutant-lease-link-lost.log",
+        "log_sha256": "6110717a54349878e8b6e6116733e4a8d8cb3ce29bb17e647c7e9761c4e795ea"
+      }
+    },
+    {
+      "name": "completed-links-leaked",
+      "status": "KILLED_BY_CONTRACT_ASSERTION",
+      "failures": 8,
+      "source_sha256": "5ed571617bfc15e16736501c05e4658b3dee8fb895f96c944809fd973c1362e9",
+      "test_sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+      "replacements": [
+        {
+          "before": "using var tokenSource =",
+          "after": "var tokenSource =",
+          "count": 4
+        }
+      ],
+      "native_receipt": {
+        "phase": "package03-lease-mutant-completed-links-leaked",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-class",
+          "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+          "--minimum-expected-tests",
+          "18",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T22:50:34.075195+00:00",
+        "completed_utc": "2026-10-02T22:50:38.801635+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-mutant-completed-links-leaked.log",
+        "log_sha256": "84694bab60e92ac840818b1f0e03b8e4dbf60a65ac8f85ee191825e5d6b15cd1"
+      }
+    },
+    {
+      "name": "queue-success-result-lost",
+      "status": "KILLED_BY_CONTRACT_ASSERTION",
+      "failures": 1,
+      "source_sha256": "0e444de37d0db74c6897a62101e2d63783583c7d930f7276ae8ee4dc9cdeeb3d",
+      "test_sha256": "d62440ecf5b7dc60c02388ed013a73baaffbbe0eb527454226248b5f8429a7a3",
+      "replacements": [
+        {
+          "before": "return await _context.CreateQueueAsync(createQueueOptions, tokenSource.Token).ConfigureAwait(false);",
+          "after": "await _context.CreateQueueAsync(createQueueOptions, tokenSource.Token).ConfigureAwait(false);\n        return null!;",
+          "count": 1
+        }
+      ],
+      "native_receipt": {
+        "phase": "package03-lease-mutant-queue-success-result-lost",
+        "command": [
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-class",
+          "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSharedAdministrationLeaseTests",
+          "--minimum-expected-tests",
+          "18",
+          "--max-parallel-test-modules",
+          "1"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T22:50:38.908116+00:00",
+        "completed_utc": "2026-10-02T22:50:43.720301+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-lease-mutant-queue-success-result-lost.log",
+        "log_sha256": "c372e911907cac9813f13beb48fd34b87a4c7243b2984b4b28bc29110da3c67c"
+      }
+    }
+  ],
+  "original_source_restored": true,
+  "new_test_removed": true
+}

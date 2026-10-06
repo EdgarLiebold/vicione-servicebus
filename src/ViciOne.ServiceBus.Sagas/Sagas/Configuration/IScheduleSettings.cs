@@ -13,5 +13,5 @@ public interface IScheduleSettings<TInstance, TMessage>
     ScheduleDelayProvider<TInstance> DelayProvider { get; }
 
     /// <summary>Gets the callback that configures correlation for the scheduled-message receive event.</summary>
-    Action<IEventCorrelationConfigurator<TInstance, TMessage>> Received { get; }
+    Action<IEventCorrelationConfigurator<TInstance, TMessage>>? Received { get; }
 }

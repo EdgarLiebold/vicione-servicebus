@@ -1,0 +1,9 @@
+{
+  "acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE307_ABSTRACTIONS_CLASS12_LOCAL_CONSTRUCTOR_SOURCE_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "f53fd611a7ef4763fbf526a42bee593bb673a768ac1409152be959491b1d789a"
+  },
+  "master_after_sha256": "b9cbc2c1e12f20f333485e824c4b3671413a2af6b05138c76dfb7ab454e24619",
+  "count": 18949,
+  "Original_remaining": 482
+}

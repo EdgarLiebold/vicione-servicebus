@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-04T18:07:11.127867+00:00",
+  "status": "ROOT_INDEPENDENT_ADVERSARIAL_SOURCE_NO_BLOCK_STRICT_NATIVE_PENDING",
+  "independent_reviewer": "Root, independent of runtime_spi_adversarial_r2 author",
+  "root_whole_delta": "31a0a8 complete both exact deltas; prior e699ab whole sameFuture owner; f05d03 whole actual RequestFaultException/ExceptionInfo contracts;942ea9 unchanged assertion context",
+  "changes": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureSameTypeBusOwnershipTests.cs",
+      "before_sha256": "27639ebecce760c49860e1f48d82eeec0f343ca3bb653436d4c3b501f9f28a6c",
+      "proposed_sha256": "251b33279b340cf92f34419ce5ba7efae278e44e7316a82acd36264b3b6cf85e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureRegistrationBoundaryTests.cs",
+      "before_sha256": "4e57bece1c259d3a669ea0203a2bad931b5fe861683460d1fa3582f556d0a785",
+      "proposed_sha256": "009745b982e7e431dbdf1b3dc672d8aeac04dca362d10180b5c3739d167ec54f"
+    }
+  ],
+  "original_preserved": "Frozen original126 epoch112files independent ACKd6da63e; actual124P2Fail0Skip retained",
+  "semantics": "Old descriptor shape replaced by actual activation exact type+public alias sameidentity+nonnull endpoint. Healthy SameFuture owner/reply assertions unchanged, exception-only output exposes bounded actual public exception chain with original cause as InnerException.",
+  "new_requirement_rows": 0,
+  "product_changes": 0
+}

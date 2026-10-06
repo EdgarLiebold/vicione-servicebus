@@ -1,0 +1,488 @@
+READ {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json", "start_line": 121, "end_line": 240, "kind": "proof"}
+          },
+          {
+            "case": "host-ConsumerStopTimeout-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-maxvalue",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-zero",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-infinite",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-relation-greater",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-relation-equal",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-relation-unset-stop",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-runtime-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-runtime-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-runtime-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "cts-custom-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "cts-custom-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "cts-custom-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-default-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-default-maxvalue",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-system-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-system-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-system-ordinary",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-custom-long-size",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-custom-long-expire",
+            "assertions_passed": true
+          }
+        ],
+        "count": 42,
+        "failures": 0,
+        "runtime": {
+          "framework": ".NET 10.0.10",
+          "processArchitecture": "X64",
+          "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+          "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+          "loadedProductAssemblies": [
+            {
+              "name": "ViciOne.ServiceBus",
+              "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+              "sha256": "7a5b00b5ecfa130ddf7143831d2a7c10004a4b1e7d9a987788260387c3fc6480"
+            },
+            {
+              "name": "ViciOne.ServiceBus.Abstractions",
+              "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+              "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "receipt": {
+        "phase": "package05-mut-r3-corrected-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/CorePackage05.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T01:29:07.509609+00:00",
+        "completed_utc": "2026-10-03T01:29:08.622084+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-corrected-all.log",
+        "log_sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1"
+
+READ {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json", "start_line": 241, "end_line": 360, "kind": "proof"}
+      },
+      "actual": {
+        "cases": [
+          {
+            "case": "results-membership-plain",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-null-plain",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-membership-inner",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-null-inner",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-empty",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-maxvalue",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-zero",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-infinite",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-maxvalue",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-zero",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-infinite",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-maxvalue",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-zero",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-infinite",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-relation-greater",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-relation-equal",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-relation-unset-stop",
+            "assertions_passed": true
+          },
+          {
+
+READ {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json", "start_line": 361, "end_line": 480, "kind": "proof"}
+            "case": "host-runtime-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-runtime-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-runtime-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "cts-custom-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "cts-custom-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "cts-custom-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-default-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-default-maxvalue",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-system-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-system-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-system-ordinary",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-custom-long-size",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-custom-long-expire",
+            "assertions_passed": true
+          }
+        ],
+        "count": 42,
+        "failures": 0,
+        "runtime": {
+          "framework": ".NET 10.0.10",
+          "processArchitecture": "X64",
+          "coreLibPath": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/System.Private.CoreLib.dll",
+          "coreLibSha256": "76388b41a8ac6608798b85eb875838899842a9f144c58257aab2c216f2f2651a",
+          "loadedProductAssemblies": [
+            {
+              "name": "ViciOne.ServiceBus",
+              "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+              "sha256": "7a5b00b5ecfa130ddf7143831d2a7c10004a4b1e7d9a987788260387c3fc6480"
+            },
+            {
+              "name": "ViciOne.ServiceBus.Abstractions",
+              "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+              "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "receipt": {
+        "phase": "package05-mut-r4-corrected-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/CorePackage05.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T01:31:46.483057+00:00",
+        "completed_utc": "2026-10-03T01:31:47.486598+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-corrected-all.log",
+        "log_sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1"
+      },
+      "actual": {
+        "cases": [
+          {
+            "case": "results-membership-plain",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-null-plain",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-membership-inner",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-null-inner",
+            "assertions_passed": true
+          },
+          {
+            "case": "results-empty",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-maximum",
+            "assertions_passed": true
+
+READ {"path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json", "start_line": 481, "end_line": 600, "kind": "proof"}
+          },
+          {
+            "case": "host-StartTimeout-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-maxvalue",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-zero",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StartTimeout-infinite",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-maxvalue",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-zero",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-StopTimeout-infinite",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-maxvalue",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-zero",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-ConsumerStopTimeout-infinite",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-relation-greater",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-relation-equal",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-relation-unset-stop",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-runtime-null",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-runtime-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "host-runtime-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "cts-custom-maximum",
+            "assertions_passed": true
+          },
+          {
+            "case": "cts-custom-fraction",
+            "assertions_passed": true
+          },
+          {
+            "case": "cts-custom-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-default-too-large",
+            "assertions_passed": true
+          },
+          {
+            "case": "batch-default-maxvalue",
+            "assertions_passed": true
+

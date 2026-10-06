@@ -1,0 +1,20 @@
+{
+  "utc": "2026-10-06T01:28:38.170653+00:00",
+  "status": "CONFIRMED_RABBIT_SUCCESSFUL_PURGE_DEBUG_CONTINUATION_FAILURE_REPAIR_PENDING",
+  "id": "F-SB-API-210",
+  "severity": "Medium",
+  "source_owner": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Middleware/PurgeOnStartupFilter.cs",
+  "title": "RabbitMQ successful startup purge optional Debug prevents channel pipeline continuation",
+  "actual_original2": {
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0,
+    "boundary": "Null69 uniqueDiagnostic ApplicationException afterrawSDK17success+tuple/Throw1/Same68. HostileSkip laterunreached."
+  },
+  "family_reconciliation": "One owningstartupPurge diagnostic family. F077once-state correct beforeDebug preserved; separateF205SQS owner. EmpiricalOriginal Purgedsite only, matchingSkip containment source-reviewed and targetedfixed coverage pending.",
+  "independent_original": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package294-rabbit-purge-original2-independent-runtime-qualification-r1/REPORT.json",
+    "sha256": "c12b88381c15bc3ecf533d1305894eaf44549e5ec99c86551b18418ac34a7423"
+  },
+  "whole_API_closed": false
+}

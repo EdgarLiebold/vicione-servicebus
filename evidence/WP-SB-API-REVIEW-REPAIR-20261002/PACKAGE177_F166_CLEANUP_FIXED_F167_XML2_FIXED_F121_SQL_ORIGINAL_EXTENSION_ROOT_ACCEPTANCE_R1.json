@@ -1,0 +1,68 @@
+{
+  "utc": "2026-10-05T10:37:54.445220+00:00",
+  "actor": "/root",
+  "status": "F166_REPAIRED_F167_XML2_REPAIRED_F121_SQL_SAME_FAMILY_EXTENSION_ORIGINAL_REGISTERED",
+  "before": {
+    "known_unique": 167,
+    "accepted": 165
+  },
+  "after": {
+    "known_unique": 167,
+    "accepted": 166
+  },
+  "accepted_ids": [
+    "F-SB-API-166",
+    "F-SB-API-167"
+  ],
+  "reopened_existing_id": "F-SB-API-121",
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package177-rabbit-cleanup-fixed-sql-topology-xml2-name-original4-fresh4-independent-r1/REPORT.json",
+    "sha256": "adf2fe73069cd5649abeb6e96bd80d85ed47cbec63897ac1c44c6eb9f4cecc97",
+    "manifest_sha256": "a7b675e5dd8b6621802f7f479d916693add5d09e6bf3d0db99d77fecd3dc9be9",
+    "freeze_sha256": "f50941727026a2d3a925b54f897770066bbd37a0dbf733390a2a2d56865e6540"
+  },
+  "root_independent_verification": "3bf5bd all3161MAN/3145frozen+currentorigins/3010CS/9actuallogs/293disjointcases/16runtimecopies/4CRCZIP. Root whole originalSQLfailurecontext and XML2 actual nodes read; Root source141 guard2 and actual originalTest178/staticpeers reviewed. No inherited human whole3010source or293assertionbody credit.",
+  "actual_native": {
+    "total": 293,
+    "passed": 292,
+    "failed": 1,
+    "skipped": 0
+  },
+  "native_runs": [
+    {
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "total": 267,
+      "passed": 266,
+      "failed": 1,
+      "skipped": 0
+    }
+  ],
+  "strict_builds": 2,
+  "fresh_packages": 4,
+  "repair_scope": {
+    "F166": "Exact two owning optional Error diagnostics now guarded; actual original6sameIDs allP and later originalbranch assertions reached. No IConnection cleanup policy change.",
+    "F167": "Two actual SQL topology getter-purpose summaries emitted and fresh4 exactDLL/XML/PDB verified; noRuntimechange."
+  },
+  "original_extension_scope": {
+    "F121": "Fifth transport owner SQLReceiveEndpointConfiguration shares dollar-anchor terminalLF validation cause; actual public Validate firstassertion162 True/False finite failure, other3 controls and prior263allP. Four originalcaseIDs do not create four findings. Existing four othertransport repairs remain accepted within prior scope."
+  },
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "final_23Unit_31Package_18Journey_4Consumers_pending": true,
+  "limits": [
+    "OfflineSDKchannel cleanup seam, no real Rabbit broker.",
+    "SQLsynchronous config/publicValidate and sharedUnit, no freshDB/cloud execution.",
+    "SQLName extension repair not yetapplied/compiled/freshqualified."
+  ]
+}

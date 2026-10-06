@@ -1,0 +1,23 @@
+{
+  "status": "PERSONAL_FULL_READ_ROWS_HASH_VERIFIED_MERGED",
+  "before_sha256": "abf8c9b6d08e5be399d517dad8dc57fae4b29db7342f59e9ad480d98911b4208",
+  "after_sha256": "4382dce390d5e8e0502b3cf6f0ab8c3668d34a4ec252de460550bcce84264769",
+  "added": 479,
+  "preserved_prior_rows": 3109,
+  "whole_full": 3588,
+  "total": 6209,
+  "proposals": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-family-review/PENDING_TO_FULL_CHECKPOINT207.json",
+      "sha256": "0c5ef88f4accb4f465c912f7f2ba6a9924ae26195d46b7a4f7b5eb3b95935190",
+      "added": 197
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/courier-jobservice-family-review/PENDING_TO_FULL_PROPOSAL_FINAL_282.json",
+      "sha256": "69897a2b570fe1953f532ca5cecc54778ed85fc20c611e1f0d5de198f03c248e",
+      "added": 282
+    }
+  ],
+  "symbols_closed": 0,
+  "limits": "FULL text reading only. Confirmed native defects, complete API contract and final integrated acceptance remain separate."
+}

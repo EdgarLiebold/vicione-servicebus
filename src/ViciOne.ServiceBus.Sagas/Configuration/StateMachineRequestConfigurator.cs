@@ -33,11 +33,11 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse> :
     public TimeSpan? TimeToLive { get; set; }
 
     /// <summary>Gets or sets the completed.</summary>
-    public Action<IEventCorrelationConfigurator<TInstance, TResponse>> Completed { get; set; } = null!;
+    public Action<IEventCorrelationConfigurator<TInstance, TResponse>>? Completed { get; set; } = null;
     /// <summary>Gets or sets the faulted.</summary>
-    public Action<IEventCorrelationConfigurator<TInstance, Fault<TRequest>>> Faulted { get; set; } = null!;
+    public Action<IEventCorrelationConfigurator<TInstance, Fault<TRequest>>>? Faulted { get; set; } = null;
     /// <summary>Gets or sets the timeout expired.</summary>
-    public Action<IEventCorrelationConfigurator<TInstance, IRequestTimeoutExpired<TRequest>>> TimeoutExpired { get; set; } = null!;
+    public Action<IEventCorrelationConfigurator<TInstance, IRequestTimeoutExpired<TRequest>>>? TimeoutExpired { get; set; } = null;
 }
 
 
@@ -65,7 +65,7 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse, TRe
     public new IRequestSettings<TInstance, TRequest, TResponse, TResponse2> Settings => this;
 
     /// <summary>Gets or sets the completed2.</summary>
-    public Action<IEventCorrelationConfigurator<TInstance, TResponse2>> Completed2 { get; set; } = null!;
+    public Action<IEventCorrelationConfigurator<TInstance, TResponse2>>? Completed2 { get; set; } = null;
 }
 
 
@@ -95,5 +95,5 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse, TRe
     public new IRequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> Settings => this;
 
     /// <summary>Gets or sets the completed3.</summary>
-    public Action<IEventCorrelationConfigurator<TInstance, TResponse3>> Completed3 { get; set; } = null!;
+    public Action<IEventCorrelationConfigurator<TInstance, TResponse3>>? Completed3 { get; set; } = null;
 }

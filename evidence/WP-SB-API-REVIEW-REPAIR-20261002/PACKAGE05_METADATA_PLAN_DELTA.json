@@ -1,0 +1,4 @@
+{
+  "phase": "PLAN_BEFORE_AUTHOR",
+  "delta": "Preserve all42 case bodies; add observed installed framework/corelib and actually loaded product assembly location/SHA metadata to final owned consumer JSON, identically for original/corrected. Recompile/rerun original42 and corrected42 before mutants."
+}

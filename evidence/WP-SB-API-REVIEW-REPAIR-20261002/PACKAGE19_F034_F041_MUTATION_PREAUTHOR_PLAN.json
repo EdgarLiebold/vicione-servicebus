@@ -1,0 +1,86 @@
+{
+  "status": "ROOT_PLANNED_BEFORE_RUNNER_AUTHORING",
+  "F034": 13,
+  "F041": 2,
+  "pairs": [
+    {
+      "name": "RestoreExecuteAlias",
+      "negative": "execute-shared",
+      "positive": "execute-single"
+    },
+    {
+      "name": "RestoreFullExecuteAlias",
+      "negative": "full-args",
+      "positive": "full-distinct"
+    },
+    {
+      "name": "RestoreFullCompensateAlias",
+      "negative": "full-log",
+      "positive": "full-distinct"
+    },
+    {
+      "name": "AcceptForeignExecute",
+      "negative": "default-mixed-execute-first",
+      "positive": "caller-fallback-execute"
+    },
+    {
+      "name": "AcceptForeignFullExecute",
+      "negative": "default-mixed-full-first",
+      "positive": "custom-selector-full"
+    },
+    {
+      "name": "AcceptForeignFullCompensate",
+      "negative": "default-mixed-full-first",
+      "positive": "custom-selector-full"
+    },
+    {
+      "name": "DropGenuineExecute",
+      "negative": "custom-selector-execute",
+      "positive": "custom-own-execute"
+    },
+    {
+      "name": "DropGenuineFullExecute",
+      "negative": "custom-selector-full",
+      "positive": "custom-own-full"
+    },
+    {
+      "name": "DropGenuineFullCompensate",
+      "negative": "custom-selector-full",
+      "positive": "custom-own-full"
+    },
+    {
+      "name": "RejectOwnExecute",
+      "negative": "custom-own-execute",
+      "positive": "custom-selector-execute"
+    },
+    {
+      "name": "RejectOwnFullExecute",
+      "negative": "custom-own-full",
+      "positive": "custom-selector-full"
+    },
+    {
+      "name": "RejectOwnFullCompensate",
+      "negative": "custom-own-full",
+      "positive": "custom-selector-full"
+    },
+    {
+      "name": "BypassTypedSelector",
+      "negative": "two-buses-full",
+      "positive": "execute-single"
+    },
+    {
+      "name": "DropPlannedCompanionName",
+      "negative": "definition-full",
+      "positive": "definition-aligned-full"
+    },
+    {
+      "name": "IgnoreCapturedCompanionName",
+      "negative": "typed-definition-compensation-full",
+      "positive": "typed-definition-aligned-full"
+    }
+  ],
+  "frame": "F040final28frame+4Courier-sourcefiles+F041wrapper. Each mutation changesexactlyone source body; properF040+F041+prior repairs retained.",
+  "native": "Strict serial CourierprojectBuild including Core; bind BOTH loaded Core and Courier DLLs. Immutable41oracle andallnonframe dependencies unchanged. ActualXunitfiniteMaterialize assertion required; noCompile/setup/guards/timeoutcleanupkillcredit.",
+  "controls": "Full41 baseline +41rollback; eachmutant sameDLL positive control.",
+  "restore": "Finallyall33source originals restored/newnonoriginalfileabsent+6209 verification; exactselectedCore/Couriercaptured bytes+SHA restored; oracle/constants unchanged."
+}

@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Logging;
 using System.Reflection;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Saga;
@@ -327,6 +329,125 @@ public sealed class SagaInstanceFactoryDeepContractTests
 
         Assert.Equal("The saga pipeline returned no task.", exception.Message);
         Assert.Equal(1, pipe.Count);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-SAGA-INSTANCE-FACTORY", "default-created-debug-does-not-prevent-owned-downstream-progress")]
+    public async Task DefaultSend_CreatedDebugDoesNotPreventDownstreamProgressAsync(bool loggerThrows)
+    {
+        const string template = "SAGA:{SagaType}:{CorrelationId} Created {MessageType}";
+        var expectedFailure = new IOException("Default saga Created diagnostic failure");
+        var logger = new CreatedDiagnosticLogger(template, loggerThrows ? expectedFailure : null);
+        Guid correlationId = NewId.NextGuid();
+        var message = new FactoryMessage();
+        ConsumeContext<FactoryMessage> source = CreateContext(correlationId, message);
+        var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var pipe = new RecordingPipe<PipelineSaga> { Result = completion.Task };
+        var factory = new DefaultSagaFactory<PipelineSaga, FactoryMessage>();
+        ILogContext? previous = LogContext.Current;
+        Task? returned = null;
+        Task? operation = null;
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            operation = InvokeAsync();
+            CreatedDiagnosticLogger.Entry selected = Assert.Single(logger.Entries, entry => entry.Template == template);
+            Assert.Equal(LogLevel.Debug, selected.Level);
+            Assert.Equal(correlationId, selected.CorrelationId);
+            Assert.Equal(loggerThrows ? 1 : 0, logger.ThrowCount);
+            if (loggerThrows)
+                Assert.Same(expectedFailure, logger.ThrownFailure);
+            else
+            {
+                Assert.Null(logger.ThrownFailure);
+                Assert.False(operation.IsCompleted);
+                Assert.Same(completion.Task, returned);
+            }
+
+            completion.TrySetResult();
+            Exception? failure = await Record.ExceptionAsync(() =>
+                operation.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None));
+            Assert.IsNotType<TimeoutException>(failure);
+            Assert.True(operation.IsCompleted);
+            Assert.True(completion.Task.IsCompletedSuccessfully);
+            Assert.Null(failure);
+            Assert.True(operation.IsCompletedSuccessfully);
+            Assert.Same(completion.Task, returned);
+            Assert.Equal(1, pipe.Count);
+            DefaultSagaConsumeContext<PipelineSaga, FactoryMessage> actual =
+                Assert.IsType<DefaultSagaConsumeContext<PipelineSaga, FactoryMessage>>(pipe.Context);
+            Assert.Equal(correlationId, actual.Saga.CorrelationId);
+            Assert.Equal(correlationId, actual.CorrelationId);
+            Assert.Same(message, actual.Message);
+            Assert.Same(source.Advanced().ReceiveContext, actual.ReceiveContext);
+            Assert.Same(source.Advanced().SerializerContext, actual.SerializerContext);
+        }
+        finally
+        {
+            completion.TrySetResult();
+            try
+            {
+                await ObserveCreatedDiagnosticTaskAsync(completion.Task);
+            }
+            finally
+            {
+                try
+                {
+                    if (operation is not null)
+                        await ObserveCreatedDiagnosticTaskAsync(operation);
+                }
+                finally
+                {
+                    LogContext.Current = previous;
+                }
+            }
+        }
+
+        async Task InvokeAsync()
+        {
+            returned = factory.SendAsync(source, pipe);
+            await returned;
+        }
+    }
+
+    private static async Task ObserveCreatedDiagnosticTaskAsync(Task task)
+    {
+        try
+        {
+            await task.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+        }
+        catch (Exception failure) when (failure is not TimeoutException && (task.IsFaulted || task.IsCanceled))
+        {
+        }
+    }
+
+    private sealed class CreatedDiagnosticLogger(string selectedTemplate, Exception? failure) : ILogger
+    {
+        public sealed record Entry(LogLevel Level, string? Template, Guid? CorrelationId);
+        public List<Entry> Entries { get; } = [];
+        public int ThrowCount { get; private set; }
+        public Exception? ThrownFailure { get; private set; }
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Debug;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state,
+            Exception? exception, Func<TState, Exception?, string> formatter)
+        {
+            IEnumerable<KeyValuePair<string, object?>> values = state as IEnumerable<KeyValuePair<string, object?>>
+                ?? Array.Empty<KeyValuePair<string, object?>>();
+            string? template = values.FirstOrDefault(value => value.Key == "{OriginalFormat}").Value as string;
+            object? correlation = values.FirstOrDefault(value => value.Key == "CorrelationId").Value;
+            Entries.Add(new Entry(logLevel, template, correlation is Guid id ? id : null));
+            if (template == selectedTemplate && failure is not null)
+            {
+                ThrowCount++;
+                ThrownFailure = failure;
+                throw failure;
+            }
+        }
     }
 
     private static void AssertInternalFactorySurface(string typeName)

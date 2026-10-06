@@ -1,0 +1,11 @@
+--- freeze/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs
++++ userinfo-leak/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs
+@@ -48,8 +48,6 @@
+         {
+             Query = string.Empty,
+             Fragment = string.Empty,
+-            UserName = string.Empty,
+-            Password = string.Empty
+         };
+         scope.Add("Uri", endpoint.Uri);
+         scope.Add("Name", new BlobUriBuilder(endpoint.Uri).BlobContainerName);

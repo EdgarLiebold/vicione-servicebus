@@ -1,0 +1,34 @@
+--- /private/tmp/vicione-servicebus-api-review-20261001/reproductions/eventhub-public/Program.cs
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-s3/freeze/04-Program.cs
+@@ -42,12 +42,29 @@
+     var controlClient = new BlobContainerClient(new Uri("https://owned-review.blob.core.windows.net/owned-container"));
+     var controlFilter = new EventHubBlobContainerFactoryFilter(controlClient);
+     string control = JsonSerializer.Serialize(controlFilter.GetProbeResult().Results);
+-    Require(control.Contains("owned-review.blob.core.windows.net/owned-container", StringComparison.Ordinal), "Positive URI control missing");
++    using var controlDocument = JsonDocument.Parse(control);
++    var controlScope = controlDocument.RootElement.GetProperty("filters");
++    var controlUri = new Uri(controlScope.GetProperty("Uri").GetString()!);
++    Require(controlScope.GetProperty("filterType").GetString() == "configureTopology", "Positive probe scope missing");
++    Require(controlUri.Scheme == "https" && controlUri.Host == "owned-review.blob.core.windows.net"
++        && controlUri.Port == 443 && controlUri.AbsolutePath == "/owned-container"
++        && controlUri.Query.Length == 0 && controlUri.Fragment.Length == 0 && controlUri.UserInfo.Length == 0,
++        "Positive URI control missing");
++    Require(controlScope.GetProperty("Name").GetString() == "owned-container", "Positive container name missing");
+     const string canary = "owned-review-canary";
+     var sasClient = new BlobContainerClient(new Uri("https://owned-review.blob.core.windows.net/owned-container?sv=2024-11-04&sr=c&sp=rw&se=2030-01-01T00%3A00%3A00Z&sig=" + canary));
+     var filter = new EventHubBlobContainerFactoryFilter(sasClient);
+     string snapshot = JsonSerializer.Serialize(filter.GetProbeResult().Results);
+-    bool leaked = snapshot.Contains(canary, StringComparison.Ordinal);
++    using var snapshotDocument = JsonDocument.Parse(snapshot);
++    var snapshotScope = snapshotDocument.RootElement.GetProperty("filters");
++    var snapshotUri = new Uri(snapshotScope.GetProperty("Uri").GetString()!);
++    Require(snapshotUri.Scheme == controlUri.Scheme && snapshotUri.Host == controlUri.Host
++        && snapshotUri.Port == controlUri.Port && snapshotUri.AbsolutePath == controlUri.AbsolutePath,
++        "SAS probe lost container identity");
++    Require(snapshotScope.GetProperty("Name").GetString() == "owned-container", "SAS probe lost container name");
++    Require(sasClient.Uri.Query.Contains(canary, StringComparison.Ordinal), "SDK SAS URI was changed");
++    bool leaked = snapshot.Contains(canary, StringComparison.Ordinal)
++        || snapshotUri.Query.Length != 0 || snapshotUri.Fragment.Length != 0 || snapshotUri.UserInfo.Length != 0;
+     Console.WriteLine(JsonSerializer.Serialize(new { positive_control = control.Contains("owned-container", StringComparison.Ordinal), sdk_uri_has_signature = sasClient.Uri.Query.Contains(canary, StringComparison.Ordinal), probe_results_has_signature = leaked, contract = leaked ? "FAIL" : "PASS" }));
+     return leaked ? 2 : 0;
+ }

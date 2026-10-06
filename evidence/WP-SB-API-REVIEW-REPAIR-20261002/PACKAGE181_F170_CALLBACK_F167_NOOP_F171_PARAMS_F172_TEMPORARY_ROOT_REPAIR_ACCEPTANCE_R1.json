@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-05T12:01:58.476735+00:00",
+  "actor": "/root",
+  "status": "F170_OWNED_CALLBACK_DRAIN_F167_NOOP_PURPOSE_EXTENSION_F171_DIAGNOSTIC_PARAMS_F172_TEMPORARY_ENDPOINT_XML_REPAIRED",
+  "before": {
+    "known_unique": 172,
+    "accepted": 168
+  },
+  "after": {
+    "known_unique": 172,
+    "accepted": 172
+  },
+  "accepted_ids": [
+    "F-SB-API-167",
+    "F-SB-API-170",
+    "F-SB-API-171",
+    "F-SB-API-172"
+  ],
+  "independent_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package181-sql-callback-fixed-xml8-fresh3-independent-r1/REPORT.json",
+    "sha256": "fc1f869a1105894b7793e7ab458ceaa52c86505e19c232855802ccb599c7e96d",
+    "manifest_sha256": "3b6ec54ef8aabaeafa675721f57d342a9ac87b9a7b7277b14ea526b8da40bad9",
+    "freeze_sha256": "c2c4b4409ab949d88b9791a2ae5ce9c9cd568b51b10bc76336281b8e4b235083"
+  },
+  "root_independent_verification": "Rootwhole121puretool f6d47c plus immutable exact2line delta cb8e99; all2857MAN/2840frozenandliveorigins/12RootreparsedPEPDB/2744CS/84Embedded/7runtime/Req165exhaustiveResource/fiveSerialReceipts/275sameoldIDsallP/CRC3/exactXML8allothernodesunchanged0d24bb. Actualreachedcallbackassertions540–595341f13 personallyread; priorRootwholeSettlepatch33b7d9+currentSettle93106c/790ce7 and fourDocwholeowners retained. No all2744humanSource/all275Testbodyclaim.",
+  "actual_native": {
+    "total": 275,
+    "passed": 275,
+    "failed": 0,
+    "skipped": 0
+  },
+  "repair_scope": {
+    "F170": "OwningCancelcallbackerror captured; realownrenewal awaited before Dispose/publicterminal; exactsolecause EDI or distinctphasefailureaggregate; no settle afterCancel/joinfailure. Bothunchangedpubliccallbackcases nowPASS includingpending558 andexactAggregateidentity571–574.",
+    "F167": "Same existingSQLtopologypurposefamily extension exactemptyApplysummary+unusedbuilderparam2nodes, previousboundedclosures retained.",
+    "F171": "Five diagnosticmessageparameters inException/invalidspecconstructors truthful failuredescription, originalpublishedwordsbound.",
+    "F172": "TemporaryReceiveEndpoint generatedname/optionalcallback truthful; removed nonDurability andfirstreceiverbindingguarantee absentSQLbody."
+  },
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "final_23Unit_31Package_18Journey_4Consumers_pending": true,
+  "limits": [
+    "Publictask/rawprovider held-task lifecycle evidenced; ownedCTSdispose/privateRenewTask obligations from actualsource, no direct introspection claim.",
+    "No combinedphaseerrors empiricalproof; aggregation reviewedsource and independentpeer.",
+    "Allcurrentlyregistered172findings haveboundedrootdisposition, wholeAPI10400remaining andnewcandidates remain."
+  ]
+}

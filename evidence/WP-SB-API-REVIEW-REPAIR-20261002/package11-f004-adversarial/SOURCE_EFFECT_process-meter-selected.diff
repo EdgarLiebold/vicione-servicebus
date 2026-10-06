@@ -1,0 +1,11 @@
+--- src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs
++++ process-meter-selected/src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs
+@@ -56,7 +56,7 @@
+             source = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);
+             Meter meter = processOwned
+                 ? processMeter = new Meter(ServiceBusTelemetry.MeterName, version)
+-                : meterFactory!.Create(new MeterOptions(ServiceBusTelemetry.MeterName) { Version = version });
++                : new Meter(ServiceBusTelemetry.MeterName, version);
+             _operations = meter.CreateCounter<long>(
+                 ServiceBusTelemetry.Metrics.MessageJournalOperations,
+                 "{operation}",

@@ -1,0 +1,88 @@
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-original-bag-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.SqlTransport -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll
+  ViciOne.ServiceBus.Courier -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll
+  ViciOne.ServiceBus.RabbitMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.AmazonSqs -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs/release/ViciOne.ServiceBus.AmazonSqs.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.ActiveMq -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq/release/ViciOne.ServiceBus.ActiveMq.dll
+  ViciOne.ServiceBus.Futures -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.AzureServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus/release/ViciOne.ServiceBus.AzureServiceBus.dll
+  ViciOne.ServiceBus.SqlTransport.PostgreSql -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll
+  ViciOne.ServiceBus.Testing -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll
+  ViciOne.ServiceBus.EntityFrameworkCore -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll
+  ViciOne.ServiceBus.EntityFrameworkCore.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll
+  ViciOne.ServiceBus.Benchmark -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark/release/vicione-servicebus-benchmark.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:03.30
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-consume-original-bag-duplicate.log
+{"mode":"duplicate","passed":false,"error":"System.InvalidOperationException","Message":"Contract assertion: Duplicate callbacks completed the unique-message total prematurely","parameter":null}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-json-null-headers-build.log
+  ViciOne.ServiceBus.Abstractions -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll
+  ViciOne.ServiceBus -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll
+  ViciOne.ServiceBus.Mediator -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll
+  ViciOne.ServiceBus.Sagas -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll
+  ViciOne.ServiceBus.JobService -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll
+  ViciOne.ServiceBus.MessagePack -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack/release/ViciOne.ServiceBus.MessagePack.dll
+  ViciOne.ServiceBus.BenchmarkConsole -> /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.BenchmarkConsole/release/ViciOne.ServiceBus.BenchmarkConsole.dll
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+    0 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:01.34
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-mutant-json-null-headers-deserialization.log
+{"mode":"deserialization","passed":false,"error":"System.ArgumentNullException","Message":"Value cannot be null. (Parameter \u0027headers\u0027)","parameter":"headers"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-original-concurrent-duplicate.log
+{"mode":"concurrent-duplicate","passed":false,"error":"System.InvalidOperationException","Message":"Contract assertion: Duplicate callbacks completed the unique-message total prematurely","parameter":null}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-original-concurrent-unique.log
+{"mode":"concurrent-unique","passed":true,"checks":32,"benchmarkDll":"2537f28382a0ffbf60abcc2d7007ac050fb145b13b1026daa1b5d2d610588344","consoleDll":"940965300abd6a592dcdd095503a63f2cde7e70b567a357bd7b8e0a19c49be3a","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-original-deserialization.log
+{"mode":"deserialization","passed":false,"error":"System.ArgumentNullException","Message":"Value cannot be null. (Parameter \u0027headers\u0027)","parameter":"headers"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-original-duplicate-send-observer.log
+{"mode":"duplicate-send-observer","passed":true,"checks":2,"benchmarkDll":"2537f28382a0ffbf60abcc2d7007ac050fb145b13b1026daa1b5d2d610588344","consoleDll":"940965300abd6a592dcdd095503a63f2cde7e70b567a357bd7b8e0a19c49be3a","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-original-duplicate.log
+{"mode":"duplicate","passed":false,"error":"System.InvalidOperationException","Message":"Contract assertion: Duplicate callbacks completed the unique-message total prematurely","parameter":null}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-original-mediator-batches.log
+{"mode":"mediator-batches","passed":false,"error":"ViciOne.ServiceBus.ConfigurationException","Message":"Message limits for bus \u0027mediator\u0027: MaxBodyBytes is not declared. Call mediator.Limits(...) with explicit byte limits.","parameter":null}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-original-unique.log
+{"mode":"unique","passed":true,"checks":2,"benchmarkDll":"2537f28382a0ffbf60abcc2d7007ac050fb145b13b1026daa1b5d2d610588344","consoleDll":"940965300abd6a592dcdd095503a63f2cde7e70b567a357bd7b8e0a19c49be3a","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-rollback-concurrent-duplicate.log
+{"mode":"concurrent-duplicate","passed":true,"checks":2,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-rollback-concurrent-unique.log
+{"mode":"concurrent-unique","passed":true,"checks":32,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-rollback-deserialization.log
+{"mode":"deserialization","passed":true,"checks":6,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-rollback-duplicate-send-observer.log
+{"mode":"duplicate-send-observer","passed":true,"checks":2,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-rollback-duplicate.log
+{"mode":"duplicate","passed":true,"checks":2,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-rollback-mediator-batches.log
+{"mode":"mediator-batches","passed":true,"checks":6,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}
+
+FILE /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-r2-rollback-unique.log
+{"mode":"unique","passed":true,"checks":2,"benchmarkDll":"999e6e8c4705018cc4efbe9f23a4bc0682a63ad3fc0bf7967463c84e09293e2f","consoleDll":"0f46229f6918fa845e783ba403eb4f046857aaa4eaac7f2fef4b9396e264bc6b","coreDll":"f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"}

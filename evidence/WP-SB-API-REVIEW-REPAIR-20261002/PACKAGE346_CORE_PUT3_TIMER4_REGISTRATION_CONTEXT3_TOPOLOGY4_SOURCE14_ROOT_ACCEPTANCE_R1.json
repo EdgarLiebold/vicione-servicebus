@@ -1,0 +1,81 @@
+{
+  "utc": "2026-10-06T05:06:44.412097+00:00",
+  "status": "ROOT_BOUNDED_SOURCE14_ACCEPTED_NATIVE0_WITH_SEPARATE_OPERATIVE_HOLDS",
+  "groups": [
+    {
+      "author": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-message-data-put3-bounded-source-contracts-proposed-r1/MANIFEST.json",
+        "sha256": "790f2d3c55ccc9dcc14bb4bb2ea8ac0344df4ed15636b3315d10318fc5fc2876"
+      },
+      "peer": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-message-data-put3-independent-runtime-source-peer-r1/MANIFEST.json",
+        "sha256": "a2f4dcf480409a8d82e413d68b64b4d41deec4dea674ea0e056ae89806afec9f"
+      },
+      "members": 3
+    },
+    {
+      "author": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-rolling-timer4-bounded-source-contracts-proposed-r1/MANIFEST.json",
+        "sha256": "7c1fb3feb492c1db022146d23c33db7d4da667296baca81249a8a40f1221bea7"
+      },
+      "peer": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-rolling-timer4-independent-source-peer-r1/MANIFEST.json",
+        "sha256": "7aa1a730e268dab408106ed09deaf3e811f5af39abb6d4b9638e37d7cd02c1e9"
+      },
+      "members": 4
+    },
+    {
+      "author": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-request-registration-typed-context3-bounded-contracts-proposed-r1/MANIFEST.json",
+        "sha256": "7df412f139abb2e589912037f263a688263a7ebf8a38903daaca14a7e272ef4b"
+      },
+      "peer": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-registration-context3-independent-source-peer-r1/MANIFEST.json",
+        "sha256": "271fc8d0d5f76a5db2d8bf993f114401f9751b6e100ed7897da6ce1d2c237d7f"
+      },
+      "members": 3
+    },
+    {
+      "author": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-core-consume-topology4-bounded-source-contracts-proposed-r1/MANIFEST.json",
+        "sha256": "fe364e2e203ee91b7767d6874af6b3f8b705d967fab4232a6b18fbbf8cf9e232"
+      },
+      "peer": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-topology4-independent-runtime-source-peer-r1/MANIFEST.json",
+        "sha256": "e5e989fb7ea31c9b3c28079cd5838462ebcc16bd812b67759ca3b6507c31e91a"
+      },
+      "members": 4
+    }
+  ],
+  "Root_own_whole_sources": [
+    "1e8156 messageData257+policy44+repo23+fourvalues201+Timer115",
+    "retained SourceMetadata26 41a786 / immutableOptions47 db7208 exactSHA rechecked",
+    "794782 registration/provider6=332L",
+    "0865ed Topology8=717L"
+  ],
+  "Root_own_entire_norms": [
+    "1a0231 Put3+Timer4",
+    "cd734d registration3+topology4"
+  ],
+  "Root_whole_independent_reports": "1a0231 all4",
+  "actual_frozen342_Core_Abstractions_metadata_reparsed_equal": true,
+  "unique_source_paths": 24,
+  "Original14_UID_source_XML_current_binding": true,
+  "Master_before": {
+    "sha256": "8f7861f388cfe6b96ab998f49772b1981fbd7bd314bbc43b342465c4d73135aa",
+    "rows": 19049,
+    "original_accepted": 18187,
+    "original_remaining": 382
+  },
+  "Master_after_counts": {
+    "rows": 19063,
+    "original_accepted": 18201,
+    "original_remaining": 368
+  },
+  "Product_changes": 0,
+  "Test_changes": 0,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": "Exact local contracts only. Retained source-derived SPI/concurrency/lifetime holds remain operative, including Get2 readstreamrelease and observer2cleanup; no defect invented from absence of universal rollback."
+}

@@ -1,0 +1,97 @@
+--- src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs
++++ shared-transport-graph-restored/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs
+@@ -1,25 +1,32 @@
+ using System;
+ using System.Collections.Generic;
+ using ViciOne.ServiceBus.Configuration;
+-using ViciOne.ServiceBus.InMemoryTransport.Addressing;
+ using ViciOne.ServiceBus.Transports;
+ 
+ namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
+ 
+ /// <summary>Creates dependency-injection bus instances backed by the in-memory transport.</summary>
+ internal sealed class InMemoryRegistrationBusFactory :
+-    IRegistrationBusFactory
++    TransportRegistrationBusFactory<IInMemoryReceiveEndpointConfigurator>
+ {
+-    readonly Uri? _baseAddress;
++    readonly InMemoryBusConfiguration _busConfiguration;
+     readonly Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? _configure;
+ 
+     /// <summary>Creates a registration factory for an optional loopback host address.</summary>
+     /// <param name="baseAddress">The host address, or <see langword="null" /> for the default.</param>
+     /// <param name="configure">An optional callback applied during bus construction.</param>
+     public InMemoryRegistrationBusFactory(Uri? baseAddress, Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure)
++        : this(new InMemoryBusConfiguration(new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology()), baseAddress), configure)
+     {
+-        _baseAddress = new InMemoryHostAddress(baseAddress ?? new Uri("loopback://localhost/"));
++    }
++
++    InMemoryRegistrationBusFactory(InMemoryBusConfiguration busConfiguration,
++        Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure)
++        : base(busConfiguration.HostConfiguration)
++    {
+         _configure = configure;
++
++        _busConfiguration = busConfiguration;
+     }
+ 
+     /// <summary>Creates the configured bus for a registration scope.</summary>
+@@ -27,44 +34,25 @@
+     /// <param name="specifications">The bus-instance specifications to apply.</param>
+     /// <param name="busName">The registered bus name, or an empty string for the default bus.</param>
+     /// <returns>The created bus instance.</returns>
+-    public IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
++    public override IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
+     {
+         ArgumentNullException.ThrowIfNull(context);
+         ArgumentNullException.ThrowIfNull(specifications);
+         ArgumentNullException.ThrowIfNull(busName);
+-        // Registration descriptors can be used by multiple service providers. Each
+-        // construction needs its own mutable topology, host and admission runtime.
+-        return new OwnedBusFactory(_baseAddress, _configure).CreateBus(context, specifications, busName);
++        var configurator = new InMemoryBusFactoryConfigurator(_busConfiguration);
++
++        return CreateBus(configurator, context, _configure, specifications);
+     }
+ 
+-    sealed class OwnedBusFactory : TransportRegistrationBusFactory<IInMemoryReceiveEndpointConfigurator>
++    /// <summary>Wraps a constructed bus and host in the registered bus-instance contract.</summary>
++    /// <param name="bus">The constructed bus control.</param>
++    /// <param name="host">The in-memory host.</param>
++    /// <param name="hostConfiguration">The host configuration.</param>
++    /// <param name="context">The registration context.</param>
++    /// <returns>The registered bus instance.</returns>
++    protected override IBusInstance CreateBusInstance(IBusControl bus, IHost<IInMemoryReceiveEndpointConfigurator> host,
++        IHostConfiguration hostConfiguration, IBusRegistrationContext context)
+     {
+-        readonly InMemoryBusConfiguration _busConfiguration;
+-        readonly Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? _configure;
+-
+-        public OwnedBusFactory(Uri? baseAddress, Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure)
+-            : this(new InMemoryBusConfiguration(new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology()), baseAddress), configure)
+-        {
+-        }
+-
+-        OwnedBusFactory(InMemoryBusConfiguration busConfiguration,
+-            Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure)
+-            : base(busConfiguration.HostConfiguration)
+-        {
+-            _busConfiguration = busConfiguration;
+-            _configure = configure;
+-        }
+-
+-        public override IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
+-        {
+-            var configurator = new InMemoryBusFactoryConfigurator(_busConfiguration);
+-            return CreateBus(configurator, context, _configure, specifications);
+-        }
+-
+-        protected override IBusInstance CreateBusInstance(IBusControl bus, IHost<IInMemoryReceiveEndpointConfigurator> host,
+-            IHostConfiguration hostConfiguration, IBusRegistrationContext context)
+-        {
+-            return new InMemoryBusInstance(bus, host, hostConfiguration, context);
+-        }
++        return new InMemoryBusInstance(bus, host, hostConfiguration, context);
+     }
+ }

@@ -1,0 +1,90 @@
+{
+  "utc": "2026-10-04T18:24:56.145602+00:00",
+  "status": "SOURCE_ADVERSARIAL_NO_BLOCK_STRICT_NATIVE_PACK_PENDING",
+  "changes": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureSameTypeBusOwnershipTests.cs",
+      "before_sha256": "251b33279b340cf92f34419ce5ba7efae278e44e7316a82acd36264b3b6cf85e",
+      "after_sha256": "11c71cf193faa1b7b571566e58645fe2f4525309df102f03142122ead36467ed"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusReceiverDispatchOwnershipTests.cs",
+      "before_sha256": null,
+      "after_sha256": "5de79ee65e27e2bb5d5108b266e5e757f2b5a85144be58bb32c8b495f51fbd3a"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSendPipeRetryOwnershipTests.cs",
+      "before_sha256": null,
+      "after_sha256": "36baa63eb7fcdf320a9004a9c2eaac24c27159d49e3f31032b265b865ea895e0"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/RequestConsumerFuture.cs",
+      "before_sha256": "6089d48f1b7d6a420c4f398914862351ff78e19f08b058dbf77daca658cf388f",
+      "after_sha256": "586fde0a6c81c7d3c976ce640b4e2f18c6d38486946dfb23498e3fa609521197"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "before_sha256": "48bbb693900c78f3fe1910e99f886e494e94fa6e1b5f27882f496ea465389d4c",
+      "after_sha256": "ac2c90a9f850394fe2857092ed8ea5949ed3c11b3bb12ec58ed31dd3558ff928"
+    }
+  ],
+  "requirement_add_only": [
+    {
+      "requirementId": "REQ-VSB-ASB-FUNCTIONS-TESTING",
+      "variantKey": "trigger-held-dispatch-outcome-and-context-registration-cleanup",
+      "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverDispatchOwnershipTests",
+      "testMethod": "TriggerHandle_JoinsActualDispatchPreservesItsOutcomeAndDisposesTheDeliveryAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+      "variantKey": "sdk-callback-joins-real-azure-lock-dispatch-and-owns-terminal-errors",
+      "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverDispatchOwnershipTests",
+      "testMethod": "ProcessorCallback_JoinsTheRealLockDispatchAndOwnsFailuresBeforeDisposingTheContextAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+      "variantKey": "receiver-stop-orders-shutdown-active-sdk-settlement-and-close-with-uncanceled-budget",
+      "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverDispatchOwnershipTests",
+      "testMethod": "ReceiverStop_JoinsShutdownActiveDeliveryAndCloseInThatOrderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+      "variantKey": "pipe-overload-joins-real-sdk-attempts-and-discriminates-caller-versus-stopping",
+      "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSendPipeRetryOwnershipTests",
+      "testMethod": "SendPipe_RetriesTheActualHeldSdkCallOrPreservesTheCorrectTerminalCauseAsync"
+    }
+  ],
+  "registry_before_rows": 215,
+  "registry_after_rows": 219,
+  "peer_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package110-same-future-message-contract-fixture-independent-r1/REPORT.json",
+      "sha256": "23e3880907e996aebf6d58303fb11c153506a0eb3e317f44bcc8d4f918891ded"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package91-azure-receiver9-runtime-spi-adversarial-r1/REPORT.json",
+      "sha256": "1fe82b6c1f993a5f0cfa594427edf895b328bca5a96fd9dcf7d69beedbd4118c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package92-azure-retry5-runtime-spi-adversarial-r1/REPORT.json",
+      "sha256": "463773a0063838ccc950573234e0b9d3022312d72e35e3e827dec80ca98804c6"
+    }
+  ],
+  "root_reviews": [
+    "b8299e minimal2ctor exactdelta;1f64e3 peer",
+    "55603f/0b0650 whole387Receiver9;408144 peerwhole",
+    "7b318c whole235Retry5;408144 peerwhole",
+    "408144 exactdefaultInitializer XML3line delta;f95b0a whole MessageFactoryCache/FutureRequest/RequestConsumerFuture causal owners"
+  ],
+  "XML_adversarial_reviewer": "Root independently reviews RuntimeSPI author. Default-only TRequest initialization requirement; no general TResponse/serializer constraint, no executableline/signature change.",
+  "preserved_originals": "Core108/111 and SQL112 both actual selected frozenruntime epochs remain immutable; fixtureerror does not produce machineFinding",
+  "before_metadata_sha256": {
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json": "672b00af10c169cd783135a25a7681aa1cf420f447bdacdbe824d460b3a78427",
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/ADDITIONAL_FINDINGS.json": "28ab06560134f7bd67d887d90f627b96ce788123b227748f8569c4dd27eb1390"
+  },
+  "whole_API_member_review_closed": false
+}

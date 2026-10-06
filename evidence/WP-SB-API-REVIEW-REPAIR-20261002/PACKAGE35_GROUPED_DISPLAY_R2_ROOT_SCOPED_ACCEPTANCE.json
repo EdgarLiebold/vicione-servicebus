@@ -1,0 +1,64 @@
+{
+  "status": "ROOT_SCOPED_R2_CURRENT_LOSSLESS_WORD_BOUNDARY_HELPER_ACCEPTED_NO_OWNER_SEMANTIC_CREDIT",
+  "actor": "/root",
+  "utc": "2026-10-04T01:21:57.028019+00:00",
+  "methods_root_personally_full": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-root-grouped-lines-cut30303-r2/codec_rules.py",
+      "bytes": 3937,
+      "sha256": "d47be63b34e9fa56c95d20a1459414ecbdfdcd364d8e33124ce8b2e2596b5a78"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-root-grouped-lines-cut30303-r2/prepare_grouped_display.py",
+      "bytes": 6550,
+      "sha256": "c87453f349b383aadcb90ccc82984020d4133c17f999afe3f404e356f3d5f90a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-grouped-display-adversarial-r1/qualify.py",
+      "bytes": 8528,
+      "sha256": "8c19617fec09910a1280419693404c32a386a9a5ff4dfbd1468cf10dda15dfdf"
+    }
+  ],
+  "report_root_personally_full": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-grouped-display-adversarial-r1/REVIEW_R1_R2.md",
+    "bytes": 3504,
+    "sha256": "c2690e501f255bb104d5bd16d31ce1cd66765af3801c1d5a2e6ccff59dd4cc7b"
+  },
+  "peer_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-grouped-display-adversarial-r1/MANIFEST.json",
+    "bytes": 5068,
+    "sha256": "b1d65078a0955cd6bd57d962bf7b04f441410b637424223b785c5f1d689d58cf"
+  },
+  "peer_physical_binding_root_personally_full": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-grouped-display-adversarial-r1/INDEPENDENT_OLD_LAYOUT_REQUIREMENT_AND_R2_BINDING.json",
+    "bytes": 3184,
+    "sha256": "92ebb9be02441bde8e7a505c7d1f67534b3beed74500d8d38e448763ce5c478e"
+  },
+  "peer_format_controls_root_personally_full": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-grouped-display-adversarial-r1/ACTUAL_R2_DECODER_FORMAT_CONTROLS.json",
+    "bytes": 1799,
+    "sha256": "d430d6119e4ff810e5c3066ab127ad7baebe5822288a76c5af336b221932747c"
+  },
+  "author_final_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-root-grouped-lines-cut30303-r2/FINAL_PROJECTION_QUALIFICATION_R2.json",
+    "bytes": 4097,
+    "sha256": "bfcfeb07a9b4c3a0d88dcf2dd5aa81606bdb50db976bf22f8d2dbbb0a2b726cc"
+  },
+  "source_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core766-root-grouped-lines-cut30303-r2/PREPARED_GROUPED_LINES_MANIFEST_R2.json",
+    "bytes": 266415,
+    "sha256": "8c8d0d9b9c5d653680f42149ee376cf0134c52aa2b49b4de8876d1052382a7a7"
+  },
+  "fresh_current_snapshot_byte_equal_files": 766,
+  "fresh_current_snapshot_byte_equal_bytes": 13011640,
+  "fresh_actual_pack_sha_length_equal": 364,
+  "peer_dossier_fresh_unique_hash_bound_references": 1574,
+  "peer_independent_all_original_ordered_layouts_and_requirements_reconstruction": true,
+  "actual_R2_word_boundary_violations": 0,
+  "historical_R1_word_boundary_blocker_preserved": 3771,
+  "ordinary_RAW_FULL_increment": 0,
+  "root_whole_owner766_semantic_credit": false,
+  "current_unit_or_whole_API_or_Aplus_credit": false,
+  "all_766_ordered_source_layouts_and4538_requirement_rows_and_actual_own_unread_values_still_mandatory": true,
+  "SDK_or_product_or_test_or_runner_change": false
+}

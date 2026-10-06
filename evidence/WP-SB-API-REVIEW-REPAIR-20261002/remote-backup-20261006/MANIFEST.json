@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-06T21:48:23.473261+00:00",
+  "status": "CURRENT_RETAINED_REVIEW_BACKUP_READY_INDEPENDENT_REVIEW_PENDING",
+  "repository": "EdgarLiebold/vicione-servicebus",
+  "repository_visibility": "PRIVATE",
+  "branch": "backup/servicebus-api-review-20261006",
+  "baseline_commit": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "archive_format": "gzip-compressed POSIX tar of regular files, split into ordered40MiB chunks; archive output outside captured roots",
+  "archive_bytes": 100800092,
+  "archive_sha256": "1cb6ac2ad9af96e5c2b38e5bd758a1a5eadc40791a97bdb2da34707ec1cb998a",
+  "archive_member_count": 11601,
+  "archive_input_bytes": 1220855711,
+  "member_manifest": {
+    "file": "ARCHIVE_INPUTS.json",
+    "sha256": "923188ff1079af7737704e2ed3a928d2e0199b4b7faaa6fa01e1ce5ac301e516"
+  },
+  "parts": [
+    {
+      "file": "review-evidence.tar.gz.part-001",
+      "bytes": 41943040,
+      "sha256": "89d632a13590472771fe71e5935d20abe97e373d5181e9ba3b50d8eaef7cab70"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-002",
+      "bytes": 41943040,
+      "sha256": "c1033e24e2b8fef7d9192355f3d91a4721297c879da4256d8a9f9081c69037c2"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-003",
+      "bytes": 16914012,
+      "sha256": "0e0d9c5ddb503425c0fe494c7afb2dd9980e9b42d109c20bff7de3abd2c00839"
+    }
+  ],
+  "captured_roots": [
+    "SERVICEBUS_API_REVIEW_AND_REPAIR",
+    "repositories/vicione-servicebus/evidence"
+  ],
+  "capture_excludes_this_backup_bundle": true,
+  "temporary_research_and_SDK_caches_not_included": true,
+  "code_tests_changelog_committed_as_normal_repository_files": true,
+  "new_SDK_or_test_runs": 0,
+  "cloud_provider_and_ARM64_evidence_remain_partial": true
+}

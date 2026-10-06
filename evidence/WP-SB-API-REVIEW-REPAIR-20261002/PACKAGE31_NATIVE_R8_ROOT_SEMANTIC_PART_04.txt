@@ -1,0 +1,464 @@
+          "phase": 1,
+          "businessCalls": 1,
+          "filterCalls": 2,
+          "throws": 1,
+          "outgoingRows": 0,
+          "Consumed": "2026-10-03T23:22:35.726147+00:00",
+          "Delivered": "2026-10-03T23:22:35.852767+00:00",
+          "LastSequenceNumber": 1,
+          "ReceiveCount": 2,
+          "actualOutgoingIds": [
+            "05006209-0028-4019-8020-000000000002"
+          ],
+          "receiveFailures": []
+        }
+      ],
+      "snapshots": [
+        {
+          "BusinessValue": 1,
+          "Inbox": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000001",
+              "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "Received": "2026-10-03T23:22:35.717477+00:00",
+              "ExpirationTime": null,
+              "ReceiveCount": 1,
+              "Consumed": "2026-10-03T23:22:35.726147+00:00",
+              "Delivered": null,
+              "LastSequenceNumber": null
+            }
+          ],
+          "Outgoing": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000002",
+              "InboxMessageId": "05006209-0028-4019-8020-000000000001",
+              "InboxConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "SequenceNumber": 1
+            }
+          ]
+        },
+        {
+          "BusinessValue": 1,
+          "Inbox": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000001",
+              "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "Received": "2026-10-03T23:22:35.717477+00:00",
+              "ExpirationTime": null,
+              "ReceiveCount": 2,
+              "Consumed": "2026-10-03T23:22:35.726147+00:00",
+              "Delivered": "2026-10-03T23:22:35.852767+00:00",
+              "LastSequenceNumber": 1
+            }
+          ],
+          "Outgoing": []
+        }
+      ],
+      "atInjectedSend": {
+        "BusinessValue": 1,
+        "Inbox": [
+          {
+            "MessageId": "05006209-0028-4019-8020-000000000001",
+            "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+            "Received": "2026-10-03T23:22:35.717477+00:00",
+            "ExpirationTime": null,
+            "ReceiveCount": 1,
+            "Consumed": "2026-10-03T23:22:35.726147+00:00",
+            "Delivered": null,
+            "LastSequenceNumber": null
+          }
+        ],
+        "Outgoing": [
+          {
+            "MessageId": "05006209-0028-4019-8020-000000000002",
+            "InboxMessageId": "05006209-0028-4019-8020-000000000001",
+            "InboxConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+            "SequenceNumber": 1
+          }
+        ]
+      },
+      "finiteLossObserved": false
+    },
+    {
+      "observation": "case-cleanup",
+      "name": "volatile-fault",
+      "AllTrackedTasksCompleted": true,
+      "primary": null,
+      "cleanup": null
+    },
+    {
+      "observation": "receive-terminal-before-sink",
+      "name": "nested-volatile-positive",
+      "phase": 0,
+      "BusinessCalls": 1,
+      "FilterCalls": 1,
+      "Throws": 0,
+      "received": [
+        "05006209-0028-4019-8020-000000000002"
+      ],
+      "failures": []
+    },
+    {
+      "observation": "receive-terminal-before-sink",
+      "name": "nested-volatile-positive",
+      "phase": 1,
+      "BusinessCalls": 1,
+      "FilterCalls": 1,
+      "Throws": 0,
+      "received": [
+        "05006209-0028-4019-8020-000000000002"
+      ],
+      "failures": []
+    },
+    {
+      "name": "nested-volatile-positive",
+      "observations": [
+        {
+          "phase": 0,
+          "businessCalls": 1,
+          "filterCalls": 1,
+          "throws": 0,
+          "outgoingRows": 0,
+          "Consumed": "2026-10-03T23:22:35.907074+00:00",
+          "Delivered": "2026-10-03T23:22:35.917591+00:00",
+          "LastSequenceNumber": 1,
+          "ReceiveCount": 1,
+          "actualOutgoingIds": [
+            "05006209-0028-4019-8020-000000000002"
+          ],
+          "receiveFailures": []
+        },
+        {
+          "phase": 1,
+          "businessCalls": 1,
+          "filterCalls": 1,
+          "throws": 0,
+          "outgoingRows": 0,
+          "Consumed": "2026-10-03T23:22:35.907074+00:00",
+          "Delivered": "2026-10-03T23:22:35.917591+00:00",
+          "LastSequenceNumber": 1,
+          "ReceiveCount": 2,
+          "actualOutgoingIds": [
+            "05006209-0028-4019-8020-000000000002"
+          ],
+          "receiveFailures": []
+        }
+      ],
+      "snapshots": [
+        {
+          "BusinessValue": 1,
+          "Inbox": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000001",
+              "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "Received": "2026-10-03T23:22:35.901503+00:00",
+              "ExpirationTime": null,
+              "ReceiveCount": 1,
+              "Consumed": "2026-10-03T23:22:35.907074+00:00",
+              "Delivered": "2026-10-03T23:22:35.917591+00:00",
+              "LastSequenceNumber": 1
+            }
+          ],
+          "Outgoing": []
+        },
+        {
+          "BusinessValue": 1,
+          "Inbox": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000001",
+              "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "Received": "2026-10-03T23:22:35.901503+00:00",
+              "ExpirationTime": null,
+              "ReceiveCount": 2,
+              "Consumed": "2026-10-03T23:22:35.907074+00:00",
+              "Delivered": "2026-10-03T23:22:35.917591+00:00",
+              "LastSequenceNumber": 1
+            }
+          ],
+          "Outgoing": []
+        }
+      ],
+      "atInjectedSend": null,
+      "finiteLossObserved": false
+    },
+    {
+      "observation": "case-cleanup",
+      "name": "nested-volatile-positive",
+      "AllTrackedTasksCompleted": true,
+      "primary": null,
+      "cleanup": null
+    },
+    {
+      "observation": "receive-terminal-before-sink",
+      "name": "nested-volatile-fault",
+      "phase": 0,
+      "BusinessCalls": 1,
+      "FilterCalls": 1,
+      "Throws": 1,
+      "received": [],
+      "failures": [
+        {
+          "$full_string_ref": 1
+        }
+      ]
+    },
+    {
+      "observation": "receive-terminal-before-sink",
+      "name": "nested-volatile-fault",
+      "phase": 1,
+      "BusinessCalls": 1,
+      "FilterCalls": 2,
+      "Throws": 1,
+      "received": [
+        "05006209-0028-4019-8020-000000000002"
+      ],
+      "failures": []
+    },
+    {
+      "name": "nested-volatile-fault",
+      "observations": [
+        {
+          "phase": 0,
+          "businessCalls": 1,
+          "filterCalls": 1,
+          "throws": 1,
+          "outgoingRows": 1,
+          "Consumed": "2026-10-03T23:22:35.988822+00:00",
+          "Delivered": null,
+          "LastSequenceNumber": null,
+          "ReceiveCount": 1,
+          "actualOutgoingIds": [],
+          "receiveFailures": [
+            {
+              "$full_string_ref": 1
+            }
+          ]
+        },
+        {
+          "phase": 1,
+          "businessCalls": 1,
+          "filterCalls": 2,
+          "throws": 1,
+          "outgoingRows": 0,
+          "Consumed": "2026-10-03T23:22:35.988822+00:00",
+          "Delivered": "2026-10-03T23:22:36.045681+00:00",
+          "LastSequenceNumber": 1,
+          "ReceiveCount": 2,
+          "actualOutgoingIds": [
+            "05006209-0028-4019-8020-000000000002"
+          ],
+          "receiveFailures": []
+        }
+      ],
+      "snapshots": [
+        {
+          "BusinessValue": 1,
+          "Inbox": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000001",
+              "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "Received": "2026-10-03T23:22:35.9836+00:00",
+              "ExpirationTime": null,
+              "ReceiveCount": 1,
+              "Consumed": "2026-10-03T23:22:35.988822+00:00",
+              "Delivered": null,
+              "LastSequenceNumber": null
+            }
+          ],
+          "Outgoing": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000002",
+              "InboxMessageId": "05006209-0028-4019-8020-000000000001",
+              "InboxConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "SequenceNumber": 1
+            }
+          ]
+        },
+        {
+          "BusinessValue": 1,
+          "Inbox": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000001",
+              "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "Received": "2026-10-03T23:22:35.9836+00:00",
+              "ExpirationTime": null,
+              "ReceiveCount": 2,
+              "Consumed": "2026-10-03T23:22:35.988822+00:00",
+              "Delivered": "2026-10-03T23:22:36.045681+00:00",
+              "LastSequenceNumber": 1
+            }
+          ],
+          "Outgoing": []
+        }
+      ],
+      "atInjectedSend": {
+        "BusinessValue": 1,
+        "Inbox": [
+          {
+            "MessageId": "05006209-0028-4019-8020-000000000001",
+            "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+            "Received": "2026-10-03T23:22:35.9836+00:00",
+            "ExpirationTime": null,
+            "ReceiveCount": 1,
+            "Consumed": "2026-10-03T23:22:35.988822+00:00",
+            "Delivered": null,
+            "LastSequenceNumber": null
+          }
+        ],
+        "Outgoing": [
+          {
+            "MessageId": "05006209-0028-4019-8020-000000000002",
+            "InboxMessageId": "05006209-0028-4019-8020-000000000001",
+            "InboxConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+            "SequenceNumber": 1
+          }
+        ]
+      },
+      "finiteLossObserved": false
+    },
+    {
+      "observation": "case-cleanup",
+      "name": "nested-volatile-fault",
+      "AllTrackedTasksCompleted": true,
+      "primary": null,
+      "cleanup": null
+    },
+    {
+      "observation": "receive-terminal-before-sink",
+      "name": "ef-fault",
+      "phase": 0,
+      "BusinessCalls": 1,
+      "FilterCalls": 1,
+      "Throws": 1,
+      "received": [],
+      "failures": [
+        {
+          "$full_string_ref": 2
+        }
+      ]
+    },
+    {
+      "observation": "receive-terminal-before-sink",
+      "name": "ef-fault",
+      "phase": 1,
+      "BusinessCalls": 1,
+      "FilterCalls": 2,
+      "Throws": 1,
+      "received": [
+        "05006209-0028-4019-8020-000000000002"
+      ],
+      "failures": []
+    },
+    {
+      "name": "ef-fault",
+      "observations": [
+        {
+          "phase": 0,
+          "businessCalls": 1,
+          "filterCalls": 1,
+          "throws": 1,
+          "outgoingRows": 1,
+          "Consumed": "2026-10-03T23:22:36.105633+00:00",
+          "Delivered": null,
+          "LastSequenceNumber": null,
+          "ReceiveCount": 1,
+          "actualOutgoingIds": [],
+          "receiveFailures": [
+            {
+              "$full_string_ref": 2
+            }
+          ]
+        },
+        {
+          "phase": 1,
+          "businessCalls": 1,
+          "filterCalls": 2,
+          "throws": 1,
+          "outgoingRows": 0,
+          "Consumed": "2026-10-03T23:22:36.105633+00:00",
+          "Delivered": "2026-10-03T23:22:36.141494+00:00",
+          "LastSequenceNumber": 1,
+          "ReceiveCount": 2,
+          "actualOutgoingIds": [
+            "05006209-0028-4019-8020-000000000002"
+          ],
+          "receiveFailures": []
+        }
+      ],
+      "snapshots": [
+        {
+          "BusinessValue": 1,
+          "Inbox": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000001",
+              "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "Received": "2026-10-03T23:22:36.098821+00:00",
+              "ExpirationTime": null,
+              "ReceiveCount": 1,
+              "Consumed": "2026-10-03T23:22:36.105633+00:00",
+              "Delivered": null,
+              "LastSequenceNumber": null
+            }
+          ],
+          "Outgoing": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000002",
+              "InboxMessageId": "05006209-0028-4019-8020-000000000001",
+              "InboxConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "SequenceNumber": 1
+            }
+          ]
+        },
+        {
+          "BusinessValue": 1,
+          "Inbox": [
+            {
+              "MessageId": "05006209-0028-4019-8020-000000000001",
+              "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+              "Received": "2026-10-03T23:22:36.098821+00:00",
+              "ExpirationTime": null,
+              "ReceiveCount": 2,
+              "Consumed": "2026-10-03T23:22:36.105633+00:00",
+              "Delivered": "2026-10-03T23:22:36.141494+00:00",
+              "LastSequenceNumber": 1
+            }
+          ],
+          "Outgoing": []
+        }
+      ],
+      "atInjectedSend": {
+        "BusinessValue": 1,
+        "Inbox": [
+          {
+            "MessageId": "05006209-0028-4019-8020-000000000001",
+            "ConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+            "Received": "2026-10-03T23:22:36.098821+00:00",
+            "ExpirationTime": null,
+            "ReceiveCount": 1,
+            "Consumed": "2026-10-03T23:22:36.105633+00:00",
+            "Delivered": null,
+            "LastSequenceNumber": null
+          }
+        ],
+        "Outgoing": [
+          {
+            "MessageId": "05006209-0028-4019-8020-000000000002",
+            "InboxMessageId": "05006209-0028-4019-8020-000000000001",
+            "InboxConsumerId": "2e244cbb-15e0-30b6-ff97-be55847ecc6a",
+            "SequenceNumber": 1
+          }
+        ]
+      },
+      "finiteLossObserved": false
+    },
+    {
+      "observation": "case-cleanup",
+      "name": "ef-fault",
+      "AllTrackedTasksCompleted": true,
+      "primary": null,
+      "cleanup": null
+    },
+    {
+      "observation": "receive-terminal-before-sink",
+      "name": "default-volatile-fault",
+      "phase": 0,

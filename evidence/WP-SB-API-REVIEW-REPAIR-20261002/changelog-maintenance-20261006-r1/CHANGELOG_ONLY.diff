@@ -1,0 +1,161 @@
+--- before/CHANGELOG.md
++++ after/CHANGELOG.md
+@@ -5,6 +5,24 @@
+ MassTransit. The [live repository diff](license/repository_diff.py) compares all tracked source,
+ tests, and other files between the upstream `MassTransit/v8.5.10` tag and the
+ latest `main` commit.
++
++## Unreleased — API review completion, 6 October 2026
++
++The source API review and repairs are complete within their recorded contract and
++local validation boundaries: all 234 confirmed audit findings have a bounded
++acceptance, with no confirmed repair pending. The current inventory accounts for
++18,600 exposed source symbols; the contract register also retains 833 accessor
++representations, which are counted separately.
++
++The final local checks passed 13,460 unit tests across 23 modules and 166 selected
++Event Hubs tests, and verified all 31 delivery packages. Real provider and cloud
++workflows, the excluded emulator tests, and ARM64 operation with 512 MiB without
++swap remain separate validation work. This is an unreleased source checkpoint,
++not a production or universal A+ certification.
++
++See the [completed review corrections and verification boundaries](docs/changelog/product-fixes.md#api-review-completion-6-october-2026)
++and the [final bounded acceptance](evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE551_FINAL234_CURRENT18600_LOCAL_GATES_ROOT_ACCEPTANCE_R1.json).
++Earlier entries and coverage pages retain their dated checkpoints.
+ 
+ ## By topic
+ 
+@@ -18,7 +36,8 @@
+   [other changes](docs/changelog/other-changes.md).
+ - [Migration from MassTransit-style APIs](docs/changelog/migration-from-masstransit.md):
+   changed call forms, moved namespaces, and new capability packages.
+-- [Current review status](docs/quality-status.md): measured coverage, CRAP and open findings.
++- [Dated coverage and review checkpoints](docs/quality-status.md): measured coverage,
++  CRAP and historical open-finding records; the API audit completion is recorded above.
+ 
+ The detailed documents preserve the original chronological entries. The source-area overview
+ helps readers locate the changes relevant to each module. Git contains the exact patch and the
+--- before/docs/changelog/product-fixes.md
++++ after/docs/changelog/product-fixes.md
+@@ -453,3 +453,121 @@
+ - Transport-Stopp versucht verbundene Consume-, Send- und eigene Kontextphasen auch nach einem früheren Fehler; mehrere echte Stoppfehler bleiben in ihrer Reihenfolge erhalten. Optionale Send-Stopp-Diagnosen verhindern die eigene Agentenfreigabe nicht. Dispatcher-Freigabe leert den Cache auch bei Diagnosefehlern. Azure-Saga-Insert erhält den tatsächlichen Speicher- beziehungsweise Konfliktausgang trotz fehlerhaftem Debuglogger. Unabhängiger aktueller Review: 160 Core- und 39 Azure-Kontrollen sowie 2.380 angrenzende Tests bestanden; fünf frische Pakete quellgebunden geprüft. Die separat reproduzierten DynamoDB-/EF-Core-Diagnosefehler werden im Folgepaket korrigiert. Nachweis: `PACKAGE173_TRANSPORT_THREE_FIXED_F152_AZURE_FIXED_PROVIDER_FIVE_ORIGINAL_ROOT_ACCEPTANCE_R1.json` im Review-Evidence-Verzeichnis.
+ 
+ - DynamoDB-/EF-Core-Saga-Insert bewahrt Speicher-, Konflikt- und Primärfehlerausgänge trotz fehlerhafter optionaler Diagnose. Beide Saga-Anmeldewege sowie Host-/Consumer-Stopp erreichen ihre eigentliche Arbeit trotz Fehlern im initialen Debuglogger. Fünf Initializer-/Mediator-Abschlussbeschreibungen berücksichtigen lokale Outbox-/Buffer-Erfassung vor Dispatch. Aktuelle unabhängige Nachprüfung: alle 2.677 ausgewählten Tests bestanden, vier strikte Builds ohne Warnungen oder Fehler und sieben frisch erzeugte Pakete quellgebunden geprüft. Nachweise: `PACKAGE174_PROVIDER_FIXED_F152_CONFIG_ORIGINAL_HOST_CONSUMER_TWO_REGISTERED_F001_XML5_EXTENSION_ROOT_ACCEPTANCE_R1.json` und `PACKAGE175_F001_XML5_F152_ALL14_HOST_CONSUMER_CURRENT2677_FRESH7_ROOT_REPAIR_ACCEPTANCE_R1.json`. Das gesamte API-Review und die abschließenden Gesamtprüfungen laufen weiter.
++
++## API review completion, 6 October 2026
++
++The source API review and repair work is complete within the individually recorded
++contract boundaries. All 234 confirmed audit findings have been accepted with
++their specific limits; no confirmed repair remains pending. The earlier
++in-progress statements describe their dated review checkpoints. The following
++entries summarize additional corrections and the final validation scope.
++
++### Additional corrections
++
++- Task-returning helpers now follow the existing `Async` naming convention. The
++  packed API baseline records the nullable `JoinSeparator` contract already
++  implemented by the endpoint formatter; the baseline update adds no runtime
++  behavior (F-SB-API-176).
++- Amazon SQS queue send topology retains configured queue attributes, tags and
++  subscription attributes. Configured endpoint connection middleware is invoked,
++  and endpoint validation includes client and connection pipe specifications.
++  RabbitMQ receive endpoints also invoke their configured connection middleware
++  before channel creation and validate channel and connection pipe specifications
++  (F-SB-API-177, F-SB-API-178, F-SB-API-182, F-SB-API-192, F-SB-API-202).
++- In the selected Product-owned diagnostic paths, optional logging and its
++  diagnostic-only argument evaluation no longer interrupt the actual operation
++  or owned cleanup. This includes durable-resource cancellation, startup purge,
++  queue subscription/deletion and connection/session retirement. Business work,
++  SDK calls and genuine provider failures remain outside diagnostic containment
++  (F-SB-API-152, F-SB-API-191, F-SB-API-205, F-SB-API-208 through F-SB-API-212).
++- Supervisors and host/endpoint shutdown attempt the captured owned stop stages
++  and await already-admitted work within the public cancellation/budget policy,
++  even after another stage fails synchronously. Reset attempts release of each
++  distinct retained provider after an earlier release failure. A failed endpoint
++  transport stop retains its handle instead of forcibly resetting a live
++  transport (F-SB-API-204, F-SB-API-226, F-SB-API-228, F-SB-API-229).
++- Failed consumer, endpoint-dependency, EF outbox and typed-observer
++  admission now retires the registrations actually returned before rejection.
++  An earlier cleanup failure does not skip later acquired registrations; the
++  primary admission cause and additional cleanup causes are retained. This does
++  not compensate unknown collaborator effects before a handle was returned.
++  Activity-observer retirement also attempts later acquired child registrations
++  after an earlier retirement failure
++  (F-SB-API-217 through F-SB-API-221, F-SB-API-223, F-SB-API-225, F-SB-API-230).
++- Request timer release still attempts owned cancellation-source and request
++  capacity release when timer disposal fails. Test-harness disposal also attempts
++  the remaining owned inactivity, observer and base-resource retirement after
++  the selected cancellation or observer failure (F-SB-API-215, F-SB-API-222,
++  F-SB-API-224).
++- Courier execute and compensate redelivery honor the enabled `ReplaceMessageId`
++  option while retaining the original identity when replacement is disabled
++  (F-SB-API-216).
++- `JsonTransportHeaders.Get` returns the documented caller default for valid but
++  incompatible header representations instead of throwing for the selected
++  built-in conversion cases (F-SB-API-203).
++- The cancellation-token code fix selects the actual added parameter index and
++  escapes keyword context identifiers in the corrected code-action routes
++  (F-SB-API-206, F-SB-API-207).
++- ActiveMQ topic cleanup retains both close and disposal causes. A RabbitMQ
++  channel already acquired during construction is retired if the supported
++  timeout setter rejects configuration (F-SB-API-213, F-SB-API-214).
++- SQS topic discovery no longer readmits SDK work by replacing a cancelled loader
++  after its owner lifetime ends. Settlement retains an active cancellation
++  callback failure and independently joins the already-owned visibility-renewal
++  task before disposing its cancellation source. Cancellation failure still
++  prevents delete/redelivery. The latter is an explicitly adopted source
++  ownership policy: the earlier four characterization tests did not reproduce an
++  early-drain failure (F-SB-API-227, F-SB-API-232).
++- Event Hubs producer disposal attempts adopted agent shutdown after observer
++  disconnection fails. Rider construction retires a returned send-observer
++  registration after later endpoint admission rejection. Receiver shutdown
++  observes the real SDK stop outcome and independently attempts locally owned
++  lease, pending-work and cancellation-source retirement. Additional
++  `ReleaseClient`/pending-disposal multi-fault ordering is source-qualified,
++  rather than a reproduced native failure (F-SB-API-231, F-SB-API-233,
++  F-SB-API-234).
++- Published XML now describes actual topology sharing, mutable retained views,
++  concurrency limits, timeout units, observer callbacks, pipe behavior and
++  configuration return values. RabbitMQ recreation documentation describes
++  accepted management requests rather than guaranteeing restored delivery.
++  These documentation corrections do not expand runtime guarantees
++  (F-SB-API-147, F-SB-API-179 through F-SB-API-190,
++  F-SB-API-193 through F-SB-API-201).
++
++### Final verification
++
++- Independent adversarial reviews cover the recorded code, test and tool
++  changes, the integrated repair review and the final register/report updates.
++- The current Roslyn run covers 33 source projects and 18,600 exposed declaration
++  IDs without reported workspace, load or compiler errors. DLL/PDB/XML evidence
++  binds the delivered assemblies to the reviewed source. The contract register's
++  833 accessor representations are separate from the declaration denominator.
++- Strict unit and Event Hubs builds completed without warnings or errors.
++  The final unit run passed 13,460 tests in 23 modules, with no failures or skips.
++  The separate Event Hubs run passed 166 tests from 22 classes, with no failures
++  or skips; the six focused controls are included in that total. Seven
++  emulator-dependent classes were excluded.
++- The package/API/consumer gate verified 31 delivery packages and compiled all
++  18 developer journeys. It executed Journey13 configuration and four isolated
++  DI/assembly consumer smokes; it did not execute 18 end-to-end workflows.
++- Forty relevant Microsoft/.NET skill records retain their fixed official
++  source revisions: 31 were applied to their documented steps and nine were
++  recorded as not applicable. Byte-retention recovery adds no new semantic
++  review or execution credit.
++
++### Remaining validation
++
++Real cloud/broker/emulator workflows, Entra/RBAC/token rotation, and ARM64
++operation with 512 MiB without swap under sustained load remain separate
++evidence requirements. Dated coverage and CRAP measurements are not a fresh
++global measurement of the final 23-module test run. Source and metadata
++acceptance does not establish universal ABI, concurrency, arbitrary SPI or
++per-member runtime guarantees. External validation remains partial, and no
++production release or universal A+ grade is declared.
++
++The repository evidence records the [final bounded acceptance](../../evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE551_FINAL234_CURRENT18600_LOCAL_GATES_ROOT_ACCEPTANCE_R1.json)
++and the [final administrative completion](../../evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE551_FINAL_PRE_REVIEWED_ADMIN_COMPLETION_AFTER_RECEIPT_R1.json).
++The Suite's `SERVICEBUS_API_REVIEW_AND_REPAIR` directory contains the full
++finding catalog, PO report and remaining-evidence worklist. Frozen review
++snapshots remain unchanged; this changelog update is subsequent documentation
++maintenance and does not constitute a new code or test run.

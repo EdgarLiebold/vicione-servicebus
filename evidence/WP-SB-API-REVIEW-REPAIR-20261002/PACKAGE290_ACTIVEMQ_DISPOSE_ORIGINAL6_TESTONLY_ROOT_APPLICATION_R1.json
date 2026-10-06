@@ -1,0 +1,25 @@
+{
+  "utc": "2026-10-06T01:09:14.148605+00:00",
+  "status": "INDEPENDENT_TEST_SOURCE_PEER_APPROVED_ORIGINAL6_APPLIED_NATIVE_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package278-activemq-connection-dispose6-testonly-proposed-r1/REPORT.json",
+    "sha256": "3bc5256f385f5001912a84e2b5c06395167587ff853035c2aa52f61535a1bdc4"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package278-activemq-dispose6-independent-source-peer-r1/REPORT.json",
+    "sha256": "eb154b569c073fb7d776d805297733a34438dd96c58915426b2a7deeabb57d35"
+  },
+  "mandatory_boundary_erratum": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package278-activemq-dispose6-report-boundary-erratum-r1/ERRATUM.json",
+    "sha256": "ef90dffc0c05dde0068dafef6961a408f7f9f182a9c75f0ebaf50d21bfdf1967"
+  },
+  "test": {
+    "relative": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqConnectionDisposeDiagnosticsTests.cs",
+    "sha256": "29c519a55dd0ca6cf5614460bffcba1d63386587b1b468cfd3e60babe6dfc456"
+  },
+  "Requirement131to132_ADD1_oldprefix_preserved": true,
+  "Product_unchanged": true,
+  "native_credit": 0,
+  "grade": null,
+  "closed": false
+}

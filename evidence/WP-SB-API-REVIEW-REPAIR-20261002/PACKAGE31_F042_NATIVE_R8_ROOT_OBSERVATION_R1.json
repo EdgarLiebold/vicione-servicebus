@@ -1,0 +1,16 @@
+{
+  "status": "ROOT_PERSONAL_COMPLETE_SEMANTIC_PROJECTION_EIGHT_CASES_SIXTEEN_RECEIVES",
+  "actor": "/root",
+  "utc": "2026-10-03T23:31:49.146217+00:00",
+  "projection": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE31_NATIVE_R8_COMPLETE_SEMANTIC_LOG_PROJECTION.json",
+    "sha256": "c5fd83ed7c182342de0a817e17e95b0a99e0e3fe19347c91e07714f71033a904",
+    "all_six_parts_personally_read": true
+  },
+  "raw_full_claimed": false,
+  "raw_sha256": "7845aeac0d68bd42203b2c5efb7d97703e1314ef830c5310b41514514de448fd",
+  "cases": 8,
+  "receives": 16,
+  "cleanup_all_joined": true,
+  "whole_F042": false
+}

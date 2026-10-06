@@ -1,0 +1,39 @@
+{
+  "utc": "2026-10-05T13:27:05.633458+00:00",
+  "result": "REVIEWED_ACTUAL21_NULLABLE_TWO_CT_OVERRIDE_BASELINE_SYNCHRONIZED_GATE_REPEAT_PENDING",
+  "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/api/packed-public-api.txt",
+  "old_sha256": "e6f246add57089d65de9f78c2b8d38fd6a3f5f73117792e7eea1dff9fbe02719",
+  "new_sha256": "f21dbd840230b816b300ad227ad3de39322cf1bd544dcafbf1f2ecd326fe9bef",
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package184-packed-api-actual23-delta-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "0ff3c3544318c100372f98ccaa431fa33c8c6c49fd2f70186cdec851b2545b17"
+  },
+  "actual_delta_patch": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package184-current31-journey18-consumer4-capture-proposed-r1/PACKED_PUBLIC_API_BASELINE_ACTUAL_DELTA.patch",
+    "sha256": "a21e0ce8a2b5cf9f91e4af10c1512752ad411f8e7d4d0daba66ebe0b9410ea4a"
+  },
+  "root_own_whole_delta_reads": [
+    "4aff68",
+    "6bc697"
+  ],
+  "root_own_seven_source_whole_reads": [
+    "b52e31",
+    "d1fbca",
+    "4511c5"
+  ],
+  "root_actual_two_fresh184_PE_PDB_and_seven_source_and_exact23_delta_check": "5da387",
+  "known_repair_families": [
+    "F-SB-API-132 nullableBodyUri",
+    "F-SB-API-146 optionalSagaCallbacks",
+    "existing operationTokenBehaviorContextProxy implementation"
+  ],
+  "new_finding": false,
+  "gate184_exit_remains": 1,
+  "gate185_pass": false,
+  "unit185_native_total": 13108,
+  "unit185_native_passed": 13108,
+  "unit185_native_failed": 0,
+  "unit185_native_skipped": 0,
+  "unit185_capture_complete": true,
+  "whole_api_closed": false
+}

@@ -1,0 +1,61 @@
+{
+  "status": "SOURCE_ACCEPTED_ALL3_FILES_NATIVE_PENDING",
+  "actor": "/root",
+  "owner766": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE35_ROOT_LAYOUT_COMPLETE_008_R1.json",
+    "bytes": 10935,
+    "sha256": "6cc19701d56253961a1c19323c2d531aa4ad96c349d9b41f5eeb56dfdd388843"
+  },
+  "adversarial_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package38-root-core-oracles-source-preflight-r1/REVIEW.json",
+    "bytes": 18011,
+    "sha256": "a3e28013b095ac1222accd8c5bbf8d9384f30de61327ed124c27bdc0e61397ce"
+  },
+  "adversarial_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package38-root-core-oracles-source-preflight-r1/REPORT.md",
+    "bytes": 2272,
+    "sha256": "be81f5d3be8564e66305c871b7c4725dfd5a082392e173632680feb319fda17b"
+  },
+  "all15_bindings_fresh": true,
+  "root_review_and_report_personally_whole": true,
+  "changes": [
+    {
+      "test": "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalTelemetryTests.cs",
+      "finding": "F-SB-API-004",
+      "outcome": "SOURCE_NO_BLOCK",
+      "modified_lines": [
+        402,
+        405
+      ],
+      "analysis": "Two stale static calls become Process instance calls. Test driver defaults to same Process telemetry through real MessageJournalWriter; explicit StartActivity/Stored tests listener stop fault and parent restoration. Existing store-count3, non-null actual activity and exact parent reference remain. Global listener collection disables parallelization; listener/activity scopes are disposed, Process telemetry itself is not. This exercises standalone Process behavior, not provider MeterFactory isolation; F004 provider closure is separate."
+    },
+    {
+      "test": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchConsumeContextTests.cs",
+      "finding": "F-SB-API-029",
+      "outcome": "SOURCE_NO_BLOCK",
+      "modified_lines": [
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72
+      ],
+      "analysis": "Obsolete last>=first exception assertion becomes exact first and last raw DateTimeOffset values with last one tick earlier, Size mode, count1 and same admitted context reference. Full MessageBatch and IMessageBatch explicitly permit decreasing wallclock metadata; the constructor copies input list and retains original order without normalizing raw times. Existing forward batch, detached input mutation, ordered enumeration and null/invalid collaborators remain asserted. This narrow constructor regression does not independently establish collector timers or full batch pipeline."
+    },
+    {
+      "test": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConsumeScopeLifecycleTests.cs",
+      "finding": "F-SB-API-032",
+      "outcome": "SOURCE_NO_BLOCK",
+      "modified_lines": [
+        106,
+        107,
+        108
+      ],
+      "analysis": "Second cleanup call must throw the same exact AggregateException instance. Created wrapper delegates through ConsumeScopeLifetime to one stored ScopedServiceLifetime disposal Task. Inner restore/scope failures preserve identity and order; both cleanup paths are attempted once, and subsequent awaits observe the existing failure. Existing Assert.Equal inner failures/events and both DisposeCount1 checks remain. This is stronger outcome+ownership validation, not swallowed cleanup or repeated work. Full file preserves concurrent successful disposal, borrowed scopes, single failure identity, provider activation fault/cancellation controls."
+    }
+  ],
+  "restore_r1_disposition": "Root terminated owned pid9952 after silent startup wait; returned0/emptylog is not restore success credit. R2 serialized unsandboxed repeat pending.",
+  "global_Aplus": false
+}

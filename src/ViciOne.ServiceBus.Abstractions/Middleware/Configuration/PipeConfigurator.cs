@@ -41,6 +41,15 @@ public partial class PipeConfigurator<TContext> :
         _specifications.Add(specification);
     }
 
+    internal Func<IPipe<TContext>, IPipe<TContext>> BuildWithContinuation()
+    {
+        var builder = new SpecificationPipeBuilder();
+        for (var index = 0; index < _specifications.Count; index++)
+            _specifications[index].Apply(builder);
+
+        return builder.Build;
+    }
+
     /// <summary>Builds the registered specifications in registration order, or returns an empty pipeline when none are registered.</summary>
     /// <returns>The pipeline produced by the registered specifications, or an empty pipeline.</returns>
     public IPipe<TContext> Build()

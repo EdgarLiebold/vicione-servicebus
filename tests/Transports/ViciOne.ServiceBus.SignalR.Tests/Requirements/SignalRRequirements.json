@@ -14,60 +14,11 @@
     "testMethod": "SendAll_DoesNotDeliverToADisconnectedClientAsync"
   },
   {
-    "requirementId": "REQ-VSB-SIGNALR-GROUP",
-    "variantKey": "only-members-receive",
+    "requirementId": "REQ-VSB-SIGNALR-BROADCAST",
+    "variantKey": "empty-node-is-no-op",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
     "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "SendGroup_DeliversOnlyToGroupMembersAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-GROUP",
-    "variantKey": "disconnect-removes-membership",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "Disconnect_RemovesEveryGroupMembershipAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-GROUP",
-    "variantKey": "local-remove-missing-is-no-op",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "RemoveFromGroup_ForLocalNonMember_DoesNotPublishAGroupCommandAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-GROUP",
-    "variantKey": "duplicate-local-add-is-idempotent",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "AddToGroup_Twice_DeliversOnlyOnceAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-GROUP",
-    "variantKey": "failed-member-does-not-block-peers",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "SendGroup_WhenOneConnectionWriteFails_ContinuesServingOtherMembersAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-USER",
-    "variantKey": "all-connections-for-user",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "SendUser_DeliversToEveryConnectionForOnlyThatUserAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CONNECTION",
-    "variantKey": "exact-local-id",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "SendConnection_DeliversToTheExactLocalConnectionAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CONNECTION",
-    "variantKey": "id-comparison-is-ordinal",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "SendConnection_WithDifferentIdCasing_DoesNotReachTheLocalConnectionAsync"
+    "testMethod": "SendAll_WithoutLocalConnections_CompletesWithoutWritesAsync"
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-BROADCAST",
@@ -84,151 +35,11 @@
     "testMethod": "SendAllExcept_WithDifferentIdCasing_DoesNotExcludeTheConnectionAsync"
   },
   {
-    "requirementId": "REQ-VSB-SIGNALR-GROUP",
-    "variantKey": "exact-member-exclusion",
+    "requirementId": "REQ-VSB-SIGNALR-BROADCAST",
+    "variantKey": "failed-connection-does-not-block-peers",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
     "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "SendGroupExcept_ExcludesTheExactConnectionIdAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-GROUP",
-    "variantKey": "member-exclusion-comparison-is-ordinal",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "SendGroupExcept_WithDifferentIdCasing_DoesNotExcludeTheConnectionAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-USER",
-    "variantKey": "remaining-connection-stays-subscribed",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "DisconnectingOneUserConnection_PreservesTheOtherSubscriptionAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "broadcast-crosses-server-boundary",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "SendAll_FromOneServer_ReachesConnectionsOnBothServersAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "disconnected-remote-client-excluded",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "SendAll_DoesNotReachADisconnectedConnectionOnAnotherServerAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "connection-routing-crosses-server-boundary",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "SendConnection_FromNonOwningServer_ReachesTheOwningServerAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "group-routing-crosses-server-boundary",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "SendGroup_FromNonOwningServer_ReachesTheRemoteGroupMemberAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "remote-remove-missing-acknowledged",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "RemoveFromGroup_OnNonOwningServer_AcknowledgesTheOwningServerAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "remote-add-acknowledged-and-effective",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "AddToGroup_OnNonOwningServer_AcknowledgesAndAddsTheRemoteConnectionAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "duplicate-remote-add-is-idempotent",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "AddToGroup_RemotelyAfterLocalAdd_DoesNotDuplicateDeliveryAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "remote-remove-is-effective",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "RemoveFromGroup_OnNonOwningServer_RemovesTheRemoteConnectionAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "local-connection-bypasses-backplane",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "SendConnection_ForLocalConnection_DoesNotPublishToTheBackplaneAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "remote-write-failure-is-contained",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "SendConnection_RemoteWriteFailure_DoesNotEscapeThePublishingServerAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SERIALIZATION",
-    "variantKey": "origin-json-policy-crosses-backplane",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerSerializationTests",
-    "testMethod": "SendAll_PreservesTheOriginatingJsonNamingPolicyAcrossTheBackplaneAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SERIALIZATION",
-    "variantKey": "messagepack-crosses-backplane",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerSerializationTests",
-    "testMethod": "SendAll_PreservesMessagePackInvocationsAcrossTheBackplaneAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CONNECTION",
-    "variantKey": "multiple-targets",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerFanOutTests",
-    "testMethod": "SendConnections_DeliversToEverySelectedConnectionOnlyAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-GROUP",
-    "variantKey": "multiple-targets-and-empty-name",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerFanOutTests",
-    "testMethod": "SendGroups_DeliversToEveryNamedGroupAndIgnoresEmptyNamesAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-USER",
-    "variantKey": "multiple-targets",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerFanOutTests",
-    "testMethod": "SendUsers_DeliversToEverySelectedUserOnlyAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-FANOUT",
-    "variantKey": "empty-target-sets-are-no-op",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerFanOutTests",
-    "testMethod": "EmptyTargetSets_DoNotPublishToTheBackplaneAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "local-result-round-trip",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "InvokeConnection_LocalClient_ReturnsTypedResultAndClearsTrackingAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "remote-result-round-trip",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "InvokeConnection_RemoteClient_ReturnsTypedResultToRequestingNodeAsync"
+    "testMethod": "SendAll_WhenOneConnectionWriteFails_ContinuesServingOtherConnectionsAsync"
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
@@ -239,24 +50,17 @@
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "missing-result-rejected",
+    "variantKey": "duplicate-remote-delivery-is-idempotent",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "InvokeConnection_ClientCompletesWithoutResult_ThrowsHubExceptionAsync"
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "ClientResultInvocation_DuplicateBackplaneDelivery_WritesOnlyOnceAsync"
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "wrong-result-type-rejected",
+    "variantKey": "invocation-frame-rejected-as-result",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
     "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "InvokeConnection_ResultHasUnexpectedRuntimeType_RejectsResultAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "wrong-connection-cannot-complete",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "SetConnectionResult_WrongConnection_DoesNotCompleteInvocationAsync"
+    "testMethod": "ReceiveClientResult_InvocationFrame_RejectsParameterBindingAsync"
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
@@ -267,10 +71,10 @@
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "remote-cancellation-forwarded",
+    "variantKey": "local-cancellation-write-failure-contained",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
     "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "InvokeConnection_RemoteCancellation_ReachesOwningClientAsync"
+    "testMethod": "InvokeConnection_LocalCancellationWriteFailure_PreservesCallerCancellationAsync"
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
@@ -281,24 +85,10 @@
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "remote-disconnect-fails-requester",
+    "variantKey": "local-result-round-trip",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
     "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "Disconnect_RemotePendingInvocation_FailsRequestingNodeAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "remote-write-failure-propagates",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "InvokeConnection_RemoteWriteFailure_FailsRequestingNodeAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "unknown-result-protocol-rejected",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "ReceiveClientResult_UnknownProtocol_FailsPendingInvocationAsync"
+    "testMethod": "InvokeConnection_LocalClient_ReturnsTypedResultAndClearsTrackingAsync"
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
@@ -313,6 +103,384 @@
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
     "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
     "testMethod": "ReceiveClientResult_MismatchedEnvelopeAndFrame_FailsOnlyAddressedInvocationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "missing-result-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "InvokeConnection_ClientCompletesWithoutResult_ThrowsHubExceptionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "null-result-preserved",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "InvokeConnection_NullClientResult_ReturnsDefaultAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "remote-cancellation-forwarded",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "InvokeConnection_RemoteCancellation_ReachesOwningClientAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "remote-cancellation-publish-failure-contained",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "InvokeConnection_RemoteCancellationPublishFailure_PreservesCallerCancellationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "remote-disconnect-fails-requester",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "Disconnect_RemotePendingInvocation_FailsRequestingNodeAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "remote-result-round-trip",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "InvokeConnection_RemoteClient_ReturnsTypedResultToRequestingNodeAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "remote-write-failure-propagates",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "InvokeConnection_RemoteWriteFailure_FailsRequestingNodeAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "stale-remote-failure-is-no-op",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "FailRemoteInvocation_WithoutMatchingPendingInvocation_IsIdempotentAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "stream-frame-rejected-as-result",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "ReceiveClientResult_StreamItemFrame_RejectsStreamBindingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "unknown-result-protocol-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "ReceiveClientResult_UnknownProtocol_FailsPendingInvocationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "wrong-connection-cannot-complete",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "SetConnectionResult_WrongConnection_DoesNotCompleteInvocationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
+    "variantKey": "wrong-result-type-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
+    "testMethod": "InvokeConnection_ResultHasUnexpectedRuntimeType_RejectsResultAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "custom-remote-group-timeout",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_AppliesACustomRemoteGroupTimeout"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "default-remote-group-timeout",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Options_DefaultToTheDocumentedRemoteGroupTimeout"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "duplicate-hub-registration-rejected-atomically",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_RejectsTheSameHubWithoutPartiallyAddingServices"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "fluent-hub-registration",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_ReturnsTheConfiguratorAndAddsTheHubLifetimeManager"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "independent-hub-types",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_AllowsIndependentHubTypes"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "maximum-system-timer-timeout-is-registrable",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_AcceptsTheLargestSystemTimerTimeout"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "nonpositive-timeout-rejected-atomically",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_RejectsANonPositiveRemoteGroupOperationTimeout"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "normal-public-composition-retains-selected-bus-owner",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneIsolationContractTests",
+    "testMethod": "PublicComposition_PublishesEachHubThroughItsSelectedBusAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "null-configurator-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_RejectsAMissingConfigurator"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "public-api-is-backplane-composition-only",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "PublicApi_ContainsOnlyBackplaneOptionsAndComposition"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "registered-options-are-snapshotted",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_SnapshotsOptionsBeforeCallerMutatesThem"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "selected-group-client-receives-acknowledgement-from-owning-bus",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRSelectedGroupClientTests",
+    "testMethod": "GroupClients_ApplyAndAcknowledgeCommandsThroughEachSelectedBusAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "shared-hub-lifetime-manager-instance",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_ResolvesOneSharedLifetimeManagerInstanceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "unusable-remote-group-timeout-rejected-before-registration",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_RejectsTimeoutBeyondTheSystemTimerLimit"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CONNECTION",
+    "variantKey": "exact-local-id",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
+    "testMethod": "SendConnection_DeliversToTheExactLocalConnectionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CONNECTION",
+    "variantKey": "id-comparison-is-ordinal",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
+    "testMethod": "SendConnection_WithDifferentIdCasing_DoesNotReachTheLocalConnectionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-CONNECTION",
+    "variantKey": "multiple-targets",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerFanOutTests",
+    "testMethod": "SendConnections_DeliversToEverySelectedConnectionOnlyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-FANOUT",
+    "variantKey": "empty-target-sets-are-no-op",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerFanOutTests",
+    "testMethod": "EmptyTargetSets_DoNotPublishToTheBackplaneAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-GROUP",
+    "variantKey": "captured-add-cannot-restore-disconnected-membership",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneIsolationContractTests",
+    "testMethod": "CapturedGroupAdd_CannotRestoreMembershipAfterDisconnectAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-GROUP",
+    "variantKey": "disconnect-removes-membership",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
+    "testMethod": "Disconnect_RemovesEveryGroupMembershipAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-GROUP",
+    "variantKey": "duplicate-local-add-is-idempotent",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
+    "testMethod": "AddToGroup_Twice_DeliversOnlyOnceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-GROUP",
+    "variantKey": "exact-member-exclusion",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
+    "testMethod": "SendGroupExcept_ExcludesTheExactConnectionIdAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-GROUP",
+    "variantKey": "failed-member-does-not-block-peers",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
+    "testMethod": "SendGroup_WhenOneConnectionWriteFails_ContinuesServingOtherMembersAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-GROUP",
+    "variantKey": "group-name-comparison-is-ordinal",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
+    "testMethod": "GroupNames_AreCaseSensitiveAndEmptyIndexesAreRemovedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-GROUP",
+    "variantKey": "local-remove-missing-is-no-op",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
+    "testMethod": "RemoveFromGroup_ForLocalNonMember_DoesNotPublishAGroupCommandAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-GROUP",
+    "variantKey": "member-exclusion-comparison-is-ordinal",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
+    "testMethod": "SendGroupExcept_WithDifferentIdCasing_DoesNotExcludeTheConnectionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-GROUP",
+    "variantKey": "multiple-targets-and-empty-name",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerFanOutTests",
+    "testMethod": "SendGroups_DeliversToEveryNamedGroupAndIgnoresEmptyNamesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-GROUP",
+    "variantKey": "only-members-receive",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
+    "testMethod": "SendGroup_DeliversOnlyToGroupMembersAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "broadcast-crosses-server-boundary",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "SendAll_FromOneServer_ReachesConnectionsOnBothServersAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "connection-routing-crosses-server-boundary",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "SendConnection_FromNonOwningServer_ReachesTheOwningServerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "disconnected-remote-client-excluded",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "SendAll_DoesNotReachADisconnectedConnectionOnAnotherServerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "duplicate-remote-add-is-idempotent",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "AddToGroup_RemotelyAfterLocalAdd_DoesNotDuplicateDeliveryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "group-routing-crosses-server-boundary",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "SendGroup_FromNonOwningServer_ReachesTheRemoteGroupMemberAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "local-connection-bypasses-backplane",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "SendConnection_ForLocalConnection_DoesNotPublishToTheBackplaneAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "remote-add-acknowledged-and-effective",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "AddToGroup_OnNonOwningServer_AcknowledgesAndAddsTheRemoteConnectionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "remote-group-cancellation-propagates",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "AddToGroup_ForUnknownRemoteConnection_PropagatesCancellationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "remote-remove-is-effective",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "RemoveFromGroup_OnNonOwningServer_RemovesTheRemoteConnectionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "remote-remove-missing-acknowledged",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "RemoveFromGroup_OnNonOwningServer_AcknowledgesTheOwningServerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "remote-write-failure-is-contained",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "SendConnection_RemoteWriteFailure_DoesNotEscapeThePublishingServerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
+    "variantKey": "unsupported-group-command-faults",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
+    "testMethod": "GroupCommand_WithUnsupportedAction_FaultsWithoutChangingMembershipAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SERIALIZATION",
+    "variantKey": "completion-null-inputs-rejected",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.HubMessageSerializerTests",
+    "testMethod": "CompletionSerialization_NullInputs_AreRejected"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-SERIALIZATION",
+    "variantKey": "completion-round-trip",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.HubMessageSerializerTests",
+    "testMethod": "CompletionFrame_RoundTripsExactlyOnce"
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-SERIALIZATION",
@@ -330,10 +498,10 @@
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-SERIALIZATION",
-    "variantKey": "completion-round-trip",
+    "variantKey": "messagepack-crosses-backplane",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.HubMessageSerializerTests",
-    "testMethod": "CompletionFrame_RoundTripsExactlyOnce"
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerSerializationTests",
+    "testMethod": "SendAll_PreservesMessagePackInvocationsAcrossTheBackplaneAsync"
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-SERIALIZATION",
@@ -344,31 +512,17 @@
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-SERIALIZATION",
-    "variantKey": "completion-null-inputs-rejected",
+    "variantKey": "origin-json-policy-crosses-backplane",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.HubMessageSerializerTests",
-    "testMethod": "CompletionSerialization_NullInputs_AreRejected"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-BROADCAST",
-    "variantKey": "empty-node-is-no-op",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "SendAll_WithoutLocalConnections_CompletesWithoutWritesAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-BROADCAST",
-    "variantKey": "failed-connection-does-not-block-peers",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "SendAll_WhenOneConnectionWriteFails_ContinuesServingOtherConnectionsAsync"
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerSerializationTests",
+    "testMethod": "SendAll_PreservesTheOriginatingJsonNamingPolicyAcrossTheBackplaneAsync"
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-USER",
-    "variantKey": "unknown-user-is-no-op",
+    "variantKey": "all-connections-for-user",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
     "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "SendUser_WithoutLocalSubscriptions_CompletesWithoutWritesAsync"
+    "testMethod": "SendUser_DeliversToEveryConnectionForOnlyThatUserAsync"
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-USER",
@@ -378,157 +532,24 @@
     "testMethod": "SendUser_WhenOneConnectionWriteFails_ContinuesServingOtherConnectionsAsync"
   },
   {
-    "requirementId": "REQ-VSB-SIGNALR-GROUP",
-    "variantKey": "group-name-comparison-is-ordinal",
+    "requirementId": "REQ-VSB-SIGNALR-USER",
+    "variantKey": "multiple-targets",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerFanOutTests",
+    "testMethod": "SendUsers_DeliversToEverySelectedUserOnlyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-USER",
+    "variantKey": "remaining-connection-stays-subscribed",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
     "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
-    "testMethod": "GroupNames_AreCaseSensitiveAndEmptyIndexesAreRemovedAsync"
+    "testMethod": "DisconnectingOneUserConnection_PreservesTheOtherSubscriptionAsync"
   },
   {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "unsupported-group-command-faults",
+    "requirementId": "REQ-VSB-SIGNALR-USER",
+    "variantKey": "unknown-user-is-no-op",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "GroupCommand_WithUnsupportedAction_FaultsWithoutChangingMembershipAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-SCALEOUT",
-    "variantKey": "remote-group-cancellation-propagates",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "AddToGroup_ForUnknownRemoteConnection_PropagatesCancellationAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "local-cancellation-write-failure-contained",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "InvokeConnection_LocalCancellationWriteFailure_PreservesCallerCancellationAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "remote-cancellation-publish-failure-contained",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "InvokeConnection_RemoteCancellationPublishFailure_PreservesCallerCancellationAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "invocation-frame-rejected-as-result",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "ReceiveClientResult_InvocationFrame_RejectsParameterBindingAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "stream-frame-rejected-as-result",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "ReceiveClientResult_StreamItemFrame_RejectsStreamBindingAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "null-result-preserved",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "InvokeConnection_NullClientResult_ReturnsDefaultAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "stale-remote-failure-is-no-op",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerClientResultTests",
-    "testMethod": "FailRemoteInvocation_WithoutMatchingPendingInvocation_IsIdempotentAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-CLIENT-RESULT",
-    "variantKey": "duplicate-remote-delivery-is-idempotent",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerScaleOutTests",
-    "testMethod": "ClientResultInvocation_DuplicateBackplaneDelivery_WritesOnlyOnceAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "default-remote-group-timeout",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "Options_DefaultToTheDocumentedRemoteGroupTimeout"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "custom-remote-group-timeout",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "Registration_AppliesACustomRemoteGroupTimeout"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "registered-options-are-snapshotted",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "Registration_SnapshotsOptionsBeforeCallerMutatesThem"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "nonpositive-timeout-rejected-atomically",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "Registration_RejectsANonPositiveRemoteGroupOperationTimeout"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "unusable-remote-group-timeout-rejected-before-registration",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "Registration_RejectsTimeoutBeyondTheSystemTimerLimit"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "maximum-system-timer-timeout-is-registrable",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "Registration_AcceptsTheLargestSystemTimerTimeout"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "fluent-hub-registration",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "Registration_ReturnsTheConfiguratorAndAddsTheHubLifetimeManager"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "shared-hub-lifetime-manager-instance",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "Registration_ResolvesOneSharedLifetimeManagerInstanceAsync"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "duplicate-hub-registration-rejected-atomically",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "Registration_RejectsTheSameHubWithoutPartiallyAddingServices"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "independent-hub-types",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "Registration_AllowsIndependentHubTypes"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "null-configurator-rejected",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "Registration_RejectsAMissingConfigurator"
-  },
-  {
-    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
-    "variantKey": "public-api-is-backplane-composition-only",
-    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
-    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
-    "testMethod": "PublicApi_ContainsOnlyBackplaneOptionsAndComposition"
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.ServiceBusHubLifetimeManagerLocalTests",
+    "testMethod": "SendUser_WithoutLocalSubscriptions_CompletesWithoutWritesAsync"
   }
 ]

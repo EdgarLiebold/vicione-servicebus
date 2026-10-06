@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-06T09:03:41.690153+00:00",
+  "status": "ROOT_F152_TWO_EXTRA_OWNING_DIAGNOSTIC_GUARDS_APPLIED_FIXED4_PLUS_PRIOR12_MODULE_STRICT_FRESH_PENDING",
+  "source": {
+    "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqBasicConsumer.cs",
+    "before_sha256": "8f09c94e0eed7441260730d039a407bbb277846a8f2c4a85a0052f30d99eb4ba",
+    "after_sha256": "38a1d55e8d1c2d185fde76ed07ae08b557b3977d21f0bae9b9e68f5c024ba62c",
+    "before_lines": 251,
+    "after_lines": 265,
+    "literal_inverse_count": 2,
+    "entire2inverse_to251": true,
+    "prior6inverse_entire_to209": true,
+    "XML_comments_exact": true
+  },
+  "Root_research_before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package394-basic-diagnostic8-fixed-source-capture-r1/RESEARCH_BEFORE.json",
+    "sha256": "9840e4ade36245033d01739b51298eab2c28bc78c246a8966c1a6618bad9c89c"
+  },
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package391-basic-extra2-owning-diagnostics-product1-proposed-r3",
+    "REPORT": "147fdefae6790784dbafcfb74ca2220bc21d69bc61aad069b26112cf3ad46387",
+    "MAN": "e082fc7a81da3613a21b7e3ff8309810a3eded1e7e338b2ff9f0e3a777aa391b"
+  },
+  "different_Product_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package391-basic-extra2-independent-scanner-source-peer-r2",
+    "REPORT": "a843dcc4499a877aea36de1dfa7872787536d398a76840f074fab299c75f32b4",
+    "MAN": "10db08a0159c1becd4089d3c0ca89eda8eb961eb59864ca9e60fc88fd2f6954f"
+  },
+  "actual_original": {
+    "REPORT": "1b55458d86b94b1e772f24fd04eca47a86e330cece94854637a7531ae5a1735d",
+    "MAN": "0536dccc0de456685b4c6ca0c513ad6ba00cd067cf694d8b5e6990b5cd5ad132",
+    "ACK": "5e384a8621d5c0c080e9ff9659414232a6888fe14e9351e05932e1184dffe689"
+  },
+  "requirements_Test374_Test366_unchanged": true,
+  "publicXML_unchanged": true,
+  "new_Finding_ID": null,
+  "fixed_native_not_yet_run": true,
+  "grade": null,
+  "whole_API_closed": false
+}

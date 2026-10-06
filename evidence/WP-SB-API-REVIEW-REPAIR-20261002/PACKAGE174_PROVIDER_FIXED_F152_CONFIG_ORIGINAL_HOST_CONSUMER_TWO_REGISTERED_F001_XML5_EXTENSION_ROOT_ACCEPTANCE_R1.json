@@ -1,0 +1,315 @@
+{
+  "utc": "2026-10-05T09:15:13.028861+00:00",
+  "actor": "root",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package174-provider-fixed-core-original-fresh5-independent-r1/REPORT.json",
+    "sha256": "c3b9e4748685c47c86a00a81aadbce8bd0a5be24a671561ef074f0b1330e3394",
+    "manifest_sha256": "0eeb9a8616aa9fd24a926d4fc4a14299a38762f5766ce0fc228d6cf9ce91e79f",
+    "freeze_sha256": "aea54d1d05524fbf300369318fd22aa2c1d0c093cc7ab6eb626c7faad556a31b"
+  },
+  "root_independent_checks": "6fc361 all3673MAN/all3655 frozen/currentfiles/all3490physicalCS/all14 exact actualledger receipts+logs/5physicalCRCZIP/disjoint2677cases; whole141 approved6aefa5+literalR2precision81092c. Allfourfirstfailureswholeabd9cb, reached exactSourcecauses d8e0c5/cc3ba8 and literalpatches216cf3.",
+  "native": {
+    "total": 2677,
+    "passed": 2673,
+    "failed": 4,
+    "skipped": 0
+  },
+  "F152_provider_fixed": "All36 Dynamo and19EF unchanged selected case IDs pass, including all12 original insert cases with actual later identity, context/state, primary storage error, terminal operation and owned SDK disposal assertions. Azure39, Coreold160, prior117/neighbors2263 pass. Twelve owningSaga/Azure/Dynamo/EF callsites fixed; two ConfigSaga routes now qualified Original failures awaiting175 repair.",
+  "F152_config_original": [
+    {
+      "scope": "core",
+      "case": "ViciOne.ServiceBus.Tests.Sagas.LegacySagaIntegrationTests.SagaRegistration_DebugFailureDoesNotPreventPublicMessageDeliveryAsync(directConnection: True, loggerThrows: True)",
+      "first_assertion": "LegacySagaIntegrationTests.cs:91 Assert.Null",
+      "actual_unique_diagnostic": "Saga registration diagnostic failure",
+      "source_cause": "Actual optional Saga/ConnectSaga log executes before repository specification/configuration/connection admission.",
+      "reached": "Actual bus startup/direct registration joined; selected structured debug Saga type identity, level, call count and exact logger cause were checked.",
+      "unreached": "Configuration callback count, selected public-send persistence, delivered snapshot and healthy handle after firstNull were not reached.",
+      "controls": "Matching healthy logger route passes; actual finally restores logging and joins owned work. No inferred later assertions on failure."
+    },
+    {
+      "scope": "core",
+      "case": "ViciOne.ServiceBus.Tests.Sagas.LegacySagaIntegrationTests.SagaRegistration_DebugFailureDoesNotPreventPublicMessageDeliveryAsync(directConnection: False, loggerThrows: True)",
+      "first_assertion": "LegacySagaIntegrationTests.cs:91 Assert.Null",
+      "actual_unique_diagnostic": "Saga registration diagnostic failure",
+      "source_cause": "Actual optional Saga/ConnectSaga log executes before repository specification/configuration/connection admission.",
+      "reached": "Actual bus startup/direct registration joined; selected structured debug Saga type identity, level, call count and exact logger cause were checked.",
+      "unreached": "Configuration callback count, selected public-send persistence, delivered snapshot and healthy handle after firstNull were not reached.",
+      "controls": "Matching healthy logger route passes; actual finally restores logging and joins owned work. No inferred later assertions on failure."
+    }
+  ],
+  "registered_two": [
+    {
+      "id": "F-SB-API-163",
+      "severity": "Medium",
+      "title": "Host stop diagnostic failure skips started rider and owned agent shutdown",
+      "source": "src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs",
+      "classification": "CONFIRMED_FINITE_NATIVE_ORIGINAL_OWNERSHIP_DIAGNOSTIC_DEFECT",
+      "status": "ORIGINAL_ROOT_REGISTERED_INDEPENDENT_REPAIR_READY",
+      "actual_original_contexts": [
+        {
+          "scope": "core",
+          "case": "ViciOne.ServiceBus.Tests.Transports.HostHandleApiTests.HostStoppingDiagnostic_DoesNotSkipRiderAndAgentShutdownAsync(loggerThrows: True)",
+          "first_assertion": "HostHandleApiTests.cs:50 Assert.Equal",
+          "actual_unique_diagnostic": "Host stop admission debug failure",
+          "source_cause": "BaseHost.StopResourcesAsync diagnostic executes before riders/endpoints/owned-agent stop.",
+          "reached": "Actual host ready and rider started; stop task joined; selected host address/reason/count/exact thrown logger cause were checked.",
+          "unreached": "Agent StopCount/token/CompletedSuccess and successful stop assertions after first rider StopCount are not reached.",
+          "controls": "Matching healthy logger route passes; actual finally restores logging and joins owned work. No inferred later assertions on failure."
+        }
+      ],
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package174-provider-fixed-core-original-fresh5-independent-r1/REPORT.json",
+        "sha256": "c3b9e4748685c47c86a00a81aadbce8bd0a5be24a671561ef074f0b1330e3394",
+        "manifest_sha256": "0eeb9a8616aa9fd24a926d4fc4a14299a38762f5766ce0fc228d6cf9ce91e79f",
+        "freeze_sha256": "aea54d1d05524fbf300369318fd22aa2c1d0c093cc7ab6eb626c7faad556a31b"
+      },
+      "whole_API_member_review_closed": false,
+      "limits": [
+        "Exact reached first assertion establishes named route; later failed-case assertions remain unreached.",
+        "Healthy actual counterpart and real finally ownership controls only; no universal logger/shutdown/task deadline guarantee."
+      ]
+    },
+    {
+      "id": "F-SB-API-164",
+      "severity": "Medium",
+      "title": "Consumer stop diagnostic failure leaves manual consume completion pending",
+      "source": "src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "classification": "CONFIRMED_FINITE_NATIVE_ORIGINAL_OWNERSHIP_DIAGNOSTIC_DEFECT",
+      "status": "ORIGINAL_ROOT_REGISTERED_INDEPENDENT_REPAIR_READY",
+      "actual_original_contexts": [
+        {
+          "scope": "core",
+          "case": "ViciOne.ServiceBus.Tests.Transports.ConsumerAgentTests.ConsumerStoppingDiagnostic_DoesNotSkipManualLoopCompletionAsync(loggerThrows: True)",
+          "first_assertion": "ConsumerAgentTests.cs:41 Assert.True",
+          "actual_unique_diagnostic": "Consumer stop admission debug failure",
+          "source_cause": "ConsumerAgent.StopAgentAsync diagnostic executes before TrySetConsumeCompleted and SetCompleted.",
+          "reached": "Actual manual consume task started pending; selected stop task joined; logger address/reason/count/exact throw cause were checked.",
+          "unreached": "Agent CompletedSuccess/Null failure/stop success/stopped token/graceful assertions after first consume completion are not reached.",
+          "controls": "Matching healthy logger route passes; actual finally restores logging and joins owned work. No inferred later assertions on failure."
+        }
+      ],
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package174-provider-fixed-core-original-fresh5-independent-r1/REPORT.json",
+        "sha256": "c3b9e4748685c47c86a00a81aadbce8bd0a5be24a671561ef074f0b1330e3394",
+        "manifest_sha256": "0eeb9a8616aa9fd24a926d4fc4a14299a38762f5766ce0fc228d6cf9ce91e79f",
+        "freeze_sha256": "aea54d1d05524fbf300369318fd22aa2c1d0c093cc7ab6eb626c7faad556a31b"
+      },
+      "whole_API_member_review_closed": false,
+      "limits": [
+        "Exact reached first assertion establishes named route; later failed-case assertions remain unreached.",
+        "Healthy actual counterpart and real finally ownership controls only; no universal logger/shutdown/task deadline guarantee."
+      ]
+    }
+  ],
+  "F001_current_five_XML_extension": {
+    "original_same_policy": "Task completion does not universally promise transport dispatch under valid local buffer/outbox endpoint policy. OriginalF001 family extended to four runtime initializer overloads and one typedMediator response completion contract; no newID or fivecaseID inflation.",
+    "original_current_bindings": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package175-root-xml5-original-current174-bindings.json",
+      "sha256": "9ad95cca582bcc90b840699df55ca0c53892a1d407e0e5b285d20c2a77c0a9aa"
+    },
+    "owners_and_exact_ids": [
+      {
+        "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/PublishEndpointExtensions.cs",
+        "relative": "src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/PublishEndpointExtensions.cs",
+        "before_sha256": "6d24c7a94f05067566e064a21596e9314a2ef8b970f744c25bc8ec623c861c48",
+        "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-initializer-mediator-result-xml5-product-proposed-r1/proposed/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/PublishEndpointExtensions.cs",
+        "proposed_sha256": "5ad124b960ce4507979fea9a9564fd0f16a543c94b30b687a4198088716489fe",
+        "before_text": "A task that completes when the initialized message has been sent to the transport.",
+        "after_text": "A task that completes the configured endpoint operation. Buffer or outbox policy may complete it after local capture, before transport dispatch; completion does not confirm delivery or consumption.",
+        "node_count": 2,
+        "literal_inverse_full_bytes_equal": true,
+        "non_XML_line_bytes_equal": true,
+        "selected_exact_ids": [
+          "M:ViciOne.ServiceBus.Advanced.Initializers.PublishEndpointExtensions.PublishAsync(ViciOne.ServiceBus.IPublishEndpoint,System.Type,System.Object,System.Threading.CancellationToken)",
+          "M:ViciOne.ServiceBus.Advanced.Initializers.PublishEndpointExtensions.PublishAsync(ViciOne.ServiceBus.IPublishEndpoint,System.Type,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.PublishContext},System.Threading.CancellationToken)"
+        ]
+      },
+      {
+        "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/SendEndpointExtensions.cs",
+        "relative": "src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/SendEndpointExtensions.cs",
+        "before_sha256": "e7d307c25ae1712b31dffa9b8c43d14db2d595fa8a0fc372f623ea45f9717aee",
+        "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-initializer-mediator-result-xml5-product-proposed-r1/proposed/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/SendEndpointExtensions.cs",
+        "proposed_sha256": "035aa8252dd894d84ff4d1003930abc049290ee75b570fd5aa9b6ccb04752f74",
+        "before_text": "A task that completes when the initialized message has been sent to the transport.",
+        "after_text": "A task that completes the configured endpoint operation. Buffer or outbox policy may complete it after local capture, before transport dispatch; completion does not confirm delivery or consumption.",
+        "node_count": 2,
+        "literal_inverse_full_bytes_equal": true,
+        "non_XML_line_bytes_equal": true,
+        "selected_exact_ids": [
+          "M:ViciOne.ServiceBus.Advanced.Initializers.SendEndpointExtensions.SendAsync(ViciOne.ServiceBus.ISendEndpoint,System.Type,System.Object,System.Threading.CancellationToken)",
+          "M:ViciOne.ServiceBus.Advanced.Initializers.SendEndpointExtensions.SendAsync(ViciOne.ServiceBus.ISendEndpoint,System.Type,System.Object,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext},System.Threading.CancellationToken)"
+        ]
+      },
+      {
+        "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Mediator/Mediator/MediatorRequestHandler.cs",
+        "relative": "src/ViciOne.ServiceBus.Mediator/Mediator/MediatorRequestHandler.cs",
+        "before_sha256": "921fd4a710d3ca83f78e9987b27311caf691c641a32f9bb78ee1530bf6894c55",
+        "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package186-initializer-mediator-result-xml5-product-proposed-r1/proposed/src/ViciOne.ServiceBus.Mediator/Mediator/MediatorRequestHandler.cs",
+        "proposed_sha256": "3587575846ccc9c4bb7e9bfcc80de0aeb8e398d1cb9da968299c4d6d7a8b4541",
+        "before_text": "A task that completes after the response has been dispatched.",
+        "after_text": "A task that completes request handling and the configured response operation. Buffer or outbox policy may complete the response operation after local capture, before transport dispatch; completion does not confirm delivery or consumption.",
+        "node_count": 1,
+        "literal_inverse_full_bytes_equal": true,
+        "non_XML_line_bytes_equal": true,
+        "selected_exact_ids": [
+          "M:ViciOne.ServiceBus.Mediator.MediatorRequestHandler`2.ConsumeAsync(ViciOne.ServiceBus.ConsumeContext{`0})"
+        ]
+      }
+    ],
+    "root_sources": "Wholeactual3owners135 c8fb63 and allreturns-onlypatches216cf3; independentwhole3pluscausalDispatcher/Outbox/directresponsepeer7ebb69. Originalactual174 physicalXML5/sourcechecksum and two actualembeddedPE/PDBpairs171128.",
+    "scope": "Comment-only, Native0; correctedpublishedXMLstillpending175.",
+    "reopened": true
+  },
+  "fresh5": [
+    {
+      "filename": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "d68021fcc7c470e78a86cb3d11cbe67dafd0537b03af476c5317fcc34e10ee23",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.dll",
+        "lib/net10.0/ViciOne.ServiceBus.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/b55ac8b6660f4362ad827b6bda204f3f.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "5796be480111cf71f8bacd5e8e2141f0b654af19dd835ebd5c95ee1005bf43fe",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "9d2c0d9bbe164be085a7e9a958fe39393207ac7e3bb534e431c53449e27c6160",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "be54fb21fe26f94356e732e078bf3d1eae2964415f34fd918b756b2793f288e6"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.Azure.Table.1.0.0.nupkg",
+      "sha256": "23c6b677754b8c814f418fba4a0258c9c69a08e1409927d163bf7adafb1e4ba6",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.Azure.Table.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.Azure.Table.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Azure.Table.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/80e8ed43ddab4d8fac98dc2798ae1450.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Azure.Table.dll",
+          "sha256": "b639b9b7bfe0388f050c30e2151dfb2db95f533fe0394cc95695250bb6e7a78f",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Azure.Table.xml",
+          "sha256": "40c4cd2d49892dbcf1020a5c4477b70e45b8136f7f132f925373f076f36c93dd",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "a9992a07405818c9a99f59d626ea44702158cd02a99ec1ee353c861875efc7c4"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.DynamoDb.1.0.0.nupkg",
+      "sha256": "936f730ebcd8a5d5fb315c365436d9d395aa6035a6b1d424cc2c3fb3a035cb04",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.DynamoDb.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.DynamoDb.dll",
+        "lib/net10.0/ViciOne.ServiceBus.DynamoDb.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/2d7c5e8af68b45dab381aee02f190670.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.DynamoDb.dll",
+          "sha256": "45b6864f06a751005d37a5da9bcd233cb2294133d3fa3939110959533c811004",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.DynamoDb.xml",
+          "sha256": "6d95321d91fab3d9675611f37d2a7a82504ac4ed85e040e641aed17ace01dad7",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "f97cc8c15a781a4ae019f3075af9f1cc736f066d57a41d57b14c6685e8bc6d9a"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+      "sha256": "c1b9103cde1caca77e01379575959af04d3c4a3df411e41113ebf4645663d1dd",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/cf1c337129a8430587e52aca72afbcd4.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "sha256": "88e163235651a7ebffe237d906ca46b783ce181bc2bf732d4582b668277af693",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.xml",
+          "sha256": "2c9fe9906fcb3273de3484dcf3eb8a7faacdbb55e378fc73e1bbd63c5fe76578",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "bb35a7eb9ab4bb54b00ce6a728d1b1004ea0b2c39a3c671b4ee2ecd50231006a"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "54d6eef7f33a82966fb9f9307a2c8ab3657d8e64c99ee8a110957d000280caf4",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.Sagas.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/6df33ae8e94541d5b142bbc635c4cc9e.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "2eeda99e21ef48c0e7bbb00e624d67e6ab35de45c4c2fc7c4472944248f5e0a2",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+          "sha256": "f22525e67ab8140d6631849e7746127e68d02c4a3f80bf786fa8b3f11ebb29bb",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "b578047fff1e6a9d6c931e9f3cf602e0649a71dfe6374901f29e35e2c585ec6f"
+    }
+  ],
+  "counts_before": {
+    "known": 162,
+    "accepted": 161
+  },
+  "counts_after": {
+    "known": 164,
+    "accepted": 160,
+    "open_ids": [
+      "F-SB-API-001",
+      "F-SB-API-152",
+      "F-SB-API-163",
+      "F-SB-API-164"
+    ]
+  },
+  "whole_API_closed": false
+}

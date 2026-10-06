@@ -1,0 +1,28 @@
+{
+  "status": "ROOT_SCOPED_F031_ACCEPTED_SHARED_FINAL_PENDING",
+  "finding": "F-SB-API-031",
+  "root_personally_FULL": "finalTXT+JSON+metadataSupplement; final boundedpublicowner7; source23preauthor; runnerfull; ASTindependent108effects/29receipts/6selectedchains",
+  "review": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-adversarial/REVIEW.json",
+  "review_sha256": "ddc730765b4b84177afd1831c0d4ebd96a8a0df414e446e38d62080a676607e1",
+  "manifest_sha256": "3ed0ae614d0dab1921faafa824ac9fc59ba43762fa66dfd3af518795b6f3d744",
+  "artifacts_verified": 8,
+  "owned_current_and_snapshot_verified": 34,
+  "original": {
+    "causal_red": 9,
+    "positive": 5,
+    "guards": 0
+  },
+  "corrected": 14,
+  "compiled_mutants": 4,
+  "baseline": 14,
+  "rollback": 14,
+  "limits": [
+    "No retained QoS-value runtime assertion.",
+    "Single typed bus route only; no public two-bus isolation claim.",
+    "Saga business correlation and terminal assertions only, no persistence/reload/lifecycle completion.",
+    "Active deadline and guard detection, no intentional caller cancellation schedule or universally cancelable cleanup guarantee.",
+    "No parallel State.Probe, canonical Core766 full owner, wholeAPI/ARM/cloud grade, CLOSED symbol or transfer of Root personal read closure.",
+    "Reviewer executed only readonly Python/Git/hash/ZIP/PE/PDB checks; no .NET native operation or product/test/global CSV write."
+  ],
+  "whole_API_CLOSED": false
+}

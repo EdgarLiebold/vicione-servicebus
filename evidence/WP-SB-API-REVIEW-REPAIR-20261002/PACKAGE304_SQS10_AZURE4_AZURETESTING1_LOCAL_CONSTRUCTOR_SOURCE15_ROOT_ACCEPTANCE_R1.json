@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-06T02:02:31.319542+00:00",
+  "status": "ROOT_ACCEPTED15_INDIVIDUAL_LOCAL_SOURCE_CONSTRUCTION_CONTRACTS_ENUM1_STILL_HELD_NATIVE0",
+  "master_before_sha256": "173da49c48f95ab01c34f0a350dfd0532b2145b2fbbbf8df470ff3ea277aa982",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package294-aws-azure-implicit16-local-source-contracts-proposed-r1",
+      "manifest_sha256": "32e5da698a843317d3ea364d17f200a922d56b676883478c9f59abb7e1d7b850"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package294-ctor16-independent-source-peer-r2",
+      "manifest_sha256": "7502591f870549bf1822cb62746c4177438e14ab04a3ed94e846bb31ddc6a0eb"
+    }
+  ],
+  "root_authority": "All16 completeindividualnorm+limits read aebf7b (earlieroversized583da2 truncated, no whole credit). Wholepeercontext excludingmechanicaltablesaebf7b, all16Original/PDB3canonical/source15/XMLabsence freshguards. Both reviewers whole22 sources1431 own authority separately; Rootretained own selected/source languagecontext and individualnorms, no borrowed whole22 credit.",
+  "source15": {
+    "AmazonSqs": 10,
+    "AzureServiceBus": 4,
+    "AzureServiceBus.Testing": 1,
+    "classes": 13,
+    "structs": 2
+  },
+  "held1": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsEndpointAddress.AddressType.#ctor",
+  "preservation": "All18922 oldMaster rows unchanged; exact15Source appendonly, enumConstructorID1 and existing operative holds remain. Per-ID type/base/initializer/defaultvalue facts only, no freshctorMethodDef/ABI/nativeactivation. Singleclass-count prose13 matches16 decomposition; no new product/test code.",
+  "counts_after": {
+    "master": 18937,
+    "Original_accepted": 18075,
+    "Original_remaining": 494
+  },
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

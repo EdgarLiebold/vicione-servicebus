@@ -1,0 +1,149 @@
+[
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE17_F029_PUBLIC_PRE_NATIVE_READ_R1.json",
+    "sha256": "290ddde43e0f460849810b730d7fe9450e1ac6ca3bcf0fbb0b1b25dfb24a1cee",
+    "semantic": {
+      "utc": "2026-10-03T06:41:12.977199+00:00",
+      "cases": 26,
+      "only8authoredowner_bodies": "no ancestor Directory.Build/Packages/global/NuGet imports; isolated restorecache",
+      "previous": "same7authorbodies;NuGetsourcechangedselectedpreviousfeed"
+    },
+    "parent_owner_read_not_transferred": true
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE17_F029_PUBLIC_PRE_NATIVE_READ_R2.json",
+    "sha256": "190cc47d5512a2f86f56873c29dbb02ec0f843d1be2b06286119c5b1e59bd2da",
+    "semantic": {
+      "utc": "2026-10-03T06:48:07.264352+00:00",
+      "capacity": "16;batchlimit2/3;duplicate+replacement admit while two originalawaitsamebatch",
+      "whole_API_CLOSED": false
+    },
+    "parent_owner_read_not_transferred": true
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE17_F029_PUBLIC_PRE_NATIVE_READ_R3.json",
+    "sha256": "4f69676079ab8d1cca4f5784fdcdd2061875036500b2bccadd2dbc9b6a104650",
+    "semantic": {
+      "utc": "2026-10-03T06:51:45.523806+00:00",
+      "cases": 26,
+      "dedup": "onlymembership/schedules/terminalcounts;noisolatedretimestampclaim"
+    },
+    "parent_owner_read_not_transferred": true
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE17_F029_PUBLIC_PRE_NATIVE_READ_R4.json",
+    "sha256": "8d964f61167f203b18a25f865a0a1479b06ec4771178584242b4793d38bb7333",
+    "semantic": {
+      "utc": "2026-10-03T07:04:46.538160+00:00",
+      "cases": 26,
+      "change": "duplicate entered-real-serialized-Add positive public SPI witness with null fallback; concurrent task drain; no product change",
+      "additional_root_fresh_full": [
+        "ITransportSequenceNumber",
+        "BaseReceiveContext",
+        "ScopePipeContext",
+        "BasePipeContext",
+        "ListPayloadCache",
+        "PipeContext"
+      ],
+      "dedup": "onlymembership/schedules/terminalcounts;noisolatedretimestampclaim"
+    },
+    "parent_owner_read_not_transferred": true
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE17_F029_PUBLIC_REQUIREMENT_SCOPE_DELTA.json",
+    "sha256": "07b6464767e88849b691b2bbddfe2f642aa2ea9ed9ac2c02b91df4aeebcfd4f9",
+    "semantic": {
+      "case_renamed": "dedup-preserves-members-and-schedule",
+      "assertions_unchanged": true,
+      "limit": "Scheduling + final membership + actual3terminals/1batch afterStop proved; no isolated duplicate Last-retimestamp statement; negativeUTC beforeduplicateSend has no admissionwitness",
+      "historical_valid_run": "package17-f029-public-corrected-twentysix-r2:26PASS; archived9owners+actualAPP/PDB",
+      "root_name_delta_FULL_beforebuild": true,
+      "final": "currentnamewhole26 reruns required"
+    },
+    "parent_owner_read_not_transferred": true
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE17_F029_SETUP_EXCLUSION_R1.json",
+    "sha256": "12bdcc1aafcc05990f1b5a6ce21e05d99ec15a034ed6df6981d57713c5f6de2f",
+    "semantic": {
+      "excluded_phase": "package17-f029-public-corrected-build",
+      "compiler_errors": 3,
+      "cause": "missing public Middleware/Operations namespace imports",
+      "product_finding_or_mutant_kill": false,
+      "source_fix": "imports + Probe.CreateScope (public interface direct)",
+      "root_delta_full_read": true
+    },
+    "parent_owner_read_not_transferred": true
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE17_F029_SETUP_EXCLUSION_R2.json",
+    "sha256": "a955b882814e33131478cc65fed91cbfd0bb06dc928bd22334e8adaa15261c2f",
+    "semantic": {
+      "excluded_phase": "package17-f029-public-corrected-build-r2",
+      "compiler_errors": 1,
+      "cause": "patternvariable shadowing",
+      "fix": "rename stopFailure",
+      "root_delta_FULL": true,
+      "product_finding_or_mutant_kill": false
+    },
+    "parent_owner_read_not_transferred": true
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE17_F029_SETUP_EXCLUSION_R3.json",
+    "sha256": "bf4d1b683d237cb2e33c168b1124582a7a16958ba29b1302bd285e44b397a84b",
+    "semantic": {
+      "excluded_phase": "package17-f029-public-corrected-twentysix",
+      "actual": "25PASS1guardfailure;dedup terminaltimeout/cleanupguardfailure",
+      "cause": "size2 capacity admits original+duplicate;third distinct replacement cannotenter while bothconsume awaitsharedbatch",
+      "fix": "public endpointcapacity16 beforeConfigureConsumer; independent boundedcleanup attempts+trackedtasksjoins",
+      "not_product_error_or_mutant_kill": true,
+      "old_owner_and_app_archived": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-capacity-refinement/MANIFEST.json"
+    },
+    "parent_owner_read_not_transferred": true
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE17_F029_SETUP_EXCLUSION_R4.json",
+    "sha256": "df560ee9d4383444285c8327c199ee8fde68987ce2ec0de913d72397a320a183",
+    "semantic": {
+      "excluded_phase": "package17-f029-public-corrected-twentysix-r3",
+      "actual": "25 PASS / 1 FAIL: duplicate terminal WaitAsync TimeoutException + cleanup List enumeration InvalidOperationException",
+      "not_product_error_or_mutant_kill": true,
+      "ordering_hypothesis": "Send completion does not prove duplicate Batch Add order; replacement may reach serialized collector before duplicate",
+      "confirmed_fixture_fault": "OwnedLifetime tasks List may change during async enumeration",
+      "fix_plan": "Identity-bound public sequence-payload getter witness before replacement send; concurrent queue drain during independently bounded cleanup",
+      "old_owner_and_app_archived": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package17-before-admission-gate-refinement/MANIFEST.json"
+    },
+    "parent_owner_read_not_transferred": true
+  },
+  {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE17_F029_SOURCE_OWNER_PLAN.json",
+    "sha256": "25a984f63d437849a64a480915f00c18e72c8fb85e17c1b35a81df837f30ed0c",
+    "semantic": {
+      "status": "RESEARCH_PLAN_BEFORE_ROOT_AUTHORSHIP",
+      "utc": "2026-10-03T06:32:18.800452+00:00",
+      "finding": "F-SB-API-029",
+      "research_manifest_sha256": "8cbbcf47104fad314062400e5b45d6f84f3451b830c292d0a536e6518efb0b2e",
+      "product_plan": [
+        "Remove only last<first UTCchronologyguard from MessageBatch",
+        "Document rawwallclock first/last maydecrease; no elapsed subtractionpromise"
+      ],
+      "public_owner_plan": {
+        "fresh_owner": "package17-f029",
+        "cases": "12 default/typed Size/TimeFirst/TimeLast backward/forward;2 publichandleForced;equal/System/providerSnapshot/dedup/cancel/schedulecleanupcontrols",
+        "configuration": "actual normalDI pluspublic typed middleware contextTimeProvider payload; limits concrete typed lambda",
+        "clock": "owned manual publicTimeProvider/ITimer, separatewallUTC and elapsed; positive deadline/callback/change/disposal witnesses; noFakeSDK sourceclaims",
+        "completion": "actualapplicationbatch plusactual originalPost/Faultterminal observer; callerSendcompletion notreceipt",
+        "mutants": [
+          "restoredchrono guard",
+          "lastUTCclamped",
+          "firstUTCoverwritten"
+        ],
+        "cleanup": "independentownedfinallycleanup;actualstop/drain,releasegates/joinalltasks;timeoutalwaysfail"
+      },
+      "canonical_tests": "Root NOTwholeCore766; nocanonicaledit/grade; staleBackwardUTC canonicalexpectation retainedvisiblependingRootownownerclosure",
+      "native": "UNEXECUTED",
+      "whole_API_CLOSED": false
+    },
+    "parent_owner_read_not_transferred": true
+  }
+]

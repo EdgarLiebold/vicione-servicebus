@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-04T13:28:35.109442+00:00",
+  "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/DependencyInjection/RuntimeRegistrationTypeContractTests.cs",
+  "source_sha256": "5bd3f429eb1ac5028d2cad5915c0c82d61efe81071074df69acf79948578fb32",
+  "requirements_before": "db0ab52523165eb15008b05cfb7eaea12b82ee27f02d0017b1084881df83f604",
+  "requirements_after": "2365f793a5ff6147fcb49ab6c67c60ead43fe5d07623e4b7f9c2c9022f2f318f",
+  "rows_before": 4571,
+  "rows_after": 4572,
+  "add": [
+    {
+      "requirementId": "REQ-VSB-DI-PUBLIC-BOUNDARIES",
+      "variantKey": "runtime-configurator-consumer-and-endpoint-implementation-must-be-closed",
+      "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.RuntimeRegistrationTypeContractTests",
+      "testMethod": "RuntimeRegistration_RejectsOpenImplementationsBeforeMutationAndAcceptsClosedControls",
+      "testAssembly": "ViciOne.ServiceBus.Tests"
+    }
+  ],
+  "remove": [],
+  "root_independent_source_review_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package66-runtime-type-root-adversarial-r1/REPORT.json",
+  "product_changed": false,
+  "native_credit": false
+}

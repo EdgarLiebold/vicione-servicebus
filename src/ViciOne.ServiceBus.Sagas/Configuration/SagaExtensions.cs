@@ -20,7 +20,13 @@ public static class SagaExtensions
         if (sagaRepository == null)
             throw new ArgumentNullException(nameof(sagaRepository));
 
-        LogContext.Debug?.Log("Subscribing Saga: {SagaType}", TypeCache<T>.ShortName);
+        try
+        {
+            LogContext.Debug?.Log("Subscribing Saga: {SagaType}", TypeCache<T>.ShortName);
+        }
+        catch (Exception)
+        {
+        }
 
         var sagaConfigurator = new SagaConfigurator<T>(sagaRepository, configurator);
 
@@ -47,7 +53,13 @@ public static class SagaExtensions
         foreach (IPipeSpecification<SagaConsumeContext<T>> pipeSpecification in pipeSpecifications)
             ArgumentNullException.ThrowIfNull(pipeSpecification);
 
-        LogContext.Debug?.Log("Connecting Saga: {SagaType}", TypeCache<T>.ShortName);
+        try
+        {
+            LogContext.Debug?.Log("Connecting Saga: {SagaType}", TypeCache<T>.ShortName);
+        }
+        catch (Exception)
+        {
+        }
 
         ISagaSpecification<T> specification = SagaConnectorCache<T>.Connector.CreateSagaSpecification<T>();
         foreach (IPipeSpecification<SagaConsumeContext<T>> pipeSpecification in pipeSpecifications)

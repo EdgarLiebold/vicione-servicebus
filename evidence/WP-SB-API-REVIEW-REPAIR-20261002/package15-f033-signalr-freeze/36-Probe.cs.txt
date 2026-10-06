@@ -1,0 +1,70 @@
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+
+namespace ViciOneReview.SignalRLifetime;
+
+public sealed class Probe(string mode)
+{
+    public string Mode { get; } = mode;
+    public bool Group => Mode.StartsWith("remotegroup") || Mode.StartsWith("advancedhandle") || Mode.StartsWith("basicclient")
+        || Mode.StartsWith("standard") || Mode.StartsWith("invalidacknowledgement") || Mode.StartsWith("dualinterfacehandle");
+    public bool Cancel => Mode.Contains("callercancel", StringComparison.Ordinal);
+    public bool PrimaryFault => !InvalidAck && (Mode.EndsWith("primaryonly") || Mode.EndsWith("dualfault")
+        || Mode is "advancedhandle-responseandhandlefault" or "advancedhandle-controlledthreefaults");
+    public bool CustomPrimary => Mode is "advancedhandle-responseandhandlefault" or "advancedhandle-controlledthreefaults";
+    public bool ScopeFault => Mode.EndsWith("dualfault") || Mode.EndsWith("cleanuponly") || Mode.EndsWith("scopefault")
+        || Mode.EndsWith("callercancelandcleanupfault") || Mode is "advancedhandle-controlledthreefaults" or "advancedhandle-handleandscopefault";
+    public bool RequestFault => Mode.StartsWith("advancedhandle", StringComparison.Ordinal);
+    public bool InvalidAck => Mode.StartsWith("invalidacknowledgement", StringComparison.Ordinal);
+    public bool Basic => Mode.StartsWith("basicclient", StringComparison.Ordinal);
+    public bool CleanupCallbacks => Mode == "standardhandle-cleanupcallbackscontained";
+    public bool ForwardPublish { get; set; } = mode == "realpublishdelivery-control";
+    public bool RecoveryUsed { get; set; }
+    public bool HealthyShutdown { get; set; }
+    public Exception Primary { get; } = new ApplicationException("operation-primary-sentinel");
+    public Exception RequestFailure { get; } = new IOException("request-release-sentinel");
+    public Exception ScopeFailure { get; } = new InvalidOperationException("scope-release-sentinel");
+    public Exception? ActualPrimary;
+    public int ScopeCreated, ScopeEnteredCount, ScopeCompleted, PublishCalls, RequestCreated, RequestDisposed, RequestAsyncDisposed, UnexpectedCalls, TimerFaults, ConnectorFaults;
+    public CancellationToken PublishToken, CreateToken, ResponseToken, SendToken;
+    public TaskCompletionSource OperationEntered { get; } = Signal();
+    public TaskCompletionSource SendEntered { get; } = Signal();
+    public TaskCompletionSource SendRelease { get; } = Signal();
+    public TaskCompletionSource ScopeEntered { get; } = Signal();
+    public TaskCompletionSource ScopeRelease { get; } = Signal();
+    public ConcurrentQueue<string> Events { get; } = new();
+    public ConcurrentQueue<Task> ActualSends { get; } = new();
+    public List<(IDisposable Handle, Task Message)> Handles { get; } = [];
+    public List<IServiceProvider> Scopes { get; } = [];
+    public List<Publication> Publications { get; } = [];
+    public IClientFactory? OwnedFactory;
+    public static TaskCompletionSource Signal() => new(TaskCreationOptions.RunContinuationsAsynchronously);
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public void FailPrimary() => throw Primary;
+    public Exception Unexpected() { Interlocked.Increment(ref UnexpectedCalls); return new NotSupportedException("Unexpected public SPI overload."); }
+}
+
+public sealed class AsyncScopeProbe : IAsyncDisposable
+{
+    readonly Probe _probe;
+    public AsyncScopeProbe(Probe probe, IServiceProvider scopedProvider)
+    {
+        _probe = probe; probe.Scopes.Add(scopedProvider); Interlocked.Increment(ref probe.ScopeCreated);
+    }
+    public async ValueTask DisposeAsync()
+    {
+        Interlocked.Increment(ref _probe.ScopeEnteredCount); _probe.Events.Enqueue("scope"); _probe.ScopeEntered.TrySetResult();
+        await _probe.ScopeRelease.Task;
+        Interlocked.Increment(ref _probe.ScopeCompleted);
+        if (_probe.ScopeFault && !_probe.HealthyShutdown) throw _probe.ScopeFailure;
+    }
+}
+
+public sealed class Publication
+{
+    public Task? Task;
+    public Exception? CancellationFailure;
+}

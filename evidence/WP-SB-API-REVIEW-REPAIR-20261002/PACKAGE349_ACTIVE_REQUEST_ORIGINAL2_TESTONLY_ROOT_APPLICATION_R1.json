@@ -1,0 +1,55 @@
+{
+  "utc": "2026-10-06T05:25:25.003796+00:00",
+  "status": "TEST_ONLY_APPLIED_UNCHANGED_ORIGINAL_PRODUCT_PRE_NATIVE",
+  "source_rows": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/Util/ActiveRequestTimerDisposalTests.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package349-active-request-original2-native-source-capture-r1/source-before/tests/ViciOne.ServiceBus.Abstractions.Tests/Util/ActiveRequestTimerDisposalTests.cs",
+      "bytes": 7734,
+      "sha256": "1711c3ab3e38940aedef33d7c1e66ffe97f3b0ce63267f100d22670450a5e874"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/Requirements/AbstractionsRequirements.json",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package349-active-request-original2-native-source-capture-r1/source-before/tests/ViciOne.ServiceBus.Abstractions.Tests/Requirements/AbstractionsRequirements.json",
+      "bytes": 235059,
+      "sha256": "f129b6e5a81bf80d7d528e47bd500b89e87f8d65bb8d64779b498b04b81204b4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Util/ActiveRequest.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package349-active-request-original2-native-source-capture-r1/source-before/src/ViciOne.ServiceBus.Abstractions/Util/ActiveRequest.cs",
+      "bytes": 3769,
+      "sha256": "827176590d51f0976aeed90259c2b4ab2efb7acda1199b6039a371c09608235d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Util/RequestRateAlgorithm.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package349-active-request-original2-native-source-capture-r1/source-before/src/ViciOne.ServiceBus.Abstractions/Util/RequestRateAlgorithm.cs",
+      "bytes": 25691,
+      "sha256": "91a5300e9909124e50d0280cc90966ca03dee45454d8f5eee2b8f1fe27a0f948"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Util/RequestRateAlgorithmOptions.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package349-active-request-original2-native-source-capture-r1/source-before/src/ViciOne.ServiceBus.Abstractions/Util/RequestRateAlgorithmOptions.cs",
+      "bytes": 1096,
+      "sha256": "a0c7574e63a4176486feb6d1a389676b01c96291f1e30b4eea817c05ac4f8ef1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package349-active-request-original2-native-source-capture-r1/source-before/tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+      "bytes": 3538,
+      "sha256": "e7defc6d171b1dcd799cdbf7276d0c37bd83c51b1fc5d991a9a3c3d85f81a921"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package349-active-request-original2-native-source-capture-r1/source-before/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+      "bytes": 915,
+      "sha256": "d78d054d54468692e35500dca6c90e706e6a77bfcbb7d1878bcb4bc97fba4e9e"
+    }
+  ],
+  "author_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package345-active-request-timer-dispose-original2-testonly-proposed-r1/REPORT.json",
+  "independent_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package345-active-request2-independent-source-peer-r1/REPORT.json",
+  "root_whole_test_receipt": "59d6e5",
+  "root_whole_target_options_project_receipt": "d8ede9",
+  "native_count": 0,
+  "grade": null,
+  "closed": false
+}

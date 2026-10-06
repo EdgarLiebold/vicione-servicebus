@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-06T01:51:03.491432+00:00",
+  "status": "ROOT_ACCEPTED4_INDIVIDUAL_POSTFIXED_LOCAL_SOURCE_CONTRACTS_NATIVE0",
+  "master_before_sha256": "25452bca0e84463d2ab597c6749b89eb168c95e34adf6f6ef94064d1533a613a",
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package291-sqs-postfixed-public-source3-contracts-proposed-r1",
+      "manifest_sha256": "51825f70464cb2e4e8c224804267866b66b8bcab9dd0dcdb54b2d349e2c5f856"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package291-sqs-source3-original-index-zero-based-precision-overlay-r1",
+      "manifest_sha256": "9946d9a4c511a74e75e694865a104790e18ce47f2b2f24b888ffb2e5e6091a60"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package291-sqs-source3-independent-norm-peer-r1",
+      "manifest_sha256": "4a7f2999db993c15bba2059c91ffde773c1d308d35d0cf8c21c0385290208356"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package293-activemq-dispose1-current-fixed-local-contract-proposed-r1",
+      "manifest_sha256": "295618480941966522ba2fe1cc7294bd0ec9005314b5ca3f87306d4b690fe0ee"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package293-activemq-dispose1-independent-scanner-source-peer-r1",
+      "manifest_sha256": "81e240d601e6985ee76632ba37b07d0d5b19f36cf479e5e45dd86fc9fb3aa46b"
+    }
+  ],
+  "root_authority": "RetainedSQS3wholeaf631e; freshcomplete3norm6926e3/Dispose1norm0397fa8de366. Entire independent reports684097. FreshactualPDB2/currentXML4/Source354265/Originalzero-based4/disjointMaster guards in thiscall. No wholeSDK lifecycle or nativeSource credit; Role disclosed QualifierownSQSProduct/Test and independent norm draft peer only, separateRuntimeSource/fixednative proofs Root292. ActiveMQ differentScannerSource peer +separatefixednative Root297.",
+  "preservation": "Existing18918 Master whole rows unchanged; Source4 appendonly. Mandatory SQSindexoverlay corrects only3 numericindices to1288/1291/1292, norms unchanged; Dispose453 exact. Pendingstages/privateworker/Concurrent/repeated/customSPI semantics explicitly ungraded.",
+  "counts_before": {
+    "master": 18918,
+    "Original_accepted": 18056,
+    "Original_remaining": 513
+  },
+  "counts_after": {
+    "master": 18922,
+    "Original_accepted": 18060,
+    "Original_remaining": 509
+  },
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

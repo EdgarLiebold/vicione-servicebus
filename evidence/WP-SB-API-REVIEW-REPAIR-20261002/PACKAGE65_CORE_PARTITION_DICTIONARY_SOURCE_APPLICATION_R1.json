@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-04T13:22:40.569848+00:00",
+  "source_application": "EXACT2_REVIEWED_PROPOSALS",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Util/SingleThreadedDictionaryTests.cs",
+      "before_sha256": null,
+      "after_sha256": "c16f504467eed8779c550400c7b9baa9009c4947933b56d3b87f297ce2bea470"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Consumers/Concurrency/ConsumerConcurrencyGateTests.cs",
+      "before_sha256": "2d6df6af1eeb6c0d2bc2ff99b1bad3fe04d60a1a9a75ec36e5e94b7a34ff617f",
+      "after_sha256": "2491430c6181e88253070f92dbdf785418a6237cfa4c5b6014f12f0446fd2cc5"
+    }
+  ],
+  "requirements_before": "1e7c1a45951c46a3d0833fae244ca428388bd2719d35d0ed20d778a43b2f2a91",
+  "requirements_after": "db0ab52523165eb15008b05cfb7eaea12b82ee27f02d0017b1084881df83f604",
+  "rows_before": 4569,
+  "rows_after": 4571,
+  "add": [
+    {
+      "requirementId": "REQ-VSB-UTILITY-DICTIONARY",
+      "variantKey": "copy-on-write-comparer-snapshots-and-factory-failure",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Util.SingleThreadedDictionaryTests",
+      "testMethod": "Mutations_PreserveComparerSnapshotsAndFailureAtomicity"
+    },
+    {
+      "requirementId": "REQ-VSB-V5-CONSUMER-PARTITION",
+      "variantKey": "dispose-rejects-before-selection-and-drains-accepted-work",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Consumers.Concurrency.ConsumerConcurrencyGateTests",
+      "testMethod": "PartitionedDispose_ClosesAdmissionBeforeSelectionAndDrainsAcceptedWorkAsync"
+    }
+  ],
+  "remove": [],
+  "independent_source_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/root-core-oracles-partition-dictionary-adversarial-r1/REPORT.json",
+  "native_credit": false,
+  "product_modified": false
+}

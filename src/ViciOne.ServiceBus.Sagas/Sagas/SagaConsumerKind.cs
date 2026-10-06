@@ -74,10 +74,15 @@ sealed class SagaConsumerKind :
         if (!selector.TryGetRegistration(registrationContext, typeof(TRegistration), out ISagaRegistration? registration))
             return false;
 
-        if (typedConfigure != null)
-            registration.AddConfigureAction<TRegistration>((_, configurator) => typedConfigure(configurator));
+        if (typedConfigure == null)
+            registration.Configure(endpointConfigurator, registrationContext);
+        else
+        {
+            if (registration is not IEndpointSagaRegistration<TRegistration> endpointRegistration)
+                throw EndpointRegistrationConfiguration.Unsupported(registration, registrationContext, "Saga configuration");
 
-        registration.Configure(endpointConfigurator, registrationContext);
+            endpointRegistration.Configure(endpointConfigurator, registrationContext, typedConfigure);
+        }
         return true;
     }
 

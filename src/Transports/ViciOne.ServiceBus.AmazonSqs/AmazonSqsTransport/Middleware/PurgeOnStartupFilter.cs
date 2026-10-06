@@ -57,6 +57,13 @@ public class PurgeOnStartupFilter :
     {
         await context.PurgeQueueAsync(_queueName, context.CancellationToken).ConfigureAwait(false);
 
-        LogContext.Debug?.Log("Purged queue {QueueName}", _queueName);
+        try
+        {
+            LogContext.Debug?.Log("Purged queue {QueueName}", _queueName);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics must not invalidate a completed purge.
+        }
     }
 }

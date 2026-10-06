@@ -1,0 +1,29 @@
+{
+  "utc": "2026-10-04T16:48:39.584932+00:00",
+  "ids": [
+    "F-SB-API-086",
+    "F-SB-API-087",
+    "F-SB-API-088",
+    "F-SB-API-089",
+    "F-SB-API-090",
+    "F-SB-API-093",
+    "F-SB-API-094"
+  ],
+  "status": "BOUNDED_REPAIRS_CLOSED_FULL_SQL_UNIT_AND_FRESH_PACKAGES",
+  "native": {
+    "passed": 263,
+    "failed": 0,
+    "skipped": 0,
+    "strict": "0W/E"
+  },
+  "independent_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package89-sql-fixed263-independent-r1/REPORT.json",
+    "sha256": "b6cefdef31a8ac19a5eb09a680aa355ed732a9b46832528fc50651c3d726bbda"
+  },
+  "freeze": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package89-sql-fixed263-independent-r1/FREEZE.json",
+    "sha256": "d298979f178140866c7b3717454f27e41dfdc06e3ad73533b305cbd18d076816"
+  },
+  "scope_limit": "local unit/SPI, no real database proof and no whole API A+",
+  "root_report_read": "b2be23 whole current qualification report"
+}

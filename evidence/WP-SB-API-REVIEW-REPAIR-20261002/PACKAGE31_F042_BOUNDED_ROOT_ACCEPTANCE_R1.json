@@ -1,0 +1,21 @@
+{
+  "status": "ROOT_ACCEPTED_BOUNDED_NATIVE_SOURCE_AND_INDEPENDENT_PHYSICAL_QUALIFICATION_FULL_F042_MUTATIONS_SHARED_FINAL_PENDING",
+  "actor": "/root",
+  "utc": "2026-10-03T23:31:49.146217+00:00",
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package31-f042-boundary-native-r8/MANIFEST.json",
+    "sha256": "34c0068c572ab7abf456b4db7f3ae8d093ba735be0013c5a16c07419366aac68",
+    "personally_full": true,
+    "all_artifact_hashes_rechecked": true
+  },
+  "review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package31-f042-boundary-native-r8/REVIEW.md",
+    "sha256": "904c0349e3185a468d670b41837e9bd5f831901196c2291154efe581d24aae8c",
+    "personally_full": true
+  },
+  "cases": 8,
+  "receives": 16,
+  "root_native_read": "whole reversible semantic projection",
+  "whole_F042": false,
+  "whole_API": false
+}

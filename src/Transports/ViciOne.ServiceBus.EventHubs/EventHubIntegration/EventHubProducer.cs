@@ -37,8 +37,27 @@ public class EventHubProducer :
     /// <returns>A task that completes after producer shutdown.</returns>
     public async ValueTask DisposeAsync()
     {
-        _connectHandle?.Disconnect();
-        await this.StopAsync("Disposing Agent").ConfigureAwait(false);
+        Exception? observerFailure = null;
+        try
+        {
+            _connectHandle?.Disconnect();
+        }
+        catch (Exception exception)
+        {
+            observerFailure = exception;
+        }
+
+        try
+        {
+            await this.StopAsync("Disposing Agent").ConfigureAwait(false);
+        }
+        catch (Exception stopFailure) when (observerFailure is not null)
+        {
+            throw new AggregateException("Producer observer disconnection and shutdown both failed.", observerFailure, stopFailure);
+        }
+
+        if (observerFailure is not null)
+            global::System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(observerFailure).Throw();
     }
 
     /// <summary>Produces one message using the default Event Hubs send-context pipe.</summary>

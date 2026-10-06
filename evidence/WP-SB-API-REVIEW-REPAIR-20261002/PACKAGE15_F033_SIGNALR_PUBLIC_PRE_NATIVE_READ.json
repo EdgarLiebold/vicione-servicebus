@@ -1,0 +1,127 @@
+{
+  "status": "ROOT_COMPLETE_BOUNDED_10_FILES_PER_STAGE_BEFORE_NATIVE",
+  "inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/Cases.cs",
+      "bytes": 13801,
+      "sha256": "f552634d81eec9193fb6f2c67ddcffd25bb0372d060d59e0b200853e6c1e4350",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/ClientAdapter.cs",
+      "bytes": 8473,
+      "sha256": "511fc22ef65d59fab61008cd27cfc89eba6a39f6a386cc0cc5c450d1282b4e07",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/NuGet.Config",
+      "bytes": 580,
+      "sha256": "9f4fab0e5007d0092c67ed5c70dfa876c1a947562edd0fd0eac73066380378d3",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/OwnedLifetime.cs",
+      "bytes": 801,
+      "sha256": "577e8003c589582e8e7142418c735a8cefbe2943713e3bb968052bf53f76299a",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/Probe.cs",
+      "bytes": 4000,
+      "sha256": "acfcc59b2107038923183190cb03de6b08ab13557dc7b7f9bedc889f016851f4",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/Program.cs",
+      "bytes": 4317,
+      "sha256": "15908a642f5d81983af4964c6c23ebc02f8f6e79c4fa21975213d7cb97f1f17e",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/PublicConnection.cs",
+      "bytes": 2959,
+      "sha256": "1da36a9b04cf717d7f2e11c0b219222db9d4f9a04719f246de3a97c4d5edfca4",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/PublishProbe.cs",
+      "bytes": 1196,
+      "sha256": "8f7f323461389c5b60de363af3946a9d9a2fa1954e6271e672adba16463c9dd1",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/SignalRLifetime.PublicConsumer.csproj",
+      "bytes": 1019,
+      "sha256": "a6c2cdc13e73f32a9b60976906f4b501c1c539a1baf4cd12a407421457de152a",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/TrackingContext.cs",
+      "bytes": 3594,
+      "sha256": "a48be5490e7bf3d4836ecd8732077613f575d9619e26276a2b906632a6d7d713",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/Cases.cs",
+      "bytes": 13801,
+      "sha256": "f552634d81eec9193fb6f2c67ddcffd25bb0372d060d59e0b200853e6c1e4350",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/ClientAdapter.cs",
+      "bytes": 8473,
+      "sha256": "511fc22ef65d59fab61008cd27cfc89eba6a39f6a386cc0cc5c450d1282b4e07",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/NuGet.Config",
+      "bytes": 581,
+      "sha256": "768e42f13ef05a8ea44aa544ee978e2a0d5aa6c5046747c24b11292f139ce9e3",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/OwnedLifetime.cs",
+      "bytes": 801,
+      "sha256": "577e8003c589582e8e7142418c735a8cefbe2943713e3bb968052bf53f76299a",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/Probe.cs",
+      "bytes": 4000,
+      "sha256": "acfcc59b2107038923183190cb03de6b08ab13557dc7b7f9bedc889f016851f4",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/Program.cs",
+      "bytes": 4317,
+      "sha256": "15908a642f5d81983af4964c6c23ebc02f8f6e79c4fa21975213d7cb97f1f17e",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/PublicConnection.cs",
+      "bytes": 2959,
+      "sha256": "1da36a9b04cf717d7f2e11c0b219222db9d4f9a04719f246de3a97c4d5edfca4",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/PublishProbe.cs",
+      "bytes": 1196,
+      "sha256": "8f7f323461389c5b60de363af3946a9d9a2fa1954e6271e672adba16463c9dd1",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/SignalRLifetime.PublicConsumer.csproj",
+      "bytes": 1019,
+      "sha256": "a6c2cdc13e73f32a9b60976906f4b501c1c539a1baf4cd12a407421457de152a",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/TrackingContext.cs",
+      "bytes": 3594,
+      "sha256": "a48be5490e7bf3d4836ecd8732077613f575d9619e26276a2b906632a6d7d713",
+      "root_read": "PERSONAL_FULL_BODY_AUTHOR_AND_FRESH_READ; sameowner exact ownSHA reuse for cloned bytes; NuGetstagefeedliteralreviewed"
+    }
+  ],
+  "lock": "notyetgenerated; RootwillFullreadbeforeexecution/acceptance",
+  "canonical_testowner": "notchangedoraccepted"
+}

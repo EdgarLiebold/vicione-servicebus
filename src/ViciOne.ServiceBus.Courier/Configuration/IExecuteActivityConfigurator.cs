@@ -12,7 +12,7 @@ public interface IExecuteActivityConfigurator<TActivity, TArguments> :
     where TActivity : class, IExecuteActivity<TArguments>
     where TArguments : class
 {
-    /// <summary>Gets or sets the concurrent message limit.</summary>
+    /// <summary>Sets the concurrent message limit.</summary>
     int? ConcurrentMessageLimit { set; }
 
     /// <summary>Configures middleware before the activity instance is resolved.</summary>

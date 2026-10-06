@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.AmazonSqs.Topology;
 public class AmazonSqsBrokerTopology :
     BrokerTopology
 {
-    /// <summary>Initializes an immutable snapshot of broker topology.</summary>
+    /// <summary>Copies the supplied topology sequences into arrays.</summary>
     /// <param name="topics">The Amazon SNS topics.</param>
     /// <param name="queues">The Amazon SQS queues.</param>
     /// <param name="queueSubscriptions">The topic-to-queue subscriptions.</param>

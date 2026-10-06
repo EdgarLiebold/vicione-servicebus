@@ -1,0 +1,177 @@
+{
+  "review_id": "PACKAGE01-INTERNAL-ADVERSARIAL-20261002",
+  "freeze_sha256": "fb4b58e623dfae621beaabec01b2919c99dd2ecf61714cdb6ece0d41c636cb7b",
+  "status": "PATCH_REVIEW_PASS_WITH_STATED_PROOF_LIMITS",
+  "files": [
+    {
+      "path": "MUTATION_REVIEW.json",
+      "sha256": "9e20cf0523a836aabf621be589cb98dd4bc8af36164eb8176b9b5a234ef79018",
+      "bytes": 14320
+    },
+    {
+      "path": "REPORT.md",
+      "sha256": "a8d4284e007f6ef459e9b088ae23dd1a3a395e9581d40a369a224b53281c0a98",
+      "bytes": 2527
+    },
+    {
+      "path": "REVIEW.json",
+      "sha256": "b3641b235ee2a793348ed661b97268f9aae4cecd97ff9c498890a94efcfc4f5f",
+      "bytes": 25115
+    },
+    {
+      "path": "delta-01.patch",
+      "sha256": "9260fade935143023871337d0381a20545e3455b067933a51297aa182eb3d621",
+      "bytes": 1419
+    },
+    {
+      "path": "delta-02.patch",
+      "sha256": "c9062cd5b46963b151517bcc602ce035dd9245b51378109839af459e6dc3f461",
+      "bytes": 1907
+    },
+    {
+      "path": "delta-03.patch",
+      "sha256": "27cdec178dfd86eb20ea6615ba641d40868d246ba46dc3153be66c531aed3326",
+      "bytes": 2208
+    },
+    {
+      "path": "delta-04.patch",
+      "sha256": "93cdb43fa869c7b35c25261c7b50843100eaf3172efef60c57b838f4219597de",
+      "bytes": 2805
+    },
+    {
+      "path": "delta-05.patch",
+      "sha256": "5e24f7564c4781037e60c9a26fed15bbdf1d2d6bcb9f1a2f888ebfb9b4a9fb34",
+      "bytes": 826
+    },
+    {
+      "path": "delta-06.patch",
+      "sha256": "e4297de96f94037046a4b0bc572e0952e4817d6ee8f208c8905fa79fbcabe8c9",
+      "bytes": 966
+    },
+    {
+      "path": "delta-07.patch",
+      "sha256": "85641e26f940446a60794fe30d9785d7bf067bcca9168c7eca28207b735beceb",
+      "bytes": 923
+    },
+    {
+      "path": "delta-08.patch",
+      "sha256": "56f0f6fa16ffddd22689ff561697fabc7311c6170f5a19ccd8e9de313363342c",
+      "bytes": 875
+    },
+    {
+      "path": "delta-09.patch",
+      "sha256": "b75349148cfbe0120f41d0c234c0c83f20b42c71c74bebce45cc3fef17fb9889",
+      "bytes": 1271
+    },
+    {
+      "path": "delta-10.patch",
+      "sha256": "677c235e6cf9fcabc53a5185ac79e0a15952157aae92aef869d1b2262285d850",
+      "bytes": 4252
+    },
+    {
+      "path": "delta-11.patch",
+      "sha256": "71912fb9cbfbf68af505dd68b389d962e93ffaba2b54339309b44ed1d511f4e7",
+      "bytes": 12937
+    },
+    {
+      "path": "delta-12.patch",
+      "sha256": "f6fdcc45b888ec7d4fc06791a71f572fd4205dcedb1a09984901ebb8f6548371",
+      "bytes": 3948
+    },
+    {
+      "path": "delta-13.patch",
+      "sha256": "4285673d4521b8956bb6df509567126b7281f2104b7810bbc3535c9b0134a7a3",
+      "bytes": 2836
+    },
+    {
+      "path": "delta-14.patch",
+      "sha256": "9313e67b3639f6005eeb83112739ff27f9c0ebe075fb93f2942a7e176a812d49",
+      "bytes": 1906
+    },
+    {
+      "path": "mutant-administration-delay.patch",
+      "sha256": "73482224816773e613184f5441d589be01277a8c06fe58bf4d4b5af58ae156ff",
+      "bytes": 517
+    },
+    {
+      "path": "mutant-borrowed-client-owned.patch",
+      "sha256": "64d90d839b3f4137007d931914525bf748708a34ad2f43269c77a8b713718362",
+      "bytes": 528
+    },
+    {
+      "path": "mutant-container-name-leak.patch",
+      "sha256": "fcd78639febed9c836fa08f35e787835e6fa6c63b59f155297ce2ed57044cc7e",
+      "bytes": 606
+    },
+    {
+      "path": "mutant-created-client-borrowed.patch",
+      "sha256": "fe81bdbebd0e3bda0d2255750e880a94d9ace671a9c6e219f69ec2ddffab8824",
+      "bytes": 531
+    },
+    {
+      "path": "mutant-direct-constructor-borrowed.patch",
+      "sha256": "c77d727f4a6e8b99fae95bd240e881742f6359e3bcbc6ee63e6f169a5f074dd8",
+      "bytes": 520
+    },
+    {
+      "path": "mutant-dispose-unawaited.patch",
+      "sha256": "75562bfacd9a8adba123659f317caa35e701f4ef5ee04a0d9ef2151c969d0f16",
+      "bytes": 538
+    },
+    {
+      "path": "mutant-fragment-leak.patch",
+      "sha256": "1047079a419af68830fdd615f0b91c72f27b4f8e6dfd62e3a686d237d4c52f8c",
+      "bytes": 509
+    },
+    {
+      "path": "mutant-maximum-bound.patch",
+      "sha256": "4cf1abcc5754ba48ef95ff0f5c6917580b910911aab2728b7d9ccf609e4539fd",
+      "bytes": 576
+    },
+    {
+      "path": "mutant-maximum-exclusive.patch",
+      "sha256": "ca6b248e33049653b2cfab41bac0308da50fc4dfe564b4b199654511dfdea46e",
+      "bytes": 705
+    },
+    {
+      "path": "mutant-message-lock.patch",
+      "sha256": "1e789456381900cd020691847bd5220d5eae5f821c63bd30a48259773414fd5b",
+      "bytes": 723
+    },
+    {
+      "path": "mutant-messaging-delay.patch",
+      "sha256": "f17765553d23c204500eefd5cb552ee3f7d5b34390b2387dcbc65eb3e779c921",
+      "bytes": 551
+    },
+    {
+      "path": "mutant-minimum-bound.patch",
+      "sha256": "1817693ab467e353b82a8aa5886bf38639988afe017bffe857eac2438cef67ed",
+      "bytes": 603
+    },
+    {
+      "path": "mutant-minimum-exclusive.patch",
+      "sha256": "3dd7acdca273ae404a63883c3a9adc49d8aef9ce8cef39d38f0d4073faeed5a9",
+      "bytes": 734
+    },
+    {
+      "path": "mutant-non-utc-session.patch",
+      "sha256": "d8a6f57967ccea504cb091073e0299d5f442731bd6be4ebdb957578b432698a8",
+      "bytes": 707
+    },
+    {
+      "path": "mutant-query-leak.patch",
+      "sha256": "cb44c1a8f2b53a1646378fcb3e8252de767f3abd41c62f99b934f0ce3be43e84",
+      "bytes": 563
+    },
+    {
+      "path": "mutant-session-snapshot.patch",
+      "sha256": "c0eaf636cd02da4b468810c858869083b00cf9bd12baa01d4d8f35844e683e11",
+      "bytes": 1268
+    },
+    {
+      "path": "mutant-userinfo-leak.patch",
+      "sha256": "a9346a7a88d7a93cb6babd96977bdb895366d4fcfd333bb7c15d7dbf515bd8cf",
+      "bytes": 565
+    }
+  ]
+}

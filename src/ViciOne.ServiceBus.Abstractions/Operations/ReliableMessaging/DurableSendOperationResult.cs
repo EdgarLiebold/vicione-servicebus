@@ -25,5 +25,7 @@ public readonly record struct DurableSendOperationResult
     public DurableSendOperationOutcome Outcome { get; }
 
     /// <summary>Gets whether the requested state transition was applied.</summary>
-    public bool IsApplied => Outcome is DurableSendOperationOutcome.Requeued or DurableSendOperationOutcome.Discarded;
+    /// <remarks>The default, uninitialized result does not report success.</remarks>
+    public bool IsApplied => Id.Value != Guid.Empty
+        && Outcome is DurableSendOperationOutcome.Requeued or DurableSendOperationOutcome.Discarded;
 }

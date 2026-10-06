@@ -1,0 +1,419 @@
+{
+  "status": "FRESH_ORIGINAL_FACTORY_SOURCE_BUILD_PACK_TWO_OWN_CACHES_SIX_CAUSAL_RED_TEN_CONTROLS_BOUND",
+  "original_factory_sha256": "befc6519928c8c7db1b6eb3bfb46938bbd4f902099f544da20d265c6cd30571a",
+  "original6209_restored_after": true,
+  "binary_sha256": "5c0a3eaff274c68b3e753db1ccf5f3fbafdfdcf4be03bd84210d6650396073f6",
+  "receipts": [
+    {
+      "phase": "package04-f018-original-provenance-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T01:17:31.526163+00:00",
+      "completed_utc": "2026-10-03T01:17:38.554762+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-original-provenance-build.log",
+      "log_sha256": "573f3e66ddcc4cb9e08528268ec730093f9fc704afb754ba9b728adc9baac7e3"
+    },
+    {
+      "phase": "package04-f018-original-provenance-pack",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-o",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T01:17:38.652814+00:00",
+      "completed_utc": "2026-10-03T01:17:40.510617+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-original-provenance-pack.log",
+      "log_sha256": "6c38166f6038a7aff77ff6381d8f502c2c4da48e485af82ad26fef0cbe74d005"
+    },
+    {
+      "phase": "package04-f018-original-provenance-ownership-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "F018.PublicConsumer.csproj",
+        "--force-evaluate"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T01:20:17.432247+00:00",
+      "completed_utc": "2026-10-03T01:20:19.580040+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-original-provenance-ownership-restore.log",
+      "log_sha256": "88371a8611990b3a059e610cd92593a80811b5ca5dba6f2ef6fb2e8b34dea6f7"
+    },
+    {
+      "phase": "package04-f018-original-provenance-ownership-build",
+      "command": [
+        "dotnet",
+        "build",
+        "F018.PublicConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T01:20:19.664769+00:00",
+      "completed_utc": "2026-10-03T01:20:23.319414+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-original-provenance-ownership-build.log",
+      "log_sha256": "add98f4b59c6506fb566950b151a97ca8b2bc433d573380026b209eb0476bb12"
+    },
+    {
+      "phase": "package04-f018-original-provenance-ownership-run",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/F018.PublicConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T01:20:23.409873+00:00",
+      "completed_utc": "2026-10-03T01:20:26.901653+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-original-provenance-ownership-run.log",
+      "log_sha256": "7fe8d5d776ba9ef7a05314b1be79a26b35c8c547a76788eb8b129622929364dd"
+    },
+    {
+      "phase": "package04-f018-original-provenance-identity-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "F018.IdentityGateConsumer.csproj",
+        "--force-evaluate"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T01:20:26.981888+00:00",
+      "completed_utc": "2026-10-03T01:20:29.016110+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-original-provenance-identity-restore.log",
+      "log_sha256": "f53665e97cf2b29909f72a0447b354078c5cff6a49c1672c44b9f40de6cafdf3"
+    },
+    {
+      "phase": "package04-f018-original-provenance-identity-build",
+      "command": [
+        "dotnet",
+        "build",
+        "F018.IdentityGateConsumer.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T01:20:29.137897+00:00",
+      "completed_utc": "2026-10-03T01:20:30.953812+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-original-provenance-identity-build.log",
+      "log_sha256": "6bdf1445ff26b90290b9eb9159b49f9597d35dc23c29e4932048a803520c426b"
+    },
+    {
+      "phase": "package04-f018-original-provenance-identity-run",
+      "command": [
+        "dotnet",
+        "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+        "all",
+        "00:00:20",
+        "00:01:00"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance",
+      "exit_code": 1,
+      "started_utc": "2026-10-03T01:20:31.051726+00:00",
+      "completed_utc": "2026-10-03T01:20:34.228160+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-original-provenance-identity-run.log",
+      "log_sha256": "15e5c64462b7d8bee62e66f7f936b8e660fa3ab88ea8dcd502ec1b3ca29c841c"
+    }
+  ],
+  "consumers": [
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance",
+      "lock_sha256": "a8e411274217f6a721863c0d4fa552fd94f2d944e91938b6fd34a9419ecdb2c7",
+      "packages": [
+        {
+          "package": "ViciOne.ServiceBus",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.1.0.0.nupkg",
+          "nupkg_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "contentHash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "nupkg_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "contentHash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+          "nupkg_sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+          "contentHash": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "dll_sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/restored-packages/vicione.servicebus.entityframeworkcore/1.0.0/vicione.servicebus.entityframeworkcore.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "7e9f12b3a9081b2720adb5af134d00564975d031c744f79a3857a397c4051d3a",
+          "contentHash": "uj57BlNgeDXPvaT0nx70KD7ruWLQzLcTOj9Ni2Td+wj8f6bFxUwvX2qnf9ImB7AJWspLMxvS6jW6/f8xIFtdbg==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "dll_sha256": "5c0a3eaff274c68b3e753db1ccf5f3fbafdfdcf4be03bd84210d6650396073f6",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/restored-packages/vicione.servicebus.entityframeworkcore.sagas/1.0.0/vicione.servicebus.entityframeworkcore.sagas.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+          "nupkg_sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+          "contentHash": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "dll_sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/restored-packages/vicione.servicebus.courier/1.0.0/vicione.servicebus.courier.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+          "nupkg_sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+          "contentHash": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "dll_sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/restored-packages/vicione.servicebus.futures/1.0.0/vicione.servicebus.futures.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+          "nupkg_sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+          "contentHash": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "dll_sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/restored-packages/vicione.servicebus.jobservice/1.0.0/vicione.servicebus.jobservice.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "contentHash": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/restored-packages/vicione.servicebus.sagas/1.0.0/vicione.servicebus.sagas.1.0.0.nupkg"
+        }
+      ],
+      "actual": {
+        "cases": [
+          {
+            "case": "send-same-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-same-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-separate-success",
+            "assertions_passed": false,
+            "exception_type": "Xunit.Sdk.NotNullException",
+            "Message": "Assert.NotNull() Failure: Value is null",
+            "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 176\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 192\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/Program.cs:line 35",
+            "bounded_guard_failure": false
+          },
+          {
+            "case": "send-separate-failure",
+            "assertions_passed": false,
+            "exception_type": "Xunit.Sdk.NotNullException",
+            "Message": "Assert.NotNull() Failure: Value is null",
+            "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 176\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 192\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/Program.cs:line 35",
+            "bounded_guard_failure": false
+          },
+          {
+            "case": "query-same-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-same-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-separate-success",
+            "assertions_passed": false,
+            "exception_type": "Xunit.Sdk.NotNullException",
+            "Message": "Assert.NotNull() Failure: Value is null",
+            "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 176\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 192\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/Program.cs:line 33",
+            "bounded_guard_failure": false
+          },
+          {
+            "case": "query-separate-failure",
+            "assertions_passed": false,
+            "exception_type": "Xunit.Sdk.NotNullException",
+            "Message": "Assert.NotNull() Failure: Value is null",
+            "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 176\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/OwnershipAssertions.cs:line 192\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-original-provenance/Program.cs:line 33",
+            "bounded_guard_failure": false
+          },
+          {
+            "case": "send-disabled-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-disabled-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-disabled-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-disabled-failure",
+            "assertions_passed": true
+          }
+        ],
+        "count": 12,
+        "failures": 4
+      }
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance",
+      "lock_sha256": "a8e411274217f6a721863c0d4fa552fd94f2d944e91938b6fd34a9419ecdb2c7",
+      "packages": [
+        {
+          "package": "ViciOne.ServiceBus",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.1.0.0.nupkg",
+          "nupkg_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "contentHash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "dll_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "nupkg_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "contentHash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "dll_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+          "nupkg_sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+          "contentHash": "8ISpCWB3mE3pyPTLlqge684zUgdSGE67yhN9ZOooTfHKe/msDPO7L/5r7r4LOMx8LP8LxxWqqJrLD5FcyeaTtg==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "dll_sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/restored-packages/vicione.servicebus.entityframeworkcore/1.0.0/vicione.servicebus.entityframeworkcore.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "7e9f12b3a9081b2720adb5af134d00564975d031c744f79a3857a397c4051d3a",
+          "contentHash": "uj57BlNgeDXPvaT0nx70KD7ruWLQzLcTOj9Ni2Td+wj8f6bFxUwvX2qnf9ImB7AJWspLMxvS6jW6/f8xIFtdbg==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "dll_sha256": "5c0a3eaff274c68b3e753db1ccf5f3fbafdfdcf4be03bd84210d6650396073f6",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/restored-packages/vicione.servicebus.entityframeworkcore.sagas/1.0.0/vicione.servicebus.entityframeworkcore.sagas.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Courier",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+          "nupkg_sha256": "bae081de9ee8d5f98a44b9672d002de4a3a469567cbda41174359076abf08a87",
+          "contentHash": "G4PmJ5emEmN+ey2uxvyjBiyzZ7bRFhK0j6jfQplujaRZvrA35FTMHDaLIYt/EaYoMsMcfwIJGzDCBCIE9YYk4A==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "dll_sha256": "7bffeba5e3e2a6b57c50e7eb78215b5c0f6b931593128b9401b78d5358ffb848",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/restored-packages/vicione.servicebus.courier/1.0.0/vicione.servicebus.courier.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Futures",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+          "nupkg_sha256": "2635351afdb45bcf9a54c197ab640ba8d3a4754c9b9229d4b46a64f70b49d22f",
+          "contentHash": "an3uBszRdq5ASsvFRAUMjFntgJMqIh6a5GwMomv394Kl9L33XkcRICP3ZTcmAXKid4lTcMMDrX8GiV/MEu0C4g==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "dll_sha256": "885025f241339fc691063cc49daaeba7b9fc8e2190e0997382d877731e829714",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/restored-packages/vicione.servicebus.futures/1.0.0/vicione.servicebus.futures.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.JobService",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+          "nupkg_sha256": "6f823a24a0c77b275c46c98480e54847051cfdfa0c9a53ab0b7d6ca09ffb0a16",
+          "contentHash": "QtyLsIiMcimbL2A8pTScYVNGTYgdYXVPUZx4DzKIq9W6Hy5U2/VNM+gcOyrdTy/R3QGpFyurjKqrS7CwESqJEw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "dll_sha256": "6d2170fd5cf2ce3f5aa038541f2965d732539c4a63cc7b5ed874264070d8e9c6",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/restored-packages/vicione.servicebus.jobservice/1.0.0/vicione.servicebus.jobservice.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package04-f018-original-provenance/ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+          "nupkg_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "contentHash": "6P9IZwp8/Luc0tfRdIlyNlMsdIwPIEWQEODNGHnLKicdqTFw0JS5kQNlMQRt9t23cuPiX3nhwmliKsnI+BVrrw==",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "runtime": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/restored-packages/vicione.servicebus.sagas/1.0.0/vicione.servicebus.sagas.1.0.0.nupkg"
+        }
+      ],
+      "actual": {
+        "cases": [
+          {
+            "case": "send-matching",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-foreign",
+            "assertions_passed": false,
+            "exception_type": "Xunit.Sdk.IsTypeException",
+            "Message": "Assert.IsType() Failure: Value is null\nExpected: typeof(System.InvalidOperationException)\nActual:   null",
+            "StackTrace": "   at Xunit.Assert.IsType(Type expectedType, Object object, Boolean exactMatch) in /_/src/xunit.v3.assert/Asserts/TypeAsserts.cs:line 262\n   at Xunit.Assert.IsType[T](Object object) in /_/src/xunit.v3.assert/Asserts/TypeAsserts.cs:line 195\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/IdentityGateAssertions.cs:line 117\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/IdentityGateAssertions.cs:line 155\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/Program.cs:line 26",
+            "bounded_guard_failure": false
+          },
+          {
+            "case": "query-matching",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-foreign",
+            "assertions_passed": false,
+            "exception_type": "Xunit.Sdk.IsTypeException",
+            "Message": "Assert.IsType() Failure: Value is null\nExpected: typeof(System.InvalidOperationException)\nActual:   null",
+            "StackTrace": "   at Xunit.Assert.IsType(Type expectedType, Object object, Boolean exactMatch) in /_/src/xunit.v3.assert/Asserts/TypeAsserts.cs:line 262\n   at Xunit.Assert.IsType[T](Object object) in /_/src/xunit.v3.assert/Asserts/TypeAsserts.cs:line 195\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/IdentityGateAssertions.cs:line 117\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/IdentityGateAssertions.cs:line 155\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-original-provenance/Program.cs:line 26",
+            "bounded_guard_failure": false
+          }
+        ],
+        "count": 4,
+        "failures": 2
+      }
+    }
+  ],
+  "limit": "Proof supplement of original generation; corrected 886a freeze unchanged. Optimistic foreign-ID no-beforeSQL only; pessimistic Query may prescan before local Begin; canonical owner remains410/409/1 pending fixture repair."
+}

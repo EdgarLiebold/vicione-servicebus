@@ -7,7 +7,7 @@ public class ReceiveEndpointBuilder :
     readonly IReceiveEndpointConfiguration _configuration;
 
     /// <summary>Initializes a new instance.</summary>
-    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <param name="configuration">The configuration whose consume pipe receives the connections.</param>
     public ReceiveEndpointBuilder(IReceiveEndpointConfiguration configuration)
     {
         _configuration = configuration;

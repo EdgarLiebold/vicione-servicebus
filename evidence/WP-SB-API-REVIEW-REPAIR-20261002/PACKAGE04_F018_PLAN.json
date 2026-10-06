@@ -1,0 +1,6 @@
+{
+  "status": "RESEARCH_PLAN_BEFORE_PUBLIC_PROOF_OR_PRODUCT_EDIT",
+  "finding": "F018",
+  "plan": "Separate twelve ordinary public SQLite/outbox ownership cases plus four explicit public middleware transaction-ID cases. Build selected original packages first, expect4 separate-transaction and2 foreign-marker causal reds with10 positive controls. Fix only actual context CurrentTransaction+TransactionId ownership in Send and Query, then freshly packed corrected package16cases plus predicate mutants and restored checks. Do not claim distributed atomicity between distinct contexts. Existing canonical fake-marker test remains untouched until Root complete owner reads.",
+  "read_closure_sha256": "064eb181614094da459dea8177332310e53b084db1bb3238c19cc25694902af6"
+}

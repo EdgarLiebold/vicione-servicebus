@@ -25,7 +25,7 @@ public class DefaultSagaFactory<TSaga, TMessage> :
         return SagaMetadataCache<TSaga>.FactoryMethod(context.CorrelationId.Value);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Obtains a saga instance for the correlated message and forwards its saga consume context to the next pipeline stage.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -41,7 +41,13 @@ public class DefaultSagaFactory<TSaga, TMessage> :
 
         var proxy = new DefaultSagaConsumeContext<TSaga, TMessage>(context, instance);
 
-        proxy.LogCreated();
+        try
+        {
+            proxy.LogCreated();
+        }
+        catch (Exception)
+        {
+        }
 
         return next.SendAsync(proxy)
             ?? throw new InvalidOperationException("The saga pipeline returned no task.");

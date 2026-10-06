@@ -1,0 +1,20 @@
+{
+  "receipt": {
+    "phase": "package15-f033-signalr-public-previous-restore-r2",
+    "command": [
+      "dotnet",
+      "restore",
+      "SignalRLifetime.PublicConsumer.csproj",
+      "--configfile",
+      "NuGet.Config",
+      "-p:NuGetAudit=false"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T05:10:48.185774+00:00",
+    "completed_utc": "2026-10-03T05:10:49.729052+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-previous-restore-r2.log",
+    "log_sha256": "71ff6e0107d35c37b10cc3c0d67643dbf43b5b816fbb71a5ab7cb3a3522073ec"
+  },
+  "reason": "NU1101 cache-as-folder feed did not resolve six existing Microsoft packages; copies in immutable flat offline feed; no test/native product execution"
+}

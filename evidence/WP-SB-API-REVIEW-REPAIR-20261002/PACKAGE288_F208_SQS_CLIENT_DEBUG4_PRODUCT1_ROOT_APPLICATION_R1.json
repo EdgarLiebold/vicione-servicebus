@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-06T01:03:30.588170+00:00",
+  "status": "INDEPENDENT_SOURCE_PEER_APPROVED_PRODUCT1_DEBUG4_APPLIED_NATIVE_PENDING",
+  "finding": "F-SB-API-208",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package284-sqs-client-owning-debug4-product1-proposed-r1/REPORT.json",
+    "sha256": "efafd5e3dc57ce6da8d7a6ed72fe35520a763525314af635b761d943758b5ba5"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package284-sqs-owning-debug4-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "90d7a0854ba8162cfad8dfc147d631272de954c5e1e40b8b7dfb2c7130348453"
+  },
+  "source": {
+    "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsClientContext.cs",
+    "before_sha256": "0415590c0183290583dda76f844a5285cdd4f6994defd80a1ab531d158fddb15",
+    "after_sha256": "7bf23a6d364d8c33714f52d60a32b8f15f5b947e7444a5326b5efc4652e7aa19",
+    "before_lines": 326,
+    "after_lines": 354,
+    "exact_wrappers": 4
+  },
+  "root_whole354": "4fc08a/328e0b",
+  "exact4_inverse_recovers_entire326": true,
+  "all19_current_inputs_guarded": true,
+  "tests409_and_Req188_unchanged": true,
+  "native_credit": 0,
+  "grade": null,
+  "closed": false
+}

@@ -1,0 +1,11 @@
+--- freeze/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs
++++ created-client-borrowed/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs
+@@ -57,7 +57,7 @@
+ 
+         var client = settings.ServiceBusClient;
+         var managementClient = settings.ServiceBusAdministrationClient;
+-        var ownsClient = client == null;
++        var ownsClient = false;
+ 
+         ValidateCustomPort(settings, client, managementClient);
+ 

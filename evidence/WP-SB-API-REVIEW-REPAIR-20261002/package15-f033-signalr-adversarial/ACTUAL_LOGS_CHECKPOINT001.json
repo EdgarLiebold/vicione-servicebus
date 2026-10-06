@@ -1,0 +1,158 @@
+{
+  "status": "PRE_FREEZE_ACTUAL_LOGS_PERSONAL_FULL_CHECKPOINT",
+  "read_by": "azure_test_scope",
+  "files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-previous-fortyone-r3.log",
+      "sha256": "e9b7a6ca3cb7565a13771c81ea4a65dd0611dd1a5320a322b488b6d0ea622e68",
+      "bytes": 35136,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-corrected-fortyone.log",
+      "sha256": "5298bdaedf143fa4e8250584da9de3118915d6185e8c0d3d2c994e1fb15f9afb",
+      "bytes": 6962,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-original-build.log",
+      "sha256": "0fcadb2382d61bb8c5b961a5fd7fffd877c72a8c9e18c0cd1aca76ac1a2d0673",
+      "bytes": 693,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-original-pack.log",
+      "sha256": "a07cbe574408f86037a54721c1d8e48c5b5e0081de3bec9f6d11692a563a3bc3",
+      "bytes": 181,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-corrected-build.log",
+      "sha256": "d16d8dbc94eb55dec1e93f56292cc68ba4e74630f2a55a24b2e06e80c3d2128c",
+      "bytes": 693,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-corrected-pack.log",
+      "sha256": "c2948ccfbce9104398120709f74668d2ba9b7819b316560aa05893743234e079",
+      "bytes": 182,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-previous-restore-r4.log",
+      "sha256": "46fe3b7bb326bb858c325003300c31ca8d282ac8a9228c17b04867baae2ca12d",
+      "bytes": 227,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-previous-build-r6.log",
+      "sha256": "be957d5517b3bb0453e5f889cd8d029784d6a5c965e06f334dbde4ea862f1d70",
+      "bytes": 303,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-corrected-restore.log",
+      "sha256": "ddbd96c11fa57ed86e125fc1a636a6b4b584c7ab42f37fd99efb1bd50c0b245e",
+      "bytes": 228,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-corrected-build.log",
+      "sha256": "75f242ba857b8220b6ebe920efd2996882099b7b4b3ee7e7658ef454d79fdb9b",
+      "bytes": 304,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION.json",
+      "sha256": "96f030c84dbf10afd67f730091718d5d54c853b9b499eca9f5b4819ea3df827a",
+      "bytes": 1071,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION_R10.json",
+      "sha256": "aabb6e96effa2683ff73ee8b38880ab69d607866e29793a1f84a4adbf902ceb9",
+      "bytes": 3172,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION_R2.json",
+      "sha256": "4f0362775a735f411284ad82a961547eaed25f017aed3eefb90665e96a7d1b24",
+      "bytes": 952,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION_R3.json",
+      "sha256": "e8fc50fd19b13abdfa3edfd4a513fead427e4138daf70ac2a0004511bb5bf4e1",
+      "bytes": 1112,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION_R4.json",
+      "sha256": "dbde7e29f4c5eb1da135760c15f7d9e83d652f683628bd661f03c304295d4964",
+      "bytes": 907,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION_R5.json",
+      "sha256": "aec97c9f07228e8fa11a5fd81238621150aea3685d87c2d30249fa09b687caed",
+      "bytes": 936,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION_R6.json",
+      "sha256": "ba47daa92cca312bc24e2bbfe7596c8a2f4f12490cd51ca691fc864820265730",
+      "bytes": 948,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION_R7.json",
+      "sha256": "8422fd2465245545a276a5e54dd1955fd2dc5c431d7f08df887d12e27be64e88",
+      "bytes": 984,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION_R8.json",
+      "sha256": "4601b81bd340ff8fb8053d090efd5f48565c7db4798354f3c638f459d217259a",
+      "bytes": 921,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION_R9.json",
+      "sha256": "8881b2a32c2c614c0ce57bf7b8072284dd1928170ca6d66547f02cea20f29782",
+      "bytes": 3863,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE15_F033_SIGNALR_CONTROL_CORRECTION_R11.json",
+      "sha256": "e52673bee752c171013d340f14edeb91b22dc4c77ae15d2fb34ade6ef19027a6",
+      "bytes": 755,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope"
+    }
+  ],
+  "limits": [
+    "Freeze/binding not yet personally read; final acceptance pending",
+    "Mutator runtime current; no new independent M rollback assertion",
+    "Invalid tenth r3 positive explicitly excluded; r4 final pair awaits own reading"
+  ]
+}

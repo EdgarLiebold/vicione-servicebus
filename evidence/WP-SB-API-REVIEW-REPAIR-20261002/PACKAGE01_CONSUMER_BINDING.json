@@ -1,0 +1,75 @@
+{
+  "status": "FRESH_PACKAGES_CONSUMED_BINARY_HASH_VERIFIED",
+  "profiles": [
+    {
+      "profile": "azure",
+      "packages": [
+        {
+          "package": "ViciOne.ServiceBus/1.0.0",
+          "nupkg_sha256": "e481ab840ffae084e0d2ea669a669f491ec55817a3abe4b0565ba1c081826890",
+          "consumed_dll_sha256": "10ff70760164fb0eb3da7ea5402c9a943117fb494ff8fd9c7844d8baf0103737",
+          "consumed_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/azure/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "restored_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/azure/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions/1.0.0",
+          "nupkg_sha256": "95d44491e8b9f1b0a1e1e7b5a146768ac38f88d1fff69173c9b1e84364ed54b2",
+          "consumed_dll_sha256": "d4ba239445e875e72ede259e195c4b0c6737e1b831b7dc9643dff292e53ac117",
+          "consumed_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/azure/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "restored_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/azure/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.AzureServiceBus/1.0.0",
+          "nupkg_sha256": "491e080ce6161b8d41b121c9776761324e668e7c68e32bfc02a243fdc43efdf1",
+          "consumed_dll_sha256": "86b78a78fdfeffa22be97f0e5b6521b4a9d15cb90992289228cb8151304d108a",
+          "consumed_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/azure/bin/Release/net10.0/ViciOne.ServiceBus.AzureServiceBus.dll",
+          "restored_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/azure/restored-packages/vicione.servicebus.azureservicebus/1.0.0/vicione.servicebus.azureservicebus.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas/1.0.0",
+          "nupkg_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "consumed_dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+          "consumed_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/azure/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "restored_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/azure/restored-packages/vicione.servicebus.sagas/1.0.0/vicione.servicebus.sagas.1.0.0.nupkg"
+        }
+      ],
+      "input_manifest_sha256": "e7b32db0255fd825a27b5b24e934e06b5caa14a3d0e64108daaff019db23bdfd"
+    },
+    {
+      "profile": "eventhub",
+      "packages": [
+        {
+          "package": "ViciOne.ServiceBus/1.0.0",
+          "nupkg_sha256": "e481ab840ffae084e0d2ea669a669f491ec55817a3abe4b0565ba1c081826890",
+          "consumed_dll_sha256": "10ff70760164fb0eb3da7ea5402c9a943117fb494ff8fd9c7844d8baf0103737",
+          "consumed_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "restored_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions/1.0.0",
+          "nupkg_sha256": "95d44491e8b9f1b0a1e1e7b5a146768ac38f88d1fff69173c9b1e84364ed54b2",
+          "consumed_dll_sha256": "d4ba239445e875e72ede259e195c4b0c6737e1b831b7dc9643dff292e53ac117",
+          "consumed_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "restored_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.EventHubs/1.0.0",
+          "nupkg_sha256": "28ef28f976a8c8226af1a9a8ce413e250974b3d2b4f3ccd1231523e9779636ad",
+          "consumed_dll_sha256": "6badfef1baec9a5f76987f055f687df7e136789393a8435e644c94fb827fb193",
+          "consumed_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub/bin/Release/net10.0/ViciOne.ServiceBus.EventHubs.dll",
+          "restored_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub/restored-packages/vicione.servicebus.eventhubs/1.0.0/vicione.servicebus.eventhubs.1.0.0.nupkg"
+        },
+        {
+          "package": "ViciOne.ServiceBus.Sagas/1.0.0",
+          "nupkg_sha256": "391cda14c9d8c05dc2191b9294437a5f147b319befcd58456141d84ab5b4bbea",
+          "consumed_dll_sha256": "cbdf5eeff927d7da683a6f8434ac0ad24b9ee4065b5751e4b9e139680b11f9da",
+          "consumed_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub/bin/Release/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "restored_nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package01/eventhub/restored-packages/vicione.servicebus.sagas/1.0.0/vicione.servicebus.sagas.1.0.0.nupkg"
+        }
+      ],
+      "input_manifest_sha256": "9547f21542ed4d5d3b65867035313edf5f2905ce5b86564eca38420a33282692"
+    }
+  ],
+  "all_four_runtime_modes_exit_zero": true,
+  "oracle_correction": "EventHub original string containment rejected equivalent explicit HTTPS :443. Parsed URI checks preserve and strengthen positive identity and secret exclusion."
+}

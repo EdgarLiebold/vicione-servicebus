@@ -1,0 +1,21 @@
+{
+  "receipt": {
+    "phase": "package15-f033-signalr-public-previous-build-r3",
+    "command": [
+      "dotnet",
+      "build",
+      "SignalRLifetime.PublicConsumer.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T05:16:14.526522+00:00",
+    "completed_utc": "2026-10-03T05:16:18.486668+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-previous-build-r3.log",
+    "log_sha256": "ae9ceb676e6465e6b682977363a8fad8e4ebcad853b20947c2d63b5a6186e651"
+  },
+  "reason": "4 compiler errors: missing SignalR extension namespace, nullable Application pipe, assertion returning Task; bounded setup corrected, no test executed"
+}

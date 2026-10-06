@@ -1,0 +1,45 @@
+{
+  "status": "F038_FIXED_TARGETED_CONTRACTS_REVIEWED_SHARED_FINAL_PENDING",
+  "utc": "2026-10-03T20:27:19.924108+00:00",
+  "product_source_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F038_SOURCE_FREEZE_R1.json",
+    "sha256": "c6c0f3b08271229fc02720d49b3cb8bfccab3eff03cba985303edad820b14f76"
+  },
+  "canonical_candidate": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F038_CANONICAL_TEST_CANDIDATE_R2.json",
+    "sha256": "6c837c9f9dc14aeb17d63ee1e6fa7dceb49aa56cef91e12f671e1c1786bad391"
+  },
+  "current_product_unchanged": true,
+  "readme_delta": "Only previously independently reviewed F021 migration index link added; actual full index Root freshly read; F038 link/document unchanged",
+  "root_personal_read": "Full3 product sources+whole1057 original canonical owner+exactnewmethod; own whole38 earlier receipt; original180 projection plus all16new and one full updated mapping; public consumer9 and mutation runner whole own FULL; all finite5actual assertion blocks and actual448log FULL",
+  "public_native10": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package23-f038-native-qualification/MANIFEST.json",
+    "sha256": "b8a8c7dd3ff4ffb1e1f57a01e445182d66eb22865262924bce0575ce27032c50"
+  },
+  "compiled_mutations5": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE23_F038_NAMING_MUTATIONS_R1.json",
+    "sha256": "635ac0c9aa18d50fbe1d0566192df63675451fa66f5b29e5a45a02123f7149eb"
+  },
+  "compiled_independent_final": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package23-f038-mutation-preflight-r1/native/MANIFEST.json",
+    "sha256": "01bb82fa9799fe0944f0c860607aa2e1fdadfaa5a7f1f0805c0a31cf4286be45"
+  },
+  "canonical_independent_final": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package23-f021-f038-autonomous-plan/f038-canonical-r2-native-qualification/MANIFEST.json",
+    "sha256": "0bb1ab350494d44a3567199ff31e56d7202a8c52b65d73f8e83d97e7bede02e0"
+  },
+  "native448": {
+    "total": 448,
+    "passed": 448,
+    "failed": 0,
+    "skipped": 0,
+    "unfiltered": true
+  },
+  "compiled_mutants5_finite": true,
+  "positive_controls5_pass": true,
+  "baseline_and_rollback_public10_pass": true,
+  "original6209_mutation_checkout_restored": true,
+  "production_broker_cutover_executed": false,
+  "brokeracceptance_claim": false,
+  "whole_API_Aplus": false
+}

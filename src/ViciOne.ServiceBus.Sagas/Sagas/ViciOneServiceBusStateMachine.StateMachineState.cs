@@ -169,7 +169,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             }
             catch (Exception ex)
             {
-                await _observer.ExecuteFaultAsync(context, ex).ConfigureAwait(false);
+                try
+                {
+                    await _observer.ExecuteFaultAsync(context, ex).ConfigureAwait(false);
+                }
+                catch (Exception observerException) when (!ReferenceEquals(ex, observerException))
+                {
+                    throw new AggregateException(ex, observerException);
+                }
 
                 throw;
             }
@@ -216,7 +223,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             }
             catch (Exception ex)
             {
-                await _observer.ExecuteFaultAsync(context, ex).ConfigureAwait(false);
+                try
+                {
+                    await _observer.ExecuteFaultAsync(context, ex).ConfigureAwait(false);
+                }
+                catch (Exception observerException) when (!ReferenceEquals(ex, observerException))
+                {
+                    throw new AggregateException(ex, observerException);
+                }
 
                 throw;
             }

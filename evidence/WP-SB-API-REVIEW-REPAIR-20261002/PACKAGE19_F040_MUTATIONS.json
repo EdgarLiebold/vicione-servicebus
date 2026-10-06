@@ -1,0 +1,1323 @@
+{
+  "status": "THREE_STRICT_COMPILED_SINGLE_EFFECT_MUTANTS_KILLED_WITH_GREEN_CONTROLS",
+  "oracle_hashes": {
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/packages.lock.json": "6ed1b2f99e8befa4d371f0fd5992ca381c2f3edeb193447f776c24bd2d69c8ae",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/NuGet.Config": "96a8e21aa8ee53d96138f82c5e05e97cd2fe92e7e622e2d9b58256eefebe9a6a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/Cases.cs": "8a6b4f65ab1e5575f90789628bb5381e4cb2965179d772695893ff8f3d98e06d",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/ActivityOwnership.PublicConsumer.csproj": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/OwnedLifetime.cs": "57121c85d071a911ebe455a3eee60e5efb2132e7dade5b6ca07d9b2b9a79f53a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/Program.cs": "45327fe8582dcc0ce8068a62a7e8941cc61777503737d75896ec65f93a9ecee9",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll": "77474d30f169a8f0829455294b880725ff64454c031fa899f51515dae2d92bc6"
+  },
+  "constant_dependencies": {
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/xunit.v3.assert.dll": "d14ea33253a7e289af5254617203b02f0643ba7ff618670de837d642ef22af11",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.dll": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.EventSource.dll": "0672b48143f7c93dc38a5734800b651c246304d65b49cbd3b766e406b04407cd",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Abstractions.dll": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Configuration.dll": "10465e68c4431d3fd790911b56fcd3cfca89dfb4b0ba75d1affd970892824b2f",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.UserSecrets.dll": "c235c7a18dcd91cb045bdb98ff26d78afb06f7ed935b0f2cf1a1ada07ec20a55",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.FileExtensions.dll": "bcbdc341e7134c620e6427ab136cd80d8686f63152e17276aa80c63afa6357ce",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.dll": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.EventLog.dll": "bb731e3abd585d6903609629b763b8837e652c2dd95492a59f85bbe76c7bc6a1",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.FileSystemGlobbing.dll": "56756b08cdffe4f47f4cba71c839375023930df5a16227cf7523085d9137d08e",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Primitives.dll": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.dll": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.CommandLine.dll": "f1b5099d9105ae82076e53f8bc90f537a99004d27479bc9cf47712e6fc645711",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.EnvironmentVariables.dll": "f9d770c991b8ccd6402aa072949843132c00566b026efaa95b63b117fa08517a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll": "77474d30f169a8f0829455294b880725ff64454c031fa899f51515dae2d92bc6",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Hosting.dll": "a78489eb8dbc8a906865a9fe54dbdc51a270ffd1d1f7c70569b20f3d6e51d029",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Options.dll": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll": "ef5817cda765fc00c65671440d18884fda8d7636b0dd5bed8135470507c9d6b2",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Binder.dll": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Json.dll": "91238276267ea5ad2986a9ba6aefbb6dc4643ccfd48167745ef963509407cf84",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/FastExpressionCompiler.dll": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Console.dll": "8564374e3dd121fedd5443a7755c8fe642d1408b45f73fc980b9d3fa99a47e79",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Physical.dll": "d57f6e1bcf47468a053696ea34b08e7d04edcc2681a5df586145835bd3f0db66",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.dll": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/System.Diagnostics.EventLog.dll": "77aae5ac102caa9c8bdd8473bc55ed7de246b3e06171c6393bad7f959c1a7bf5",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Debug.dll": "6f8570299320cb4b7d732180e73fd4782e73d076b9031eded7c15c94f6609c33"
+  },
+  "frame": {
+    "results": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+    "host": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+    "host_xml": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+    "batch": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+    "batch_options": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+    "registration": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+    "connector": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+    "identity": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+    "trace": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "journal_telemetry": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+    "journal_writer": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+    "journal_registration": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+    "transport_registration": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+    "endpoint_context": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+    "combined_endpoint": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+    "scope_factory": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+    "owned_lifetime": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+    "inmemory_factory": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+    "log_context": "src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+    "bus_log_context": "src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+    "contract_identity": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+    "message_data": "src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+    "encryption": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+    "encryption_provider": "src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+    "batch_snapshot": "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs",
+    "batch_contract": "src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs",
+    "definition_registrar": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+    "inmemory_receive_context": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs"
+  },
+  "selected_runtime_sha256": "43fbefc4df727cd1c108d80f32a635eeb279abc70143da59c0ac3cd03f7ce70a",
+  "controls": [
+    {
+      "name": "corrected",
+      "build": {
+        "phase": "package19-f040-mut-corrected-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T10:07:28.631489+00:00",
+        "completed_utc": "2026-10-03T10:07:47.112653+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-corrected-build.log",
+        "log_sha256": "b99db451d35f5029e96066b773f93e5d351dc338d51d17d1906e78af82fa895b"
+      },
+      "binary": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/ViciOne.ServiceBus.dll",
+        "sha256": "02fbaf637129bd1d4579f8db1842aee613e24528616b9a4d0dfabd3a454ff1fc"
+      },
+      "source_snapshots": [
+        {
+          "key": "results",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-0.txt",
+          "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+          "current_source_sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+        },
+        {
+          "key": "host",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-1.txt",
+          "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+          "current_source_sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+        },
+        {
+          "key": "host_xml",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-2.txt",
+          "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+          "current_source_sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+        },
+        {
+          "key": "batch",
+          "relative": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-3.txt",
+          "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+          "current_source_sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+        },
+        {
+          "key": "batch_options",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-4.txt",
+          "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+          "current_source_sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+        },
+        {
+          "key": "registration",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-5.txt",
+          "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+          "current_source_sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+        },
+        {
+          "key": "connector",
+          "relative": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-6.txt",
+          "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+          "current_source_sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+        },
+        {
+          "key": "identity",
+          "relative": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-7.txt",
+          "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+          "current_source_sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+        },
+        {
+          "key": "trace",
+          "relative": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-8.txt",
+          "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+          "current_source_sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+        },
+        {
+          "key": "journal_telemetry",
+          "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-9.txt",
+          "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+          "current_source_sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d"
+        },
+        {
+          "key": "journal_writer",
+          "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-10.txt",
+          "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+          "current_source_sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+        },
+        {
+          "key": "journal_registration",
+          "relative": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-11.txt",
+          "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+          "current_source_sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+        },
+        {
+          "key": "transport_registration",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-12.txt",
+          "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+          "current_source_sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+        },
+        {
+          "key": "endpoint_context",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-13.txt",
+          "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+          "current_source_sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0"
+        },
+        {
+          "key": "combined_endpoint",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-14.txt",
+          "sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432",
+          "current_source_sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432"
+        },
+        {
+          "key": "scope_factory",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-15.txt",
+          "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+          "current_source_sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127"
+        },
+        {
+          "key": "owned_lifetime",
+          "relative": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-16.txt",
+          "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+          "current_source_sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82"
+        },
+        {
+          "key": "inmemory_factory",
+          "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-17.txt",
+          "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+          "current_source_sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+        },
+        {
+          "key": "log_context",
+          "relative": "src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-18.txt",
+          "sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+          "current_source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+        },
+        {
+          "key": "bus_log_context",
+          "relative": "src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-19.txt",
+          "sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1",
+          "current_source_sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1"
+        },
+        {
+          "key": "contract_identity",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-20.txt",
+          "sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+          "current_source_sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+        },
+        {
+          "key": "message_data",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-21.txt",
+          "sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca",
+          "current_source_sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca"
+        },
+        {
+          "key": "encryption",
+          "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-22.txt",
+          "sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93",
+          "current_source_sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93"
+        },
+        {
+          "key": "encryption_provider",
+          "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-23.txt",
+          "sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf",
+          "current_source_sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf"
+        },
+        {
+          "key": "batch_snapshot",
+          "relative": "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-24.txt",
+          "sha256": "4b875678d516251fe7434f720f7acac6cf231a3036affd5245f3321525432571",
+          "current_source_sha256": "4b875678d516251fe7434f720f7acac6cf231a3036affd5245f3321525432571"
+        },
+        {
+          "key": "batch_contract",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-25.txt",
+          "sha256": "65701e0f2982dcb23aae7bff376955a1b48c694c6dd39b5ca94768d923b54eeb",
+          "current_source_sha256": "65701e0f2982dcb23aae7bff376955a1b48c694c6dd39b5ca94768d923b54eeb"
+        },
+        {
+          "key": "definition_registrar",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-26.txt",
+          "sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de",
+          "current_source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+        },
+        {
+          "key": "inmemory_receive_context",
+          "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/corrected/source-27.txt",
+          "sha256": "ad835878411a286f7463fe79d30d774fee603305293a66902e4ae764de9f3b94",
+          "current_source_sha256": "ad835878411a286f7463fe79d30d774fee603305293a66902e4ae764de9f3b94"
+        }
+      ],
+      "all_cases": {
+        "phase": "package19-f040-mut-corrected-fourteen",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:12"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T10:07:47.353195+00:00",
+        "completed_utc": "2026-10-03T10:08:02.551525+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-corrected-fourteen.log",
+        "log_sha256": "30002cf1af2f7c06ab647166184463b0446f7d8094e706a86a5dfd6f4df54bdf"
+      }
+    },
+    {
+      "name": "rollback",
+      "build": {
+        "phase": "package19-f040-mut-rollback-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T10:08:39.118834+00:00",
+        "completed_utc": "2026-10-03T10:08:45.783263+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-rollback-build.log",
+        "log_sha256": "7ab67a71db2dc777c427da390e2396fc87136d4a0d5eb52b7f67e069ad79181a"
+      },
+      "binary": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/ViciOne.ServiceBus.dll",
+        "sha256": "02fbaf637129bd1d4579f8db1842aee613e24528616b9a4d0dfabd3a454ff1fc"
+      },
+      "source_snapshots": [
+        {
+          "key": "results",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-0.txt",
+          "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+          "current_source_sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+        },
+        {
+          "key": "host",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-1.txt",
+          "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+          "current_source_sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+        },
+        {
+          "key": "host_xml",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-2.txt",
+          "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+          "current_source_sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+        },
+        {
+          "key": "batch",
+          "relative": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-3.txt",
+          "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+          "current_source_sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+        },
+        {
+          "key": "batch_options",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-4.txt",
+          "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+          "current_source_sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+        },
+        {
+          "key": "registration",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-5.txt",
+          "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+          "current_source_sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+        },
+        {
+          "key": "connector",
+          "relative": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-6.txt",
+          "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+          "current_source_sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+        },
+        {
+          "key": "identity",
+          "relative": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-7.txt",
+          "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+          "current_source_sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+        },
+        {
+          "key": "trace",
+          "relative": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-8.txt",
+          "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+          "current_source_sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+        },
+        {
+          "key": "journal_telemetry",
+          "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-9.txt",
+          "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+          "current_source_sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d"
+        },
+        {
+          "key": "journal_writer",
+          "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-10.txt",
+          "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+          "current_source_sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+        },
+        {
+          "key": "journal_registration",
+          "relative": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-11.txt",
+          "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+          "current_source_sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+        },
+        {
+          "key": "transport_registration",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-12.txt",
+          "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+          "current_source_sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+        },
+        {
+          "key": "endpoint_context",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-13.txt",
+          "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+          "current_source_sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0"
+        },
+        {
+          "key": "combined_endpoint",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-14.txt",
+          "sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432",
+          "current_source_sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432"
+        },
+        {
+          "key": "scope_factory",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-15.txt",
+          "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+          "current_source_sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127"
+        },
+        {
+          "key": "owned_lifetime",
+          "relative": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-16.txt",
+          "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+          "current_source_sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82"
+        },
+        {
+          "key": "inmemory_factory",
+          "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-17.txt",
+          "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+          "current_source_sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+        },
+        {
+          "key": "log_context",
+          "relative": "src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-18.txt",
+          "sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+          "current_source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+        },
+        {
+          "key": "bus_log_context",
+          "relative": "src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-19.txt",
+          "sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1",
+          "current_source_sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1"
+        },
+        {
+          "key": "contract_identity",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-20.txt",
+          "sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+          "current_source_sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+        },
+        {
+          "key": "message_data",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-21.txt",
+          "sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca",
+          "current_source_sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca"
+        },
+        {
+          "key": "encryption",
+          "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-22.txt",
+          "sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93",
+          "current_source_sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93"
+        },
+        {
+          "key": "encryption_provider",
+          "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-23.txt",
+          "sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf",
+          "current_source_sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf"
+        },
+        {
+          "key": "batch_snapshot",
+          "relative": "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-24.txt",
+          "sha256": "4b875678d516251fe7434f720f7acac6cf231a3036affd5245f3321525432571",
+          "current_source_sha256": "4b875678d516251fe7434f720f7acac6cf231a3036affd5245f3321525432571"
+        },
+        {
+          "key": "batch_contract",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-25.txt",
+          "sha256": "65701e0f2982dcb23aae7bff376955a1b48c694c6dd39b5ca94768d923b54eeb",
+          "current_source_sha256": "65701e0f2982dcb23aae7bff376955a1b48c694c6dd39b5ca94768d923b54eeb"
+        },
+        {
+          "key": "definition_registrar",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-26.txt",
+          "sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de",
+          "current_source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+        },
+        {
+          "key": "inmemory_receive_context",
+          "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/rollback/source-27.txt",
+          "sha256": "ad835878411a286f7463fe79d30d774fee603305293a66902e4ae764de9f3b94",
+          "current_source_sha256": "ad835878411a286f7463fe79d30d774fee603305293a66902e4ae764de9f3b94"
+        }
+      ],
+      "all_cases": {
+        "phase": "package19-f040-mut-rollback-fourteen",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:12"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T10:08:45.973617+00:00",
+        "completed_utc": "2026-10-03T10:09:00.830015+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-rollback-fourteen.log",
+        "log_sha256": "30002cf1af2f7c06ab647166184463b0446f7d8094e706a86a5dfd6f4df54bdf"
+      }
+    }
+  ],
+  "mutants": [
+    {
+      "name": "RestoreEscapedTopologyName",
+      "build": {
+        "phase": "package19-f040-mut-RestoreEscapedTopologyName-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T10:08:02.696115+00:00",
+        "completed_utc": "2026-10-03T10:08:13.931207+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-RestoreEscapedTopologyName-build.log",
+        "log_sha256": "0608caba3a8b93744dac7adc3c288d59135faa18b5edcadf789c1583d674961a"
+      },
+      "binary": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/ViciOne.ServiceBus.dll",
+        "sha256": "7d2bfb807fd1a3bf5cfb8180ca647f96d3675089bfd6ac47c920dfe97faaa9ed"
+      },
+      "source_snapshots": [
+        {
+          "key": "results",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-0.txt",
+          "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+          "current_source_sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+        },
+        {
+          "key": "host",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-1.txt",
+          "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+          "current_source_sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+        },
+        {
+          "key": "host_xml",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-2.txt",
+          "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+          "current_source_sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+        },
+        {
+          "key": "batch",
+          "relative": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-3.txt",
+          "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+          "current_source_sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+        },
+        {
+          "key": "batch_options",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-4.txt",
+          "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+          "current_source_sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+        },
+        {
+          "key": "registration",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-5.txt",
+          "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+          "current_source_sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+        },
+        {
+          "key": "connector",
+          "relative": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-6.txt",
+          "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+          "current_source_sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+        },
+        {
+          "key": "identity",
+          "relative": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-7.txt",
+          "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+          "current_source_sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+        },
+        {
+          "key": "trace",
+          "relative": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-8.txt",
+          "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+          "current_source_sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+        },
+        {
+          "key": "journal_telemetry",
+          "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-9.txt",
+          "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+          "current_source_sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d"
+        },
+        {
+          "key": "journal_writer",
+          "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-10.txt",
+          "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+          "current_source_sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+        },
+        {
+          "key": "journal_registration",
+          "relative": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-11.txt",
+          "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+          "current_source_sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+        },
+        {
+          "key": "transport_registration",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-12.txt",
+          "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+          "current_source_sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+        },
+        {
+          "key": "endpoint_context",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-13.txt",
+          "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+          "current_source_sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0"
+        },
+        {
+          "key": "combined_endpoint",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-14.txt",
+          "sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432",
+          "current_source_sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432"
+        },
+        {
+          "key": "scope_factory",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-15.txt",
+          "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+          "current_source_sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127"
+        },
+        {
+          "key": "owned_lifetime",
+          "relative": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-16.txt",
+          "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+          "current_source_sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82"
+        },
+        {
+          "key": "inmemory_factory",
+          "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-17.txt",
+          "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+          "current_source_sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+        },
+        {
+          "key": "log_context",
+          "relative": "src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-18.txt",
+          "sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+          "current_source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+        },
+        {
+          "key": "bus_log_context",
+          "relative": "src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-19.txt",
+          "sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1",
+          "current_source_sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1"
+        },
+        {
+          "key": "contract_identity",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-20.txt",
+          "sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+          "current_source_sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+        },
+        {
+          "key": "message_data",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-21.txt",
+          "sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca",
+          "current_source_sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca"
+        },
+        {
+          "key": "encryption",
+          "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-22.txt",
+          "sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93",
+          "current_source_sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93"
+        },
+        {
+          "key": "encryption_provider",
+          "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-23.txt",
+          "sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf",
+          "current_source_sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf"
+        },
+        {
+          "key": "batch_snapshot",
+          "relative": "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-24.txt",
+          "sha256": "4b875678d516251fe7434f720f7acac6cf231a3036affd5245f3321525432571",
+          "current_source_sha256": "4b875678d516251fe7434f720f7acac6cf231a3036affd5245f3321525432571"
+        },
+        {
+          "key": "batch_contract",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-25.txt",
+          "sha256": "65701e0f2982dcb23aae7bff376955a1b48c694c6dd39b5ca94768d923b54eeb",
+          "current_source_sha256": "65701e0f2982dcb23aae7bff376955a1b48c694c6dd39b5ca94768d923b54eeb"
+        },
+        {
+          "key": "definition_registrar",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-26.txt",
+          "sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de",
+          "current_source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+        },
+        {
+          "key": "inmemory_receive_context",
+          "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/RestoreEscapedTopologyName/source-27.txt",
+          "sha256": "2c4cad2d7cd3d95b8a1da54c0d1f5feae76b613b9e2a783f6f79992382cbd16e",
+          "current_source_sha256": "2c4cad2d7cd3d95b8a1da54c0d1f5feae76b613b9e2a783f6f79992382cbd16e"
+        }
+      ],
+      "negative": {
+        "phase": "package19-f040-mut-RestoreEscapedTopologyName-default-backtick",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "default-backtick",
+          "00:00:12"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T10:08:14.177177+00:00",
+        "completed_utc": "2026-10-03T10:08:14.826726+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-RestoreEscapedTopologyName-default-backtick.log",
+        "log_sha256": "c8899143a85df4375cf23664e3ebc5e6b75a5e9a2d83c6daa898b388ab475f72",
+        "finite_topology_assertion_line": 79
+      },
+      "positive": {
+        "phase": "package19-f040-mut-RestoreEscapedTopologyName-default-ascii",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "default-ascii",
+          "00:00:12"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T10:08:14.964114+00:00",
+        "completed_utc": "2026-10-03T10:08:15.736470+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-RestoreEscapedTopologyName-default-ascii.log",
+        "log_sha256": "5000adfe05c8f2e0739f6276070612cf88f8bba1ac03454232e6285ca81d9411"
+      }
+    },
+    {
+      "name": "DecodeEntityTwice",
+      "build": {
+        "phase": "package19-f040-mut-DecodeEntityTwice-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T10:08:15.880021+00:00",
+        "completed_utc": "2026-10-03T10:08:23.667998+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-DecodeEntityTwice-build.log",
+        "log_sha256": "c41edf8245c2a853853c31b62149970186fb065966fc901116aeee85b1f66319"
+      },
+      "binary": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/ViciOne.ServiceBus.dll",
+        "sha256": "e13ab0b2a8c7564d42b1a9a7cff4ebf424a6e0438fcc3c5e5fb20dc0eae0bda9"
+      },
+      "source_snapshots": [
+        {
+          "key": "results",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-0.txt",
+          "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+          "current_source_sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+        },
+        {
+          "key": "host",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-1.txt",
+          "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+          "current_source_sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+        },
+        {
+          "key": "host_xml",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-2.txt",
+          "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+          "current_source_sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+        },
+        {
+          "key": "batch",
+          "relative": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-3.txt",
+          "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+          "current_source_sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+        },
+        {
+          "key": "batch_options",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-4.txt",
+          "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+          "current_source_sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+        },
+        {
+          "key": "registration",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-5.txt",
+          "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+          "current_source_sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+        },
+        {
+          "key": "connector",
+          "relative": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-6.txt",
+          "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+          "current_source_sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+        },
+        {
+          "key": "identity",
+          "relative": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-7.txt",
+          "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+          "current_source_sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+        },
+        {
+          "key": "trace",
+          "relative": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-8.txt",
+          "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+          "current_source_sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+        },
+        {
+          "key": "journal_telemetry",
+          "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-9.txt",
+          "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+          "current_source_sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d"
+        },
+        {
+          "key": "journal_writer",
+          "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-10.txt",
+          "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+          "current_source_sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+        },
+        {
+          "key": "journal_registration",
+          "relative": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-11.txt",
+          "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+          "current_source_sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+        },
+        {
+          "key": "transport_registration",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-12.txt",
+          "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+          "current_source_sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+        },
+        {
+          "key": "endpoint_context",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-13.txt",
+          "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+          "current_source_sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0"
+        },
+        {
+          "key": "combined_endpoint",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-14.txt",
+          "sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432",
+          "current_source_sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432"
+        },
+        {
+          "key": "scope_factory",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-15.txt",
+          "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+          "current_source_sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127"
+        },
+        {
+          "key": "owned_lifetime",
+          "relative": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-16.txt",
+          "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+          "current_source_sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82"
+        },
+        {
+          "key": "inmemory_factory",
+          "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-17.txt",
+          "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+          "current_source_sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+        },
+        {
+          "key": "log_context",
+          "relative": "src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-18.txt",
+          "sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+          "current_source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+        },
+        {
+          "key": "bus_log_context",
+          "relative": "src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-19.txt",
+          "sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1",
+          "current_source_sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1"
+        },
+        {
+          "key": "contract_identity",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-20.txt",
+          "sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+          "current_source_sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+        },
+        {
+          "key": "message_data",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-21.txt",
+          "sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca",
+          "current_source_sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca"
+        },
+        {
+          "key": "encryption",
+          "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-22.txt",
+          "sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93",
+          "current_source_sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93"
+        },
+        {
+          "key": "encryption_provider",
+          "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-23.txt",
+          "sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf",
+          "current_source_sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf"
+        },
+        {
+          "key": "batch_snapshot",
+          "relative": "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-24.txt",
+          "sha256": "4b875678d516251fe7434f720f7acac6cf231a3036affd5245f3321525432571",
+          "current_source_sha256": "4b875678d516251fe7434f720f7acac6cf231a3036affd5245f3321525432571"
+        },
+        {
+          "key": "batch_contract",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-25.txt",
+          "sha256": "65701e0f2982dcb23aae7bff376955a1b48c694c6dd39b5ca94768d923b54eeb",
+          "current_source_sha256": "65701e0f2982dcb23aae7bff376955a1b48c694c6dd39b5ca94768d923b54eeb"
+        },
+        {
+          "key": "definition_registrar",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-26.txt",
+          "sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de",
+          "current_source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+        },
+        {
+          "key": "inmemory_receive_context",
+          "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/DecodeEntityTwice/source-27.txt",
+          "sha256": "a3c98e78c0ed50bcb2977b59817a54bb5aeb6a62e2ac6ebafa95ba9df9ff01b4",
+          "current_source_sha256": "a3c98e78c0ed50bcb2977b59817a54bb5aeb6a62e2ac6ebafa95ba9df9ff01b4"
+        }
+      ],
+      "negative": {
+        "phase": "package19-f040-mut-DecodeEntityTwice-typed-percent",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "typed-percent",
+          "00:00:12"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T10:08:23.914352+00:00",
+        "completed_utc": "2026-10-03T10:08:24.739339+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-DecodeEntityTwice-typed-percent.log",
+        "log_sha256": "4e3d5a1a19988f3ad6abc60ecb9afa82afbcba613cc8ae7ac67610e2ae3dbff4",
+        "finite_topology_assertion_line": 83
+      },
+      "positive": {
+        "phase": "package19-f040-mut-DecodeEntityTwice-typed-ascii",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "typed-ascii",
+          "00:00:12"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T10:08:24.944124+00:00",
+        "completed_utc": "2026-10-03T10:08:26.127061+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-DecodeEntityTwice-typed-ascii.log",
+        "log_sha256": "8220d704eb3b6cf8ef865e7ea407009a18f6b9669e48257604f9233f6ca1b901"
+      }
+    },
+    {
+      "name": "UseSenderWildcardParser",
+      "build": {
+        "phase": "package19-f040-mut-UseSenderWildcardParser-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T10:08:26.352854+00:00",
+        "completed_utc": "2026-10-03T10:08:36.718377+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-UseSenderWildcardParser-build.log",
+        "log_sha256": "3956c2ca3d223edf02c57fc4612f41af6a3f90a80e221ea4a5ed4b2be294929d"
+      },
+      "binary": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/ViciOne.ServiceBus.dll",
+        "sha256": "893d66ad5173e4b4952afa42c1bdd076bbb79195ca324191905b00fbc126a8e3"
+      },
+      "source_snapshots": [
+        {
+          "key": "results",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-0.txt",
+          "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+          "current_source_sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee"
+        },
+        {
+          "key": "host",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-1.txt",
+          "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+          "current_source_sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+        },
+        {
+          "key": "host_xml",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-2.txt",
+          "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+          "current_source_sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+        },
+        {
+          "key": "batch",
+          "relative": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-3.txt",
+          "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+          "current_source_sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+        },
+        {
+          "key": "batch_options",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-4.txt",
+          "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+          "current_source_sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817"
+        },
+        {
+          "key": "registration",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-5.txt",
+          "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+          "current_source_sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1"
+        },
+        {
+          "key": "connector",
+          "relative": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-6.txt",
+          "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+          "current_source_sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d"
+        },
+        {
+          "key": "identity",
+          "relative": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-7.txt",
+          "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+          "current_source_sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6"
+        },
+        {
+          "key": "trace",
+          "relative": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-8.txt",
+          "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+          "current_source_sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+        },
+        {
+          "key": "journal_telemetry",
+          "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-9.txt",
+          "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+          "current_source_sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d"
+        },
+        {
+          "key": "journal_writer",
+          "relative": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-10.txt",
+          "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+          "current_source_sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+        },
+        {
+          "key": "journal_registration",
+          "relative": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-11.txt",
+          "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+          "current_source_sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c"
+        },
+        {
+          "key": "transport_registration",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-12.txt",
+          "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+          "current_source_sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8"
+        },
+        {
+          "key": "endpoint_context",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-13.txt",
+          "sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0",
+          "current_source_sha256": "b2c1d906242adcf8b1b2f4ecd105cc28bbf8aca533a744844bf524dc2ec941c0"
+        },
+        {
+          "key": "combined_endpoint",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-14.txt",
+          "sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432",
+          "current_source_sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432"
+        },
+        {
+          "key": "scope_factory",
+          "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-15.txt",
+          "sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+          "current_source_sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127"
+        },
+        {
+          "key": "owned_lifetime",
+          "relative": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-16.txt",
+          "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+          "current_source_sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82"
+        },
+        {
+          "key": "inmemory_factory",
+          "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-17.txt",
+          "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+          "current_source_sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e"
+        },
+        {
+          "key": "log_context",
+          "relative": "src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-18.txt",
+          "sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+          "current_source_sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9"
+        },
+        {
+          "key": "bus_log_context",
+          "relative": "src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-19.txt",
+          "sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1",
+          "current_source_sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1"
+        },
+        {
+          "key": "contract_identity",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-20.txt",
+          "sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+          "current_source_sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+        },
+        {
+          "key": "message_data",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/MessageData/IMessageData.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-21.txt",
+          "sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca",
+          "current_source_sha256": "ef68d21a483f70eed1f65463058c54e0f04c6e55c11dd1b4db17297e044aceca"
+        },
+        {
+          "key": "encryption",
+          "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-22.txt",
+          "sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93",
+          "current_source_sha256": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93"
+        },
+        {
+          "key": "encryption_provider",
+          "relative": "src/ViciOne.ServiceBus/Serialization/Encryption/IEncryptionKeyProvider.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-23.txt",
+          "sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf",
+          "current_source_sha256": "557bef89c70eee3de29d3b14ee21c6d367275de685593c5e60cbae4bd916eeaf"
+        },
+        {
+          "key": "batch_snapshot",
+          "relative": "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-24.txt",
+          "sha256": "4b875678d516251fe7434f720f7acac6cf231a3036affd5245f3321525432571",
+          "current_source_sha256": "4b875678d516251fe7434f720f7acac6cf231a3036affd5245f3321525432571"
+        },
+        {
+          "key": "batch_contract",
+          "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-25.txt",
+          "sha256": "65701e0f2982dcb23aae7bff376955a1b48c694c6dd39b5ca94768d923b54eeb",
+          "current_source_sha256": "65701e0f2982dcb23aae7bff376955a1b48c694c6dd39b5ca94768d923b54eeb"
+        },
+        {
+          "key": "definition_registrar",
+          "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-26.txt",
+          "sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de",
+          "current_source_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de"
+        },
+        {
+          "key": "inmemory_receive_context",
+          "relative": "src/ViciOne.ServiceBus/InMemoryTransport/Runtime/InMemoryReceiveEndpointContext.cs",
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package19-f040-binaries/UseSenderWildcardParser/source-27.txt",
+          "sha256": "eaf4bd2ef678b25b99e2ad6635445103f2c8a24f883dcc8d4017e652aff58def",
+          "current_source_sha256": "eaf4bd2ef678b25b99e2ad6635445103f2c8a24f883dcc8d4017e652aff58def"
+        }
+      ],
+      "negative": {
+        "phase": "package19-f040-mut-UseSenderWildcardParser-default-wildcard",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "default-wildcard",
+          "00:00:12"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T10:08:36.936046+00:00",
+        "completed_utc": "2026-10-03T10:08:37.887502+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-UseSenderWildcardParser-default-wildcard.log",
+        "log_sha256": "34d46c3bf0c27bde498c83e82764da59302fafb38f1bb8488aaa58ed12842e5d",
+        "finite_topology_assertion_line": 83
+      },
+      "positive": {
+        "phase": "package19-f040-mut-UseSenderWildcardParser-default-ascii",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/ActivityOwnership.PublicConsumer.dll",
+          "default-ascii",
+          "00:00:12"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-transport/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T10:08:38.097374+00:00",
+        "completed_utc": "2026-10-03T10:08:38.964845+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package19-f040-mut-UseSenderWildcardParser-default-ascii.log",
+        "log_sha256": "f2e0f77a8f5c5d90f3cd1c013414a06814600eed1eb69a029e25e0b8ccaee64a"
+      }
+    }
+  ],
+  "mutation_tree_original_files_verified": 6209,
+  "oracle_and_runtime_restored": true
+}

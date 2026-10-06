@@ -1,4 +1,5 @@
 using System.Reflection;
+using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Util;
@@ -53,6 +54,64 @@ public sealed class NonContainerOptionsValidationTests
         MethodInfo validate = typeof(OutboxConsumeOptions).GetMethod("Validate", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
         validate.Invoke(options, null);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-OPTIONS", "unsupported-positive-timer-range-rejected-before-filter-admission")]
+    public void OutboxConsume_RejectsUnsupportedPositiveTimeoutBeforeFilterAdmission(bool maximumTimeSpan)
+    {
+        IConsumeScopeProvider provider = DispatchProxy.Create<IConsumeScopeProvider, RejectingScopeProvider>();
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = Guid.NewGuid(),
+            ConsumerType = "Consumer",
+            MessageDeliveryLimit = 10,
+            MessageDeliveryTimeout = maximumTimeSpan ? TimeSpan.MaxValue : TimeSpan.FromMilliseconds(uint.MaxValue),
+        };
+
+        ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
+            new OutboxConsumeFilter<object, object>(provider, options));
+
+        Assert.Contains(nameof(OutboxConsumeOptions.MessageDeliveryTimeout), exception.Message, StringComparison.Ordinal);
+        Assert.Contains("timer", exception.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(0, ((RejectingScopeProvider)(object)provider).Invocations);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(9999)]
+    [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-OPTIONS", "supported-timer-upper-bound-and-fraction-remain-admissible")]
+    public void OutboxConsume_AcceptsRuntimeSupportedTimerBoundary(int extraTicks)
+    {
+        TimeSpan timeout = TimeSpan.FromMilliseconds(uint.MaxValue - 1L).Add(TimeSpan.FromTicks(extraTicks));
+        using var actualTimer = new CancellationTokenSource(timeout);
+        IConsumeScopeProvider provider = DispatchProxy.Create<IConsumeScopeProvider, RejectingScopeProvider>();
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = Guid.NewGuid(),
+            ConsumerType = "Consumer",
+            MessageDeliveryLimit = 10,
+            MessageDeliveryTimeout = timeout,
+        };
+
+        var filter = new OutboxConsumeFilter<object, object>(provider, options);
+
+        Assert.NotNull(filter);
+        Assert.False(actualTimer.IsCancellationRequested);
+        Assert.Equal(0, ((RejectingScopeProvider)(object)provider).Invocations);
+    }
+
+    private class RejectingScopeProvider : DispatchProxy
+    {
+        public int Invocations { get; private set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            Invocations++;
+            throw new InvalidOperationException($"Filter construction must not acquire a consume scope: {targetMethod?.Name}");
+        }
     }
 
     [Theory]

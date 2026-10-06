@@ -9,8 +9,8 @@ namespace ViciOne.ServiceBus.AzureServiceBus.Tests;
 public sealed class ServiceBusScheduleCancellationCapabilityTests
 {
     [Fact]
-    [RequirementCoverage("REQ-VSB-ASB-SCHEDULER-CANCELLATION", "native-broker-assigns-token-after-send")]
-    public void NativeBrokerScheduler_AssignsTokenAfterAcceptingTheSend()
+    [RequirementCoverage("REQ-VSB-ASB-SCHEDULER-CANCELLATION", "advertises-provider-assigned-cancellation-token-mode")]
+    public void CancellationMode_AdvertisesProviderAssignedToken()
     {
         ISendEndpointProvider endpoints = DispatchProxy.Create<ISendEndpointProvider, UnexpectedEndpointProxy>();
 

@@ -1,0 +1,26 @@
+--- Frozen/.github/workflows/native-tests.yml
++++ Current/.github/workflows/native-tests.yml
+@@ -52,6 +52,8 @@
+       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+         with:
+           dotnet-version: ${{ env.DOTNET_VERSION }}
++      - name: Restore complete graph required by architecture evaluation
++        run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
+       - name: Restore locked dependency graph
+         run: dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
+       - name: Build release test binaries
+--- Frozen/docs/build.md
++++ Current/docs/build.md
+@@ -40,6 +40,12 @@
+ ```
+ 
+ ## Hermetic unit profile
++
++On a fresh checkout, restore `ViciOne.ServiceBus.Engineering.slnx` in locked mode before
++restoring and building the unit solution. Architecture tests evaluate every native test project,
++including projects outside the unit solution, and require their restored package imports to
++classify the Microsoft Testing Platform applications. Restore prepares this graph without
++starting provider services; the unit command below still runs only the unit profile.
+ 
+ The process exit code is the verdict. The checked-in MTP configuration makes warnings and skipped
+ tests fail. `--minimum-expected-tests` is a lower discovery guard, not the exact expected test

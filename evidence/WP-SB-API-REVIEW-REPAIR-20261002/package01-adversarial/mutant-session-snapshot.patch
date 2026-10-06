@@ -1,0 +1,27 @@
+--- freeze/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs
++++ session-snapshot/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs
+@@ -10,6 +10,7 @@
+     MessageSessionContext
+ {
+     readonly ProcessSessionMessageEventArgs _session;
++    readonly DateTimeOffset _expiry;
+     readonly CancellationToken _cancellationToken;
+ 
+     /// <summary>Initializes the context from a session-processor callback.</summary>
+@@ -18,6 +19,7 @@
+     public ServiceBusMessageSessionContext(ProcessSessionMessageEventArgs session, CancellationToken cancellationToken)
+     {
+         _session = session;
++        _expiry = session.SessionLockedUntil.ToUniversalTime();
+         _cancellationToken = cancellationToken;
+     }
+ 
+@@ -57,7 +59,7 @@
+     }
+ 
+     /// <summary>Gets the current session lock expiration in UTC, including SDK-owned renewals.</summary>
+-    public DateTimeOffset LockedUntilUtc => _session.SessionLockedUntil.ToUniversalTime();
++    public DateTimeOffset LockedUntilUtc => _expiry;
+ 
+     /// <summary>Gets the accepted Azure Service Bus session identifier.</summary>
+     public string SessionId => _session.SessionId;

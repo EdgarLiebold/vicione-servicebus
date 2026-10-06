@@ -1,0 +1,6 @@
+{
+  "status": "SEVEN_COMPILER_ERRORS_EXCLUDED_NOT_CAUSAL_OR_MUTANT",
+  "phase": "package16-f019-public-corrected-build-r2",
+  "log_sha256": "06ddf7afbf9cf76f58df0b962a61728827487a0bdc616e80d0480a907cdb689c",
+  "fixes": "Missing Record in standalone xunitassert replaced public local Capture/CaptureAsync; correct public HandlerExtensions namespace (RootFULL additional source); nullable AssemblyName guard annotation. Identical owner patches and Root complete delta reads before build."
+}

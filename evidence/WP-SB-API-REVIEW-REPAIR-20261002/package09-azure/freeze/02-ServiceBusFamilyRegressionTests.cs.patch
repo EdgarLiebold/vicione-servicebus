@@ -1,0 +1,274 @@
+--- /dev/null
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusFamilyRegressionTests.cs
+@@ -0,0 +1,271 @@
++// Public Azure topology regressions; no broker is started.
++using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Text.Json;
++using System.Text.Json.Nodes;
++using System.Threading;
++using System.Threading.Tasks;
++using Azure.Messaging.ServiceBus.Administration;
++using Microsoft.Extensions.DependencyInjection;
++using Microsoft.Extensions.DependencyInjection.Extensions;
++using Microsoft.Extensions.Logging;
++using Microsoft.Extensions.Logging.Abstractions;
++using ViciOne.ServiceBus;
++using ViciOne.ServiceBus.Advanced;
++using ViciOne.ServiceBus.Advanced.Topology;
++using ViciOne.ServiceBus.Advanced.Registration;
++using ViciOne.ServiceBus.AzureServiceBus;
++using ViciOne.ServiceBus.AzureServiceBus.Configuration;
++using ViciOne.ServiceBus.AzureServiceBus.Topology;
++using ViciOne.ServiceBus.Configuration;
++using ViciOne.ServiceBus.DependencyInjection;
++using ViciOne.ServiceBus.Serialization;
++using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
++using Xunit;
++
++namespace ViciOne.ServiceBus.AzureServiceBus.Tests;
++
++public sealed class ServiceBusFamilyRegressionTests
++{
++    [Fact]
++    [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "default-session-formatter-reaches-send-filter-with-explicit-override")]
++    public async Task DefaultSessionFormatter_ReachesTheSendFilterAndPreservesExplicitOverridesAsync()
++    {
++        // Positive control: the ordinary message-specific extension already works.
++        var overriddenDefault = new RecordingSessionFormatter("default-session");
++        ISendTopologyConfigurator overridden = SendTopology(overriddenDefault);
++        overridden.UseSessionIdFormatter<FamilyMessage>(_ => "message-session");
++        AzureServiceBusSendContext<FamilyMessage> explicitContext = await ApplySessionTopologyAsync(overridden);
++        Assert.Equal("message-session", explicitContext.SessionId);
++        Assert.Equal("message-session", explicitContext.PartitionKey);
++        Assert.Equal(0, overriddenDefault.Calls);
++
++        // Null formatter result must not remove explicitly supplied routing metadata.
++        ISendTopologyConfigurator empty = SendTopology(new RecordingSessionFormatter(null));
++        AzureServiceBusSendContext<FamilyMessage> preserved = await ApplySessionTopologyAsync(empty, "already-explicit");
++        Assert.Equal("already-explicit", preserved.SessionId);
++        Assert.Equal("already-explicit", preserved.PartitionKey);
++
++        var formatter = new RecordingSessionFormatter("default-session");
++        ISendTopologyConfigurator topology = SendTopology(formatter);
++        AzureServiceBusSendContext<FamilyMessage> context = await ApplySessionTopologyAsync(topology);
++
++        // Current F fails here: actual null. Cache Factory created a null formatter.
++        Assert.Equal("default-session", context.SessionId);
++        Assert.Equal("default-session", context.PartitionKey);
++        Assert.Equal(1, formatter.Calls);
++        Assert.Same(context.Message, formatter.LastMessage);
++    }
++
++    [Theory]
++    [InlineData(false)]
++    [InlineData(true)]
++    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-OPTIONS", "consume-subscriptions-retain-rule-filter-validation")]
++    public void ConsumeSubscriptions_RetainRuleFilterValidation(bool typed)
++    {
++        var direct = new ServiceBusSubscriptionConfigurator("review-forward", "review-topic")
++        {
++            Rule = Rule(),
++            Filter = new FalseRuleFilter(),
++        };
++        Assert.Equal("Rule/Filter", Assert.Single(direct.Validate()).Key);
++
++        foreach (bool useRule in new[] { false, true })
++        {
++            int controlCalls = 0;
++            IServiceBusConsumeTopologyConfigurator control = ConsumeTopology();
++            Subscribe(control, typed, subscription =>
++            {
++                controlCalls++;
++                if (useRule) subscription.Rule = Rule();
++                else subscription.Filter = new FalseRuleFilter();
++            });
++            Assert.Equal(1, controlCalls);
++            Assert.Empty(control.Validate());
++        }
++
++        int callbackCalls = 0;
++        IServiceBusConsumeTopologyConfigurator topology = ConsumeTopology();
++        Subscribe(topology, typed, subscription =>
++        {
++            callbackCalls++;
++            subscription.Rule = Rule();
++            subscription.Filter = new FalseRuleFilter();
++        });
++        Assert.Equal(1, callbackCalls);
++
++        // Current F fails here: no validation failure survives the specification.
++        Assert.Equal(new[] { "Rule/Filter" }, topology.Validate()
++            .Where(result => result.Disposition == ValidationResultDisposition.Failure)
++            .Select(result => result.Key).ToArray());
++    }
++
++    [Theory]
++    [InlineData(false)]
++    [InlineData(true)]
++    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-OPTIONS", "bus-construction-rejects-conflicting-consume-rule-filter")]
++    public void BusConstruction_RejectsConflictingConsumeRuleAndFilter(bool typed)
++    {
++        // Normal public bus construction: valid callback forms must both build.
++        _ = BuildSubscriptionBus(typed, true, false);
++        _ = BuildSubscriptionBus(typed, false, true);
++
++        // Current F is expected to fail Assert.Throws because construction succeeds.
++        ConfigurationException exception = Assert.Throws<ConfigurationException>(
++            () => { _ = BuildSubscriptionBus(typed, true, true); });
++        Assert.Contains("Rule/Filter", exception.Message, StringComparison.Ordinal);
++    }
++
++    [Fact]
++    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-NAME", "nested-queue-destinations-have-distinct-automatic-subscriptions")]
++    public async Task NestedQueueDestinations_HaveDistinctAutomaticSubscriptionsAsync()
++    {
++        // Positive admission control: same DI route with different leaf names.
++        SubscriptionDeclaration[] control = await BuildDeclarationsAsync("branch-a/orders-a", "branch-b/orders-b");
++        Assert.Equal(2, control.Select(value => value.Name).Distinct(StringComparer.OrdinalIgnoreCase).Count());
++
++        SubscriptionDeclaration[] actual = await BuildDeclarationsAsync("branch-a/orders", "branch-b/orders");
++        // BuildDeclarations already proved two distinct actual destination queues.
++        // Current F fails here: distinct count1 because both subscription names are orders.
++        Assert.Equal(2, actual.Select(value => value.Name).Distinct(StringComparer.OrdinalIgnoreCase).Count());
++    }
++
++    static ISendTopologyConfigurator SendTopology(ISessionIdFormatter formatter)
++    {
++        ISendTopologyConfigurator topology = new ServiceBusSendTopology();
++        Assert.True(topology.TryAddConvention(new SessionIdSendTopologyConvention { DefaultFormatter = formatter }));
++        return topology;
++    }
++
++    static async Task<AzureServiceBusSendContext<FamilyMessage>> ApplySessionTopologyAsync(
++        ISendTopologyConfigurator topology, string? existingSession = null)
++    {
++        IMessageSendTopologyConfigurator<FamilyMessage> messageTopology = topology.GetMessageTopology<FamilyMessage>();
++        Assert.True(messageTopology.TryGetConvention<ISessionIdMessageSendTopologyConvention<FamilyMessage>>(out _));
++        var builder = new CaptureTopologyBuilder<SendContext<FamilyMessage>>();
++        messageTopology.Apply(builder);
++        Assert.InRange(builder.Filters.Count, 0, 1);
++        var context = new AzureServiceBusSendContext<FamilyMessage>(new FamilyMessage(), TestContext.Current.CancellationToken)
++        {
++            SessionId = existingSession,
++        };
++        context.GetOrAddPayload<ServiceBusSendContext<FamilyMessage>>(() => context);
++        var terminal = new RecordingPipe<SendContext<FamilyMessage>>();
++        if (builder.Filters.Count == 0) await terminal.SendAsync(context);
++        else await builder.Filters[0].SendAsync(context, terminal);
++        Assert.Equal(1, terminal.Calls);
++        Assert.Same(context, terminal.LastContext);
++        return context;
++    }
++
++    static IServiceBusConsumeTopologyConfigurator ConsumeTopology()
++    {
++        IMessageTopologyConfigurator messages = AzureBusFactory.CreateMessageTopology();
++        return new ServiceBusConsumeTopology(messages, new ServiceBusPublishTopology(messages));
++    }
++
++    static void Subscribe(IServiceBusConsumeTopologyConfigurator topology, bool typed,
++        Action<IServiceBusSubscriptionConfigurator> configure)
++    {
++        if (typed) topology.GetMessageTopology<FamilyMessage>().Subscribe("review-forward", configure);
++        else topology.Subscribe("review-topic", "review-forward", configure);
++    }
++
++    static CreateRuleOptions Rule() => new("review-rule", new TrueRuleFilter());
++
++    static IBusControl BuildSubscriptionBus(bool typed, bool useRule, bool useFilter) =>
++        Bus.Factory.CreateUsingAzureServiceBus(bus => bus.ReceiveEndpoint("review-queue", endpoint =>
++        {
++            void Configure(IServiceBusSubscriptionConfigurator subscription)
++            {
++                if (useRule) subscription.Rule = Rule();
++                if (useFilter) subscription.Filter = new FalseRuleFilter();
++            }
++            if (typed) endpoint.Subscribe<FamilyMessage>("review-forward", Configure);
++            else endpoint.Subscribe("review-topic", "review-forward", Configure);
++        }));
++
++    static async Task<SubscriptionDeclaration[]> BuildDeclarationsAsync(string firstPath, string secondPath)
++    {
++        var services = new ServiceCollection();
++        services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
++        services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(NullLogger<>)));
++        services.AddViciOneServiceBus(registration =>
++        {
++            registration.Limits(MessageLimits.Conservative);
++            registration.AddConsumer<FamilyConsumer>();
++            registration.UsingAzureServiceBus((context, bus) =>
++            {
++                bus.ReceiveEndpoint(firstPath, endpoint => endpoint.ConfigureConsumer<FamilyConsumer>(context));
++                bus.ReceiveEndpoint(secondPath, endpoint => endpoint.ConfigureConsumer<FamilyConsumer>(context));
++            });
++        });
++        await using ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);
++        IBusControl busControl = provider.GetRequiredService<IBusControl>();
++        JsonNode probe = JsonSerializer.SerializeToNode(busControl.GetProbeResult(TestContext.Current.CancellationToken),
++            ServiceBusMetadataJson.Options)!;
++        var expectedPaths = new HashSet<string>(new[] { firstPath, secondPath }, StringComparer.Ordinal);
++        SubscriptionDeclaration[] declarations = FindScopes(probe, "queueSubscription")
++            .Select(scope => new SubscriptionDeclaration(
++                scope["subscriptionName"]!.GetValue<string>(), scope["forwardTo"]!.GetValue<string>()))
++            .Where(value => expectedPaths.Contains(value.ForwardTo)).ToArray();
++        Assert.Equal(2, declarations.Length);
++        Assert.Equal(expectedPaths.Order(StringComparer.Ordinal).ToArray(),
++            declarations.Select(value => value.ForwardTo).Order(StringComparer.Ordinal).ToArray());
++        Assert.All(declarations, value => Assert.InRange(value.Name.Length, 1, 50));
++        return declarations;
++    }
++
++    static IEnumerable<JsonObject> FindScopes(JsonNode? node, string scopeName)
++    {
++        if (node is JsonObject obj)
++        {
++            foreach (KeyValuePair<string, JsonNode?> property in obj)
++            {
++                if (property.Key == scopeName)
++                {
++                    if (property.Value is JsonObject single) yield return single;
++                    else if (property.Value is JsonArray array)
++                        foreach (JsonNode? item in array) yield return Assert.IsType<JsonObject>(item);
++                }
++                foreach (JsonObject nested in FindScopes(property.Value, scopeName)) yield return nested;
++            }
++        }
++        else if (node is JsonArray values)
++            foreach (JsonNode? value in values)
++                foreach (JsonObject nested in FindScopes(value, scopeName)) yield return nested;
++    }
++
++    sealed class CaptureTopologyBuilder<T> : ITopologyPipeBuilder<T> where T : class, PipeContext
++    {
++        public List<IFilter<T>> Filters { get; } = new();
++        public bool IsDelegated => false;
++        public bool IsImplemented => false;
++        public ITopologyPipeBuilder<T> CreateDelegatedBuilder() => this;
++        public void AddFilter(IFilter<T> filter) => Filters.Add(filter);
++    }
++
++    sealed class RecordingPipe<T> : IPipe<T> where T : class, PipeContext
++    {
++        public int Calls { get; private set; }
++        public T? LastContext { get; private set; }
++        public Task SendAsync(T context) { Calls++; LastContext = context; return Task.CompletedTask; }
++        public void Probe(ProbeContext context) { }
++    }
++
++    sealed class RecordingSessionFormatter(string? value) : ISessionIdFormatter
++    {
++        public int Calls { get; private set; }
++        public object? LastMessage { get; private set; }
++        public string? FormatSessionId<T>(SendContext<T> context) where T : class
++        { Calls++; LastMessage = context.Message; return value; }
++    }
++
++    sealed record SubscriptionDeclaration(string Name, string ForwardTo);
++    public sealed class FamilyMessage;
++    public sealed class FamilyConsumer : IConsumer<FamilyMessage>
++    {
++        public Task ConsumeAsync(ConsumeContext<FamilyMessage> context) => Task.CompletedTask;
++    }
++}

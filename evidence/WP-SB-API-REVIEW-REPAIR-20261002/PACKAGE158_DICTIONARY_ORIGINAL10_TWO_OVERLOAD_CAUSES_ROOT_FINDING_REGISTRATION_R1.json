@@ -1,0 +1,66 @@
+{
+  "utc": "2026-10-05T00:24:39.879335+00:00",
+  "actor": "/root",
+  "status": "ROOT_REGISTERED_ONE_FINDING_TWO_FINITE_OVERLOAD_CAUSES",
+  "confirmed_before": 133,
+  "confirmed_after": 134,
+  "accepted_repairs": 133,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package158-respond-fixed21-dictionary-original10-neighbors-fresh2-independent-r1/REPORT.json",
+    "sha256": "b242d1dfe713a7b8b09eac9a1295ef00255502212126a7a3966854ae6270f536"
+  },
+  "finding_id": "F-SB-API-134",
+  "original_native": {
+    "total": 10,
+    "passed": 8,
+    "failed": 2,
+    "skipped": 0
+  },
+  "actual_finite_causes": [
+    {
+      "actual_case": "ViciOne.ServiceBus.Tests.Serialization.DictionarySendHeadersTests.IncompatibleValueType_ReturnsTheFallbackWhileCodecFailuresRemainVisible",
+      "first_assertion": "Assert.Null(conversionFailure) at current test169. Record.Exception captured JsonException converting an actual stored Guid through metadata serializer to Int32.",
+      "actual_source_stack": "DictionarySendHeaders.Get<T:struct>129 -> SystemTextJsonMessageSerializer.DeserializeObject<T>176 -> JsonElement.Deserialize<Int32>.",
+      "assertions_reached_before_failure": [
+        "Same unique IOException from actual custom converter.Write and WriteCalls1",
+        "Same unique JsonException from actual custom converter.Write and WriteCalls1",
+        "Compatible int27 and text27 conversion",
+        "Missing/null caller fallback42, missing null",
+        "Exact Guid read and raw header Guid identity"
+      ],
+      "unreached": [
+        "Result==42",
+        "Get<int>(Guid,null) returnsnull",
+        "Stored source Guid unchanged assertion"
+      ],
+      "finite_causality": "Real stored Guid incompatible with requested int should use documented caller fallback; codec serialization exceptions previously observed are distinct and must remain visible."
+    },
+    {
+      "actual_case": "ViciOne.ServiceBus.Tests.Serialization.DictionarySendHeadersTests.IncompatibleReferenceType_ReturnsTheExactFallbackWhileCodecCancellationRemainsVisible",
+      "first_assertion": "Assert.Null(conversionFailure) at current test216. Record.Exception captured JsonException converting an actual stored Guid through metadata serializer to List<Int32>.",
+      "actual_source_stack": "DictionarySendHeaders.Get<T:class>115 -> SystemTextJsonMessageSerializer.DeserializeObject<T>144 -> SystemTextJsonExtensions.GetObject<T>27.",
+      "assertions_reached_before_failure": [
+        "Same unique OperationCanceledException and exact canceled token from actual custom converter.Write, WriteCalls1",
+        "Compatible List reference Same",
+        "Missing/null exact caller fallback List reference and missing null",
+        "Exact Guid read and raw header Guid identity"
+      ],
+      "unreached": [
+        "Result reference Same supplied fallback",
+        "Get<List<int>>(Guid,null) returnsnull",
+        "Stored source Guid unchanged assertion"
+      ],
+      "finite_causality": "Documented incompatible reference-header fallback should preserve supplied reference; codec cancellation must remain exact and not swallowed."
+    }
+  ],
+  "root_reads": [
+    "Original10fullraw d35e0d",
+    "ActualSourceDictionary148wholea313dc/oldTest149wholec584e7/new122controlsRoota313dc/e807dc",
+    "Qualificationreporttailcc9fbd andwholefinitecauses03636e; all3347MAN/actualpack192e50"
+  ],
+  "limits": [
+    "FirstAssertNullconversionFailure each fails realJSONtypeconversion; laterfallback/resultSame/defaultnull/sourceunchanged assertions unreachedOriginal.",
+    "IO/exactJsonExceptionWrite/OCE controls beforefailure observed; no broadcodec suppression authorized.",
+    "Code/designpeer and fixednative/freshCore required; no wholereviewclosure."
+  ]
+}

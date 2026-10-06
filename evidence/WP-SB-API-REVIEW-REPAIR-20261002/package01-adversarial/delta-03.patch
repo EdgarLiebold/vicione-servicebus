@@ -1,0 +1,44 @@
+--- baseline/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs
++++ freeze/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs
+@@ -57,13 +57,14 @@
+ 
+         var client = settings.ServiceBusClient;
+         var managementClient = settings.ServiceBusAdministrationClient;
++        var ownsClient = client == null;
+ 
+         ValidateCustomPort(settings, client, managementClient);
+ 
+         (client, managementClient) = CreateMissingClients(settings, endpoint, client, managementClient);
+ 
+         var namespaceAddress = new UriBuilder(_hostConfiguration.HostAddress) { Path = "", Query = "", Fragment = "" }.Uri;
+-        return new ServiceBusConnectionContext(client, managementClient, supervisor.Stopped, namespaceAddress);
++        return new ServiceBusConnectionContext(client, managementClient, supervisor.Stopped, namespaceAddress, ownsClient);
+     }
+ 
+     static void ValidateCustomPort(ServiceBusHostSettings settings, ServiceBusClient? client,
+@@ -91,6 +92,7 @@
+             {
+                 MaxRetries = settings.RetryLimit,
+                 Mode = ServiceBusRetryMode.Exponential,
++                Delay = settings.RetryMinBackoff,
+                 MaxDelay = settings.RetryMaxBackoff,
+             },
+             EnableCrossEntityTransactions = false,
+@@ -102,6 +104,7 @@
+             {
+                 MaxRetries = settings.RetryLimit,
+                 Mode = Azure.Core.RetryMode.Exponential,
++                Delay = settings.RetryMinBackoff,
+                 MaxDelay = settings.RetryMaxBackoff
+             }
+         };
+@@ -111,8 +114,8 @@
+             && (settings.ConnectionString == null || !HasSharedAccess(settings.ConnectionString)))
+             tokenCredential = new DefaultAzureCredential();
+ 
++        managementClient ??= CreateAdministrationClient(settings, endpoint, tokenCredential, managementOptions);
+         client ??= CreateMessagingClient(settings, endpoint, tokenCredential, clientOptions);
+-        managementClient ??= CreateAdministrationClient(settings, endpoint, tokenCredential, managementOptions);
+         return (client, managementClient);
+     }
+ 

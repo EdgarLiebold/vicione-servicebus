@@ -1,0 +1,110 @@
+using System.Collections.Concurrent;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Observers;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Courier;
+using ViciOne.ServiceBus.Courier.Contracts;
+using Xunit;
+
+namespace ActivityOwnership;
+public interface INamedBus : IBus { }
+public interface ISecondBus : IBus { }
+public interface IArguments { Guid Tracking { get; } string Owner { get; } }
+public interface ILog { Guid Tracking { get; } string Owner { get; } }
+public sealed record SharedArguments(Guid Tracking, string Owner) : IArguments;
+public sealed record DistinctArguments(Guid Tracking, string Owner) : IArguments;
+public sealed record SharedLog(Guid Tracking, string Owner) : ILog;
+public sealed record DistinctLog(Guid Tracking, string Owner) : ILog;
+public sealed record Call(Guid Tracking, string Action, string Owner, string Endpoint);
+public sealed record Terminal(Guid Tracking, Guid? MessageId, bool Faulted, Exception? Failure);
+public sealed class Probe : IConsumeObserver
+{
+    readonly ConcurrentDictionary<Guid, TaskCompletionSource<Terminal>> _terminals = new();
+    public readonly ConcurrentQueue<Call> Calls = new();
+    public readonly ConcurrentDictionary<string, IRegistrationContext> BusContexts = new();
+    public readonly ConcurrentQueue<(string Bus, string Name, int Prefetch, int? Concurrent)> LowerCallbacks = new();
+    public readonly ConcurrentQueue<(string Bus, string Name)> Endpoints = new();
+    public readonly ConcurrentQueue<(Guid Tracking, bool Faulted)> TerminalBusiness = new();
+    public readonly ConcurrentQueue<Terminal> Receipts = new();
+    public readonly ConcurrentQueue<Type> SelectorRequests = new();
+    public Task<Terminal> Watch(Guid tracking) => _terminals.GetOrAdd(tracking, _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).Task;
+    public void Record(ActivityContext context, string action, string owner, Guid tracking, string payloadOwner)
+    {
+        Assert.Equal(context.TrackingNumber, tracking); Assert.Equal(owner, payloadOwner);
+        Calls.Enqueue(new(context.TrackingNumber, action, owner, Uri.UnescapeDataString(context.ReceiveContext.InputAddress.Segments[^1].Trim('/'))));
+    }
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class => Finish(context, null);
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception failure) where T : class => Finish(context, failure);
+    Task Finish<T>(ConsumeContext<T> context, Exception? failure) where T : class
+    {
+        Guid? tracking = context.Message switch { IRoutingSlipCompleted x => x.TrackingNumber, IRoutingSlipFaulted x => x.TrackingNumber, _ => null };
+        if (tracking is Guid id)
+        {
+            var value = new Terminal(id, context.MessageId, context.Message is IRoutingSlipFaulted, failure);
+            Receipts.Enqueue(value); _terminals.GetOrAdd(id, _ => new(TaskCreationOptions.RunContinuationsAsynchronously)).TrySetResult(value);
+        }
+        return Task.CompletedTask;
+    }
+}
+public sealed class TerminalConsumer(Probe probe) : IConsumer<IRoutingSlipCompleted>, IConsumer<IRoutingSlipFaulted>
+{
+    public Task ConsumeAsync(ConsumeContext<IRoutingSlipCompleted> context)
+    { probe.TerminalBusiness.Enqueue((context.Message.TrackingNumber, false)); return Task.CompletedTask; }
+    public Task ConsumeAsync(ConsumeContext<IRoutingSlipFaulted> context)
+    {
+        Assert.Single(context.Message.ActivityExceptions);
+        probe.TerminalBusiness.Enqueue((context.Message.TrackingNumber, true)); return Task.CompletedTask;
+    }
+}
+public sealed class AExecute<T>(Probe probe) : IExecuteActivity<T> where T : class, IArguments
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<T> context)
+    { probe.Record(context, "execute", "A", context.Arguments.Tracking, context.Arguments.Owner); return Task.FromResult(context.Completed()); }
+}
+public sealed class BExecute<T>(Probe probe) : IExecuteActivity<T> where T : class, IArguments
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<T> context)
+    { probe.Record(context, "execute", "B", context.Arguments.Tracking, context.Arguments.Owner); return Task.FromResult(context.Completed()); }
+}
+public sealed class A<T, L>(Probe probe) : IActivity<T, L> where T : class, IArguments where L : class, ILog
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<T> context)
+    { probe.Record(context, "execute", "A", context.Arguments.Tracking, context.Arguments.Owner); return Task.FromResult(context.Completed<L>(new { context.TrackingNumber, Tracking = context.TrackingNumber, Owner = "A" })); }
+    public Task<CompensationResult> CompensateAsync(CompensateContext<L> context)
+    { probe.Record(context, "compensate", "A", context.Log.Tracking, context.Log.Owner); return Task.FromResult(context.Compensated()); }
+}
+public sealed class B<T, L>(Probe probe) : IActivity<T, L> where T : class, IArguments where L : class, ILog
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<T> context)
+    { probe.Record(context, "execute", "B", context.Arguments.Tracking, context.Arguments.Owner); return Task.FromResult(context.Completed<L>(new { Tracking = context.TrackingNumber, Owner = "B" })); }
+    public Task<CompensationResult> CompensateAsync(CompensateContext<L> context)
+    { probe.Record(context, "compensate", "B", context.Log.Tracking, context.Log.Owner); return Task.FromResult(context.Compensated()); }
+}
+public sealed class FailActivity(Probe probe) : IExecuteActivity<SharedArguments>
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<SharedArguments> context)
+    { probe.Record(context, "fail", "FAIL", context.Arguments.Tracking, context.Arguments.Owner); return Task.FromResult(context.Faulted(new ApplicationException("intentional-routing-slip-failure"))); }
+}
+public sealed class DefinitionFailActivity(Probe probe) : IExecuteActivity<DistinctArguments>
+{
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<DistinctArguments> context)
+    { probe.Record(context, "fail", "FAIL", context.Arguments.Tracking, context.Arguments.Owner); return Task.FromResult(context.Faulted(new ApplicationException("intentional-routing-slip-failure"))); }
+}
+public sealed class ExecuteNames : ExecuteActivityDefinition<AExecute<SharedArguments>, SharedArguments>
+{ public ExecuteNames() { ExecuteEndpointName = "definition-execute"; } }
+public sealed class ActivityNames : ActivityDefinition<A<SharedArguments, SharedLog>, SharedArguments, SharedLog>
+{ public ActivityNames() { ExecuteEndpointName = "definition-execute"; CompensateEndpointName = "definition-compensate"; } }
+public sealed class CallerExecute(string name) : SettingsEndpointDefinition<IExecuteActivity<SharedArguments>>(new EndpointSettings<IEndpointDefinition<IExecuteActivity<SharedArguments>>> { Name = name })
+{ protected override string FormatEndpointName(IEndpointNameFormatter formatter) => throw new InvalidOperationException("Explicit caller name must take precedence"); }
+public sealed class CallerCompensate(string name) : SettingsEndpointDefinition<ICompensateActivity<SharedLog>>(new EndpointSettings<IEndpointDefinition<ICompensateActivity<SharedLog>>> { Name = name })
+{ protected override string FormatEndpointName(IEndpointNameFormatter formatter) => throw new InvalidOperationException("Explicit caller name must take precedence"); }
+// Public container-extension control: null optional concrete lookup must retain a genuine caller generic fallback.
+public sealed class NullDefinitionRegistrar(IServiceCollection services, Probe probe) : DependencyInjectionContainerRegistrar(services)
+{
+    public override T? GetDefinition<T>(IServiceProvider provider) where T : class
+    { ArgumentNullException.ThrowIfNull(provider); probe.SelectorRequests.Enqueue(typeof(T)); Console.WriteLine("OPTIONAL_LOOKUP_NULL " + typeof(T).FullName); return null; }
+}
+public sealed class CustomConfigurator(IServiceCollection services, IContainerRegistrar registrar) : ServiceCollectionBusConfigurator(services, registrar);

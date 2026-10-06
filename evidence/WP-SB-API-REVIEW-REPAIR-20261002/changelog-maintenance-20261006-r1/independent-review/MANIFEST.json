@@ -1,0 +1,35 @@
+{
+  "scope": "Immutable independent Doc2 peer only; no circular self hash",
+  "files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/changelog-maintenance-20261006-independent-doc2-peer-r1/CHANGELOG_ONLY.diff",
+      "sha256": "150246970e5863779cc365a5ee2c4ac3159fb462c357da4b0e6b4fc4170a31af",
+      "bytes": 11892
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/changelog-maintenance-20261006-independent-doc2-peer-r1/REPORT.json",
+      "sha256": "345f33b3c8a3a8568ad6975e6f02fe4660aeafeaed827baeeea75127f9f4f093",
+      "bytes": 11924
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/changelog-maintenance-20261006-independent-doc2-peer-r1/after/CHANGELOG.md",
+      "sha256": "4d2377126b992bb25b59b895b96238bd189fdf209e9387cb4bad570efd68440f",
+      "bytes": 2716
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/changelog-maintenance-20261006-independent-doc2-peer-r1/after/docs/changelog/product-fixes.md",
+      "sha256": "63d7a6b78faf10309159e6b070beca158e989f155ccb63fe6ccb76b2bbfe3c9e",
+      "bytes": 49573
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/changelog-maintenance-20261006-independent-doc2-peer-r1/before/CHANGELOG.md",
+      "sha256": "2c20193151874c23b53eac5dec72e784724acd9ed385bbdace20d795058e7a37",
+      "bytes": 1486
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/changelog-maintenance-20261006-independent-doc2-peer-r1/before/docs/changelog/product-fixes.md",
+      "sha256": "77373cd27e36c2dc36a834fc646565d1cdab769ef567ba09be63beb9ae64773a",
+      "bytes": 41739
+    }
+  ]
+}

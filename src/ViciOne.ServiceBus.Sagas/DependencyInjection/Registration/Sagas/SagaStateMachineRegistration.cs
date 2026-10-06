@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
@@ -14,14 +15,15 @@ namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 /// <typeparam name="TStateMachine">The state machine type.</typeparam>
 /// <typeparam name="TInstance">The instance type.</typeparam>
 public class SagaStateMachineRegistration<TStateMachine, TInstance> :
-    ISagaRegistration
+    ISagaRegistration,
+    IEndpointSagaRegistration<TInstance>
     where TStateMachine : class, ISagaStateMachine<TInstance>
     where TInstance : class, ISagaStateMachineInstance
 {
     readonly IContainerSelector _selector;
     readonly List<Action<IRegistrationContext, ISagaConfigurator<TInstance>>> _configureActions;
     readonly object _definitionLock = new();
-    volatile ISagaDefinition<TInstance>? _definition;
+    readonly ConditionalWeakTable<IServiceProvider, ISagaDefinition<TInstance>> _definitions = new();
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="selector">The selector.</param>
@@ -57,6 +59,18 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="context">The context associated with the operation.</param>
     public void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
+        => Configure(configurator, context, null);
+
+    void IEndpointSagaRegistration<TInstance>.Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context,
+        Action<ISagaConfigurator<TInstance>> configure)
+    {
+        EndpointRegistrationConfiguration.RequireDefaultDispatch(this, typeof(ISagaRegistration),
+            typeof(SagaStateMachineRegistration<TStateMachine, TInstance>), context, "Saga configuration");
+        Configure(configurator, context, configure);
+    }
+
+    void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context,
+        Action<ISagaConfigurator<TInstance>>? configure)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(context);
@@ -76,6 +90,8 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
         foreach (Action<IRegistrationContext, ISagaConfigurator<TInstance>> action in _configureActions)
             action(context, stateMachineConfigurator);
 
+        configure?.Invoke(stateMachineConfigurator);
+
         IEnumerable<IEventObserver<TInstance>> eventObservers = context.GetServices<IEventObserver<TInstance>>();
         foreach (IEventObserver<TInstance> eventObserver in eventObservers)
             stateMachine.ConnectEventObserver(eventObserver);
@@ -84,9 +100,16 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
         foreach (IStateObserver<TInstance> stateObserver in stateObservers)
             stateMachine.ConnectStateObserver(stateObserver);
 
-        LogContext.Info?.Log("Configured endpoint {Endpoint}, Saga: {SagaType}, State Machine: {StateMachineType}",
-            configurator.InputAddress.GetEndpointName(),
-            TypeCache<TInstance>.ShortName, TypeCache.GetShortName(stateMachine.GetType()));
+        try
+        {
+            LogContext.Info?.Log("Configured endpoint {Endpoint}, Saga: {SagaType}, State Machine: {StateMachineType}",
+                configurator.InputAddress.GetEndpointName(),
+                TypeCache<TInstance>.ShortName, TypeCache.GetShortName(stateMachine.GetType()));
+        }
+        catch
+        {
+            // Optional diagnostics cannot prevent adoption of the saga endpoint specification.
+        }
 
         configurator.AddEndpointSpecification(stateMachineConfigurator);
     }
@@ -102,22 +125,19 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
     {
         ArgumentNullException.ThrowIfNull(provider);
 
-        if (_definition != null)
-            return _definition;
-
         lock (_definitionLock)
         {
-            if (_definition != null)
-                return _definition;
+            if (_definitions.TryGetValue(provider, out ISagaDefinition<TInstance>? definition))
+                return definition;
 
-            ISagaDefinition<TInstance> definition =
+            definition =
                 _selector.GetDefinition<ISagaDefinition<TInstance>>(provider) ?? new DefaultSagaDefinition<TInstance>();
 
             IEndpointDefinition<TInstance>? endpointDefinition = _selector.GetEndpointDefinition<TInstance>(provider);
             if (endpointDefinition != null)
                 definition.EndpointDefinition = endpointDefinition;
 
-            _definition = definition;
+            _definitions.Add(provider, definition);
             return definition;
         }
     }

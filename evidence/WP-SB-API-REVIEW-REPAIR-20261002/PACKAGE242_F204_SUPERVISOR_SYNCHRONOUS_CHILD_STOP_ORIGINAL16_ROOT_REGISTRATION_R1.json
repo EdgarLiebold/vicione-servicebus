@@ -1,0 +1,57 @@
+{
+  "utc": "2026-10-05T21:17:47.318377+00:00",
+  "id": "F-SB-API-204",
+  "severity": "High",
+  "title": "Supervisor synchronous later child stop failure publishes public failure before earlier admitted stop work drains",
+  "classification": "CONFIRMED_FINITE_SOURCE_BOUND_NATIVE_ORIGINAL_WITH_HEALTHY_CONTROL",
+  "source": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/Supervisor.cs",
+  "actual_original": {
+    "phase": "package241-supervisor-original16-native-r1",
+    "passed": 15,
+    "failed": 1,
+    "skipped": 0,
+    "new_cases": 7,
+    "retained_cases": 9,
+    "log_sha256": "6f82cf89ab6e143ff2cf07d227795ccb58d2fa41ae416efce1b8d2a676619ba0"
+  },
+  "first_finite_failure": {
+    "case": "ViciOne.ServiceBus.Abstractions.Tests.Advanced.Middleware.SupervisorLifecycleTests.PublicStop_LaterSynchronousChildFailureDrainsTheAlreadyStartedStopAsync(failSecond: True)",
+    "assertion": "False(operation.IsCompleted)",
+    "trace_line": 275,
+    "expected": false,
+    "actual": true,
+    "preceding_reached": [
+      "first.StopCalls=1",
+      "second.StopCalls=1",
+      "rawFirst=Single(first.RawStopTasks)",
+      "rawFirst pending",
+      "first.Completed pending",
+      "Same(primary,second.LastSynchronousStopFailure)"
+    ],
+    "later_unreached": [
+      "third.StopCalls=1",
+      "main ReleaseStop",
+      "rawFirst/first/third completion assertions",
+      "Same(primary,observed public-operation cause)",
+      "supervisor.Stopped/operation terminal assertions"
+    ],
+    "finally_only_stack_line": 301,
+    "source_cause": "StopSupervisorAsync installs child Completed WhenAll, then fills stopTasks by direct StopAsync calls. Synchronous second call escapes loop before awaiting already admitted first stop or invoking third. Agent.ExecuteStopAttemptAsync catches and faults public attempt immediately while rawFirst remains gated. Finite public state oracle confirms admitted-work drain gap, no fixture timeout.",
+    "cleanup": "Finally disables all failure switches/releases gates, joins raw owned tasks and retries via nestedfinally. No separate cleanup error in raw; line301 is stack only."
+  },
+  "independent_original_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package241-supervisor-original16-independent-qualification-r1/REPORT.json",
+    "sha256": "4a60350f62f843420773879d59b267f42602f9802b679abbf493c9e4631730f0",
+    "manifest_sha256": "92afed04749fd1c06e5169574d7660893de95fe7b939bcb4347109f1527275bc"
+  },
+  "root_own_read": "Original full16 raw36e4d0; independentwhole360dbd; current Supervisor156/Agent281876023; wholeTest5865f46bf+d03350.",
+  "distinct_from_existing_findings": [
+    "F052 BatchEndpointExtensions",
+    "F055 JobService",
+    "F144 ForkFilter",
+    "F160 TransportPipeContextSupervisor"
+  ],
+  "grade": null,
+  "repair_accepted": false,
+  "whole_API_closed": false
+}

@@ -1,0 +1,20 @@
+{
+  "actor": "/root",
+  "status": "SOURCE_ACCEPTED_PRIVATE_PUBLIC_API_PROBE_NATIVE_PENDING",
+  "review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/provider-definition-composition-source-preflight-r1/SOURCE_REVIEW_R2.json",
+    "bytes": 24643,
+    "sha256": "f6baf44cba4eafb49f312387d50707f7a802e94757b109d8e9c67ad50c31fa4e"
+  },
+  "report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/provider-definition-composition-source-preflight-r1/REVIEW_R2.md",
+    "bytes": 6153,
+    "sha256": "bf536e8ff2335ae99cb728316809e84f8ab9118b8fa4d621fce00f5ba9cebfa2"
+  },
+  "root_whole_owner_authored_and_reread": true,
+  "root_whole_review_and_report": true,
+  "all27_current_bindings_fresh": true,
+  "previous_fixture_block": "provider creation moved inside try/finally; all actual providers cleaned independently; primary retained",
+  "new_product_finding_confirmed": false,
+  "native_operations": 0
+}

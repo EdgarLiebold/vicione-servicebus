@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T02:08:53.436961+00:00",
+  "finding": "F-SB-API-211",
+  "status": "ACTUAL_ORIGINAL10_INDEPENDENTLY_QUALIFIED_REGISTERED_REPAIR_PENDING",
+  "cause": "Two owning ActiveMqSessionContext synchronous DeleteQueue/DeleteTopic optional Debug calls can throw before a Task is returned or actual executor deletion work is admitted.",
+  "distinct_identity": "One Session deletion diagnostic cause family across exactlytwo public queue/topic sites, nottwo IDs; differentowning public stage fromConnectionDispose F209, SQSclient F208 andRabbitpurge F210.",
+  "original": {
+    "capture_MAN": "45c9c6b46cb279229f6eb92b90cdf4ff74294196639304256f83af8395ea9b75",
+    "independent_REPORT": "367ebb06b4e45f2f84a3fe9f04de22e12c3b26ba025751d2626bf21fe56287b3",
+    "independent_MAN": "2a2b7f3a25d7c5d324234723ac29a66812a394e2c257623fb1e2d7ef1a11b131",
+    "counts": {
+      "total": 10,
+      "passed": 8,
+      "failed": 2,
+      "skipped": 0
+    },
+    "first_failures": "TwohostileNull105 afteractualrawconsumer+publiccreationjoin/selectedtuple/Same loggeruniqueIOException101; nativeDelete0/noReturnedTask. Laterhostile assertionsunreached; finally169 nosecondfailure.",
+    "compile_history": "Root300firstcompilefailure ZERO native; correctedRoot303-r2first10 actualrun only."
+  },
+  "root_authority": "RootwholeTest3004573d2+exactmetadata299, wholecurrentSession3127463ef; wholeactual10raw45cf44 +wholeindqualification04c303.",
+  "known_before": 210,
+  "known_after": 211,
+  "bounded_before": 210,
+  "bounded_after": 210,
+  "grade": null,
+  "whole_API_closed": false
+}

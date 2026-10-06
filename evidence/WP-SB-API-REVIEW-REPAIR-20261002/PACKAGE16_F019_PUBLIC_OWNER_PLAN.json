@@ -1,0 +1,11 @@
+{
+  "status": "ROOT_BOUNDED_PUBLIC_F019_RESEARCH_AND_PLAN_BEFORE_IMPLEMENTATION",
+  "owner": "R/repair-consumers/package16-f019/{previous,corrected}",
+  "cases": 32,
+  "native_test_plan_sha256": "996b28be32edf1e9723a0829f39e49249b96bc5efbc9358800c93876119f6efb",
+  "native_mutant_plan_sha256": "200f1ab869b21e3d1e8e7d6a302c6f679c8f14aebb0f41ba056be3c08feab478",
+  "root_inputs": "Own47current source preauthor; exact own package14 public csproj/config; no inherited Directory.Build/Packages/global/NuGet files exist in consumer ancestors; new wholeowner bodies must be FULL read after Root authors them and before Native. All task gates released and actual tasks separately joined in finally; cleanup attempts independent.",
+  "source_inventory": "Program.cs, Cases.cs, LoggingProbe.cs, RuntimeOwner.cs, OwnedLifetime.cs, DelegatingContext.cs, LoggingLifetime.PublicConsumer.csproj, NuGet.Config, packages.lock.json(after restore before acceptance)",
+  "native_runtime_plan": "Selected offline ViciOne Core+Abstractions1.0.0; Microsoft.Extensions.Hosting/Logging/DI10.0.12 plus their actual pinned dependencies. No AspNetCore framework reference; verify actual loaded Microsoft DLLs; exact SDK source remains unread; no fake bus/IVT/private-reflection/canonical test edit",
+  "preauthor_UTC": "2026-10-03T05:49:36.047744+00:00"
+}

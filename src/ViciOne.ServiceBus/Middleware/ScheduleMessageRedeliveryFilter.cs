@@ -27,7 +27,7 @@ public class ScheduleMessageRedeliveryFilter<TMessage> :
         context.CreateFilterScope("scheduleRedeliveryContext");
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Provides scheduler-based redelivery context when absent, then forwards the consumed message.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

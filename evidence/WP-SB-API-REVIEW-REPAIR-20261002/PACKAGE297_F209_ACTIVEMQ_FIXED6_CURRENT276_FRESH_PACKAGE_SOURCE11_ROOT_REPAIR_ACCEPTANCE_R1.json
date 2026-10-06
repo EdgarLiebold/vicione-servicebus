@@ -1,0 +1,29 @@
+{
+  "utc": "2026-10-06T01:30:33.916543+00:00",
+  "status": "F209_FIXED6_CURRENT276_STRICT_FRESH_PACKAGE_INDEPENDENT_BOUNDED_ROOT_ACCEPTANCE",
+  "finding": "F-SB-API-209",
+  "actual_focused6_allpass_and_subset276": true,
+  "actual_whole276_0fail_0skip": true,
+  "capture": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package293-activemq-fixed-root-native-publication-capture-r1/REPORT.json",
+    "sha256": "cede6b232088fc4dd947961050a33d3d5abc22963075f7a857f6fa427bd00378"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package285-activemq-debug2-independent-source-peer-r1/REPORT.json",
+    "sha256": "e059c832f21ceb8c921adf0f428dcbb90c7b7cac6b8f3b345734dbe7be7589c5"
+  },
+  "independent_result_publication_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package293-activemq-fixed6-publication-independent-qualification-r1/REPORT.json",
+    "sha256": "abfc1aef82c2366080ee63dcf55212e401dafc76f073e37a97d08902c9fc3dbd"
+  },
+  "repair": "Exactlytwo local optionalDebug scopes, nativeClose/Dispose/executorcleanup +failurecapture/Warning/orderedEDIaggregate paths unchanged outside guards. ActualheldNMSprimary preserved.",
+  "existing_source11_rebase": "SourceSHA+currentPDBbinding+rebaseref only; allindividualnorm/status/native/XML andother18893objects exact. Six alreadycurrentPDB fields updated, five historical185 property/type provenance retained unchanged with newcurrent binding. No historical185 current_sha field interpreted as fresh297. No SourceDispose1 acceptance before separatecurrentnorm peer.",
+  "master_before_sha256": "aa7d38e8534d98b5dd80d4e163f2de309cd94dd2832d7f22b77bc7d004fe095c",
+  "known_findings": 210,
+  "known_dispositions_before": 208,
+  "known_dispositions_after": 209,
+  "Originalremaining": 527,
+  "scope": "Native6 publicSDKcleanup and privateexecutor sourcebridge; no directly observedprivateworkerTask/generalrepeatedconcurrent/cancellation/destinations/allAPI/ABI claim.14selectedartifact and actualNuGet currentDLLXML.",
+  "grade": null,
+  "whole_API_closed": false
+}

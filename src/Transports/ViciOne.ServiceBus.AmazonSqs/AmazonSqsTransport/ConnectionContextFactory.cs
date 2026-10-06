@@ -61,7 +61,13 @@ public class ConnectionContextFactory :
 
             try
             {
-                TransportLogMessages.ConnectHost(_hostConfiguration.Settings.ToString());
+                try
+                {
+                    TransportLogMessages.ConnectHost(_hostConfiguration.Settings.ToString());
+                }
+                catch (Exception)
+                {
+                }
 
                 var connection = _hostConfiguration.Settings.CreateConnection();
 
@@ -73,7 +79,13 @@ public class ConnectionContextFactory :
             }
             catch (Exception ex)
             {
-                LogContext.Warning?.Log(ex, "Connection Failed: {InputAddress}", _hostConfiguration.HostAddress);
+                try
+                {
+                    LogContext.Warning?.Log(ex, "Connection Failed: {InputAddress}", _hostConfiguration.HostAddress);
+                }
+                catch (Exception)
+                {
+                }
                 throw new AmazonSqsConnectionException("Connect failed: " + _hostConfiguration.Settings, ex);
             }
         }, supervisor.Stopping).ConfigureAwait(false);

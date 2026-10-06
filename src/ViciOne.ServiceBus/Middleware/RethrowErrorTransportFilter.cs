@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Middleware;
 public class RethrowErrorTransportFilter :
     IFilter<ExceptionReceiveContext>
 {
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Returns a faulted task carrying the receive context's exception.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

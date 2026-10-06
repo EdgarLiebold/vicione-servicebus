@@ -1,0 +1,81 @@
+{
+  "utc": "2026-10-06T05:29:22.137930+00:00",
+  "status": "TEST_ONLY_APPLIED_UNCHANGED_ORIGINAL_FORMATTER295_PRE_NATIVE",
+  "source_rows": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DefaultEndpointNameFormatter.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-native-source-capture-r1/source-before/src/ViciOne.ServiceBus/Configuration/DefaultEndpointNameFormatter.cs",
+      "bytes": 12512,
+      "sha256": "a0a5728a255acc76e5e584d28d0eade124d46e22cb5fe41510cead78837df1bd"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/TypeCache.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-native-source-capture-r1/source-before/src/ViciOne.ServiceBus.Abstractions/Advanced/TypeCache.cs",
+      "bytes": 3027,
+      "sha256": "b29648387f5c627952c8cf53a785b452f42687b7aea801519def73db4974086a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Internals/Reflection/TypeNameFormatter.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-native-source-capture-r1/source-before/src/ViciOne.ServiceBus.Abstractions/Internals/Reflection/TypeNameFormatter.cs",
+      "bytes": 2713,
+      "sha256": "1311b6360ee087395be444791972f4278377e0fe0d3fbf2a81f437bdc74f5531"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/TypeExtensions.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-native-source-capture-r1/source-before/src/ViciOne.ServiceBus.Abstractions/Internals/Extensions/TypeExtensions.cs",
+      "bytes": 10325,
+      "sha256": "b0541ed73255d65c64b9e573c86309766f17b6f30800bb350df52356dd558341"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/EndpointNameFormatterTests.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-native-source-capture-r1/source-before/tests/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/EndpointNameFormatterTests.cs",
+      "bytes": 8915,
+      "sha256": "7de7c91c468e9a63d8ac792933f379b0c8613497e5bce7fd07e901ea2e5b562f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-native-source-capture-r1/source-before/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "bytes": 2378,
+      "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/GlobalUsings.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-native-source-capture-r1/source-before/tests/ViciOne.ServiceBus.Tests/GlobalUsings.cs",
+      "bytes": 268,
+      "sha256": "ae580d7c99fba34f66ce0f433556ed9996fe28a409a049e9f9309a9bfaabed39"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-native-source-capture-r1/source-before/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "bytes": 1658779,
+      "sha256": "ba8a1a46cb8fe33aa19c5d46c0d560e601b8c540210e496def5efec5b046f24e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/public-api-baseline/PublicApiBaseline.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-native-source-capture-r1/source-before/tools/public-api-baseline/PublicApiBaseline.cs",
+      "bytes": 25637,
+      "sha256": "f62b2315d132da62ee743052d8d23c4c99f3fe787a22e12280117032de7e26ed"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/FormatterJoinSeparatorNullabilityOriginalTests.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-native-source-capture-r1/source-before/tests/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/FormatterJoinSeparatorNullabilityOriginalTests.cs",
+      "bytes": 4253,
+      "sha256": "1d0d10eeeb4ab9cbcb87b9e73ec42596539c1dfa709f9a329f00c06603f37d8f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package350-formatter-original6-native-source-capture-r1/source-before/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+      "bytes": 915,
+      "sha256": "d78d054d54468692e35500dca6c90e706e6a77bfcbb7d1878bcb4bc97fba4e9e"
+    }
+  ],
+  "author_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package346-formatter-nullability-original6-testonly-proposed-r1/REPORT.json",
+  "independent_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package346-formatter-original6-independent-runtime-source-peer-r1/REPORT.json",
+  "root_whole_test_receipt": "db8143",
+  "root_whole_helpers_receipt": "a4645f",
+  "root_whole_target_retained_receipt": "1f716d",
+  "root_peer_report_receipt": "f474ed",
+  "native_count": 0,
+  "grade": null,
+  "closed": false
+}

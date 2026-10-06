@@ -1,0 +1,440 @@
+{
+  "utc": "2026-10-05T02:36:54.920495+00:00",
+  "actor": "/root",
+  "status": "APPLIED_GUARDED_49_PRODUCT1_TEST1_REQUIREMENT_FILES_NATIVE_PENDING",
+  "registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE164_CALLBACK_XML42_TTL_CLEAR_FOUR_CAUSES_ROOT_FINDING_REGISTRATION_R1.json",
+    "sha256": "847721e4a40c6ce9270b173d12e489d41ce5d7209fc7e910eec55b8d25c5fc01"
+  },
+  "author_and_independent_source_peers": [
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-product-proposed-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-product-proposed-r1/MANIFEST.json",
+        "sha256": "40993ee48a4d30c05aa34b666ee220c803739fb3c6cb00e53c8c26b873b18f19"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-product-proposed-r1/REPORT.json",
+        "sha256": "a55d1a1a510801c98888bfb3619744788c24253ae6f6faed5c89fbf1f849b3ab"
+      },
+      "files_verified": 16
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-independent-scanner-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-independent-scanner-r1/MANIFEST.json",
+        "sha256": "160df082152147814d5672a7ce2b77ef2ca424f286d84f45e8bf5111aa548bc6"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-saga-optional-callback-nullability-independent-scanner-r1/REPORT.json",
+        "sha256": "7ac8960b881c58f7d4edf9bf3ee555d7b6750a67faf12f4d74c44d7325a6f0b2"
+      },
+      "files_verified": 3
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-send-purpose-xml42-product-proposed-r2",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-send-purpose-xml42-product-proposed-r2/MANIFEST.json",
+        "sha256": "170da238371ca8409b0c572c72d6cc7267840e0f29f0bf61e5e34b56128c96f3"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-send-purpose-xml42-product-proposed-r2/REPORT.json",
+        "sha256": "fbf088a20300b201fbe059952a93942955a6dd4ef7e2f4b26d387c9057d7122d"
+      },
+      "files_verified": 88
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-xml42-independent-rebase-r2",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-xml42-independent-rebase-r2/MANIFEST.json",
+        "sha256": "a6edab64327b076f707cfc1e5e63c4cfa9a1c245bfb5706c895a16f18a6ec87b"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-middleware-xml42-independent-rebase-r2/REPORT.json",
+        "sha256": "11fa392dca7fb1e768f98d75d762cd3d64f12d5b8bbf23b4ba7d7b34cbb78748"
+      },
+      "files_verified": 1
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-product-proposed-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-product-proposed-r1/MANIFEST.json",
+        "sha256": "cc7db1feb4bba9dc603cb0a016e40629a401ccdd4913cb7d98584a6ccac79c95"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-product-proposed-r1/REPORT.json",
+        "sha256": "9bb933597c00a262c78d885445674c92561977e86c63e61bd11392571aa91f6e"
+      },
+      "files_verified": 13
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-independent-scanner-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-independent-scanner-r1/MANIFEST.json",
+        "sha256": "9873235ed4d2548eda70ffa54705f983a9939b3d3813cd4ad64c52b915a2ddcd"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-request-lifetime-clear-xml2-independent-scanner-r1/REPORT.json",
+        "sha256": "a4061b8819a9b970702cb58b895306493297842a0d9071b2c4f93ebf102a2885"
+      },
+      "files_verified": 3
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-combined-request-config-independent-scanner-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-combined-request-config-independent-scanner-r1/MANIFEST.json",
+        "sha256": "cb374339f99a1b1b2d99c37ebfce4d15450dab6a9ee7efbba3d83941205d7fac"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-combined-request-config-independent-scanner-r1/REPORT.json",
+        "sha256": "0484d249dee1526d04708738e426e6141082ae1407ecde21f7171253a0b64148"
+      },
+      "files_verified": 2
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-oracles-proposed-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-oracles-proposed-r1/MANIFEST.json",
+        "sha256": "78be63e0bb080a2fa3f54d6e5701476f7a36e4c16c055dd1d4f969d385261a11"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-oracles-proposed-r1/REPORT.json",
+        "sha256": "dd41e02e7c9663de4efbc28b3bc97c0edf977d738ae25405477fac501936266c"
+      },
+      "files_verified": 6
+    },
+    {
+      "directory": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-independent-runtime-r1",
+      "manifest": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-independent-runtime-r1/MANIFEST.json",
+        "sha256": "23b733b737aa59668238ac148d8bf59dc8773810ff425b97ec695759cf3b71b5"
+      },
+      "report": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-consume-parent-fanout2-independent-runtime-r1/REPORT.json",
+        "sha256": "b8a809418bd5d987b7f05b7ce12feb4840c493896fd14e3deed729dcbebc706c"
+      },
+      "files_verified": 1
+    }
+  ],
+  "changed_files": [
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Configuration/StateMachineRequestConfigurator.cs",
+      "before_sha256": "f142170db44fb2b4fbe7037eae4b2dde34bdf4ab0b0b10f25d1660c72741db1d",
+      "after_sha256": "762187b6290bd25de40e0dc12438082846d99475dd4e191bac26b553a64b525a",
+      "authority": "nullable-author+independent-scanner; shared IRequestConfigurator additionally combined-source peer"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Configuration/StateMachineScheduleConfigurator.cs",
+      "before_sha256": "aa27ec8ca0aedf6cd65fba7cc5e82a3b98e0b4e116ef7aa1a6c6a0aeb362a210",
+      "after_sha256": "e327f9ba9a41094aa63b012e66244723ef20c197d27b39e469808387b5b60508",
+      "authority": "nullable-author+independent-scanner; shared IRequestConfigurator additionally combined-source peer"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/IRequestSettings.cs",
+      "before_sha256": "39e9994b6b5363ed246535cf90d47b0b6d206d50509a9641f32965456b903159",
+      "after_sha256": "6c19fb851198302b568e5d8884d58f1fca5a33ca0ebe9c0139e04f79975a3055",
+      "authority": "nullable-author+independent-scanner; shared IRequestConfigurator additionally combined-source peer"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IRequestConfigurator.cs",
+      "before_sha256": "7201b0ae3fbdb0da34a1fc2e9bd79bd94c874f8d67413cb195cfbdac3f9073ad",
+      "after_sha256": "507489c0585386c2adf03795f46e4998d63145cf9035b5ee7fb31e464c475435",
+      "authority": "nullable-author+independent-scanner; shared IRequestConfigurator additionally combined-source peer"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IScheduleSettings.cs",
+      "before_sha256": "5079275eabce36f602e515eb216e0be05653de6ae7554698812ea10e9eb5d350",
+      "after_sha256": "63bc979edc3b13185f6f379a2edcf83b4be5051c4d209146358cc626b2c8f29c",
+      "authority": "nullable-author+independent-scanner; shared IRequestConfigurator additionally combined-source peer"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Configuration/IScheduleConfigurator.cs",
+      "before_sha256": "fb64bceb1b56c4996559a76a4774a8f0e814a35baf0ca75d9b943062aa67acb9",
+      "after_sha256": "e3312f7f1d9a2de4864cd5b877fdcfcee9479880ffdea5a59e38f0c169bd64b7",
+      "authority": "nullable-author+independent-scanner; shared IRequestConfigurator additionally combined-source peer"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumeContextMessageTypeFilter.cs",
+      "before_sha256": "1a7306c4b54916fb992d700206c4e2ddd0fff15d0b4a6f310e9fcb8c6fb102c8",
+      "after_sha256": "b6b45afef8a344155d352bc0586838ec255d37f999be00f2b0e49295c7574c64",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs",
+      "before_sha256": "203cbd2e3ab347e04ec92109aca2f64de4792e046159f9aaedf7efa100d01426",
+      "after_sha256": "a41c7fb422f320303478d5fedfa62c17074cb087b1f0af69bf912d0f4b70963a",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumePipe.cs",
+      "before_sha256": "82f41224ae47bec063bac9311de34ab127a29ac02a903effedfdddeae2113685",
+      "after_sha256": "6e27995ba6ac1b29757547636a2b63aae7157423a180768f6c1c56e00acda63f",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerMergePipe.cs",
+      "before_sha256": "a75fa5fceea99501c43e07ce14a83780b19cf06dc0833260e8ecd228828f8682",
+      "after_sha256": "554d009c97309e137a422f7f0e69a38b2b55f31532e1431ea5cd33a7cd7ecb3f",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerMessageMergePipe.cs",
+      "before_sha256": "c7218bc9c452724184bcf0b36286d6e23a963996a348681b06b4db2e2082ad50",
+      "after_sha256": "0447d0edc962e82c2d6ad4a1d9a8bc33c4eadfdcf6b9ba84060f26f23d363582",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerSplitFilter.cs",
+      "before_sha256": "aab728ffbe186fdcaafe0bc946b4f3a9304260827a259a7700fd54c62dc9f78a",
+      "after_sha256": "cf3031a9c739e46ef858b12dd35826eb11dfa7ca7fe6c6b9ed394b0623ee27d3",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ContextFilter.cs",
+      "before_sha256": "597b8c4301c78f1a07d844e4331631864b86b06f6b2aa49980a3c57a84a320b1",
+      "after_sha256": "c0034af5fa7570a12052b08012a4efdf93b243fdf309849d2817ac10b84043a5",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CorrelationIdMessageFilter.cs",
+      "before_sha256": "0c2f0efc4bcd44f95549cfb76b28dd74c6b4b3f5defea6dca743f504614a4700",
+      "after_sha256": "948290e4ada278cecbe332168f1cd7d5c349979c5a1aefe67732963a720862d3",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/DelayedMessageRedeliveryFilter.cs",
+      "before_sha256": "4e4c5f2fe487de2f3975d4ade4f88103618166b95efb3d193b2b40c95fe90ab7",
+      "after_sha256": "d5cb1891eaaad9dfc6f6ae98cf063e0cc802db6eaa0e1dafce1ffec05272e7da",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/DelayedMessageSchedulerFilter.cs",
+      "before_sha256": "4f5b4370bb5866e5888615a31e11420cb9e331a8ebd8e0547a6bb46b0b612652",
+      "after_sha256": "3f7cbe29c17c35d62d1090f1f12f83250c20f361acadfa802f7f71a232bb5ddd",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/DelaySendPipe.cs",
+      "before_sha256": "115e0af4a797f535f466edd94c49631648601fecd3c7b981ec839e998e2ddc96",
+      "after_sha256": "2db5fc513d916531875eb6e1b5ad61c55c77b9efe5be5ab7466087f7e73e07a2",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/FaultDeadLetterFilter.cs",
+      "before_sha256": "4edc6aeb5dc3308dcf5e6c8dbc0c3308a2ca3a56db4f55079232ae9e8488c06d",
+      "after_sha256": "b26c0f3063e9ae63fbaf96dbd2223c80b9ccf46fe30227e81fa41ea0d4a3970e",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/FutureRequestPipe.cs",
+      "before_sha256": "572b7b5db4178793f9e87217918173d1a7699a24e0fb997b1f0f34f30454e172",
+      "after_sha256": "ae79d36515b63aedfa333b58c838b7cb540b293ebb6d413f5481abf512fddbf4",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/FutureResultPipe.cs",
+      "before_sha256": "9b8721738837fb51b999d63445248ba5bf65debd9812fce06a94006816e13cbc",
+      "after_sha256": "f8bd262834df77ac6cdef8bf7db30458e9c00678720c0bdd2cae93f0cfd048d5",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/GenerateFaultFilter.cs",
+      "before_sha256": "a4bbd9e7cef9812b639e97de75fc854b69f0423bc1e415bb460ce21c696f5075",
+      "after_sha256": "62684d26fa10402c32b7a1bb41e367ce15e9bed74163f16d8739dd8d00a02668",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/InlineFilter.cs",
+      "before_sha256": "b0c91adde7a3cfc3f8b661ab803bfe63b2f22e491512c225e53580df3d8131fa",
+      "after_sha256": "4e0ca00ae4b6e0ac2d416784b9f51a248017ea5ea760e7a7e0f9bd82ea281ac5",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/KeyFilter.cs",
+      "before_sha256": "8bd943ff99129496ae6fb9eed4eebf73192c205839610f27b8c2ef9f381b7e5a",
+      "after_sha256": "972457558367458153bcc3de5e2a4a41ea017b19aede317fd525fdb0200f979c",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/MessageSchedulerFilter.cs",
+      "before_sha256": "4d0cfa9023f8d6109f80f5bbad0988163f8a89f1dbd50835abf74fb580736402",
+      "after_sha256": "9ad572f0171a4c2a23d670ef804e70568af9446af1346c996d9aee6880e15736",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/MessageSplitFilter.cs",
+      "before_sha256": "fc099779e1cb05767c2aa06eb186e14896ef7e35c1aef9ab93dde752bf78399b",
+      "after_sha256": "3dcb3b30d924ab4a739cb6806d325ce67cc5729bd5f6cb87f25511c19aaebf8c",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "before_sha256": "c3d84e077590acec52e6e13323c6d356560f0d7ed035a8ae12db906fbeff4efc",
+      "after_sha256": "c0ef95912363f64d6387ad963437350e11443d22ddecb663cc03286f5ed68aa4",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/OutboxMessageSendPipe.cs",
+      "before_sha256": "2987dc188e9b8021a4842771067e621b146ae81b73c6de99b8888b0ef5c7caf0",
+      "after_sha256": "0dae55f440c4502650c9263a63e1927fe70b474b4c3a0cd5c7e4442423bd82d1",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/PayloadFilter.cs",
+      "before_sha256": "fdf4715cc83ff37a1ee2378b8d081ce4e393c577367c24d507b3e6c866348c78",
+      "after_sha256": "fae0a836e6de99aba5876e531f4989f60a5423dd615feea2ccc5c1accb36eb33",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/PipeContextSourceBindFilter.cs",
+      "before_sha256": "1ab8ed05c2e50e820e7ff54a8e865e675a062ef364f954db2554377074363263",
+      "after_sha256": "8351ffb4d95633e058a3cb4812a14f957db14e7c461a877f15a5470cf735c7e6",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ReceiveEndpointDependencyFilter.cs",
+      "before_sha256": "3c04f613042005606159900ffca268abd8098f56a2699ca343672e61386b015c",
+      "after_sha256": "5ca2d8c5044559c1a565ada891d3de7ca81745f01ebcc80da27b55801691d337",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/RequestIdFilter.cs",
+      "before_sha256": "264d6e3f248e3b5dd750906c03f3ee2fe32ad1873d6b40a7dcfda0d4c9cc5635",
+      "after_sha256": "5cc75ff6624965001386e7d438b9133173e390bf09fe1ab3c974788b36248447",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/RethrowErrorTransportFilter.cs",
+      "before_sha256": "9fd3c14596f70831c18669249bc2aed576517820e3e49cab96a33119abc173cf",
+      "after_sha256": "9ed0a162a3f0375e4882efb58584029404bb5d4291dea4053aea14a21d088f4a",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScheduleMessageRedeliveryFilter.cs",
+      "before_sha256": "c275f6543d302f6a2647e5977dc859bb7503a6abd3e76aa1a5da2b9300b06b4e",
+      "after_sha256": "d0b48bbb69a07a7f6c5150ae113e62357cd3286aecf8c96c3c07488b24aa8ca7",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopeCompensateFilter.cs",
+      "before_sha256": "0feb309f0164d7eb4a4af4dbe8ce5b1fee43f6ec7b8de27a2665c46edfa5dfe2",
+      "after_sha256": "7e0f9a7859f82ca110db90f0d71c1a020d3510b1ef7f8a0f8d9fb1afec8ef505",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopeConsumeFilter.cs",
+      "before_sha256": "fcb8b5faafe05cad64ad2269ba652734e4fb921425627dfb73b885256fadf4c9",
+      "after_sha256": "127bfaf3633c5c687215ca3ec1439aeb14369fd281ad54d08a39a98a71eba2cf",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedCompensateFilter.cs",
+      "before_sha256": "b1adbff5e18bf32e57f3f96ac40fedc76f24af8068afb4feff18c526fce00dfa",
+      "after_sha256": "54a67ce163d9cf1015a5662f7be508142500c32054d23a60d7f0fd8a4ffb9453",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedConsumeFilter.cs",
+      "before_sha256": "5fa3d762fc58b742a9245deaba75075007e4b3b9343c37dfa212d7a4ba45995c",
+      "after_sha256": "79e8d3ac7538d2938935ccf7cc47c3eab4f092cac28d73f0517f6fe8c448de26",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedExecuteFilter.cs",
+      "before_sha256": "1ee459e3e4d6816a368d276eeb1227ebf9c3d7f497c88a7c0d9d10287da95724",
+      "after_sha256": "d0981390f745b03c5a9caa5e338238b6946d8ca00846bbde0d97d6a1aac48cc4",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopedFilter.cs",
+      "before_sha256": "bafa94a4559526d8b4b0788821953e48bbe9d39767fa7534cd20825d89e67e9e",
+      "after_sha256": "4e5f1d04a17fc210f070614c503f9ea9184b9f1501e34f53e53d27022c2a56b5",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopeExecuteFilter.cs",
+      "before_sha256": "0964bbad166519ea864aee8cb0a6e389f1d2373db0809cfc788439ce42dd4b02",
+      "after_sha256": "03530ddc1a7a842b55f9c92e73c7bc9c189106e091f521c975a4016c026bfad8",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ScopeMessageFilter.cs",
+      "before_sha256": "78782ab10546b3b2129f3a775d7fbc9985d78ff70438f4898c8fbb9a19933668",
+      "after_sha256": "bc9999c2a6eb366a8b7bdffc08eddbffa108a35ade764bcbf4f1523064d0b037",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/SetCorrelationIdFilter.cs",
+      "before_sha256": "b1dfab083be7f83e9b604c08a3542f4da99ac76ea4be737c51945c0c93a88f66",
+      "after_sha256": "2dde40cf99d00243faffe2d6f428b48ad715c28b5d67c8e0805db842679ccc9d",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/SetPartitionKeyFilter.cs",
+      "before_sha256": "5f7b8236b5f44117f1c57bd979c39951d27a4043e77bf17c61614313fafbb38a",
+      "after_sha256": "48275532db3a5966bc7463147215e34932329e41b124059f95da101a5fcc5b59",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/SetRoutingKeyFilter.cs",
+      "before_sha256": "35c2f288b9f989a6daabcb234d56394df3d3222358713244548067f0b7dc19ce",
+      "after_sha256": "faac8dbd9cefb14c30545a11b8174b5bd9532f48b0b65f2d873f384576c67ca7",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/SetSerializerFilter.cs",
+      "before_sha256": "8f08e69cdd49eef1f2246b23954a62fd956989a3df20a1b6111e35153e7c33a8",
+      "after_sha256": "f063494960d7c6175f82f556812842f6aae05fc8063ff4d299056001131a8049",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/TimeoutFilter.cs",
+      "before_sha256": "391e5a99893199f3a8a712b523ca7dcb871650241b82f6db4d278bd5fc0c90bb",
+      "after_sha256": "1559a25abd172c20de9a9b45e07b71cc8dc941e96dc2c269a4de9cca0aa901ec",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/TransactionFilter.cs",
+      "before_sha256": "d6f9c078bec420783c5edc9580d1da39be768c52a0135e08f03f2ecc03621840",
+      "after_sha256": "3ca627d9ca854a38589f4dca668f859b0e6619f865f154aa6187c4c768e502f2",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/TransportReadyFilter.cs",
+      "before_sha256": "d62f158a14ae0e82f474981d9c0ef5c9f2cc6e35b671b88ba6c412739195fec3",
+      "after_sha256": "9d6a513fbe6c4890ee292d367763c72149b1ece8771a5674a50206ced2d73c9f",
+      "authority": "xml42 current163 rebase+independent qualifier R1 individual whole owners/R2 stale-handle preservation"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/StateMachineRequestExtensions.cs",
+      "before_sha256": "955a29334d8ea91041d9e09bcfd2e84919c4983e132237c0fa5d8e415036cf57",
+      "after_sha256": "3713f9aa003675a65a4b29396e2a65894bea502eed26709b0f8ff0cf93ab5ee3",
+      "authority": "lifetime-clear XML-only author+independent-scanner"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeOutputObserverContractTests.cs",
+      "before_sha256": "4647e6d790e16abe5273bdc31103ca30a38357b9ba54c0818fecb9d966951f1e",
+      "after_sha256": "654e91b3e5331b8c96ba684564cfa5e0c6e1a87272199c84468f4d2db065a433",
+      "authority": "research-plan+whole133 root188788+independent runtime peer"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "cce9529da22e8f6c7b290a310a646e698bbf27b1c54a8cb0d94f957596bccc19",
+      "after_sha256": "d107994d0a96291e3515ad4124754720ccbc330ec243d3f275f632d3dd288ee0",
+      "authority": "parent2 independently reviewed exact add-only1 requirement; prefix all4638 preserved"
+    }
+  ],
+  "test_additive_lines": 133,
+  "test_methods_added": 1,
+  "test_cases_added": 2,
+  "requirements_before": 4638,
+  "requirements_after": 4639,
+  "requirements_prefix_preserved": true,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-root-before-r1",
+  "limits": [
+    "No parent fanout defect registered before actual finite Original.",
+    "Callback runtime and delegate CLR identity preserved; public Nullable metadata intentionally corrected.",
+    "XML-only44 emitted nodes expected, Delay163 correction and RequestId163 executable repair preserved.",
+    "No wholeAPI/globalA+ closure."
+  ]
+}

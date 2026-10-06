@@ -1,0 +1,106 @@
+{
+  "freeze_sha256": "74225b35b438aaf9a6e4cee0100a9db52f2ba35d618871ae04836e6c692c5010",
+  "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package10-f022-adversarial",
+  "status": "SCOPED_ACCEPT_F022_FROZEN_PRODUCT_PUBLIC_ORACLE_RUNNER_AND_R2_COUNTERPROOFS",
+  "files": [
+    {
+      "name": "COMPATIBILITY_AND_FRAME_CHECK.json",
+      "bytes": 897,
+      "sha256": "004cffc0d3fbd76ae8b98bf4ae2f95ba7a82671e9a14f7c5e83618e8052c1157"
+    },
+    {
+      "name": "EXACT_PRODUCT_DELTA.txt",
+      "bytes": 1467,
+      "sha256": "fb395c13e2e5e43050cb98b569c03e8d98548a2d285c6340c777427507e9930c"
+    },
+    {
+      "name": "FREEZE_HASH_CHECK.json",
+      "bytes": 11613,
+      "sha256": "740d4eec41092309c22ea89c1d39a2b06d4a6026f182c580dde5c49df2beb0d9"
+    },
+    {
+      "name": "GUIDANCE_REUSE.json",
+      "bytes": 3951,
+      "sha256": "3f00e456d84c3ebe510d0de75add51b938e2fe175fadb596fec131db05e980ae"
+    },
+    {
+      "name": "INDEPENDENT_MUTANT_PE_PDB_CHECKS.json",
+      "bytes": 45231,
+      "sha256": "acde4bec55373942812854269ff4fa7dcc84d1099b3ba75d248d3e86251a07b4"
+    },
+    {
+      "name": "INDEPENDENT_PACKAGE_PE_PDB_CHECKS.json",
+      "bytes": 1462975,
+      "sha256": "8a6f1e9ab5ddb512d1675ffa153a216eb40eb01de21ac8f1156fa81e02da3d8a"
+    },
+    {
+      "name": "INDEPENDENT_SOURCE_NATIVE_RESTORE_CHECKS.json",
+      "bytes": 18338,
+      "sha256": "01161767d2241c07455763af638272a757218c5b1ea28605816051fb02b35f15"
+    },
+    {
+      "name": "LOG_FULL_READ_01.txt",
+      "bytes": 13412,
+      "sha256": "0b16fd04a557ebe7fce7a5529b30b2355bddc77938dc25782a0f2160d934c37e"
+    },
+    {
+      "name": "LOG_FULL_READ_02.txt",
+      "bytes": 13729,
+      "sha256": "f1df20dba47228bd396df59e7b0b4be64cf4249d671fa58ca14a0fc217656813"
+    },
+    {
+      "name": "LOG_FULL_READ_03.txt",
+      "bytes": 13923,
+      "sha256": "4b34bd1effd254402e4601242d4637eb6b5e6db510cf9320c5579f20a675fa8c"
+    },
+    {
+      "name": "LOG_FULL_READ_04.txt",
+      "bytes": 11388,
+      "sha256": "531f883823a92a2107d187189c7c031a271eedd67a26fd487a986b27101c4d51"
+    },
+    {
+      "name": "LOG_FULL_READ_05.txt",
+      "bytes": 11890,
+      "sha256": "f2eefcbe2dcd5f0de6c441dcc6ac398c595097f5db5b08800fa01e49365a710c"
+    },
+    {
+      "name": "LOG_FULL_READ_06.txt",
+      "bytes": 11307,
+      "sha256": "751256d7c07f612e69eb015259a0230d6c55eb9b5244c7d3884cdc02b3d72fa2"
+    },
+    {
+      "name": "LOG_READ_PLAN.json",
+      "bytes": 62044,
+      "sha256": "3b9cae31883c2e89896572354398aa463fa62acd49429e46c1ac4ed5ebaedd0a"
+    },
+    {
+      "name": "PROOF_LOSSLESS_BODIES.json",
+      "bytes": 57533,
+      "sha256": "706913b700e6b3f0e99264039d11c0ed88b40fe55325d0e47554b36421f5d95d"
+    },
+    {
+      "name": "PROOF_LOSSLESS_OUTLINE.json",
+      "bytes": 60425,
+      "sha256": "8736e7801c6dc294a758774618b5d14ccb7de097af074e343faf9624b86443d4"
+    },
+    {
+      "name": "READ_CLOSURE.json",
+      "bytes": 146597,
+      "sha256": "a957cc08e234e94b1331248887e4328cdc97b4c1b183df2d63a4357393d6453e"
+    },
+    {
+      "name": "REVIEW.json",
+      "bytes": 7245,
+      "sha256": "d1734e3fb5ea6109602a25835e0c549ef8e98832f5ffb141c0131fa50c81a1b2"
+    },
+    {
+      "name": "REVIEW.txt",
+      "bytes": 6397,
+      "sha256": "fb52743aec763afef3c86cdb3f85d17de6b36921b946de7957adc0361ff1cd1f"
+    }
+  ],
+  "native_operations": 0,
+  "product_fixture_runner_writes": 0,
+  "scope": "F022 only",
+  "symbol_CLOSED": 0
+}

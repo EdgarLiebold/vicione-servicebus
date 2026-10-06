@@ -1,0 +1,26 @@
+{
+  "excluded_compilers": [
+    "package16-f019-public-corrected-build CS0104",
+    "package16-f019-public-corrected-build-r2 seven compiler/setup errors"
+  ],
+  "excluded_wrong_oracle": "package16-f019-public-corrected-thirtytwo31/1 erroneous expected Public.Category for actual caller singlelogger Public.Caller; not product/mutation kill",
+  "historical_pre_marker": [
+    "package16-f019-public-corrected-thirtytwo-r2 valid old32 PASS",
+    "package16-f019-public-previous-thirtytwo valid old13 causal reds/19 positives"
+  ],
+  "final_credited": [
+    "package16-f019-public-previous-thirtytwo-r2",
+    "package16-f019-public-corrected-thirtytwo-r3",
+    "ten actual strictcompiled mutation stages8mutants+corrected+rollback"
+  ],
+  "limits": [
+    "No canonicalCore766 fullowner/WholeCore/API/A+ grade",
+    "No heap/strongref leakage/ARM/cloud/HTTP/pendingcancel universality proof",
+    "No universal quiescence after guardfailure/processkill; every guardfailure excluded from PASS/counterproof",
+    "No Microsoft exactSDKimplementation-source FULL claim; actual NuGet/DLL10.0.12 proved",
+    "Same mutable output paths with actual runtime SHA evidence; no execution attestation claims",
+    "Native mutation DLL substitution compiled from isolated M24-frame+original other source; no fresh NuGet restore per mutant; main selected package chains separately verified",
+    "F031 or other Findings/SignalR fanout not closed by these32 logging cases",
+    "Exactly1 frame file absent in F and deleted from M, not3"
+  ]
+}

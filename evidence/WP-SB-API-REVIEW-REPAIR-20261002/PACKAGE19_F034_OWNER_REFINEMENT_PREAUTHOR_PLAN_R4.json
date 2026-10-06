@@ -1,0 +1,24 @@
+{
+  "status": "ROOT_RESEARCH_PLAN_BEFORE_FRESH_OWNER_AUTHORING",
+  "original_inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/Models.cs",
+      "sha256": "0b03a6bf96d30492569dd45172b12cd636b1a7d9589b9d20d4a8b0d18af3f8e8",
+      "root_personally_read_full": true
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package19-f034/corrected/RuntimeOwner.cs",
+      "sha256": "7f1353717035189c3686eed86a37bd236b139904ef2d1fe1760973dfd588568d",
+      "root_personally_read_full": true
+    }
+  ],
+  "changes": [
+    "Decode actual last canonical URI entity exactly once in business endpoint receipt",
+    "Include explicitly registered standalone fluent endpoints in definition matrix finite expected multiset",
+    "Print complete expected and actual finite callback endpoint multisets before retained Assert.Equal"
+  ],
+  "evidence": "PlanEndpoints explicitly unions endpoint registrations. No fluent exclusion contract. IConsumerKindEndpointContext names companion endpoint uniquely and supplies definition as optional settings. F040 corrected14 actualgreen.",
+  "preserved": "Same34 cases; allbusiness owner/orderedexecute+inversecompensation/tracking/non-nullMessageId/terminal counts/realDI/cancellation/cleanup unchanged.",
+  "fresh_generation": "repair-consumers/package19-f034-r4/{previous,corrected}; original R3 immutable",
+  "limits": "Fixture corrections not product fixes. No canonical test owner authority or F034count credit; full companion collision separate sourcecandidate."
+}

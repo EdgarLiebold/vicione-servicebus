@@ -1,0 +1,13 @@
+{
+  "utc": "2026-10-04T23:16:15.838869+00:00",
+  "receipt": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE155_CORE_CONTEXT_TRANSPORT_INITIALIZER400_BOUNDED_ROOT_ACCEPTANCE_OUTBOX1_HELD_R1.json",
+    "sha256": "b56d030cb8ceb3ae8026ead8df22d4b9013295e7842820961cef0c761b1f8d89"
+  },
+  "correction": "E401 source manifest has114 entries, not121; entire114 were checked in8a87b5 before later historicalXML target error. Actual103 live Sourceowners and canonical401XML checked; accepted400 membership and decision unchanged.",
+  "actual_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-core-context-transport-initializer401-research-r1/MANIFEST.json",
+    "sha256": "3a45312b4480b6c0e533b488960b8203935860b195c924de672c955da6833d69"
+  },
+  "actual_count": 114
+}

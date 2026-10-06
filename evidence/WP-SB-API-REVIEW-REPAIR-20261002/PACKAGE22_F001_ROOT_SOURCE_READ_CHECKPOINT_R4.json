@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-03T11:50:35.216741+00:00",
+  "rows": [
+    {
+      "scope_id": 16,
+      "path": "src/ViciOne.ServiceBus.Abstractions/Scheduling/ConsumeContextSchedulerExtensions.cs",
+      "bytes": 25103,
+      "sha256": "ceeb30195ea131ecedbd86d9104b993796dd18c375a8fb858688e5b0c59762ca",
+      "personal_read": "ROOT_WHOLE_SOURCE_BODY",
+      "semantic_note": "Scheduler delegates configured payload provider; operation completion cannot promise subsequent delivery."
+    },
+    {
+      "scope_id": 17,
+      "path": "src/ViciOne.ServiceBus.Abstractions/Scheduling/ConsumeContextSelfSchedulerExtensions.cs",
+      "bytes": 22795,
+      "sha256": "deb7d00385718ad7ee506323271416f56465ac5d83ba190896d878866ec9a217",
+      "personal_read": "ROOT_WHOLE_SOURCE_BODY",
+      "semantic_note": "Scheduler delegates configured payload provider; operation completion cannot promise subsequent delivery."
+    },
+    {
+      "scope_id": 26,
+      "path": "src/ViciOne.ServiceBus/Context/Consumption/BaseConsumeContext.cs",
+      "bytes": 23147,
+      "sha256": "137cf601244d214fbeaba92596740b569f933644f2c0ee0719e21ffaf084f72a",
+      "personal_read": "ROOT_WHOLE_SOURCE_BODY",
+      "semantic_note": "Respond variants track configured send tasks; captured volatile or durable outbox messages may complete before dispatch. Keep NotifyConsumed/Faulted callback guarantees separate."
+    }
+  ],
+  "root_scope_personal_full_total": 32,
+  "scope_total": 32,
+  "prior_checkpoints": [
+    "PACKAGE22_F001_ROOT_SOURCE_READ_CHECKPOINT_R1.json",
+    "PACKAGE22_F001_ROOT_SOURCE_READ_CHECKPOINT_R2.json",
+    "PACKAGE22_F001_ROOT_SOURCE_READ_CHECKPOINT_R3.json"
+  ],
+  "does_not_claim": "entire API semantic closure, emitted XML validation, source repair acceptance or test owner grade"
+}

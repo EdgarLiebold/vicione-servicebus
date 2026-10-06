@@ -1,0 +1,13 @@
+{
+  "status": "636_PERSONAL_READ_ROWS_HASH_VERIFIED_AND_MERGED",
+  "before_sha256": "a719b2198efd208034b3d1d74fb962e229aec8ff6deb3fc097ae823678b643da",
+  "after_sha256": "1b7f06a1af3f54113d7b0a01a333c69fadf37391f1e2b9538d37e287f5c904c5",
+  "preserved_prior_rows": 1941,
+  "added": 636,
+  "whole_full": 2577,
+  "total": 6209,
+  "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-family-review/PENDING_TO_FULL_CHECKPOINT120.json",
+  "proposal_sha256": "3851a70214f2976b33539d8328133c21eccde37754d2bf8a152c5cf9c2323d90",
+  "symbols_closed": 0,
+  "limits": "Text read only; no whole semantic API/owner/project grading closure."
+}

@@ -53,8 +53,10 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
         var pipe = new SendRequestPipe(_request, context.ReceiveContext.InputAddress, requestId, sendTuple.Pipe);
 
         var endpoint = serviceAddress != null
-            ? await context.GetSendEndpointAsync(serviceAddress).ConfigureAwait(false)
+            ? await context.GetSendEndpointAsync(serviceAddress, context.CancellationToken).ConfigureAwait(false)
             : await context.ReceiveContext.PublishEndpointProvider.GetPublishEndpointAsync<TRequest>(context, null);
+
+        context.CancellationToken.ThrowIfCancellationRequested();
 
         await endpoint.SendAsync(sendTuple.Message, pipe, context.CancellationToken).ConfigureAwait(false);
 

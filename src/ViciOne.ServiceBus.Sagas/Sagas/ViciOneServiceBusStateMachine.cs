@@ -1841,8 +1841,15 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
                     {
                         if (!tokenId.HasValue || messageTokenId.Value != tokenId.Value)
                         {
-                            LogContext.Debug?.Log("SAGA: {CorrelationId} Scheduled message not current: {TokenId}", context.Saga.CorrelationId,
-                                messageTokenId.Value);
+                            try
+                            {
+                                LogContext.Debug?.Log("SAGA: {CorrelationId} Scheduled message not current: {TokenId}", context.Saga.CorrelationId,
+                                    messageTokenId.Value);
+                            }
+                            catch (Exception)
+                            {
+                                // Diagnostic logging must not change rejection of a stale scheduled message.
+                            }
 
                             return;
                         }

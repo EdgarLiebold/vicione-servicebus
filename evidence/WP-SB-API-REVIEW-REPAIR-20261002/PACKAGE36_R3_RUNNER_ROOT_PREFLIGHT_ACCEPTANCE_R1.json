@@ -1,0 +1,35 @@
+{
+  "status": "ROOT_ACCEPTED_EXACT_R3_RUNNER_PREFLIGHT_NO_NATIVE_CREDIT",
+  "utc": "2026-10-04T02:08:23.373096+00:00",
+  "actor": "/root",
+  "runner": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package36_azure_retained_mutations.py",
+    "bytes": 17969,
+    "sha256": "1e5a680c0ebf44e7e2ec21bb73aee14acd5ceccbc49894163b8631e039ad2de8"
+  },
+  "prepared": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-azure-retained-mutants-r3/PREPARED.json",
+    "bytes": 2460374,
+    "sha256": "aea5f1e5864f6c96404f3682a7bb4920f4feae32557cfd71529249a505b91248"
+  },
+  "peer_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-retained-source-preflight-r3/MANIFEST.json",
+    "bytes": 6097,
+    "sha256": "40692b2b9a0622588b18e1488c5a0f6a0ec5dcc7f2ac7e238d5b824fd331ebd1"
+  },
+  "peer_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-retained-source-preflight-r3/REVIEW.md",
+    "bytes": 4581,
+    "sha256": "83b21d76780135580af28b60cba7167b7954e84a89b9329d3f1eb7cf8cf75b4d"
+  },
+  "freshly_verified_peer_artifacts": 19,
+  "synthetic_binding_controls": {
+    "positive": 1,
+    "negatives": 6
+  },
+  "root_personal_FULL": "Whole original Root-authored runner and every complete R2/R3 patch; full peer R1/R2/R3 reports/manifests, actual pure binding controls, historical causal compatibility and seven prepared reference rows.",
+  "original_source_frame": "6209 frozen dependencies, selected current three topology overrides and unchanged public fixture; bin/obj retain last corrected rollback rebuild, no previous binary restoration claim.",
+  "SDK_operations_planned": 26,
+  "actual_native_operations_so_far": 0,
+  "current_unit_and_whole_api_pending": true
+}

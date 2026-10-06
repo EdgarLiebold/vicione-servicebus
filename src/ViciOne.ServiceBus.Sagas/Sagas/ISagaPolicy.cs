@@ -13,7 +13,7 @@ public interface ISagaPolicy<TSaga, TMessage>
     /// <summary>If true, changes should not be saved to the saga repository.</summary>
     bool IsReadOnly { get; }
 
-    /// <summary>If true, the instance returned should be used to try and insert as a new saga instance, ignoring any failures.</summary>
+    /// <summary>Produces a saga instance to attempt inserting before message processing when this policy supports pre-insertion; insertion and failure handling follow the repository provider's policy.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="instance">Receives the instance produced by the operation.</param>
     /// <returns>True if the instance should be inserted before invoking the message logic.</returns>

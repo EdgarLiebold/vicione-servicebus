@@ -1,0 +1,499 @@
+{
+  "review_id": "PACKAGE01-INTERNAL-ADVERSARIAL-20261002",
+  "role": "Internal read-only adversarial patch reviewer; no external-product-team, release or whole-API acceptance authority",
+  "author_history_received": false,
+  "builds_or_tests_started_by_reviewer": false,
+  "product_writes_by_reviewer": false,
+  "freeze_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE01_FREEZE.json",
+  "freeze_sha256": "fb4b58e623dfae621beaabec01b2919c99dd2ecf61714cdb6ece0d41c636cb7b",
+  "baseline_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "reviewed_at_utc": "2026-10-02T21:40:00.395015+00:00",
+  "status": "PATCH_REVIEW_PASS_WITH_STATED_PROOF_LIMITS",
+  "final_acceptance": false,
+  "findings": [],
+  "coverage": [
+    {
+      "path": "docs/changelog/product-fixes.md",
+      "bytes": 27282,
+      "sha256": "c2bc141a0fc9b3ae3c805529659d27993c17f6a10ffebbaa28bf9271143c610e",
+      "baseline_sha256": "d9a5062208372c480e982dbc756736c81e80531e1dde6a6d1851d2abd306c901",
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -320,3 +320,14 @@"
+      ],
+      "delta_sha256": "9260fade935143023871337d0381a20545e3455b067933a51297aa182eb3d621"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/HostSettings.cs",
+      "bytes": 3048,
+      "sha256": "e3ebda96dcf52830f12ba2baca06bbdd94873cddb2bed08f14dbf18423e022a8",
+      "baseline_sha256": "a57d5545d4dd781f941f33fbd88fa5e1c0b701be15717370a2477667a187eb10",
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -10,6 +10,8 @@",
+        "@@ -36,8 +38,19 @@"
+      ],
+      "delta_sha256": "c9062cd5b46963b151517bcc602ce035dd9245b51378109839af459e6dc3f461"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ConnectionContextFactory.cs",
+      "bytes": 7262,
+      "sha256": "a693723e346542fbec2c921651db0f633b64fae47a275eaafbbaff7a8f9d636d",
+      "baseline_sha256": "0b52008444b659453098077b9239c65a79db703762e37157b068205034bc83ea",
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -57,13 +57,14 @@",
+        "@@ -91,6 +92,7 @@",
+        "@@ -102,6 +104,7 @@",
+        "@@ -111,8 +114,8 @@"
+      ],
+      "delta_sha256": "27cdec178dfd86eb20ea6615ba641d40868d246ba46dc3153be66c531aed3326"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+      "bytes": 22734,
+      "sha256": "baaf584e5293b7fd896ab11a2c4e78b79182f9d5a8ed98eefb9987aa683f650b",
+      "baseline_sha256": "749ae49b80c9737709fada793336973d9594f70902a8c53cb16e3c3a3bc68faa",
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -19,24 +19,28 @@",
+        "@@ -332,15 +336,17 @@"
+      ],
+      "delta_sha256": "93cdb43fa869c7b35c25261c7b50843100eaf3172efef60c57b838f4219597de"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs",
+      "bytes": 3182,
+      "sha256": "4bf182e49632282f7908f16a777c981807e6d6e18c5271f8b57d841051f9ccd7",
+      "baseline_sha256": "3f9d7ecc415d0da3aeba43f0c8748c4a8e8e04256df5d02ca28128ce7c02dee5",
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -56,8 +56,8 @@"
+      ],
+      "delta_sha256": "5e24f7564c4781037e60c9a26fed15bbdf1d2d6bcb9f1a2f888ebfb9b4a9fb34"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/IServiceBusHostConfigurator.cs",
+      "bytes": 2733,
+      "sha256": "36a5d5f9db3880cbcf837ec5fea88be39cd03feeeedda6246d6c73e796306bdd",
+      "baseline_sha256": "65c9d559807f4306369a733c8a4eb803b5a84484e0640666ba509917d2d6f4ea",
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -40,7 +40,9 @@"
+      ],
+      "delta_sha256": "e4297de96f94037046a4b0bc572e0952e4817d6ee8f208c8905fa79fbcabe8c9"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusHostConfigurator.cs",
+      "bytes": 11710,
+      "sha256": "ebb03406b03ced5a79517a5fb30027821bef57173652de2c44d7f02cc6313e93",
+      "baseline_sha256": "30eea384e77aacfc8d867fd0df29a54671e2dd01e7a0a59db9062f1f73c81200",
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -126,7 +126,9 @@"
+      ],
+      "delta_sha256": "85641e26f940446a60794fe30d9785d7bf067bcca9168c7eca28207b735beceb"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusHostSettings.cs",
+      "bytes": 3044,
+      "sha256": "74416b3386b9dc6cb5142dd3a2de7a3252e2e5de66f64f2dc402b64c8583539b",
+      "baseline_sha256": "b892528f2a55d8402253412e706ebaa2bbb013c7966223737c94742b817b0337",
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -49,7 +49,8 @@"
+      ],
+      "delta_sha256": "56f0f6fa16ffddd22689ff561697fabc7311c6170f5a19ccd8e9de313363342c"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs",
+      "bytes": 3162,
+      "sha256": "f2cb75c8d811a285b1a777b647b543619302d4f1b7b59c0aafc90bdc1c67b047",
+      "baseline_sha256": "72681fc37657703ff4ad0d4ec8c659984080c34db6f732db8c3a7deea8ee49da",
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -40,12 +40,19 @@"
+      ],
+      "delta_sha256": "b75349148cfbe0120f41d0c234c0c83f20b42c71c74bebce45cc3fef17fb9889"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "bytes": 65803,
+      "sha256": "8ade935241c8e5a059ee9901f88af887abacfa94bce04521dc305b2d4e135105",
+      "baseline_sha256": "1657e2120176cdb667cdd940574887e68dd85a138f97c3743f2a69ea87b08a60",
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -179,4 +179,12 @@"
+      ],
+      "delta_sha256": "677c235e6cf9fcabc53a5185ac79e0a15952157aae92aef869d1b2262285d850"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusClientOwnershipAndRetryTests.cs",
+      "bytes": 12448,
+      "sha256": "12cb6504033f8b97063c2e24670180022ee38625e5265ad9a1d51e3efa6136d6",
+      "baseline_sha256": null,
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -0,0 +1,247 @@"
+      ],
+      "delta_sha256": "71912fb9cbfbf68af505dd68b389d962e93ffaba2b54339309b44ed1d511f4e7"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusMessageSessionContextTests.cs",
+      "bytes": 3638,
+      "sha256": "6fdd9aff4066890bc6da770979ea4589391d0ae4594a893b7d196ba5c27dfaf8",
+      "baseline_sha256": null,
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -0,0 +1,73 @@"
+      ],
+      "delta_sha256": "f6fdcc45b888ec7d4fc06791a71f572fd4205dcedb1a09984901ebb8f6548371"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubCheckpointProbeSecurityTests.cs",
+      "bytes": 2534,
+      "sha256": "fecd5b4a058a4f7e0372ffb72d61f1254cf172d3f403050617815b64f0399785",
+      "baseline_sha256": null,
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -0,0 +1,43 @@"
+      ],
+      "delta_sha256": "4285673d4521b8956bb6df509567126b7281f2104b7810bbc3535c9b0134a7a3"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "bytes": 32978,
+      "sha256": "b861de7665883089a93ad927cf01c8c0f50858d834389424e330c36f2999bc5c",
+      "baseline_sha256": "24ef367a2e722e73bff4f77281636a5c16b033b4a7b98cf9d8d49222c9488f28",
+      "snapshot_sha256_verified": true,
+      "live_sha256_verified": true,
+      "baseline_sha256_verified": true,
+      "review_scope": "Every added, removed and modified line; complete new test files",
+      "hunks": [
+        "@@ -80,4 +80,5 @@"
+      ],
+      "delta_sha256": "9313e67b3639f6005eeb83112739ff27f9c0ebe075fb93f2942a7e176a812d49"
+    }
+  ],
+  "contract_results": [
+    {
+      "finding": "F-SB-API-007",
+      "verdict": "Source, frozen regression oracles and exact one-cause native mutants satisfy this package correction; release/integration gates remain separate",
+      "details": [
+        "Both newly created messaging and administration SDK retry policies receive settings.RetryMinBackoff.",
+        "HostSettings enforces exact inclusive SDK interval 1 ms..5 min before assigning its backing field; host configurator delegates to same guard.",
+        "Public signatures stay unchanged; configured SDK timing now takes effect; defaults and jitter/server-directed-delay limitations are documented.",
+        "SDK-private field/method reflection is a fail-loud test oracle tied to Azure.Core 1.60.0 and ServiceBus 7.20.2, not production API. Missing fields, missing retry policy and type drift fail.",
+        "Supplied SDK object identities and distinct explicit policies are preserved."
+      ]
+    },
+    {
+      "finding": "F-SB-API-008",
+      "verdict": "Source, frozen regression oracles and exact one-cause native mutants satisfy this package correction; release/integration gates remain separate",
+      "details": [
+        "ownsClient is captured before filling missing clients; the four supplied-client combinations distinguish missing messaging ownership from missing administration client.",
+        "Only internally created messaging clients are disposed by factory contexts; administration client has no additional disposal contract introduced.",
+        "Public three-argument ServiceBusConnectionContext constructor remains owned; internal ownership parameter does not change public/binary signature.",
+        "Dispose still awaits SDK cleanup and exposes the original failure; PipeContextAgent/PipeContextDisposer preserve owning terminal disposal.",
+        "Regression StopAsync awaits supervisor stop, Supervisor.Completed and Agent.Completed. Borrowed supplied SDK client survives two separate terminal context lifecycles and sender recreation; caller cleanup closes it.",
+        "Administration-first construction avoids creating an owned messaging client before a failing administration construction; no new partial-construction failure injection claimed."
+      ]
+    },
+    {
+      "finding": "F-SB-API-011",
+      "verdict": "Source, frozen regression oracles and exact one-cause native mutants satisfy this package correction; release/integration gates remain separate",
+      "details": [
+        "LockedUntilUtc reads current callback.SessionLockedUntil and converts to UTC without a cached snapshot or new renewal owner.",
+        "Test starts with distinct message/session expiration and nonzero UTC offset, observes two receiver renewals, keeps message expiry unchanged and asserts callback token.",
+        "Existing no-op renewal contract and pre-canceled caller token remain unchanged; no Cloud automatic-renewal proof claimed."
+      ]
+    },
+    {
+      "finding": "F-SB-API-015",
+      "verdict": "Source, frozen regression oracles and exact one-cause native mutants satisfy this package correction; release/integration gates remain separate",
+      "details": [
+        "Provider emitter removes the complete query, fragment and both user-info components before storing a Uri in ScopeProbeContext.",
+        "Name is reparsed through BlobUriBuilder from the sanitized endpoint, preventing the independently reproduced SDK Name fragment leak.",
+        "Serialization test checks actual GetProbeResult.Results, configureTopology scope, retained scheme/host/port/path, exact container name, all literal and encoded credential canaries, and unmodified SDK Uri/Name.",
+        "package01-test-eventhub-probe-03.log supplies concrete causal evidence: two canary cases leaked fragment-canary through Name; current freeze fixes that source.",
+        "Production SDK credential URI and storage capability remain unchanged; global provider secret-leak audit is outside this patch verdict."
+      ]
+    }
+  ],
+  "assertion_quality": {
+    "scope": "Exactly the three new frozen regression files, all assertions read; lexical references are not runtime assertion counts",
+    "test_methods": 9,
+    "native_cases": 21,
+    "direct_body_assertion_references": 61,
+    "helper_assertion_references": 10,
+    "total_assertion_references": 71,
+    "assertion_free_tests": 0,
+    "trivial_only_tests": 0,
+    "tautological_tests": 0,
+    "unawaited_async_assertions": 0,
+    "categories": [
+      "Equality/identity",
+      "Boolean",
+      "Exception",
+      "Negative",
+      "Type",
+      "String",
+      "Collection (helper retry-policy uniqueness)",
+      "State/side effect"
+    ],
+    "per_method": [
+      {
+        "method": "MinimumBackoff_ReachesBothCreatedSdkClientsAsync",
+        "direct_asserts": 8,
+        "categories": [
+          "Type",
+          "Equality",
+          "Boolean",
+          "State"
+        ],
+        "strength": "Distinct delay values including both inclusive bounds; both SDK clients and retained max/retry/mode controls; owned client closed after terminal stop."
+      },
+      {
+        "method": "MinimumBackoff_RejectsSdkInvalidBoundsWithoutChangingSettings",
+        "direct_asserts": 6,
+        "categories": [
+          "Exception",
+          "Equality",
+          "Negative",
+          "State"
+        ],
+        "strength": "Negative/zero/sub-ms/above-max ticks; both public settings routes; exact ParamName and atomic retained prior value."
+      },
+      {
+        "method": "SuppliedMessagingClient_SurvivesTwoTerminalContextsAsync",
+        "direct_asserts": 10,
+        "categories": [
+          "Type",
+          "Equality/identity",
+          "Boolean",
+          "Negative",
+          "State"
+        ],
+        "strength": "External ownership survives replacement; public sender reuse; caller cleanup; distinct external messaging/admin retry policies."
+      },
+      {
+        "method": "CreatedMessagingClient_ClosesAfterTerminalStopAsync",
+        "direct_asserts": 5,
+        "categories": [
+          "Type",
+          "Equality/identity",
+          "Boolean",
+          "State"
+        ],
+        "strength": "Both administration routes retain factory messaging ownership."
+      },
+      {
+        "method": "DirectConstructor_AwaitsOwnedClientDisposalAsync",
+        "direct_asserts": 3,
+        "categories": [
+          "Boolean",
+          "Negative",
+          "Equality",
+          "State"
+        ],
+        "strength": "Task gates discriminate pending asynchronous disposal; exact invocation count."
+      },
+      {
+        "method": "DirectConstructor_PreservesOwnedClientDisposalFailureAsync",
+        "direct_asserts": 3,
+        "categories": [
+          "Exception",
+          "Equality/identity",
+          "Negative",
+          "State"
+        ],
+        "strength": "Exact original exception object and cleanup invocation count."
+      },
+      {
+        "method": "LockedUntilUtc_FollowsSuccessfulSessionRenewalsAsync",
+        "direct_asserts": 9,
+        "categories": [
+          "Equality",
+          "State",
+          "Negative"
+        ],
+        "strength": "Independent session/message values, nonzero UTC offset, two renewals, unchanged snapshot and renewal ownership."
+      },
+      {
+        "method": "RenewLock_PreCanceledCallerRetainsItsTokenAsync",
+        "direct_asserts": 3,
+        "categories": [
+          "Exception",
+          "Equality",
+          "Negative",
+          "State"
+        ],
+        "strength": "Original caller cancellation token and zero receiver renewal count."
+      },
+      {
+        "method": "SerializedProbe_RemovesCredentialsWithoutChangingSdkUri",
+        "direct_asserts": 14,
+        "categories": [
+          "Equality/identity",
+          "Type",
+          "String",
+          "Negative",
+          "State"
+        ],
+        "strength": "Actual serialized scope; all credential locations and Name; valid no-credential control, preserved SDK input."
+      }
+    ],
+    "calibration": "Low count exception tests remain meaningful. No extra categories recommended for their own sake. SDK delay strategy comparison verifies independent input projection; it does not certify Azure retry timing."
+  },
+  "controls_and_limitations": [
+    {
+      "severity": "Informational",
+      "status": "LIMITATION_NOT_CONFIRMED_PRODUCT_DEFECT",
+      "scope": "Live Azure Service Bus / Blob provider",
+      "details": "Hermetic native tests do not measure broker retry timing, physical shared connection interruption, service lock renewal, cloud checkpoint access, restart durability or Embedded/Standard resource costs."
+    },
+    {
+      "severity": "Informational",
+      "status": "LIMITATION_NOT_CONFIRMED_PRODUCT_DEFECT",
+      "scope": "Blob emulator/address-style diagnostics",
+      "details": "New probe tests use DNS-style HTTPS with explicit port; no new native path-style emulator probe control. Existing ServiceBus default/custom/emulator endpoint tests are separate positive controls. BlobUriBuilder uses SDK endpoint parsing; no observed emulator regression."
+    },
+    {
+      "severity": "Informational",
+      "status": "LIMITATION_NOT_CONFIRMED_PRODUCT_DEFECT",
+      "scope": "Factory creation/stop races and construction failures",
+      "details": "The added tests do not directly fault each SDK constructor or race creation against terminal stop. Unchanged generic owner chain was reviewed; administration-first construction reduces partial messaging allocation. No empirically confirmed survivor claimed."
+    },
+    {
+      "severity": "Gate",
+      "status": "OUTSIDE_THIS_REVIEW_ACCEPTANCE",
+      "scope": "Whole ServiceBus API and release",
+      "details": "This patch verdict does not close other findings, all inherited/public/XML surfaces, full native provider profiles, pack/package-consumer gates or external release chain."
+    },
+    {
+      "severity": "Gate",
+      "status": "PENDING_AT_REVIEW_COMPLETION",
+      "scope": "Fresh package consumer and current shared native profiles",
+      "details": "Fresh pack/package consumer and current shared profiles remain pending at this internal patch verdict. No final acceptance, whole-API, general A+ or release assertion."
+    }
+  ],
+  "skills_source": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills",
+  "skills_applied": [
+    "test-gap-analysis",
+    "assertion-quality",
+    "test-analysis-extensions/extensions/dotnet.md"
+  ],
+  "test_gap_calibration": "All 17 selected independent logical mutations are empirically killed by the native phase logs, inspected against exact reconstructed source hashes and causal assertion/guard lines. This is a bounded patch mutant set, not a repository mutation score. No static survivor claimed.",
+  "patch_review_completed": true,
+  "freeze_reverified_after_mutation_closure": true,
+  "mutation_review": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-adversarial/MUTATION_REVIEW.json",
+    "sha256": "9e20cf0523a836aabf621be589cb98dd4bc8af36164eb8176b9b5a234ef79018",
+    "closure_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE01_MUTATION_CLOSURE.json",
+    "closure_sha256": "0b734bf802a0ab1461a019173e45d3ff36c72b96a4cdf7057a09c138d2a7e37c",
+    "native_one_cause_mutants": 17,
+    "all_log_hashes_verified": true,
+    "checks_verified": 28,
+    "all_mutant_deltas_reconstructed_exactly_from_frozen_source": true,
+    "nonmutated_recorded_production_hashes_unchanged": true,
+    "original_failures": {
+      "azure_client": {
+        "total": 15,
+        "failed": 11
+      },
+      "session": {
+        "total": 2,
+        "failed": 1
+      },
+      "probe": {
+        "total": 4,
+        "failed": 3
+      }
+    },
+    "corrected_and_corrected_rollback_cases": [
+      15,
+      2,
+      4
+    ],
+    "skips": 0,
+    "tracked_original_baseline_rollback_independently_verified_files": 6209,
+    "excluded_attempts": [
+      "package01-mutant-messaging-delay: discovery/filter wiring failure, exit 8, not a killed mutant",
+      "pre-r3 minimum-exclusive metadata-recognition failure: excluded; final causal native r3 receipt used"
+    ],
+    "immutable_test_chain_review": "Runner copies exact three live/frozen-equal tests before phases; AST/runner review finds no test mutation until final removal. Closure stores production hashes per phase; retrospective test byte binding is not represented as a fictitious preexecution runner freeze."
+  },
+  "evidence_bindings": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE01_FREEZE.json",
+      "sha256": "fb4b58e623dfae621beaabec01b2919c99dd2ecf61714cdb6ece0d41c636cb7b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE01_SDK_BINARY_BINDING.json",
+      "sha256": "d228837561f4778c1bfec25b4886cac08907da0c8db7bf42064462c31f635140"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE01_MUTATION_CLOSURE.json",
+      "sha256": "0b734bf802a0ab1461a019173e45d3ff36c72b96a4cdf7057a09c138d2a7e37c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE01_MUTANT_DELTAS.json",
+      "sha256": "72609732de3e962ac2d305aaa0cce527d855841c59d7adadad78f55d7d350eeb"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE01_MUTATION_SOURCE_ROLLBACK.json",
+      "sha256": "eac9195939d313ed5106f32ca104f0b02bb790a10b78d8dfb1e46ae027e4ba1d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-test-azure.log",
+      "sha256": "65ad7d3b6a94793036ea13fbedb97800eaf4998a20d8b71bc4593dfec4b8f2cc"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-test-eventhub-probe-03.log",
+      "sha256": "0cced6d137237016b674f3bc1674b77f065ac41e345eb8ceb86cf5308d70318b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package01-test-eventhub-probe-04.log",
+      "sha256": "78dc5b345e30963ddfcb9d037a2abab3935955811a02a1f7402c4f0ccecaf54a"
+    }
+  ]
+}

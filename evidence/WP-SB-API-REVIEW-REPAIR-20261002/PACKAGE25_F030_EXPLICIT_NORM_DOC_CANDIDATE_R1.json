@@ -1,0 +1,27 @@
+{
+  "status": "EXPLICIT_AUTONOMOUS_F030_CONTRACT_AND_DOC_CANDIDATE_FINAL_PEER_PENDING",
+  "actor": "/root",
+  "utc": "2026-10-03T21:28:33.350181+00:00",
+  "user_authorization": "behebe alle Fehler A+ autonom",
+  "original_startup_requirement_implemented": false,
+  "original_findings_bytes_unchanged_sha256": "65e808177cbe5c9f63f1016ee577b591a4de6f56b0df1af65d878103a17a0630",
+  "disposition_is_contract_change_not_oracle_correction": true,
+  "new_runtime_code_changes_this_delta": false,
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/vicione-architecture/work/CURRENT_ORDER.yaml",
+      "sha256": "3dcf910209645e76bd035219a9a0aebb5b5f501a5e26a13da8544b36a7cea35f",
+      "bytes": 315644
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/api/batch-time-limits.md",
+      "sha256": "5b2974538a1b1dc2b5e2daa94cc442c2c3e5f47f19d1ee19b17bcb0f41d27daa",
+      "bytes": 3102
+    }
+  ],
+  "current_native8_pass": 8,
+  "current_native8_log_sha256": "3cc1a8753b9ad243953e065f059f43997335089f0f3ec96dc085df8a9dd7821d",
+  "source_preflight_sha256": "2bd4b8744654558ef9c5ad3057ad462ece889573f12e481753a913630cbce8fa",
+  "norm_recommendation_sha256": "643d524e90d8222e16bdcaf438fe3a4d492634d62d905094f7f75d7c722cb5aa",
+  "global_API_Aplus": false
+}

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-/// <summary>Provides an immutable snapshot of Azure Service Bus entity declarations and relationships.</summary>
+/// <summary>Provides Azure Service Bus entity declarations and relationships in mutable arrays.</summary>
 public class ServiceBusBrokerTopology :
     BrokerTopology
 {

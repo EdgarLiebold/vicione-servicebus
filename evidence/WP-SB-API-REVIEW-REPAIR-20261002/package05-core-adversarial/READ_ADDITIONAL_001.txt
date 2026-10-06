@@ -1,0 +1,384 @@
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs", "start_line": 1, "end_line": 59, "kind": "original_product"}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ViciOne.ServiceBus;
+
+/// <summary>Reports an invalid service-bus configuration and its validation failures.</summary>
+public class ConfigurationException :
+    ViciOneServiceBusException
+{
+    /// <summary>Creates a configuration exception without a custom message or validation results.</summary>
+    public ConfigurationException()
+    {
+    }
+
+    /// <summary>Creates a configuration exception containing a stable snapshot of the validation results.</summary>
+    /// <param name="results">The validation results that explain the invalid configuration.</param>
+    /// <param name="message">The description of the configuration failure.</param>
+    public ConfigurationException(IEnumerable<ValidationResult> results, string message)
+        : base(message)
+    {
+        Results = Snapshot(results);
+    }
+
+    /// <summary>Creates a configuration exception containing validation results and an underlying failure.</summary>
+    /// <param name="results">The validation results that explain the invalid configuration.</param>
+    /// <param name="message">The description of the configuration failure.</param>
+    /// <param name="innerException">The exception that caused this configuration failure.</param>
+    public ConfigurationException(IEnumerable<ValidationResult> results, string message, Exception innerException)
+        : base(message, innerException)
+    {
+        Results = Snapshot(results);
+    }
+
+    /// <summary>Creates a configuration exception with the specified failure message.</summary>
+    /// <param name="message">The description of the configuration failure.</param>
+    public ConfigurationException(string message)
+        : base(message)
+    {
+    }
+
+    /// <summary>Creates a configuration exception with an underlying failure.</summary>
+    /// <param name="message">The description of the configuration failure.</param>
+    /// <param name="innerException">The exception that caused this configuration failure.</param>
+    public ConfigurationException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
+
+    /// <summary>Gets the immutable snapshot of validation results associated with the failure.</summary>
+    public IReadOnlyList<ValidationResult> Results { get; } = [];
+
+    static IReadOnlyList<ValidationResult> Snapshot(IEnumerable<ValidationResult> results)
+    {
+        ArgumentNullException.ThrowIfNull(results);
+
+        return results.ToArray();
+    }
+}
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs", "start_line": 1, "end_line": 49, "kind": "original_product"}
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Options;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>Defines configuration options for validate vici one service bus host.</summary>
+public sealed class ValidateViciOneServiceBusHostOptions :
+    IValidateOptions<ViciOneServiceBusHostOptions>
+{
+    /// <summary>Validates the current configuration.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="options">The options that control the operation.</param>
+    /// <returns>The validation failures.</returns>
+    public ValidateOptionsResult Validate(string? name, ViciOneServiceBusHostOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        string bus = string.IsNullOrWhiteSpace(name) ? "all" : name;
+        List<string> failures = [];
+        AddPositiveTimeoutFailure(failures, options.StartTimeout, nameof(options.StartTimeout), bus);
+        AddPositiveTimeoutFailure(failures, options.StopTimeout, nameof(options.StopTimeout), bus);
+        AddPositiveTimeoutFailure(failures, options.ConsumerStopTimeout, nameof(options.ConsumerStopTimeout), bus);
+
+        if (options.StopTimeout.HasValue
+            && options.ConsumerStopTimeout.HasValue
+            && options.ConsumerStopTimeout > options.StopTimeout)
+        {
+            failures.Add(
+                $"Host lifecycle for bus '{bus}': {nameof(options.ConsumerStopTimeout)} ({options.ConsumerStopTimeout:c}) "
+                + $"must be less than or equal to {nameof(options.StopTimeout)} ({options.StopTimeout:c}). "
+                + $"Set {nameof(options.ConsumerStopTimeout)} to no more than {nameof(options.StopTimeout)}.");
+        }
+
+        return failures.Count == 0
+            ? ValidateOptionsResult.Success
+            : ValidateOptionsResult.Fail(failures);
+    }
+
+    static void AddPositiveTimeoutFailure(List<string> failures, TimeSpan? value, string optionName, string bus)
+    {
+        if (value <= TimeSpan.Zero)
+        {
+            failures.Add(
+                $"Host lifecycle for bus '{bus}': {optionName} ({value:c}) must be greater than {TimeSpan.Zero:c} when specified. "
+                + $"Set {optionName} to a positive duration or leave it unset.");
+        }
+    }
+}
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs", "start_line": 1, "end_line": 26, "kind": "original_product"}
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>Configures how the application host starts and stops registered bus instances.</summary>
+public sealed class ViciOneServiceBusHostOptions
+{
+    /// <summary>Gets or sets whether host startup waits until every registered bus instance has started.</summary>
+    public bool WaitUntilStarted { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum duration of bus startup. A <see langword="null"/> value applies no timeout in addition to caller cancellation.
+    /// </summary>
+    public TimeSpan? StartTimeout { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum duration of bus shutdown. A <see langword="null"/> value applies no timeout in addition to caller cancellation.
+    /// </summary>
+    public TimeSpan? StopTimeout { get; set; }
+
+    /// <summary>
+    /// Gets or sets how long consumers may finish active work before their <see cref="PipeContext.CancellationToken"/> is canceled.
+    /// A <see langword="null"/> value allows consumers to use the complete bus shutdown interval.
+    /// </summary>
+    public TimeSpan? ConsumerStopTimeout { get; set; }
+}
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs", "start_line": 1, "end_line": 120, "kind": "original_product"}
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Batching.Runtime;
+
+/// <summary>Owns the common admission, cancellation, probing, and shutdown lifecycle for batch collectors.</summary>
+/// <typeparam name="TMessage">The message contract collected into each batch.</typeparam>
+internal abstract class BatchCollectorBase<TMessage> :
+    IBatchCollector<TMessage>
+    where TMessage : class
+{
+    readonly IPipe<ConsumeContext<IMessageBatch<TMessage>>> _consumerPipe;
+    readonly BatchCollectorLifetime _lifetime;
+    readonly BatchRuntimeSettings _settings;
+
+    /// <summary>Creates a collector whose completed batches are sent through the supplied pipe.</summary>
+    /// <param name="options">The validated batch limits captured for this collector.</param>
+    /// <param name="consumerPipe">The pipeline that receives each completed batch.</param>
+    protected BatchCollectorBase(BatchOptions options, IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe)
+    {
+        _settings = new BatchRuntimeSettings(options);
+        _consumerPipe = consumerPipe ?? throw new ArgumentNullException(nameof(consumerPipe));
+        _lifetime = new BatchCollectorLifetime(_settings.ConcurrencyLimit);
+    }
+
+    /// <summary>Stops admissions, delivers every partial batch, and drains all accepted operations.</summary>
+    /// <returns>A value task that completes after collection and batch delivery have terminated.</returns>
+    public ValueTask DisposeAsync() => _lifetime.DisposeAsync(FlushActiveBatchesAsync);
+
+    /// <summary>Adds one message to the batch selected by the concrete collector.</summary>
+    /// <param name="context">The message context to collect.</param>
+    /// <param name="cancellationToken">Cancels admission to the serialized collector.</param>
+    /// <returns>The batch consumer whose completion governs the message pipeline.</returns>
+    public Task<BatchConsumer<TMessage>> CollectAsync(
+        ConsumeContext<TMessage> context,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<BatchConsumer<TMessage>>(cancellationToken);
+        if (!_lifetime.TryBeginOperation())
+            return Task.FromException<BatchConsumer<TMessage>>(new ObjectDisposedException(GetType().Name));
+
+        return CollectCoreAsync(context, Activity.Current, cancellationToken);
+    }
+
+    /// <summary>Removes a completed batch from the active lookup when it still matches.</summary>
+    /// <param name="consumer">The completed batch consumer.</param>
+    /// <param name="cancellationToken">Cancels admission to the serialized collector.</param>
+    /// <returns>A task that completes after the active-batch lookup has been updated.</returns>
+    public Task CompleteAsync(
+        BatchConsumer<TMessage> consumer,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(consumer);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+        if (!_lifetime.TryBeginOperation())
+            return Task.CompletedTask;
+
+        return CompleteCoreAsync(consumer, cancellationToken);
+    }
+
+    /// <summary>Adds the completed-batch pipeline to the probe graph.</summary>
+    /// <param name="context">The probe graph to extend.</param>
+    public void Probe(ProbeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        _consumerPipe.Probe(context.CreateScope("batchCollector"));
+    }
+
+    /// <summary>Adds a message to an existing batch or creates its successor.</summary>
+    /// <param name="context">The message context to add.</param>
+    /// <param name="currentBatch">The batch currently assigned to the message stream.</param>
+    /// <param name="currentActivity">The trace activity associated with message admission.</param>
+    /// <returns>The batch that now owns the message pipeline.</returns>
+    protected async Task<BatchConsumer<TMessage>> CollectIntoBatchAsync(
+        ConsumeContext<TMessage> context,
+        BatchConsumer<TMessage>? currentBatch,
+        Activity? currentActivity)
+    {
+        if (currentBatch != null && context.Advanced().GetRetryAttempt() > 0)
+            await currentBatch.ForceCompleteAsync().ConfigureAwait(false);
+
+        if (currentBatch == null || currentBatch.IsCompleted)
+        {
+            currentBatch = new BatchConsumer<TMessage>(
+                _settings,
+                _lifetime.Collector,
+                _lifetime.Dispatcher,
+                _consumerPipe,
+                context.GetTimeProvider());
+        }
+
+        await currentBatch.AddAsync(context, currentActivity).ConfigureAwait(false);
+        return currentBatch;
+    }
+
+    /// <summary>Adds a message to the concrete collector's active-batch lookup.</summary>
+    protected abstract Task<BatchConsumer<TMessage>> AddAsync(ConsumeContext<TMessage> context, Activity? currentActivity);
+
+    /// <summary>Removes a completed batch from the concrete collector's active-batch lookup.</summary>
+    protected abstract Task RemoveAsync(BatchConsumer<TMessage> consumer);
+
+    /// <summary>Closes and detaches every batch still owned by the concrete collector.</summary>
+    protected abstract Task FlushActiveBatchesAsync();
+
+    async Task<BatchConsumer<TMessage>> CollectCoreAsync(
+        ConsumeContext<TMessage> context,
+        Activity? currentActivity,
+        CancellationToken cancellationToken)
+    {
+        using CancellationTokenSource? linkedCancellation = CreateOperationCancellation(
+            context.CancellationToken,
+            cancellationToken,
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs", "start_line": 121, "end_line": 240, "kind": "original_product"}
+            out CancellationToken operationToken);
+        try
+        {
+            return await _lifetime.Collector.ExecuteAsync(
+                    () => AddAsync(context, currentActivity),
+                    operationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception) when (cancellationToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(exception.Message, exception, cancellationToken);
+        }
+        catch (OperationCanceledException exception) when (context.CancellationToken.IsCancellationRequested)
+        {
+            throw new OperationCanceledException(exception.Message, exception, context.CancellationToken);
+        }
+        finally
+        {
+            _lifetime.CompleteOperation();
+        }
+    }
+
+    async Task CompleteCoreAsync(
+        BatchConsumer<TMessage> consumer,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _lifetime.Collector.ExecuteAsync(
+                    () => RemoveAsync(consumer),
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+        finally
+        {
+            _lifetime.CompleteOperation();
+        }
+    }
+
+    static CancellationTokenSource? CreateOperationCancellation(
+        CancellationToken contextCancellationToken,
+        CancellationToken cancellationToken,
+        out CancellationToken operationToken)
+    {
+        if (!contextCancellationToken.CanBeCanceled || contextCancellationToken == cancellationToken)
+        {
+            operationToken = cancellationToken;
+            return null;
+        }
+
+        if (!cancellationToken.CanBeCanceled)
+        {
+            operationToken = contextCancellationToken;
+            return null;
+        }
+
+        CancellationTokenSource linkedCancellation =
+            CancellationTokenSource.CreateLinkedTokenSource(contextCancellationToken, cancellationToken);
+        operationToken = linkedCancellation.Token;
+        return linkedCancellation;
+    }
+}
+
+/// <summary>Serializes messages into consecutive batches without a grouping key.</summary>
+/// <typeparam name="TMessage">The message contract collected into each batch.</typeparam>
+internal sealed class BatchCollector<TMessage> :
+    BatchCollectorBase<TMessage>
+    where TMessage : class
+{
+    BatchConsumer<TMessage>? _currentBatch;
+
+    /// <summary>Creates a collector whose completed batches are sent through the supplied pipe.</summary>
+    /// <param name="options">The validated batch limits captured for this collector.</param>
+    /// <param name="consumerPipe">The pipeline that receives each completed batch.</param>
+    public BatchCollector(BatchOptions options, IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe)
+        : base(options, consumerPipe)
+    {
+    }
+
+    protected override async Task<BatchConsumer<TMessage>> AddAsync(
+        ConsumeContext<TMessage> context,
+        Activity? currentActivity)
+    {
+        _currentBatch = await CollectIntoBatchAsync(context, _currentBatch, currentActivity).ConfigureAwait(false);
+        return _currentBatch;
+    }
+
+    protected override Task RemoveAsync(BatchConsumer<TMessage> consumer)
+    {
+        if (_currentBatch == consumer)
+            _currentBatch = null;
+
+        return Task.CompletedTask;
+    }
+
+    protected override Task FlushActiveBatchesAsync()
+    {
+        BatchConsumer<TMessage>? batch = _currentBatch;
+        _currentBatch = null;
+        return batch?.ForceCompleteAsync() ?? Task.CompletedTask;
+    }
+}
+
+/// <summary>Serializes messages into independent batches selected by a grouping key.</summary>
+/// <typeparam name="TMessage">The message contract collected into each batch.</typeparam>
+/// <typeparam name="TKey">The non-null grouping-key type.</typeparam>
+internal sealed class BatchCollector<TMessage, TKey> :
+    BatchCollectorBase<TMessage>
+    where TMessage : class
+    where TKey : notnull
+{
+    readonly Dictionary<TKey, BatchConsumer<TMessage>> _batchesByKey = [];
+    readonly IGroupKeyProvider<TMessage, TKey> _keyProvider;
+    BatchConsumer<TMessage>? _ungroupedBatch;
+
+    /// <summary>Creates a collector whose completed groups are sent through the supplied pipe.</summary>
+    /// <param name="options">The validated batch limits captured for this collector.</param>
+    /// <param name="consumerPipe">The pipeline that receives each completed batch.</param>
+    /// <param name="keyProvider">The selector that assigns messages to groups.</param>
+    public BatchCollector(
+

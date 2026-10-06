@@ -1,0 +1,87 @@
+{
+  "utc": "2026-10-04T15:29:46.074351+00:00",
+  "decision": "ROOT_SOURCE_ADVERSARIAL_NO_BLOCK_F078_F081_FOUR_NATIVE_CONFIRMED_FIXES_APPLIED_FIXED_NATIVE_PENDING",
+  "sources": [
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Metadata/BusHostInfo.cs",
+      "before": "f53077044ef9df91520cd886d9a21c9e1aa9af672aa4140f5f9ecf46e9d38b36",
+      "after": "b1c3f5ee608770a030dffdc3eccd0b09cb685f24d6a13934cbf099a484561357"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Metadata/HostMetadataCache.cs",
+      "before": "ff5aa4779a216f042ff47a7f25adefd1cb49590f80d0868cf5106d364300d7a5",
+      "after": "11f4b7331e48e8c54d24581c59ee24aa5a64f7f0da25c3599617a288f2b46539"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Metadata/Reflection/PropertyAccessorFactory.cs",
+      "before": "1e1bf07ad652a42beba010ddeabfce34a3f44950a42c086e48170730d352953a",
+      "after": "8415c65ab18b13f983c96fc0e8d48a0a84e0d7ad0566c92cb34c114643f9fc50"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Metadata/Reflection/ReadWriteProperty.cs",
+      "before": "5dc51ba19bb2af336ccaee83c2e876141715cc6853ee7040628a6bbe2688f702",
+      "after": "eadecc871052093c15805d8f6688434153d373c86da31bd4e850d2a3078602c1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/NewId/NewId.cs",
+      "before": "67e06d842aef20c48291eec66caecc88fdc367cce05542439f829926d8d386d0",
+      "after": "5f27acace6003dd9ec9b5b67fe5e7d13847a3f8e2ba1fde8a1828269fbf9fa3b"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/NewId/NewIdFormatters/Base32Formatter.cs",
+      "before": "9f498ffbb7020a86e7c4bc20d39ccb9732c8da748f35feba28b43d4f14cda3cf",
+      "after": "c66e6ac8256f61f460fdc3600e21a5a36c155cdd05b9367a57561457b9a5da99"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Abstractions.Tests/AbstractionEdgeContractTests.cs",
+      "before": "95c900bc44e9b2909c9459d30a4c882d2ea144e09c11c29a6c35cc8750bdb23e",
+      "after": "798da2ba71bcc7536f6cf93294be0f1e59daab94f398c2dc3fd0610ebf6e3ddc"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackEnvelopeMetadataProjectionTests.cs",
+      "before": "a35505b2baa3b5a9a09fd23508d9f26b1a4decbd980f1e12d100b747de976b5b",
+      "after": "e74a9306752fcca7e4430e13aa1d289154dfcc26fb5056ab1d95211f2ea1ae05"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.MessagePack.Tests/Requirements/MessagePackRequirements.json",
+      "before": "8915c31ca125f14aa614c9439690965409d9c50f75716a33843434c0c2eb13cb",
+      "after": "1b1d1dbaf7ecd7200b48d6aadb372c9bad95c855115a7e8dfc3f5256b6c65e5a"
+    }
+  ],
+  "messagepack_requirement_merge": {
+    "before": "8915c31ca125f14aa614c9439690965409d9c50f75716a33843434c0c2eb13cb",
+    "after": "1b1d1dbaf7ecd7200b48d6aadb372c9bad95c855115a7e8dfc3f5256b6c65e5a",
+    "rows_before": 113,
+    "rows_after": 114
+  },
+  "abstraction_requirement_rows_unchanged": 669,
+  "root_reads": [
+    "555f8c exact6productdiff plus R2hosttestdiff plus actualnewMessagePack3case delta",
+    "complete independent c50d933 Source report and e2f96 Original17 qualified report, tool output 2112 tokens fully visible"
+  ],
+  "original_native": {
+    "Berlin17": {
+      "failed": 9,
+      "passed": 8,
+      "skipped": 0,
+      "sha256": "6f92fb3105c41e5ec5af4d9edba6bf0e391e21270cff762f4d1905e22c47ba45"
+    },
+    "UTC3": {
+      "passed": 3,
+      "failed": 0,
+      "sha256": "4da6c05b586acb6c83301c58f35164ea3b61ad33d6f95a31a2eaacab4f842298"
+    },
+    "NewYork3": {
+      "passed": 1,
+      "failed": 2,
+      "sha256": "ce42bb027f7420377d1b8c03949df493de798f4031339cbeffbf2a302d942f28"
+    },
+    "Scalar9": {
+      "passed": 9,
+      "failed": 0,
+      "sha256": "b2b8e84b8f072c38acaed634109d2e2ce1794c2ac28c044b92e3b0132040c1f0"
+    }
+  },
+  "independent_source_report_sha256": "c50d933c2b9a4adec36a0f0aef47d930d8ec541efc0823447f8d41933b7bdcd2",
+  "limits": "Historical wire instance-field equality, fixed native, fresh package and root closure pending. R2 host oracle transparently differs from frozen Original R1."
+}

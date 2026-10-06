@@ -1,0 +1,652 @@
+{
+  "utc": "2026-10-06T18:20:52.248516+00:00",
+  "status": "DIFFERENT_REVIEWED_TEST_ONLY13_HELPER_NAMES61_IDENTIFIERS_APPLIED_STRICT_NATIVE_PENDING",
+  "finding": "F-SB-API-176",
+  "before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package535-f176-test9-identifier61-root-application-before-r1/MANIFEST.json",
+    "sha256": "59ec15d43c114744cdf1edef256731627fffbd7eaa9a34c7b94ff9f6a18177d1"
+  },
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package532-async13-identifier-only-test9-proposed-r1/REPORT.json",
+    "sha256": "67ec911642a60ea6df678bc3959a1d82f4ec5eef993abdb612b026aa93f5b195"
+  },
+  "author_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package532-async13-identifier-only-test9-proposed-r1/MANIFEST.json",
+    "sha256": "297d3297be8e2d7174e2c2f31701c497658a3978735f6352db2b221f9a89847a"
+  },
+  "different_whole_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package532-async13-test9-independent-whole-source-peer-r1/REPORT.json",
+    "sha256": "4f283b040db47a962d70c25d716b8c33a1bfac3f7dab0ff0b5ac3a166bb8a61b"
+  },
+  "different_peer_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package532-async13-test9-independent-whole-source-peer-r1/MANIFEST.json",
+    "sha256": "7f93728edcdbda4b0eecccd84d9ec3188280fcf15713b4a2c1d7600b8864ac6d"
+  },
+  "mandatory_author_project_count_precision": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package532-test9-author-project-read-label-precision-r1/MANIFEST.json",
+    "sha256": "29039c34f212460b0ba45f3d502fcb477cefd034b2ea721c0daf9e567226197d"
+  },
+  "mandatory_Root_test_file_count_precision": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package532-f176-physical-test9-count-precision-root-r1/ERRATUM.json",
+    "sha256": "c76398f8aed96dcbc5518b62c3185821e7555f140d8f4a8932e3acf6e3a596fb"
+  },
+  "root_whole_patch_read": "687472 whole5328tokens exact9-filepatch; a15aff authorcompleteREPORT",
+  "scope": {
+    "test_files": 9,
+    "helper_names": 13,
+    "declaration_identifiers": 13,
+    "call_identifiers": 48,
+    "total_identifiers": 61,
+    "assertions_or_behavior_changes": 0,
+    "new_tests": 0,
+    "requirement_or_architecture_changes": 0,
+    "Product_API_changes": 0
+  },
+  "all16_live_before_guards_exact": true,
+  "changes": [
+    {
+      "source_relative": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/HostOwningEndpointDiagnosticsTests.cs",
+      "whole_lines": 329,
+      "before_sha256": "5c90282e9f82a275cf4ae5c859e86c66df3db4294d1cf68870595bb76ba5a551",
+      "after_sha256": "786f8fcfc940f1dfa3ecc6e6b9698cb8a1ffa40654841ed7197e4e5605892ae5",
+      "exact_changed_identifier_spans": [
+        {
+          "line": 201,
+          "zero_based_column": 32,
+          "exact_before_line": "                \"ResetAsync\" => Reset(),",
+          "old_identifier": "Reset",
+          "new_identifier": "ResetAsync",
+          "declaration": false
+        },
+        {
+          "line": 274,
+          "zero_based_column": 18,
+          "exact_before_line": "        ValueTask Reset()",
+          "old_identifier": "Reset",
+          "new_identifier": "ResetAsync",
+          "declaration": true
+        }
+      ],
+      "identifier_spans_count": 2,
+      "declarations": 1,
+      "full_literal_inverse_exact": true,
+      "all_other_bytes_equal_after_exact_inverse": true
+    },
+    {
+      "source_relative": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/QueueOwningWarningDiagnosticsTests.cs",
+      "whole_lines": 225,
+      "before_sha256": "f969ce3fa2de08a661546b8c17a6c628171301b0f53dc22b4f9e7bdf14f9ee4c",
+      "after_sha256": "fbe744806c4a4fc00d3a6f116f0a2592d29fd090cd700871a70d1ee12e4454ed",
+      "exact_changed_identifier_spans": [
+        {
+          "line": 156,
+          "zero_based_column": 20,
+          "exact_before_line": "        public Task Invoke(string operation, CancellationToken token)",
+          "old_identifier": "Invoke",
+          "new_identifier": "InvokeAsync",
+          "declaration": true
+        },
+        {
+          "line": 168,
+          "zero_based_column": 96,
+          "exact_before_line": "        public override Task CloseAsync(CancellationToken cancellationToken = default) => probe.Invoke(\"close\", cancellationToken);",
+          "old_identifier": "Invoke",
+          "new_identifier": "InvokeAsync",
+          "declaration": false
+        },
+        {
+          "line": 169,
+          "zero_based_column": 105,
+          "exact_before_line": "        public override Task StopProcessingAsync(CancellationToken cancellationToken = default) => probe.Invoke(\"stop\", cancellationToken);",
+          "old_identifier": "Invoke",
+          "new_identifier": "InvokeAsync",
+          "declaration": false
+        },
+        {
+          "line": 180,
+          "zero_based_column": 97,
+          "exact_before_line": "        public override Task CloseAsync(CancellationToken cancellationToken = default) => _probe.Invoke(\"close\", cancellationToken);",
+          "old_identifier": "Invoke",
+          "new_identifier": "InvokeAsync",
+          "declaration": false
+        },
+        {
+          "line": 181,
+          "zero_based_column": 106,
+          "exact_before_line": "        public override Task StopProcessingAsync(CancellationToken cancellationToken = default) => _probe.Invoke(\"stop\", cancellationToken);",
+          "old_identifier": "Invoke",
+          "new_identifier": "InvokeAsync",
+          "declaration": false
+        }
+      ],
+      "identifier_spans_count": 5,
+      "declarations": 1,
+      "full_literal_inverse_exact": true,
+      "all_other_bytes_equal_after_exact_inverse": true
+    },
+    {
+      "source_relative": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/FactoryBuildObserverRetirementTests.cs",
+      "whole_lines": 185,
+      "before_sha256": "e933ece439619583452e5bf5b892c0e0078a8638117ed0a2eb997ecd439e40c0",
+      "after_sha256": "653f64b39b32be0d31688e28e36b50d25705be4a58836d914490e0477045f619",
+      "exact_changed_identifier_spans": [
+        {
+          "line": 169,
+          "zero_based_column": 13,
+          "exact_before_line": "        Task Unexpected() { Interlocked.Increment(ref _calls); throw new InvalidOperationException(\"Unexpected SDK send activation.\"); }",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": true
+        },
+        {
+          "line": 170,
+          "zero_based_column": 79,
+          "exact_before_line": "        public Task PreSendAsync<T>(SendContext<T> context) where T : class => Unexpected();",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": false
+        },
+        {
+          "line": 171,
+          "zero_based_column": 80,
+          "exact_before_line": "        public Task PostSendAsync<T>(SendContext<T> context) where T : class => Unexpected();",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": false
+        },
+        {
+          "line": 172,
+          "zero_based_column": 102,
+          "exact_before_line": "        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception) where T : class => Unexpected();",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": false
+        }
+      ],
+      "identifier_spans_count": 4,
+      "declarations": 1,
+      "full_literal_inverse_exact": true,
+      "all_other_bytes_equal_after_exact_inverse": true
+    },
+    {
+      "source_relative": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ActivityObserverRegistrationCleanupTests.cs",
+      "whole_lines": 229,
+      "before_sha256": "cc88e466f5fe36299b72d8e3e91a9376c40db2708fa50546aafc534a839e3e2a",
+      "after_sha256": "9d0835cbf6ea89c3522dd33550d0c8688393164c442d2243a4e3b3c041a132f7",
+      "exact_changed_identifier_spans": [
+        {
+          "line": 207,
+          "zero_based_column": 64,
+          "exact_before_line": "            where TActivity : class where TArguments : class => UnexpectedNotification();",
+          "old_identifier": "UnexpectedNotification",
+          "new_identifier": "UnexpectedNotificationAsync",
+          "declaration": false
+        },
+        {
+          "line": 209,
+          "zero_based_column": 64,
+          "exact_before_line": "            where TActivity : class where TArguments : class => UnexpectedNotification();",
+          "old_identifier": "UnexpectedNotification",
+          "new_identifier": "UnexpectedNotificationAsync",
+          "declaration": false
+        },
+        {
+          "line": 211,
+          "zero_based_column": 64,
+          "exact_before_line": "            where TActivity : class where TArguments : class => UnexpectedNotification();",
+          "old_identifier": "UnexpectedNotification",
+          "new_identifier": "UnexpectedNotificationAsync",
+          "declaration": false
+        },
+        {
+          "line": 213,
+          "zero_based_column": 58,
+          "exact_before_line": "            where TActivity : class where TLog : class => UnexpectedNotification();",
+          "old_identifier": "UnexpectedNotification",
+          "new_identifier": "UnexpectedNotificationAsync",
+          "declaration": false
+        },
+        {
+          "line": 215,
+          "zero_based_column": 58,
+          "exact_before_line": "            where TActivity : class where TLog : class => UnexpectedNotification();",
+          "old_identifier": "UnexpectedNotification",
+          "new_identifier": "UnexpectedNotificationAsync",
+          "declaration": false
+        },
+        {
+          "line": 217,
+          "zero_based_column": 58,
+          "exact_before_line": "            where TActivity : class where TLog : class => UnexpectedNotification();",
+          "old_identifier": "UnexpectedNotification",
+          "new_identifier": "UnexpectedNotificationAsync",
+          "declaration": false
+        },
+        {
+          "line": 219,
+          "zero_based_column": 21,
+          "exact_before_line": "        private Task UnexpectedNotification()",
+          "old_identifier": "UnexpectedNotification",
+          "new_identifier": "UnexpectedNotificationAsync",
+          "declaration": true
+        }
+      ],
+      "identifier_spans_count": 7,
+      "declarations": 1,
+      "full_literal_inverse_exact": true,
+      "all_other_bytes_equal_after_exact_inverse": true
+    },
+    {
+      "source_relative": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjectionSagaConfigurationDiagnosticTests.cs",
+      "whole_lines": 287,
+      "before_sha256": "811b34b664e4b8409e2ae008f164f6b22c27618427a42a01f9d460f1218b6d2f",
+      "after_sha256": "27e8c0cba984f96f08113ff9b554102b14fceb5fc6796f599fdaf280a3a16b64",
+      "exact_changed_identifier_spans": [
+        {
+          "line": 249,
+          "zero_based_column": 13,
+          "exact_before_line": "        Task Unexpected()",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": true
+        },
+        {
+          "line": 254,
+          "zero_based_column": 77,
+          "exact_before_line": "        public Task PreExecuteAsync(IBehaviorContext<ProbeState> context) => Unexpected();",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": false
+        },
+        {
+          "line": 255,
+          "zero_based_column": 99,
+          "exact_before_line": "        public Task PreExecuteAsync<T>(IBehaviorContext<ProbeState, T> context) where T : class => Unexpected();",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": false
+        },
+        {
+          "line": 256,
+          "zero_based_column": 78,
+          "exact_before_line": "        public Task PostExecuteAsync(IBehaviorContext<ProbeState> context) => Unexpected();",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": false
+        },
+        {
+          "line": 257,
+          "zero_based_column": 100,
+          "exact_before_line": "        public Task PostExecuteAsync<T>(IBehaviorContext<ProbeState, T> context) where T : class => Unexpected();",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": false
+        },
+        {
+          "line": 258,
+          "zero_based_column": 100,
+          "exact_before_line": "        public Task ExecuteFaultAsync(IBehaviorContext<ProbeState> context, Exception exception) => Unexpected();",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": false
+        },
+        {
+          "line": 259,
+          "zero_based_column": 122,
+          "exact_before_line": "        public Task ExecuteFaultAsync<T>(IBehaviorContext<ProbeState, T> context, Exception exception) where T : class => Unexpected();",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": false
+        },
+        {
+          "line": 260,
+          "zero_based_column": 123,
+          "exact_before_line": "        public Task StateChangedAsync(IBehaviorContext<ProbeState> context, IState currentState, IState? previousState) => Unexpected();",
+          "old_identifier": "Unexpected",
+          "new_identifier": "UnexpectedAsync",
+          "declaration": false
+        }
+      ],
+      "identifier_spans_count": 8,
+      "declarations": 1,
+      "full_literal_inverse_exact": true,
+      "all_other_bytes_equal_after_exact_inverse": true
+    },
+    {
+      "source_relative": "tests/ViciOne.ServiceBus.Tests/Consumers/InstanceConnectionAdmissionCleanupTests.cs",
+      "whole_lines": 351,
+      "before_sha256": "c5cd12f59e44f7867cca2e75977eb83129d9bf1352ca362a281e5df5ac458a5b",
+      "after_sha256": "cbac007a4f72a60cfe693c1dfa397bdfd93767277192ada4662738695d4a9408",
+      "exact_changed_identifier_spans": [
+        {
+          "line": 38,
+          "zero_based_column": 13,
+          "exact_before_line": "        Task Observe(Task task)",
+          "old_identifier": "Observe",
+          "new_identifier": "ObserveAsync",
+          "declaration": true
+        },
+        {
+          "line": 55,
+          "zero_based_column": 19,
+          "exact_before_line": "            return Observe(task);",
+          "old_identifier": "Observe",
+          "new_identifier": "ObserveAsync",
+          "declaration": false
+        },
+        {
+          "line": 45,
+          "zero_based_column": 16,
+          "exact_before_line": "        Task<T> ObserveValue<T>(Task<T> task)",
+          "old_identifier": "ObserveValue",
+          "new_identifier": "ObserveValueAsync",
+          "declaration": true
+        },
+        {
+          "line": 61,
+          "zero_based_column": 19,
+          "exact_before_line": "            return ObserveValue(task);",
+          "old_identifier": "ObserveValue",
+          "new_identifier": "ObserveValueAsync",
+          "declaration": false
+        },
+        {
+          "line": 100,
+          "zero_based_column": 42,
+          "exact_before_line": "                Assert.Equal(first, await ObserveValue(consumer.First.Task));",
+          "old_identifier": "ObserveValue",
+          "new_identifier": "ObserveValueAsync",
+          "declaration": false
+        },
+        {
+          "line": 101,
+          "zero_based_column": 43,
+          "exact_before_line": "                Assert.Equal(second, await ObserveValue(consumer.Second.Task));",
+          "old_identifier": "ObserveValue",
+          "new_identifier": "ObserveValueAsync",
+          "declaration": false
+        },
+        {
+          "line": 102,
+          "zero_based_column": 42,
+          "exact_before_line": "                Assert.Equal(third, await ObserveValue(consumer.Third.Task));",
+          "old_identifier": "ObserveValue",
+          "new_identifier": "ObserveValueAsync",
+          "declaration": false
+        },
+        {
+          "line": 52,
+          "zero_based_column": 13,
+          "exact_before_line": "        Task Operation(Task task)",
+          "old_identifier": "Operation",
+          "new_identifier": "OperationAsync",
+          "declaration": true
+        },
+        {
+          "line": 66,
+          "zero_based_column": 18,
+          "exact_before_line": "            await Operation(harness.StartAsync(budget.Token));",
+          "old_identifier": "Operation",
+          "new_identifier": "OperationAsync",
+          "declaration": false
+        },
+        {
+          "line": 97,
+          "zero_based_column": 33,
+          "exact_before_line": "                Task firstSend = Operation(sendEndpoint.SendAsync(first, budget.Token));",
+          "old_identifier": "Operation",
+          "new_identifier": "OperationAsync",
+          "declaration": false
+        },
+        {
+          "line": 98,
+          "zero_based_column": 34,
+          "exact_before_line": "                Task secondSend = Operation(sendEndpoint.SendAsync(second, budget.Token));",
+          "old_identifier": "Operation",
+          "new_identifier": "OperationAsync",
+          "declaration": false
+        },
+        {
+          "line": 99,
+          "zero_based_column": 33,
+          "exact_before_line": "                Task thirdSend = Operation(sendEndpoint.SendAsync(third, budget.Token));",
+          "old_identifier": "Operation",
+          "new_identifier": "OperationAsync",
+          "declaration": false
+        },
+        {
+          "line": 104,
+          "zero_based_column": 22,
+          "exact_before_line": "                await Operation(consumer.Release.Task);",
+          "old_identifier": "Operation",
+          "new_identifier": "OperationAsync",
+          "declaration": false
+        },
+        {
+          "line": 139,
+          "zero_based_column": 18,
+          "exact_before_line": "            await Operation(endpoint.StopAsync(CancellationToken.None));",
+          "old_identifier": "Operation",
+          "new_identifier": "OperationAsync",
+          "declaration": false
+        },
+        {
+          "line": 140,
+          "zero_based_column": 18,
+          "exact_before_line": "            await Operation(harness.StopAsync(CancellationToken.None));",
+          "old_identifier": "Operation",
+          "new_identifier": "OperationAsync",
+          "declaration": false
+        },
+        {
+          "line": 58,
+          "zero_based_column": 16,
+          "exact_before_line": "        Task<T> OperationValue<T>(Task<T> task)",
+          "old_identifier": "OperationValue",
+          "new_identifier": "OperationValueAsync",
+          "declaration": true
+        },
+        {
+          "line": 69,
+          "zero_based_column": 18,
+          "exact_before_line": "            await OperationValue(endpoint.Ready);",
+          "old_identifier": "OperationValue",
+          "new_identifier": "OperationValueAsync",
+          "declaration": false
+        },
+        {
+          "line": 92,
+          "zero_based_column": 51,
+          "exact_before_line": "                ISendEndpoint sendEndpoint = await OperationValue(harness.Bus.GetSendEndpointAsync(",
+          "old_identifier": "OperationValue",
+          "new_identifier": "OperationValueAsync",
+          "declaration": false
+        }
+      ],
+      "identifier_spans_count": 18,
+      "declarations": 4,
+      "full_literal_inverse_exact": true,
+      "all_other_bytes_equal_after_exact_inverse": true
+    },
+    {
+      "source_relative": "tests/ViciOne.ServiceBus.Tests/Courier/ActivityRedeliveryMessageIdentityTests.cs",
+      "whole_lines": 338,
+      "before_sha256": "3ab164dfcacf340b0b20386cec0c0ad24d00c91d166977047fef055cfce62ec4",
+      "after_sha256": "57c74e7a31763d0fe68ef5d609f6ad9ddd89d18a9d91b605d8f12821c6bb64fc",
+      "exact_changed_identifier_spans": [
+        {
+          "line": 43,
+          "zero_based_column": 13,
+          "exact_before_line": "        Task Track(Task task, bool observational = false)",
+          "old_identifier": "Track",
+          "new_identifier": "TrackAsync",
+          "declaration": true
+        },
+        {
+          "line": 100,
+          "zero_based_column": 18,
+          "exact_before_line": "            await Track(harness.StartAsync(budget.Token)).WaitAsync(timeout, budget.Token);",
+          "old_identifier": "Track",
+          "new_identifier": "TrackAsync",
+          "declaration": false
+        },
+        {
+          "line": 104,
+          "zero_based_column": 16,
+          "exact_before_line": "                Track(activityCompleted.WaitAsync(timeout, budget.Token), observational: true),",
+          "old_identifier": "Track",
+          "new_identifier": "TrackAsync",
+          "declaration": false
+        },
+        {
+          "line": 108,
+          "zero_based_column": 33,
+          "exact_before_line": "                observations.Add(Track(compensated.WaitAsync(timeout, budget.Token), observational: true));",
+          "old_identifier": "Track",
+          "new_identifier": "TrackAsync",
+          "declaration": false
+        },
+        {
+          "line": 109,
+          "zero_based_column": 33,
+          "exact_before_line": "                observations.Add(Track(faulted.WaitAsync(timeout, budget.Token), observational: true));",
+          "old_identifier": "Track",
+          "new_identifier": "TrackAsync",
+          "declaration": false
+        },
+        {
+          "line": 112,
+          "zero_based_column": 33,
+          "exact_before_line": "                observations.Add(Track(completed.WaitAsync(timeout, budget.Token), observational: true));",
+          "old_identifier": "Track",
+          "new_identifier": "TrackAsync",
+          "declaration": false
+        },
+        {
+          "line": 114,
+          "zero_based_column": 18,
+          "exact_before_line": "            await Track(harness.Bus.ExecuteAsync(builder.Build(), budget.Token)).WaitAsync(timeout, budget.Token);",
+          "old_identifier": "Track",
+          "new_identifier": "TrackAsync",
+          "declaration": false
+        },
+        {
+          "line": 115,
+          "zero_based_column": 18,
+          "exact_before_line": "            await Track(Task.WhenAll(observations), observational: true).WaitAsync(timeout, budget.Token);",
+          "old_identifier": "Track",
+          "new_identifier": "TrackAsync",
+          "declaration": false
+        },
+        {
+          "line": 117,
+          "zero_based_column": 18,
+          "exact_before_line": "            await Track(harness.StopAsync(CancellationToken.None)).WaitAsync(timeout, CancellationToken.None);",
+          "old_identifier": "Track",
+          "new_identifier": "TrackAsync",
+          "declaration": false
+        }
+      ],
+      "identifier_spans_count": 9,
+      "declarations": 1,
+      "full_literal_inverse_exact": true,
+      "all_other_bytes_equal_after_exact_inverse": true
+    },
+    {
+      "source_relative": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerDuplicateAndTypedObserverAdmissionTests.cs",
+      "whole_lines": 481,
+      "before_sha256": "b52061d3423f9e29a390dc8ea6b866fb6d61125414dbf5bf25bdbb40e47391a7",
+      "after_sha256": "be54df46075c59f517b4aeb22fec608c4c986c9010281ca9b669cb5d0e46bd5c",
+      "exact_changed_identifier_spans": [
+        {
+          "line": 45,
+          "zero_based_column": 29,
+          "exact_before_line": "            original = agent.Deliver(Key, firstContext, firstLock);",
+          "old_identifier": "Deliver",
+          "new_identifier": "DeliverAsync",
+          "declaration": false
+        },
+        {
+          "line": 55,
+          "zero_based_column": 79,
+          "exact_before_line": "            Exception? invocation = Record.Exception(() => { duplicate = agent.Deliver(Key, duplicateContext, fallback); });",
+          "old_identifier": "Deliver",
+          "new_identifier": "DeliverAsync",
+          "declaration": false
+        },
+        {
+          "line": 258,
+          "zero_based_column": 20,
+          "exact_before_line": "        public Task Deliver(string key, BaseReceiveContext context, ReceiveLockContext receiveLock) => DispatchAsync(key, context, receiveLock);",
+          "old_identifier": "Deliver",
+          "new_identifier": "DeliverAsync",
+          "declaration": true
+        }
+      ],
+      "identifier_spans_count": 3,
+      "declarations": 1,
+      "full_literal_inverse_exact": true,
+      "all_other_bytes_equal_after_exact_inverse": true
+    },
+    {
+      "source_relative": "tests/ViciOne.ServiceBus.Tests/Transports/HostOwnedShutdownDrainTests.cs",
+      "whole_lines": 462,
+      "before_sha256": "a9cb101204247044d4d7252e70a0bc04cd902876ad727caa22e7693023f11e4c",
+      "after_sha256": "238bafbc43ee1ddb96451a58101bfca10085664403279ee9bc1ff64a397bb6c3",
+      "exact_changed_identifier_spans": [
+        {
+          "line": 407,
+          "zero_based_column": 61,
+          "exact_before_line": "                nameof(ReceiveEndpointContext.ResetAsync) => Reset(),",
+          "old_identifier": "Reset",
+          "new_identifier": "ResetAsync",
+          "declaration": false
+        },
+        {
+          "line": 423,
+          "zero_based_column": 18,
+          "exact_before_line": "        ValueTask Reset()",
+          "old_identifier": "Reset",
+          "new_identifier": "ResetAsync",
+          "declaration": true
+        },
+        {
+          "line": 196,
+          "zero_based_column": 45,
+          "exact_before_line": "                    PublicTasks.Add(endpoint.NotifyReady());",
+          "old_identifier": "NotifyReady",
+          "new_identifier": "NotifyReadyAsync",
+          "declaration": false
+        },
+        {
+          "line": 208,
+          "zero_based_column": 45,
+          "exact_before_line": "                    PublicTasks.Add(endpoint.NotifyReady());",
+          "old_identifier": "NotifyReady",
+          "new_identifier": "NotifyReadyAsync",
+          "declaration": false
+        },
+        {
+          "line": 428,
+          "zero_based_column": 20,
+          "exact_before_line": "        public Task NotifyReady() => _transportObservers.ReadyAsync(new ReadyEvent(Address));",
+          "old_identifier": "NotifyReady",
+          "new_identifier": "NotifyReadyAsync",
+          "declaration": true
+        }
+      ],
+      "identifier_spans_count": 5,
+      "declarations": 2,
+      "full_literal_inverse_exact": true,
+      "all_other_bytes_equal_after_exact_inverse": true
+    }
+  ],
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": [
+    "Actual532 remains13459PASS1FAIL; no changed testUID/oracle and no13separatefailedNativecases.",
+    "Pure lexical replacements; historicalNative sourcehashes nowhistorical forchangedTest9. ProductSource current525unchanged.",
+    "No Architectureallowlist/Skip/Requirementweakening. Strictcompile, actualnaming/global23, EventFactory andpackgates still required."
+  ]
+}

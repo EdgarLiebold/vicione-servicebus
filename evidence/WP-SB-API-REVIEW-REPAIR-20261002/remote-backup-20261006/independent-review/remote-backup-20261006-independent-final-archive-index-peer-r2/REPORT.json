@@ -1,0 +1,149 @@
+{
+  "utc": "2026-10-06T21:55:19.825877+00:00",
+  "status": "FINAL_ARCHIVE_RESTORATION_STAGED6330_EXACT125_RAW_RULES_NO_BLOCKER_FOR_ROOT_BACKUP_COMMIT_PUSH",
+  "role": "Read-only different reviewer; Root writes O/Git/remote. Q reports/temporary recovery files only.",
+  "mandatory_prior_archive_proof": {
+    "REPORT": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/REPORT.json",
+      "sha256": "3e8b7258b7aa45dc030e1bd747b098f688cbbae1cb417929f970b02be7fdea40",
+      "bytes": 9407
+    },
+    "MAN": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/MANIFEST.json",
+      "sha256": "ea0b48500ce60fb3f376ce3652b9d125d3f0dc39a3e348d7ac5abff406644117",
+      "bytes": 1222
+    },
+    "archive_restore_PROOF": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/ARCHIVE_RESTORATION_PROOF.json",
+      "sha256": "72785836cb47f9af8e1065f2323b9565d4d4bf41de0998a8d962f03da008301d",
+      "bytes": 1585
+    },
+    "index6330_PROOF": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/INDEX_PROOF.json",
+      "sha256": "32199db9a748c6ab4fb2946a022d407221aa50467bcce3778dd2a2dfecceec19",
+      "bytes": 1381
+    },
+    "index6330_binding": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-archive-index-peer-r1/INDEX6330_BINDINGS.json",
+      "sha256": "aed81ffbf529b57626d3da1db9843a9ace553e9f0db47289a4120be037f4a5d2",
+      "bytes": 1082706
+    }
+  },
+  "mandatory_raw_attribute_peer": {
+    "REPORT": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-raw-attributes-peer-r1/REPORT.json",
+      "sha256": "51ad830da322ab94665030c569d834c4a5927a1a8ab0e2e8bd38d58e7cb1382c",
+      "bytes": 47824
+    },
+    "MAN": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remote-backup-20261006-independent-raw-attributes-peer-r1/MANIFEST.json",
+      "sha256": "ade95eb6e97eaae0a23f87ed6ac6ed4e870edb97377e73d6598b240cf35b6ab1",
+      "bytes": 360
+    }
+  },
+  "current_author_bundle_payloads_direct_stagedGitBlobSHA_equals_live": {
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/ARCHIVE_INPUTS.json": {
+      "sha256": "923188ff1079af7737704e2ed3a928d2e0199b4b7faaa6fa01e1ce5ac301e516",
+      "git_oid": "6ade29df8fa324bd1ae7342d14c9cc48086d772c",
+      "bytes": 3165275
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/MANIFEST.json": {
+      "sha256": "a956938156856b1ad9e8e16e033cf25d3a6d0deaf221fe00a6da901a45e04d50",
+      "git_oid": "0ca55ce966fe5559680d7e519ecfbf4f0bf04267",
+      "bytes": 1707
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/RAW_EVIDENCE_ATTRIBUTES.json": {
+      "sha256": "0d62b775257805c0c94327a5e6d58329765485bfa3884491b5afeebfbfcb7b08",
+      "git_oid": "860c1bd2cdc3154cc2231526496ee8dde4460549",
+      "bytes": 46288
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/README.md": {
+      "sha256": "5b327aa94f33446857382af81485df147f3168a4242db53e9e9a701822089c00",
+      "git_oid": "a492aa0bddf9bf162468d66e3b541fad583d0811",
+      "bytes": 1656
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/STAGED_REVIEWED_INPUTS.json": {
+      "sha256": "84cf661dee991058e5cd1b27ab1a408235720ac2b4d53bb943dc71a3d1b5d6a9",
+      "git_oid": "1b237d3757b88504e7e0b718be45d10408f8fbb9",
+      "bytes": 1944035
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-001": {
+      "sha256": "89d632a13590472771fe71e5935d20abe97e373d5181e9ba3b50d8eaef7cab70",
+      "git_oid": "bf9d82330d971f96f1573c2937030dc817a77510",
+      "bytes": 41943040
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-002": {
+      "sha256": "c1033e24e2b8fef7d9192355f3d91a4721297c879da4256d8a9f9081c69037c2",
+      "git_oid": "a1c7ca7018c8e7100d2b2611780375e20ea19b5f",
+      "bytes": 41943040
+    },
+    "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-003": {
+      "sha256": "0e0d9c5ddb503425c0fe494c7afb2dd9980e9b42d109c20bff7de3abd2c00839",
+      "git_oid": "5223925ad25e181836fb58a1a20603221d8dc716",
+      "bytes": 16914012
+    }
+  },
+  "current_bundle_payload_count": 8,
+  "current_index_stage0_count": 8851,
+  "current_index_records_sha256": "7fdbad4022bd610c2ca00bb9e4441e410ebee460748ee73895a3cf53e8ffeeb4",
+  "all6330_previous_selected_OID_modes_identical_and_contentproof_retained": true,
+  "scope_overrides_only_approved_Doc2": {
+    "CHANGELOG.md": "4d2377126b992bb25b59b895b96238bd189fdf209e9387cb4bad570efd68440f",
+    "docs/changelog/product-fixes.md": "63d7a6b78faf10309159e6b070beca158e989f155ccb63fe6ccb76b2bbfe3c9e"
+  },
+  "archive": {
+    "members": 11601,
+    "regular_safe_unique": true,
+    "roots": {
+      "D": 6819,
+      "O_evidence": 4782
+    },
+    "compressed_bytes": 100800092,
+    "restored_regular_bytes": 1220855711,
+    "archive_sha256": "1cb6ac2ad9af96e5c2b38e5bd758a1a5eadc40791a97bdb2da34707ec1cb998a",
+    "all3_chunk_SHA_rechecked": true,
+    "complete_read_restore_every_member_sha_live_equal": true,
+    "historical_absolute_paths_not_falsely_rewritten": true
+  },
+  "post_archive_additions_outside_bundle_exact": [
+    "repositories/vicione-servicebus/evidence/.gitattributes"
+  ],
+  "post_archive_addition_reason": "Exact125 archival byte/whitespace preservation attributes created after complete original archive capture. Archived old11601 bytes unchanged. Attributes committed normally and deliberately outside frozen6330. Backup bundle and laterpeer/receipts stay outside archive to avoid recursion.",
+  "branch": "backup/servicebus-api-review-20261006",
+  "main_baseline_unchanged": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "Root_staged_input_receipt": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/STAGED_REVIEWED_INPUTS.json",
+    "sha256": "84cf661dee991058e5cd1b27ab1a408235720ac2b4d53bb943dc71a3d1b5d6a9",
+    "bytes": 1944035
+  },
+  "Root_archive_manifest": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/MANIFEST.json",
+    "sha256": "a956938156856b1ad9e8e16e033cf25d3a6d0deaf221fe00a6da901a45e04d50",
+    "bytes": 1707
+  },
+  "Root_member_manifest": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/ARCHIVE_INPUTS.json",
+    "sha256": "923188ff1079af7737704e2ed3a928d2e0199b4b7faaa6fa01e1ce5ac301e516",
+    "bytes": 3165275
+  },
+  "Root_README": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/README.md",
+    "sha256": "5b327aa94f33446857382af81485df147f3168a4242db53e9e9a701822089c00",
+    "bytes": 1656
+  },
+  "prior_report_precision": [
+    "Initial R1 key all6_bundle_payloads_direct_stagedGitBlobSHA_equal_live had actual8dictionaryentries. Current R2 uses accurate8 count; no old data modified.",
+    "Initial stage/archive-census report is honestly earlier than final3CSV cr-at-eol addition and subsequent evidence/.gitattributes. Final RAW/STAGED receipt SHA and8current stagedpayload hashes supersede those initial two earlier receipt versions. Six original archive/README/manifest payloads retain exact values.",
+    "Failed 796eb8 unavailable hashlib.file_digest probe and 718705 outdated3CSV-rule expectation remain unsuccessful, not claimed as checks passed. Successful raw-rule proof is51ad830d/ade95eb6."
+  ],
+  "limits": [
+    "No new code/tests/SDK/STATE/API-member change or audit restart. No added Native/runtime grade.",
+    "All durable D/O evidence files complete as actual archiveinput scope; temporary research/build/SDK caches are explicitlyexcluded in README.",
+    "Remote repository PRIVATE verification belongs to Root existing receipt; this review has performed no remote write/readback. Commit/push durability must be confirmed after Root action.",
+    "Standard Product/test/build whitespace checks unchanged; only125exact preexisting evidence file paths have narrow preservational attributes.",
+    "Backup sourcebranch is separate; no main mutation, forcedpush, deploy or release implied."
+  ],
+  "SDK_calls": 0,
+  "O_Git_STATE_Master_writes": 0,
+  "grade": null
+}

@@ -1,0 +1,28 @@
+{
+  "locked_versions": {
+    "Azure.Core": "1.60.0",
+    "Azure.Messaging.ServiceBus": "7.20.2"
+  },
+  "binaries": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/Azure.Core.dll",
+      "sha256": "d0773e2ebfc5dd9f478f82aff0f77f18f446268f22b95dc8201525dcd959d743",
+      "bytes": 896824
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/Azure.Messaging.ServiceBus.dll",
+      "sha256": "f07a2a15b7a1276970e512e9486de8a2ea8b551833669b40f9c0117544191e5b",
+      "bytes": 722232
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.AzureServiceBus.Tests.dll",
+      "sha256": "fb5828e86f49966f33003a7da985b8aaf5648be1cfaabe7b501564bc41b923fb",
+      "bytes": 515072
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.AzureServiceBus.dll",
+      "sha256": "86b78a78fdfeffa22be97f0e5b6521b4a9d15cb90992289228cb8151304d108a",
+      "bytes": 345600
+    }
+  ]
+}

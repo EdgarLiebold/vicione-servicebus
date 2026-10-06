@@ -1,0 +1,9 @@
+{
+  "acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE301_SQS_POSTFIXED_SOURCE3_ACTIVEMQ_DISPOSE_SOURCE1_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "1ebb180f8494308978e00ec84a12d026a551734b115eb6bad8bb8a328625877a"
+  },
+  "master_after_sha256": "341afccfe53b4be100b228a2d068b9901fab145d6d937501852fa5ac7e5db8ca",
+  "count": 18922,
+  "Original_remaining": 509
+}

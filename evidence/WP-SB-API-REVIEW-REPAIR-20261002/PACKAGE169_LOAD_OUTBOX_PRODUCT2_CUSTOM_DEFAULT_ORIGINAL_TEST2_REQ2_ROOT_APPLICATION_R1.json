@@ -1,0 +1,85 @@
+{
+  "utc": "2026-10-05T06:24:56.632889+00:00",
+  "actor": "/root",
+  "epoch": 169,
+  "status": "PEER_APPROVED_PRODUCT2_TEST2_REQUIREMENT2_APPLIED_NATIVE_PENDING",
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Saga/InMemoryRepository/InMemorySagaRepositoryContext.cs",
+      "before_sha256": "25aa52f0b8ad67aa11def89b3ef28c84efe06b940435466ba03b2fd1e4d9e045",
+      "after_sha256": "6f79b6947368e64ce1f837cbd08b37aa33d900dc382e16033ee74c3a8e6938ad",
+      "before_lines": 394,
+      "after_lines": 412
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "before_sha256": "8190d61b9ef84f54c84900d26050981476e601b11e440392daa72bbb6041cae1",
+      "after_sha256": "e91101c1cf3bd5209a468542353c41a1fc87b1c40764fec4733dce84072008de",
+      "before_lines": 186,
+      "after_lines": 198
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaStateQueryRuntimeExtensionDeepContractTests.cs",
+      "before_sha256": "ba0aa1085494d9c68980e29872ae0481d59d9569d4a2b15a4c22863901542c6a",
+      "after_sha256": "96c6bff71849d04a5dea4c982b09c5a4b32c3c433ca1574f4627e2d3e7e80750",
+      "before_lines": 709,
+      "after_lines": 836
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaInstanceFactoryDeepContractTests.cs",
+      "before_sha256": "f4a0201dcf42e191bc62d2a74a6847951584e37fa586ecc0228dde0ceee650b8",
+      "after_sha256": "554ea89913f5406e242d7a29608f7f1a55fdafd506366e6495c8f00c48886f43",
+      "before_lines": 694,
+      "after_lines": 815
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "bfd627e483f07beef4f3b300be65a01d1a2dfedc36f17805ad8712091be8f7cd",
+      "after_sha256": "e860435e762f4d6f936214b6925107c2a089ce082c531cec5ad2f2f838d1d49d",
+      "before_rows": 4646,
+      "after_rows": 4648
+    }
+  ],
+  "author_peer_bindings": [
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package171-inmemory-load-operation-view-product-candidate-r1/REPORT.json",
+      "author_sha256": "248747f5c28abeda4d8520a14796ac22c0c5b9320035cfbb81bd0e477e93ce9a",
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package171-inmemory-load-operation-view-independent-scanner-r1/REPORT.json",
+      "peer_sha256": "b748c21f54b41b95e7a543f9d48d958dcc8128fd0732edad5c61e58a8f1c05c7"
+    },
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-outbox-debug-progress-product-proposed-r1/REPORT.json",
+      "author_sha256": "304e97b830da3e1a0e6c99e55cdc41a652fba14c1bbe42d80f55e84f863d1dca",
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-outbox-debug-progress-independent-qualification-r1/REPORT.json",
+      "peer_sha256": "1519a9eb5f47d2a29dc670410bc635b4735d77b6b0e3eaf1b01b85b04f1de991"
+    },
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package169-transition-custom-proxy-control1-proposed-r1/REPORT.json",
+      "author_sha256": "2a0112b3965d4a97ea1adb237fdd5ea45d5543d4670038d1102df2ef0d2cf16b",
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package169-transition-custom-proxy-control1-independent-scanner-r1/REPORT.json",
+      "peer_sha256": "74b854d00ef41cd5270a1fc431983b89d66d809b72bd310ab2422d4c0f86d5a3"
+    },
+    {
+      "author": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-default-saga-created-debug2-oracles-proposed-r1/REPORT.json",
+      "author_sha256": "f4830cb9a4ee46b22d546d1bb63e7a0afeeeae4df340f066c212e2705a6135e9",
+      "peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package172-default-saga-created-debug2-independent-scanner-r1/REPORT.json",
+      "peer_sha256": "103595d7f40f97af8a8b9752932cefef1895e2e3ba9e5b65c0661bd9d6c0d906"
+    }
+  ],
+  "prior168_freeze_ACK": "9dac94b4690722bd527607bf2cd43a227a90727d59e33a46429709149dd2847d",
+  "prior168_root_qualification": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE168_F153_REPAIR_F152_PARTIAL_AND_TWO_NEW_CAUSES_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "11575430e85031232a683d5e6d0b2c661d6a8fd008a80c20625b949a9988ea60"
+  },
+  "requirements_prefix_preserved": 4646,
+  "requirements_current": 4648,
+  "root_reads": [
+    "Full Loadproposed412 and Outbox198 read d927b6; alloldbytesoutside narrowchanges reverse/reconstructed exact.",
+    "Whole Custom127 delta and Default119+2usings delta48dd33, wholeauthorReports; peerreports andOutboxtwoLiteralWrappers f920ea."
+  ],
+  "limits": [
+    "No fixednative/grade until actualqualified epoch. F154/F155 Original168 qualifiedbefore sourceapplication.",
+    "F152 Defaultfactory samefamily Original2 new, no currentdefaultfix.",
+    "CustomSPI control supporteddelegation healthycase, no universal arbitrary SPI promise. No newPublicAPI/XML fromProduct2."
+  ]
+}

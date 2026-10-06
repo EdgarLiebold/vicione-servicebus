@@ -46,7 +46,7 @@ public class ConsumePipe :
         _pipe.Probe(scope);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Runs the consume context through the configured input pipeline.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(ConsumeContext context)

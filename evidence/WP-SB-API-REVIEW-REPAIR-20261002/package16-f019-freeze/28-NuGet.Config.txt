@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources><clear /><add key="review-selected-packages" value="/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package16-f019/previous" /><add key="installed-package-cache" value="/Users/edgar.liebold/.nuget/packages" /></packageSources>
+  <packageSourceMapping><packageSource key="review-selected-packages"><package pattern="ViciOne.ServiceBus*" /></packageSource><packageSource key="installed-package-cache"><package pattern="*" /></packageSource></packageSourceMapping>
+</configuration>

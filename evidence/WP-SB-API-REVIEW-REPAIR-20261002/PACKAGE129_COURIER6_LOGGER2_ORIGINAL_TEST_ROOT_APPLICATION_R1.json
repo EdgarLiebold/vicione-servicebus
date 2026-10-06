@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-04T19:49:45.108088+00:00",
+  "decision": "APPLY_ORIGINAL_ONLY_PUBLIC_COURIER6_AND_DISPATCH_LOGGER2_TESTS_AFTER_INDEPENDENT_SOURCE_NO_BLOCK",
+  "independent_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package126-courier-original6-independent-scanner-r1/REPORT.json",
+      "sha256": "f8b622c820d3c6ce76596a39cf28ad4b42671c57a0cd1bf0ebca1e5924abcf0d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package126-zero-activity-logger-independent-source-r1/REPORT.json",
+      "sha256": "664ff840b2a689f3544f85b943a0618680c330e6a8df20070cbbcf02305eb21e"
+    }
+  ],
+  "author_manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package126-courier-activity-observer-original6-oracles-proposed-r2/MANIFEST_R2.json",
+      "sha256": "d06895967042784b568c3b5291b77a49ae3990c62cecd2b1574f54cab869f90b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package126-zero-activity-logger-oracles-proposed-r1/MANIFEST.json",
+      "sha256": "fed8bee429ef65b546a2d31f7084d1006278f14d9d33542d13b33d626cecabe8"
+    }
+  ],
+  "current_before_all_guards": true,
+  "product_changes": 0,
+  "native_expected_only": {
+    "courier": 6,
+    "logger": 2
+  },
+  "requirements_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "sha256": "66676661f20721aa3c6424021535c10706e4728c1eaa667abcffd401c12ba32a"
+  },
+  "root_reads": "Prior whole285 Courier proposal and whole Logger addition+helpers, peer source reports01385a/6f9d5c; test-only application. No native/finding credit.",
+  "after": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityObserverFailureTests.cs",
+      "sha256": "dec1f7966301288306234de54e2b244a02989a9e6be46e9f36ecfe200af75f7c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Transports/ReceivePipeDispatcherTests.cs",
+      "sha256": "0288a282b0b6f7f32036c9bb7ce8f0925a9ef86635af94d1e5bdacd19b971109"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "sha256": "054474dd84cc57c5914d98c4d9565ef58891aa40686c75bee3961a0f18b29611"
+    }
+  ],
+  "requirements_after_rows": 4593
+}

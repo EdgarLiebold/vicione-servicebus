@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Testing.Internal;
@@ -133,24 +135,40 @@ public abstract class AsyncTestHarness :
     /// <summary>Releases the resources owned by this instance.</summary>
     public virtual void Dispose()
     {
-        // Disposal is idempotent because a harness can be owned by more than one lifecycle boundary.
+        CancellationTokenSource? testScope;
         lock (_scopeLock)
         {
             if (_disposed)
                 return;
 
             _disposed = true;
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource?.Dispose();
+            testScope = _cancellationTokenSource;
             _cancellationTokenSource = null;
             _cancellationToken = CancellationToken.None;
         }
 
-        // Inactivity observation belongs to the harness lifetime rather than a test scope.
-        _harnessLifetime.Cancel();
+        List<Exception>? failures = null;
+        void Release(Action release)
+        {
+            try { release(); }
+            catch (Exception exception) { (failures ??= new List<Exception>()).Add(exception); }
+        }
+
+        // User cancellation callbacks run outside the scope lock. Each owned resource is attempted.
+        if (testScope is not null)
+        {
+            Release(testScope.Cancel);
+            Release(testScope.Dispose);
+        }
+        Release(_harnessLifetime.Cancel);
         if (_inactivityObserver.IsValueCreated)
-            _inactivityObserver.Value.Dispose();
-        _harnessLifetime.Dispose();
+            Release(_inactivityObserver.Value.Dispose);
+        Release(_harnessLifetime.Dispose);
+
+        if (failures?.Count == 1)
+            ExceptionDispatchInfo.Capture(failures[0]).Throw();
+        if (failures?.Count > 1)
+            throw new AggregateException("One or more asynchronous test-harness resources could not be released.", failures);
     }
 
     /// <summary>Cancels the current test scope and any harness tasks bound to it.</summary>

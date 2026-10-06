@@ -1,0 +1,73 @@
+{
+  "utc": "2026-10-06T05:11:12.950038+00:00",
+  "status": "ROOT_BOUNDED_EXPANDED_F152_24_OWNING_CALLS_REPAIRED_INDEPENDENT_FIXED_28_SELECTED_CASES_AND_FRESH2_PUBLICATION_ACCEPTED",
+  "finding": "F-SB-API-152",
+  "family_scope": "Historical14 Saga5/AzureTable3/Dynamo2/EF2/ConfigSaga2 plus Consumer8/AzureBlob2 =24 unique owning optional diagnostic calls; earlier historicalproof immutable, added10 owningcalls have genuineOriginal3368P8F and3416P6F versus actualfixed16+12 allP. No newID inflation.",
+  "proofs": {
+    "consumerFixed": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package342-consumer16-fixed-publication-independent-qualification-r1/MANIFEST.json",
+      "sha256": "f6b7e4cb0a87964e88143a63d7d1dfe88bda6faffbefec6fce3ae43152c84914"
+    },
+    "consumerRolePrecision": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package342-independent-product-peer-role-precision-erratum-r1/MANIFEST.json",
+      "sha256": "977ebd1adc3d2d99f4d65a8677f033ed8a5933443de66ccccd9c286e95ad3474"
+    },
+    "azureFixed": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package344-azure-fixed12-publication-independent-qualification-r1/MANIFEST.json",
+      "sha256": "922f7fd166704272587a7738222d60d1c50f7493bf661237b36b35979c6185e4"
+    },
+    "consumerNormAuthor": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package338-consumer-source8-prospective-individual-norms-proposed-r1/MANIFEST.json",
+      "sha256": "e3b0d43393b1438c79563fdfab15f6793ea5ad25faecd4817ab49de33bc9d579"
+    },
+    "consumerNormRootPeer": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package345-consumer-source8-independent-root-norm-peer-r1/MANIFEST.json",
+      "sha256": "5c512b902ac5881b9b169f5ea9c9c33ff65be8919e2902a200a2f1f6a75b5488"
+    },
+    "azureNorm2Author": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package339-azureblob-getput2-proposed352-local-norm-revision-r1/MANIFEST.json",
+      "sha256": "d11a04e8f9c7ef217318a71f455439c11675cd7396112fb37ab4a217d20f0c33"
+    }
+  },
+  "Root_own_whole_current_and_norms": [
+    "Consumer238 dce92c +8 helpers8445c7/dce92c",
+    "Azure352e0cc0d and exactprior/postnorm2af488b",
+    "Source8allindividualnorms88c9ae / Rootnormpeer806162",
+    "actualfixedraw026330/ad9eab",
+    "independentfixedReportsced7fa/b0fb41 plusroleprecisionb0fb41"
+  ],
+  "focused_cases": {
+    "consumer_total": 16,
+    "consumer_P": 16,
+    "azure_total": 12,
+    "azure_P": 12,
+    "F": 0,
+    "S": 0
+  },
+  "module_regression": {
+    "Core_P": 7878,
+    "AzureStorage_P": 37,
+    "limits": "Actual mechanical aggregate outcomes, no humanwholealloracle claim; focusedcases subsets."
+  },
+  "strict_builds_0W0E": 2,
+  "fresh_packages": 2,
+  "Source_new_original_members": 8,
+  "revised_literal_member_norms": 2,
+  "identity_only_other_rows": 12,
+  "all_owner_identity_rows": 14,
+  "Master_before": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "a88c2a6bbb6a754c63c81a5d7bc4c54ed9edfe1b23a7810a1156a15b3e21d662"
+  },
+  "Master_counts_after": {
+    "rows": 19071,
+    "original_accepted": 18209,
+    "original_remaining": 360
+  },
+  "unique_known_before_after": 214,
+  "bounded_current_before": 213,
+  "bounded_current_after": 214,
+  "whole_API_closed": false,
+  "grade": null,
+  "remaining": "FullOriginal360memberreview and freshall23/31pack/18compile4actualconsumer gates remain open; arbitrarypublicSPI obligations preserved."
+}

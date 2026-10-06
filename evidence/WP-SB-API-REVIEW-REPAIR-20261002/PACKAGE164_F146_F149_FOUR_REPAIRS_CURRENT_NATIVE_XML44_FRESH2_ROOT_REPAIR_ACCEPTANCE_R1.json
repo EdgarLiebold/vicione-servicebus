@@ -1,0 +1,404 @@
+{
+  "utc": "2026-10-05T02:50:09.493977+00:00",
+  "actor": "/root",
+  "status": "ROOT_ACCEPTED_FOUR_BOUNDED_CALLBACK_AND_PUBLISHED_XML_REPAIRS",
+  "finding_ids": [
+    "F-SB-API-146",
+    "F-SB-API-147",
+    "F-SB-API-148",
+    "F-SB-API-149"
+  ],
+  "accepted_before": 145,
+  "accepted_after": 149,
+  "known_findings_before_parent_registration": 149,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/REPORT.json",
+    "sha256": "b56750e89f523b997efdec5830b5dc41ab5e9872321bdeb83bb4b533f6633f03"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-callback-fixed96-parent-original16-neighbors2290-xml44-fresh2-independent-r1/MANIFEST.json",
+    "sha256": "656c1febc8e33aefc108f9050f58e9ca23fb8abf907b6b281a538098f950e5b3"
+  },
+  "root_manifest_verified": 3343,
+  "root_current_frozen_files_verified": 3325,
+  "actual_sdk_closed": [
+    {
+      "phase": "package164-callback-xml-parent-original-strict-core-build-r1",
+      "command": [
+        "dotnet",
+        "build",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "-warnaserror",
+        "-bl:artifacts/log/package164-callback-xml-parent-original-strict-core-build-r1.binlog"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T02:37:09.981533+00:00",
+      "completed_utc": "2026-10-05T02:38:21.037251+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package164-callback-xml-parent-original-strict-core-build-r1.log",
+      "log_sha256": "d15a04c0e5cea415af0b2be3851c034c3437f9161b14bd971ff5cf041feb30ab"
+    },
+    {
+      "phase": "package164-fixed-scope-routing-schedule-header-callback-native96-r1",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests",
+        "ViciOne.ServiceBus.Tests.Middleware.DynamicRoutingTests",
+        "ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineConfigurationContractTests",
+        "ViciOne.ServiceBus.Tests.Serialization.DictionarySendHeadersTests",
+        "ViciOne.ServiceBus.Tests.Scheduling.AdvancedSchedulerDefaultAdapterTests",
+        "ViciOne.ServiceBus.Tests.Requirements.RequirementCoverageProjectionTests",
+        "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests",
+        "--minimum-expected-tests",
+        "96",
+        "--output",
+        "Detailed",
+        "--results-directory",
+        "artifacts/results-package164-fixed-scope-routing-schedule-header-callback-native96-r1"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T02:38:36.226550+00:00",
+      "completed_utc": "2026-10-05T02:38:40.785438+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package164-fixed-scope-routing-schedule-header-callback-native96-r1.log",
+      "log_sha256": "8246954e2d4d9f2f89a474e42962d8090cdd7079f013b21058f50cb9ad0aae98"
+    },
+    {
+      "phase": "package164-consume-parent-fanout-original-native16-r1",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-class",
+        "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests",
+        "--minimum-expected-tests",
+        "16",
+        "--output",
+        "Detailed",
+        "--results-directory",
+        "artifacts/results-package164-consume-parent-fanout-original-native16-r1"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 2,
+      "started_utc": "2026-10-05T02:38:56.580270+00:00",
+      "completed_utc": "2026-10-05T02:39:00.102800+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package164-consume-parent-fanout-original-native16-r1.log",
+      "log_sha256": "ec4c02e01619b60e62092d265b8dc5413076aa2419b201c6d176522552b9b50e"
+    },
+    {
+      "phase": "package164-serialization-scheduling-middleware-di-saga-neighbors2290-r1",
+      "command": [
+        "dotnet",
+        "test",
+        "--project",
+        "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--filter-namespace",
+        "ViciOne.ServiceBus.Tests.Serialization",
+        "ViciOne.ServiceBus.Tests.Scheduling",
+        "ViciOne.ServiceBus.Tests.Middleware",
+        "ViciOne.ServiceBus.Tests.DependencyInjection",
+        "ViciOne.ServiceBus.Tests.SagaStateMachine",
+        "--filter-not-class",
+        "ViciOne.ServiceBus.Tests.Serialization.DictionarySendHeadersTests",
+        "ViciOne.ServiceBus.Tests.Scheduling.AdvancedSchedulerDefaultAdapterTests",
+        "ViciOne.ServiceBus.Tests.DependencyInjection.ConsumeScopeLifecycleTests",
+        "ViciOne.ServiceBus.Tests.Middleware.DynamicRoutingTests",
+        "ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineConfigurationContractTests",
+        "ViciOne.ServiceBus.Tests.Middleware.ConsumeOutputObserverContractTests",
+        "--minimum-expected-tests",
+        "2290",
+        "--output",
+        "Detailed",
+        "--results-directory",
+        "artifacts/results-package164-serialization-scheduling-middleware-di-saga-neighbors2290-r1"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T02:40:01.130009+00:00",
+      "completed_utc": "2026-10-05T02:40:11.716919+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package164-serialization-scheduling-middleware-di-saga-neighbors2290-r1.log",
+      "log_sha256": "c11a92e58390107d8d6a041d3b1a7e0e02ef9dc4ced9c0603caf7d96ee79dad3"
+    },
+    {
+      "phase": "package164-fresh-core-pack-r1",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--output",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-fresh-two/packages"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T02:40:33.957317+00:00",
+      "completed_utc": "2026-10-05T02:40:35.722180+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package164-fresh-core-pack-r1.log",
+      "log_sha256": "39354792b3bec9f86c7506a272829403e55fb5784d5e14255f5b518f1b9e0bc2"
+    },
+    {
+      "phase": "package164-fresh-sagas-pack-r1",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--output",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package164-fresh-two/packages"
+      ],
+      "cwd": "repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-05T02:40:55.817348+00:00",
+      "completed_utc": "2026-10-05T02:40:58.321514+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package164-fresh-sagas-pack-r1.log",
+      "log_sha256": "3137905326c1d96f63c6139fcf45a93ba087ffb0c1971d83ce24ba321ebbe85b"
+    }
+  ],
+  "native": {
+    "total": 2402,
+    "passed": 2401,
+    "failed": 1,
+    "skipped": 0
+  },
+  "native_callback6_now_all_assertions_reached": [
+    {
+      "original163_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 3, member: \"Completed3\")",
+      "current164_same_logged_case_passed": true,
+      "unchanged_test_body": true,
+      "now_reached": [
+        "Default settings/concrete null",
+        "Setter exact delegate reference and real Request/Schedule callback invocation1/correct correlation type",
+        "Resetnull then actual second declaration distinct with callback observation count unchanged",
+        "Settings read metadata Nullable source191",
+        "Configurator interface write metadata Nullable source192",
+        "For five request callbacks concrete read/write metadata Nullable source195/196"
+      ],
+      "limits": "Schedule Received is implemented explicitly and has no public concrete property; only actual settings-read/interface-write native assertions apply there. Required initialized DelayProvider/request event metadata positive control also passes."
+    },
+    {
+      "original163_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 2, member: \"Completed2\")",
+      "current164_same_logged_case_passed": true,
+      "unchanged_test_body": true,
+      "now_reached": [
+        "Default settings/concrete null",
+        "Setter exact delegate reference and real Request/Schedule callback invocation1/correct correlation type",
+        "Resetnull then actual second declaration distinct with callback observation count unchanged",
+        "Settings read metadata Nullable source191",
+        "Configurator interface write metadata Nullable source192",
+        "For five request callbacks concrete read/write metadata Nullable source195/196"
+      ],
+      "limits": "Schedule Received is implemented explicitly and has no public concrete property; only actual settings-read/interface-write native assertions apply there. Required initialized DelayProvider/request event metadata positive control also passes."
+    },
+    {
+      "original163_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 1, member: \"Faulted\")",
+      "current164_same_logged_case_passed": true,
+      "unchanged_test_body": true,
+      "now_reached": [
+        "Default settings/concrete null",
+        "Setter exact delegate reference and real Request/Schedule callback invocation1/correct correlation type",
+        "Resetnull then actual second declaration distinct with callback observation count unchanged",
+        "Settings read metadata Nullable source191",
+        "Configurator interface write metadata Nullable source192",
+        "For five request callbacks concrete read/write metadata Nullable source195/196"
+      ],
+      "limits": "Schedule Received is implemented explicitly and has no public concrete property; only actual settings-read/interface-write native assertions apply there. Required initialized DelayProvider/request event metadata positive control also passes."
+    },
+    {
+      "original163_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 1, member: \"Completed\")",
+      "current164_same_logged_case_passed": true,
+      "unchanged_test_body": true,
+      "now_reached": [
+        "Default settings/concrete null",
+        "Setter exact delegate reference and real Request/Schedule callback invocation1/correct correlation type",
+        "Resetnull then actual second declaration distinct with callback observation count unchanged",
+        "Settings read metadata Nullable source191",
+        "Configurator interface write metadata Nullable source192",
+        "For five request callbacks concrete read/write metadata Nullable source195/196"
+      ],
+      "limits": "Schedule Received is implemented explicitly and has no public concrete property; only actual settings-read/interface-write native assertions apply there. Required initialized DelayProvider/request event metadata positive control also passes."
+    },
+    {
+      "original163_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 1, member: \"TimeoutExpired\")",
+      "current164_same_logged_case_passed": true,
+      "unchanged_test_body": true,
+      "now_reached": [
+        "Default settings/concrete null",
+        "Setter exact delegate reference and real Request/Schedule callback invocation1/correct correlation type",
+        "Resetnull then actual second declaration distinct with callback observation count unchanged",
+        "Settings read metadata Nullable source191",
+        "Configurator interface write metadata Nullable source192",
+        "For five request callbacks concrete read/write metadata Nullable source195/196"
+      ],
+      "limits": "Schedule Received is implemented explicitly and has no public concrete property; only actual settings-read/interface-write native assertions apply there. Required initialized DelayProvider/request event metadata positive control also passes."
+    },
+    {
+      "original163_case": "ViciOne.ServiceBus.Tests.Configuration.StateMachineRequestScheduleTimeoutDeepContractTests.OptionalCorrelationCallback_NullabilityMatchesDefaultResetAndActualDeclaration(family: 0, member: \"Received\")",
+      "current164_same_logged_case_passed": true,
+      "unchanged_test_body": true,
+      "now_reached": [
+        "Default settings/concrete null",
+        "Setter exact delegate reference and real Request/Schedule callback invocation1/correct correlation type",
+        "Resetnull then actual second declaration distinct with callback observation count unchanged",
+        "Settings read metadata Nullable source191",
+        "Configurator interface write metadata Nullable source192",
+        "For five request callbacks concrete read/write metadata Nullable source195/196"
+      ],
+      "limits": "Schedule Received is implemented explicitly and has no public concrete property; only actual settings-read/interface-write native assertions apply there. Required initialized DelayProvider/request event metadata positive control also passes."
+    }
+  ],
+  "XML": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "nodes": 6872,
+      "actual_changed_member_IDs": [
+        "M:ViciOne.ServiceBus.Middleware.ConsumeContextMessageTypeFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+        "M:ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+        "M:ViciOne.ServiceBus.Middleware.ConsumePipe.SendAsync(ViciOne.ServiceBus.ConsumeContext)",
+        "M:ViciOne.ServiceBus.Middleware.ConsumerMergePipe`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0})",
+        "M:ViciOne.ServiceBus.Middleware.ConsumerMessageMergePipe`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1})",
+        "M:ViciOne.ServiceBus.Middleware.ConsumerSplitFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1}})",
+        "M:ViciOne.ServiceBus.Middleware.ContextFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+        "M:ViciOne.ServiceBus.Middleware.CorrelationIdMessageFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.DelayedMessageRedeliveryFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.DelayedMessageSchedulerFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+        "M:ViciOne.ServiceBus.Middleware.DelaySendPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+        "M:ViciOne.ServiceBus.Middleware.FaultDeadLetterFilter.SendAsync(ViciOne.ServiceBus.Advanced.ReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ReceiveContext})",
+        "M:ViciOne.ServiceBus.Middleware.FutureRequestPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+        "M:ViciOne.ServiceBus.Middleware.FutureResultPipe`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+        "M:ViciOne.ServiceBus.Middleware.GenerateFaultFilter.SendAsync(ViciOne.ServiceBus.Advanced.ExceptionReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExceptionReceiveContext})",
+        "M:ViciOne.ServiceBus.Middleware.InlineFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+        "M:ViciOne.ServiceBus.Middleware.KeyFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+        "M:ViciOne.ServiceBus.Middleware.MessageSchedulerFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+        "M:ViciOne.ServiceBus.Middleware.MessageSplitFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,`1}})",
+        "M:ViciOne.ServiceBus.Middleware.OutboxMessagePipe`1.SendAsync(ViciOne.ServiceBus.Middleware.OutboxConsumeContext{`0})",
+        "M:ViciOne.ServiceBus.Middleware.OutboxMessageSendPipe.SendAsync(ViciOne.ServiceBus.Advanced.SendContext)",
+        "M:ViciOne.ServiceBus.Middleware.PayloadFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+        "M:ViciOne.ServiceBus.Middleware.PipeContextSourceBindFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+        "M:ViciOne.ServiceBus.Middleware.ReceiveEndpointDependencyFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+        "M:ViciOne.ServiceBus.Middleware.RequestIdFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.RethrowErrorTransportFilter.SendAsync(ViciOne.ServiceBus.Advanced.ExceptionReceiveContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExceptionReceiveContext})",
+        "M:ViciOne.ServiceBus.Middleware.ScheduleMessageRedeliveryFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.ScopeCompensateFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.CompensateContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.CompensateContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.ScopeConsumeFilter.SendAsync(ViciOne.ServiceBus.ConsumeContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext})",
+        "M:ViciOne.ServiceBus.Middleware.ScopedCompensateFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.CompensateContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.CompensateContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.ScopedConsumeFilter`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.ScopedExecuteFilter`2.SendAsync(ViciOne.ServiceBus.Advanced.ExecuteContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExecuteContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.ScopedFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+        "M:ViciOne.ServiceBus.Middleware.ScopeExecuteFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.ExecuteContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ExecuteContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.ScopeMessageFilter`1.SendAsync(ViciOne.ServiceBus.ConsumeContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.ConsumeContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.SetCorrelationIdFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.SetPartitionKeyFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.SetRoutingKeyFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.SetSerializerFilter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SendContext{`0}})",
+        "M:ViciOne.ServiceBus.Middleware.TimeoutFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+        "M:ViciOne.ServiceBus.Middleware.TransactionFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+        "M:ViciOne.ServiceBus.Middleware.TransportReadyFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})"
+      ],
+      "all_other_nodes_byte_equal163": true
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Sagas",
+      "nodes": 2435,
+      "actual_changed_member_IDs": [
+        "P:ViciOne.ServiceBus.Sagas.IRequestConfigurator.TimeToLive",
+        "M:ViciOne.ServiceBus.Sagas.StateMachineRequestExtensions.CancelRequestTimeout``4(ViciOne.ServiceBus.Sagas.IEventActivityBinder{``0,``1},ViciOne.ServiceBus.Sagas.IRequest{``0,``2,``3},System.Boolean)"
+      ],
+      "all_other_nodes_byte_equal163": true
+    }
+  ],
+  "physical_fresh2_zip_crc_and_dll_xml_equality": [
+    {
+      "filename": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "4526db689cff0c782fd07b8d20af7678e35beecdce057579a237435b916e28cd",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.dll",
+        "lib/net10.0/ViciOne.ServiceBus.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/dce7a54a8c8241d880fa1ae68a83991d.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "f55b4216687aa18e1c9c0c0edea4e99f3ac3a70e27d2df3aef4c63697b361762",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "13930f9225e082b6e59552bdf64f573b8b3b8a6715e32cf6c9ed5b878bc8e3d6",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "260697e62a1198acb05825824a6403325062c50431af790573ee25fc4c388bd2"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "33ce8fa923d7c8674c0f0973e5d29931597dd1a33b4f4a44464e3b58a240dabd",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.Sagas.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/d9df93c3a1694cfca16a3d34767e4d6c.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "fcf5ef79d6c3a1e89f7aa1cce4b27b7608b759b510958d863e2d53aa1c9b3230",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+          "sha256": "84a96fc821c43b3fced4d9ead9b9bf93a083158e7a1e4114a3eb4bc3c87a3516",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "4172e0e5fabfefe2b71a80a2bdb64b2e75b5453a3acef773d3552bac84de429d"
+    }
+  ],
+  "root_read_authority": "Actual approved delta and sourcepeer reports cited Root164application; report selected fields8ddc64 recovered completeparent/fresh2 b4ede1. Same b4ede1 actual raw sixpassed+requirednonnullablecontrol. Root whole currentparent168/innerOutbox1607e60d0. All manifest/current freeze/receipts/logs and direct ZIP/XML comparisons checked here. No claim Rootwhole42Productowners/2290Testbodies.",
+  "limits": [
+    "Pure frozen qualification only; no SDK/repository mutation by peer.",
+    "One finite new original Parent failure retained; no clean Core/wholeAPI acceptance.",
+    "Current typed/compiler API inventory not regenerated here; no current denominator or comprehensive signature metadata claim.",
+    "Only7 selected runtimeDLLs equal selected canonicalframes, not all loadeddependencies.",
+    "Req4639 exactly once managedresource payload; resource names not decoded.",
+    "Native callback reflection proves actual selected read/write attributes; arbitrary custom implementers not validated.",
+    "XML44 exact actual diff; all other Core/Sagas emitted nodes unchanged163, Delay163 remainscorrect.",
+    "Fresh2 archive CRC/DLL/XML/embeddedPDB match frozen164 only; no global release/API grade.",
+    "2290 mechanically exhaustive logged-case binding, no blanket human semantic/testbody credit."
+  ],
+  "CLOSED": false
+}

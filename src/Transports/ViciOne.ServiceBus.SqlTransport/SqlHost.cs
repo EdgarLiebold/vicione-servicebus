@@ -81,7 +81,13 @@ public class SqlHost :
 
         configuration.Validate().ThrowIfContainsFailure("The receive endpoint configuration is invalid:");
 
-        TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
+        try
+        {
+            TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
+        }
+        catch (Exception)
+        {
+        }
 
         configuration.Build(this);
 

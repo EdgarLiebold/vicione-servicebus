@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-06T02:49:53.187893+00:00",
+  "status": "INDEPENDENT_SOURCE_REVIEWED_PRODUCT1_APPLIED_FIXED_NATIVE_PENDING",
+  "finding": "F-SB-API-212",
+  "registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE313_F212_RABBIT_CONNECTION_OWNING_DEBUG2_ORIGINAL6_ROOT_FINDING_REGISTRATION_R1.json",
+    "sha256": "f395c70b09e6971a9f08d6c225472e99c6554276940129a6714a96ddd2f17331"
+  },
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package312-rabbit-connection-own-debug2-product1-proposed-r1",
+    "manifest_sha256": "d84c4fa348c47e26e9cb6314eb4feb9aeeb4df9637b9f067fe1732ef084e56f4"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package312-rabbit-debug2-independent-scanner-source-peer-r1",
+    "manifest_sha256": "eb099f11425debb4c6c038266822ec00c594eaf14b81d3d0c3a086e2c7508abe"
+  },
+  "change": {
+    "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqConnectionContext.cs",
+    "before_sha256": "d87eb938614c19a920bed97daec06634cab69bac34b0e4a767434c09b06b7b8d",
+    "after_sha256": "5bf399bf2bca9a87cd3385eae62521be137dd70e938d4c813934ea10a898ca62",
+    "before_lines": 125,
+    "after_lines": 139,
+    "literal_two_inverse_exact": true,
+    "patch_sha256": "080aed2b00978923d4f9d994d175b4ee9005b306f0adc4362541f80e4c57f7e7"
+  },
+  "literal_inverses": [
+    {
+      "before": "        TransportLogMessages.DisconnectHost(Description);",
+      "after": "        try\n        {\n            TransportLogMessages.DisconnectHost(Description);\n        }\n        catch (Exception)\n        {\n            // Diagnostics do not prevent owned connection cleanup.\n        }"
+    },
+    {
+      "before": "        TransportLogMessages.DisconnectedHost(Description);",
+      "after": "        try\n        {\n            TransportLogMessages.DisconnectedHost(Description);\n        }\n        catch (Exception)\n        {\n            // Diagnostics do not change the completed cleanup outcome.\n        }"
+    }
+  ],
+  "root_whole139": "e2c691",
+  "root_wholepeer": "295230",
+  "preservation": "Two owningDiagnostic expression guards only. Native helper Close-suppressed/Dispose-primary, lifetimeawait/leases/task/cancel/API/XML/Test250/Req290 unchanged. Fixed/currentmodule/strict/NuGet acceptance remains pending actual independent qualification.",
+  "native_credit": 0,
+  "grade": null
+}

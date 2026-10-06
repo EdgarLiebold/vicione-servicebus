@@ -1,0 +1,203 @@
+{
+  "status": "RUNNING",
+  "findings": [
+    "F013",
+    "F014",
+    "F017"
+  ],
+  "checks": [
+    {
+      "phase": "package03-eh-isolated-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+        "--locked-mode",
+        "--disable-parallel"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:32:31.621947+00:00",
+      "completed_utc": "2026-10-02T23:32:35.167841+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eh-isolated-restore.log",
+      "log_sha256": "d7558ed960c2b2ad78b436a3d1c3781262f5976ca9646ebb7b91265bead3fb6c"
+    },
+    {
+      "phase": "package03-eh-isolated-corrected-closing",
+      "command": [
+        "env",
+        "VICIONE_TESTS__Profile=LocalIntegration",
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-method",
+        "*.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+        "--minimum-expected-tests",
+        "10"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:32:35.270574+00:00",
+      "completed_utc": "2026-10-02T23:32:48.352503+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eh-isolated-corrected-closing.log",
+      "log_sha256": "b0238acea12dc5309827193e1b5025399730ca522bdd2584221e299ee380b122"
+    },
+    {
+      "phase": "package03-eh-isolated-corrected-validation",
+      "command": [
+        "env",
+        "VICIONE_TESTS__Profile=LocalIntegration",
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-method",
+        "*.InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync",
+        "*.InheritedTransportGuards_StillRejectTheirInvalidLimitsAsync",
+        "*.ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync",
+        "*.ValidConfiguration_BuildsWithOrWithoutOptionalEventHubSelectionAsync",
+        "--minimum-expected-tests",
+        "19"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:32:48.459845+00:00",
+      "completed_utc": "2026-10-02T23:32:53.788089+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eh-isolated-corrected-validation.log",
+      "log_sha256": "5fc00527eceb70faccd7ad6b34d47f7d6895fdf17cf9bc7e58387b4b73bac9b8"
+    },
+    {
+      "phase": "package03-eh-isolated-corrected-producer-fast",
+      "command": [
+        "env",
+        "VICIONE_TESTS__Profile=LocalIntegration",
+        "dotnet",
+        "test",
+        "--project",
+        "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--filter-method",
+        "*.PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync",
+        "*.PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync",
+        "--minimum-expected-tests",
+        "24"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T23:32:53.929242+00:00",
+      "completed_utc": "2026-10-02T23:32:59.144280+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eh-isolated-corrected-producer-fast.log",
+      "log_sha256": "6d58d647c4608868960b6faee09d61a193b8539ecfd1daa7d27e4b9dd3807631"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "closing-original",
+      "source": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProcessorContext.cs",
+      "source_sha256": "3374984bb7f32b1b08707e61c7ae7283c8edc50e2f92d0eaec9b5d4b08c67d44",
+      "source_before_sha256": "998db6d69265b24ff6cd2a83a0f67d75f22726b4cc678a194700729e22172946",
+      "family": "closing",
+      "status": "KILLED_BY_NATIVE_CONTRACT_ASSERTION",
+      "native_receipt": {
+        "phase": "package03-eh-mutant-closing-original",
+        "command": [
+          "env",
+          "VICIONE_TESTS__Profile=LocalIntegration",
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-method",
+          "*.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+          "--minimum-expected-tests",
+          "10"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T23:32:59.247908+00:00",
+        "completed_utc": "2026-10-02T23:33:05.531808+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eh-mutant-closing-original.log",
+        "log_sha256": "f95043d3fd7609d42a5b45336ad5d9ad15d031e6117ff671edf4dd572dc0c8f9"
+      }
+    },
+    {
+      "name": "closing-no-internal-await",
+      "source": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProcessorContext.cs",
+      "source_sha256": "c3ce9592c79dced730f629192cca0c57b1783ca66b7fb0d010884fb76de051b6",
+      "source_before_sha256": "998db6d69265b24ff6cd2a83a0f67d75f22726b4cc678a194700729e22172946",
+      "family": "closing",
+      "status": "KILLED_BY_NATIVE_CONTRACT_ASSERTION",
+      "native_receipt": {
+        "phase": "package03-eh-mutant-closing-no-internal-await",
+        "command": [
+          "env",
+          "VICIONE_TESTS__Profile=LocalIntegration",
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-method",
+          "*.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+          "--minimum-expected-tests",
+          "10"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T23:33:05.634387+00:00",
+        "completed_utc": "2026-10-02T23:33:10.949800+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eh-mutant-closing-no-internal-await.log",
+        "log_sha256": "414c544ae95a1c690ec4bdb99f40fc10128f9c93742978f57a632b5f675de3e8"
+      }
+    },
+    {
+      "name": "closing-primary-discarded",
+      "source": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProcessorContext.cs",
+      "source_sha256": "8dbed2c218de8d57df985631a65e1bdaac0c529308b530f900e010e69a618c4b",
+      "source_before_sha256": "998db6d69265b24ff6cd2a83a0f67d75f22726b4cc678a194700729e22172946",
+      "family": "closing",
+      "status": "KILLED_BY_NATIVE_CONTRACT_ASSERTION",
+      "native_receipt": {
+        "phase": "package03-eh-mutant-closing-primary-discarded",
+        "command": [
+          "env",
+          "VICIONE_TESTS__Profile=LocalIntegration",
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "--filter-method",
+          "*.Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync",
+          "--minimum-expected-tests",
+          "10"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 2,
+        "started_utc": "2026-10-02T23:33:11.078196+00:00",
+        "completed_utc": "2026-10-02T23:33:15.317487+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eh-mutant-closing-primary-discarded.log",
+        "log_sha256": "6c9dacad3cb7493a17fe0d55abecc3efb337d2afb035f79d1f4d28299aa9d6a4"
+      }
+    }
+  ],
+  "excluded": "F016 original setup double-generates receive contexts; separate corrected oracle pending.",
+  "original_inputs_restored": true,
+  "new_fixtures_removed": true
+}

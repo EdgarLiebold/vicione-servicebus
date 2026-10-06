@@ -74,19 +74,43 @@ internal sealed class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         try
         {
             (Task<global::Azure.Response> insert, var entity) = TableInsert(instance);
-            await insert.ConfigureAwait(false);
-            _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
+            global::Azure.Response response = await insert.ConfigureAwait(false);
+            if (response.Headers.ETag is not { } eTag || string.IsNullOrWhiteSpace(eTag.ToString()))
+            {
+                throw new InvalidOperationException(
+                    "Azure Table inserted the saga but returned no usable ETag; conditional saga writes cannot continue.");
+            }
+            entity.ETag = eTag;
+            try
+            {
+                _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
+            }
+            catch (Exception)
+            {
+            }
 
             return await CreateSagaConsumeContextAsync(entity, SagaConsumeContextMode.Insert).ConfigureAwait(false);
         }
         catch (RequestFailedException exception) when (exception.Status == 409)
         {
-            _consumeContext.LogInsertFault<TSaga, TMessage>(exception, instance.CorrelationId);
+            try
+            {
+                _consumeContext.LogInsertFault<TSaga, TMessage>(exception, instance.CorrelationId);
+            }
+            catch (Exception)
+            {
+            }
             return default;
         }
         catch (Exception exception)
         {
-            _consumeContext.LogInsertFault<TSaga, TMessage>(exception, instance.CorrelationId);
+            try
+            {
+                _consumeContext.LogInsertFault<TSaga, TMessage>(exception, instance.CorrelationId);
+            }
+            catch (Exception)
+            {
+            }
             throw;
         }
     }

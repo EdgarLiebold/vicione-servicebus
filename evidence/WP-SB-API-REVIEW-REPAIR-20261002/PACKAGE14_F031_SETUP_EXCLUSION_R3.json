@@ -1,0 +1,32 @@
+{
+  "status": "CONSUMER_PUBLIC_ADVANCED_ACCESS_COMPILER_SETUP_EXCLUDED",
+  "cause": "typed ConsumeContext infrastructure requires public Advanced extension; global endpoint callback extension requires Advanced.Registration import",
+  "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-public-previous-build-r3.log",
+  "log_sha256": "02364003441f24dc202bb7ec46d7befdba14fbe425cc2030dceffceb6c1bcac2",
+  "preserved_sources": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/previous-Components.cs-r3.txt",
+      "sha256": "439edc10f691004c12cb548b302b5ee737cc7620be16a976d64127b12e1685ff"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/previous-EndpointCases.cs-r3.txt",
+      "sha256": "df37b07121be8673184a0cc51939dd79e76b63f0571d3a604689fb7d7b655135"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/corrected-Components.cs-r3.txt",
+      "sha256": "439edc10f691004c12cb548b302b5ee737cc7620be16a976d64127b12e1685ff"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package14-f031-setup-excluded/corrected-EndpointCases.cs-r3.txt",
+      "sha256": "df37b07121be8673184a0cc51939dd79e76b63f0571d3a604689fb7d7b655135"
+    }
+  ],
+  "Root_personally_FULL_public_interfaces": [
+    "ConsumeContext",
+    "AdvancedConsumeContextExtensions",
+    "MessageContext",
+    "AdvancedBusRegistrationConfiguratorExtensions"
+  ],
+  "compiler_errors": 2,
+  "finding_or_kill_count": 0
+}

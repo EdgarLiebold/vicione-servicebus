@@ -11,7 +11,7 @@ public readonly record struct ClusterNode :
     IParsable<ClusterNode>,
     ISpanParsable<ClusterNode>
 {
-    /// <summary>Gets the DNS name or normalized IP address.</summary>
+    /// <summary>Gets the stored host name or IP address.</summary>
     public string HostName { get; }
 
     /// <summary>Gets the explicit AMQP port, or <see langword="null"/> to use the connection-factory default.</summary>
@@ -23,8 +23,8 @@ public readonly record struct ClusterNode :
         Port = port;
     }
 
-    /// <summary>Returns the canonical node representation, using brackets for IPv6 hosts.</summary>
-    /// <returns>The canonical host and optional port.</returns>
+    /// <summary>Returns the stored host and optional port representation, adding brackets around IPv6 hosts.</summary>
+    /// <returns>The stored host and optional port, with brackets around IPv6 hosts.</returns>
     public override string ToString()
     {
         if (string.IsNullOrEmpty(HostName))

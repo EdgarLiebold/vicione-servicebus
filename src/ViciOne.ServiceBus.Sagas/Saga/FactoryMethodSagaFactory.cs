@@ -4,7 +4,7 @@ using ViciOne.ServiceBus.Logging;
 
 namespace ViciOne.ServiceBus.Saga;
 
-/// <summary>Creates a saga instance using the default factory method.</summary>
+/// <summary>Obtains saga instances from the supplied factory delegate.</summary>
 /// <typeparam name="TSaga">The saga state managed by the member.</typeparam>
 /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
 public class FactoryMethodSagaFactory<TSaga, TMessage> :
@@ -35,7 +35,7 @@ public class FactoryMethodSagaFactory<TSaga, TMessage> :
             ?? throw new InvalidOperationException("The saga factory method returned no instance.");
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Obtains a saga instance for the correlated message and forwards its saga consume context to the next pipeline stage.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -52,7 +52,13 @@ public class FactoryMethodSagaFactory<TSaga, TMessage> :
 
         var proxy = new DefaultSagaConsumeContext<TSaga, TMessage>(context, instance);
 
-        proxy.LogCreated();
+        try
+        {
+            proxy.LogCreated();
+        }
+        catch (Exception)
+        {
+        }
 
         return next.SendAsync(proxy)
             ?? throw new InvalidOperationException("The saga pipeline returned no task.");

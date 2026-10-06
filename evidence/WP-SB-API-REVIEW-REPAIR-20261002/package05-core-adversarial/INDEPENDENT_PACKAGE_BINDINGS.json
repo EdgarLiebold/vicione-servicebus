@@ -1,0 +1,308 @@
+{
+  "four_packages": [
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original",
+      "lock_sha256": "07da501d49f24b2e333434eb986eb265c640182fc2c48332346e19fd7a1fcb35",
+      "actual_cases": 42,
+      "actual_failures": 10,
+      "packages": [
+        {
+          "package": "ViciOne.ServiceBus",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package05/original/ViciOne.ServiceBus.1.0.0.nupkg",
+          "nupkg_sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+          "contentHash": "BIXqeDZ5N2WWlNzqYVLdduvYtCAluXqgN5pgHsCNQCCgUFts9iY8gPnyzoSdbjAO0vOle5Udj2D900WVSB3GJA==",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "loaded_runtime": {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+          },
+          "zip_DLL_sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+          "zip_XML_sha256": "beda69a21e970ddfdecc08bd744fe237cf78bdf35a51e57c1c980a789556e1c8",
+          "cache_XML_equal": true,
+          "runtime_XML_present": false,
+          "owned_public_XML_members": []
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package05/original/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "nupkg_sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+          "contentHash": "yx6FMoZDCWC6B+OnkNCo1gAZIpg6MBa/0PNcwrb59/p1yESRlD1a516bFY/9z5Fuf8Ko2V+GqzSfIAFIFAojXA==",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "loaded_runtime": {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/original/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+          },
+          "zip_DLL_sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15",
+          "zip_XML_sha256": "1182e961a8760ac22f822533ae1ff9247402fecd5490a1fbbf09631d6acbdd02",
+          "cache_XML_equal": true,
+          "runtime_XML_present": false,
+          "owned_public_XML_members": [
+            {
+              "id": "P:ViciOne.ServiceBus.Configuration.BatchOptions.TimeLimit",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.Configuration.BatchOptions.TimeLimit\">\n            <summary>Gets or sets the maximum time to wait before delivering a partial batch.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "P:ViciOne.ServiceBus.Configuration.BatchOptions.TimeLimitStart",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.Configuration.BatchOptions.TimeLimitStart\">\n            <summary>Gets or sets the message arrival from which <see cref=\"P:ViciOne.ServiceBus.Configuration.BatchOptions.TimeLimit\" /> is measured.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "T:ViciOne.ServiceBus.Configuration.EndpointQosConfigurationException",
+              "xml": "<member name=\"T:ViciOne.ServiceBus.Configuration.EndpointQosConfigurationException\">\n            <summary>Reports conflicting or invalid transport quality-of-service ownership for an endpoint.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.Configuration.EndpointQosConfigurationException.#ctor(System.String)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.Configuration.EndpointQosConfigurationException.#ctor(System.String)\">\n            <summary>Creates an exception with the endpoint quality-of-service validation message.</summary>\n            <param name=\"message\">The description of the invalid endpoint configuration.</param>\n        </member>\n        "
+            },
+            {
+              "id": "P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.StartTimeout",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.StartTimeout\">\n            <summary>\n            Gets or sets the maximum duration of bus startup. A <see langword=\"null\" /> value applies no timeout in addition to caller cancellation.\n            </summary>\n        </member>\n        "
+            },
+            {
+              "id": "P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.StopTimeout",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.StopTimeout\">\n            <summary>\n            Gets or sets the maximum duration of bus shutdown. A <see langword=\"null\" /> value applies no timeout in addition to caller cancellation.\n            </summary>\n        </member>\n        "
+            },
+            {
+              "id": "P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.ConsumerStopTimeout",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.ConsumerStopTimeout\">\n            <summary>\n            Gets or sets how long consumers may finish active work before their <see cref=\"P:ViciOne.ServiceBus.Advanced.PipeContext.CancellationToken\" /> is canceled.\n            A <see langword=\"null\" /> value allows consumers to use the complete bus shutdown interval.\n            </summary>\n        </member>\n        "
+            },
+            {
+              "id": "T:ViciOne.ServiceBus.ConfigurationException",
+              "xml": "<member name=\"T:ViciOne.ServiceBus.ConfigurationException\">\n            <summary>Reports an invalid service-bus configuration and its validation failures.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.ConfigurationException.#ctor",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.ConfigurationException.#ctor\">\n            <summary>Creates a configuration exception without a custom message or validation results.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ValidationResult},System.String)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ValidationResult},System.String)\">\n            <summary>Creates a configuration exception containing a stable snapshot of the validation results.</summary>\n            <param name=\"results\">The validation results that explain the invalid configuration.</param>\n            <param name=\"message\">The description of the configuration failure.</param>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ValidationResult},System.String,System.Exception)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ValidationResult},System.String,System.Exception)\">\n            <summary>Creates a configuration exception containing validation results and an underlying failure.</summary>\n            <param name=\"results\">The validation results that explain the invalid configuration.</param>\n            <param name=\"message\">The description of the configuration failure.</param>\n            <param name=\"innerException\">The exception that caused this configuration failure.</param>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.String)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.String)\">\n            <summary>Creates a configuration exception with the specified failure message.</summary>\n            <param name=\"message\">The description of the configuration failure.</param>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.String,System.Exception)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.String,System.Exception)\">\n            <summary>Creates a configuration exception with an underlying failure.</summary>\n            <param name=\"message\">The description of the configuration failure.</param>\n            <param name=\"innerException\">The exception that caused this configuration failure.</param>\n        </member>\n        "
+            },
+            {
+              "id": "P:ViciOne.ServiceBus.ConfigurationException.Results",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.ConfigurationException.Results\">\n            <summary>Gets the immutable snapshot of validation results associated with the failure.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "T:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException",
+              "xml": "<member name=\"T:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException\">\n            <summary>Reports an attempt to register more than one pipe segment with the same key.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor\">\n            <summary>Creates a duplicate-key exception without a custom message.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor(System.String)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor(System.String)\">\n            <summary>Creates a duplicate-key exception with the specified failure message.</summary>\n            <param name=\"message\">The description of the duplicate pipe key.</param>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor(System.String,System.Exception)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor(System.String,System.Exception)\">\n            <summary>Creates a duplicate-key exception with an underlying failure.</summary>\n            <param name=\"message\">The description of the duplicate pipe key.</param>\n            <param name=\"innerException\">The exception raised while registering the keyed pipe segment.</param>\n        </member>\n        "
+            },
+            {
+              "id": "T:ViciOne.ServiceBus.PipeConfigurationException",
+              "xml": "<member name=\"T:ViciOne.ServiceBus.PipeConfigurationException\">\n            <summary>Provides the exception base for invalid middleware-pipe configuration.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.PipeConfigurationException.#ctor",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.PipeConfigurationException.#ctor\">\n            <summary>Creates a pipe-configuration exception without a custom message.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.PipeConfigurationException.#ctor(System.String)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.PipeConfigurationException.#ctor(System.String)\">\n            <summary>Creates a pipe-configuration exception with the specified failure message.</summary>\n            <param name=\"message\">The description of the invalid pipe configuration.</param>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.PipeConfigurationException.#ctor(System.String,System.Exception)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.PipeConfigurationException.#ctor(System.String,System.Exception)\">\n            <summary>Creates a pipe-configuration exception with an underlying failure.</summary>\n            <param name=\"message\">The description of the invalid pipe configuration.</param>\n            <param name=\"innerException\">The exception raised while configuring the pipe.</param>\n        </member>\n        "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected",
+      "lock_sha256": "67b4ca31e0cd16ce001ed3a42122dfbfc76131e717a0ffc6cd4518216eb648d4",
+      "actual_cases": 42,
+      "actual_failures": 0,
+      "packages": [
+        {
+          "package": "ViciOne.ServiceBus",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package05/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+          "nupkg_sha256": "b60931a6596d6cfe6f0f572d727f52bdb502c81a9c8c02bbac53b0fcc43768e2",
+          "contentHash": "eXJD1Plo8z1Dv1+1RidR55PdW2ZrJrPqv74iKqTeazN9e2QnD0pwDxtcWhtdY+8+7NJ1LdKe/BvCfPAm7rbg8g==",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/restored-packages/vicione.servicebus/1.0.0/vicione.servicebus.1.0.0.nupkg",
+          "member": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "loaded_runtime": {
+            "name": "ViciOne.ServiceBus",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "70c111cec48d128c020f93dbb11b9bf917a1e2d7ff2ac4e4dd7e891061cbdd57"
+          },
+          "zip_DLL_sha256": "70c111cec48d128c020f93dbb11b9bf917a1e2d7ff2ac4e4dd7e891061cbdd57",
+          "zip_XML_sha256": "beda69a21e970ddfdecc08bd744fe237cf78bdf35a51e57c1c980a789556e1c8",
+          "cache_XML_equal": true,
+          "runtime_XML_present": false,
+          "owned_public_XML_members": []
+        },
+        {
+          "package": "ViciOne.ServiceBus.Abstractions",
+          "nupkg": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package05/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+          "nupkg_sha256": "7c595f5b5a7cfed14d0f47f4ed2d36cb0e7e7422a68f2e574f2b8c7550f63855",
+          "contentHash": "A9V+lrKurMYuZbMsAWHO3dZYPNy/kfr8JKloDpSTLPyePE/3SCGb3Gt29Ckp3eER0gi/19YYuHqqQBlpZmKH9g==",
+          "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/restored-packages/vicione.servicebus.abstractions/1.0.0/vicione.servicebus.abstractions.1.0.0.nupkg",
+          "member": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "loaded_runtime": {
+            "name": "ViciOne.ServiceBus.Abstractions",
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+          },
+          "zip_DLL_sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a",
+          "zip_XML_sha256": "d1dc5ee4ccc8a81d9eed7871460710e17760ae22fc1378d72c2d1a7de4c407c9",
+          "cache_XML_equal": true,
+          "runtime_XML_present": false,
+          "owned_public_XML_members": [
+            {
+              "id": "P:ViciOne.ServiceBus.Configuration.BatchOptions.TimeLimit",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.Configuration.BatchOptions.TimeLimit\">\n            <summary>Gets or sets the maximum time to wait before delivering a partial batch.</summary>\n            <remarks>\n            The selected context TimeProvider must support the interval. For TimeProvider.System, truncated whole milliseconds\n            are at most 4294967294; this provider-dependent check occurs when a new batch is created, before timer creation and message admission.\n            </remarks>\n        </member>\n        "
+            },
+            {
+              "id": "P:ViciOne.ServiceBus.Configuration.BatchOptions.TimeLimitStart",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.Configuration.BatchOptions.TimeLimitStart\">\n            <summary>Gets or sets the message arrival from which <see cref=\"P:ViciOne.ServiceBus.Configuration.BatchOptions.TimeLimit\" /> is measured.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "T:ViciOne.ServiceBus.Configuration.EndpointQosConfigurationException",
+              "xml": "<member name=\"T:ViciOne.ServiceBus.Configuration.EndpointQosConfigurationException\">\n            <summary>Reports conflicting or invalid transport quality-of-service ownership for an endpoint.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.Configuration.EndpointQosConfigurationException.#ctor(System.String)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.Configuration.EndpointQosConfigurationException.#ctor(System.String)\">\n            <summary>Creates an exception with the endpoint quality-of-service validation message.</summary>\n            <param name=\"message\">The description of the invalid endpoint configuration.</param>\n        </member>\n        "
+            },
+            {
+              "id": "P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.StartTimeout",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.StartTimeout\">\n            <summary>\n            Gets or sets the maximum duration of bus startup. A <see langword=\"null\" /> value applies no timeout in addition to caller cancellation.\n            </summary>\n            <remarks>When specified, the duration is positive and its truncated whole milliseconds are at most 4294967294.</remarks>\n        </member>\n        "
+            },
+            {
+              "id": "P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.StopTimeout",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.StopTimeout\">\n            <summary>\n            Gets or sets the maximum duration of bus shutdown. A <see langword=\"null\" /> value applies no timeout in addition to caller cancellation.\n            </summary>\n            <remarks>When specified, the duration is positive and its truncated whole milliseconds are at most 4294967294.</remarks>\n        </member>\n        "
+            },
+            {
+              "id": "P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.ConsumerStopTimeout",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.Configuration.ViciOneServiceBusHostOptions.ConsumerStopTimeout\">\n            <summary>\n            Gets or sets how long consumers may finish active work before their <see cref=\"P:ViciOne.ServiceBus.Advanced.PipeContext.CancellationToken\" /> is canceled.\n            A <see langword=\"null\" /> value allows consumers to use the complete bus shutdown interval.\n            </summary>\n            <remarks>When specified, the duration is positive and its truncated whole milliseconds are at most 4294967294.</remarks>\n        </member>\n        "
+            },
+            {
+              "id": "T:ViciOne.ServiceBus.ConfigurationException",
+              "xml": "<member name=\"T:ViciOne.ServiceBus.ConfigurationException\">\n            <summary>Reports an invalid service-bus configuration and its validation failures.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.ConfigurationException.#ctor",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.ConfigurationException.#ctor\">\n            <summary>Creates a configuration exception without a custom message or validation results.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ValidationResult},System.String)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ValidationResult},System.String)\">\n            <summary>Creates a configuration exception containing a stable snapshot of the validation results.</summary>\n            <param name=\"results\">The validation results that explain the invalid configuration.</param>\n            <param name=\"message\">The description of the configuration failure.</param>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ValidationResult},System.String,System.Exception)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.ValidationResult},System.String,System.Exception)\">\n            <summary>Creates a configuration exception containing validation results and an underlying failure.</summary>\n            <param name=\"results\">The validation results that explain the invalid configuration.</param>\n            <param name=\"message\">The description of the configuration failure.</param>\n            <param name=\"innerException\">The exception that caused this configuration failure.</param>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.String)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.String)\">\n            <summary>Creates a configuration exception with the specified failure message.</summary>\n            <param name=\"message\">The description of the configuration failure.</param>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.String,System.Exception)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.ConfigurationException.#ctor(System.String,System.Exception)\">\n            <summary>Creates a configuration exception with an underlying failure.</summary>\n            <param name=\"message\">The description of the configuration failure.</param>\n            <param name=\"innerException\">The exception that caused this configuration failure.</param>\n        </member>\n        "
+            },
+            {
+              "id": "P:ViciOne.ServiceBus.ConfigurationException.Results",
+              "xml": "<member name=\"P:ViciOne.ServiceBus.ConfigurationException.Results\">\n            <summary>Gets the immutable snapshot of validation results associated with the failure.</summary>\n            <remarks>Membership is fixed at construction; entry instances retain their original ownership.</remarks>\n        </member>\n        "
+            },
+            {
+              "id": "T:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException",
+              "xml": "<member name=\"T:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException\">\n            <summary>Reports an attempt to register more than one pipe segment with the same key.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor\">\n            <summary>Creates a duplicate-key exception without a custom message.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor(System.String)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor(System.String)\">\n            <summary>Creates a duplicate-key exception with the specified failure message.</summary>\n            <param name=\"message\">The description of the duplicate pipe key.</param>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor(System.String,System.Exception)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.DuplicateKeyPipeConfigurationException.#ctor(System.String,System.Exception)\">\n            <summary>Creates a duplicate-key exception with an underlying failure.</summary>\n            <param name=\"message\">The description of the duplicate pipe key.</param>\n            <param name=\"innerException\">The exception raised while registering the keyed pipe segment.</param>\n        </member>\n        "
+            },
+            {
+              "id": "T:ViciOne.ServiceBus.PipeConfigurationException",
+              "xml": "<member name=\"T:ViciOne.ServiceBus.PipeConfigurationException\">\n            <summary>Provides the exception base for invalid middleware-pipe configuration.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.PipeConfigurationException.#ctor",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.PipeConfigurationException.#ctor\">\n            <summary>Creates a pipe-configuration exception without a custom message.</summary>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.PipeConfigurationException.#ctor(System.String)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.PipeConfigurationException.#ctor(System.String)\">\n            <summary>Creates a pipe-configuration exception with the specified failure message.</summary>\n            <param name=\"message\">The description of the invalid pipe configuration.</param>\n        </member>\n        "
+            },
+            {
+              "id": "M:ViciOne.ServiceBus.PipeConfigurationException.#ctor(System.String,System.Exception)",
+              "xml": "<member name=\"M:ViciOne.ServiceBus.PipeConfigurationException.#ctor(System.String,System.Exception)\">\n            <summary>Creates a pipe-configuration exception with an underlying failure.</summary>\n            <param name=\"message\">The description of the invalid pipe configuration.</param>\n            <param name=\"innerException\">The exception raised while configuring the pipe.</param>\n        </member>\n        "
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "all6209_M_original_hashes_restored": true,
+  "manifest_rows": 6209,
+  "src_subset": 4219,
+  "original_corrected_assertion_and_project_inputs_identical": [
+    {
+      "file": "BatchTimerAssertions.cs",
+      "sha256": "dc72e10b31f3ee1ecd5ae8b6a746d3185a3453fe876988588ca39899dfc98baa",
+      "original_corrected_equal": true
+    },
+    {
+      "file": "HostTimeoutAssertions.cs",
+      "sha256": "10ab3e81f227587b50486e9052021c85638502e3b9fb03b17ebb7046483c6358",
+      "original_corrected_equal": true
+    },
+    {
+      "file": "OwnedLifetime.cs",
+      "sha256": "cd94fc8c143a9ce057002fda15e29ac76c684f2845dc264ad0dfe3a031a0ae6b",
+      "original_corrected_equal": true
+    },
+    {
+      "file": "Program.cs",
+      "sha256": "dddba44e9f9e1376c612093ffe7f14ecc1b68875173b0fa49c30dd1e5a729df8",
+      "original_corrected_equal": true
+    },
+    {
+      "file": "ResultsAssertions.cs",
+      "sha256": "9a75db2b72535847674eaa3314c59041ff8b71c0900bbea7a9a021cb8fa2e1f1",
+      "original_corrected_equal": true
+    },
+    {
+      "file": "CorePackage05.PublicConsumer.csproj",
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+      "original_corrected_equal": true
+    }
+  ],
+  "freeze14_current_unchanged": true,
+  "runtime_XML_scope": "XML ZIP/cache members inspected; consumer output XML absent, therefore no runtime XML loading claim.",
+  "separate_evidence": "Packed actual O corrected42 uses 70c111.../52f7a320...; isolated M corrected/rollback42 uses 7a5b00.../938f413.... Mutants are direct compiled DLL substitution, never claimed fresh restore per mutant."
+}

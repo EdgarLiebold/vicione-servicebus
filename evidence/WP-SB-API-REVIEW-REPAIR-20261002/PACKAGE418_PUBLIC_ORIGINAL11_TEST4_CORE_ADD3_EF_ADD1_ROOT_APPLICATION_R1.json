@@ -1,0 +1,110 @@
+{
+  "utc": "2026-10-06T10:48:03.488595+00:00",
+  "status": "TESTONLY_ORIGINAL11_APPLIED_ACTUAL_COMPILER_NATIVE_PENDING",
+  "author_proposals": [
+    "package397-saga-configure-diagnostic-original2-testonly-proposed-r1",
+    "package410-harness-dispose-original2-testonly-proposed-r1",
+    "package417-basehost-start-diagnostics4-root-testonly-proposed-r1",
+    "package416-ef-outbox-admission3-testonly-proposed-r1"
+  ],
+  "independent_peers": [
+    {
+      "directory": "package397-saga-test2-independent-source-peer-r1",
+      "REPORT": "7a280d97f3208e42f92ab6a531a33224bb524fd90da8ae375b8694c2a4b8852d",
+      "MANIFEST": "0f3999b4fe941935e022285d7f460b8af0e6a4e268f3f7043b1c6e59b3494402"
+    },
+    {
+      "directory": "package410-bus-dispose2-independent-test-source-peer-r1",
+      "REPORT": "f565fab5503e48d49cd21420f41ba27c27c15b6f1682d8a15bd7c457e1b263e8",
+      "MANIFEST": "b84b6e1e4a4c40b28432500c07b2b86991b630a190ba406b6fa04261970cb4c3"
+    },
+    {
+      "directory": "package417-basehost4-independent-test-source-peer-r1",
+      "REPORT": "05cf386ec4145a048ea8451c5265943bbd898511773d23e44ad50ba73efc2715",
+      "MANIFEST": "47b142d7ed767e58f8a7d0677d1eef0dbfbc9f8228637ac10bd110f285b1ccf1"
+    },
+    {
+      "directory": "package416-ef-original3-independent-test-source-peer-r1",
+      "REPORT": "3ab100fa1751518a7bdb4e088078603a84675268931dd39679dac3d10ce89176",
+      "MANIFEST": "3400c7f48f1514f8e8fcbce5eccbff8dfc59d8e0efe83a6626bde6c1209ee180"
+    }
+  ],
+  "mandatory_peer_supplements": [
+    "package397-saga-test2-read-count-only-precision-r1",
+    "package410-bus-dispose2-helper-read-count-precision-r1",
+    "package416-ef-outbox-admission3-author-read-label-count-precision-r1"
+  ],
+  "root_whole_test_reads": [
+    "Saga287 prior3a1620 exact SHA",
+    "Bus266 2af979",
+    "Host175 9f33e0",
+    "EF244 19e1a9"
+  ],
+  "root_whole_peer_reads": [
+    "fab85d Saga+Bus helperprecision",
+    "df8a02 Bus",
+    "18f74a EF",
+    "4735e8 Host"
+  ],
+  "changes": [
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjectionSagaConfigurationDiagnosticTests.cs",
+      "before_sha256": null,
+      "after_sha256": "811b34b664e4b8409e2ae008f164f6b22c27618427a42a01f9d460f1218b6d2f",
+      "bytes": 14311
+    },
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Testing/BusObserverDisposalFailureBoundaryTests.cs",
+      "before_sha256": null,
+      "after_sha256": "a115f3359a4dc115fd26e1dcfc846e94ab367403702e84dccfc846db08a6fc42",
+      "bytes": 11751
+    },
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Transports/HostStartingDiagnosticTests.cs",
+      "before_sha256": null,
+      "after_sha256": "1684ea5b63a4d9219564bfc01d4bce543872a36ebc02acbf0aaf6556b91a15f4",
+      "bytes": 8488
+    },
+    {
+      "relative": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOutboxObserverAdmissionTests.cs",
+      "before_sha256": null,
+      "after_sha256": "663cddd4406c450786782ffa34800e031cfc55193726859bcf0017d76d5f8ea8",
+      "bytes": 11524
+    },
+    {
+      "relative": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "b68b94160dc96fc2bcf34bccfc8b896914cb3a566b318f57af016773ec6d0dec",
+      "after_sha256": "f7baccea0190603f6c9cdcbda4c25cf3b4e2c131cecee40f82966a27b09553ee",
+      "bytes": 1664343
+    },
+    {
+      "relative": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/EntityFrameworkRequirements.json",
+      "before_sha256": "8a9646e7d74a85527e1b3476feb868321c1a9fe2f2bd62c82591c751b31ea263",
+      "after_sha256": "78c39c3b14e5701391527eb1e13ed89f256130f63d29009126a88ded089b4bb4",
+      "bytes": 109423
+    }
+  ],
+  "counts": {
+    "CoreCases": 8,
+    "EFCases": 3,
+    "CoreRequirements": 4680,
+    "EFRequirements": 277
+  },
+  "literal_inverses": {
+    "Core4677_all_original_bytes_preserved": true,
+    "EF276_all_original_bytes_preserved": true,
+    "test_delete_new_files_only": true
+  },
+  "source_guard_count": 94,
+  "public_bounds": "No Product change. Actual public lifecycle/Saga/spec/EF observer ownership exact supplied controls; no DB/broker/global Native forecast. Source diagnostics policy/additional lifecycle findings assessed only after actual Original.",
+  "precision": {
+    "prior_root_report_reference": "package417 Root own read descriptive StartHostHandle63 and HostHandleApiTests292",
+    "measured_actual_counts": {
+      "StartHostHandle.cs": 53,
+      "HostHandleApiTests.cs": 294
+    },
+    "effect": "Only retrospective descriptive line-count correction53/294; exact sourceSHA/whole read/Test175/peer/contract/Native0 unchanged. No claimed whole missing source."
+  },
+  "native": 0,
+  "grade": null
+}

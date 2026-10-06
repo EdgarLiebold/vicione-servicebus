@@ -1,0 +1,44 @@
+{
+  "reader": "Root",
+  "FULL_before_native": true,
+  "bounded_new_owner": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/previous/ConsumerCases.cs",
+      "bytes": 6409,
+      "sha256": "44535b626939cd423515265d1b6046a0fda933f6055e53e1599eae7ac506d989"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/previous/NuGet.Config",
+      "bytes": 581,
+      "sha256": "d181fa362b64a8f92e113eb19e914828d8e3371ddf2532d3deaaded6705bb3c9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/previous/OwnedLifetime.cs",
+      "bytes": 796,
+      "sha256": "4294a2e6cea32f6eeed611558513cf9f209fc8374d8d8db993fe0e14e592f8ae"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/previous/Probe.cs",
+      "bytes": 5627,
+      "sha256": "83f94faafb0d8703bcd4dc6222819decfcbc4adc876b9c6b3d5d11360657a161"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/previous/Program.cs",
+      "bytes": 3256,
+      "sha256": "2d6976596466cdcb261e1c4ab186e040641bfe155efa1047939063d36d7075df"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/previous/ScopeFault.PublicConsumer.csproj",
+      "bytes": 879,
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package13-f033/previous/packages.lock.json",
+      "bytes": 8006,
+      "sha256": "4db37ce93421924eda50a0d828e85be064b22f0e777f6a672b75caa173293bad"
+    }
+  ],
+  "corrected_behavior_inputs": "exact identical source byte hashes; separate NuGet.Config feed only",
+  "canonical_core_owner766": "NOT_FULL_OR_EDITED",
+  "source_research_plan": "PACKAGE13_F033_PUBLIC_CONSUMER_PLAN.json"
+}

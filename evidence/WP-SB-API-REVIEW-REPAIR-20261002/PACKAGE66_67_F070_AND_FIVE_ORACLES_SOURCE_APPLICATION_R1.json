@@ -1,0 +1,106 @@
+{
+  "utc": "2026-10-04T13:39:36.883927+00:00",
+  "product2": [
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/RegistrationConfiguratorExtensions.cs",
+      "before_sha256": "cb3e4b87b4d31500a5945e04470650229b0fd8411e599db913abf770d9c335a6",
+      "after_sha256": "3f2af70be8279400a640616ea46ad1d97dc0766ad89e1fb4f0ab95b82e8e3a58",
+      "diff": "--- \n+++ \n@@ -53,7 +53,7 @@\n \n         if (ConsumerRegistrationMetadata.IsConsumerRegistrationExcluded(consumerType))\n             throw new ArgumentException($\"{TypeCache.GetShortName(consumerType)} is a saga, and cannot be registered as a consumer\", nameof(consumerType));\n-        if (!consumerType.IsClass || consumerType.IsAbstract || !ConsumerRegistrationMetadata.IsConsumer(consumerType))\n+        if (!consumerType.IsClass || consumerType.IsAbstract || consumerType.ContainsGenericParameters || !ConsumerRegistrationMetadata.IsConsumer(consumerType))\n             throw new ArgumentException($\"{TypeCache.GetShortName(consumerType)} is not a concrete consumer implementation\", nameof(consumerType));\n \n         var register = (IRegisterConsumer)(Activator.CreateInstance(typeof(RegisterConsumer<>).MakeGenericType(consumerType)) ?? throw new System.InvalidOperationException(\"The requested runtime type could not be activated.\"));\n"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionEndpointRegistrationExtensions.cs",
+      "before_sha256": "9b022ebc67803381f3e797db602e56651fea589c37330c62e255408cd14ca416",
+      "after_sha256": "b2dd9f1c1f74c064c3e60ceb1e39b4ba7a339e2c7114f37ef75e797a47b8b9a8",
+      "diff": "--- \n+++ \n@@ -71,7 +71,7 @@\n         ArgumentNullException.ThrowIfNull(registrar);\n         ArgumentNullException.ThrowIfNull(endpointDefinitionType);\n \n-        if (!endpointDefinitionType.IsClass || endpointDefinitionType.IsAbstract\n+        if (!endpointDefinitionType.IsClass || endpointDefinitionType.IsAbstract || endpointDefinitionType.ContainsGenericParameters\n             || !endpointDefinitionType.TryGetSingleClosedGenericArguments(typeof(IEndpointDefinition<>), out Type[] types))\n             throw new ArgumentException($\"{TypeCache.GetShortName(endpointDefinitionType)} is not an endpoint definition\", nameof(endpointDefinitionType));\n \n"
+    }
+  ],
+  "test4": [
+    {
+      "repo_relative_path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/CoreRegistrationOracleTests.cs",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package62-core-five-oracles-code-r1/proposed/tests/ViciOne.ServiceBus.Tests/DependencyInjection/CoreRegistrationOracleTests.cs",
+      "bytes": 9962,
+      "sha256": "60dfefdc722f2f3c19fe2fa11814489c5ece07bde61736e77df9548ad696189a",
+      "new_owner": true
+    },
+    {
+      "repo_relative_path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/PublicScopedFilterSelectionContractTests.cs",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package62-core-five-oracles-code-r1/proposed/tests/ViciOne.ServiceBus.Tests/DependencyInjection/PublicScopedFilterSelectionContractTests.cs",
+      "bytes": 14030,
+      "sha256": "2c5a0b73ac426bf44ce494acc9fbc899a503b62ce56c98d4d494924f5b1efcc2",
+      "new_owner": true
+    },
+    {
+      "repo_relative_path": "tests/ViciOne.ServiceBus.Tests/Middleware/TenantScopeIntegrationTests.cs",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package62-core-five-oracles-code-r1/proposed/tests/ViciOne.ServiceBus.Tests/Middleware/TenantScopeIntegrationTests.cs",
+      "bytes": 12919,
+      "sha256": "dc56a3f48efa2cba924844848d3470daaa521278e9d03d8049ac893862d4cb22",
+      "new_owner": false
+    },
+    {
+      "repo_relative_path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineMetricsTests.cs",
+      "proposal": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package62-core-five-oracles-code-r1/proposed/tests/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineMetricsTests.cs",
+      "bytes": 60944,
+      "sha256": "dc517604e676bf9c9261b836f0fc92f9bb4996f732c73cc4b3c39cb288323023",
+      "new_owner": false
+    }
+  ],
+  "requirements_before": "2365f793a5ff6147fcb49ab6c67c60ead43fe5d07623e4b7f9c2c9022f2f318f",
+  "requirements_after": "40879045cc98f478665cd171311aeb0d27ba7841d92c1dd743895e4ae8343d06",
+  "rows_before": 4572,
+  "rows_after": 4579,
+  "add": [
+    {
+      "requirementId": "REQ-VSB-DI-ENDPOINT-CALLBACK",
+      "variantKey": "global-owner-order-exact-inputs-and-fail-stop",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.CoreRegistrationOracleTests",
+      "testMethod": "EndpointCallbackAggregate_PreservesGlobalThenOwnerOrderAndFailureCutoff"
+    },
+    {
+      "requirementId": "REQ-VSB-DI-FACTORY-CONTRACT",
+      "variantKey": "bus-factory-exact-owner-inputs",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.CoreRegistrationOracleTests",
+      "testMethod": "BusFactoryResolution_ForwardsExactOwnerContextSpecificationsAndName"
+    },
+    {
+      "requirementId": "REQ-VSB-DI-FACTORY-CONTRACT",
+      "variantKey": "bus-factory-null-duplicate-before-descriptor-mutation",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.CoreRegistrationOracleTests",
+      "testMethod": "BusFactorySelection_RejectsInvalidOrRepeatedFactoriesBeforeDescriptorMutation"
+    },
+    {
+      "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+      "variantKey": "public-child-context-exact-meter-scope",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineMetricsTests",
+      "testMethod": "AutomaticChildLogContext_PreservesOnlyTheOwningProviderMeterBinding"
+    },
+    {
+      "requirementId": "REQ-VSB-CONTAINER-FILTER",
+      "variantKey": "public-selector-selected-excluded-five-pipelines",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.PublicScopedFilterSelectionContractTests",
+      "testMethod": "PublicScopedFilterSelection_AttachesOnlyTheSelectedPipelineContracts"
+    },
+    {
+      "requirementId": "REQ-VSB-CONTAINER-FILTER",
+      "variantKey": "selector-failure-before-observer-attachment-five-pipelines",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.DependencyInjection.PublicScopedFilterSelectionContractTests",
+      "testMethod": "PublicScopedFilterSelectionFailure_PreventsEveryObserverAttachment"
+    },
+    {
+      "requirementId": "REQ-VSB-TENANT-SCOPE",
+      "variantKey": "closed-send-filter-initializes-consume-dependent-scope",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Middleware.TenantScopeIntegrationTests",
+      "testMethod": "TenantFilter_InitializesTheScopeBeforeDependentComponentsAreResolvedAsync"
+    }
+  ],
+  "remove": [],
+  "independent_product_source_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package66-f070-runtime-type-guard-adversarial-r1/REPORT.json",
+  "independent_test_source_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package67-core-five-oracles-root-adversarial-r1/REPORT.json",
+  "native_credit": false
+}

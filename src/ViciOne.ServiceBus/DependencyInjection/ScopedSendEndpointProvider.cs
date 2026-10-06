@@ -12,7 +12,7 @@ public class ScopedSendEndpointProvider :
     readonly IServiceProvider _serviceProvider;
 
     /// <summary>Initializes a new instance.</summary>
-    /// <param name="provider">The service provider used to resolve dependencies.</param>
+    /// <param name="provider">The underlying send endpoint provider.</param>
     /// <param name="serviceProvider">The service provider.</param>
     public ScopedSendEndpointProvider(ISendEndpointProvider provider, IServiceProvider serviceProvider)
     {

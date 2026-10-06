@@ -183,6 +183,195 @@ public sealed class InMemoryOutboxSchedulingLifecycleTests
         Assert.Equal(control.TokenId, Assert.Single(provider.Active).Token);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-SCHEDULER", "discard-joins-started-cancellation-before-later-sync-failure-completes")]
+    public async Task Discard_WaitsForStartedCancellationWhenALaterProviderCallThrowsSynchronouslyAsync(bool laterSyncFailure)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        var provider = new RecordingProvider();
+        var realScheduler = new MessageScheduler(provider, DispatchProxy.Create<IBusTopology, PublishTopology>());
+        ConsumeContext<Command> consumed = InMemoryOutboxTestContextFactory.Create(new Command(), token, realScheduler);
+        var outbox = new InMemoryOutboxConsumeContext<Command>(consumed);
+        Assert.True(outbox.TryGetPayload(out MessageSchedulerContext? scheduler));
+        Assert.NotNull(scheduler);
+        ScheduledMessage<Command> first = await scheduler.ScheduleSendAsync(Destination, DueAt, new Command { Value = "first" }, token);
+        ScheduledMessage<Command> second = await scheduler.ScheduleSendAsync(ControlDestination, DueAt, new Command { Value = "second" }, token);
+        Assert.Equal(2, provider.Active.Count);
+        Assert.False(outbox.ClearToSend.IsCompleted);
+
+        var firstCancellation = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var ownedProviderTasks = new List<Task>();
+        var syncFailure = new IOException("unique-second-synchronous-outbox-cancellation-failure");
+        var logger = new OutboxCleanupDiagnosticLogger(null);
+        ViciOne.ServiceBus.Logging.ILogContext? previous = LogContext.Current;
+        Task? operation = null;
+        var calls = 0;
+        provider.CancelOverride = (_, _, _) =>
+        {
+            calls++;
+            if (calls == 1)
+            {
+                ownedProviderTasks.Add(firstCancellation.Task);
+                return firstCancellation.Task;
+            }
+            if (laterSyncFailure)
+                throw syncFailure;
+            ownedProviderTasks.Add(Task.CompletedTask);
+            return Task.CompletedTask;
+        };
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            operation = outbox.DiscardPendingActionsAsync(token);
+            Assert.Equal(2, calls);
+            Assert.Equal(new[] { (Destination, first.TokenId), (ControlDestination, second.TokenId) },
+                provider.Cancellations.Select(x => (x.Destination, x.Token)));
+            Assert.All(provider.Cancellations, cancellation => Assert.Equal(token, cancellation.CancellationToken));
+            Assert.False(firstCancellation.Task.IsCompleted);
+            Assert.False(operation.IsCompleted);
+
+            firstCancellation.SetResult();
+            await operation.WaitAsync(Timeout, token);
+            Assert.True(operation.IsCompletedSuccessfully);
+            Assert.All(ownedProviderTasks, task => Assert.True(task.IsCompletedSuccessfully));
+            if (laterSyncFailure)
+                Assert.Same(syncFailure, Assert.Single(logger.Failures));
+            else
+                Assert.Empty(logger.Failures);
+        }
+        finally
+        {
+            LogContext.ConfigureCurrentLogContext();
+            firstCancellation.TrySetResult();
+            try
+            {
+                await ObserveCleanupTaskAsync(Task.WhenAll(ownedProviderTasks));
+                if (operation is not null)
+                    await ObserveCleanupTaskAsync(operation);
+                provider.CancelOverride = null;
+                await outbox.DiscardPendingActionsAsync(CancellationToken.None);
+                await outbox.ExecutePendingActionsAsync(false, CancellationToken.None);
+                await outbox.ConsumeCompleted.WaitAsync(Timeout, CancellationToken.None);
+                Assert.Empty(provider.Active);
+                Assert.True(outbox.ClearToSend.IsCompletedSuccessfully);
+            }
+            finally
+            {
+                LogContext.Current = previous;
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-SCHEDULER", "scheduler-cleanup-warning-does-not-change-contained-failure-outcome")]
+    public async Task SchedulerCleanupWarning_DoesNotChangeTheContainedFailureOutcomeAsync(bool commit, bool loggerThrows)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        var provider = new RecordingProvider();
+        var realScheduler = new MessageScheduler(provider, DispatchProxy.Create<IBusTopology, PublishTopology>());
+        ConsumeContext<Command> consumed = InMemoryOutboxTestContextFactory.Create(new Command(), token, realScheduler);
+        var outbox = new InMemoryOutboxConsumeContext<Command>(consumed);
+        Assert.True(outbox.TryGetPayload(out MessageSchedulerContext? scheduler));
+        Assert.NotNull(scheduler);
+        ScheduledMessage<Command> scheduled = await scheduler.ScheduleSendAsync(Destination, DueAt, new Command { Value = "tracked" }, token);
+        var providerFailure = new IOException("unique-actual-outbox-scheduler-cancellation-failure");
+        var diagnosticFailure = new ApplicationException("unique-outbox-warning-diagnostic-failure");
+        var logger = new OutboxCleanupDiagnosticLogger(loggerThrows ? diagnosticFailure : null);
+        var ownedProviderTasks = new List<Task>();
+        var deliveries = 0;
+        ViciOne.ServiceBus.Logging.ILogContext? previous = LogContext.Current;
+        Task? operation = null;
+        provider.CancelOverride = (_, _, _) =>
+        {
+            Task failure = Task.FromException(providerFailure);
+            ownedProviderTasks.Add(failure);
+            return failure;
+        };
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            await outbox.AddAsync(() =>
+            {
+                deliveries++;
+                return Task.CompletedTask;
+            }, token);
+            if (commit)
+                await scheduler.CancelScheduledSendAsync(Destination, scheduled.TokenId, token);
+            Assert.Equal(0, deliveries);
+            Assert.Empty(provider.Cancellations);
+            Assert.False(outbox.ClearToSend.IsCompleted);
+
+            operation = commit
+                ? outbox.ExecutePendingActionsAsync(false, token)
+                : outbox.DiscardPendingActionsAsync(token);
+            Exception? observed = await Record.ExceptionAsync(() => operation.WaitAsync(Timeout, token));
+
+            Assert.Null(observed);
+            Assert.True(operation.IsCompletedSuccessfully);
+            Assert.Same(providerFailure, Assert.Single(logger.Failures));
+            CancellationObservation cancellation = Assert.Single(provider.Cancellations);
+            Assert.Equal(Destination, cancellation.Destination);
+            Assert.Equal(scheduled.TokenId, cancellation.Token);
+            Assert.Equal(token, cancellation.CancellationToken);
+            Assert.True(Assert.Single(ownedProviderTasks).IsFaulted);
+            Assert.Equal(commit ? 1 : 0, deliveries);
+            Assert.Equal(commit, outbox.ClearToSend.IsCompletedSuccessfully);
+        }
+        finally
+        {
+            LogContext.ConfigureCurrentLogContext();
+            try
+            {
+                await ObserveCleanupTaskAsync(Task.WhenAll(ownedProviderTasks));
+                if (operation is not null)
+                    await ObserveCleanupTaskAsync(operation);
+                provider.CancelOverride = null;
+                await outbox.DiscardPendingActionsAsync(CancellationToken.None);
+                await outbox.ExecutePendingActionsAsync(false, CancellationToken.None);
+                await outbox.ConsumeCompleted.WaitAsync(Timeout, CancellationToken.None);
+                Assert.Empty(provider.Active);
+                Assert.True(outbox.ClearToSend.IsCompletedSuccessfully);
+            }
+            finally
+            {
+                LogContext.Current = previous;
+            }
+        }
+    }
+
+    private static async Task ObserveCleanupTaskAsync(Task task)
+    {
+        try
+        {
+            await task.WaitAsync(Timeout, CancellationToken.None);
+        }
+        catch (Exception failure) when (failure is not TimeoutException && (task.IsFaulted || task.IsCanceled))
+        {
+            // The fixture observes terminal expected provider/diagnostic failures; a pending-task watchdog still fails.
+        }
+    }
+
+    private sealed class OutboxCleanupDiagnosticLogger(Exception? failure) : Microsoft.Extensions.Logging.ILogger
+    {
+        public System.Collections.Concurrent.ConcurrentQueue<Exception?> Failures { get; } = new();
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel) =>
+            logLevel == Microsoft.Extensions.Logging.LogLevel.Warning;
+        public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, Microsoft.Extensions.Logging.EventId eventId,
+            TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+        {
+            Failures.Enqueue(exception);
+            if (failure is not null)
+                throw failure;
+        }
+    }
+
     private static async Task<ScheduledMessage> ScheduleAsync(MessageSchedulerContext scheduler, int route, int form,
         Command message, object values, IPipe<SendContext<Command>> typed, IPipe<SendContext> untyped, CancellationToken token)
     {
@@ -245,6 +434,7 @@ public sealed class InMemoryOutboxSchedulingLifecycleTests
         public List<Observation> Accepted { get; } = [];
         public List<Observation> Active { get; } = [];
         public List<CancellationObservation> Cancellations { get; } = [];
+        public Func<Uri, Guid, CancellationToken, Task>? CancelOverride { get; set; }
 
         public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt,
             T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken) where T : class
@@ -267,6 +457,8 @@ public sealed class InMemoryOutboxSchedulingLifecycleTests
         {
             cancellationToken.ThrowIfCancellationRequested();
             Cancellations.Add(new CancellationObservation(destinationAddress, tokenId, cancellationToken));
+            if (CancelOverride is { } cancel)
+                return cancel(destinationAddress, tokenId, cancellationToken);
             Active.RemoveAll(x => x.Destination == destinationAddress && x.Token == tokenId);
             return Task.CompletedTask;
         }

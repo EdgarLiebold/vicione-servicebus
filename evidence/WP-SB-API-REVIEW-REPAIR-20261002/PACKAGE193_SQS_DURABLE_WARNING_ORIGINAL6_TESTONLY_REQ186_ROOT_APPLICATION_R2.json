@@ -1,0 +1,57 @@
+{
+  "utc": "2026-10-05T15:57:38.670038+00:00",
+  "status": "REVIEWED_IMPORT1_TEST_FIX_APPLIED_ORIGINAL_NATIVE_PENDING",
+  "test": {
+    "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/DurableResourceWarningOwnershipTests.cs",
+    "sha256": "0cc65c64fbc4967f15c9d67db0b68e7820ef3df4a7d25cd56bed6b11cbeeaab2",
+    "lines": 206,
+    "cases": 6
+  },
+  "requirements": {
+    "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+    "before_sha256": "d31916f03c00cbadb2a26c09c76fa40b28f54c9125393c1cb434fd55d22fdc1a",
+    "after_sha256": "5e2935b6ce5bb5b5908b19f55b85334fbc3e6b9c4390a90927a745c5a38e530a",
+    "before_rows": 184,
+    "after_rows": 186,
+    "unchanged_prefix184": true,
+    "additions": 2
+  },
+  "product_store_before": {
+    "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DurableResourceStore.cs",
+    "sha256": "66d327709126033ace4abaee0d56f4846b4346718403f87aea54d7563f158706",
+    "actual_190_qualified_PDB_checksum": "66d327709126033ace4abaee0d56f4846b4346718403f87aea54d7563f158706"
+  },
+  "proposal_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-sqs-durable-warning-original6-oracles-proposed-r2/MANIFEST.json",
+    "sha256": "3ae4c40a53acf16a7f925d56c100a18e881d1f9f870b3b59350b2ec08ffd2ac6"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-sqs-durable-warning6-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "2dbeb6849435837bd4cde42df0fad052b5749ad966ff06fa8e21790c212fbfb4"
+  },
+  "root_review": {
+    "whole205_test_and_ADD2": "41b2de",
+    "whole253_current_store": "11848b",
+    "whole_source_peer": "b2f5bf"
+  },
+  "product_code_changed": false,
+  "native_original_pending": true,
+  "finding_registration": null,
+  "global_Aplus": false,
+  "previous_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE193_SQS_DURABLE_WARNING_ORIGINAL6_TESTONLY_REQ186_ROOT_APPLICATION_R1.json",
+    "sha256": "5d17f6cbe4591ded2b8ade4de61153e3eaab9242077d78ff41522b5ecd06149d"
+  },
+  "independent_import_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-durable-warning-import-only-independent-runtime-source-peer-r2/REPORT.json",
+    "sha256": "492f7b6ffc81103373163a03b1e1032b712f40f47b8660127e5df45b43b066ad"
+  },
+  "historical_R1_failed_build_log_sha256": "236088c00136ad8a15a018d643fe8f1827b6ac426f2c80d3a3b80767175a9ba6",
+  "root_import_review": {
+    "whole_original205": "41b2de",
+    "whole_actual_ILogContext": "f9ba64",
+    "whole_R2_report_and_erratum": "b0e757",
+    "whole_independent_import_peer": "85b76f"
+  },
+  "correction_only": "using ViciOne.ServiceBus.Logging; preserves all205otherbytes and Req186. No Product finding."
+}

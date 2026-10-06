@@ -1,0 +1,24 @@
+{
+  "status": "ROOT_APPLIED_TEST1_REQADD3_COMPILER_ORIGINAL8_PENDING",
+  "before": {
+    "master": "36d004cea3623fcc9c213124308bad34d433dd9dc263a489f5c65e5d7f922f29",
+    "req_before": "d52821f54d300544ffd441617096b29d3159c366c35e6dcf2c15abff6fd426cb",
+    "test_absent": true,
+    "author_R2": "2b44eb007920397cbb1f7a45327144878b78624ed30654c7846d983b95c9faa6",
+    "different_peer": "3204eebb754e95d70cb518b067ecf91fd54f6cb969d56d8e68c803cf615a81fe",
+    "mandatory_erratum": "baf9068da1e455e46c8917bc8454ff580d46110f5d5bcf2e522a52d7525636d4"
+  },
+  "before_manifest_sha256": "778e30bca7daa814c2aacf472f515c943260e87a0cf2c41a9847f51b794a6906",
+  "test_after_sha256": "18f9af9b0ee3a11f3421416e47445c092a788791b2cec5a999aa2e1fc5d727d9",
+  "req_after_sha256": "0863335a64975bd14f44012fc1bcc14a604925f0a747bb511760308cea328012",
+  "old191_fullrows_preserved": true,
+  "new_count": 194,
+  "new_api_native_credit": 0,
+  "grade": null,
+  "root_personal_read": "R1 whole464 in12bc63/0d0c42/1aa1cc; R2 exact !47045b; full authorR2+mandatoryerratum637a0b; differentwholePeer6daba3",
+  "limits": [
+    "42author guards equal; product454 dependency differences already independently whole reviewed, no historical graph/current compile transfer.",
+    "Root copies exact reviewed bytes with191fullrows equal, does not use withdrawn patch success claim.",
+    "No sourceFinding disposition or native success prediction."
+  ]
+}

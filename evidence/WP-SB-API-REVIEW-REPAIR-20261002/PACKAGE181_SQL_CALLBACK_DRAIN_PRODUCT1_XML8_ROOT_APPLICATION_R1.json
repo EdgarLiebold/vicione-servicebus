@@ -1,0 +1,128 @@
+{
+  "utc": "2026-10-05T11:38:55.136119+00:00",
+  "actor": "/root",
+  "scope": "OneownedSettle drain/cause-preservation fix and fourXML-onlyowners8nodes; unchanged790Test/165Req",
+  "plan": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package208-sql-cancel-failure-owned-drain-product-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+      "before_sha256": "42330a4cb291d6002e020e771601d04d74b72b086bfe060c826134aae5cfe7cb",
+      "after_sha256": "30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d",
+      "kind": "OWNED_CALLBACK_FAILURE_DRAIN_AND_CAUSE_PRESERVATION_ONLY"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Exceptions/SqlEndpointAddressException.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package209-sql-diagnostic-param-noop-temporary-doc8-product-proposed-r2/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Exceptions/SqlEndpointAddressException.cs",
+      "before_sha256": "e9352bc7c2396847980e7ce655c68a79f42c668fb0db9a273230868e7c94fb34",
+      "after_sha256": "6c0ab121494eb7399ae537e76fe0627467f62b0f9def1d88f2f7e4806fa9bb17",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Exceptions/SqlTopologyException.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package209-sql-diagnostic-param-noop-temporary-doc8-product-proposed-r2/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Exceptions/SqlTopologyException.cs",
+      "before_sha256": "f952eadcb476d9911ccf358a06e6b46bf9bcce5ebfe6c48ca0d87e1cf2c7db02",
+      "after_sha256": "e3b7a5f730a23d8123b27a3570034a22cdddd10008c4c9b246371ff1669b9848",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 2
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/Topology/InvalidSqlConsumeTopologySpecification.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package209-sql-diagnostic-param-noop-temporary-doc8-product-proposed-r2/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/Topology/InvalidSqlConsumeTopologySpecification.cs",
+      "before_sha256": "d088b37567d0c789b4b405b8ffed034b4cf320453f7061b9f088ee6621ca5ebf",
+      "after_sha256": "9a374daba14986562353e0e4607ec7c8c486d2cf4819ddcc51d1987d902833cc",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 3
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlReceiveEndpointConfigurationExtensions.cs",
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package209-sql-diagnostic-param-noop-temporary-doc8-product-proposed-r2/proposed/src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlReceiveEndpointConfigurationExtensions.cs",
+      "before_sha256": "4e936a995df879935ef6600587d0bb91d956544a6a7ce7d4cfac13c01aa471ac",
+      "after_sha256": "67722f9ae49bbe5f4c4c619f488e0256c8f087586d7da64751621fb324253f47",
+      "kind": "XML_ONLY",
+      "XML_nodes_changed": 1
+    }
+  ],
+  "XML8_original_and_expected_nodes": [
+    {
+      "id": "M:ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddressException.#ctor(System.Uri,System.String)",
+      "node": "param:message",
+      "before_text": "The message to process.",
+      "after_text": "The description of the endpoint-address failure.",
+      "owner_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Exceptions/SqlEndpointAddressException.cs",
+      "before_source_sha256": "e9352bc7c2396847980e7ce655c68a79f42c668fb0db9a273230868e7c94fb34"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Providers.Transports.SqlEndpointAddressException.#ctor(System.Uri,System.String,System.Exception)",
+      "node": "param:message",
+      "before_text": "The message to process.",
+      "after_text": "The description of the endpoint-address failure.",
+      "owner_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Exceptions/SqlEndpointAddressException.cs",
+      "before_source_sha256": "e9352bc7c2396847980e7ce655c68a79f42c668fb0db9a273230868e7c94fb34"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Providers.Transports.SqlReceiveEndpointConfigurationExtensions.ReceiveEndpoint(ViciOne.ServiceBus.Providers.Transports.ISqlBusFactoryConfigurator,System.Action{ViciOne.ServiceBus.Providers.Transports.ISqlReceiveEndpointConfigurator})",
+      "node": "summary",
+      "before_text": "\n            Declare a ReceiveEndpoint using a unique generated queue name. This queue defaults to auto-delete\n            and non-durable. By default all services bus instances include a default receiveEndpoint that is\n            of this type (created automatically upon the first receiver binding).\n            ",
+      "after_text": "\n            Declares a receive endpoint using a temporary definition with a generated name and an optional\n            configuration callback.\n            ",
+      "owner_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/SqlReceiveEndpointConfigurationExtensions.cs",
+      "before_source_sha256": "4e936a995df879935ef6600587d0bb91d956544a6a7ce7d4cfac13c01aa471ac"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Providers.Transports.SqlTopologyException.#ctor(System.String)",
+      "node": "param:message",
+      "before_text": "The message to process.",
+      "after_text": "The description of the topology failure.",
+      "owner_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Exceptions/SqlTopologyException.cs",
+      "before_source_sha256": "f952eadcb476d9911ccf358a06e6b46bf9bcce5ebfe6c48ca0d87e1cf2c7db02"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.Providers.Transports.SqlTopologyException.#ctor(System.String,System.Exception)",
+      "node": "param:message",
+      "before_text": "The message to process.",
+      "after_text": "The description of the topology failure.",
+      "owner_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Exceptions/SqlTopologyException.cs",
+      "before_source_sha256": "f952eadcb476d9911ccf358a06e6b46bf9bcce5ebfe6c48ca0d87e1cf2c7db02"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.Configuration.InvalidSqlConsumeTopologySpecification.#ctor(System.String,System.String)",
+      "node": "param:message",
+      "before_text": "The message to process.",
+      "after_text": "The validation failure message.",
+      "owner_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/Topology/InvalidSqlConsumeTopologySpecification.cs",
+      "before_source_sha256": "d088b37567d0c789b4b405b8ffed034b4cf320453f7061b9f088ee6621ca5ebf"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.Configuration.InvalidSqlConsumeTopologySpecification.Apply(ViciOne.ServiceBus.SqlTransport.Topology.IReceiveEndpointBrokerTopologyBuilder)",
+      "node": "summary",
+      "before_text": "Applies this specification to the target builder.",
+      "after_text": "Performs no topology changes; validation reports the stored failure separately.",
+      "owner_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/Topology/InvalidSqlConsumeTopologySpecification.cs",
+      "before_source_sha256": "d088b37567d0c789b4b405b8ffed034b4cf320453f7061b9f088ee6621ca5ebf"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.SqlTransport.Configuration.InvalidSqlConsumeTopologySpecification.Apply(ViciOne.ServiceBus.SqlTransport.Topology.IReceiveEndpointBrokerTopologyBuilder)",
+      "node": "param:builder",
+      "before_text": "The builder that receives the configuration.",
+      "after_text": "The topology builder; this specification leaves it unchanged.",
+      "owner_relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/Configuration/Topology/InvalidSqlConsumeTopologySpecification.cs",
+      "before_source_sha256": "d088b37567d0c789b4b405b8ffed034b4cf320453f7061b9f088ee6621ca5ebf"
+    }
+  ],
+  "source_preflight": {
+    "all_four_author_peer_MAN_counts": {
+      "package208-sql-cancel-failure-owned-drain-product-proposed-r1": 4,
+      "package208-sql-cancel-failure-owned-drain-independent-scanner-r1": 1,
+      "package209-sql-diagnostic-param-noop-temporary-doc8-product-proposed-r2": 8,
+      "package209-sql-diagnostic-param-noop-temporary-doc8-independent-scanner-r2": 1
+    },
+    "Root_personal": "WholeSettleonlypatch33b7d9 and independentpeer958946; wholeactualfourDocowners121771798 +fourproposed120ea6cd1 +singlebuildernodec6edf1 +independentpeer537428. WholeactualbaseException/URI/TemporaryDefinition0807ee403cc0289c2c; all8specificnorms and OriginalpublishedXMLfc734e, extraunusedbuilderpurpose Rootidentified.",
+    "nonSettle_product_bytes_equal": true,
+    "fourXMLowners_nonXML_and_literal_inverse_equal": true,
+    "actualcurrent180_original_XML8_matched": true
+  },
+  "before_frames": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package181-root-before-r1/frames",
+  "tests_requirements_unchanged": true,
+  "native_or_XML_after_pending": true,
+  "whole_API_closed": false
+}

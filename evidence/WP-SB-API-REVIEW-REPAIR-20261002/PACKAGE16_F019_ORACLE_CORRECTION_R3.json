@@ -1,0 +1,6 @@
+{
+  "status": "WRONG_SINGLELOGGER_CATEGORY_EXPECTATION_EXCLUDED",
+  "initial_run": "31 PASS/1 wrong explicitILogger assertion; not product red or mutant",
+  "log_sha256": "aa3e79f956ff4745791210b9ee60ec446db386492793022e86dfc559552e6bac",
+  "fix": "SingleLoggerFactory correctly routes every category to exact caller ILogger; assert Public.Caller category for only explicitILogger mode before/after root disposal. Other category controls unchanged; both copies equal, Root FULL delta."
+}

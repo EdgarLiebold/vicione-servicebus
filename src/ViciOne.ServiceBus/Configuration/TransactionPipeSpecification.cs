@@ -38,13 +38,13 @@ public class TransactionPipeSpecification<T> :
             yield return this.Failure("Timeout", "Must be > 0");
     }
 
-    /// <summary>Gets or sets the timeout.</summary>
+    /// <summary>Sets the transaction timeout.</summary>
     public TimeSpan Timeout
     {
         set => _timeout = value;
     }
 
-    /// <summary>Gets or sets the isolation level.</summary>
+    /// <summary>Sets the transaction isolation level.</summary>
     public IsolationLevel IsolationLevel
     {
         set => _isolationLevel = value;

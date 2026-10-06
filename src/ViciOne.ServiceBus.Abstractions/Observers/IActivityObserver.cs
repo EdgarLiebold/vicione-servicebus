@@ -6,19 +6,16 @@ namespace ViciOne.ServiceBus.Advanced.Observers;
 /// <summary>Receives notifications about activity events.</summary>
 public interface IActivityObserver
 {
-    /// <summary>Called before a message is dispatched to any consumers.</summary>
+    /// <summary>Called before the execution activity is invoked.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
-    /// <param name="context">The consume context.</param>
+    /// <param name="context">The execution activity context.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task PreExecuteAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
         where TActivity : class
         where TArguments : class;
 
-    /// <summary>
-    /// Called after the message has been dispatched to all consumers - note that in the case of an exception
-    /// this method is not called, and the DispatchFaulted method is called instead.
-    /// </summary>
+    /// <summary>Called after execution and its continuation complete successfully. Failures are reported to ExecuteFaultAsync.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
@@ -27,7 +24,7 @@ public interface IActivityObserver
         where TActivity : class
         where TArguments : class;
 
-    /// <summary>Called after the message has been dispatched to all consumers when one or more exceptions have occurred.</summary>
+    /// <summary>Called when the observed execution pipeline fails.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TArguments">The arguments type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
@@ -37,19 +34,16 @@ public interface IActivityObserver
         where TActivity : class
         where TArguments : class;
 
-    /// <summary>Called before a message is dispatched to any consumers.</summary>
+    /// <summary>Called before the compensation activity is invoked.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
-    /// <param name="context">The consume context.</param>
+    /// <param name="context">The compensation activity context.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task PreCompensateAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
         where TActivity : class
         where TLog : class;
 
-    /// <summary>
-    /// Called after the message has been dispatched to all consumers - note that in the case of an exception
-    /// this method is not called, and the DispatchFaulted method is called instead.
-    /// </summary>
+    /// <summary>Called after compensation and its continuation complete successfully. Failures are reported to CompensateFailAsync.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
@@ -58,7 +52,7 @@ public interface IActivityObserver
         where TActivity : class
         where TLog : class;
 
-    /// <summary>Called after the message has been dispatched to all consumers when one or more exceptions have occurred.</summary>
+    /// <summary>Called when the observed compensation pipeline fails.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <typeparam name="TLog">The log type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>

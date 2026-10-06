@@ -1,0 +1,13 @@
+--- baseline/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusHostConfigurator.cs
++++ freeze/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusHostConfigurator.cs
+@@ -126,7 +126,9 @@
+         set => _settings.TransportType = value;
+     }
+ 
+-    /// <summary>Sets the minimum delay used by the exponential retry policy.</summary>
++    /// <summary>Sets the base delay of the exponential retry policy used for library-created Azure SDK clients.</summary>
++    /// <exception cref="ArgumentOutOfRangeException">The delay is less than one millisecond or greater than five minutes.</exception>
++    /// <remarks>The SDK applies backoff, jitter and <see cref="RetryMaxBackoff"/>; server-directed retry delays may differ. Caller-owned clients retain their own retry options.</remarks>
+     public TimeSpan RetryMinBackoff
+     {
+         set => _settings.RetryMinBackoff = value;

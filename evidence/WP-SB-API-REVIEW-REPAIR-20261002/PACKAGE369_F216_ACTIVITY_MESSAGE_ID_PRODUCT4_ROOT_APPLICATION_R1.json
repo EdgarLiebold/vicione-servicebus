@@ -1,0 +1,160 @@
+{
+  "utc": "2026-10-06T07:09:24.542945+00:00",
+  "status": "ROOT_APPLIED_F216_INDEPENDENT_REVIEWED_PRODUCT4_FIXED_NATIVE_MODULE_STRICT_PUBLICATION_PENDING",
+  "finding": "F-SB-API-216",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package365-activity-messageid-product4-proposed-r1/MANIFEST.json",
+    "sha256": "68efff22cc636c30eacca95de01da2401adaf09a3cafad8f49ffed2e3859b78c"
+  },
+  "independent_product_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package365-activity-product4-independent-runtime-source-peer-r1/MANIFEST.json",
+    "sha256": "0f177d974b9a41018fe909e5a1a1f334c475daba38d17783fbf8e1e5dcea9eaf"
+  },
+  "independent_original_native": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package364-activity-original4-independent-qualification-r1/MANIFEST.json",
+    "sha256": "1e729a28b881256ac0997edcf57e5b3c9d9f696553b00b2cd868dedae54d74d5"
+  },
+  "Root_proposed4_309_and_exactpatch_whole": "2e16d1",
+  "Root_independent_report_whole": "1ae2b6",
+  "Root_exact4norm_precision_semantic_fields_recovery": "029d96 excludes redundant provenance truncation92004f",
+  "source_changes": [
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/Redelivery/ExecuteContextRedeliveryPipeSpecification.cs",
+      "before_sha256": "8abaec66e3bef836b1f703a5819f936e8f958cd53ad19cf048eb52ec6250bfb3",
+      "after_sha256": "0679d29ad5d6756f8b3b8b66c41e3ea4a4d935477ff2d2b84ea5c9d90bce2785",
+      "before_lines": 66,
+      "after_lines": 66,
+      "literal_replacements": [
+        {
+          "before": "new ActivityRedeliveryRetryFilter<ExecuteContext<TArguments>>(policy, _observers)",
+          "after": "new ActivityRedeliveryRetryFilter<ExecuteContext<TArguments>>(policy, _observers, ReplaceMessageId)"
+        }
+      ],
+      "inverse_exact": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/Redelivery/CompensateContextRedeliveryPipeSpecification.cs",
+      "before_sha256": "a94234e226ce0641a1bcfd45feb4aeab5139b8cbfca9b1856ecdb83d24a1c487",
+      "after_sha256": "95e61a542d7a79a28eb740cbbe0b1188f04e7cb9bdd2db973adf1229ad2c5482",
+      "before_lines": 65,
+      "after_lines": 65,
+      "literal_replacements": [
+        {
+          "before": "new ActivityRedeliveryRetryFilter<CompensateContext<TLog>>(policy, _observers)",
+          "after": "new ActivityRedeliveryRetryFilter<CompensateContext<TLog>>(policy, _observers, ReplaceMessageId)"
+        }
+      ],
+      "inverse_exact": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Middleware/ActivityRedeliveryRetryFilter.cs",
+      "before_sha256": "13a9e4b8474c1b3954a616d075bc2725b37d5c4400054bb0c51db9a9504000fe",
+      "after_sha256": "57d6fd4004a949a00dd6c115a4d31c72999fb345210849837ed3429f29b95507",
+      "before_lines": 48,
+      "after_lines": 58,
+      "literal_replacements": [
+        {
+          "before": "    readonly IRetryPolicy _retryPolicy;",
+          "after": "    readonly IRetryPolicy _retryPolicy;\n    readonly bool _replaceMessageId;"
+        },
+        {
+          "before": "    public ActivityRedeliveryRetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)",
+          "after": "    /// <param name=\"replaceMessageId\">Whether to replace an outgoing identifier that the provider has left unchanged.</param>\n    public ActivityRedeliveryRetryFilter(IRetryPolicy retryPolicy, RetryObservable observers, bool replaceMessageId = false)"
+        },
+        {
+          "before": "        _observers = observers ?? throw new ArgumentNullException(nameof(observers));",
+          "after": "        _observers = observers ?? throw new ArgumentNullException(nameof(observers));\n        _replaceMessageId = replaceMessageId;"
+        },
+        {
+          "before": "                    TypeCache<ActivityRedeliveryRetryFilter<TContext>>.ShortName, token), cancellationToken));",
+          "after": "                    TypeCache<ActivityRedeliveryRetryFilter<TContext>>.ShortName, token), cancellationToken,\n                callback: _replaceMessageId ? ReplaceUnchangedMessageId : null));"
+        },
+        {
+          "before": "    }\n}\n",
+          "after": "    }\n\n    static void ReplaceUnchangedMessageId(ConsumeContext consumeContext, SendContext sendContext)\n    {\n        if (sendContext.MessageId == consumeContext.MessageId)\n            sendContext.ReplaceMessageId(consumeContext);\n    }\n}\n"
+        }
+      ],
+      "inverse_exact": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/RetryPolicies/RedeliveryRetryExecution.cs",
+      "before_sha256": "25f540d360fe3a0e0af7a5bf00e50e0b80b7627ccdcd723ec70522ff09a0c9ef",
+      "after_sha256": "e4136637296460dbb2d0a5c8cad3cee38bd3d29c9ba49472837f2a3b364a7dd6",
+      "before_lines": 118,
+      "after_lines": 120,
+      "literal_replacements": [
+        {
+          "before": "    /// <returns>A task that preserves scheduling or acknowledgment failure without scheduling again.</returns>",
+          "after": "    /// <param name=\"callback\">Optional outgoing-context customization applied by the redelivery provider.</param>\n    /// <returns>A task that preserves scheduling or acknowledgment failure without scheduling again.</returns>"
+        },
+        {
+          "before": "        Exception exception, Func<CancellationToken, Task> notifyConsumed, CancellationToken cancellationToken)",
+          "after": "        Exception exception, Func<CancellationToken, Task> notifyConsumed, CancellationToken cancellationToken,\n        Action<ConsumeContext, SendContext>? callback = null)"
+        },
+        {
+          "before": "            await redeliveryContext.ScheduleRedeliveryAsync(retryContext.Delay ?? TimeSpan.Zero,\n                cancellationToken: cancellationToken).ConfigureAwait(false);",
+          "after": "            await redeliveryContext.ScheduleRedeliveryAsync(retryContext.Delay ?? TimeSpan.Zero, callback,\n                cancellationToken: cancellationToken).ConfigureAwait(false);"
+        }
+      ],
+      "inverse_exact": true
+    }
+  ],
+  "Req4668_to4669_rebase": "Exact already-reviewed ConsumerADD1. No ActivityTest change.",
+  "current_requirement_sha256": "796ec0273897fca12920ab17eeea4ad750724d60033373bf9598ed866159cce5",
+  "current_Req_rows": 4669,
+  "activity_test_sha256": "3ab164dfcacf340b0b20386cec0c0ad24d00c91d166977047fef055cfce62ec4",
+  "original_producer_Req_rows": 4668,
+  "affected_current_master10_rebase_pending": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.CompensateContextRedeliveryPipeSpecification`1.#ctor"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "T:ViciOne.ServiceBus.Configuration.CompensateContextRedeliveryPipeSpecification`1"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.ExecuteContextRedeliveryPipeSpecification`1.#ctor"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "T:ViciOne.ServiceBus.Configuration.ExecuteContextRedeliveryPipeSpecification`1"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.CompensateContextRedeliveryPipeSpecification`1.Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder{ViciOne.ServiceBus.Advanced.CompensateContext{`0}})"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.CompensateContextRedeliveryPipeSpecification`1.SetRetryPolicy(ViciOne.ServiceBus.Configuration.RetryPolicyFactory)"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.CompensateContextRedeliveryPipeSpecification`1.Validate"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.ExecuteContextRedeliveryPipeSpecification`1.Apply(ViciOne.ServiceBus.Configuration.IPipeBuilder{ViciOne.ServiceBus.Advanced.ExecuteContext{`0}})"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.ExecuteContextRedeliveryPipeSpecification`1.SetRetryPolicy(ViciOne.ServiceBus.Configuration.RetryPolicyFactory)"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.Configuration.ExecuteContextRedeliveryPipeSpecification`1.Validate"
+    }
+  ],
+  "semantic_master4_proposal": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package365-activity-product4-independent-runtime-source-peer-r1/EXACT4_PROPOSED_MASTER_NORM_PRECISIONS.json",
+    "sha256": "54120b0eb8a25eccff75c43ea9dd5d5a721fd710dceffc7210858649700a0571"
+  },
+  "master_bytes_unchanged_until_fresh_qualified_rebase": "a73ebb4fde240dd744806cea0c0cbe0831211d6483c3017eba997a8e4413be36",
+  "internal_XML_identity_change": "Filter bool ctor and helper callback signature/parameter docs change; public spec XML remains source-identical. Fresh compiled proof pending, no wholeXML equality claim.",
+  "native_fixed_count": 0,
+  "whole_API_closed": false,
+  "scheduled_and_custom_provider_scope": "True unchanged-ID callback only; false/ordinary preserve existing defaults. Current genuine native onlydelayed4, no scheduled empirical credit.",
+  "known": 216,
+  "bounded": 215
+}

@@ -1,0 +1,64 @@
+{
+  "utc": "2026-10-06T03:08:36.269815+00:00",
+  "status": "SOURCE_APPLIED_INDEPENDENT_PEER_NO_BLOCK_ACTUAL_COMPILED_PUBLICATION_PENDING",
+  "finding": "F-SB-API-147",
+  "owners": [
+    {
+      "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "before_sha256": "85e81973ebe87f14af4e4c84e960088489bbbd5a2488f6fab5cd9435cb1cf127",
+      "proposed_sha256": "aedf858fa6a40d59ba1e33ccfdefac6f48dd61198684a69d0df4e8127ae9ce6d",
+      "physical_lines": 53,
+      "literal_inverse_equals_before": true,
+      "all_non_XML_doc_lines_byte_equal": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopedSendPipeAdapter.cs",
+      "before_sha256": "d3e6a40602c2bd54eb1cdcec28ced25382df10f530791684adcaedb825518266",
+      "proposed_sha256": "0acea6997d7fb550d3551d58a920e63b63901fd559a45c6b7b21f23a878b8c19",
+      "physical_lines": 38,
+      "literal_inverse_equals_before": true,
+      "all_non_XML_doc_lines_byte_equal": true
+    }
+  ],
+  "replacements": [
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})",
+      "original_csv_zero_based_index": 7791,
+      "source_relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+      "node": "summary",
+      "before_text": "Sends a message to the configured destination.",
+      "proposed_text": "Acquires a consumer scope, awaits the next consumer stage, and releases the acquired scope.",
+      "actual_before_member_XML": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.ConsumerConsumeContext{`0,``0}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <typeparam name=\"TMessage\">The message contract processed by the member.</typeparam>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedSendPipeAdapter`1.Send(ViciOne.ServiceBus.Advanced.SendContext{`0})",
+      "original_csv_zero_based_index": 7813,
+      "source_relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopedSendPipeAdapter.cs",
+      "node": "summary",
+      "before_text": "Sends a message to the configured destination.",
+      "proposed_text": "Performs no additional work for this adapter's typed send context.",
+      "actual_before_member_XML": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedSendPipeAdapter`1.Send(ViciOne.ServiceBus.Advanced.SendContext{`0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n        </member>\n        "
+    },
+    {
+      "assembly": "ViciOne.ServiceBus",
+      "id": "M:ViciOne.ServiceBus.DependencyInjection.ScopedSendPipeAdapter`1.Send``1(ViciOne.ServiceBus.Advanced.SendContext{``0})",
+      "original_csv_zero_based_index": 7814,
+      "source_relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopedSendPipeAdapter.cs",
+      "node": "summary",
+      "before_text": "Sends a message to the configured destination.",
+      "proposed_text": "Supplies this adapter's service provider to the context's payload get-or-add operation.",
+      "actual_before_member_XML": "<member name=\"M:ViciOne.ServiceBus.DependencyInjection.ScopedSendPipeAdapter`1.Send``1(ViciOne.ServiceBus.Advanced.SendContext{``0})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n            <param name=\"context\">The context associated with the operation.</param>\n        </member>\n        "
+    }
+  ],
+  "author_manifest_sha256": "f7eab9e3cf9a3246ddc461f8e0c500144e91a083d0151d6631216fe841c9c3a7",
+  "peer_manifest_sha256": "ea92c131c7e3c2667526f69bfa123cd594420e3fb4a33f77600edcda33724464",
+  "peer_report_sha256": "d9b6e3d6100e7c8f8ed87d38d1936505be45cc3a1b9f1ad019f637ccaa0443e2",
+  "root_source_authority": "Whole before/proposed2 91 and patch36d889 retained; whole reports565ec9/3ef24b and current exact inverses checked. Executable nonDoc bytes unchanged.",
+  "Native_added": 0,
+  "new_findings_added": 0,
+  "Original_accepted_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

@@ -12,6 +12,39 @@ namespace ViciOne.ServiceBus.Tests.Futures;
 public sealed class FutureRegistrationBoundaryTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-FUTURE-REGISTRATION", "built-in-companion-futures-activate-through-normal-public-composition")]
+    public async Task BuiltInCompanionFutures_ActivateThroughNormalPublicCompositionAsync()
+    {
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.SetInMemorySagaRepositoryProvider();
+            configuration.AddFutureRequestConsumer<
+                RequestConsumerFuture<BuiltinCommandA, BuiltinResultA>, BuiltinConsumerA,
+                BuiltinCommandA, BuiltinResultA>();
+            configuration.AddFutureRequestConsumer<
+                RequestConsumerFuture<BuiltinCommandB, BuiltinResultB>, BuiltinConsumerB,
+                BuiltinCommandB, BuiltinResultB>();
+            configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
+        });
+        await using ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);
+
+        // Actual bus construction configures companion endpoints and activates the
+        // registered machines. No invented untyped definition alias is supplied.
+        IBus bus = provider.GetRequiredService<IBus>();
+        var first = provider.GetRequiredService<RequestConsumerFuture<BuiltinCommandA, BuiltinResultA>>();
+        var second = provider.GetRequiredService<RequestConsumerFuture<BuiltinCommandB, BuiltinResultB>>();
+
+        Assert.NotNull(bus.Address);
+        Assert.NotNull(first.CommandReceived);
+        Assert.NotNull(second.CommandReceived);
+        Assert.NotSame(first, second);
+        Assert.Same(first, provider.GetRequiredService<RequestConsumerFuture<BuiltinCommandA, BuiltinResultA>>());
+        Assert.Same(second, provider.GetRequiredService<RequestConsumerFuture<BuiltinCommandB, BuiltinResultB>>());
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-FUTURE-REGISTRATION", "typed-and-runtime-registration-preserve-definition")]
     public void TypedAndRuntimeRegistration_PreserveDefaultAndExplicitDefinitions()
     {
@@ -96,8 +129,12 @@ public sealed class FutureRegistrationBoundaryTests
         Assert.NotNull(registration);
         Assert.Single(services, descriptor => descriptor.ServiceType == typeof(RequestFuture));
         Assert.Single(services, descriptor => descriptor.ServiceType == typeof(RequestConsumer));
-        Assert.Contains(services, descriptor => descriptor.ImplementationType is { IsGenericType: true } type
-            && type.GetGenericTypeDefinition() == typeof(RequestConsumerFutureDefinition<,,,>));
+        using ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);
+        var definition = provider.GetRequiredService<
+            RequestConsumerFutureDefinition<RequestFuture, RequestConsumer, RequestMessage, ResponseMessage>>();
+        Assert.IsType<RequestConsumerFutureDefinition<RequestFuture, RequestConsumer, RequestMessage, ResponseMessage>>(definition);
+        Assert.Same(definition, provider.GetRequiredService<IFutureDefinition<RequestFuture>>());
+        Assert.NotNull(definition.EndpointDefinition);
     }
 
     [Fact]
@@ -320,6 +357,19 @@ public sealed class FutureRegistrationBoundaryTests
     private sealed class RequestConsumer : IConsumer<RequestMessage>
     {
         public Task ConsumeAsync(ConsumeContext<RequestMessage> context) => Task.CompletedTask;
+    }
+
+    public sealed record BuiltinCommandA(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record BuiltinCommandB(Guid CorrelationId) : ICorrelatedBy<Guid>;
+    public sealed record BuiltinResultA(string Value);
+    public sealed record BuiltinResultB(string Value);
+    public sealed class BuiltinConsumerA : IConsumer<BuiltinCommandA>
+    {
+        public Task ConsumeAsync(ConsumeContext<BuiltinCommandA> context) => Task.CompletedTask;
+    }
+    public sealed class BuiltinConsumerB : IConsumer<BuiltinCommandB>
+    {
+        public Task ConsumeAsync(ConsumeContext<BuiltinCommandB> context) => Task.CompletedTask;
     }
 
     private sealed class RepositoryMarker;

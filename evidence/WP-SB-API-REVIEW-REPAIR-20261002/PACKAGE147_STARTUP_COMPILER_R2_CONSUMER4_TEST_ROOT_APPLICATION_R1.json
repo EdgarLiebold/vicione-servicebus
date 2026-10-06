@@ -1,0 +1,70 @@
+{
+  "utc": "2026-10-04T21:10:47.209017+00:00",
+  "decision": "APPLY_INDEPENDENTLY_APPROVED_TWO_TYPE_TEST_COMPILER_CORRECTION_AND_CONSUMER_STOP4_ORIGINAL_CAUSAL_ORACLES",
+  "author_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package146-startup10-host-compiler-correction-r2/REPORT.json",
+      "sha256": "adff09000e0f399e55146aea55e83ad7d1c0ade6b4cec56ab6361413cbdd789f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package145-consumer-stop-diagnostic4-oracles-proposed-r1/REPORT.json",
+      "sha256": "663c3e0a9a0c5805f8c2d29d70af17ec74e21bfa6df5301a600a6fcec30e6256"
+    }
+  ],
+  "peer_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package146-startup10-host-compiler-independent-runtime-r2/REPORT.json",
+      "sha256": "5159f607cb21cff890e6785b73aa3568f8139ae115c0d5c016baaf3e13e50f2b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package147-consumer-stop4-independent-runtime-source-r2/REPORT.json",
+      "sha256": "d774829f15676a214251a62e1e5146c2d5dab89a91d4b56e52691835f44ed2c4"
+    }
+  ],
+  "manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package146-startup10-host-compiler-correction-r2/MANIFEST.json",
+      "sha256": "8135ea481314bfff4d5f22b7048c279b5ca5c78372011dd209258f8ca6f467eb"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package146-startup10-host-compiler-independent-runtime-r2/MANIFEST.json",
+      "sha256": "86fa3f240930a105d620684764e3d8ba7c03ba5041a120f27e671d7d0f3a5f5d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package145-consumer-stop-diagnostic4-oracles-proposed-r1/MANIFEST.json",
+      "sha256": "b956826c9ea744a9caf450ed8d5ab46c757ee7df978a482a8b12cfed9acdf604"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package147-consumer-stop4-independent-runtime-source-r2/MANIFEST.json",
+      "sha256": "661c94c71d52ebad5dc73e25957dbfef0924d525e679850cc4121ccc0333c443"
+    }
+  ],
+  "changes": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs",
+      "before_sha256": "9f023f37020808ba51cd0692fdb7d6408725f4e4df5749fc9d0814b358919c61",
+      "after_sha256": "303c63521ca7bca3c2d1a979189f97b55b174af119cb5e2037adba0e3c95ff0b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+      "before_sha256": "e9ba04dcc129ceb3266d20a5a97ad1d996fa1ec13cde44ae0d20af32365440fb",
+      "after_sha256": "aac760c52eee27b218da3f60b9006f1b484fa72ff4173367690f2c57d32c85fe"
+    }
+  ],
+  "requirements_before_sha256": "733909112e6cfce88217f95c3b9c14d0bd7f027d6239bc838e6869857c8b161f",
+  "requirements_after": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "sha256": "b0c8a917b713f6789de136bb40862cc62c1a2edb86d0285c1393fd2e7a334c6b"
+  },
+  "requirements_rows_before": 4596,
+  "requirements_rows_after": 4597,
+  "requirement_merge": "OriginalQ4594 prefix verified byte-semantic against Root4596; retain existing2startup rows and append exact1consumer new row. No stale4595 full overwrite.",
+  "prior_original_validator_freeze_ACK": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package146-original-validator46-independent-r1/FREEZE.json",
+    "sha256": "22c6b6282bb316f860c0e149b44d266ee8690806ec54f2f6057724f462ffcfc5"
+  },
+  "root_personal_review": "Compiler author/peer wholecae209 andexact2delta07972c; actualIHost/BaseHost/Stop837dad/880cc5/4fffe0; Consumer new4whole70a005 andcurrentSource shutdown185..end144bb1; entireauthor+peer54de6c and beforeResearch144bb1. Independentpeer wholeactualowner931L/source379/F065fixtures provides separate source-proof, no foreignhumanread credit inherited.",
+  "source_state": "Products unchanged: Consumer current F065 containment remains ORIGINAL diagnostic58405; BusLifecycle/Factory and InMemory original; Future one-lineF120fixed0b758. SDK inactive before apply.",
+  "compiler_eligibility": "146failedCS1929 solely newfixture; R1sourcepeer compilereligibility explicitlysuperseded by R2. No productfinding ornative result fromfailedBuild.",
+  "scope": "Meaningful finite4consumer variants, all owned tasks joined; timer allowed only currentF065 correctedSource. Native/strict pending; wholeAPI PARTIAL."
+}

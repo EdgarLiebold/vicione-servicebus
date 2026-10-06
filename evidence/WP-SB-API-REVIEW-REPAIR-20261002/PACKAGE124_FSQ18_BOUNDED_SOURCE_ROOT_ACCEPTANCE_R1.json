@@ -1,0 +1,166 @@
+{
+  "utc": "2026-10-04T19:19:42.237786+00:00",
+  "decision": "ROOT_ACCEPT18_BOUNDED_LOCAL_SOURCE_CONTRACTS",
+  "accepted_before": 2093,
+  "accepted_after": 2111,
+  "matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package104-fsq39-runtime-dispositions-r1/PER_ID39_RUNTIME_RECONCILIATION.json",
+    "sha256": "6586c4ce37f424ac5338996342898d980efbcff717a96912af5b7a58d573742f"
+  },
+  "root_personal_reads": [
+    "Prior checkpoint complete per39 compact contracts and human report; this turn all18 per-ID complete semantic contract/reason/source pins, chunk1c4693.",
+    "Actual bounded FutureDefinition Endpoint/default-property and SetResultFromInput source in897607 beginning untruncated; output middle truncated earns no whole credit.",
+    "Whole actual FutureNotFoundException51L and FutureRequestConsumerDefinition37L; actual Future.cs410..476 Guid helpers/FutureState121..157 all5 predicates in79173b.",
+    "Actual QuartzSchedulerLease18..49 readonly EndpointAddress and direct constructor in8b5941."
+  ],
+  "scope": "Literal local guards/defaults/forwarding, ordinary exception constructors, no-allocation backing-collection predicates and readonly endpoint reference. Callback/serializer/provider/lifecycle/async execution are separate obligations. Current hashes checked before acceptance; historical PDB/package epochs remain explicit historical evidence.",
+  "members": [
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureDefinition`1.Endpoint(System.Action{ViciOne.ServiceBus.Configuration.IEndpointRegistrationConfigurator})",
+      "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureDefinition.cs",
+      "source_sha256": "4b54c585e3f8384f63eee1d0bb8a9b0e915b4f4ea1e46a3f20020f70a1d339df",
+      "contract": "Optional configure Action defaults null; creates EndpointRegistrationConfigurator<TFuture>, invokes callback if supplied, then assigns FutureEndpointDefinition<TFuture>. Returns void.",
+      "individual_reason": "Protected straight-line endpoint builder: callback default null, callback runs before assignment, exact settings-derived EndpointDefinition assigned only after callback success. User callback behavior belongs to caller; no asynchronous ownership/state transition introduced. Source suffices for this bounded builder contract; direct fluent registration test is a different owner and is not falsely attached."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureRequestConsumerDefinition`2.#ctor",
+      "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureRequestConsumerDefinition.cs",
+      "source_sha256": "a605fbddcb37692d1f801707e7e16b27c0c8206f491c3a753cdd2ca105bec846",
+      "contract": "Implicit public construction initializes no address; inherited ConsumerDefinition defaults plus null lazy request address.",
+      "individual_reason": "Roslyn implicit public constructor only performs ordinary inherited defaults and null request-address field initialization. No acquisition, activation, disposal, cancellation or scheduler effect. Actual configuration workflow is reviewed separately under index17."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Configuration.FutureResultConfiguratorExtensions.SetResultFromInput``2(ViciOne.ServiceBus.Configuration.IFutureResultConfigurator{``0,``1})",
+      "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureResultConfiguratorExtensions.cs",
+      "source_sha256": "c92dff315a84655b7463f71c703b480283165ac28e53321e876dd489718415c3",
+      "contract": "Null configurator guard then registers result factory returning context.Message, constrained TInput:TResult. Returns void; actual exact input identity is produced only when configured factory runs.",
+      "individual_reason": "Thin configuration adapter registers a factory returning the exact event context.Message under the declared TInput:TResult constraint. The configurator null guard and registration are source-visible; factory execution and terminal delivery remain owned by result configurator/activity routes. No execution-at-configuration claim or extra mirror test."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.FutureNotFoundException.#ctor",
+      "path": "src/ViciOne.ServiceBus.Futures/FutureNotFoundException.cs",
+      "source_sha256": "78f506de5335f84b49b6cc56173dbf03dd5061934cb68dff1f9e2aff63246319",
+      "contract": "Ordinary empty/message/message+inner overloads forward to base; Type+Guid overload guards futureType in FormatMessage, retains exact type and Guid (including Guid.Empty), and sets descriptive message. Exact overload signature disambiguates these paths.",
+      "individual_reason": "Empty constructor directly delegates to the ordinary Exception base constructor; no additional state/resources/validation or asynchronous behavior. Source sufficient; no duplicate BCL constructor test."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.FutureNotFoundException.#ctor(System.String)",
+      "path": "src/ViciOne.ServiceBus.Futures/FutureNotFoundException.cs",
+      "source_sha256": "78f506de5335f84b49b6cc56173dbf03dd5061934cb68dff1f9e2aff63246319",
+      "contract": "Ordinary empty/message/message+inner overloads forward to base; Type+Guid overload guards futureType in FormatMessage, retains exact type and Guid (including Guid.Empty), and sets descriptive message. Exact overload signature disambiguates these paths.",
+      "individual_reason": "String constructor forwards the supplied nullable message directly to the base exception. No normalization or ownership behavior beyond the inherited Exception contract."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.FutureNotFoundException.#ctor(System.String,System.Exception)",
+      "path": "src/ViciOne.ServiceBus.Futures/FutureNotFoundException.cs",
+      "source_sha256": "78f506de5335f84b49b6cc56173dbf03dd5061934cb68dff1f9e2aff63246319",
+      "contract": "Ordinary empty/message/message+inner overloads forward to base; Type+Guid overload guards futureType in FormatMessage, retains exact type and Guid (including Guid.Empty), and sets descriptive message. Exact overload signature disambiguates these paths.",
+      "individual_reason": "String-plus-inner constructor forwards the supplied message and exact inner exception to the base; no rethrow or new cancellation/resource behavior."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.FutureNotFoundException.#ctor(System.Type,System.Guid)",
+      "path": "src/ViciOne.ServiceBus.Futures/FutureNotFoundException.cs",
+      "source_sha256": "78f506de5335f84b49b6cc56173dbf03dd5061934cb68dff1f9e2aff63246319",
+      "contract": "Ordinary empty/message/message+inner overloads forward to base; Type+Guid overload guards futureType in FormatMessage, retains exact type and Guid (including Guid.Empty), and sets descriptive message. Exact overload signature disambiguates these paths.",
+      "individual_reason": "Type+Guid constructor locally guards futureType, formats the descriptive message and records exact FutureType/FutureId. Guid.Empty is allowed. Pure bounded diagnostic construction; no request lookup, timeout or bus activity."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureState.HasFaults",
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+      "source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+      "contract": "Returns backing Faults collection is nonnull and Count>0; does not trigger lazy getter allocation. No serialization, provider lookup or mutation.",
+      "individual_reason": "Checks _faults is nonnull and Count>0. Does not call lazy Faults getter or allocate it. Source-sufficient local predicate; no thread-safe collection promise."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureState.HasPending",
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+      "source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+      "contract": "Returns backing Pending collection is nonnull and Count>0; does not trigger lazy getter allocation. No serialization, provider lookup or mutation.",
+      "individual_reason": "Checks _pending is nonnull and Count>0. Does not call lazy Pending getter or allocate it. Source-sufficient local predicate; no thread-safe collection promise."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureState.HasResults",
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+      "source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+      "contract": "Returns backing Results collection is nonnull and Count>0; does not trigger lazy getter allocation. No serialization, provider lookup or mutation.",
+      "individual_reason": "Checks _results is nonnull and Count>0. Does not call lazy Results getter or allocate it. Source-sufficient local predicate; no thread-safe collection promise."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureState.HasSubscriptions",
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+      "source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+      "contract": "Returns backing Subscriptions collection is nonnull and Count>0; does not trigger lazy getter allocation. No serialization, provider lookup or mutation.",
+      "individual_reason": "Checks _subscriptions is nonnull and Count>0. Does not call lazy Subscriptions getter or allocate it. Source-sufficient local predicate; no thread-safe collection promise."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.FutureState.HasVariables",
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+      "source_sha256": "a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504",
+      "contract": "Returns backing Variables collection is nonnull and Count>0; does not trigger lazy getter allocation. No serialization, provider lookup or mutation.",
+      "individual_reason": "Checks _variables is nonnull and Count>0. Does not call lazy Variables getter or allocate it. Source-sufficient local predicate; no thread-safe collection promise."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.FutureIdOrDefault(ViciOne.ServiceBus.ConsumeContext,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})",
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+      "source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+      "contract": "Guards context/variables; serializer.GetValue<Guid>(FutureId header) returns value or Guid.Empty; conversion failure policy belongs serializer.",
+      "individual_reason": "Reads FutureId using the configured serializer GetValue<Guid>, returning Guid.Empty on absence. Null guards and default are literal source contract; malformed-value conversion belongs to serializer. No new nonempty-Guid validation promise."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.FutureIdOrFault(ViciOne.ServiceBus.ConsumeContext,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})",
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+      "source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+      "contract": "Guards context/variables; returns available serialized FutureId else RequestException. Does not enforce nonempty existing Guid itself.",
+      "individual_reason": "Reads FutureId using the configured serializer; absence throws RequestException. Existing Guid.Empty is not rejected. Local selection/error contract is source sufficient; serializer conversion errors are propagated."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.RequestIdOrDefault(ViciOne.ServiceBus.Advanced.MessageContext)",
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+      "source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+      "contract": "Guards MessageContext and returns context.RequestId or Guid.Empty. Existing Guid.Empty is returned without additional validation.",
+      "individual_reason": "Returns nullable context.RequestId value, or Guid.Empty if absent. Existing empty Guid is preserved. Pure local accessor after context null guard; no bus or lifetime operation."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "M:ViciOne.ServiceBus.Futures.Future`3.RequestIdOrFault(ViciOne.ServiceBus.Advanced.MessageContext)",
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+      "source_sha256": "9efa36b8710e81cc4d8384b8e2702ca917ad9b57d8785f72012a5f998aafcb3a",
+      "contract": "Guards MessageContext; absent RequestId throws RequestException, otherwise returns exact nullable value.",
+      "individual_reason": "Returns the exact context.RequestId value when present; absence throws RequestException. No additional nonempty-Guid validation. Pure local accessor/error branch."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Futures",
+      "id": "P:ViciOne.ServiceBus.Configuration.FutureDefinition`1.EndpointDefinition",
+      "path": "src/ViciOne.ServiceBus.Futures/Configuration/FutureDefinition.cs",
+      "source_sha256": "4b54c585e3f8384f63eee1d0bb8a9b0e915b4f4ea1e46a3f20020f70a1d339df",
+      "contract": "Nullable typed endpoint definition auto property; replacing it after endpoint name cached does not invalidate cache by this setter.",
+      "individual_reason": "Nullable typed EndpointDefinition auto property stores/returns the supplied reference. Setter has no cache invalidation or eager callback behavior; previously cached endpoint names are not promised to be recomputed."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.Quartz",
+      "id": "P:ViciOne.ServiceBus.Quartz.QuartzSchedulerLease.EndpointAddress",
+      "path": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulerLease.cs",
+      "source_sha256": "0f32a6ca76cfca1a29c6be961337db7840839554a32dadb71dd8aed4e291f237",
+      "contract": "Read-only exact nonnull endpoint address supplied by direct integration; remains readable after disposal.",
+      "individual_reason": "Readonly exact endpoint Uri supplied by the lease constructor; remains readable after disposal. Accessor acquires or disposes nothing; resource cleanup reviewed separately on lease lifecycle owners."
+    }
+  ],
+  "workflow21_accepted": false,
+  "closed_entire_owners": false,
+  "whole_api_status": "PARTIAL"
+}

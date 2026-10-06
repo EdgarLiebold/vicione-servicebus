@@ -1,0 +1,139 @@
+{
+  "utc": "2026-10-05T14:32:03.976565+00:00",
+  "status": "THREE_ORIGINAL_CAUSES_REGISTERED_REPAIR_PENDING",
+  "actual_original_native": {
+    "phase": "package187-sqs-original8-fixture1-native-r1",
+    "total": 8,
+    "passed": 3,
+    "failed": 5,
+    "skipped": 0,
+    "log_sha256": "a8a8b915511416047da94a6d0d4a6557a41557f2b0043075569777d949834b1e"
+  },
+  "original_qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package187-sqs-original8-independent-r1/REPORT.json",
+    "sha256": "aaa686286e015081bd22a635c4e56ea62796d26a2cad339a990441430cfaf198"
+  },
+  "independent_native_case_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package187-sqs-original8-own-native-case-classification-r1/REPORT.json",
+    "sha256": "8d85f497ff2e366af155e1c7b9bc13cab90ed45d17543943e087c3a240138ca2"
+  },
+  "root_actual_counterproof": {
+    "receipt": "35c449",
+    "PE_PDB_assemblies": 10,
+    "PDB_documents": 2984,
+    "embedded_Req181_once": true
+  },
+  "root_whole_original_raw": "d1b4ca",
+  "case_contexts": [
+    {
+      "method": "ConfiguredContextFilters_ExecuteBeforeProviderTopologyAsync",
+      "input": {
+        "route": 0
+      },
+      "outcome": "PASS",
+      "first_failure": null,
+      "reached": "All healthy filter0/null3 public readiness, SDK pending/entry and exactly-once owned SDK disposal assertions passed.",
+      "unreached": null,
+      "source_cause": "Endpoint ConfigureConnection populates private configurator, while Build wires only the client configurator; actual context uses host connection supervisor and unconfigured ClientContextFactory.",
+      "no_automatic_finding_registration": true
+    },
+    {
+      "method": "ConfiguredContextFilters_ExecuteBeforeProviderTopologyAsync",
+      "input": {
+        "route": 1
+      },
+      "outcome": "FAIL_FINITE_CONNECTION_FILTER_NOT_EXECUTED",
+      "first_failure": "Assert.Equal at test73: filter Calls expected1, actual0.",
+      "reached": "Host.Build/Start returned, actual Task.WhenAny admission boundary completed; connection filter call counter0. SDK CreateEntered completion inferred from actual signal code and missing filter entry.",
+      "unreached": "Test74 SDK CreateCalls assertion and all later readiness/disposal assertions; test117 is finally stack only.",
+      "source_cause": "Endpoint ConfigureConnection populates private configurator, while Build wires only the client configurator; actual context uses host connection supervisor and unconfigured ClientContextFactory.",
+      "no_automatic_finding_registration": true
+    },
+    {
+      "method": "ConfiguredContextFilters_ExecuteBeforeProviderTopologyAsync",
+      "input": {
+        "route": 2
+      },
+      "outcome": "FAIL_FINITE_CONNECTION_FILTER_NOT_EXECUTED",
+      "first_failure": "Assert.Equal at test73: filter Calls expected1, actual0.",
+      "reached": "Host.Build/Start returned, actual Task.WhenAny admission boundary completed; connection filter call counter0. SDK CreateEntered completion inferred from actual signal code and missing filter entry.",
+      "unreached": "Test74 SDK CreateCalls assertion and all later readiness/disposal assertions; test117 is finally stack only.",
+      "source_cause": "Endpoint ConfigureConnection populates private configurator, while Build wires only the client configurator; actual context uses host connection supervisor and unconfigured ClientContextFactory.",
+      "no_automatic_finding_registration": true
+    },
+    {
+      "method": "ConfiguredContextFilters_ExecuteBeforeProviderTopologyAsync",
+      "input": {
+        "route": 3
+      },
+      "outcome": "PASS",
+      "first_failure": null,
+      "reached": "All healthy filter0/null3 public readiness, SDK pending/entry and exactly-once owned SDK disposal assertions passed.",
+      "unreached": null,
+      "source_cause": "Endpoint ConfigureConnection populates private configurator, while Build wires only the client configurator; actual context uses host connection supervisor and unconfigured ClientContextFactory.",
+      "no_automatic_finding_registration": true
+    },
+    {
+      "method": "QueueSendTopology_PreservesConfiguredMetadataToProviderAsync",
+      "input": {
+        "metadataKind": 0
+      },
+      "outcome": "PASS",
+      "first_failure": null,
+      "reached": "Actual SDK CreateQueue request held; operation and SDK task pending; owner-linked SDK token cancelable/not canceled; exact queue name. All subsequent cache identity/provider reuse and cleanup assertions pass.",
+      "unreached": null,
+      "source_cause": "QueueSendSettings.GetBrokerTopology uses CreateQueue(EntityName, Durable, AutoDelete) and omits all three settings dictionaries.",
+      "no_automatic_finding_registration": true
+    },
+    {
+      "method": "QueueSendTopology_PreservesConfiguredMetadataToProviderAsync",
+      "input": {
+        "metadataKind": 1
+      },
+      "outcome": "FAIL_FINITE_METADATA",
+      "first_failure": "Assert.Equal at 169: expected configured queue attributes, actual empty collection.",
+      "reached": "Actual SDK CreateQueue request held; operation and SDK task pending; owner-linked SDK token cancelable/not canceled; exact queue name.",
+      "unreached": "Later assertions after first mismatch; later cache completion/reuse assertions not native reached. Stack194 belongs finally only.",
+      "source_cause": "QueueSendSettings.GetBrokerTopology uses CreateQueue(EntityName, Durable, AutoDelete) and omits all three settings dictionaries.",
+      "no_automatic_finding_registration": true
+    },
+    {
+      "method": "QueueSendTopology_PreservesConfiguredMetadataToProviderAsync",
+      "input": {
+        "metadataKind": 2
+      },
+      "outcome": "FAIL_FINITE_METADATA",
+      "first_failure": "Assert.Equal at 170: expected configured queue tags, actual empty collection.",
+      "reached": "Actual SDK CreateQueue request held; operation and SDK task pending; owner-linked SDK token cancelable/not canceled; exact queue name. Queue attributes comparison reached and passed before tags mismatch.",
+      "unreached": "Later assertions after first mismatch; later cache completion/reuse assertions not native reached. Stack194 belongs finally only.",
+      "source_cause": "QueueSendSettings.GetBrokerTopology uses CreateQueue(EntityName, Durable, AutoDelete) and omits all three settings dictionaries.",
+      "no_automatic_finding_registration": true
+    },
+    {
+      "method": "QueueSendTopology_PreservesConfiguredMetadataToProviderAsync",
+      "input": {
+        "metadataKind": 3
+      },
+      "outcome": "FAIL_FINITE_METADATA",
+      "first_failure": "Assert.Equal at 175: expected configured declaration subscription attributes, actual empty collection.",
+      "reached": "Actual SDK CreateQueue request held; operation and SDK task pending; owner-linked SDK token cancelable/not canceled; exact queue name. Empty queue attributes/tags, prohibited subscription keys absent, declaration attributes/tags pass.",
+      "unreached": "Later assertions after first mismatch; later cache completion/reuse assertions not native reached. Stack194 belongs finally only.",
+      "source_cause": "QueueSendSettings.GetBrokerTopology uses CreateQueue(EntityName, Durable, AutoDelete) and omits all three settings dictionaries.",
+      "no_automatic_finding_registration": true
+    }
+  ],
+  "documentation_evidence": {
+    "actual185_published_XML_read": "d394c6",
+    "member": "P:ViciOne.ServiceBus.AmazonSqs.Configuration.AmazonSqsReceiveEndpointConfiguration.ConcurrentDeliveryLimit",
+    "wrong": "maximum number of messages delivered concurrently by the endpoint",
+    "actual": "per ordered-message group concurrency",
+    "independent_source_peer": "package214-sqs-concurrent-delivery-xml1-independent-runtime-peer-r2"
+  },
+  "counts": {
+    "known_before": 176,
+    "known_after": 179,
+    "accepted_before": 176,
+    "accepted_after": 176
+  },
+  "limits": "Original187 healthy controls and first finite failures only; Original186 host-logging failures are fixture-only. No cloud integration, later unreached assertions or whole API grade."
+}

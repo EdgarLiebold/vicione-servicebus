@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Consumers;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
@@ -18,7 +19,7 @@ public class ScopeConsumerFactory<TConsumer> :
         _scopeProvider = scopeProvider ?? throw new ArgumentNullException(nameof(scopeProvider));
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Acquires a consumer scope, awaits the next consumer stage, and releases the acquired scope.</summary>
     /// <typeparam name="TMessage">The message contract processed by the member.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
@@ -29,9 +30,18 @@ public class ScopeConsumerFactory<TConsumer> :
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
 
-        await using IConsumerConsumeScopeContext<TConsumer, TMessage> scope = await _scopeProvider.GetScopeAsync<TConsumer, TMessage>(context);
+        IConsumerConsumeScopeContext<TConsumer, TMessage> scope = await _scopeProvider.GetScopeAsync<TConsumer, TMessage>(context);
+        Exception? operationFailure = null;
+        try
+        {
+            await next.SendAsync(scope.Context).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
 
-        await next.SendAsync(scope.Context).ConfigureAwait(false);
+        await OwnedConsumerLifetime.ReleaseAfterOperationAsync(scope, operationFailure).ConfigureAwait(false);
     }
 
     void IProbeSite.Probe(ProbeContext context)

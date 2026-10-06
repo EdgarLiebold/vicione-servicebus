@@ -1,0 +1,72 @@
+{
+  "utc": "2026-10-05T00:43:58.444525+00:00",
+  "actor": "/root",
+  "status": "TWO_ORIGINAL_NATIVE_CAUSES_CONFIRMED",
+  "confirmed_before": 135,
+  "confirmed_after": 137,
+  "accepted_current": 134,
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package159-outbox-original84-recurring-doc4-fresh2-independent-r1/REPORT.json",
+    "sha256": "1c6189da625d6f23e2dd9e15b11eb11d7bade714f24a42e1a079679da1cb5945"
+  },
+  "actual_native": {
+    "total": 84,
+    "passed": 81,
+    "failed": 3,
+    "skipped": 0,
+    "old78_passed": 78,
+    "new6_passed": 3,
+    "new6_failed": 3
+  },
+  "actual_finite_causes": [
+    {
+      "case": "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxSchedulingLifecycleTests.Discard_WaitsForStartedCancellationWhenALaterProviderCallThrowsSynchronouslyAsync(laterSyncFailure: True)",
+      "first_assertion": "Assert.False(operation.IsCompleted) at test233: actual True while firstCancellation.Task still pending.",
+      "reached": [
+        "Actual real scheduler scheduled two tracked messages",
+        "Two cancellation calls with exact destinations/tokenIDs/caller tokens",
+        "First actual provider cancellation task remains pending"
+      ],
+      "unreached": [
+        "Public operation terminal only after first cancellation release",
+        "Owned provider tasks all terminal before public completion",
+        "Same synchronous failure in warning diagnostic queue"
+      ],
+      "source_cause": "CancelAllScheduledMessagesAsync directly invokes provider inside foreach before PendingTaskCollection.CompletedAsync. A later synchronous throw bypasses await of already registered earlier task. Public Discard catches/logs and completes successfully while that earlier task remains pending.",
+      "cleanup": "finally releases first gate, independently observes actual provider and public tasks, disables override, performs real discard/execute/ConsumeCompleted and restores ambient logger."
+    },
+    {
+      "cases": [
+        "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxSchedulingLifecycleTests.SchedulerCleanupWarning_DoesNotChangeTheContainedFailureOutcomeAsync(commit: True, loggerThrows: True)",
+        "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxSchedulingLifecycleTests.SchedulerCleanupWarning_DoesNotChangeTheContainedFailureOutcomeAsync(commit: False, loggerThrows: True)"
+      ],
+      "first_assertion": "Assert.Null(observed) at test313 after await joined public operation; actual unique ApplicationException from warning logger.",
+      "reached": [
+        "Real tracked scheduling and deferred action admission",
+        "No earlier deliveries/cancellation calls; ClearToSend incomplete",
+        "Public commit/discard operation reached terminal and Record.Exception observed unique diagnostic failure"
+      ],
+      "unreached": [
+        "Public task successful",
+        "Same contained provider IOException in logger queue assertion",
+        "Exact cancellation destination/tokenID/token assertions",
+        "Owned provider task IsFaulted assertion",
+        "Delivery count and ClearToSend outcome assertions"
+      ],
+      "source_cause": "ExecutePendingActionsAsync89 and DiscardPendingActionsAsync110 call warning logger unguarded inside provider failure catch. Unique logger ApplicationException escapes and changes previously contained failure outcome.",
+      "cleanup": "finally observes expected terminal provider/public failures, disables override, completes true cleanup and restores exact prior LogContext; TimeoutException never swallowed."
+    }
+  ],
+  "root_actual_raw_read": "c14282 entire3failure blocks, prior sdk log/poll6d967c; whole481 test/new189/old289+provider3 and272outer previous e8eb95/7e0d5e/706dc6/cd7868",
+  "hash_verified_MAN_entries": 3339,
+  "limits": [
+    "Pure frozen qualification only; no SDK/native/repo mutations.",
+    "Original84 contains3realfinite failures; no cleanCore/wholeAPI claim.",
+    "Only first failing assertion and earlier reached assertions credited; later original assertions explicitly unreached.",
+    "Existing dictionary candidate from158 not rerun in159, no repaired claim.",
+    "Physical/generated checksums do not grant humanwhole-source or APIgrade credit.",
+    "Exactly selected7runtime DLLs canonical equality; not all loaded dependencies.",
+    "Resource payload exactsinglephysical requirement JSON, names not decoded.",
+    "Four actual emitted XML members/children corrected; no deep immutability or setter/runtime change."
+  ]
+}

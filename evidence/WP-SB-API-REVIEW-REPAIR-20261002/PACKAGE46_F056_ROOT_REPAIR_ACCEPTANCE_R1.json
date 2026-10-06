@@ -1,0 +1,14 @@
+{
+  "finding": "F-SB-API-056",
+  "status": "FIXED_ADVERSARIAL_NATIVE_FRESH_PACK_ROOT_REPAIR_REVIEW_CLOSED",
+  "source_review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package46-bus-depot-product-adversarial-preflight-r1/REPORT.md",
+  "original": "10 native finite original REDs; immutable actual PE/PDB/source in package45-46-current-green-job-original-bus-frame-r1 independently qualified",
+  "corrected": "Native48 independently/root whole read 15Bus+17Job+16Options all48PASS noF/S; strict0W/E; actual corrected frame37 immutable",
+  "final_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package46-bus-final-packed-qualification-r1/REPORT.md",
+    "sha256": "2df674d5be9251a5ddd89a4b19996a68a0420f0022021ac23bf69395034dc74a"
+  },
+  "native_log_sha256": "10697fae34f9171ae06b7cd3ff2fedc0c3298fbbdaa14d61913740d9ea68c0d3",
+  "fresh_core_package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package45-46-current-fresh-packs-r1/packages/ViciOne.ServiceBus.1.0.0.nupkg",
+  "limit": "Finding repair only; F057/F058 and whole API acceptance separate"
+}

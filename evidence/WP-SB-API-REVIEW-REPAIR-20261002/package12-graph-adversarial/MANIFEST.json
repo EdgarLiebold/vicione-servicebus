@@ -1,0 +1,51 @@
+{
+  "status": "IMMUTABLE_FINAL_SCOPED_F039_ADVERSARIAL_REVIEW",
+  "utc": "2026-10-03T04:00:17.292597+00:00",
+  "freeze_sha256": "0dc7415ee56a76034a34cc78b73d3c2e26585ee442666cb03b9744ab7d554e17",
+  "outputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/READ_CLOSURE.json",
+      "sha256": "d9aa3e830c7dbcd0c92311a8bd88718b64308efbbb6e21318ca2c293300a7d1e",
+      "bytes": 77596
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/MUTATION_REVIEW.json",
+      "sha256": "4d13dd0665c9127d09e1bf989760770e9ef2b6d01418248e574344e1224f6b25",
+      "bytes": 62683
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/REVIEW.json",
+      "sha256": "69f1b6150d03c23e58e98943777087440454dce8824e8dab4ef93d5af80ec9f5",
+      "bytes": 6032
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/REVIEW.txt",
+      "sha256": "b30537927efcbfb64af4aea6e542a10830d28c0c5140a40eecd913726281da0d",
+      "bytes": 2335
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/INDEPENDENT_6209_ROLLBACK_CHECK.json",
+      "sha256": "09e08dc6cd15133e6e84220608190227534368fc0e3ee2b8912e5ec82a5e9135",
+      "bytes": 529
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/INDEPENDENT_PDB_SOURCE_BINDING.json",
+      "sha256": "79ff4f0dc74746be0d05ca9d90801594674aa37b2ef5bb23d84f59a628a694b3",
+      "bytes": 59421
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/INDEPENDENT_PUBLIC_ROUTE_PDB_BINDING.json",
+      "sha256": "675a5a232ddd33a1b3c122c4f437a31d2c446227ee150ae432369aa4bc5b7ad4",
+      "bytes": 29446
+    }
+  ],
+  "limits": [
+    "Scoped F039 internal factory and eight public console modes only. No Core766/all-InMemory/canonical-test-owner grades, no CLOSED symbol or whole API acceptance.",
+    "Two sequential providers, not parallel CreateBus; no ARM/cloud/broker/restart/retained-heap claim. Explicit public logging override isolates open F019.",
+    "Imported F004 and earlier package frames are personally FULL or own exact SHA reused here, but their complete native review is not transferred or regraded.",
+    "Frozen selected Graph package/PDB/source frame only. Later Package13 current ScopeConsumerFactory/build outputs are outside this acceptance.",
+    "Compiled mutants substitute strict-built DLLs into unchanged NuGet consumer; no fresh pack per mutant claim.",
+    "Guards are exclusions and cannot PASS. WaitAsync is an observation deadline, not universal underlying task cancellation. All accepted runs completed without guard failure.",
+    "No builds/restores/tests/native/product/canonical-test/CSV writes by this internal independent reviewer."
+  ]
+}

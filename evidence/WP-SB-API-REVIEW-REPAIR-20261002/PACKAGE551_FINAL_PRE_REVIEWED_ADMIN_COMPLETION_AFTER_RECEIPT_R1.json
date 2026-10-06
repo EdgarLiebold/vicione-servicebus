@@ -1,0 +1,68 @@
+{
+  "status": "ROOT_APPLIED_ONLY_PRE_REVIEWED_FINAL_ADMINISTRATIVE_COMPLETION_DELTA",
+  "different_review": {
+    "report": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINAL_EVIDENCE/package551-final-root-application-independent-audit-r1/REPORT.json",
+      "sha256": "3869e4ebca276ba7a9fb2d6e3159a0f68ca592ddbaba5cace41baabe783fdeec",
+      "bytes": 2830
+    },
+    "manifest": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINAL_EVIDENCE/package551-final-root-application-independent-audit-r1/MANIFEST.json",
+      "sha256": "fa54887525bd932515eb630965c69356c66aef5e7aea72e9ce5659879284f76f",
+      "bytes": 311
+    }
+  },
+  "before": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINAL_EVIDENCE/root551-final-admin-delta-before/STATE.json",
+      "sha256": "ca0d1f6cabd41e5080ca445d1d1dc8281db103591b4325e19331cf1c0f5a6c9c",
+      "bytes": 3623416
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINAL_EVIDENCE/root551-final-admin-delta-before/PO_BERICHT.txt",
+      "sha256": "96d187fc69581e1de3d3327b53b2e3c6dacad124af884c8371ff60fa2a55d8eb",
+      "bytes": 2338
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINAL_EVIDENCE/root551-final-admin-delta-before/REVIEW_REPORT_CURRENT.txt",
+      "sha256": "306836986637715cb981ac3992782cd7d63e0dd6e5549fbb01c6a36e30eaf517",
+      "bytes": 4639
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/FINAL_EVIDENCE/root551-final-admin-delta-before/MANIFEST_CURRENT.json",
+      "sha256": "55832d35351f2b6c9280bfbc2250c4fe10d87c4accd830180031850947e1635f",
+      "bytes": 6275
+    }
+  ],
+  "after": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+      "sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+      "bytes": 3624096
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/PO_BERICHT.txt",
+      "sha256": "bdcd7c1fb212e62e0bea7087bb9a9f2c503c494f175ee77a0257372d21347974",
+      "bytes": 2342
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/REVIEW_REPORT_CURRENT.txt",
+      "sha256": "fefdea44e2d9b5d90b9207ec29c1fe320e90cdccefda17c2943b47e5e8719f82",
+      "bytes": 4643
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/MANIFEST_CURRENT.json",
+      "sha256": "31bd4bdb93aa5a1c52b40ee6c7d50ef0dbace420c1a7d3f499c18276787e6664",
+      "bytes": 7538
+    }
+  ],
+  "changed_STATE_fields": [
+    "active_phase",
+    "final_application_adversarial_review",
+    "updated_utc"
+  ],
+  "text_delta": "Exactly identical reviewed sentence future→completed in PO and REVIEW_REPORT",
+  "manifest_delta": "STATE and two text hashes updated; different peer REPORT/MAN appended; no recursive selfhash.",
+  "Source_Test_Product_MemberNorm_mutations": 0,
+  "SDK_calls": 0
+}

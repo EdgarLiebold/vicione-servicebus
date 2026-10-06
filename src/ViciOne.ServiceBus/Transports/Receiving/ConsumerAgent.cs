@@ -21,6 +21,7 @@ public abstract class ConsumerAgent<TKey> :
     readonly IReceivePipeDispatcher _dispatcher;
     readonly object _consumeTaskLock = new();
     readonly ConcurrentDictionary<TKey, PendingReceiveLockContext> _pending;
+    readonly object _pendingLock = new();
     Task? _consumeTask;
     Task? _consumeTaskObserver;
     TaskCompletionSource<bool>? _consumeTaskSource;
@@ -137,7 +138,13 @@ public abstract class ConsumerAgent<TKey> :
     /// <returns>The task that represents completion of the consumer agent.</returns>
     protected override Task StopAgentAsync(StopContext context)
     {
-        LogContext.Debug?.Log("Consumer Stopping: {InputAddress} ({Reason})", _context.InputAddress, context.Reason);
+        try
+        {
+            LogContext.Debug?.Log("Consumer Stopping: {InputAddress} ({Reason})", _context.InputAddress, context.Reason);
+        }
+        catch (Exception)
+        {
+        }
 
         TrySetConsumeCompleted();
 
@@ -148,11 +155,28 @@ public abstract class ConsumerAgent<TKey> :
 
     void CancelPendingConsumers()
     {
-        foreach (var key in _pending.Keys)
+        PendingReceiveLockContext[] pending;
+        lock (_pendingLock)
         {
-            if (_pending.TryRemove(key, out var context))
-                context.Cancel();
+            pending = new List<PendingReceiveLockContext>(_pending.Values).ToArray();
+            _pending.Clear();
         }
+
+        List<Exception>? failures = null;
+        foreach (PendingReceiveLockContext context in pending)
+        {
+            try
+            {
+                context.Cancel();
+            }
+            catch (Exception exception)
+            {
+                (failures ??= new List<Exception>()).Add(exception);
+            }
+        }
+
+        if (failures != null)
+            throw new AggregateException("One or more retained deliveries failed during cancellation.", failures);
     }
 
     /// <summary>Completes a manually managed consume loop successfully.</summary>
@@ -168,9 +192,14 @@ public abstract class ConsumerAgent<TKey> :
         if (_consumeTaskSource == null)
             return;
 
-        CancelPendingConsumers();
-
-        _consumeTaskSource.TrySetCanceled(cancellationToken);
+        try
+        {
+            CancelPendingConsumers();
+        }
+        finally
+        {
+            _consumeTaskSource.TrySetCanceled(cancellationToken);
+        }
     }
 
     /// <summary>Faults a manually managed consume loop and cancels retained duplicate deliveries.</summary>
@@ -181,9 +210,14 @@ public abstract class ConsumerAgent<TKey> :
         if (_consumeTaskSource == null)
             return;
 
-        CancelPendingConsumers();
-
-        _consumeTaskSource.TrySetException(exception);
+        try
+        {
+            CancelPendingConsumers();
+        }
+        finally
+        {
+            _consumeTaskSource.TrySetException(exception);
+        }
     }
 
     /// <summary>Waits for active deliveries and the transport consume loop during shutdown.</summary>
@@ -191,6 +225,20 @@ public abstract class ConsumerAgent<TKey> :
     /// <returns>A task that completes after both sources of activity have ended or shutdown is canceled.</returns>
     protected virtual async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
+        var cancellationFailures = new ConcurrentQueue<Exception>();
+
+        void CancelAndCaptureFailures()
+        {
+            try
+            {
+                CancelPendingConsumers();
+            }
+            catch (Exception exception)
+            {
+                cancellationFailures.Enqueue(exception);
+            }
+        }
+
         if (!IsIdle)
         {
             CancellationTokenSource? cancellationTokenSource = null;
@@ -199,7 +247,7 @@ public abstract class ConsumerAgent<TKey> :
             if (_context.ConsumerStopTimeout != null)
             {
                 cancellationTokenSource = new CancellationTokenSource(_context.ConsumerStopTimeout.Value);
-                registration = cancellationTokenSource.Token.Register(CancelPendingConsumers);
+                registration = cancellationTokenSource.Token.Register(CancelAndCaptureFailures);
             }
 
             try
@@ -208,9 +256,17 @@ public abstract class ConsumerAgent<TKey> :
             }
             catch (OperationCanceledException)
             {
-                LogContext.Warning?.Log("Consumer stop canceled: {InputAddress}", _context.InputAddress);
-
-                CancelPendingConsumers();
+                try
+                {
+                    LogContext.Warning?.Log("Consumer stop canceled: {InputAddress}", _context.InputAddress);
+                }
+                catch
+                {
+                }
+                finally
+                {
+                    CancelAndCaptureFailures();
+                }
             }
             finally
             {
@@ -223,20 +279,30 @@ public abstract class ConsumerAgent<TKey> :
         lock (_consumeTaskLock)
             consumeTask = _consumeTask;
 
-        if (consumeTask is null)
-            return;
+        if (consumeTask is not null)
+        {
+            try
+            {
+                await consumeTask.OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    LogContext.Warning?.Log(e, "Consumer stop faulted: {InputAddress}", _context.InputAddress);
+                }
+                catch
+                {
+                }
+            }
+        }
 
-        try
-        {
-            await consumeTask.OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
-        }
-        catch (OperationCanceledException)
-        {
-        }
-        catch (Exception e)
-        {
-            LogContext.Warning?.Log(e, "Consumer stop faulted: {InputAddress}", _context.InputAddress);
-        }
+        // Registration disposal above joins the timeout callback before its failures are observed.
+        if (!cancellationFailures.IsEmpty)
+            throw new AggregateException("Retained delivery cancellation failed during shutdown.", cancellationFailures);
     }
 
     /// <summary>Determines whether deliveries with the supplied identity participate in duplicate coordination.</summary>
@@ -260,45 +326,75 @@ public abstract class ConsumerAgent<TKey> :
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(receiveLockContext);
 
-        var added = false;
-        var lockContext = receiveLockContext;
-
-        if (IsTrackable(key))
+        if (!IsTrackable(key))
         {
-            lockContext = _pending.AddOrUpdate(key, _ =>
-            {
-                var current = new PendingReceiveLockContext();
-                added = current.Enqueue(context, receiveLockContext);
-                return current;
-            }, (_, current) =>
-            {
-                added = current.Enqueue(context, receiveLockContext);
-                return current;
-            });
-
-            if (!added)
-            {
-                context.LogTransportDupe(key);
-                return Task.CompletedTask;
-            }
+            return _dispatcher.DispatchAsync(context, receiveLockContext)
+                ?? throw new InvalidOperationException("The receive pipe dispatcher returned no dispatch task.");
         }
 
-        var dispatchTask = _dispatcher.DispatchAsync(context, lockContext)
-            ?? throw new InvalidOperationException("The receive pipe dispatcher returned no dispatch task.");
+        PendingReceiveLockContext pending;
+        bool added;
+        lock (_pendingLock)
+        {
+            if (!_pending.TryGetValue(key, out pending!) || pending.IsEmpty)
+            {
+                // A settled generation must not be revived while its dispatcher is still completing.
+                pending = new PendingReceiveLockContext();
+                _pending[key] = pending;
+            }
 
-        return added ? TrackDispatchAsync(dispatchTask, key) : dispatchTask;
+            added = pending.Enqueue(context, receiveLockContext);
+        }
+
+        if (!added)
+        {
+            try
+            {
+                context.LogTransportDupe(key);
+            }
+            catch (Exception)
+            {
+            }
+            return Task.CompletedTask;
+        }
+
+        return TrackDispatchAsync(key, pending, context);
     }
 
-    async Task TrackDispatchAsync(Task dispatchTask, TKey key)
+    async Task TrackDispatchAsync(TKey key, PendingReceiveLockContext pending, ReceiveContext context)
     {
         try
         {
+            Task dispatchTask = _dispatcher.DispatchAsync(context, pending)
+                ?? throw new InvalidOperationException("The receive pipe dispatcher returned no dispatch task.");
             await dispatchTask.ConfigureAwait(false);
+        }
+        catch (Exception dispatchFailure)
+        {
+            lock (_pendingLock)
+            {
+                if (_pending.TryGetValue(key, out var current) && ReferenceEquals(current, pending))
+                    _pending.TryRemove(key, out _);
+            }
+
+            try
+            {
+                pending.Cancel();
+            }
+            catch (Exception cancellationFailure)
+            {
+                throw new AggregateException("Dispatch and retained delivery cancellation both failed.", dispatchFailure, cancellationFailure);
+            }
+
+            throw;
         }
         finally
         {
-            if (_pending.TryGetValue(key, out var value) && value.IsEmpty)
-                _pending.TryRemove(key, out _);
+            lock (_pendingLock)
+            {
+                if (_pending.TryGetValue(key, out var current) && ReferenceEquals(current, pending) && pending.IsEmpty)
+                    _pending.TryRemove(key, out _);
+            }
         }
     }
 }

@@ -1,0 +1,170 @@
+{
+  "status": "PREAUTHOR_ROOT_FULL_SOURCE_RESEARCH_PLAN",
+  "finding": "F-SB-API-031",
+  "owned_inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+      "sha256": "4f7c63c487d9e8916075f53f7d7aad97b261731e93020805e60c3e679a075825",
+      "bytes": 18461,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerKind.cs",
+      "sha256": "a380102810512390083e300911f516317acd6507337157ec2a5547da62fe6bf2",
+      "bytes": 4961,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/CombinedEndpointDefinition.cs",
+      "sha256": "990725177a15132849b70caf68bcef694bc28bf6119615707d0eacae8d88d432",
+      "bytes": 5011,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DelegateEndpointDefinition.cs",
+      "sha256": "9176f0771ee8bdfb1fb878b117d63f1ca309a519891f00918194733680cf8505",
+      "bytes": 3116,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKind.cs",
+      "sha256": "df1100d0b6473e0b3a9b861b0f1f4ce986c1b78d4f6e8e1176dae7734b08206b",
+      "bytes": 1283,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Registration/IConsumerKindRegistration.cs",
+      "sha256": "790dec194cf2059ea19e7fa7f30dbdefa246c0b91bbd446df377bfd1eabe7b1f",
+      "bytes": 1277,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/IConsumerDefinition.cs",
+      "sha256": "68b203b4714ac0003721eca099458d68bb47ec0cca93ee481173cf7e43649921",
+      "bytes": 1820,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/ConsumerDefinition.cs",
+      "sha256": "1a47e02c5a0e71a44409d754ddba75d4c8dc3c55d50399a4c25deb1e31154216",
+      "bytes": 4697,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/IEndpointDefinition.cs",
+      "sha256": "a876159f5952cf5aff18f0d440993405ba99ee40d827950c482a4d6dee45aeae",
+      "bytes": 2098,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/EndpointSettings.cs",
+      "sha256": "4c963f3e5908a73edd1d37ddbb401bffd2d0e6bb4930ccabbe18fe573e196f6f",
+      "bytes": 4904,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/EndpointDefinitionExtensions.cs",
+      "sha256": "62e0027e2b7a8c82ce62ae1c43b5b0c773016b661f9dcdc3c453d748aad0619f",
+      "bytes": 1663,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/Qos/EndpointQosTopologyValidator.cs",
+      "sha256": "361604187185c4c820089989f1e5b49560118580f4f19c48a1cb52711b336ab3",
+      "bytes": 4669,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Sagas/SagaConsumerKind.cs",
+      "sha256": "0ed7f545397027b66111aa26df1c318f25eb0fc0cc78a9df56b4b37f401def85",
+      "bytes": 6741,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/Registration/Sagas/SagaRegistration.cs",
+      "sha256": "e8e76678219e34786fdce69c67df251baf17b7d2b86be4f0cb7352331d68e30e",
+      "bytes": 3942,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaDefinition.cs",
+      "sha256": "125101ca9474ca2152f0825c8e46741527bbf4b358c04db5a5b356c112f42698",
+      "bytes": 3697,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/ISagaDefinition.cs",
+      "sha256": "de28b1f1c7b69e9a97ef20d4fcf94e8393084019c2f52f67f7767a7c56ae40b8",
+      "bytes": 1512,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaEndpointDefinition.cs",
+      "sha256": "22c7946083f04581c8323eb28513522800d7fcb77a8a1f356259c89a99d56f44",
+      "bytes": 972,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/Registration/Sagas/SagaRegistrationConfigurator.cs",
+      "sha256": "24f2e5bcee69e37e1cc103c33a9220aecb300097db450c664952c50bcccbdf9f",
+      "bytes": 3191,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/DependencyInjection/InMemorySagaRepositoryRegistrationExtensions.cs",
+      "sha256": "3b72a20fdcf5d917f3fd22343a3b8017f17978bbe5863fb687f28321c4a17b3f",
+      "bytes": 1359,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/SettingsEndpointDefinition.cs",
+      "sha256": "71d1c9027aaf53a5ec7b0dbdd9f273803fbf648109a224e4ee95811cdef8a15e",
+      "bytes": 3630,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/DependencyInjection/DependencyInjectionSagaRegistrationExtensions.cs",
+      "sha256": "9e758334f726abd3e98b4200f26c25c93e118d4159daf32015487344208c3084",
+      "bytes": 9243,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaRegistrationConfiguratorExtensions.cs",
+      "sha256": "f45ef7881f381702b1aa6619951fc0f14860828751510de7654d5a4e877c332e",
+      "bytes": 7360,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/SagaRegistrationExtensions.cs",
+      "sha256": "6eeb1b93b1b763da8804bb23eae1a6b024e295fd3f51f4c38826a1f0ef3f2de0",
+      "bytes": 20300,
+      "Root_personally_FULL": true
+    }
+  ],
+  "research_plan": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/lifetime-final-findings/F031_PLAN.json",
+  "research_plan_sha256": "48882d2c6ba1d367af336eab9d5662e7cbb7e5dad7817f7ddccc94c79df959fd",
+  "change": "One internal method stable OrderBy all categories, retaining shared Combine guards",
+  "native_control_plan": [
+    {
+      "case": "mixed-callbacks",
+      "expected": "Consumer definition Endpoint + Saga definition Endpoint use same name with no fluent Endpoint override. One materialized endpoint, exact ordered callbacks Consumer1 then Saga1, Plain business1 and correlated Saga business1, two successful typed terminal receipts."
+    },
+    {
+      "case": "mixed-qos-consumer-and-saga",
+      "expected": "Separate cases put PrefetchCount/endpoint ConcurrentMessageLimit only on Consumer or only on Saga definition. Both reject EndpointQosConfigurationException with endpoint/owner diagnosis before any endpoint materialization or callback, unlike current accepted plan."
+    },
+    {
+      "case": "mixed-topology",
+      "expected": "Consumer true versus Saga false rejects with ConfigureConsumeTopology diagnosis before materialization; compatible true/true produces both callbacks and both real handlers."
+    },
+    {
+      "case": "positive-dedicated-saga-and-same-kind",
+      "expected": "Dedicated Saga retains explicit QoS; same-category two Consumers run exact callback1 each. Same-category shared consumer-owned QoS continues rejecting."
+    },
+    {
+      "case": "precedence-and-order",
+      "expected": "Reverse registration order still honors category order; omit one endpoint definition and retain default values. Explicit global endpoint definition remains authoritative and applied once. Typed bus with two bus owners does not combine across buses."
+    }
+  ],
+  "whole_Core_testowner": "Not modified or accepted"
+}

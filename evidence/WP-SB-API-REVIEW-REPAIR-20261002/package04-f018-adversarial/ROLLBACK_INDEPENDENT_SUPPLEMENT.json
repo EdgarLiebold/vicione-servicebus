@@ -1,0 +1,11 @@
+{
+  "status": "ALL6209_ORIGINAL_TRACKED_BYTES_RESTORED_AFTER_SUPPLEMENT",
+  "coverage": "/private/tmp/vicione-servicebus-api-review-20261001/FILE_COVERAGE.csv",
+  "coverage_sha256": "4382dce390d5e8e0502b3cf6f0ab8c3668d34a4ec252de460550bcce84264769",
+  "files": 6209,
+  "mismatches": [],
+  "read_status": "HASH_CHECK_ONLY",
+  "limits": [
+    "Current read occurs after F018 original-provenance native checkpoint; Root reports independent later Package05 mutation process owns five possible differences. No historical-time state inferred from this current-state hash check."
+  ]
+}

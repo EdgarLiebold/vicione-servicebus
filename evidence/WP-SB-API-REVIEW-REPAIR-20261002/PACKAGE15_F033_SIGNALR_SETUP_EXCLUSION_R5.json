@@ -1,0 +1,21 @@
+{
+  "receipt": {
+    "phase": "package15-f033-signalr-public-previous-build-r2",
+    "command": [
+      "dotnet",
+      "build",
+      "SignalRLifetime.PublicConsumer.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-warnaserror"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T05:15:43.024410+00:00",
+    "completed_utc": "2026-10-03T05:15:46.331129+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-previous-build-r2.log",
+    "log_sha256": "6e16ae0935654d45b90571d61231977dffe3f53ffe996b4c8c236505a01b7bbb"
+  },
+  "reason": "4 compiler errors: Root initially added wrong Configuration namespace; corrected from fully read public IPipeSpecification; no native case"
+}

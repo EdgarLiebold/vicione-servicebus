@@ -1,0 +1,222 @@
+{
+  "utc": "2026-10-05T09:54:36.656682+00:00",
+  "actor": "/root",
+  "status": "ROOT_APPLIED_REVIEWED_XML11_SOURCE9_RABBIT_ORIGINAL_TEST1_REQ1",
+  "files": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/ClientContext.cs",
+      "before_sha256": "c94ab3e6da1c86754c76910fd37aea6141759b709c670906edeb0a33c934b3c1",
+      "after_sha256": "7cdcfe78131a25e850b20bc4d9610efddf5847ec9c58c71188fe545c81928c2a",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-sql-touch-purpose-xml8-product-proposed-r1/proposed/ClientContext.cs",
+      "XML_count": 1
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlClientContext.cs",
+      "before_sha256": "ae0c64d39df12ee39733a79496ba8f57523c77d41ea3c8417494b05cae060967",
+      "after_sha256": "fef042c679ee373cccfb6397b1f5e3f841e8f500926cf7e885f16668c1f1cafc",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-sql-touch-purpose-xml8-product-proposed-r1/proposed/SqlClientContext.cs",
+      "XML_count": 1
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/ScopeClientContext.cs",
+      "before_sha256": "adea04628c018e4f9d4051a2fec29f06f3eaea9156235e9d63eada341a22e6bc",
+      "after_sha256": "c68024e19dce8a7862973ec56b77bbefea9aadbb08ea01eb31545c88b03f4185",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-sql-touch-purpose-xml8-product-proposed-r1/proposed/ScopeClientContext.cs",
+      "XML_count": 1
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/SharedClientContext.cs",
+      "before_sha256": "42f47b319d86fa0acb9dba2908a8e25de2c791bcc36f68e0e1a9c072233d6d17",
+      "after_sha256": "58d2ae777acbde10f6536ae75da0ce9d89003e44d222cc049e7fdccef05cb322",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-sql-touch-purpose-xml8-product-proposed-r1/proposed/SharedClientContext.cs",
+      "XML_count": 1
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Runtime/PostgreSqlClientContext.cs",
+      "before_sha256": "548d38438422ff2cc3416407d6de4d7837553a8451914b98b06f45c9df8df738",
+      "after_sha256": "6166a5c370339fab31f4d2428b7083756e1f1320047adb9e6ed5e9acdc51ac1c",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-sql-touch-purpose-xml8-product-proposed-r1/proposed/PostgreSqlClientContext.cs",
+      "XML_count": 2
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Runtime/SqlServerClientContext.cs",
+      "before_sha256": "9681a3c651cc8ff6f3f87847a1d12360ce6f186dc5439f98e0b006fdb299b467",
+      "after_sha256": "0efd115c0bb14403172b23e391284aedf0988d7ed5cdad42c3b36554d7baf506",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package192-sql-touch-purpose-xml8-product-proposed-r1/proposed/SqlServerClientContext.cs",
+      "XML_count": 2
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ChannelContext.cs",
+      "before_sha256": "c11335db5a645c00efc400745a0c12a5f7341d9595ab7bb83d9b4deed04e4876",
+      "after_sha256": "66c9335668931728684c0b02c77070c086d72555863db3d1fdc69ecd2c87da3a",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package194-rabbit-nack-returns-xml3-product-proposed-r1/proposed/ChannelContext.cs",
+      "XML_count": 1
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ScopeChannelContext.cs",
+      "before_sha256": "61225368379c5d65b0936c75b9fad9b6ba1406778e0142810075678d16790d07",
+      "after_sha256": "76df6616a20d9c0d9a3b0d88f6a13c4c325bbd88007c418b9cb192622242c8e7",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package194-rabbit-nack-returns-xml3-product-proposed-r1/proposed/ScopeChannelContext.cs",
+      "XML_count": 1
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/SharedChannelContext.cs",
+      "before_sha256": "65feebbf475c4f1aad68873c430d962078ea6f9892976cadf31c077feef1c5dd",
+      "after_sha256": "77000291ee204747434bdcef7252bb7d5c7b54d642a737bf6ed4d199b17fbce2",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package194-rabbit-nack-returns-xml3-product-proposed-r1/proposed/SharedChannelContext.cs",
+      "XML_count": 1
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqChannelCleanupContractTests.cs",
+      "before_sha256": null,
+      "after_sha256": "c1a9086612aae4d4a025dd928181c810938f502ab31b06e558dbfe58ed7b7a94",
+      "proposed_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package190-rabbit-channel-cleanup6-oracles-proposed-r2/RabbitMqChannelCleanupContractTests.proposed.cs",
+      "XML_count": 0,
+      "new_test_lines": 227
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+      "before_sha256": "752934988b7991f2953a18d8263611fc07b2d0042c20dd990c824720586eff52",
+      "after_sha256": "fa2e17a213b3722272cc3eaf5470f203aa0d2c1a9b8f8a3146909ac611383abb",
+      "XML_count": 0,
+      "old_rows": 282,
+      "new_rows": 283,
+      "add_only": [
+        {
+          "requirementId": "REQ-VSB-RABBITMQ-CHANNEL-CLEANUP",
+          "variantKey": "close-dispose-owned-despite-diagnostic-failure",
+          "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+          "testType": "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.RabbitMqChannelCleanupContractTests",
+          "testMethod": "CleanupAsync_AttemptsAndJoinsCloseAndDisposeDespiteDiagnosticFailureAsync"
+        }
+      ]
+    }
+  ],
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package176-root-before-r1",
+  "original_XML11": [
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Converts this value to uch queue.",
+      "after": "Records usage of the specified primary queue through the provider."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SqlClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Updates a queue's last-used timestamp.",
+      "after": "Records usage of the specified primary queue through the provider."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.ScopeClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Converts this value to uch queue.",
+      "after": "Records usage of the specified primary queue through the provider."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SharedClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Converts this value to uch queue.",
+      "after": "Records usage of the specified primary queue through the provider."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgreSqlClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Updates a queue's last-used timestamp.",
+      "after": "Records activity for the specified primary queue with a zero-counter metric capture."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.PostgreSql.PostgreSqlClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "returns",
+      "before": "A task that completes after PostgreSQL updates the queue timestamp.",
+      "after": "A task that completes after PostgreSQL records the queue activity."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "summary",
+      "before": "Updates a queue's last-used timestamp.",
+      "after": "Records activity for the specified primary queue with a zero-counter metric capture."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "id": "M:ViciOne.ServiceBus.SqlTransport.SqlServer.SqlServerClientContext.TouchQueueAsync(System.String,System.Threading.CancellationToken)",
+      "node": "returns",
+      "before": "A task that completes after SQL Server updates the queue timestamp.",
+      "after": "A task that completes after SQL Server records the queue activity."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.ChannelContext.BasicNackAsync(System.UInt64,System.Boolean,System.Boolean,System.Threading.CancellationToken)",
+      "node": "returns",
+      "before": "A task that completes after the negative acknowledgement is written.",
+      "after": "A task that completes after rejection handling, which may be a no-op when the channel is unavailable or already closed."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.ScopeChannelContext.BasicNackAsync(System.UInt64,System.Boolean,System.Boolean,System.Threading.CancellationToken)",
+      "node": "returns",
+      "before": "A task that completes after the negative acknowledgement is written.",
+      "after": "A task that completes after rejection handling, which may be a no-op when the channel is unavailable or already closed."
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "id": "M:ViciOne.ServiceBus.RabbitMq.SharedChannelContext.BasicNackAsync(System.UInt64,System.Boolean,System.Boolean,System.Threading.CancellationToken)",
+      "node": "returns",
+      "before": "A task that completes after the rejection has been written to the channel.",
+      "after": "A task that completes after rejection handling, which may be a no-op when the channel is unavailable or already closed."
+    }
+  ],
+  "original4frames": [
+    {
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "dll_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.dll",
+      "dll_sha256": "b2198537098d5128824ddb4eb485aba75abe3a27a0f6679c6827e6f5ae27bd9d",
+      "xml_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq/release/ViciOne.ServiceBus.RabbitMq.xml",
+      "xml_sha256": "d8181bd705feba18dbcca3df2fdd795fee6027059a8a8ad4d0ce1b8399cbc392",
+      "pdb_sha256": "171a2d15cd3e7a5112a08f66a4f4cc279bdba0de25c18fee46095829ff726be1"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport",
+      "dll_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll",
+      "dll_sha256": "1c40ad088878f589630110f37a0ef1ef19f7d19880d4e3e71a96515172688871",
+      "xml_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.xml",
+      "xml_sha256": "97e52e0018833c7dd1a612ebdfd68321bec9a9e89756cafab5eae26967b996a1",
+      "pdb_sha256": "928cb290e90c78d17f14bd93b66cfe490b36419b14aad5b2021bac0ed6c889eb"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+      "dll_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll",
+      "dll_sha256": "d82f115ac7e86d3b391eb0ae9b7b8fb72cc6d6d80980f9cd53a3d5e1965a6f42",
+      "xml_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.xml",
+      "xml_sha256": "cc3f7615deec8242e20549ec4c3b2c7b6dd89d37348b2de357213d6510d4c35e",
+      "pdb_sha256": "ffec6fd7727c7204bc46bbcfbcf5f8ea8263afa5e58a73b7567dd8e88bf4a083"
+    },
+    {
+      "assembly": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "dll_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer/release/ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+      "dll_sha256": "d37a410372ee9a27ccfed857eb6dbdad9f22afa4ecd05bc3b8a75ce04e9a0912",
+      "xml_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer/release/ViciOne.ServiceBus.SqlTransport.SqlServer.xml",
+      "xml_sha256": "005d16fb9e2e1b6f58ac4c5dec8b3c22daf761e1d665b30608a23a4e6c5711c9",
+      "pdb_sha256": "4d4e34069c9ee49128f0d68cbb6569f9c2f38e4cb6492d08b7dc72f887bf4c53"
+    }
+  ],
+  "root_preflight_plan": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package176-root-doc11-and-cleanup6-application-plan-r1.json",
+    "sha256": "eb25a7673d85050c68dd1b55518d7f71da84e961c898dcecd6e0959c42e83f9d"
+  },
+  "independent_reviews": [
+    "package190-rabbit-channel-cleanup6-independent-runtime-peer-r2",
+    "package192-sql-touch-purpose-xml8-independent-runtime-peer-r1",
+    "package194-rabbit-nack-xml3-independent-runtime-peer-r1"
+  ],
+  "test_R1_withdrawn_R2_finally_race_corrected": true,
+  "runtime_product_changes": 0,
+  "native_run_or_finding_closure_claim": false,
+  "whole_API_A_plus": false
+}

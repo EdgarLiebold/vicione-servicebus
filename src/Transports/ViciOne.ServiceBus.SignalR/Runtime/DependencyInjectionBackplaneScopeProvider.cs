@@ -1,6 +1,10 @@
+using System.Collections.Concurrent;
+using System.Reflection;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.SignalR.Configuration;
 using ViciOne.ServiceBus.SignalR.Contracts;
 
 namespace ViciOne.ServiceBus.SignalR.Runtime;
@@ -24,12 +28,51 @@ internal sealed class DependencyInjectionBackplaneScopeProvider :
         AsyncServiceScope serviceScope = _serviceScopeFactory.CreateAsyncScope();
         try
         {
-            return new BackplaneScope<THub>(serviceScope);
+            Type busType = serviceScope.ServiceProvider.GetService<SignalRBackplaneSettings<THub>>()?.BusType ?? typeof(IBus);
+            return ScopeFactories<THub>.Get(busType)(serviceScope);
         }
-        catch
+        catch (Exception operationFailure)
         {
-            await serviceScope.DisposeAsync().ConfigureAwait(false);
+            await BackplaneOperationLifetime.ReleaseAfterOperationAsync(serviceScope, null, operationFailure)
+                .ConfigureAwait(false);
             throw;
+        }
+    }
+
+    static IBackplaneScope<THub> CreateDefaultScope<THub>(AsyncServiceScope serviceScope)
+        where THub : Hub
+    {
+        IServiceProvider provider = serviceScope.ServiceProvider;
+        return new BackplaneScope<THub>(serviceScope,
+            provider.GetRequiredService<IPublishEndpoint>(),
+            provider.GetRequiredService<IRequestClient<GroupCommand<THub>>>());
+    }
+
+    static IBackplaneScope<THub> CreateOwnedScope<TBus, THub>(AsyncServiceScope serviceScope)
+        where TBus : class, IBus
+        where THub : Hub
+    {
+        IServiceProvider provider = serviceScope.ServiceProvider;
+        return new BackplaneScope<THub>(serviceScope,
+            provider.GetRequiredService<Bind<TBus, IPublishEndpoint>>().Value,
+            provider.GetRequiredService<Bind<TBus, IRequestClient<GroupCommand<THub>>>>().Value);
+    }
+
+    static class ScopeFactories<THub>
+        where THub : Hub
+    {
+        static readonly ConcurrentDictionary<Type, Func<AsyncServiceScope, IBackplaneScope<THub>>> _factories = new();
+
+        public static Func<AsyncServiceScope, IBackplaneScope<THub>> Get(Type busType)
+        {
+            if (busType == typeof(IBus))
+                return CreateDefaultScope<THub>;
+
+            return _factories.GetOrAdd(busType, static type =>
+                typeof(DependencyInjectionBackplaneScopeProvider)
+                    .GetMethod(nameof(CreateOwnedScope), BindingFlags.Static | BindingFlags.NonPublic)!
+                    .MakeGenericMethod(type, typeof(THub))
+                    .CreateDelegate<Func<AsyncServiceScope, IBackplaneScope<THub>>>());
         }
     }
 
@@ -39,14 +82,13 @@ internal sealed class DependencyInjectionBackplaneScopeProvider :
     {
         readonly AsyncServiceScope _serviceScope;
 
-        public BackplaneScope(AsyncServiceScope serviceScope)
+        public BackplaneScope(AsyncServiceScope serviceScope, IPublishEndpoint publishEndpoint,
+            IRequestClient<GroupCommand<THub>> groupCommandClient)
         {
             _serviceScope = serviceScope;
-            PublishEndpoint = ServiceProvider.GetRequiredService<IPublishEndpoint>();
-            GroupCommandClient = ServiceProvider.GetRequiredService<IRequestClient<GroupCommand<THub>>>();
+            PublishEndpoint = publishEndpoint;
+            GroupCommandClient = groupCommandClient;
         }
-
-        IServiceProvider ServiceProvider => _serviceScope.ServiceProvider;
 
         public IPublishEndpoint PublishEndpoint { get; }
 

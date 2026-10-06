@@ -1,0 +1,20 @@
+{
+  "status": "PARTIAL_ROOT_PERSONAL_COMPLETE_LITERAL_DICTIONARY_NO_OWNER_FULL_CREDIT",
+  "actor": "/root",
+  "utc": "2026-10-04T00:13:23.708157+00:00",
+  "source_packs_personally_full_untruncated": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0101.txt",
+      "sha256": "3633c0e06c44720b9edef6428aef623b23f8f4052d45a3af3b602d1c74111195",
+      "bytes": 13973
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/core-canonical-root-read-preparation/SOURCE-0102.txt",
+      "sha256": "be4991c8f9db9ac4aba2c480e383f7ba0076e1ef9c22f920145b2ef4f37d4aa1",
+      "bytes": 13944
+    }
+  ],
+  "line_ids": "16807..17144; exact per-file ordered mappings still pending",
+  "whole_owner766": false,
+  "RAW_increment": 0
+}

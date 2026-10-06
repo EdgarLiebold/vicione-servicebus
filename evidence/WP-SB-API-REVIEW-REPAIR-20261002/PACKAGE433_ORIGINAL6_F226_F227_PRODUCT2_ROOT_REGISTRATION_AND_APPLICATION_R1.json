@@ -1,0 +1,122 @@
+{
+  "utc": "2026-10-06T12:04:06.441379+00:00",
+  "status": "CONFIRMED_ORIGINAL6_FINDINGS2_PRODUCT2_APPLIED_FIXED_NATIVE_PENDING",
+  "pins": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package431-pipe-owned-stop-topic-owner-lifetime-product2-root-proposed-r1/REPORT.json",
+      "sha256": "3670f183de74fb915b196d8509e016d1e13faab4df73f0b9a137258bb8f29410"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package431-pipe-owned-stop-topic-owner-lifetime-product2-root-proposed-r1/MANIFEST.json",
+      "sha256": "a3c878f9c131928c73f3fed5d5a25d70d1f449f9e7b877b6c287f347df417a13"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package431-product2-independent-source-peer-r1/REPORT.json",
+      "sha256": "b79ac79246a8909f073a53ecb6808c2f27c539cbcf286e3174fc9a222964bff7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package431-product2-independent-source-peer-r1/MANIFEST.json",
+      "sha256": "231e8e3e2e7b3b7fe9cef411d4bdf4e1e556c5f3d201fcb30078e240524a9c59"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package430-original6-independent-native-qualification-r1/REPORT.json",
+      "sha256": "bbdd27e132e8ba7cf5f02c48427033f87635efd91b098aaf22e7c71e17117bca"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package430-original6-independent-native-qualification-r1/MANIFEST.json",
+      "sha256": "78615c4c1e9f1a12bff11dd156cd8af0ba651efc942ce4bfb65dde48c67950b4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package431-root-source-read-agent-count-precision-r1/ERRATUM.json",
+      "sha256": "cf3ee3bb5f28e307c76c9f3abf66146e548ee83206c97bf2559a4ce37372d2aa"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package431-root-source-read-agent-count-precision-r1/MANIFEST.json",
+      "sha256": "e111f6c0d5bdbb263a69461a248428796e2f612499ca437ec77500346e548581"
+    }
+  ],
+  "changes": [
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+      "before_sha256": "03d4e0b667f35b672a602bae5a295fa4250076d4c381c98dad4a792bd5588ec1",
+      "proposed_sha256": "95990a1d8ad24d0c65c5daaa46ceacdbbeb818d376da9295f614eaaf5a3309d7",
+      "before_lines": 183,
+      "proposed_lines": 197,
+      "literal_inverse_equal": true,
+      "XML_comments_unchanged": true
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+      "before_sha256": "2b203290313f1394ab32f4890917c4b16f8893783842e4a46eceaa52bf06963b",
+      "proposed_sha256": "13d304a8b161cbbce750e4ae00f9a543cec80796bb1d2ed823f7e94c31a0ae45",
+      "before_lines": 182,
+      "proposed_lines": 186,
+      "literal_inverse_equal": true,
+      "XML_comments_unchanged": true
+    }
+  ],
+  "finding2": [
+    {
+      "id": "F-SB-API-226",
+      "severity": "Medium",
+      "title": "Pipe context supervisor synchronous owned stop failure skips later owned agent admission and earlier-work drain",
+      "source_owners": [
+        "src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs"
+      ],
+      "classification": "CONFIRMED_FINITE_NATIVE_PUBLIC_OWNED_STOP_ADMISSION_DEFECT",
+      "actual_original": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package430-original6-independent-native-qualification-r1/REPORT.json",
+        "sha256": "bbdd27e132e8ba7cf5f02c48427033f87635efd91b098aaf22e7c71e17117bca"
+      },
+      "actual_native_counts": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "causal_bound": "Actual public Stop after real three owned/one borrowed context; exact sync second IO with terminal parent observed. First66 actualStopAdmissions2 expected3 before fallback; later drain/completion assertions unreached. Separate from F160 transport stop phases and F204 plain Supervisor override policy.",
+      "scope": "All captured owned stop admissions in this concrete Pipe override and awaiting actual admitted stop Tasks. No arbitrary Completed getter/failure success promise."
+    },
+    {
+      "id": "F-SB-API-227",
+      "severity": "Medium",
+      "title": "SQS topic discovery replaces canceled loader and readmits SDK work after owner lifetime ends",
+      "source_owners": [
+        "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs"
+      ],
+      "classification": "CONFIRMED_FINITE_NATIVE_PUBLIC_OWNER_LIFETIME_REDISCOVERY_DEFECT",
+      "actual_original": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package430-original6-independent-native-qualification-r1/REPORT.json",
+        "sha256": "bbdd27e132e8ba7cf5f02c48427033f87635efd91b098aaf22e7c71e17117bca"
+      },
+      "actual_native_counts": {
+        "total": 4,
+        "passed": 2,
+        "failed": 2,
+        "skipped": 0
+      },
+      "causal_bound": "Both actual Get and GetByName see first ListTopics raw Task canceled exact ended owner token; first64 actual native calls2 expected1. Second recorded before finite caller cancel escape. Later public cancellation shape/no-circuitbreaker assertions unreached.",
+      "scope": "Stop rediscovery when already-observed owner lifetime cancellation ends declared discovery. Non-owner retry remains current policy, cooperative race not atomic admission promise."
+    }
+  ],
+  "known_before": 225,
+  "known_after": 227,
+  "bounded_accepted_unchanged": 225,
+  "root_personal_source_and_peer_reads": [
+    "42b528",
+    "a687f2",
+    "f442a7",
+    "20e170",
+    "606dbb Native causal/source/all limits; repeated guardCS mechanical list central cut not borrowed semantic authority"
+  ],
+  "mandatory_agent_read_count_erratum": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package431-root-source-read-agent-count-precision-r1/ERRATUM.json",
+  "Product_files": 2,
+  "Test_Req_changes": false,
+  "Master_changes": false,
+  "new_public_API": false,
+  "XML_comments_unchanged": true,
+  "exact_inverse_before_retained": true,
+  "fixed_native_required": 6,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package433-original6-findings226227-product2-root-application-before-r1",
+  "limits": "Finding original bounds only; repair acceptance awaits unchanged Test6 fixed compile/run/independent Native, impacted modules and publication. Whole API70/finalgates still open."
+}

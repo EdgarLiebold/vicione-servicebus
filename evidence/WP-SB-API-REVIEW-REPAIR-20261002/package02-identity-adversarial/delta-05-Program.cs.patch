@@ -1,0 +1,142 @@
+--- /private/tmp/vicione-servicebus-api-review-20261001/reproductions/public-contracts/Program.cs
++++ /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-corrected/Program.cs
+@@ -2,6 +2,8 @@
+ using System.Runtime.Serialization;
+ using System.Text;
+ using System.Text.Json;
++using ViciOne.ServiceBus;
++using ViciOne.ServiceBus.Advanced;
+ using ViciOne.ServiceBus.Advanced.Serialization;
+ using ViciOne.ServiceBus.AmazonS3.MessageData;
+ using ViciOne.ServiceBus.MessageData;
+@@ -15,6 +17,8 @@
+     "s3-prefix" => CheckS3Prefix(),
+     "key-id" => await CheckKeyIdAsync(),
+     "pre-auth" => await ObservePreAuthLookupAsync(),
++    "key-boundaries" => await CheckKeyBoundariesAsync(),
++    "contract-boundaries" => CheckContractBoundaries(),
+     _ => throw new ArgumentException("Unknown review mode.")
+ };
+ 
+@@ -128,6 +132,115 @@
+ }
+ static void Emit(object observation) => Console.WriteLine(JsonSerializer.Serialize(observation));
+ 
++static async Task<int> CheckKeyBoundariesAsync()
++{
++    byte[] payload = [0, 1, 127, 128, 254, 255];
++    string[] validNames = ["review-ascii", "review-Ω-😀", "review-\uFFFD", "\uD7FF", "\uE000",
++        new string('a', ushort.MaxValue), new string('Ω', 32767) + "a",
++        string.Concat(Enumerable.Repeat("😀", 16383)) + "abc"];
++    int roundtrips = 0;
++    foreach (string name in validNames)
++    {
++        byte[] bytes = SyntheticKey();
++        var key = new EncryptionKey(name, bytes);
++        Require(key.KeyId == name, "Valid key identifier was changed");
++        var provider = new StableKeyProvider(key);
++        IMessageDataRepository inner = new InMemoryMessageDataRepository();
++        var repository = new EncryptedMessageDataRepository(inner, provider, 64);
++        await using var source = new MemoryStream(payload, writable: false);
++        Uri address = await repository.PutAsync(source);
++        await using Stream envelopeStream = await inner.GetAsync(address);
++        byte[] envelope = await ReadAsync(envelopeStream);
++        int length = BinaryPrimitives.ReadUInt16BigEndian(envelope.AsSpan(5, 2));
++        byte[] expectedId = new UTF8Encoding(false, true).GetBytes(name);
++        Require(length == expectedId.Length && envelope.AsSpan(7, length).SequenceEqual(expectedId), "UTF8 envelope identifier was changed");
++        await using Stream result = await repository.GetAsync(address);
++        Require((await ReadAsync(result)).SequenceEqual(payload), "Valid key payload roundtrip failed");
++        Require(provider.Lookups.SequenceEqual([name]), "Historical key lookup changed identifier");
++        roundtrips++;
++    }
++
++    string[] malformed = ["key-\uD800", "key-\uDC00", "key-\uD800x", "key-\uDC00\uD800", "key-\uD800\uD800", "key-\uDC00x"];
++    int rejected = 0;
++    foreach (string name in malformed)
++    {
++        ArgumentException failure = Throws<ArgumentException>(() => new EncryptionKey(name, SyntheticKey()));
++        Require(failure.ParamName == "keyId" && failure.InnerException is EncoderFallbackException, "Malformed key must fail at keyId with encoding cause");
++        rejected++;
++    }
++    foreach (string name in new[] {new string('a', 65536), new string('Ω', 32768), string.Concat(Enumerable.Repeat("😀", 16384))})
++    {
++        ArgumentException failure = Throws<ArgumentException>(() => new EncryptionKey(name, SyntheticKey()));
++        Require(failure.ParamName == "keyId", "Oversized UTF8 identifier must name keyId");
++    }
++    Require(Throws<ArgumentNullException>(() => new EncryptionKey(null!, SyntheticKey())).ParamName == "keyId", "Null identifier guard changed");
++    Require(Throws<ArgumentException>(() => new EncryptionKey(" ", SyntheticKey())).ParamName == "keyId", "Blank identifier guard changed");
++
++    foreach (int size in new[] {16, 24, 32})
++    {
++        byte[] callerMaterial = Enumerable.Range(0, size).Select(x => (byte)x).ToArray();
++        byte[] originalMaterial = callerMaterial.ToArray();
++        const string name = "defensive-copy-control";
++        var key = new EncryptionKey(name, callerMaterial);
++        Array.Fill(callerMaterial, (byte)255);
++        IMessageDataRepository inner = new InMemoryMessageDataRepository();
++        var writer = new EncryptedMessageDataRepository(inner, new StableKeyProvider(key), 64);
++        var reader = new EncryptedMessageDataRepository(inner, new StableKeyProvider(new EncryptionKey(name, originalMaterial)), 64);
++        await using var source = new MemoryStream(payload, writable: false);
++        Uri address = await writer.PutAsync(source);
++        await using Stream result = await reader.GetAsync(address);
++        Require((await ReadAsync(result)).SequenceEqual(payload), "Caller mutation changed retained AES material");
++    }
++    foreach (int size in new[] {0, 15, 17, 23, 25, 31, 33})
++        Require(Throws<ArgumentException>(() => new EncryptionKey("valid", new byte[size])).ParamName == "keyMaterial", "AES key-size guard changed");
++    Emit(new {mode = "key-boundaries", valid_unicode_roundtrips = roundtrips, malformed_rejected = rejected,
++        inclusive_utf8_bytes = ushort.MaxValue, retained_aes_sizes_and_defensive_copy = true, contract = "PASS"});
++    return 0;
++}
++
++static int CheckContractBoundaries()
++{
++    string[] valid = ["review-ascii", "review-Übertragung-東京", "review-😀", "review-\uFFFD", "\uD7FF", "\uE000", new string('a', 256), string.Concat(Enumerable.Repeat("😀", 128))];
++    foreach (string name in valid)
++    {
++        var identity = new MessageContractIdentity(name, ushort.MaxValue);
++        Require(identity.Name == name && identity.MajorVersion == ushort.MaxValue, "Valid contract identity changed");
++        string canonical = identity.ToString();
++        Require(MessageContractIdentity.Parse(canonical) == identity, "Valid canonical parse changed identity");
++        Require(MessageContractIdentity.TryParse(canonical, out var parsed) && parsed == identity, "Valid TryParse rejected identity");
++        var attribute = new MessageContractAttribute(name, ushort.MaxValue);
++        Require(attribute.Name == name && attribute.MajorVersion == ushort.MaxValue, "Valid contract attribute changed");
++        var catalog = new MessageContractCatalogBuilder().Register<BoundaryMessage>(name, ushort.MaxValue).Build();
++        Require(catalog.GetIdentity(typeof(BoundaryMessage)) == identity && catalog.GetMessageType(identity) == typeof(BoundaryMessage), "Valid bidirectional catalog mapping changed");
++    }
++    string[] malformed = ["review-\uD800", "review-\uDC00", "review-\uD800x", "review-\uDC00\uD800", "review-\uD800\uD800", "review-\uDC00x"];
++    foreach (string name in malformed)
++    {
++        Require(Throws<ArgumentException>(() => new MessageContractIdentity(name, 1)).ParamName == "name", "Malformed constructor must name name");
++        Require(Throws<ArgumentException>(() => MessageContractIdentity.Parse(name + ";v=1")).ParamName == "name", "Malformed parse must name name");
++        Require(!MessageContractIdentity.TryParse(name + ";v=1", out var identity) && identity == default, "Malformed TryParse must return false and default");
++        Require(Throws<ArgumentException>(() => new MessageContractAttribute(name)).ParamName == "name", "Malformed attribute must reject name");
++        Require(Throws<ArgumentException>(() => new MessageContractCatalogBuilder().Register<BoundaryMessage>(name)).ParamName == "name", "Malformed catalog registration must reject name");
++    }
++    foreach (string name in new[] {new string('a', 257), string.Concat(Enumerable.Repeat("😀", 128)) + "a"})
++        Require(Throws<ArgumentOutOfRangeException>(() => new MessageContractIdentity(name, 1)).ParamName == "name", "Existing UTF16 length limit changed");
++    foreach (int version in new[] {-1, 0, 65536})
++        Require(Throws<ArgumentOutOfRangeException>(() => new MessageContractIdentity("valid", version)).ParamName == "majorVersion", "Version boundary changed");
++    foreach (string text in new[] {"valid;v=01", "valid;v=0", "valid;v=65536", "valid;v=-1", "valid;v=1;v=1"})
++        Require(!MessageContractIdentity.TryParse(text, out _), "Invalid canonical form was accepted");
++    Emit(new {mode = "contract-boundaries", valid_unicode_route_sets = valid.Length, malformed_rejected_route_sets = malformed.Length,
++        inclusive_utf16_characters = 256, retained_version_bounds = true, contract = "PASS"});
++    return 0;
++}
++
++static T Throws<T>(Action operation) where T : Exception
++{
++    try { operation(); }
++    catch (T exception) when (exception.GetType() == typeof(T)) { return exception; }
++    throw new InvalidOperationException("Expected exact " + typeof(T).Name + " was not thrown");
++}
++public sealed record BoundaryMessage(string Value);
++
+ sealed class StableKeyProvider(EncryptionKey current) : IEncryptionKeyProvider
+ {
+     public EncryptionKey Current { get; } = current;
+@@ -141,3 +254,5 @@
+         return key is not null;
+     }
+ }
++
++

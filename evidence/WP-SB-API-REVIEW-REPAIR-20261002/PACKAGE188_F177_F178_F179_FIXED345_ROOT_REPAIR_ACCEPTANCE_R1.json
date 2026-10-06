@@ -1,0 +1,60 @@
+{
+  "utc": "2026-10-05T15:08:59.730480+00:00",
+  "status": "F177_METADATA_F178_CONNECTION_F179_XML_FIXED_ADVERSARIAL_ROOT_REPAIR_ACCEPTED",
+  "findings": [
+    "F-SB-API-177",
+    "F-SB-API-178",
+    "F-SB-API-179"
+  ],
+  "counts": {
+    "known": 181,
+    "accepted_before": 176,
+    "accepted_after": 179
+  },
+  "strict_build": {
+    "phase": "package188-sqs-product6-lifetime9-final-strict-build-r1",
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log_sha256": "ead550654ff6c9b85f22bcf0572ed9bc8b73cf4f8264f7833455113b2689d1f6"
+  },
+  "actual_full_AWS_native": {
+    "phase": "package188-sqs-product6-lifetime9-fullaws-native-r1",
+    "total": 345,
+    "passed": 345,
+    "failed": 0,
+    "skipped": 0,
+    "log_sha256": "41a97125c9486dea042fb997e721144b56fcf9cbaa9fb705a14c514cc1237a64"
+  },
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package188-sqs-fixed345-independent-r1/REPORT.json",
+    "sha256": "09b57496c1d95f33f9f7aff992ec6241bb423fc85c23b886db45bd8bb6baeca6"
+  },
+  "actual17_result_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package188-sqs-actual17-fixed-independent-runtime-result-peer-r1/REPORT.json",
+    "sha256": "fd68f6290bc9c612075c9a282bc320c26b37432c3e3316561dde358c4b026a1f"
+  },
+  "root_actual_counterproof": {
+    "receipt": "444cd2",
+    "own_PE_PDB_reparse_frames": 10,
+    "source_documents": 2985,
+    "actual_PE_Req183_once": true
+  },
+  "root_personal_actual17_outcomes": "d86322",
+  "root_qualification_report_whole": "bf76f6",
+  "root_result_peer_whole": "19015b",
+  "product_source_and_test_peers": "Retained exact Root application 910cb... and fed46..., reviewed Source6/Source359/original304 with immutable pinned independent peers.",
+  "fixed_behaviour": [
+    "Configured endpoint ConnectionContext filters execute before actual provider topology admission for concrete and interface public callbacks; client and null controls preserved.",
+    "Configured queue attributes and tags reach actual held SQS CreateQueueRequest; subscription attributes survive topology declaration without being sent as queue attributes.",
+    "Client publication awaits configured continuation; missing or repeated next rejected; exact primary and cleanup failures retained; unpublished client retired once; controlled cancellation and separate endpoint client owners verified.",
+    "Published ConcurrentDeliveryLimit summary describes each ordered message group."
+  ],
+  "limits": [
+    "Actual SNS subscription operation not asserted by metadata declaration case.",
+    "Remaining328 AWS pass IDs are mechanically bound; no invented human whole-testbody review.",
+    "Frozen188 Source6/resource183 proof; separate validationOriginal2/resource184 remains pending.",
+    "No fresh188 SQS NuGet or loaded/cloud claim; final whole-suite/package consumer gates and remaining API review remain open."
+  ],
+  "global_Aplus": false
+}

@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-06T02:11:18.696883+00:00",
+  "status": "ROOT_ACCEPTED12_INDIVIDUAL_LOCAL_SOURCE_CONSTRUCTOR_CONTRACTS_NATIVE0",
+  "master_before_sha256": "ba15911c47f35fd5e9383039b15038c14022dffe408785cb573b01012a78ebbc",
+  "author_independent_evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package295-abstractions-class12-local-constructor-contracts-proposed-r1",
+      "manifest_sha256": "0d13c4027cf95273125c3f0868643fb20efe63e1c7995f47379efd9e0df7ed1d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package295-abstractions-class12-independent-runtime-source-peer-r2",
+      "manifest_sha256": "57348edb1824eb4c42721ce2e5a9f6095e1ed920e27cc51bc414c93b39ee3a3e"
+    }
+  ],
+  "root_authority": "Complete12 individualnorms d7832d; wholepeer50c0a8 (combined output had small normtruncate, fullnorms recoveredseparately d7832d). ApprovedP36 actual700 documents Source12 binds/XMLabsence/Originalfullrow12/currentMasterdisjoint in thiscall. Authors eachownwhole245+ConnectHandle23; no transferred RootwholeSourceauthority or whole700semanticclaim.",
+  "scope": "Six Attribute default routes, four NewId provider localroutes, EmptyConnectHandle, RequestRateAlgorithmOptions initializer order/defaults. required RequestResultLimit caller initialization/new()-constraint preserved. Externalbase/activation/environment/callback/method/lifetime ungraded. Excluded28enum/structIDs untouched.",
+  "preservation": "All18937 oldMasterrows unchanged, Source12appendonly. No product/test changes or new Native/ABI credit.",
+  "counts_after": {
+    "master": 18949,
+    "Original_accepted": 18087,
+    "Original_remaining": 482
+  },
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false
+}

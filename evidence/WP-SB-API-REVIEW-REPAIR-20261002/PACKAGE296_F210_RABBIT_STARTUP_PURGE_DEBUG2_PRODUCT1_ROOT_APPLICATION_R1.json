@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T01:28:38.173121+00:00",
+  "status": "INDEPENDENT_SOURCE_PEER_APPROVED_PRODUCT1_DEBUG2_APPLIED_NATIVE_PENDING",
+  "finding": "F-SB-API-210",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package290-rabbit-purge-own-debug2-product-proposed-r1/REPORT.json",
+    "sha256": "1cdc362136efd9678704427ce650d1558f34a6273ed28b73db6f5b8d515d2610"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package290-rabbit-purge-debug2-independent-source-peer-r1/REPORT.json",
+    "sha256": "4f3b4fda8fe7ba93ad9ad5f7ab82c6afbb83d3a7b62156fde199d04b5ef5497b"
+  },
+  "source": {
+    "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Middleware/PurgeOnStartupFilter.cs",
+    "before_sha256": "3e2a7e9d1eb83d7325000bdc9c9f23fc04b3ef5bbc6ffe4f2ae3719f183d38c6",
+    "proposed_sha256": "52fb5db21acc28b55038bc191362d5331f4cdbd18bf569e6246101d70ed9f8e7",
+    "before_lines": 67,
+    "proposed_lines": 79,
+    "added_lines": 12
+  },
+  "exact2inverse_whole67": true,
+  "F077_once_and_allSDK_CT_semaphore_next_unchanged": true,
+  "Test276_Req289_unchanged": true,
+  "guard_and_phase_precision": "f7ff98 initialguard assumedlist but actualOriginalMANdictfiles; no mutation occurred. Root mistakenly started fixed2-r1 after failedguard; this actual1P1F run is merely unchangedOriginal repetition c93a1a, not repairedproduct or new defect; zero fixedcredit. Allactualschemas inspected504e02 and guard rerun beforethisapplication. Truefixed run uses-r2.",
+  "native_credit": 0,
+  "grade": null
+}

@@ -1,3 +1,4 @@
+using System;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AmazonSqs;
@@ -10,7 +11,13 @@ public class ClientContextSupervisor :
     /// <summary>Initializes a client supervisor backed by a connection supervisor.</summary>
     /// <param name="connectionContextSupervisor">The connection supervisor and parent consume agent.</param>
     public ClientContextSupervisor(IConnectionContextSupervisor connectionContextSupervisor)
-        : base(new ClientContextFactory(connectionContextSupervisor))
+        : this(connectionContextSupervisor, null)
+    {
+    }
+
+    internal ClientContextSupervisor(IConnectionContextSupervisor connectionContextSupervisor,
+        Func<IPipe<ConnectionContext>, IPipe<ConnectionContext>>? connectionPipeBuilder)
+        : base(new ClientContextFactory(connectionContextSupervisor, connectionPipeBuilder))
     {
         connectionContextSupervisor.AddConsumeAgent(this);
     }

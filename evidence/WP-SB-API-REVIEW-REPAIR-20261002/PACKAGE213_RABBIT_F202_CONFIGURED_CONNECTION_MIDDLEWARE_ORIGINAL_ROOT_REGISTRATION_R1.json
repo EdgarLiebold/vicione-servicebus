@@ -1,0 +1,89 @@
+{
+  "utc": "2026-10-05T19:40:54.116785+00:00",
+  "status": "CONFIRMED_FINITE_NATIVE_ORIGINAL_HEALTHY_CONTROL_PASSED_REPAIR_PENDING",
+  "finding": "F-SB-API-202",
+  "severity": "High",
+  "title": "RabbitMQ configured receive-endpoint connection middleware is omitted before channel creation",
+  "source_owner": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqReceiveEndpointConfiguration.cs",
+  "related_distinct_owner_finding": "F-SB-API-178 concerns AmazonSqs only; RabbitMQ independently confirmed in actual Original213R2. No transfer of runtime credit.",
+  "native_receipt": {
+    "phase": "package213-rabbit-connection-wiring-original2-native-r2",
+    "command": [
+      "dotnet",
+      "test",
+      "--project",
+      "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+      "--configuration",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "--filter-class",
+      "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.Configuration.RabbitMqConfiguredConnectionWiringTests",
+      "--results-directory",
+      "artifacts/results-package213-rabbit-connection-wiring-original2-r2",
+      "--output",
+      "Detailed"
+    ],
+    "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "exit_code": 2,
+    "started_utc": "2026-10-05T19:30:18.081769+00:00",
+    "completed_utc": "2026-10-05T19:30:20.418530+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package213-rabbit-connection-wiring-original2-native-r2.log",
+    "log_sha256": "2773e3073ea2722ac93ab45b0cf903ef62b3b21d0408bb1f506b8012fb1095f8"
+  },
+  "actual_counts": {
+    "total": 2,
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0
+  },
+  "capture": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package213-rabbit-connection-wiring-original2-source-bound-capture-r2",
+    "BEFORE_sha256": "169f5687327ed2a9a7d4c6b0bf624c1823b9fbd128b014840fe5b498976eefb8",
+    "AFTER_sha256": "9690bbc3e66af1575a8bef844c663c468435603cc77ab65452e3aee3a929b9e1",
+    "PRE_sha256": "60107fb5ca63bbe712562a187a2e41d0a1d336b804f6c472642259c848b801c3"
+  },
+  "independent_result_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package213-rabbit-wiring-original-r2-independent-scanner-r1",
+    "REPORT_sha256": "0be52865e986f4fb581c23fda0bedf7857420a081d49dd04a19c2a7a08fe448f",
+    "MANIFEST_sha256": "5cfb54f5048a2c0b591bad1829c7a1e91f86700cbacc9ff84a0f615ceb1baacc",
+    "all_payloads_verified": true
+  },
+  "healthy_control": {
+    "status": "All assertions pass",
+    "bounded_route": "Broker-free unconnected receive-startup path with actual public endpoint construction and real owned startup/stop tasks; no normal broker/channel topology/QoS/consumer behavior claim.",
+    "reached_assertions": [
+      "Public Build registers exact endpoint/queue once; callback/filter/create counters initially zero.",
+      "Actual channel creation once supplies non-null agent and live cancellable token; provider work and readiness held pending.",
+      "After actual channel work release, Ready(false) completes with exact address/endpoint.",
+      "Channel/connection shutdown handlers attached once, no early disposal.",
+      "Endpoint Stop remains pending while channel disposal admitted once; borrowed connection not yet disposed.",
+      "Released actual Dispose and joined endpoint Stop/creation-agent completion remove handlers once.",
+      "Connection remains borrowed until owning fixture supervisor Stop, then disposed once.",
+      "Final actual Create and channel Dispose counts are one; nested cleanup joins/restoration complete."
+    ]
+  },
+  "first_finite_failure": {
+    "status": "Finite first failure",
+    "first_failure": {
+      "test_line": 79,
+      "assertion": "Assert.Equal(1, filterCalls)",
+      "expected": 1,
+      "actual": 0
+    },
+    "reached_before_first_failure": [
+      "Actual public ConfigureConnection callback ran once.",
+      "Public Build and endpoint registration prerequisites passed.",
+      "Startup awaited either configured-filter entry or genuine channel-creation entry; configured filter count is zero."
+    ],
+    "source_supported_inference": "With filter entry emitted only after increment, the observed wait is consistent with direct channel creation winning; the later CreateCalls assertion is not credited as reached.",
+    "unreached_assertions": "All assertions after line79, including provider count/token, readiness and domain assertions; later line181 is propagation through cleanup, not another causal failure.",
+    "cleanup": "Actual cleanup releases and independently joins started work and restores ambient state; raw log contains no R2 watchdog failure."
+  },
+  "source_cause_boundary": "The actual public receive endpoint stores/calls/validates its connection configurator, but Build composes the channel configurator. The queue context constructs ChannelContextSupervisor from the host ConnectionContextSupervisor, and ChannelContextFactory delegates agent admission to actual ConnectionContext.CreateChannelContextAsync. The configured connection filter is absent from this tested receive-startup construction path.",
+  "Root_personal_review": "Wholeactual427 before8dd0da/3c909d plus publicAutoStartfalse one-line inversecee1d1/4641af; ownwholeOriginalR2actualDetailedloge6f238 and independentwholeREPORT76342b. First Root registration attempt rejected manifest-list schema before any writes; corrected descriptor schema checked146a99, all payloads verified.",
+  "repair_design": "229 borrowed endpoint-generation connection-supervisor facade; specifications compiled once, immutable actual per-call continuation, parent ownership/channel agent lifetime retained. Independent adversarial source review before Root apply.",
+  "whole_API_review_closed": false,
+  "repair_accepted": false,
+  "original_R1_watchdog_not_promoted": true
+}

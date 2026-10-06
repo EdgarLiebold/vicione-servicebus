@@ -1,0 +1,48 @@
+{
+  "utc": "2026-10-04T23:14:23.370020+00:00",
+  "decision": "ACCEPT400_INDIVIDUAL_INTERFACE_SOURCE_CONTRACTS_DEFAULT2_BOUNDED_OUTBOX_METHOD1_HELD",
+  "api_before": 3823,
+  "api_after": 4223,
+  "source_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-core-context-transport-initializer401-research-r1/REPORT.json",
+    "sha256": "e0b039b1412a2e7d08fbc71719057e7ee5edbe1395e2f40044f2e7189c7d4a08"
+  },
+  "per_member": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-core-context-transport-initializer401-research-r1/PER_SYMBOL401_CONTEXT_AND_RECOMMENDATIONS.json",
+    "sha256": "2341bf1bfd9ffadd4b1a13c68ce3fd1807c4974d70dffe5cde92d7bf2d7629b7"
+  },
+  "precision12owner61rows": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package151-core-context-transport-initializer401-research-r1/TWELVE_OWNER_NORM_PRECISION_ERRATUM_R2.json",
+    "sha256": "8ac9ad086e555a9cf85611c3bd5a8c8dbebb21faedb56d188c3294415c66e067"
+  },
+  "held": "M:ViciOne.ServiceBus.Middleware.IOutboxContextFactory`1.SendAsync``1(ViciOne.ServiceBus.ConsumeContext{``0},ViciOne.ServiceBus.Middleware.OutboxConsumeOptions,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Middleware.OutboxConsumeContext{``0}},System.Threading.CancellationToken)",
+  "root_personal_review": [
+    "0f06ca",
+    "08aa4e",
+    "af74a9",
+    "8100a8",
+    "0b94d4",
+    "c5efe0",
+    "4cc664",
+    "8cb524",
+    "97a2c3",
+    "f962a8",
+    "a1f3c1",
+    "9b4b27",
+    "81ccf7",
+    "76e438",
+    "e98d45",
+    "3d25ad",
+    "f98c49(errors/tokens only)",
+    "177fce(default2actualbody+testroute)",
+    "af1f32(all401currentcanonicalXML)"
+  ],
+  "source_binding": "Full121-manifest entries and103 sourceowners checked8a87b5 before historical extra output failure; af1f32 corrects that canonical-only target. Historic profile XML not currentproof.",
+  "limits": [
+    "Abstract methods and accessors Source contracts; concrete guards/customproviders/dispatch/storage/lifecycle runtime remain separate.",
+    "Default TryGetContext actual body/source test route personally read; source/compile/historicalUnit40R2 module only, no new native fact receipt. Literal ActivitySystem emptygetter Source-only.",
+    "Member nullable/default/refout/constraints/XML clauses individually reviewed, no interface mirror tests.",
+    "M179 wrong destination-send summary held pending independent truthful XML fix and current compiled package qualification."
+  ],
+  "CLOSED": false
+}

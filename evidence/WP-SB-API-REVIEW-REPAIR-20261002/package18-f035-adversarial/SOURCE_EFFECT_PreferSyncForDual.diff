@@ -1,0 +1,11 @@
+--- frozen-corrected-Registrar
++++ PreferSyncForDual
+@@ -469,7 +469,7 @@
+             if (Interlocked.Exchange(ref _disposed, 1) != 0)
+                 return ValueTask.CompletedTask;
+ 
+-            if (Value is IAsyncDisposable asynchronous)
++            if (Value is IAsyncDisposable asynchronous && Value is not IDisposable)
+                 return asynchronous.DisposeAsync();
+ 
+             ((IDisposable)Value).Dispose();

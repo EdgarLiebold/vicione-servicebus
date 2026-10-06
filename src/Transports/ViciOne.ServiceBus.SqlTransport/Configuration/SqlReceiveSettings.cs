@@ -11,7 +11,7 @@ public class SqlReceiveSettings :
     int _concurrentDeliveryLimit;
 
     /// <summary>Initializes a new instance.</summary>
-    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <param name="configuration">The endpoint configuration retained by the receive settings.</param>
     /// <param name="queueName">The queue name.</param>
     /// <param name="autoDeleteOnIdle">The auto delete on idle.</param>
     public SqlReceiveSettings(ISqlEndpointConfiguration configuration, string queueName, TimeSpan? autoDeleteOnIdle = null)

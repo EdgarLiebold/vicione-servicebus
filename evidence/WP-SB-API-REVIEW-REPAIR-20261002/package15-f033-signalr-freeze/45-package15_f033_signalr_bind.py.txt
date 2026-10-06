@@ -1,0 +1,119 @@
+"""Independent Root binding of SignalR source effects, actual receipts and selected package chains."""
+import ast
+import base64
+import csv
+import hashlib
+import json
+import shutil
+import zipfile
+import xml.etree.ElementTree as XML
+from pathlib import Path
+
+W = Path('/Users/edgar.liebold/Downloads/ViciOne Suite 2.0')
+O = W / 'repositories/vicione-servicebus'
+R = Path('/private/tmp/vicione-servicebus-api-review-20261001')
+E = O / 'evidence/WP-SB-API-REVIEW-REPAIR-20261002'
+D = W / 'SERVICEBUS_API_REVIEW_AND_REPAIR'
+runner = D / 'package15_f033_signalr_mutations.py'
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+oldtree = ast.parse((D / 'package14_f031_mutations.py').read_text())
+paths = next(ast.literal_eval(x.value) for x in oldtree.body if isinstance(x, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'PATHS' for t in x.targets))
+paths.update(provider='src/Transports/ViciOne.ServiceBus.SignalR/Runtime/DependencyInjectionBackplaneScopeProvider.cs', manager='src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ServiceBusHubLifetimeManager.cs', backplane_lifetime='src/Transports/ViciOne.ServiceBus.SignalR/Runtime/BackplaneOperationLifetime.cs')
+corrected = {k: (O / rel).read_text() for k, rel in paths.items()}
+original = {k: (R / 'frozen-repository' / rel).read_bytes() if (R / 'frozen-repository' / rel).exists() else None for k, rel in paths.items()}
+tree = ast.parse(runner.read_text())
+functions = [x for x in tree.body if isinstance(x, ast.FunctionDef) and x.name in ['mutation', 'method']]
+namespace = dict(corrected=corrected, original=original)
+exec(compile(ast.Module(body=functions, type_ignores=[]), str(runner), 'exec'), namespace)
+data = json.loads((E / 'PACKAGE15_F033_SIGNALR_MUTATIONS.json').read_text())
+assert data['status'].startswith('TEN_COMPILED_') and len(data['mutants']) == 10
+frames = [('corrected', data['corrected_binary'], corrected)]
+for mutant in data['mutants']:
+    expected, negative, positive, assertion = namespace['mutation'](mutant['name'])
+    failed = mutant['rejection']['actual']['cases'][0]
+    assert failed['case'] == negative and failed['exception_type'] == assertion and not failed['bounded_guard_failure']
+    assert mutant['positive_control']['actual']['cases'][0]['case'] == positive
+    assert mutant['positive_control']['actual']['failures'] == 0
+    frames.append((mutant['name'], mutant['binary'], expected))
+frames.append(('rollback', data['rollback_binary'], corrected))
+effects = []
+for name, frame, expected in frames:
+    assert set(frame['source_snapshots']) == set(paths.values())
+    for key, rel in paths.items():
+        snap = frame['source_snapshots'][rel]
+        assert Path(snap['path']).read_text() == expected[key] and sha(snap['path']) == snap['sha256']
+        effects.append(dict(variant=name, source=rel, sha256=snap['sha256']))
+    for binary in frame['binaries']: assert sha(binary['path']) == binary['sha256']
+assert len(effects) == 252
+receipts = [json.loads(line) for line in (E / 'VERIFICATION_LOG.jsonl').read_text().splitlines() if json.loads(line)['phase'].startswith('package15-f033-signalr-')]
+for receipt in receipts:
+    assert sha(receipt['log']) == receipt['log_sha256']
+    log = Path(receipt['log']).read_text()
+    if 'build' in receipt['command'] and receipt['exit_code'] == 0:
+        assert ('0 Warning(s)' in log and '0 Error(s)' in log) or ('0 Warnung(en)' in log and '0 Fehler' in log)
+previous = json.loads(Path(next(x['log'] for x in receipts if x['phase'] == 'package15-f033-signalr-public-previous-fortyone-r3')).read_text())
+fixed = json.loads(Path(next(x['log'] for x in receipts if x['phase'] == 'package15-f033-signalr-public-corrected-fortyone')).read_text())
+assert previous['count'] == 41 and previous['failures'] == 17 and fixed['count'] == 41 and fixed['failures'] == 0
+for case in previous['cases']:
+    if not case['assertions_passed']:
+        assert not case['bounded_guard_failure'] and case['exception_type'] in ['Xunit.Sdk.IsTypeException', 'Xunit.Sdk.IsAssignableFromException']
+        assert 'Cases.cs:line' in case['StackTrace']
+for control in data['controls'] + [data['rollback']]: assert control['actual']['count'] == 41 and control['actual']['failures'] == 0
+chains = []
+pruning = []
+xmlns = {'n': 'http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd'}
+for stage, actual in [('previous', previous), ('corrected', fixed)]:
+    owner = R / 'repair-consumers/package15-f033-signalr' / stage
+    lock = json.loads((owner / 'packages.lock.json').read_text())['dependencies']['net10.0']
+    assets_path = owner / 'obj/project.assets.json'; assets = json.loads(assets_path.read_text())
+    prune = assets['project']['frameworks']['net10.0']['packagesToPrune']
+    assert not any(k.startswith('Microsoft.Extensions.') for k in assets['libraries'])
+    assert 'Microsoft.AspNetCore.App' in assets['project']['frameworks']['net10.0']['frameworkReferences']
+    for package in ['ViciOne.ServiceBus', 'ViciOne.ServiceBus.Abstractions', 'ViciOne.ServiceBus.SignalR']:
+        selected = R / 'repair-packages/package15-f033-signalr' / stage / (package + '.1.0.0.nupkg')
+        raw = selected.read_bytes(); digest = base64.b64encode(hashlib.sha512(raw).digest()).decode()
+        assert digest == lock[package]['contentHash']
+        cache = owner / 'restored-packages' / package.lower() / '1.0.0'
+        assert (cache / (package.lower() + '.1.0.0.nupkg.sha512')).read_text().strip() == digest
+        assert sha(cache / (package.lower() + '.1.0.0.nupkg')) == sha(selected)
+        runtime = next(x for x in actual['runtime']['loadedProductAssemblies'] if x['name'] == package)
+        dll = package + '.dll'
+        with zipfile.ZipFile(selected) as z:
+            entry = next(x for x in z.namelist() if x.startswith('lib/') and x.endswith('/' + dll))
+            assert hashlib.sha256(z.read(entry)).hexdigest() == runtime['sha256']
+            nuspec = XML.fromstring(z.read(package + '.nuspec'))
+            dependency_rows = [x.attrib for x in nuspec.findall('.//n:dependency', xmlns)]
+        assert sha(runtime['path']) == runtime['sha256'] and sha(cache / entry) == runtime['sha256']
+        omitted = [x for x in dependency_rows if x['id'].startswith('Microsoft.Extensions.')]
+        for dependency in omitted:
+            assert dependency['version'] == '10.0.12' and prune[dependency['id']] == '(,10.0.32767]'
+            assert dependency['id'] not in lock[package].get('dependencies', {})
+        chains.append(dict(consumer=stage, package=str(selected), sha256=sha(selected), raw_zip_sha512_base64=digest, cache=str(cache), runtime=runtime, nuspec_dependencies=dependency_rows))
+        if omitted: pruning.append(dict(consumer=stage, unchanged_core_package_dependencies=omitted, assets=str(assets_path), assets_sha256=sha(assets_path), sdk_prune_ranges={x['id']: prune[x['id']] for x in omitted}, actual_framework='Microsoft.AspNetCore.App10.0.10', no_nuspec_modified=True))
+    for microsoft in actual['runtime']['loadedMicrosoftAssemblies']:
+        assert '/Microsoft.AspNetCore.App/10.0.10/' in microsoft['path'] and sha(microsoft['path']) == microsoft['sha256']
+for package in ['ViciOne.ServiceBus', 'ViciOne.ServiceBus.Abstractions']:
+    a = next(x for x in previous['runtime']['loadedProductAssemblies'] if x['name'] == package)
+    b = next(x for x in fixed['runtime']['loadedProductAssemblies'] if x['name'] == package)
+    assert a['sha256'] == b['sha256']
+rows = list(csv.DictReader((R / 'FILE_COVERAGE.csv').open())); assert len(rows) == 6209
+assert all(sha(R / 'mutations/source-main' / row['path']) == row['sha256'] for row in rows)
+assert not (R / 'mutations/source-main' / paths['identity']).exists() and not (R / 'mutations/source-main' / paths['backplane_lifetime']).exists()
+assert data['oracle_hashes_preserved'] and data['runtime_restored'] and not data['original_mismatches']
+assert all(sha(p) == expected for p, expected in data['oracle_hashes'].items())
+binding = dict(source_effect_checks=effects, actual_receipts=receipts, selected_package_chains=chains, explicit_sdk_pruning_binding=pruning, original_final='41:17causal assertion reds/24positives/0guards', corrected=41, baseline=41, rollback=41, compiled_mutants=10, prior_nine_exact_reuse=data['prior_nine_pairs'], excluded='R1-R10 setup; R11 incorrect tenth positive independently found and corrected, no ten-kill before R4 pair', original_M_restored=6209, oracle_preserved=True, runtime_restored=True, mutation_mode='SDK-compiled SignalR DLL substitutions; Core/Abstractions runtime bytes constant; actual embedded PDBs separately independently inspectable', whole_API_CLOSED=False)
+bound = E / 'PACKAGE15_F033_SIGNALR_ROOT_BINDING.json'; bound.write_text(json.dumps(binding, indent=2) + '\n')
+folder = E / 'package15-f033-signalr-freeze'; folder.mkdir(exist_ok=False)
+owned = [O / rel for rel in paths.values()]
+for stage in ['previous', 'corrected']: owned.extend(sorted(p for p in (R / 'repair-consumers/package15-f033-signalr' / stage).iterdir() if p.is_file()))
+owned.extend([runner, D / 'run_operation.py', Path(__file__)])
+assert len(owned) == 46
+inputs = []
+for index, p in enumerate(owned):
+    snap = folder / (f'{index:02d}-' + p.name + '.txt'); shutil.copyfile(p, snap)
+    inputs.append(dict(path=str(p), snapshot=str(snap), bytes=p.stat().st_size, sha256=sha(p)))
+plan_names = ['PACKAGE15_F033_SIGNALR_SOURCE_PLAN.json', 'PACKAGE15_F033_SIGNALR_PUBLIC_OWNER_PLAN.json', 'PACKAGE15_F033_SIGNALR_PUBLIC_PRE_NATIVE_READ.json', 'PACKAGE15_F033_SIGNALR_PUBLIC_PRE_NATIVE_READ_R2.json']
+plan_names.extend(['PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION.json'] + ['PACKAGE15_F033_SIGNALR_SETUP_EXCLUSION_R' + str(i) + '.json' for i in range(2,11)] + ['PACKAGE15_F033_SIGNALR_CONTROL_CORRECTION_R11.json'])
+freeze = dict(status='FROZEN_F033_SIGNALR_ADVERSARIAL_PENDING', finding='F-SB-API-033', scope='three SignalR product files;21shared frame+22public owner inputs+3runners', owned_inputs=inputs, root_binding=dict(path=str(bound), sha256=sha(bound)), mutations=dict(path=str(E / 'PACKAGE15_F033_SIGNALR_MUTATIONS.json'), sha256=sha(E / 'PACKAGE15_F033_SIGNALR_MUTATIONS.json')), plans_and_exclusions=[dict(path=str(E / name), sha256=sha(E / name)) for name in plan_names], separate_candidate='SIGNALR-FANOUT-SYNC-001 UNVERIFIED, separate qualification pending; no F033 closure transfers', limits='One real InMemory bus/group Ack and public custom SPI fault controls; no HTTP/cross-node/cloud/ARM/heap/wholeCoretestowner or wholeAPI grade. Actual Microsoft framework10.0.10; original10.0.12 plan historical, no exactSDKsourceFULL assertion.')
+frozen = E / 'PACKAGE15_F033_SIGNALR_FREEZE.json'; frozen.write_text(json.dumps(freeze, indent=2) + '\n')
+print(json.dumps(dict(effects=len(effects), receipts=len(receipts), package_chains=len(chains), owned=len(owned), freeze_sha256=sha(frozen))))

@@ -1,0 +1,13 @@
+{
+  "utc": "2026-10-06T04:39:48.184689+00:00",
+  "status": "INDEPENDENT_SOURCE_REVIEWED_XML_STREAM_TEST_R2_APPLIED_ORIGINAL_NATIVE_PENDING",
+  "author_manifest": "eecb43c5c534d988638d9716f997832cb1736faf0cb31e1c98dc4e5008d3e4f9",
+  "root_peer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package341-azure-xml-stream-test-r2-independent-root-source-peer-r1",
+  "root_peer_manifest": "41de4257984855275e8349cfad5950bff2c71e55f44a9339d0c1a62722685839",
+  "before_test_sha256": "d7a0403e99a68f2a2f124c8f761cd3d756adfc1b65fcf8e8ce245a6cbd2c8171",
+  "after_test_sha256": "84d97957f2d9f2566a5db7bbda0b431d613982d3529cfe07a498ae9ee17ded71",
+  "Product_changes": 0,
+  "requirement_catalog_unchanged_sha256": "ea246e143b45725db1f9d5e8597615ef18f33229968980fde75d1bf3d95000aa",
+  "Native_credit": 0,
+  "grade": null
+}

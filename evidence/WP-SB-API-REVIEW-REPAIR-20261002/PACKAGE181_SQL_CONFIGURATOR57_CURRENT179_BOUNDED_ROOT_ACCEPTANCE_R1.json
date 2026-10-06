@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-05T11:57:38.175577+00:00",
+  "actor": "/root",
+  "scope": "57 disjoint original SQL localconfiguration/type contracts; zero accessor aliases/native claims",
+  "before": {
+    "raw": 8980,
+    "original": 8118
+  },
+  "after": {
+    "raw": 9037,
+    "original": 8175,
+    "original_remaining": 10394,
+    "sidecars": 833
+  },
+  "author_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package205-sql-configurator-topology57-current179-contracts-r2/REPORT.json",
+    "sha256": "1dcb3b6ac1b8cfc01f9934d21b1cc8192b589be6b4532821f8dc8c3f98a7bee1",
+    "manifest_sha256": "e4eb7b24c29e531b4b67880c87fccd512025a19a9a6f50275fae867575b6f7ee"
+  },
+  "independent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package208-sql57-and-interface81-corrections-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "de5e5579c41c0eecae4c929bbd4430bdff043abdabe2bff18b9a4f7d5ad4be60",
+    "manifest_sha256": "7ad624fe3859a155aa020ae6b406f37133b2e3d5f0cdd19c1d394de6f28cf4a8"
+  },
+  "root_personal_read": "All57 individualnorms c4646c+1f6763; allfive actual455Source bodies 78474f; independentpeer whole549e06. Source57 literal all8MAN entries/currentSource5/OriginalCSV/qualified179PDB/currentXML57/CRC/disjoint/nativeruntimebounds checked here. Two getter artifacts corrected by exactID before promotion. No borrowed human-source or runtime credit.",
+  "native_cases_added": 0,
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "runtime_obligations_preserved": true,
+  "instrument_errata": "Three read-only preflights stopped before any writes: relativeMAN path; exacttwo allowedBoundedRECstatuses; list-vs-map MAN normalization. No ProductFinding."
+}

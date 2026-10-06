@@ -1,0 +1,146 @@
+{
+  "status": "FRESH_NUGET_ONLY_70_CASES_GREEN_FROZEN_ADVERSARIAL_PENDING",
+  "findings": [
+    "F013",
+    "F014",
+    "F016",
+    "F017"
+  ],
+  "files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/ApiSurfaceGlobalUsings.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public/freeze/00-ApiSurfaceGlobalUsings.cs",
+      "sha256": "ecd805162a2970979ebb8080228bfe22493418b176f19595cb97d916b129fb47",
+      "bytes": 679
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubBuiltContextCapture.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public/freeze/01-EventHubBuiltContextCapture.cs",
+      "sha256": "7f84d4ca721d0eec08dfecc1d7b5dc1b79bef13cfadb7f40293f3fe00e90a081",
+      "bytes": 5052
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubClosingRegressionTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public/freeze/02-EventHubClosingRegressionTests.cs",
+      "sha256": "4dafff623c158ac522e5dbd503b384ad127328eef10fc36372d5550b62315643",
+      "bytes": 7165
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubDeferredCallerCancellationRegressionTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public/freeze/03-EventHubDeferredCallerCancellationRegressionTests.cs",
+      "sha256": "a3bbc162f53c8a096e98727ce535b36d67e98174e7565e69d6e90134a72192f0",
+      "bytes": 14421
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubPublicContracts.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public/freeze/04-EventHubPublicContracts.csproj",
+      "sha256": "a21099102bfe0220faedabbfdd5cd5687fda1bb414d0ed0e1af74cc8e9077072",
+      "bytes": 607
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubReceivePolicyRegressionTests.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public/freeze/05-EventHubReceivePolicyRegressionTests.cs",
+      "sha256": "0f8809be0d7a4a06fea86bf609744dbb6457a2de424d60eaac23b323e16fe33c",
+      "bytes": 13349
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public/freeze/06-NuGet.Config",
+      "sha256": "2f724c9df6e5592421f4521799c6e043add8717a8e58327f8eb26d06df2927c4",
+      "bytes": 512
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public/freeze/07-Program.cs",
+      "sha256": "13bc91923dc85550376526ca521fd38c94db85a124a2492a7679debe29506bf6",
+      "bytes": 22192
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/PublicContractRuntime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public/freeze/08-PublicContractRuntime.cs",
+      "sha256": "fe8e43a909ca5c028b3e6d44b451840ea6f803a04f0d6a6f3c1a72ecbb919521",
+      "bytes": 463
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public/freeze/09-packages.lock.json",
+      "sha256": "76ebf1f78dfaa140b7a58048c216361edc2f72c3e760972cafa05297c019fc83",
+      "bytes": 14361
+    }
+  ],
+  "existing_product_freeze_sha256": "827aff14744d9383e0e18c584035ef729dfa820b1436c00a9870b882bd26d8a0",
+  "binding": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE03_EVENTHUB_PUBLIC_BINDING.json",
+    "sha256": "095f21e044360b3adef0fd9284f09376605f636dce68d9d4b4c7167fc3e3ed62"
+  },
+  "native_receipts": [
+    {
+      "phase": "package03-eventhub-fresh-pack",
+      "command": [
+        "dotnet",
+        "pack",
+        "src/Transports/ViciOne.ServiceBus.EventHubs/ViciOne.ServiceBus.EventHubs.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "-o",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package03-eventhub",
+        "-p:PackageVersion=1.0.0",
+        "-warnaserror"
+      ],
+      "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:11:34.336454+00:00",
+      "completed_utc": "2026-10-03T00:11:36.714035+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-fresh-pack.log",
+      "log_sha256": "db3bcb683cde148a4aa02a8281c7129773bdd3f158734b18b621da5a937130e9"
+    },
+    {
+      "phase": "package03-eventhub-public-build-r5",
+      "command": [
+        "dotnet",
+        "build",
+        "EventHubPublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:39:09.438334+00:00",
+      "completed_utc": "2026-10-03T00:39:14.246790+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public-build-r5.log",
+      "log_sha256": "36a0ecff39dc99a0d8ac7fa8de0c7c3f2687a1a5f854a67e41c819d998645f35"
+    },
+    {
+      "phase": "package03-eventhub-public-run70-r5",
+      "command": [
+        "dotnet",
+        "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/bin/Release/net10.0/EventHubPublicContracts.dll",
+        "20"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:39:14.382012+00:00",
+      "completed_utc": "2026-10-03T00:39:15.307524+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public-run70-r5.log",
+      "log_sha256": "98145a9076aecf62671338c5aec569eea1c205eabea7e37545ffbe3baa710a19"
+    }
+  ],
+  "summary": {
+    "total": 70,
+    "passed": 70,
+    "failed": 0,
+    "failures": [],
+    "eventHubDll": "e9ccaacdc6cdc36c1f3ebf1a9e5a5ca0ea2733855f05c5ba1d546db8e064b8ac",
+    "coreDll": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253",
+    "abstractionsDll": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+  },
+  "projection": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package03-eventhub-public-consumer-inputs.json",
+    "sha256": "867b07fa064b7e0ff4b06f3270208a810ca22fcff43475aa04e61ee1e8d87ddc"
+  },
+  "exclusions": "r1-r4 diagnostic metadata did not reliably name physical assemblies; only r5 establishes final label binding. Intermediate compile failures excluded. These 70 console cases are separate from 182 native owner cases; no cloud run claimed."
+}

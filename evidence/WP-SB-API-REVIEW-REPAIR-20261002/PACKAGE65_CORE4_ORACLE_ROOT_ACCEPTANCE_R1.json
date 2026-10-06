@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-04T13:42:43.208283+00:00",
+  "decision": "ROOT_ACCEPTED_SPECIFIC4_CONTRACTS_AFTER_ACTUAL2_NEW_ORACLES_AND8_CONTROLS",
+  "matrix_indexes": [
+    7,
+    9,
+    12,
+    14
+  ],
+  "native_counts": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0
+  },
+  "strict": "c0d01c7cdc9c581f131c02ff7844c3cd488b424dcb7d488c0d22a3e1da2bb1bd",
+  "native": "409ec02012b73a68549e6776d04284e63cf724daae4c0ad85e72a0234981fa57",
+  "root_rawnative_whole": "1f1d69",
+  "root_independent_source_report_whole": "78baa3",
+  "root_independent_binding_report_whole": "ee1c8b",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package65-core-oracles-independent-r1/REPORT.json",
+    "sha256": "1b8ad5c536bae27c106b56bb697aef6dc85deb2ce836ce28355056c97df94633"
+  },
+  "source_basis": "Root whole3products8dbd81, wholeprevioushost260linesc51fe3+2c6440, authored2exactoracles; independentSourceReviewer scannerwhole.",
+  "scope_limits": [
+    "No multithreaded dictionary linearizability guarantee.",
+    "Dispose closesnewadmission beforeselector and lets already accepted work finish; no atomic racingadmissionquiescence/FIFO claim.",
+    "Product unchanged; selected actual native frame frozen before later TypeProbe changes."
+  ],
+  "all_API_Aplus": false
+}

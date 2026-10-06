@@ -6,9 +6,8 @@ namespace ViciOne.ServiceBus.Providers.Transports;
 public static class SqlReceiveEndpointConfigurationExtensions
 {
     /// <summary>
-    /// Declare a ReceiveEndpoint using a unique generated queue name. This queue defaults to auto-delete
-    /// and non-durable. By default all services bus instances include a default receiveEndpoint that is
-    /// of this type (created automatically upon the first receiver binding).
+    /// Declares a receive endpoint using a temporary definition with a generated name and an optional
+    /// configuration callback.
     /// </summary>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="configure">The callback used to configure the component.</param>

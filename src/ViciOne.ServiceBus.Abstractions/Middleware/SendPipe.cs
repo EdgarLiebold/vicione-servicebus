@@ -32,7 +32,7 @@ public class SendPipe :
             outputPipe.Probe(scope);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Runs the typed send context through its cached message pipeline.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>

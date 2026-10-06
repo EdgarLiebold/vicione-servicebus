@@ -1,0 +1,1210 @@
+{
+  "status": "PARENT_VERIFIED_ORIGINAL_RAW_READ_MERGE_SEMANTIC_PARTIAL",
+  "utc": "2026-10-03T14:12:18.664695+00:00",
+  "original_head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "original_tree": "a69acad1df9167725c06e2dd127b7f927bbe4298",
+  "root_personal_semantic_notes_read": {
+    "small": 49,
+    "packed_families": 278
+  },
+  "independent_original_proofs": [
+    {
+      "path": ".devcontainer/devcontainer.json",
+      "sha256": "43a79fb8f502c0d088894d23ece4af51d896c3275971d39d3e4dd57f58dd0ad6",
+      "bytes": 1192,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": ".github/FUNDING.yml",
+      "sha256": "df5b54820163497c3e5da28b75f1efc3af8de508cd15a68954d7b234bef20eba",
+      "bytes": 17,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "sha256": "8d2bdfb105c20f2145d2ff678c9db2c4b21e5f3856368b3c7c0af77cad768267",
+      "bytes": 2728,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "sha256": "f97602f0efe9417d6fecec2ae3285f82e121ec27c6e364127dd2dc15c2d11bfa",
+      "bytes": 453,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "sha256": "8c51c55f12fa913c693c4618a4f37cf059ced58b33a1f7f702861142132d379d",
+      "bytes": 197,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/amazon-s3-message-data.md",
+      "sha256": "4b32e1a7dcd175512b6266e8d086345fa43963520ff26934b19c2b888d46abc3",
+      "bytes": 3086,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/api-heritage-disposition.json",
+      "sha256": "487d1ffac332eb06db386b336543151950558f59a74a3d7bdbc33787075c20cb",
+      "bytes": 4604,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/api-surface.md",
+      "sha256": "1e73261d5d854980ff5e233aaf4ffcbcd46976b136a0f3a000ea24e9ac5b6e9b",
+      "bytes": 23843,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 3,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/api/application-api.txt",
+      "sha256": "0e8a2d299e0cfedd9e3ac964b2ac046ebc871e58bf07067ed6f922537a524276",
+      "bytes": 4034,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/changelog/migration-from-masstransit.md",
+      "sha256": "a39cd3622b93477ee371d55eed867cbb2ce1b3c8fc4eefeef6455e86c1c07833",
+      "bytes": 17655,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 2,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/changelog/other-changes.md",
+      "sha256": "a55e65c2890042fd591ba4500b84d4540b9f6d870dfae493c671d7ba43c08f04",
+      "bytes": 25107,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 3,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/changelog/product-fixes.md",
+      "sha256": "d9a5062208372c480e982dbc756736c81e80531e1dde6a6d1851d2abd306c901",
+      "bytes": 26259,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 3,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/changelog/removed-capabilities.md",
+      "sha256": "cd30f2775c3ce97eb79d7418995c570533587c8f3bae46e125dd48869c856a0a",
+      "bytes": 442,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/changelog/source-areas.md",
+      "sha256": "a6039c78283a42aa26947ba2fe10be1df07b9247b70585032f7f2fcc423c586b",
+      "bytes": 12326,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 2,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/changelog/verification-history.md",
+      "sha256": "1166696e9f3dc9d794273f654ffc08a017f904667be7f7d3cb45ec719802a551",
+      "bytes": 112263,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 10,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/provider-capabilities.json",
+      "sha256": "422a0241dce7f85c76e587727d2a978969f44757063d8b0bacc699299ca9b3cb",
+      "bytes": 9625,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-01.json",
+      "sha256": "86648ab8117bd7b890516b576cd0f732c28f879919be0fe2622d443b4a2fbec1",
+      "bytes": 2705,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-02.json",
+      "sha256": "179722a3c2efb584a43e5d49a973342bc22ae23ec8ae304485be07d327030413",
+      "bytes": 2630,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-03.json",
+      "sha256": "a47376e590361f9dff30b2aadd5b1e1e3b2203c33e722713246ab87606f5dc05",
+      "bytes": 3639,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-04.json",
+      "sha256": "cb6768ebf6797efbe66b4bceb1ff7a18abbd2e05526c50af2bdb66d6aca61ea3",
+      "bytes": 3054,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-05.json",
+      "sha256": "e724cdf1842cf1edef4a5afa213eaad3e066b0c72b9d09457bc0d4b8eda41311",
+      "bytes": 3903,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-06.json",
+      "sha256": "4cdfd9dff605c435ca454c7a9489ef1bd87bd60d4ec955f07ba7a29431a4e8a1",
+      "bytes": 3498,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-07.json",
+      "sha256": "d5bd08e669422501851a3da5e81f1af07d2388e2267d41bb41bc6d0f0d75c8ee",
+      "bytes": 3553,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-08.json",
+      "sha256": "122c4a1d08fc0a5b36d89d2690fd55e52f78032f7b325c379294037ddbdef81d",
+      "bytes": 4142,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-09.json",
+      "sha256": "560f07f54908e7966ba4fc94397684277b89adb62084c5678a8c4e92828328f8",
+      "bytes": 3483,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-10.json",
+      "sha256": "8cd608ea09574733448baeda615e1b54e0b4cc9d2d72237869ee6fb1119d9fd4",
+      "bytes": 3734,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-11.json",
+      "sha256": "4a1b0ad68eb8033439c0124531fd082edb6b7938df1e65adecf4925c5c5b558f",
+      "bytes": 3192,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-12.json",
+      "sha256": "70f3cfba49d1657154674eacb84cd08ac4b080af3afcf69984cc97ad4fad2449",
+      "bytes": 4265,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-13.json",
+      "sha256": "81ac17896e3e06a835f7187f9eb523cd4a2abfd1fb3c4c102c4a58c36ec1dd1c",
+      "bytes": 4797,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-14.json",
+      "sha256": "83741e0a36bc1560ebcb44f4d57163d48442e294f7349dc48337993bc739be25",
+      "bytes": 3559,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-15.json",
+      "sha256": "45c30bb0317121c74a9b69cff8911bf80147152a76718a74305a6867eebcea83",
+      "bytes": 4461,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-16.json",
+      "sha256": "1ca602afb5b56e629cca191c659d4fbffe96a9c892f70fdff8b5ea2ffc6f3f63",
+      "bytes": 3807,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-17.json",
+      "sha256": "c6232aa9ba25c07828e3d2ceee88fd012fefe2ca4826a908cc1ba8cd5677f364",
+      "bytes": 2244,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-18.json",
+      "sha256": "dc9a99192baf427a129c07d24102dfd9d6426adbf966df86dcfebaeebeab5951",
+      "bytes": 2243,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-19.json",
+      "sha256": "f491dd9914adb968c593e391ccf6d4105470412bc5d6e591ace4c5635ad96f68",
+      "bytes": 2243,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-20.json",
+      "sha256": "2955f478eee3de9dad8feb8fc54f5bbc548535a69557b3c1aa637c8220639ff6",
+      "bytes": 2412,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-21.json",
+      "sha256": "0c8c403399624b58701d49962f803c1f4d37c26e635daea71bc062249e267237",
+      "bytes": 2908,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-22.json",
+      "sha256": "914542cc4146e4d620022419cb0bb52afebf83a3b60a35ee668b0bfccd483314",
+      "bytes": 4139,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-23.json",
+      "sha256": "88c3d0df66255b0077bdd000ebdf0d32f200f67b79bec9cc775527cab00028d7",
+      "bytes": 2834,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-24.json",
+      "sha256": "85c7d69197f519891a215ddd0a63541ef42545f5fe3f40660d2a880a7cb32f46",
+      "bytes": 4686,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-25.json",
+      "sha256": "a8233e3c2ea6340b194e611124687987806ec86fbf176d85951cee9a747476f4",
+      "bytes": 4567,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-26.json",
+      "sha256": "63dd9eb2eeb0da3b993f38296739c763c11eb1ae2a5c93ba9ace88ce6c5f1e0b",
+      "bytes": 5392,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-27.json",
+      "sha256": "2edb8645f918f317cb79232e42085fe7874a4a0b92f629b1f23947acaa59f6cf",
+      "bytes": 4479,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-28.json",
+      "sha256": "a4e4a0911c893332bb0e485d7507a49f9dac785b8f9fd3f69c93effbcaf307cb",
+      "bytes": 4202,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-29.json",
+      "sha256": "37ae79e35008b478ad10f5b7cf7a16e50c2d30571b97647107f62d6c42730b70",
+      "bytes": 5094,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-30.json",
+      "sha256": "36290cbc7018342a5e5e91da04a0d573bca7c5c9e5c3865391a013a6e74693b3",
+      "bytes": 4589,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-31.json",
+      "sha256": "a32310ec098fdfa98aaf4816912a4677e85b5adbb02abb08ab2ed3975581e686",
+      "bytes": 5809,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/quality/t176-receipts/t176-profile-32.json",
+      "sha256": "b85674584e27823f5a2c85a5bc3ca599328904fd61d4c7e90a0c4f555a833e2e",
+      "bytes": 5526,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 1,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/static-configuration-validation.json",
+      "sha256": "42d60d7d6ec844fb67d9843bfb91b93b71344fe6114b340e69bf13eef429baf8",
+      "bytes": 34351,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 3,
+      "lossless_adjacent_lines_and_bytes": true
+    },
+    {
+      "path": "docs/api/packed-public-api.txt",
+      "sha256": "875cfc65a4f93bf34d8f34d9487d9f789582abe8ce8b8ac48d6be94b3bb78728",
+      "bytes": 3730857,
+      "git_blob_byte_equal": true,
+      "input_manifest_equal": true,
+      "parts": 330,
+      "lossless_adjacent_lines_and_bytes": true
+    }
+  ],
+  "checkpoint_bindings": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/CHECKPOINT_001.json",
+      "sha256": "c003d9b1a1bb700c0a8be3a619a972f1f5084cff81ea20cb05c8262542a67a82"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/CHECKPOINT_002.json",
+      "sha256": "be99ba5813aadbe74cb6993ee4517c7f28a24872c0e282c24d7609d4c20c8f93"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/CHECKPOINT_003.json",
+      "sha256": "09c78fe18210f0ef45e425a4dc9b1d9e8330df2a5608f93aaa3a31611d165a01"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/CHECKPOINT_004.json",
+      "sha256": "44933229e3d87eda3bb981e729accb73e4a54e21d0fdb1c7aca363972fa04910"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/CHECKPOINT_005.json",
+      "sha256": "dcdeb7ff43cc81f98551e41007d1ccaeed1db84f2a6b0e52d33f7447966aceab"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/CHECKPOINT_006.json",
+      "sha256": "d09e5dab22d35a15efd1bd268cc7d46a42f7a61622775a3848991a942a482359"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/CHECKPOINT_007.json",
+      "sha256": "2e4425df0135a84978c1bdb7ff9d4f37ebee9843a6e94eb66676dea640fe4017"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_001.json",
+      "sha256": "df8f286ef82e3fb7558cc3dd3fd6ac696f72239b24b626d53c11e8d68245627f",
+      "bytes": 2676
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_002.json",
+      "sha256": "7acbe3d1b242b1880a87e2d9868e250787a062434fbefaf3185014f08e4c9464",
+      "bytes": 3900
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_003.json",
+      "sha256": "b2a6dd83b2cddc35f261c11764ef74b7796b3d03aba802af26988fa85ca04538",
+      "bytes": 2928
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_004.json",
+      "sha256": "09e3d603a4cb721176f93c2803fb04a1179ecfc601a5ddafee63f8f2d8282379",
+      "bytes": 2974
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_005.json",
+      "sha256": "1fa63f15a31c83d39caa941250d69011a82341b2b47c6208d1f3bba54e2e4b34",
+      "bytes": 2012
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_006.json",
+      "sha256": "1538f3e56064e51b5a87424a6b98e8df7acee61dadb9298b58d1a06f6742c9f6",
+      "bytes": 2894
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_007.json",
+      "sha256": "fc1824a3245c946d328f6c60aff646d194f9c71a2f3b93ac68d042fc5f24ae83",
+      "bytes": 1610
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_008.json",
+      "sha256": "2fb4acfe3a5f3ade0e625d5d63c63d5b77929de0366968143305b7b63bb562d9",
+      "bytes": 1656
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_009.json",
+      "sha256": "64e317df4c568ebd6dcf6fee84466fa07be45d8aca0919b6fded60efc3a1871f",
+      "bytes": 2834
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_010.json",
+      "sha256": "5e5adb558273a8c2a851f11b81768626c3a5b176c20a0844208e48c45e34f060",
+      "bytes": 1755
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_011.json",
+      "sha256": "dfb666a740928bf84fc1e460e4658154c3654e1e64beb05b0d97f64fbd51a52e",
+      "bytes": 1663
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_012.json",
+      "sha256": "26ec1cb4c1cb177af02238d43f3bd9cf70a3d505eff13bc85c4085f2522a813e",
+      "bytes": 1751
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_013.json",
+      "sha256": "ed4656261bf491a40dd0ce6b22548915fd702f2175446d5b9c3ee22256507ae1",
+      "bytes": 1767
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_014.json",
+      "sha256": "3866be369aee165ec463668733b3f47c41805678c448864cb72e80c13b3a93ce",
+      "bytes": 1697
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_015.json",
+      "sha256": "37ef8cdbbca7d22c3c1f47b3e3c9d763298cd255a7fb40031efbd6b8bb5fee94",
+      "bytes": 1673
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_016.json",
+      "sha256": "fd36a627842369e35092c5939e3d24207b78d4857f2d5b5492de161025365279",
+      "bytes": 1663
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_017.json",
+      "sha256": "b13e217399569e43e7bd4f834fb6284de3a52b7f5de7d79f643b83a6525d6cdf",
+      "bytes": 1795
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_018.json",
+      "sha256": "22185a3566760b8d06462fa7fc3f23580755c88879e20f3c1048df995b60d878",
+      "bytes": 1798
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_019.json",
+      "sha256": "03410aac91d7947fc80354a7a2e17d2117475fc0345561bac63415a2dafd5ae1",
+      "bytes": 1673
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_020.json",
+      "sha256": "0a47b3a073b12a59b17ddc31b812c3f07d4dac906ec942e8df4e61958db4a57c",
+      "bytes": 1730
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_021.json",
+      "sha256": "81edbfa528dd3a64ab67c3dd1de3eab3ad82126fe81fc5ccfe5d9641bb55038c",
+      "bytes": 1737
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_022.json",
+      "sha256": "18dcd3e9ad90040d295a1b5c47ce568e13da1f5c3e85390182876b01b9bf9aee",
+      "bytes": 1836
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_023.json",
+      "sha256": "7f29dd0ff00f475f50bb726324d42ecb89469f40c96f263360552b444310ab24",
+      "bytes": 1857
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_024.json",
+      "sha256": "c1379876cfe846490618839b3ccd1142339987ddb895af82cd453cc233f28c0b",
+      "bytes": 1912
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_025.json",
+      "sha256": "584b019f28db4b405c418c7ca295342dc37dc14f9a2ce82c923a5ca1f019e314",
+      "bytes": 1800
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_026.json",
+      "sha256": "2228f594c697717eb47d9996662eca254427a6f3c53e628286a15d2528cf895b",
+      "bytes": 1761
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_027.json",
+      "sha256": "1532c85904e9541ee07cb42421f66f3beba9c5aed33733835d154ffd79207b02",
+      "bytes": 1821
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_028.json",
+      "sha256": "a33c82bf8bb41b30fabf0c47b4bb11bf9d87b53c531455978b625702cd1b797d",
+      "bytes": 1826
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_029.json",
+      "sha256": "9e5e7c9d11e6bb252ee8f79f4193b9649dda47948307e38a60c681b8b7aff75e",
+      "bytes": 1813
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_030.json",
+      "sha256": "a50fbc12d3615d4c69d38cf37fb40a34ee564fac0c74bcbed86e634f52ec4d63",
+      "bytes": 1652
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_031.json",
+      "sha256": "cebcdb1c9c0dacc148ce52d48154b81f1682e67ffbd8f6372d505eca85571b6a",
+      "bytes": 1718
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_032.json",
+      "sha256": "76d2ec4a1f04564a1f3c957e99ed6bef7b641bbf089029ebf61d83d6a7f7ae48",
+      "bytes": 1719
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_033.json",
+      "sha256": "e2a1647f81046e2db6517870d4cadfe50541296f6665ebaba4ac4c585b6e3924",
+      "bytes": 1706
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_034.json",
+      "sha256": "71f80fcfac6d4b25fd8d7bfffaa980821f332a3fe9cd28d3e573460ae656104f",
+      "bytes": 1781
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_035.json",
+      "sha256": "d80479dfdcb643d3f5d5821c76f1c52877a2b338a0ec8c4b9e4832348e64fca3",
+      "bytes": 1880
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_036.json",
+      "sha256": "153e995e48f800a60e15a1444dd3002e77b09fc577a9950fba55537c474d375f",
+      "bytes": 1677
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_037.json",
+      "sha256": "f8b66b23851083f50b6732bddd427ce1360c1dbcdb0857813533f60a875b3b38",
+      "bytes": 1803
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_038.json",
+      "sha256": "082ebb4b8c556f8e71c2f2a7a64e7e6a4902c408c199428eff0729647db3a0a2",
+      "bytes": 1692
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_039.json",
+      "sha256": "0af3ffd37c6ca40cd1fa1e47ed8dda1f768e31016be8040773857d33af0f483f",
+      "bytes": 1760
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_040.json",
+      "sha256": "306e9d566b2d94bca16b9f2c6475859a5983e5d36730c603c87338ae11571535",
+      "bytes": 1726
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_041.json",
+      "sha256": "eba165551c7c2baf0498814233e22804aedffcd83ed38b016aa9981b4121b8fe",
+      "bytes": 1770
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_042.json",
+      "sha256": "a19cb02c7911d987d262bafc47d2db553322fa536aead330089ca9c912f881b6",
+      "bytes": 1789
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_043.json",
+      "sha256": "1a596bc5497edf35dec81e19506ab8715492ed3a4c72448b36380ab41f486a6f",
+      "bytes": 1702
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_044.json",
+      "sha256": "a9e8ead1862b2f13357c670696d35205433399bacde688240cab72aae6f5db74",
+      "bytes": 1830
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_045.json",
+      "sha256": "6c94255876d67830718ceb5d7928119f569371a6fd37c7190571ab46c804232c",
+      "bytes": 1808
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_046.json",
+      "sha256": "4df9f06054d796cd42d5ed4943d7f19eb718e5d74ddf5c107ddb2f46235db1dc",
+      "bytes": 1787
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_047.json",
+      "sha256": "06b36d05a433495b30d950589b94d150d82f5a549024d9bb5287bcd0564a1408",
+      "bytes": 1771
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_048.json",
+      "sha256": "19ff6bfcc05c0bb7f4b4ac8ae70a4b62b4a6585b2a840b245b8806a8c3fc871f",
+      "bytes": 1797
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_049.json",
+      "sha256": "d73c9a3a026efa3e3852542fc1f62472291625563472a72bb2635f22025ec977",
+      "bytes": 1776
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_050.json",
+      "sha256": "3062ba67b3df0b53f3222d240bbc8534d2ddf12de0002a2bf1d9badf39cf2221",
+      "bytes": 1843
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_051.json",
+      "sha256": "86f63aca157b7b93676eb0c3ed8f896f733ac7aaeae494bb8171e20036077fed",
+      "bytes": 1786
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_052.json",
+      "sha256": "88e3958d0da59eba40e0062b6cdf7bed34e201863d87447a2882b09bf0043d95",
+      "bytes": 1725
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_053.json",
+      "sha256": "16c61cdf0f5d2b5ce5e8dc18f33b958167fc8b9be5ef4b2736fbcd79f8ebd97d",
+      "bytes": 1797
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_054.json",
+      "sha256": "1e3050c522fa84c909e117c13e152fa817c44f4c08d22e4e5077e273345ef799",
+      "bytes": 1715
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_055.json",
+      "sha256": "c3eaf25c5156c9c9507f862c8b5b0122e5791afe64dbb28075377b67a4d9754d",
+      "bytes": 1770
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_056.json",
+      "sha256": "c781fed56730386aa59fe03babb41bfa78156c8bb1d0234cf52b0219c910e8a2",
+      "bytes": 1769
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_057.json",
+      "sha256": "c0d80b000a194dd7f2f16f3ab19fc4c80d16d0a968ed2bfa6bc3df1b89e3d722",
+      "bytes": 1803
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_058.json",
+      "sha256": "8b15f4145921ac5dbcc91d1b9774ec481d86da1a3940da7a72c11965d429c99c",
+      "bytes": 1717
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_059.json",
+      "sha256": "71903ce7b7d924618b547408c34775789894fdb947e7b1304918c76487f435e3",
+      "bytes": 1759
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_060.json",
+      "sha256": "ef1995780e05c619d10585de05d975186af942d8d023d15982ab7b5ebfb274e8",
+      "bytes": 1715
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_061.json",
+      "sha256": "40a9e3c0078bb169bcb510e5594f293b8458adde88e7b3c53b5b2e2b476e60bb",
+      "bytes": 1807
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_062.json",
+      "sha256": "c867cac3e33569e4f794a040cd65ec0f4e89f14e42d93802a1a402b76ab455fc",
+      "bytes": 1759
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_063.json",
+      "sha256": "be853ad63c63f51e97d81a411fa1a942c0c8df4b235114e78b6705c99a4cd46e",
+      "bytes": 1850
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_064.json",
+      "sha256": "4934815c80b5d43e2a2791374f20661f4a9333f21565eb030c12111af7941d94",
+      "bytes": 1867
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_065.json",
+      "sha256": "854ef3d5c56023ad47dc68fb99f816b3a2aba685d8999348fb4a408709fba476",
+      "bytes": 1937
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_066.json",
+      "sha256": "7e403093ad588f7a25998aabb0d3fa5145faf5d178efea0f4d435db352fc2f4b",
+      "bytes": 1944
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_067.json",
+      "sha256": "6385ac24f1b1df2efb9750219c4973d6990e5975f4f4a71800f3d32103118151",
+      "bytes": 1978
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_068.json",
+      "sha256": "973c7bed173e58b052c8a90d5518540730b843f290771c77e560cf1c2787925b",
+      "bytes": 1966
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_069.json",
+      "sha256": "89d16855e9ef095212223a294291218489e35cf2cb9a1ba823163d37c81fc91a",
+      "bytes": 1886
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_070.json",
+      "sha256": "e099f715a16cd42fa00b7f4a366d393a19b2f357cc9d2307c0bb48d1e7480b5c",
+      "bytes": 2021
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_071.json",
+      "sha256": "1b6390597dac1d17124714bf431cc3fb06536d6a6af4737872c88e6e4ecc7e21",
+      "bytes": 1973
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_072.json",
+      "sha256": "6c20e3861049e6b0a6017281e1511b57752fbdb9bacadd9ac8bd6a77c3a3d0f8",
+      "bytes": 1945
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_073.json",
+      "sha256": "719f311fc7a349d698459d2e314b92f3281bcded577fcf6845f8b3356c2e09ce",
+      "bytes": 1990
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_074.json",
+      "sha256": "b1daee4e208b853a8afd308415dbd23ab8c7a46122dc3e0feb1b993316a12171",
+      "bytes": 1869
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_075.json",
+      "sha256": "b0b71562d642aae0b3658503783fae8e791da7dfe8095253abcdcf8c4a7ac2b1",
+      "bytes": 1956
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_076.json",
+      "sha256": "33478c6babf5ddd1655259a9e881c470cf896f481ec14c05206711618737f63c",
+      "bytes": 1900
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_077.json",
+      "sha256": "8bb32effc127f993e69228145feed6e2b509286a6eb8b71f7f91bcba8b063f20",
+      "bytes": 1930
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_078.json",
+      "sha256": "b9d3bc20adbd3e0ca21a47fc3bbe040ec2d136dc1d169d57e12c1001c9a34b51",
+      "bytes": 1858
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_079.json",
+      "sha256": "82a5e09ffade44d460602fd8436901d961632e7697b7f54927a8a0b5798da909",
+      "bytes": 1876
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_080.json",
+      "sha256": "f3b43e69be980eb66b32775e023770cde050c2305ea94df80ab59626ac4887b3",
+      "bytes": 1903
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_081.json",
+      "sha256": "d1ea8d2e96a931949ad27d4c2fcca3e6d12555c98864d7ec1b3c2d2da0fcd849",
+      "bytes": 1859
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_082.json",
+      "sha256": "4cdd26e0966e9168f67367523c7d51e8e90fab0f92888cf69e86d86a41345e85",
+      "bytes": 1906
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_083.json",
+      "sha256": "e4b39d3e774130e3783ce091e5d9cae9ebe96b47564913fdac6fe31949f036d8",
+      "bytes": 1904
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_084.json",
+      "sha256": "51612be00b56366207162fdab98f8a6f084d03a843a9c4366efdc5382c11e1a6",
+      "bytes": 1839
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_085.json",
+      "sha256": "ff90d108336ffda1e80232a583c9f2ec5851bfdd812aa17fbef4eccdcf8bf8be",
+      "bytes": 1852
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_086.json",
+      "sha256": "e96d39bed90e7412be53422ac45b2d5ca0309596df052923e8e97cdc876aaf30",
+      "bytes": 1907
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_087.json",
+      "sha256": "8d1727209c59ecd32ae1cecf28cd6ffdcc92f7dae58af3b209e3847c00e1838d",
+      "bytes": 1913
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_088.json",
+      "sha256": "110e0c6596ebe3f2f75b316ea2169a288d54af585b15f42f61f20daa4271b8d4",
+      "bytes": 1830
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_089.json",
+      "sha256": "e63f44fadecb3283ca5fcdd497e0675b78b359ef05f299bcca405df8812c3279",
+      "bytes": 1883
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_090.json",
+      "sha256": "522435ab4733912642a2d4c0ae74a6281c48414f06664c8b3912af15a43314f5",
+      "bytes": 1923
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_091.json",
+      "sha256": "55c6de94fdf29716427c0fd06c327799c535acbd9268b775e16c3f89ceb835e1",
+      "bytes": 1901
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_092.json",
+      "sha256": "718811c5e8b0e90deda83a1f2c05bb81c4d913d5a00f2bdbddef860c983f1f6f",
+      "bytes": 1892
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_093.json",
+      "sha256": "0ca8ec412180053d393767b0e13aac5d082d5653993ab0f893c98b0e041f126b",
+      "bytes": 1868
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_094.json",
+      "sha256": "013ead07d3784ad69b904680aa2aca6999ea6fc84c691fba5badb1c327c6bc61",
+      "bytes": 1566
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_095.json",
+      "sha256": "8535ef778535c34974bfc4eabf5334376b1aae05e2ed1bdb0510b20404282e06",
+      "bytes": 2316
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_096.json",
+      "sha256": "27440ce39dc970aad62783baae8c71d83a8c05513a120e0512a796620d910ce1",
+      "bytes": 2176
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_097.json",
+      "sha256": "c41f49ff064fcf91b6eb02f12170b04f90f89518fa9337ad8ac7edc142ff16d4",
+      "bytes": 2202
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_098.json",
+      "sha256": "c2d57c10725a5e0572a864a223086b15d8d645ea5effa8040a3c58141a37ce78",
+      "bytes": 1922
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_099.json",
+      "sha256": "54ace897f77fe4c10e26a30c13afa2d81c50f501801797e024aa002a054164ea",
+      "bytes": 2195
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_100.json",
+      "sha256": "aa6c172cb2f2025fec06ff6b207c749bfad3e56b8ba3b0f6ec8a91dafe00c914",
+      "bytes": 2189
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_101.json",
+      "sha256": "158696aaefbe3a41e4581746ab9fec4df0310fc614ceec1703bdef888c74d5ed",
+      "bytes": 2125
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_102.json",
+      "sha256": "94fd895b9cbb224d95a4c60138c529d08e8c398db5f55a3b7048240b428196da",
+      "bytes": 2322
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_103.json",
+      "sha256": "bc7b1a6b4f26c1c31789a6d7b276e205e95b8d642967cc5c9de1547f925bb99b",
+      "bytes": 2716
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_104.json",
+      "sha256": "0190ef9a665d150d6f1a006feb5d91e6346f72711f669bcf17e4b4b6cb90a794",
+      "bytes": 2334
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_105.json",
+      "sha256": "9e0b9e88fd19b35a60135e947f84abcd4e51c02224df50fe5e4795cc9fe2aca9",
+      "bytes": 2405
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_106.json",
+      "sha256": "01c54a1fee8b4c87352360e613c1daeac430304db73979cab3ec09f76d709e6b",
+      "bytes": 2417
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_107.json",
+      "sha256": "cab3524ed7b10ac6a2b63cb27512ff5ea7847c2a29c5ff554a28198f85d7de4c",
+      "bytes": 2405
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_108.json",
+      "sha256": "4cd18d6e40ee26262a5d194defc52d13636936ee9b65958a1f502b73c7082e0b",
+      "bytes": 2597
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_109.json",
+      "sha256": "2777cbbe222a033383c18d1fac511466a08f3aa1b222479d36b9d3d965116646",
+      "bytes": 2277
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_110.json",
+      "sha256": "f1f5f7c37a9b444bd13ac6161198b7e5f1b2f1f61bee806b330444184ae91dfc",
+      "bytes": 2376
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_111.json",
+      "sha256": "3405a66796c3d4375345a3aefe08f70bc0ead85266bce26b18ac40ef69ef2a3e",
+      "bytes": 2402
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_112.json",
+      "sha256": "59c1715b55f56f20ce89c6865ec2ad42515b11f9bb895e8a99890bd1879b3fdd",
+      "bytes": 2476
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_113.json",
+      "sha256": "98339d0f1f17443f582e8fc0b67ea20d34fced4d4d530e1535cfdae4c8d5fb9a",
+      "bytes": 2460
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_114.json",
+      "sha256": "35e1b281dbbe8d819fa8e4417f5c076671c070c51b2f7297878bf81038b1c6aa",
+      "bytes": 2536
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_115.json",
+      "sha256": "f7a024789780ebb2ade15efce73297d86dab9d818a7b60c2ebd168401b39cefe",
+      "bytes": 2124
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_116.json",
+      "sha256": "ad60df7062be5abff0f3acb67d652d61bb685b88777e5baa3958f92d1f8b8806",
+      "bytes": 1981
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_117.json",
+      "sha256": "4b33b4e8f7c2a546589516f9eeb2a787b6203396f22d642dbbba020012aee9b5",
+      "bytes": 2129
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_118.json",
+      "sha256": "58bc9bab2b6b3f2f4e92fce2d04aef09467e8007c71de35dec045607faee0fcd",
+      "bytes": 2075
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_119.json",
+      "sha256": "bddc737eef8fa23fccfeeeff43dfa4b79f411420aef7b4e01879883bf927f43c",
+      "bytes": 2017
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_120.json",
+      "sha256": "4888eab81a48b240db02026beff0d7832359fa8fda5927b6f50990c439657057",
+      "bytes": 2058
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_121.json",
+      "sha256": "81012d4c161fe914d5f1d729b7b82b3730423396e89aa8b75296269771626246",
+      "bytes": 2062
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_122.json",
+      "sha256": "23abf2a20c587296cddf06257a37b5af22f79e088576c8a8dde5d968a5202cc9",
+      "bytes": 2212
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_123.json",
+      "sha256": "da55bca98408c177a79376ac656a1bb631a36c2dd455c11cc3a517970c0a9bd4",
+      "bytes": 2171
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_124.json",
+      "sha256": "07624843319bed2bfaf7c25bb3a05d2caf6efce677ae53d2617a4c44b9063cb4",
+      "bytes": 2169
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_125.json",
+      "sha256": "219f1a4dfdb16a152a1dec01e30fe144b653cbe32e7de936042e340bda6e2632",
+      "bytes": 2068
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_126.json",
+      "sha256": "79b9a34de3b79b376d2b0fd15aaf1df9a9a1eb9f8ebacf91698189fc915e6a3e",
+      "bytes": 2126
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_127.json",
+      "sha256": "c6f88ec3b601c0e1e46ab47b99a87ddfda60c3e56bcffe22874202d4c641773a",
+      "bytes": 2075
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_128.json",
+      "sha256": "a6254631870ecd910eb657c939c75fc9c4418a08548d3b40c8098a8f16dc19a6",
+      "bytes": 2201
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_129.json",
+      "sha256": "33a75fbf9b106a52d8f9e7ce42a79d8becc616af9d054f8da69d2062b402f5ff",
+      "bytes": 2093
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_130.json",
+      "sha256": "90092c05f1ffe99059fbcd2764ad22cbbdc2cf8b081fb78f6b2419571c1ebebe",
+      "bytes": 2059
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_131.json",
+      "sha256": "69d4f7aa67a0f03a9c6e5e520b6ff202a7fbfb9cd8fda1171972fa8f5faaf896",
+      "bytes": 2261
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_132.json",
+      "sha256": "43900d6c04991e32f3c8f683dd8a789bbd3a0ca70d738e8080e3430c915146a0",
+      "bytes": 2051
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_133.json",
+      "sha256": "754cac22fb4ed24b53c2f965eafd682a632200d99e0cf54a233835bca424a4d1",
+      "bytes": 2204
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_134.json",
+      "sha256": "851e4ea1eeb2feb67d1f63302c573538a2fdaf1627dedb3506aa37d51f4c02ca",
+      "bytes": 2141
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_135.json",
+      "sha256": "c098abbd1d624a8f014339b3f94d0f05f59c9caf7a34edadf05c42464cef6bf5",
+      "bytes": 2131
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_136.json",
+      "sha256": "074959e64a917a52abd2a54c18ebc18e032c45de9f0cc6693675f17115755ee2",
+      "bytes": 2109
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_CHECKPOINT_137.json",
+      "sha256": "2b961eef3670b23a5d18be7f4d0b45e5f7a497b829a5a094cb1677805228af58",
+      "bytes": 1676
+    }
+  ],
+  "proposals": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PARENT_MERGE_PROPOSAL_CHECKPOINT007.json",
+      "sha256": "70896b7a45f68a64deb2b4fce53915fb641df840a494d6b11cf6405824a0cd0b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PARENT_PACKED_ONLY_MERGE_PROPOSAL_R2.json",
+      "sha256": "c3ded192159efc4df0c71a3a2ec55973d1ee9cc3a3776a3c84069b5f558d0c20"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/PACKED_API_RAW_FULL_CLOSURE_R2.json",
+      "sha256": "eadeae5da3bc5fffebbf156c77338a80c3d608faebb54f40cab92b6d944c1002"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/TEXT_PARTS.json",
+      "sha256": "27c72b34b5eb14f36b8bc39a744249f1861a05e5cc429a321583e2f08705bccf"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/remaining-docs-config-raw-read/SCOPE_INPUTS.json",
+      "sha256": "6e47180fdea0c99983c18589c757982805dda2ca9c9ac236abaca7bf6b1d816d"
+    }
+  ],
+  "csv_before_sha256": "fc001e4aa6f7113d13ac813585a816f843626b519d75bc074164af60d078718d",
+  "csv_after_sha256": "6dee2d6d17806bb1f23fa70cfef35ccf95693691035d35b66bace663253b39bb",
+  "new_full": 50,
+  "prior_full": 6158,
+  "after_full": 6208,
+  "total": 6209,
+  "all_other_rows_preserved": true,
+  "archive_ordinary_raw_credit": 0,
+  "symbols_closed": 0,
+  "root_canonical_test_owner_authority_transferred": false,
+  "whole_API_closed": false
+}

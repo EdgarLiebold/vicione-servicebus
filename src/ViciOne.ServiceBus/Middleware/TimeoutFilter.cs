@@ -47,7 +47,7 @@ public sealed class TimeoutFilter<TContext, TResult> :
         _timeout = timeout;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Runs the continuation with a linked timeout context and awaits its consume completion.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>

@@ -1,0 +1,86 @@
+{
+  "status": "ROOT_WHOLE_NEW_BOUNDED_OWNER_FULL_BEFORE_NATIVE",
+  "root_basis": "8 complete bodies read; Cases/Program authored deltas fully personally read; previous exact seven body hash reuses plus FULL feed config; lock awaited restore; no canonical owner transfer",
+  "inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/Cases.cs",
+      "sha256": "5fb8c55f7361fe5f5a6a03c6c593829675bea31744435d8b87e505487b596fd8",
+      "bytes": 17921
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/DelegatingContext.cs",
+      "sha256": "6c4856cb7be16e80c63bfb69c5b93e44d2c498ca5ba56826b4b2708b8c223d9d",
+      "bytes": 666
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/LoggingLifetime.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/LoggingProbe.cs",
+      "sha256": "31fb45296b6f91dd46595efc262da3488c46624fe6570d0e0da1b81d9dfa9afc",
+      "bytes": 3538
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/NuGet.Config",
+      "sha256": "56d8cf3e8c66279b3ae8a6e8a9d53b4a91e6511248da8549e1aa0b8ee4dc96df",
+      "bytes": 572
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/OwnedLifetime.cs",
+      "sha256": "611b5e50bd5b61336e1146c2a7aec53cfbafdcfcfc392e4b2f8a54625907c462",
+      "bytes": 1582
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/Program.cs",
+      "sha256": "b1d04be48378ee520dba292309a0170bdac9cbf390b0b031515880f383310d49",
+      "bytes": 2325
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/RuntimeOwner.cs",
+      "sha256": "6226ce654d8fbebf6f448d56841777fcd11e0dbc3320dca9c977ad68253c0f70",
+      "bytes": 6368
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/Cases.cs",
+      "sha256": "5fb8c55f7361fe5f5a6a03c6c593829675bea31744435d8b87e505487b596fd8",
+      "bytes": 17921
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/DelegatingContext.cs",
+      "sha256": "6c4856cb7be16e80c63bfb69c5b93e44d2c498ca5ba56826b4b2708b8c223d9d",
+      "bytes": 666
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/LoggingLifetime.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/LoggingProbe.cs",
+      "sha256": "31fb45296b6f91dd46595efc262da3488c46624fe6570d0e0da1b81d9dfa9afc",
+      "bytes": 3538
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/NuGet.Config",
+      "sha256": "98446e2bbcea5b9d267a7d328ae10d2363fe4b32063f7e11fec65314b7b8d294",
+      "bytes": 573
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/OwnedLifetime.cs",
+      "sha256": "611b5e50bd5b61336e1146c2a7aec53cfbafdcfcfc392e4b2f8a54625907c462",
+      "bytes": 1582
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/Program.cs",
+      "sha256": "b1d04be48378ee520dba292309a0170bdac9cbf390b0b031515880f383310d49",
+      "bytes": 2325
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/RuntimeOwner.cs",
+      "sha256": "6226ce654d8fbebf6f448d56841777fcd11e0dbc3320dca9c977ad68253c0f70",
+      "bytes": 6368
+    }
+  ]
+}

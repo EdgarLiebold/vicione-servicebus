@@ -1,0 +1,9 @@
+{
+  "utc": "2026-10-05T02:24:55.880789+00:00",
+  "status": "APPEND_ONLY_ROOT_PERSONAL_READ_RECEIPT_PRECISION",
+  "original_acceptance_sha256": "59368177792e39aa0894115e7c1e14008847295f250c930ec6bf4c7ae46db20b",
+  "correction": "Exact compact member norms24..48 viafbce2c,49..73 viad1513b,74..94 via819767. d3f63d is the actual whole remaining14 source owners, not the compact49..73 norm-output. Root actual whole29 source1029 remains1bbb41/d3f63d. Original acceptance/no-native/counts6169 unchanged.",
+  "limits": [
+    "Only read receipt precision corrected; no Source/Test/Req/SDK/newacceptance/finding change."
+  ]
+}

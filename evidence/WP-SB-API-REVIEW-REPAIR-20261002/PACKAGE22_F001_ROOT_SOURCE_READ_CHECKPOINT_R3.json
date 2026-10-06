@@ -1,0 +1,31 @@
+{
+  "finding": "F-SB-API-001",
+  "new_FULL": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/BatchEndpointExtensions.cs",
+      "sha256": "0841653d0dce1370dbe1f3e5089139e81848b6c2e851e95da113afd66e387005",
+      "bytes": 25561,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Scheduling/IRecurringMessageScheduler.cs",
+      "sha256": "0d64596843c024595cffdfaaecedbf8c95afdc7211f8da2b613c7eb9755da7bc",
+      "bytes": 19640,
+      "Root_personally_FULL": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Scheduling/MessageSchedulerContext.cs",
+      "sha256": "7e479bd1347e85e0d747c815ff55145922a5f550b6b1471d243643a26b33db71",
+      "bytes": 9224,
+      "Root_personally_FULL": true
+    }
+  ],
+  "total_scope_personally_FULL": 29,
+  "remaining_scope_ids": [
+    16,
+    17,
+    26
+  ],
+  "code_changes": 0,
+  "notes": "Scheduled/recurring return describes configured scheduling result/capture rather than future delivery; cancellation lifecycle methods remain separate. Batch lazy-SPI-sync-throw candidate preserved independently with no finding/repair credit."
+}

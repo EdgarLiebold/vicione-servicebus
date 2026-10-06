@@ -1,0 +1,120 @@
+{
+  "utc": "2026-10-05T05:30:04.453562+00:00",
+  "actor": "/root",
+  "confirmed_before": 151,
+  "confirmed_after": 153,
+  "accepted_current": 151,
+  "causes": [
+    {
+      "id": "F-SB-API-152",
+      "severity": "Medium",
+      "title": "Product-owned Saga Used and Removed diagnostics interrupt healthy processing and turn completed deletion into failure",
+      "classification": "CONFIRMED_FINITE_NATIVE_PRODUCT_DIAGNOSTIC_WORKFLOW_DEFECT",
+      "actual_original_contexts": [
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Removed\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source867 Assert.Null(operationFailure) receives unique InvalidOperationException from selected Removed Debug logger.",
+          "reached": [
+            "Exact selected template single, Debug level, correlation ID and hostile logger throwcount1",
+            "Actual repository load ID once; actual saga consume context async-disposed1/sync0",
+            "Actual Delete received exact saga context before diagnostic"
+          ],
+          "unreached": [
+            "Next continuation single/context assertions869 onward",
+            "Post-Assert.Null repository update/delete/suppression assertions"
+          ],
+          "source_cause": "SendSagaPipe existing lifecycle invokes LogRemoved unguarded at109 after actual Delete; lifecycle captures logger error as operation failure and rethrows after actual cleanup.",
+          "healthy_control": "Same emission/loggerThrows:false passes complete continuation/persistence assertions."
+        },
+        {
+          "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Used\", loggerThrows: True)",
+          "classification": "CAUSAL_PRODUCT_DIAGNOSTIC_FAILURE",
+          "first_failure": "Source867 Assert.Null(operationFailure) receives unique InvalidOperationException from selected Used Debug logger.",
+          "reached": [
+            "Exact selected template single, Debug level, correlation ID and hostile logger throwcount1",
+            "Actual repository load ID once; actual saga consume context async-disposed1/sync0"
+          ],
+          "unreached": [
+            "Next continuation single/context assertions869 onward",
+            "Post-Assert.Null repository update/delete/suppression assertions"
+          ],
+          "source_cause": "SendSagaPipe existing lifecycle invokes LogUsed unguarded at89 before policy.ExistingAsync; lifecycle captures logger error as operation failure and rethrows after actual cleanup.",
+          "healthy_control": "Same emission/loggerThrows:false passes complete continuation/persistence assertions."
+        }
+      ],
+      "policy": "Product-owned processing diagnostics must not replace business processing/persistence outcome. Global public LogContext and explicit logging extension propagation contracts remain separate. Existing ownership-on-logger-fault test must be deliberately reconciled when guarded owner callsite changes.",
+      "limits": "Created failures in166 are testfixture errors and provide zero Productcredit; Created rerun and other emissions require their own evidence.",
+      "status": "CONFIRMED_REPAIR_RESEARCH_PENDING",
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-inner-outbox-fixed100-parent18-saga-original38-neighbors2268-fresh2-independent-r1/REPORT.json",
+        "sha256": "f8c594350912b23d430ef0743b6d5a9b63a4888a784416e0f43776a138048381"
+      },
+      "whole_API_member_review_closed": false
+    },
+    {
+      "id": "F-SB-API-153",
+      "severity": "Medium",
+      "title": "TransitionToStateAsync omits a separately supplied live caller cancellation token after admission",
+      "classification": "CONFIRMED_FINITE_NATIVE_PUBLIC_CALLER_TOKEN_FORWARDING_DEFECT",
+      "actual_original_contexts": [
+        {
+          "case": "ViciOne.ServiceBus.Tests.Sagas.SagaStateQueryRuntimeExtensionDeepContractTests.Transition_LiveCallerTokenReachesCooperativeAccessorBeforeMutationAsync(mode: 2)",
+          "classification": "CAUSAL_PRODUCT_CALLER_TOKEN_OMISSION",
+          "first_failure": "Source287 exact callerToken equals accessor.ReadToken fails; actualcontextToken is None while independently supplied livecallerToken is cancellable.",
+          "reached": [
+            "Actual held accessor entered/read1 with real saga/stateMachine/Running.Enter identities",
+            "Context token equals None; initial state unchanged; Set0; no Enter context",
+            "Actual accessor.ReadTask and public operation both pending"
+          ],
+          "unreached": [
+            "Caller.Cancel line291",
+            "Actual canceled public Task/token assertions",
+            "No state mutation after actual caller cancellation"
+          ],
+          "source_cause": "StateMachineExtensions prechecks supplied token, then calls behavior.ExecuteAsync(context.CreateProxy(toState.Enter)) without projecting live supplied caller token. TransitionActivity uses context.CancellationToken for Get/Set; accessor therefore receives None.",
+          "healthy_controls": "Mode0 None+None and Mode1 identical caller/context token both pass full transition/Set/Enter identity/token assertions.",
+          "cleanup": "Finally release and independent observe actual accessor.ReadTask then publicoperation; no timeout or fabricated cancellation outcome used."
+        }
+      ],
+      "limits": "Original first287 token equality executedfailed; caller cancel291 and later canceled status were unreached. No universal two-budget merge, noncooperative hardstop or all lifecycle cancellation claim.",
+      "status": "CONFIRMED_REPAIR_RESEARCH_PENDING",
+      "original_qualification": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package166-inner-outbox-fixed100-parent18-saga-original38-neighbors2268-fresh2-independent-r1/REPORT.json",
+        "sha256": "f8c594350912b23d430ef0743b6d5a9b63a4888a784416e0f43776a138048381"
+      },
+      "whole_API_member_review_closed": false
+    }
+  ],
+  "excluded_testfixture_contexts": [
+    {
+      "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Created\", loggerThrows: False)",
+      "classification": "TEST_FIXTURE_FAILURE_ZERO_PRODUCT_CREDIT",
+      "first_failure": "Source852 Assert.Single selected diagnostic entries receives empty list.",
+      "reached": [
+        "Only operation attempted inside Record.ExceptionAsync; selected diagnostic did not occur"
+      ],
+      "unreached": [
+        "Selected level/correlation/throwcount",
+        "Factory call/context identity assertions",
+        "Source867 operationFailure assertion and continuation identity"
+      ],
+      "limits": "Both healthy and hostile Created cases fail same earlier prerequisite; no Created logger suppression/product regression finding from these cases. Root author must correct fixture and rerun original source. No unobserved actual operationFailure cause invented."
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Middleware.SagaRepositoryLifecycleDeepContractTests.SagaDebugDiagnostics_DoNotReplaceHealthyLifecycleAsync(emission: \"Created\", loggerThrows: True)",
+      "classification": "TEST_FIXTURE_FAILURE_ZERO_PRODUCT_CREDIT",
+      "first_failure": "Source852 Assert.Single selected diagnostic entries receives empty list.",
+      "reached": [
+        "Only operation attempted inside Record.ExceptionAsync; selected diagnostic did not occur"
+      ],
+      "unreached": [
+        "Selected level/correlation/throwcount",
+        "Factory call/context identity assertions",
+        "Source867 operationFailure assertion and continuation identity"
+      ],
+      "limits": "Both healthy and hostile Created cases fail same earlier prerequisite; no Created logger suppression/product regression finding from these cases. Root author must correct fixture and rerun original source. No unobserved actual operationFailure cause invented."
+    }
+  ],
+  "CLOSED": false
+}

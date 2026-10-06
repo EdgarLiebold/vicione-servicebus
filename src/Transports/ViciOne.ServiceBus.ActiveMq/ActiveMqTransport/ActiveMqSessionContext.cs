@@ -121,15 +121,11 @@ public class ActiveMqSessionContext :
             ITopic destination = SessionUtil.GetTopic(_session, topicName);
 
             IMessageProducer producer = _session.CreateProducer(destination);
-            try
-            {
-                producer.Close();
-            }
-            finally
-            {
-                // Dispose also runs when Close fails so the session does not retain the short-lived producer.
-                producer.Dispose();
-            }
+            var failures = new ActiveMqCleanupFailures();
+            failures.Capture(() => producer.Close(), static _ => { });
+            // Dispose also runs when Close fails so the session does not retain the short-lived producer.
+            failures.Capture(() => producer.Dispose(), static _ => { });
+            failures.ThrowIfAny("One or more ActiveMQ topic producer cleanup stages failed.");
         }, cancellationToken);
     }
 
@@ -274,7 +270,14 @@ public class ActiveMqSessionContext :
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled(cancellationToken);
 
-        TransportLogMessages.DeleteTopic(topicName);
+        try
+        {
+            TransportLogMessages.DeleteTopic(topicName);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics do not prevent native deletion.
+        }
 
         return _executor.ExecuteAsync(() =>
         {
@@ -292,7 +295,14 @@ public class ActiveMqSessionContext :
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled(cancellationToken);
 
-        TransportLogMessages.DeleteQueue(queueName);
+        try
+        {
+            TransportLogMessages.DeleteQueue(queueName);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics do not prevent native deletion.
+        }
 
         return _executor.ExecuteAsync(() =>
         {

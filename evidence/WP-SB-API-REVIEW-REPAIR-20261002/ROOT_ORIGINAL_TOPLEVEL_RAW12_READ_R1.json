@@ -1,0 +1,105 @@
+{
+  "utc": "2026-10-03T11:18:05.853001+00:00",
+  "files": [
+    {
+      "path": ".editorconfig",
+      "sha256": "620cf8f37fd9c45ae51dccf0ddadca145d1bb44daacd3b092e1a910444646f66",
+      "bytes": 451,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Formatting rules for namespaces, whitespace and line endings; no API runtime semantics."
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "c17b2e3401aac308943eefaffa5316a3110445858bf848917a7a774e232020aa",
+      "bytes": 1973,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Text normalization and two exact immutable evidence whitespace exceptions; no new broad exclusion."
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "17f4846fc2d69960b194d73d6d13376c1f478f79e48b3cd13ad087d6606c1ab4",
+      "bytes": 1294,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Generated build/test/log outputs excluded; immutable acceptance evidence remains separate."
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "12b6cf76e745490c1fb5e40e3375bd5c4a627b21c166954697cf6426353dcec2",
+      "bytes": 1201,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Explicit direct maintenance authorization, changelog/provenance preservation and Suite architecture boundaries."
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "2c20193151874c23b53eac5dec72e784724acd9ed385bbdace20d795058e7a37",
+      "bytes": 1486,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Navigation to migration, defects and quality history; final repairs must be recorded in current version."
+    },
+    {
+      "path": "COPYRIGHT",
+      "sha256": "8324a0cb8ce9702b9519ba19318afeb230ec7d9d2469e46e3fa0ceda5b23f9e9",
+      "bytes": 612,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Fork attribution retained; no legal suitability verdict."
+    },
+    {
+      "path": "LICENSE.txt",
+      "sha256": "f634e0b04b32e05da1915e2d58e89c63e9f358dcd65cc5218a6152ec0e3d65a1",
+      "bytes": 10313,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Retained Apache2.0 terms fully read as repository provenance; no legal opinion."
+    },
+    {
+      "path": "SECURITY.md",
+      "sha256": "1039abcd0f7eed0507c60c33f34ce2e6ca8dec99470d63e0b0c1b15549ddb441",
+      "bytes": 935,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Private reporting route and no declared supported release series; no external message sent."
+    },
+    {
+      "path": "ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx",
+      "sha256": "2bff0f36fbda621f0403c63c89300d257b62d2f0441f1c096ef96e26e071d4b6",
+      "bytes": 1090,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Isolated emulator test owner and actual testing/product dependencies."
+    },
+    {
+      "path": "ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx",
+      "sha256": "00f08bee1fe7a104a8d58eb7b04d96ee06400d81bbf1a78ac5817baff81a41dd",
+      "bytes": 1498,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Isolated RabbitMQ acceptance owner with actual shipping/testing dependencies."
+    },
+    {
+      "path": "ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx",
+      "sha256": "8ddfd357d1ddf12743aacb3ff5594ee5a7dd8d6634bb130482962cc150dab4fc",
+      "bytes": 1857,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Isolated SQLServer profile graph includes own provider and shared SQL/PostgreSQL dependencies."
+    },
+    {
+      "path": "ViciOne.ServiceBus.slnx",
+      "sha256": "1977742d6c335f003ea6d556a61b8c725993dae81abfe2b81432da9128d8f070",
+      "bytes": 3906,
+      "Root_personally_FULL": true,
+      "Git_Frozen_CSV_bytes_exact": true,
+      "semantic_notes": "Shipping capabilities and compile-tested compositions; production graph excludes native test owners."
+    }
+  ],
+  "before_csv_sha256": "2bb2f9937fbd48d6d1e5040e03d8960b34d573d7db9edb34cf58a4884034cc9a",
+  "after_csv_sha256": "ffe685468cee73adb603c707ebbf30dbf5810964217057f03f97b46bdf9088e9",
+  "new_original_RAW_FULL": 12,
+  "whole_API_CLOSED": false
+}

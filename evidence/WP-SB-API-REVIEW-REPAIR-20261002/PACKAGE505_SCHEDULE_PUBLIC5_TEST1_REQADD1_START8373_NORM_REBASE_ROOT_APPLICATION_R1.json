@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-06T15:44:07.702986+00:00",
+  "status": "ROOT_APPLIED_REVIEWED_SCHEDULE5_TEST_AND_EXISTING_START8373_CURRENT_NORM_REBASE",
+  "before_MAN": "a07da9c33e3f5d3aabd1bbf99f3616edc6d1df02f9c2837106f015329ede6363",
+  "ScheduleTest": {
+    "relative": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ScheduledOwningDiagnosticsTests.cs",
+    "lines": 272,
+    "sha256": "4ed9e58e0663660b7acc3ea18428628f5ce04210815c831f47ad5e1865a2d816"
+  },
+  "ScheduleAuthorREPORT": "1c684fb7396947bdc7321f164d1bdaa2042bcc624fb449e14cca91e66c9a20e6",
+  "ScheduleDifferentREPORT": "9e1b3a28e3c38f3a747a39c85fa5098f6ecf9a80223438a85adc4618873fac5a",
+  "mandatory_materializer_count207_erratum": "5b5b74d31d8ed4ad9ab382c6e6167adbf73f643de0b5b46858cb93d4d0c6f047",
+  "Root_whole_Test272_peer_erratum": "581914",
+  "AzureReq_latest_merge": {
+    "before222": "03e517eacb370444e4360ec552f784935d9e7d8f4eb5ca38292b32e982f9092a",
+    "after223": "9a9cd47b50186d496f32b4de5ce052ffd73ca85e702f0d204bb3789c11f6b7dc",
+    "addition": {
+      "requirementId": "REQ-VSB-ASB-SCHEDULER-OUTCOME",
+      "variantKey": "accepted-sdk-schedule-or-cancel-is-not-replaced-or-duplicated-by-owning-diagnostic",
+      "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ScheduledOwningDiagnosticsTests",
+      "testMethod": "SendScheduleOrCancel_OptionalOwningDiagnosticDoesNotReplaceAcceptedSdkOutcomeAsync"
+    },
+    "literal_insert": ",\n  {\n    \"requirementId\": \"REQ-VSB-ASB-SCHEDULER-OUTCOME\",\n    \"variantKey\": \"accepted-sdk-schedule-or-cancel-is-not-replaced-or-duplicated-by-owning-diagnostic\",\n    \"testAssembly\": \"ViciOne.ServiceBus.AzureServiceBus.Tests\",\n    \"testType\": \"ViciOne.ServiceBus.AzureServiceBus.Tests.ScheduledOwningDiagnosticsTests\",\n    \"testMethod\": \"SendScheduleOrCancel_OptionalOwningDiagnosticDoesNotReplaceAcceptedSdkOutcomeAsync\"\n  }",
+    "literal_offset": 83631,
+    "entire222_bytes_inverse_exact": true
+  },
+  "Start8373": {
+    "author": "62fe7e495e6090090ef0eb512c0feb720cbcd71ca4f513d6b6b1ece59757f133",
+    "different": "e067876647d845023d2cf6dc925e2a1538e238094d3a8fe09356b3788d2a0fd3",
+    "Root_whole_peer": "cb40f2",
+    "existing_entire_old_row_preserved": true,
+    "new_symbol_native_count": 0
+  },
+  "Product_changed": false,
+  "native_credit": 0,
+  "Master_count_unchanged": 19410,
+  "original_remaining_unchanged": 21,
+  "grade": null
+}

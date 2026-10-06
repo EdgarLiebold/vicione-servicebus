@@ -1,0 +1,42 @@
+{
+  "scope": "readonly early-validation contract research; no new implementation or test fixture generated",
+  "status": "UNRESOLVED_ORIGINAL_F030_STARTUP_AND_NAMED_BUS_IDENTITY_CONTRACT",
+  "source_evidence_plans": [
+    "STARTUP_READ_PLAN.json",
+    "PROVIDER_READ_PLAN.json",
+    "ADDITIONAL_READ_PLAN.json"
+  ],
+  "observed_public_route": "BatchTimerAssertions.cs UseExecute(context.SetTimeProvider(custom)) after normal bus start; actual size and virtual-clock expiry verified with long-capable ITimer.",
+  "unsafe_inferences": [
+    "No DI TimeProvider does not imply every future batch uses System.",
+    "DI TimeProvider registered does not by itself select ConsumeContext batch provider in reviewed common paths.",
+    "Endpoint default/System at build time does not preclude later middleware context override.",
+    "Custom ITimer long support does not exempt CTS(TimeSpan,TimeProvider) constructor upper range."
+  ],
+  "possible_contracts": [
+    {
+      "choice": "Keep context-selected provider semantics and precreation guard",
+      "preserves": "Existing public middleware custom-long behavior",
+      "does_not_supply": "Universal before-receiver-startup guarantee; original F030 closure needs explicit contract decision."
+    },
+    {
+      "choice": "Declare effective batch provider/timer capabilities early with defined override rules",
+      "preserves": "Potential long-capable timers with startup validation",
+      "requires": "Production API/ownership contract, capability validation and adversarial normal/custom/override tests; not merely inspecting a default."
+    },
+    {
+      "choice": "Restrict all batch TimeLimit to System range at startup",
+      "supplies": "Simple early range check",
+      "breaks": "Proved existing supported custom-long route; requires explicit compatibility decision."
+    }
+  ],
+  "discriminating_future_routes": [
+    "Invalid System default must fail before a receive transport startup signal, with structured Batch.TimeLimit + bus/endpoint owner and no timer/admission.",
+    "Long-capable declared custom provider must start and produce exact size/expiry result and terminal ownership counts.",
+    "Late middleware custom provider with no DI provider must have explicit accepted/rejected contract; existing positive case must not disappear silently.",
+    "Registered DI custom provider without ConsumeContext override must prove actual selected batch provider, not infer it from registration.",
+    "Named buses with identical endpoint names must prove final diagnostic bus identity."
+  ],
+  "native_execution": false,
+  "finding_id_created": false
+}

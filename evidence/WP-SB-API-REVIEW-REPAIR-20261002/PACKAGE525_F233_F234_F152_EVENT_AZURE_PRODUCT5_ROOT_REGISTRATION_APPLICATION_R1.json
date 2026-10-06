@@ -1,0 +1,132 @@
+{
+  "utc": "2026-10-06T17:25:49.205299+00:00",
+  "status": "ROOT_DIFFERENT_REVIEWED_PRODUCT5_APPLIED_FIXED_PUBLICATION_GLOBAL_OPEN",
+  "before": {
+    "API_MEMBER_ACCEPTANCE_CURRENT.json": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package525-product5-root-application-before-r1/API_MEMBER_ACCEPTANCE_CURRENT.json",
+      "sha256": "27298e62cde4cd96a4c0e609e8ae6a8370a256a74d55639053d67513ebf15f01"
+    },
+    "STATE.json": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package525-product5-root-application-before-r1/STATE.json",
+      "sha256": "8b9305bae71b7e99238038e40f7236991c74f7b579ba7d0bf4e5184c7a8f9ae7"
+    },
+    "PO_BERICHT.txt": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package525-product5-root-application-before-r1/PO_BERICHT.txt",
+      "sha256": "0e1309218df0fbb81b01b180e1843687d18b709b6c1a5823f1e1b3a110d5671b"
+    }
+  },
+  "before_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package525-product5-root-application-before-r1/MANIFEST.json",
+    "sha256": "3d8cab8f4709d1480fbf1b5c72cc0a4cb0b37e08d23457bd4ac5862424c1284f"
+  },
+  "authorities": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package521-azure-schedule-fallback-debug4-root-product1-proposed-r1/MANIFEST.json",
+      "sha256": "9ddd58ca7b13f31100478eed12a4efa933e882c3f5dc986525ed098436045c3b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package521-azure-fallback-debug4-independent-product-source-peer-r1/MANIFEST.json",
+      "sha256": "8b559bbcfb7695a2a50efa2febc14abd9ca931bb352968847f2d60569cdbd927"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package521-independent-source-peer-applycheck-receipt-precision-r1/MANIFEST.json",
+      "sha256": "eeb67ff0002ac8ba73000a76bf3922a6a87bcb440f28da19b2842f7aa3d7ed6e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package450-event-completed-owning-debug1-product-proposed-r1/MANIFEST.json",
+      "sha256": "ac7a9f70d53f301ea4e621a84fa99f473cd1ec73875e32da312c8786e39d45d2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package450-event-completed1-independent-runtime-product-source-peer-r1/MANIFEST.json",
+      "sha256": "1529e393fbb48ae8f7a0697d6b26733d6b893e5d815b21f2b5498edc97678c75"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package520-event-owned-build-stop-product3-runtime-proposed-r1/MANIFEST.json",
+      "sha256": "50cbb4d9135210a8a245b9032e3c8b52a83c8fd56d3832322cf31767baa293e3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package520-event-owned-build-stop-independent-product-source-peer-r1/MANIFEST.json",
+      "sha256": "07a38d12eba7e2d7d736be97bad556fccbf689486dcd97954a84829c7bb96cc7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package520-event-product3-native-reference-label-precision-r1/MANIFEST.json",
+      "sha256": "c64324fc2e8f2b4469f65fb1f1e68a3dcffcc0f9e62b8e71d67e709ca4e68f6f"
+    }
+  ],
+  "independent_Original14": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package516-event-completed2-independent-original-qualification-r1/REPORT.json",
+      "sha256": "37766ce0fe8fed780a9cb0e50fefc18b0ffecec041538b16a207c48423f8aed1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package519-event-public4-independent-original-qualification-r1/REPORT.json",
+      "sha256": "f93ec258be7b2a80859ca6e88d2390f4435e6dc33eda11853d5295d93cecc23e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package520-azure-fallback8-independent-original-qualification-r1/REPORT.json",
+      "sha256": "2178de1174d17dff7a5049e3723696aa37e31fd66331900919d7ab9f5a1a0786"
+    }
+  ],
+  "own_whole_reads": {
+    "Azure316": "c65cce complete plus90e18f before288",
+    "Completed62": "9385e6 complete source+different report",
+    "Event661": "41fb79 Receiver220/Lock156;66eaa9 Factory285; wholeProductreport4bdb14, wholeindependentpeer ca2d2a"
+  },
+  "source_changes": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusSendTransportContext.cs",
+      "before": "834fae2411dd970d05177f23f833f9452fdff30411d7212daa5dbb9fdf3b2623",
+      "after": "b38bafcc6bf219a745f69e70ca967a0a079bb52e41e67cccf342f6cbc2fcd55c",
+      "kind": "F152_FOUR_DIAGNOSTICS"
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubConsumerFilter.cs",
+      "before": "aba16534849e17f21585f90b32947030cb56d53161b4ef74374378cd2b2738d1",
+      "after": "66d305560d51f7472c3cc8535b21533ca2588fb2bb9efc141580aecf52b3320a",
+      "kind": "F152_COMPLETED_DIAGNOSTIC"
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubFactoryConfigurator.cs",
+      "before": "2934f2efefa0324fc67ef7653ecb951126b112ae0a02f634edb504aa78cb16b1",
+      "after": "cb1630b846703e817f17c528823b42a3d252a4f0db7b847ebf37eeb1af5f0b70",
+      "kind": "F233_BUILD_OBSERVER"
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubDataReceiver.cs",
+      "before": "61038a593599e9a91c39e40b64ec8e66d650ee9f603df5232192a1b323775d38",
+      "after": "ad9e68540c889e7f4e8b043edab9262590bf7c9f8db60ca138855e3e550ad875",
+      "kind": "F234_RECEIVER_OWNED_CLEANUP"
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+      "before": "4b5403a4932b0c885aa83497b62c706c3f36bdddcbb49cbcef6b517d13ae43c6",
+      "after": "8f75eb7f25c12d4ed7adc1e59387ed10be97100d2608044d9e43f01d2e8e5d6a",
+      "kind": "F234_RECEIVER_OWNED_CLEANUP"
+    }
+  ],
+  "new_finding_ids": [
+    "F-SB-API-233",
+    "F-SB-API-234"
+  ],
+  "finding_family": "F152 owning diagnostic extension only; F233 returned factory observer distinct owner; F234 receiver-owned stop cleanup distinct producer F231, extra Lock pending cleanup Source-only same receiver lifecycle extension under expressly adopted local norm.",
+  "count_accounting": {
+    "known_before": 232,
+    "known_after": 234,
+    "bounded": 225,
+    "pending": 9,
+    "master_rows": 19422,
+    "original_remaining": 9
+  },
+  "catalog_Test_Master_bytes_unchanged": true,
+  "SDK_tasks_fresh_fixed_pending": true,
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": [
+    "Actual Original14 independent:5161P1F/5192P2F/5204P4F. No further fault types empirically invented.",
+    "Every existing Source/XML/public declaration beyond exact local literal edits preserved. Signature/compiledAPI/publication fresh tests pending.",
+    "Completed guard current Req98 is exact Root518 literalADD2 composition of former reviewed96; Test285 unchanged. No guard stale96 silently claimed current.",
+    "Lock.Dispose prior accepted norm requires exact semantic revision/current binding; initialization3639 body byteidentical identity-only rebase later. Worklist524 historical SHA drift remains final reconciliation.",
+    "No finite noncooperative SDK, complete native handler removal/private observer drain, arbitrary preacquisition compensation, broker or universal grade."
+  ]
+}

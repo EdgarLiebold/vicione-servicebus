@@ -1,0 +1,96 @@
+{
+  "status": "ROOT_CURRENT_WHOLE_BOUNDED_OWNER_FULL_BEFORE_FINAL_NATIVE",
+  "basis": "Initial8 full bodies; all3 compiler/oracle corrections and three marker refinement lines personally FULL; corrected34-entry lock FULL; previous exactmetadatareuse of correctedlock plus complete Corechangedentry (sha512). No canonical766 closure. Parentbuildinputs noinherit; real publicHandlerExtensions additional RootFULL. No universal quiescence afterguardfailure.",
+  "inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/Cases.cs",
+      "sha256": "129c0ee31fcccdf000d5c1b0cfb1f723297fd6bdce500b329583b4836679228d",
+      "bytes": 18524
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/DelegatingContext.cs",
+      "sha256": "6c4856cb7be16e80c63bfb69c5b93e44d2c498ca5ba56826b4b2708b8c223d9d",
+      "bytes": 666
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/LoggingLifetime.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/LoggingProbe.cs",
+      "sha256": "1954dea202fe8cd27d7ffda5f42562c329b725f68c8b1bba9f2f800cba736b07",
+      "bytes": 3566
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/NuGet.Config",
+      "sha256": "56d8cf3e8c66279b3ae8a6e8a9d53b4a91e6511248da8549e1aa0b8ee4dc96df",
+      "bytes": 572
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/OwnedLifetime.cs",
+      "sha256": "611b5e50bd5b61336e1146c2a7aec53cfbafdcfcfc392e4b2f8a54625907c462",
+      "bytes": 1582
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/Program.cs",
+      "sha256": "f0fb77b95a554ea0bdcf6ca0311f0dd9086dcaa12c6c324a9060c6dba2b4285a",
+      "bytes": 2327
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/RuntimeOwner.cs",
+      "sha256": "2ced01e978d780a167b82fa8a41c1f8f47577ad4c81361c0dbc2108d91fb8e42",
+      "bytes": 6445
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/packages.lock.json",
+      "sha256": "250230183b431e497812c2f2f2877a535e8de5ad67ba695c2d18f99bea34779a",
+      "bytes": 16204
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/Cases.cs",
+      "sha256": "129c0ee31fcccdf000d5c1b0cfb1f723297fd6bdce500b329583b4836679228d",
+      "bytes": 18524
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/DelegatingContext.cs",
+      "sha256": "6c4856cb7be16e80c63bfb69c5b93e44d2c498ca5ba56826b4b2708b8c223d9d",
+      "bytes": 666
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/LoggingLifetime.PublicConsumer.csproj",
+      "sha256": "547fd129d0d402bf995abf0632c0e4586bd861a19bab3af499483428ef514ac0",
+      "bytes": 961
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/LoggingProbe.cs",
+      "sha256": "1954dea202fe8cd27d7ffda5f42562c329b725f68c8b1bba9f2f800cba736b07",
+      "bytes": 3566
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/NuGet.Config",
+      "sha256": "98446e2bbcea5b9d267a7d328ae10d2363fe4b32063f7e11fec65314b7b8d294",
+      "bytes": 573
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/OwnedLifetime.cs",
+      "sha256": "611b5e50bd5b61336e1146c2a7aec53cfbafdcfcfc392e4b2f8a54625907c462",
+      "bytes": 1582
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/Program.cs",
+      "sha256": "f0fb77b95a554ea0bdcf6ca0311f0dd9086dcaa12c6c324a9060c6dba2b4285a",
+      "bytes": 2327
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/RuntimeOwner.cs",
+      "sha256": "2ced01e978d780a167b82fa8a41c1f8f47577ad4c81361c0dbc2108d91fb8e42",
+      "bytes": 6445
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/packages.lock.json",
+      "sha256": "dda3c57e7dda5c7b5548ae96604e8db87ae02b0fadec94d3cd1c6eef5980386a",
+      "bytes": 16204
+    }
+  ]
+}

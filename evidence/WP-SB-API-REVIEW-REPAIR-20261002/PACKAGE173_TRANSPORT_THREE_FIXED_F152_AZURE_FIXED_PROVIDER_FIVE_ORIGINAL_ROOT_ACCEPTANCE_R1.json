@@ -1,0 +1,228 @@
+{
+  "utc": "2026-10-05T08:51:11.015087+00:00",
+  "actor": "root",
+  "qualification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package173-transport-azure-fixed-provider-original-fresh5-independent-r1/REPORT.json",
+    "sha256": "72b077a2d001820bb99046932d9616f96ec88714d679a78b7fae66e6ca98b48b",
+    "manifest_sha256": "6d0f861d5b6ceafec45bbae76842a75dd47f754f87ff4f199e42b1864a88d586",
+    "freeze_sha256": "3ad79c866b4860d72c5b7ff5592cbc42712ef0947f053bdb34adeff9a42902b3"
+  },
+  "root_independent_checks": "7e688d all3674 MAN entries/all3656 frozen and current live files/all3490 physical CS/all15 exact original ledger receipts and live log hashes/all5 physical fresh CRC-valid ZIP DLL/XML payloads. Root whole pre-execution capture c14aec/qualifier37b3ef and causal product6c25b7/first-failure blocks3e7a3f1332e6 reviewed.",
+  "native": {
+    "total": 2634,
+    "passed": 2629,
+    "failed": 5,
+    "skipped": 0
+  },
+  "accepted_repairs": {
+    "F-SB-API-160": "Consume, send and owned-context stop phases attempted in order despite earlier failure; actual multiple stop faults retained in order. Core160 includes all original controls and new actual multi-failure control.",
+    "F-SB-API-161": "Owning send-stop optional Debug failure no longer prevents actual owned agent shutdown; both healthy/hostile original controls pass.",
+    "F-SB-API-162": "Actual dispatcher cache always cleared after disposal admission, including optional Debug failure; metrics/argument exceptions remain visible. Both original controls pass."
+  },
+  "F152_Azure_extension_fixed": "All39 current Azure tests pass, including original6 real SDK-table success/409/500 healthy and hostile diagnostics. Three owning optional diagnostic calls guarded; storage/factory/token/ETag contracts unchanged.",
+  "F152_Dynamo_EF_original_extension": [
+    {
+      "scope": "dynamo",
+      "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 2, loggerThrows: True)",
+      "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:117 Assert.Same",
+      "actual_cause": "DynamoDB insert diagnostic failure",
+      "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+      "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+      "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+      "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+    },
+    {
+      "scope": "dynamo",
+      "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 0, loggerThrows: True)",
+      "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:107 Assert.Null",
+      "actual_cause": "DynamoDB insert diagnostic failure",
+      "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+      "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+      "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+      "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+    },
+    {
+      "scope": "dynamo",
+      "case": "ViciOne.ServiceBus.DynamoDb.Tests.Saga.DynamoDbSagaFailureBoundaryTests.Insert_DebugDiagnosticsPreserveSdkStorageOutcomeAsync(outcome: 1, loggerThrows: True)",
+      "first_assertion": "DynamoDbSagaFailureBoundaryTests.cs:117 Assert.Same",
+      "actual_cause": "DynamoDB insert diagnostic failure",
+      "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+      "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+      "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+      "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+    },
+    {
+      "scope": "ef",
+      "case": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.DbContextSagaRepositoryContextTests.Insert_DebugDiagnosticsPreservePersistedOutcomeAsync(outcome: 0, loggerThrows: True)",
+      "first_assertion": "DbContextSagaRepositoryContextTests.cs:104 Assert.Null",
+      "actual_cause": "EF insert diagnostic failure",
+      "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+      "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+      "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+      "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+    },
+    {
+      "scope": "ef",
+      "case": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Saga.DbContextSagaRepositoryContextTests.Insert_DebugDiagnosticsPreservePersistedOutcomeAsync(outcome: 1, loggerThrows: True)",
+      "first_assertion": "DbContextSagaRepositoryContextTests.cs:104 Assert.Null",
+      "actual_cause": "EF insert diagnostic failure",
+      "reached": "Actual operation joined and timeout excluded; provider request/row outcome, correlation identity, exact structured debug cause and logger throw identity checked before the first failing assertion.",
+      "unreached": "Dynamo0 returned context/state/message/token/success after107; Dynamo1/2 null returned context/taskfault after117; SDKDisposeCount1 after finally is beyond the failing assertion. EF0 successful result/context/entity unchanged and EF1 null result/success after104.",
+      "source_cause": "Dynamo Insert owns unguarded success/fault LogInsert calls, preserving storage failure only when diagnostic does not throw. EF owns unguarded success LogInsert and verified conflict LogInsertFault after exact loser detach/winner load.",
+      "controls": "Dynamo three healthy logger modes pass; EF success/collision healthy plus both unrelated-failure modes pass. No actual AWS cloud or universal EF provider proof."
+    }
+  ],
+  "family_scope": "Eight previously qualified owning Saga/Azure callsites fixed. Dynamo2 and EF2 owners now five causally qualified original failing cases; proposed product2 independent SOURCE_NO_BLOCK. ConfigSaga Subscribe/Connect2 still Original controls pending174. Direct public logging propagation is separate. F152 remains OPEN, no five new IDs.",
+  "fresh5": [
+    {
+      "filename": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "37b8d7a2fb7df4e2bee105a0d751422f17105029cea7556b05577a1f4c0142df",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.dll",
+        "lib/net10.0/ViciOne.ServiceBus.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/a58197abc5c545b3a1d300f333460262.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "5796be480111cf71f8bacd5e8e2141f0b654af19dd835ebd5c95ee1005bf43fe",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "9d2c0d9bbe164be085a7e9a958fe39393207ac7e3bb534e431c53449e27c6160",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "be54fb21fe26f94356e732e078bf3d1eae2964415f34fd918b756b2793f288e6"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.Azure.Table.1.0.0.nupkg",
+      "sha256": "14b1ce2fa10a9dc1f4be5ad1cf464f3b8ceed602495b11af7820ff00afa39c1d",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.Azure.Table.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.Azure.Table.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Azure.Table.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/cdd0c47e37ba4864baf6158b2bfe212f.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Azure.Table.dll",
+          "sha256": "b639b9b7bfe0388f050c30e2151dfb2db95f533fe0394cc95695250bb6e7a78f",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Azure.Table.xml",
+          "sha256": "40c4cd2d49892dbcf1020a5c4477b70e45b8136f7f132f925373f076f36c93dd",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "a9992a07405818c9a99f59d626ea44702158cd02a99ec1ee353c861875efc7c4"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.DynamoDb.1.0.0.nupkg",
+      "sha256": "80b1102f40ec8f21cf9ed0c15e131fb411bd0adec1843ef1a97ad2336c3b96ba",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.DynamoDb.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.DynamoDb.dll",
+        "lib/net10.0/ViciOne.ServiceBus.DynamoDb.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/6d20a27846124de1ab919df5dd74d2cf.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.DynamoDb.dll",
+          "sha256": "36a348f43022bbb50503f2a0cf3bf86c56f354c58c78c0bef736519b1b1950a3",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.DynamoDb.xml",
+          "sha256": "6d95321d91fab3d9675611f37d2a7a82504ac4ed85e040e641aed17ace01dad7",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "91e6ced08200e2e316339e19fa0db8b87c075d1aadd844aa50ffc054acb61e8d"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+      "sha256": "a24f616216d75e52171f167b5c77902d829309a624b0ebe0db1f67e2a3edf753",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/2acc71434e5241da938ad5fd27a939e6.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "sha256": "c5ea8f88c592dc7b3495250b0343c776679e5fe8d55f37d3f66b926c4d105bba",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.xml",
+          "sha256": "2c9fe9906fcb3273de3484dcf3eb8a7faacdbb55e378fc73e1bbd63c5fe76578",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "784d4415b5dfb78de448e2bb6b1a0b7401f712c98c1c19376c3f4ec37a578fba"
+    },
+    {
+      "filename": "ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "sha256": "ffc7b865041617a53dbdf82ee664a04f69e65ba4b09f8c47ec10460f9b3a8004",
+      "CRC_all_entries": true,
+      "ZIP_entries": [
+        "_rels/.rels",
+        "ViciOne.ServiceBus.Sagas.nuspec",
+        "NuGet.README.md",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+        "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+        "[Content_Types].xml",
+        "package/services/metadata/core-properties/0d186957b26e45b7a9682280eb9bd0be.psmdcp"
+      ],
+      "actual_entries": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "2eeda99e21ef48c0e7bbb00e624d67e6ab35de45c4c2fc7c4472944248f5e0a2",
+          "actual_frozen_frame_equal": true
+        },
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.xml",
+          "sha256": "f22525e67ab8140d6631849e7746127e68d02c4a3f80bf786fa8b3f11ebb29bb",
+          "actual_frozen_frame_equal": true
+        }
+      ],
+      "embedded_PDB_SHA": "b578047fff1e6a9d6c931e9f3cf602e0649a71dfe6374901f29e35e2c585ec6f"
+    }
+  ],
+  "counts_before": {
+    "known": 162,
+    "accepted": 158
+  },
+  "counts_after": {
+    "known": 162,
+    "accepted": 161
+  },
+  "limits": [
+    "No real AWS/Azure cloud or universal EF-provider integration claim. Actual in-process SDK adapter/SQLite controls only.",
+    "Only named actual terminal tasks and reached first assertions support Original causality; later failing-case assertions remain unreached.",
+    "No universal cancellation/noncooperative-agent stop/physical receiver-disposal claim.",
+    "Whole API review, current final full unit suite, fresh31 and journeys/packed consumers remain open."
+  ],
+  "whole_API_closed": false
+}

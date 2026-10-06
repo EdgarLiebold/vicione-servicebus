@@ -25,13 +25,13 @@ public sealed class ScheduleRecurringMessageCommand<T> :
         PayloadType = MessageTypeCache<T>.MessageTypeNames.ToArray();
     }
 
-    /// <summary>Gets or sets the schedule.</summary>
+    /// <summary>Gets the schedule.</summary>
     public RecurringSchedule Schedule { get; }
-    /// <summary>Gets or sets the payload type.</summary>
+    /// <summary>Gets the payload type.</summary>
     public string[] PayloadType { get; }
-    /// <summary>Gets or sets the destination.</summary>
+    /// <summary>Gets the destination.</summary>
     public Uri Destination { get; }
-    /// <summary>Gets or sets the payload.</summary>
+    /// <summary>Gets the payload.</summary>
     public object Payload { get; }
     /// <summary>Returns the string representation of this instance.</summary>
     /// <returns>The converted string.</returns>

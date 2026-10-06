@@ -1,0 +1,985 @@
+{
+  "status": "EXECUTED_ALL_9_KILLED_ROLLBACK_GREEN",
+  "oracle_source_sha256": "0bcc4cb7eac8f09e7839480a89b2cdc6e1a9ed9803e5c779ddd4628195470025",
+  "oracle_dll_sha256": "383d43a377cdd427dfb2852b9750d09594816e8ccbaf59aee3db0c833992ed21",
+  "corrected_source_hashes": {
+    "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs": "5ad6e01550f2f8e2f462988d0d3ec7f4039d656b42624b378e952a79ad81aa93",
+    "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+  },
+  "checks": [
+    {
+      "phase": "package02-identity-isolated-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "--locked-mode",
+        "--disable-parallel"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:07:38.297555+00:00",
+      "completed_utc": "2026-10-02T22:07:39.788054+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-isolated-restore.log",
+      "log_sha256": "d7558ed960c2b2ad78b436a3d1c3781262f5976ca9646ebb7b91265bead3fb6c"
+    },
+    {
+      "receipt": {
+        "phase": "package02-identity-isolated-original-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-02T22:07:39.869889+00:00",
+        "completed_utc": "2026-10-02T22:07:41.197116+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-isolated-original-build.log",
+        "log_sha256": "d54e66179fabaaed13d7a41d2c8c8227a8d47a356525985d197978a78a97452e"
+      },
+      "copied_actual_source_build_dlls": [
+        {
+          "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+          "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "fc02d528397bf50e91dd50cfd57ee323d3e353c7dcb1bad626a5ac0dcff8c40d"
+        },
+        {
+          "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+          "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "c33db2969a6a245bf4fe669ea037ebef806906ada5ed3c27faa722b0bdf99647"
+        }
+      ]
+    },
+    {
+      "phase": "package02-identity-isolated-original-key-boundaries",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "key-boundaries"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+      "exit_code": 134,
+      "started_utc": "2026-10-02T22:07:41.299359+00:00",
+      "completed_utc": "2026-10-02T22:07:42.830064+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-isolated-original-key-boundaries.log",
+      "log_sha256": "c240f08565be14cd9cd05e94ec210483e61fac7a082dae1b43b681639fa61a2b"
+    },
+    {
+      "phase": "package02-identity-isolated-original-contract-boundaries",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "contract-boundaries"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+      "exit_code": 134,
+      "started_utc": "2026-10-02T22:07:42.913227+00:00",
+      "completed_utc": "2026-10-02T22:07:44.126578+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-isolated-original-contract-boundaries.log",
+      "log_sha256": "df04efd6599f16b1a1f797e46c477ecb8c629d9700b29ad58dd80a9be5b91058"
+    },
+    {
+      "receipt": {
+        "phase": "package02-identity-isolated-corrected-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-02T22:07:44.212719+00:00",
+        "completed_utc": "2026-10-02T22:07:56.943430+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-isolated-corrected-build.log",
+        "log_sha256": "79085782c58fb34201c71e4f10d42c5cbe36085ed3f653ad0fdbbcb6f3484571"
+      },
+      "copied_actual_source_build_dlls": [
+        {
+          "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+          "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "84d0dea459208b41e8100eda5019dc6a7ab6f86a91abd26f6c3713d0e1d2661b"
+        },
+        {
+          "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+          "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "5866db4219b93371159d9710075c2762f9123c3b46de1810d4f5228714bf2123"
+        }
+      ]
+    },
+    {
+      "phase": "package02-identity-isolated-corrected-key-boundaries",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "key-boundaries"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:07:57.083617+00:00",
+      "completed_utc": "2026-10-02T22:07:58.682862+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-isolated-corrected-key-boundaries.log",
+      "log_sha256": "f424f1b7ea8fe6b9cc3749fd71132cf33c57b7149ead7d0e1b58fdbae61c9ab3"
+    },
+    {
+      "phase": "package02-identity-isolated-corrected-contract-boundaries",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "contract-boundaries"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:07:58.774137+00:00",
+      "completed_utc": "2026-10-02T22:08:00.195559+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-isolated-corrected-contract-boundaries.log",
+      "log_sha256": "c6130cf282e2eab2b962b12463fa6cf9428908338b689228257c49fcb8233e52"
+    },
+    {
+      "phase": "package02-identity-r2-isolated-restore",
+      "command": [
+        "dotnet",
+        "restore",
+        "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "--locked-mode",
+        "--disable-parallel"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:09:30.788894+00:00",
+      "completed_utc": "2026-10-02T22:09:33.343663+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-isolated-restore.log",
+      "log_sha256": "d7558ed960c2b2ad78b436a3d1c3781262f5976ca9646ebb7b91265bead3fb6c"
+    },
+    {
+      "receipt": {
+        "phase": "package02-identity-r2-isolated-original-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-02T22:09:33.426213+00:00",
+        "completed_utc": "2026-10-02T22:09:46.345373+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-isolated-original-build.log",
+        "log_sha256": "01e303e79387410bea4e592d13033e8b276299192325c3632279360bc69e2b5b"
+      },
+      "copied_actual_source_build_dlls": [
+        {
+          "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+          "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "fc02d528397bf50e91dd50cfd57ee323d3e353c7dcb1bad626a5ac0dcff8c40d"
+        },
+        {
+          "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+          "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "c33db2969a6a245bf4fe669ea037ebef806906ada5ed3c27faa722b0bdf99647"
+        }
+      ]
+    },
+    {
+      "phase": "package02-identity-r2-isolated-original-key-boundaries",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "key-boundaries"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+      "exit_code": 134,
+      "started_utc": "2026-10-02T22:09:46.464848+00:00",
+      "completed_utc": "2026-10-02T22:09:48.096219+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-isolated-original-key-boundaries.log",
+      "log_sha256": "c240f08565be14cd9cd05e94ec210483e61fac7a082dae1b43b681639fa61a2b"
+    },
+    {
+      "phase": "package02-identity-r2-isolated-original-contract-boundaries",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "contract-boundaries"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+      "exit_code": 134,
+      "started_utc": "2026-10-02T22:09:48.206025+00:00",
+      "completed_utc": "2026-10-02T22:09:49.721102+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-isolated-original-contract-boundaries.log",
+      "log_sha256": "df04efd6599f16b1a1f797e46c477ecb8c629d9700b29ad58dd80a9be5b91058"
+    },
+    {
+      "receipt": {
+        "phase": "package02-identity-r2-isolated-corrected-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-02T22:09:49.809598+00:00",
+        "completed_utc": "2026-10-02T22:09:59.452159+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-isolated-corrected-build.log",
+        "log_sha256": "7b76e373e04b14a6243e9337168e610895a0244390d984dceab8b48587495595"
+      },
+      "copied_actual_source_build_dlls": [
+        {
+          "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+          "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "84d0dea459208b41e8100eda5019dc6a7ab6f86a91abd26f6c3713d0e1d2661b"
+        },
+        {
+          "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+          "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "5866db4219b93371159d9710075c2762f9123c3b46de1810d4f5228714bf2123"
+        }
+      ]
+    },
+    {
+      "phase": "package02-identity-r2-isolated-corrected-key-boundaries",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "key-boundaries"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:09:59.574602+00:00",
+      "completed_utc": "2026-10-02T22:10:01.088861+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-isolated-corrected-key-boundaries.log",
+      "log_sha256": "f424f1b7ea8fe6b9cc3749fd71132cf33c57b7149ead7d0e1b58fdbae61c9ab3"
+    },
+    {
+      "phase": "package02-identity-r2-isolated-corrected-contract-boundaries",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "contract-boundaries"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:10:01.183728+00:00",
+      "completed_utc": "2026-10-02T22:10:02.520544+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-isolated-corrected-contract-boundaries.log",
+      "log_sha256": "c6130cf282e2eab2b962b12463fa6cf9428908338b689228257c49fcb8233e52"
+    },
+    {
+      "receipt": {
+        "phase": "package02-identity-r2-isolated-rollback-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-02T22:10:35.851462+00:00",
+        "completed_utc": "2026-10-02T22:10:39.665972+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-isolated-rollback-build.log",
+        "log_sha256": "76d31d4ad836be0d10334fa36b0f8ba7fb381c587bb07dd225847922a75d1867"
+      },
+      "copied_actual_source_build_dlls": [
+        {
+          "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+          "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "84d0dea459208b41e8100eda5019dc6a7ab6f86a91abd26f6c3713d0e1d2661b"
+        },
+        {
+          "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+          "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "5866db4219b93371159d9710075c2762f9123c3b46de1810d4f5228714bf2123"
+        }
+      ]
+    },
+    {
+      "phase": "package02-identity-r2-isolated-rollback-key-boundaries",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "key-boundaries"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:10:39.803118+00:00",
+      "completed_utc": "2026-10-02T22:10:41.481451+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-isolated-rollback-key-boundaries.log",
+      "log_sha256": "f424f1b7ea8fe6b9cc3749fd71132cf33c57b7149ead7d0e1b58fdbae61c9ab3"
+    },
+    {
+      "phase": "package02-identity-r2-isolated-rollback-contract-boundaries",
+      "command": [
+        "dotnet",
+        "run",
+        "--project",
+        "PublicContracts.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "contract-boundaries"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+      "exit_code": 0,
+      "started_utc": "2026-10-02T22:10:41.614376+00:00",
+      "completed_utc": "2026-10-02T22:10:43.049288+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-isolated-rollback-contract-boundaries.log",
+      "log_sha256": "c6130cf282e2eab2b962b12463fa6cf9428908338b689228257c49fcb8233e52"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "key-lossy-encoding",
+      "changed_source": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+      "source_sha256": "1b84c93f9a23ef09e1ad030d950e1a81a4c74d6e9c023ddace89733730975d14",
+      "replacement": {
+        "before": "new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true).GetByteCount(keyId)",
+        "after": "Encoding.UTF8.GetByteCount(keyId)"
+      },
+      "status": "KILLED_BY_EXECUTED_PUBLIC_CONTRACT",
+      "build": {
+        "receipt": {
+          "phase": "package02-identity-mutant-build-key-lossy-encoding",
+          "command": [
+            "dotnet",
+            "build",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-02T22:08:00.293089+00:00",
+          "completed_utc": "2026-10-02T22:08:08.854133+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-mutant-build-key-lossy-encoding.log",
+          "log_sha256": "36722dd3323418a5b56af156a2919f41f1ea762ee624473fcdf98f81089747a9"
+        },
+        "copied_actual_source_build_dlls": [
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "8bcef49c5611a1af71213b7a39adb6fcd12e4d2c9a23dcb726c23a90601d6c50"
+          },
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "5866db4219b93371159d9710075c2762f9123c3b46de1810d4f5228714bf2123"
+          }
+        ]
+      },
+      "native_contract_failure": {
+        "phase": "package02-identity-mutant-key-lossy-encoding",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "PublicContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "key-boundaries"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+        "exit_code": 134,
+        "started_utc": "2026-10-02T22:08:08.970870+00:00",
+        "completed_utc": "2026-10-02T22:08:10.589087+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-mutant-key-lossy-encoding.log",
+        "log_sha256": "c240f08565be14cd9cd05e94ec210483e61fac7a082dae1b43b681639fa61a2b"
+      }
+    },
+    {
+      "name": "key-exclusive-upper-bound",
+      "changed_source": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+      "source_sha256": "2af416a76562bf2f4dd3a325407038f0fd04d6d06386cc0740e41d9581e7575e",
+      "replacement": {
+        "before": "keyIdByteCount > ushort.MaxValue",
+        "after": "keyIdByteCount >= ushort.MaxValue"
+      },
+      "status": "KILLED_BY_EXECUTED_PUBLIC_CONTRACT",
+      "build": {
+        "receipt": {
+          "phase": "package02-identity-mutant-build-key-exclusive-upper-bound",
+          "command": [
+            "dotnet",
+            "build",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-02T22:08:10.681786+00:00",
+          "completed_utc": "2026-10-02T22:08:17.128778+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-mutant-build-key-exclusive-upper-bound.log",
+          "log_sha256": "b4734caaf38c8e1f6e2e9ff822a6d8544f6a8392adaeb4e7dd7dc59fd2ef8809"
+        },
+        "copied_actual_source_build_dlls": [
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "0d05602c2c47b165801d7f5c67c6a787dde49669e402609729d51d1431bfa08d"
+          },
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "5866db4219b93371159d9710075c2762f9123c3b46de1810d4f5228714bf2123"
+          }
+        ]
+      },
+      "native_contract_failure": {
+        "phase": "package02-identity-mutant-key-exclusive-upper-bound",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "PublicContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "key-boundaries"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+        "exit_code": 134,
+        "started_utc": "2026-10-02T22:08:17.240780+00:00",
+        "completed_utc": "2026-10-02T22:08:18.615276+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-mutant-key-exclusive-upper-bound.log",
+        "log_sha256": "302ef0bbfad8b655e54dc75b247efa041cbff0fcee34c1353a4e2998e63b6909"
+      }
+    },
+    {
+      "name": "key-character-count-bound",
+      "changed_source": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+      "source_sha256": "e7f95da9c0bb27e9df601cb510e42a8e7bd1e6ad61db2872c84a45dfe25b1358",
+      "replacement": {
+        "before": "keyIdByteCount > ushort.MaxValue",
+        "after": "keyId.Length > ushort.MaxValue"
+      },
+      "status": "KILLED_BY_EXECUTED_PUBLIC_CONTRACT",
+      "build": {
+        "receipt": {
+          "phase": "package02-identity-mutant-build-key-character-count-bound",
+          "command": [
+            "dotnet",
+            "build",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-02T22:08:18.758397+00:00",
+          "completed_utc": "2026-10-02T22:08:24.885903+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-mutant-build-key-character-count-bound.log",
+          "log_sha256": "089a990828350234c540a3260527e651442d3ae18c0919f04785bccb793d7fd0"
+        },
+        "copied_actual_source_build_dlls": [
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "e65e1301d69d915bcfa354e7922c9bf2ea1618c0c29f8efa0e8701bed906af92"
+          },
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "5866db4219b93371159d9710075c2762f9123c3b46de1810d4f5228714bf2123"
+          }
+        ]
+      },
+      "native_contract_failure": {
+        "phase": "package02-identity-mutant-key-character-count-bound",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "PublicContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "key-boundaries"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+        "exit_code": 134,
+        "started_utc": "2026-10-02T22:08:25.000098+00:00",
+        "completed_utc": "2026-10-02T22:08:26.998846+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-mutant-key-character-count-bound.log",
+        "log_sha256": "b11939df76922135a1a3db18ee7b6f6fce2b90f49a895f0c671f02b05f8468ba"
+      }
+    },
+    {
+      "name": "key-lost-encoding-cause",
+      "changed_source": "src/ViciOne.ServiceBus/Serialization/Encryption/EncryptionKey.cs",
+      "source_sha256": "5162d698a0cba8b0aab981d693c002c46989044e3538f3770fc541911b9e2524",
+      "replacement": {
+        "before": "nameof(keyId), exception)",
+        "after": "nameof(keyId), exception.InnerException)"
+      },
+      "status": "KILLED_BY_EXECUTED_PUBLIC_CONTRACT",
+      "build": {
+        "receipt": {
+          "phase": "package02-identity-r2-mutant-build-key-lost-encoding-cause",
+          "command": [
+            "dotnet",
+            "build",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-02T22:10:02.616466+00:00",
+          "completed_utc": "2026-10-02T22:10:09.017885+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-build-key-lost-encoding-cause.log",
+          "log_sha256": "a1112bcd0f0cd724c7717f09b372736b8b95b058f2ea07e25a4724e608b66fc7"
+        },
+        "copied_actual_source_build_dlls": [
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "71a07bd1914518c78b3e3982c4c5291efe6843b7269f001a51dd6132b20d9701"
+          },
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "5866db4219b93371159d9710075c2762f9123c3b46de1810d4f5228714bf2123"
+          }
+        ]
+      },
+      "native_contract_failure": {
+        "phase": "package02-identity-r2-mutant-key-lost-encoding-cause",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "PublicContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "key-boundaries"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+        "exit_code": 134,
+        "started_utc": "2026-10-02T22:10:09.129935+00:00",
+        "completed_utc": "2026-10-02T22:10:10.456735+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-key-lost-encoding-cause.log",
+        "log_sha256": "c08c825dc069605e1875e0c25d394969587ee5e9751b724ac0f022a52fe4ddd0"
+      }
+    },
+    {
+      "name": "contract-lost-high-surrogate-guard",
+      "changed_source": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "source_sha256": "33ce5029e362c78b009117c1ce37273d5da8dd82001fb4d9ed881a9a58dcd8d2",
+      "replacement": {
+        "before": "!char.IsLowSurrogate(name[index + 1])",
+        "after": "false"
+      },
+      "status": "KILLED_BY_EXECUTED_PUBLIC_CONTRACT",
+      "build": {
+        "receipt": {
+          "phase": "package02-identity-r2-mutant-build-contract-lost-high-surrogate-guard",
+          "command": [
+            "dotnet",
+            "build",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-02T22:10:10.552100+00:00",
+          "completed_utc": "2026-10-02T22:10:17.244874+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-build-contract-lost-high-surrogate-guard.log",
+          "log_sha256": "3a19eede0c08718b1e2ed6edfeb34029ef5656238895dbf0db6c38b8c0c62d78"
+        },
+        "copied_actual_source_build_dlls": [
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "84d0dea459208b41e8100eda5019dc6a7ab6f86a91abd26f6c3713d0e1d2661b"
+          },
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "2ca9d8e3b1c392a6146eb5373b20af9f6870de6877aebb7cb48f512b4ce41179"
+          }
+        ]
+      },
+      "native_contract_failure": {
+        "phase": "package02-identity-r2-mutant-contract-lost-high-surrogate-guard",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "PublicContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "contract-boundaries"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+        "exit_code": 134,
+        "started_utc": "2026-10-02T22:10:17.358239+00:00",
+        "completed_utc": "2026-10-02T22:10:18.706679+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-contract-lost-high-surrogate-guard.log",
+        "log_sha256": "df04efd6599f16b1a1f797e46c477ecb8c629d9700b29ad58dd80a9be5b91058"
+      }
+    },
+    {
+      "name": "contract-valid-pair-not-consumed",
+      "changed_source": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "source_sha256": "10a52e501dbf0071a1a577f943130ee12726f6d69c32be6e7dd6a39ffda7ecb2",
+      "replacement": {
+        "before": "                index++;",
+        "after": "                // mutant: leave low surrogate unconsumed"
+      },
+      "status": "KILLED_BY_EXECUTED_PUBLIC_CONTRACT",
+      "build": {
+        "receipt": {
+          "phase": "package02-identity-r2-mutant-build-contract-valid-pair-not-consumed",
+          "command": [
+            "dotnet",
+            "build",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-02T22:10:18.838313+00:00",
+          "completed_utc": "2026-10-02T22:10:21.287412+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-build-contract-valid-pair-not-consumed.log",
+          "log_sha256": "96b93760eac62ba5fc57c25b2c0b37d0b7866a04b3ebdbf9285c6f44e0517c26"
+        },
+        "copied_actual_source_build_dlls": [
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "84d0dea459208b41e8100eda5019dc6a7ab6f86a91abd26f6c3713d0e1d2661b"
+          },
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "b1215899558c182ba1cb5886f05753523eaa3fe6b42ba8f9e7d1635663ba5fa6"
+          }
+        ]
+      },
+      "native_contract_failure": {
+        "phase": "package02-identity-r2-mutant-contract-valid-pair-not-consumed",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "PublicContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "contract-boundaries"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+        "exit_code": 134,
+        "started_utc": "2026-10-02T22:10:21.432780+00:00",
+        "completed_utc": "2026-10-02T22:10:23.177377+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-contract-valid-pair-not-consumed.log",
+        "log_sha256": "12e4c3d11d7a1dd243c0d2544cb51ca90198c11667c910cc09d40136d39b25b3"
+      }
+    },
+    {
+      "name": "contract-lost-low-surrogate-guard",
+      "changed_source": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "source_sha256": "184d772cd156e958d2f43e288b2193dd6cd512c35eb40a6d5ec5d55a42a86814",
+      "replacement": {
+        "before": "if (char.IsLowSurrogate(character))",
+        "after": "if (char.IsLowSurrogate(character) && character == '\\0')"
+      },
+      "status": "KILLED_BY_EXECUTED_PUBLIC_CONTRACT",
+      "build": {
+        "receipt": {
+          "phase": "package02-identity-r2-mutant-build-contract-lost-low-surrogate-guard",
+          "command": [
+            "dotnet",
+            "build",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-02T22:10:23.303633+00:00",
+          "completed_utc": "2026-10-02T22:10:25.979499+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-build-contract-lost-low-surrogate-guard.log",
+          "log_sha256": "8feb4a68f9e13a3e2038ca4ff5dd765b59bdc71b7fbc0a6870fdc5ff911d96db"
+        },
+        "copied_actual_source_build_dlls": [
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "84d0dea459208b41e8100eda5019dc6a7ab6f86a91abd26f6c3713d0e1d2661b"
+          },
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "1384ce8b31af4ce43e6da7838fab9078ef164535a4518ef9745fd292873fb6ff"
+          }
+        ]
+      },
+      "native_contract_failure": {
+        "phase": "package02-identity-r2-mutant-contract-lost-low-surrogate-guard",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "PublicContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "contract-boundaries"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+        "exit_code": 134,
+        "started_utc": "2026-10-02T22:10:26.093277+00:00",
+        "completed_utc": "2026-10-02T22:10:27.432244+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-contract-lost-low-surrogate-guard.log",
+        "log_sha256": "df04efd6599f16b1a1f797e46c477ecb8c629d9700b29ad58dd80a9be5b91058"
+      }
+    },
+    {
+      "name": "contract-exclusive-length-bound",
+      "changed_source": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "source_sha256": "122b03b5dc61d241bef79b6e7b10bb6ac85da4361cd469175203a315516578e8",
+      "replacement": {
+        "before": "name.Length > 256",
+        "after": "name.Length >= 256"
+      },
+      "status": "KILLED_BY_EXECUTED_PUBLIC_CONTRACT",
+      "build": {
+        "receipt": {
+          "phase": "package02-identity-r2-mutant-build-contract-exclusive-length-bound",
+          "command": [
+            "dotnet",
+            "build",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-02T22:10:27.532576+00:00",
+          "completed_utc": "2026-10-02T22:10:29.885092+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-build-contract-exclusive-length-bound.log",
+          "log_sha256": "d2ec20f3047a81f8697043c35d6c17780c21f7e8b7ed56f1fff80161c4822299"
+        },
+        "copied_actual_source_build_dlls": [
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "84d0dea459208b41e8100eda5019dc6a7ab6f86a91abd26f6c3713d0e1d2661b"
+          },
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "f1bea42269bef41afaf5daf2a14d3a9e9b94f47af18b47e390487e57e8a436b3"
+          }
+        ]
+      },
+      "native_contract_failure": {
+        "phase": "package02-identity-r2-mutant-contract-exclusive-length-bound",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "PublicContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "contract-boundaries"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+        "exit_code": 134,
+        "started_utc": "2026-10-02T22:10:30.003537+00:00",
+        "completed_utc": "2026-10-02T22:10:31.561765+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-contract-exclusive-length-bound.log",
+        "log_sha256": "0a80d3670c3f85ae753c4fa8a2d8ec0a4ba6172f168d584ed2f45b6ec743d5a5"
+      }
+    },
+    {
+      "name": "contract-replacement-character-overrejection",
+      "changed_source": "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "source_sha256": "66e597e06a089a423b1821c07ef50ac3221c18430f8c29177d1019fd24f5d3d0",
+      "replacement": {
+        "before": "char.IsControl(character) || char.IsWhiteSpace(character) || character == ';'",
+        "after": "char.IsControl(character) || char.IsWhiteSpace(character) || character == ';' || character == '\\uFFFD'"
+      },
+      "status": "KILLED_BY_EXECUTED_PUBLIC_CONTRACT",
+      "build": {
+        "receipt": {
+          "phase": "package02-identity-r2-mutant-build-contract-replacement-character-overrejection",
+          "command": [
+            "dotnet",
+            "build",
+            "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-02T22:10:31.656786+00:00",
+          "completed_utc": "2026-10-02T22:10:34.028066+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-build-contract-replacement-character-overrejection.log",
+          "log_sha256": "1a4d027eb45254ce07e72f2ad054c3be29655dd6db58112901f5ae28a420bd55"
+        },
+        "copied_actual_source_build_dlls": [
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.dll",
+            "sha256": "84d0dea459208b41e8100eda5019dc6a7ab6f86a91abd26f6c3713d0e1d2661b"
+          },
+          {
+            "source": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+            "consumer": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations/bin/Release/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+            "sha256": "bf1c72d7e255f4a1f8964de051ec27e6eae78b34ebbc399e2295f7e3198cd18d"
+          }
+        ]
+      },
+      "native_contract_failure": {
+        "phase": "package02-identity-r2-mutant-contract-replacement-character-overrejection",
+        "command": [
+          "dotnet",
+          "run",
+          "--project",
+          "PublicContracts.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--",
+          "contract-boundaries"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package02/identity-mutations",
+        "exit_code": 134,
+        "started_utc": "2026-10-02T22:10:34.255283+00:00",
+        "completed_utc": "2026-10-02T22:10:35.734693+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package02-identity-r2-mutant-contract-replacement-character-overrejection.log",
+        "log_sha256": "d3184c988a9a5b80e38ecbfb7ec3c6bc54bf06a872b5da52fe255c9df5753e05"
+      }
+    }
+  ],
+  "execution_kind": "Frozen package-compiled public consumer with two actual isolated-source build DLLs; this is mutation evidence, separate from the fresh NuGet-consumer gate",
+  "excluded_attempt": "Unused catch variable made the first lost-cause mutant uncompilable (CS0168). It is not counted. Remaining definitions preserve compilation and execute contracts.",
+  "original_tracked_rollback_verified": 6209
+}

@@ -1,0 +1,10 @@
+--- freeze/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs
++++ query-leak/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Middleware/EventHubBlobContainerFactoryFilter.cs
+@@ -46,7 +46,6 @@
+         var scope = context.CreateFilterScope("configureTopology");
+         var endpoint = new UriBuilder(_blobContainerClient.Uri)
+         {
+-            Query = string.Empty,
+             Fragment = string.Empty,
+             UserName = string.Empty,
+             Password = string.Empty

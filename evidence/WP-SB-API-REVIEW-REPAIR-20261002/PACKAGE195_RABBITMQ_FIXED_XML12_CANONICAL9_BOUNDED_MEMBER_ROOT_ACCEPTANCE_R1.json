@@ -1,0 +1,231 @@
+{
+  "utc": "2026-10-05T16:41:49.426905+00:00",
+  "status": "NINE_ORIGINAL_CONTRACTS_SOURCE_BOUNDED_ROOT_ACCEPTED",
+  "repair_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE195_F186_TO_F190_XML12_FRESH_PACKAGE_ROOT_REPAIR_ACCEPTANCE_R1.json",
+    "sha256": "0311742ae9fcef73552aa6898c6ee885019ab76f6684eb9a81bf40f083a3bd79"
+  },
+  "previous_master": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "f7c68c4d1c0495c370cd298843604c45b872a5b5daec88b290292d725cc12bff"
+  },
+  "original_canonical_added": 9,
+  "raw_rows_before": 10761,
+  "raw_rows_after": 10770,
+  "original_accepted_before": 9899,
+  "original_accepted_after": 9908,
+  "original_remaining_after": 8661,
+  "old_all10761_rows_preserved": true,
+  "excluded_protected_member": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.HeaderProvider",
+  "selected_contracts": [
+    {
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqBusConfiguration.CreateEndpointConfiguration(System.Boolean)",
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/IRabbitMqBusConfiguration.cs",
+      "source_sha256": "c1c4db773d80b16de439403693cea6b976e231571624c6965ae723e8bb2e1e2c",
+      "member_contract": "M:ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqBusConfiguration.CreateEndpointConfiguration(System.Boolean): Declares endpoint creation. The built-in implementation creates new consume topology while retaining parent message/send/publish topology; the SPI does not establish universal behavior for custom implementations.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/reference/formatting facts only; full provider/broker/creation/disposal workflows remain separately scoped."
+      ],
+      "selected195_actual_PDB_source_binding": {
+        "document": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/IRabbitMqBusConfiguration.cs",
+        "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/IRabbitMqBusConfiguration.cs",
+        "sha256": "c1c4db773d80b16de439403693cea6b976e231571624c6965ae723e8bb2e1e2c",
+        "kind": "ACTUAL_PHYSICAL_SOURCE"
+      },
+      "selected195_actual_XML": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqBusConfiguration.CreateEndpointConfiguration(System.Boolean)\">\n            <summary>Creates an endpoint configuration; the built-in implementation shares message, send, and publish topology and creates new consume topology.</summary>\n            <param name=\"isBusEndpoint\">Whether the configuration belongs to the bus endpoint.</param>\n            <returns>The new RabbitMQ endpoint configuration.</returns>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqEndpointConfiguration.CreateEndpointConfiguration(System.Boolean)",
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqEndpointConfiguration.cs",
+      "source_sha256": "fb1ca49c194584cabe5b10f9270b188e0a4a44cfc6d7410e43f938471cd3fd54",
+      "member_contract": "M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqEndpointConfiguration.CreateEndpointConfiguration(System.Boolean): Creates a child endpoint using the same parent message/send/publish topology references and a newly constructed consume topology; isBusEndpoint is forwarded. No cloned parent topology promise.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/reference/formatting facts only; full provider/broker/creation/disposal workflows remain separately scoped."
+      ],
+      "selected195_actual_PDB_source_binding": {
+        "document": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqEndpointConfiguration.cs",
+        "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqEndpointConfiguration.cs",
+        "sha256": "fb1ca49c194584cabe5b10f9270b188e0a4a44cfc6d7410e43f938471cd3fd54",
+        "kind": "ACTUAL_PHYSICAL_SOURCE"
+      },
+      "selected195_actual_XML": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.Configuration.RabbitMqEndpointConfiguration.CreateEndpointConfiguration(System.Boolean)\">\n            <summary>Creates a child endpoint configuration with new consume topology and retained parent message, send, and publish topology references.</summary>\n            <param name=\"isBusEndpoint\">Whether the child belongs to the bus endpoint.</param>\n            <returns>The new child endpoint configuration.</returns>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.HostName",
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/ClusterNode.cs",
+      "source_sha256": "f24bef9ec1c60630fcb059abdcd066138348627064f54e82b52f9c3caee62bc9",
+      "member_contract": "P:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.HostName: Returns the stored host spelling; constructor parsing validates IP input without canonicalizing its stored text. Public getter alone does not normalize.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/reference/formatting facts only; full provider/broker/creation/disposal workflows remain separately scoped."
+      ],
+      "selected195_actual_PDB_source_binding": {
+        "document": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/ClusterNode.cs",
+        "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/ClusterNode.cs",
+        "sha256": "f24bef9ec1c60630fcb059abdcd066138348627064f54e82b52f9c3caee62bc9",
+        "kind": "ACTUAL_PHYSICAL_SOURCE"
+      },
+      "selected195_actual_XML": "<member name=\"P:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.HostName\">\n            <summary>Gets the stored host name or IP address.</summary>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqReceiveEndpointConfiguration.Settings",
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/IRabbitMqReceiveEndpointConfiguration.cs",
+      "source_sha256": "9cdbb225374c18b126da5f23b8f6b5c8f7a632360d7c06c0db193e510624d088",
+      "member_contract": "P:ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqReceiveEndpointConfiguration.Settings: Declares a ReceiveSettings view. Built-in receive configuration returns its backing mutable settings instance; read-only interface access does not establish object immutability.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/reference/formatting facts only; full provider/broker/creation/disposal workflows remain separately scoped."
+      ],
+      "selected195_actual_PDB_source_binding": {
+        "document": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/IRabbitMqReceiveEndpointConfiguration.cs",
+        "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/IRabbitMqReceiveEndpointConfiguration.cs",
+        "sha256": "9cdbb225374c18b126da5f23b8f6b5c8f7a632360d7c06c0db193e510624d088",
+        "kind": "ACTUAL_PHYSICAL_SOURCE"
+      },
+      "selected195_actual_XML": "<member name=\"P:ViciOne.ServiceBus.RabbitMq.Configuration.IRabbitMqReceiveEndpointConfiguration.Settings\">\n            <summary>Gets the receive settings used to declare broker topology.</summary>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqHostSettings.RequestedConnectionTimeout",
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqHostSettings.cs",
+      "source_sha256": "1c909e71461a4a7f900115e35599cc5068fc4c677bfd2be790636e4d00aa8f3e",
+      "member_contract": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqHostSettings.RequestedConnectionTimeout: Declares the requested connection timeout as TimeSpan. No bare millisecond scalar or custom implementation default is implied.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/reference/formatting facts only; full provider/broker/creation/disposal workflows remain separately scoped."
+      ],
+      "selected195_actual_PDB_source_binding": {
+        "document": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqHostSettings.cs",
+        "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqHostSettings.cs",
+        "sha256": "1c909e71461a4a7f900115e35599cc5068fc4c677bfd2be790636e4d00aa8f3e",
+        "kind": "ACTUAL_PHYSICAL_SOURCE"
+      },
+      "selected195_actual_XML": "<member name=\"P:ViciOne.ServiceBus.RabbitMq.RabbitMqHostSettings.RequestedConnectionTimeout\">\n            <summary>Gets the requested connection timeout.</summary>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.Properties",
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveContext.cs",
+      "source_sha256": "6d155d16be214ce532e3ae94b7e2215a4bd2396fd9f42976d18ddb85835522cb",
+      "member_contract": "P:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.Properties: Returns the delivery-supplied IReadOnlyBasicProperties reference retained by the built-in receive context; read-only access does not freeze the underlying caller object.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/reference/formatting facts only; full provider/broker/creation/disposal workflows remain separately scoped."
+      ],
+      "selected195_actual_PDB_source_binding": {
+        "document": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveContext.cs",
+        "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveContext.cs",
+        "sha256": "6d155d16be214ce532e3ae94b7e2215a4bd2396fd9f42976d18ddb85835522cb",
+        "kind": "ACTUAL_PHYSICAL_SOURCE"
+      },
+      "selected195_actual_XML": "<member name=\"P:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.Properties\">\n            <summary>Gets the AMQP message properties supplied with the delivery.</summary>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "T:ViciOne.ServiceBus.RabbitMq.Configuration.BatchSettings",
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/BatchSettings.cs",
+      "source_sha256": "7bca8ac593f04b9401ce0fa79fc747dc45165d8dd3b746bd8782f67c4be461e4",
+      "member_contract": "T:ViciOne.ServiceBus.RabbitMq.Configuration.BatchSettings: Declares read-only property access to batch limits and timeout. Built-in configuration exposes a mutable BatchConfigurator through this interface; no immutable snapshot is promised.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/reference/formatting facts only; full provider/broker/creation/disposal workflows remain separately scoped."
+      ],
+      "selected195_actual_PDB_source_binding": {
+        "document": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/BatchSettings.cs",
+        "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/BatchSettings.cs",
+        "sha256": "7bca8ac593f04b9401ce0fa79fc747dc45165d8dd3b746bd8782f67c4be461e4",
+        "kind": "ACTUAL_PHYSICAL_SOURCE"
+      },
+      "selected195_actual_XML": "<member name=\"T:ViciOne.ServiceBus.RabbitMq.Configuration.BatchSettings\">\n            <summary>Defines read-only access to RabbitMQ client-side publish-batch settings.</summary>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.#ctor(System.String,System.String,System.String,System.UInt64,System.ReadOnlyMemory{System.Byte},System.Boolean,RabbitMQ.Client.IReadOnlyBasicProperties,ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveEndpointContext,System.Object[])",
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveContext.cs",
+      "source_sha256": "6d155d16be214ce532e3ae94b7e2215a4bd2396fd9f42976d18ddb85835522cb",
+      "member_contract": "M:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.#ctor(System.String,System.String,System.String,System.UInt64,System.ReadOnlyMemory{System.Byte},System.Boolean,RabbitMQ.Client.IReadOnlyBasicProperties,ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveEndpointContext,System.Object[]): Constructs the receive context with the supplied delivery metadata and retains the supplied properties reference. Existing body handling and other constructor semantics are unchanged by the documentation repair; no immutable caller properties promise.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/reference/formatting facts only; full provider/broker/creation/disposal workflows remain separately scoped."
+      ],
+      "selected195_actual_PDB_source_binding": {
+        "document": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveContext.cs",
+        "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqReceiveContext.cs",
+        "sha256": "6d155d16be214ce532e3ae94b7e2215a4bd2396fd9f42976d18ddb85835522cb",
+        "kind": "ACTUAL_PHYSICAL_SOURCE"
+      },
+      "selected195_actual_XML": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveContext.#ctor(System.String,System.String,System.String,System.UInt64,System.ReadOnlyMemory{System.Byte},System.Boolean,RabbitMQ.Client.IReadOnlyBasicProperties,ViciOne.ServiceBus.RabbitMq.RabbitMqReceiveEndpointContext,System.Object[])\">\n            <summary>Creates a receive context from AMQP delivery data.</summary>\n            <param name=\"exchange\">The source exchange.</param>\n            <param name=\"routingKey\">The delivery routing key.</param>\n            <param name=\"consumerTag\">The broker-assigned consumer tag.</param>\n            <param name=\"deliveryTag\">The channel-scoped delivery tag.</param>\n            <param name=\"body\">The serialized message body.</param>\n            <param name=\"redelivered\">Whether RabbitMQ previously delivered this message.</param>\n            <param name=\"properties\">The AMQP message properties supplied with the delivery.</param>\n            <param name=\"receiveEndpointContext\">The endpoint context and message limits.</param>\n            <param name=\"payloads\">Additional transport payloads.</param>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.ToString",
+      "assembly": "ViciOne.ServiceBus.RabbitMq",
+      "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/ClusterNode.cs",
+      "source_sha256": "f24bef9ec1c60630fcb059abdcd066138348627064f54e82b52f9c3caee62bc9",
+      "member_contract": "M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.ToString: Uses the stored host spelling with IPv6 brackets when required and appends the optional invariant-format port. IP validation does not imply canonicalized host output.",
+      "runtime_obligations_not_native_proven": [
+        "Exact local declaration/reference/formatting facts only; full provider/broker/creation/disposal workflows remain separately scoped."
+      ],
+      "selected195_actual_PDB_source_binding": {
+        "document": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/ClusterNode.cs",
+        "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/ClusterNode.cs",
+        "sha256": "f24bef9ec1c60630fcb059abdcd066138348627064f54e82b52f9c3caee62bc9",
+        "kind": "ACTUAL_PHYSICAL_SOURCE"
+      },
+      "selected195_actual_XML": "<member name=\"M:ViciOne.ServiceBus.RabbitMq.Configuration.ClusterNode.ToString\">\n            <summary>Returns the stored host and optional port representation, adding brackets around IPv6 hosts.</summary>\n            <returns>The stored host and optional port, with brackets around IPv6 hosts.</returns>\n        </member>",
+      "canonical_original_member": true,
+      "compiler_accessor_sidecar": false,
+      "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_DECLARATION_OR_LOCAL_SOURCE_CONTRACT",
+      "native_cases_added": 0,
+      "whole_API_member_review_closed": false,
+      "grade": null
+    }
+  ],
+  "native_cases_added": 0,
+  "global_Aplus": false
+}

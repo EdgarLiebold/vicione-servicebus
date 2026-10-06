@@ -1,0 +1,84 @@
+using System.Collections.Concurrent;
+using System.Diagnostics.Metrics;
+using ViciOne.ServiceBus.MessageJournal;
+
+namespace ViciOneReview.JournalOwnership;
+
+internal sealed class BoundedStore : IMessageJournalStore
+{
+    readonly object _gate = new();
+    readonly List<MessageJournalEntry> _entries = [];
+    public MessageJournalStoreLimits Limits { get; } = new(65536, 32, TimeSpan.FromHours(1));
+    public bool ThrowAppend;
+    public int Attempts;
+    public TaskCompletionSource<MessageJournalEntry> Appended { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    public MessageJournalEntry[] Entries { get { lock (_gate) return _entries.ToArray(); } }
+    public ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken token)
+    {
+        token.ThrowIfCancellationRequested();
+        Interlocked.Increment(ref Attempts);
+        if (ThrowAppend) throw new InvalidOperationException("owned-journal-store-fault");
+        if (entry.ContentSizeInBytes > Limits.MaximumEntryBytes) throw new InvalidOperationException("entry-capacity");
+        lock (_gate)
+        {
+            _entries.RemoveAll(x => x.ObservedAt < entry.ObservedAt - Limits.RetentionPeriod);
+            while (_entries.Count >= Limits.MaximumEntries) _entries.RemoveAt(0);
+            _entries.Add(entry);
+        }
+        Appended.TrySetResult(entry);
+        return ValueTask.CompletedTask;
+    }
+}
+
+internal sealed class JournalPolicy : IMessageJournalPolicy
+{
+    public string Mode = "stored";
+    public CancellationTokenSource? CancelOperation;
+    public int Calls;
+    public bool SawCancellation;
+    public ValueTask<MessageJournalProjection?> ProjectAsync(MessageJournalCapture capture, CancellationToken token)
+    {
+        Interlocked.Increment(ref Calls);
+        if (Mode == "cancel")
+        {
+            CancelOperation!.Cancel();
+            SawCancellation = token.IsCancellationRequested;
+            token.ThrowIfCancellationRequested();
+        }
+        token.ThrowIfCancellationRequested();
+        if (Mode == "fault") throw new InvalidOperationException("owned-journal-policy-fault");
+        return ValueTask.FromResult<MessageJournalProjection?>(Mode == "filtered" ? null : new(
+            MessageJournalDataClassification.Internal, capture.ContentType, capture.MessageTypes,
+            metadata: new Dictionary<string, string> { ["review"] = "sanitized" }, body: "journal-proof"u8.ToArray()));
+    }
+}
+
+internal sealed class OwnedMeterFactory : IMeterFactory
+{
+    readonly object _gate = new();
+    readonly Dictionary<(string, string?), Meter> _meters = new();
+    int _disposed;
+    public bool ThrowCreate;
+    public int DisposeCalls;
+    public int FailedCreateCalls;
+    public ConcurrentQueue<MeterOptions> Requests { get; } = new();
+    public Meter Create(MeterOptions options)
+    {
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+        Requests.Enqueue(options);
+        if (ThrowCreate) { Interlocked.Increment(ref FailedCreateCalls); throw new InvalidOperationException("owned-meter-create-fault"); }
+        lock (_gate)
+        {
+            if (_meters.TryGetValue((options.Name, options.Version), out Meter? existing)) return existing;
+            var created = new Meter(new MeterOptions(options.Name) { Version = options.Version, Scope = this, Tags = options.Tags });
+            _meters.Add((options.Name, options.Version), created);
+            return created;
+        }
+    }
+    public void Dispose()
+    {
+        if (Interlocked.Exchange(ref _disposed, 1) != 0) return;
+        Interlocked.Increment(ref DisposeCalls);
+        lock (_gate) foreach (Meter meter in _meters.Values) meter.Dispose();
+    }
+}

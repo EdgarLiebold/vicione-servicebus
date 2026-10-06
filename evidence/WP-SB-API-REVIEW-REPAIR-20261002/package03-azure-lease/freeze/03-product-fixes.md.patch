@@ -1,0 +1,9 @@
+--- /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package09-azure/freeze/04-product-fixes.md
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md
+@@ -343,3 +343,6 @@
+ - Azure Service Bus consuming subscriptions now reject a complete rule combined with a separate
+   default-rule filter before bus construction. Named and typed subscriptions retain this validation;
+   configuring either option alone remains supported.
++- Azure Service Bus shared administration leases now retain caller and lease cancellation links
++  until queue/topic creation and subscription creation/deletion finish. Successful results and
++  original faults are preserved; completed requests detach their cancellation registrations.

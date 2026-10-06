@@ -1,0 +1,9 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE316_F213_ACTIVEMQ_FIXED6_CURRENT292_FRESH_PACKAGE_SOURCE14_ROOT_REPAIR_ACCEPTANCE_R1.json",
+    "sha256": "3755030777c0a8f4c42f9680bd8f59355eb85840817cec5c1c55f979a9a8276c"
+  },
+  "master_after_sha256": "a1dd25137e772e28d0c40fdba907b31a5ee2898b56dd2e61b815e37d31a4dc55",
+  "accepted_count": 18971,
+  "Original_remaining": 460
+}

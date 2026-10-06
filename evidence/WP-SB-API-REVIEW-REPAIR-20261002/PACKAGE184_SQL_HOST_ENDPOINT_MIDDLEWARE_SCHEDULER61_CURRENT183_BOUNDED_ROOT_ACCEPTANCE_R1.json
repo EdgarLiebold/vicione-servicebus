@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-05T12:52:30.768405+00:00",
+  "actor": "/root",
+  "scope": "61original SQLhost/endpoint/middleware/scheduler individually boundedcurrent183sourcecontracts;5formerdiagnostic/docs holdsresolvedwithcurrentproof",
+  "before": {
+    "raw": 9553,
+    "original": 8691
+  },
+  "after": {
+    "raw": 9614,
+    "original": 8752,
+    "sidecars": 833,
+    "original_remaining": 9817
+  },
+  "author_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package214-sql-source61-current183-rebase-r2/REPORT.json",
+    "sha256": "95265c626ffb98ef5bef47a72afde4bf62ce643c3a8a4088b1e7dd5cdea30b5f"
+  },
+  "independent_peer_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package214-sql-source61-current183-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "a637455d5fd87f8adf3ea674a195881ad4006b712e051ea22aeb10885261fdbd"
+  },
+  "mandatory_errata": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package214-sql61-rebase-report-receipt-label-erratum-r1/ERRATUM.json",
+      "sha256": "56f9d62c0f291d413e7a6b29ad7b3046b53a9915ac290d97059294d672da570a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package214-sql61-implicit-ctor-null-key-overlay-r1/OVERLAY.json",
+      "sha256": "55345fb6836340cf4345915c133b748f0169ce5a94e50f31589bbf7b7d44b20b"
+    }
+  ],
+  "root_personal": "Alloriginal61individualnorms3a400b+b4d800 retainedexact54; all7currentnormdelta f13c81. Owncurrent196/72from183review plusConsumer46 33dddc prior182. Currentpeerwhole28d015 andordinal32explicitNone7c1cf2. All4MAN/current9Source/61PDB/60XML+implicitNA/FreshCRC/OriginalCSVdisjoint/prefix checked here. NofreshRootwhole9Source or allNative285bodyclaim.",
+  "native_cases_added": 0,
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "limits": [
+    "Current per-ID Source-contract recommendations only. No wholeSQL/Cloud/DB/current inherited-runtime certification.",
+    "All unchanged54 norms reuse previously genuine own review; no false fresh whole61/whole9 credit.",
+    "External qualified285 is not own whole log reading or child native execution."
+  ]
+}

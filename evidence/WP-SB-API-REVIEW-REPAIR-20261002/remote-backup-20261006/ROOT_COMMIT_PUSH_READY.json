@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-06T21:56:13.479088+00:00",
+  "status": "LOCAL_COMMIT_PUSH_READY_DIFFERENT_PEER_NO_BLOCKER",
+  "user_authorization": "sichere jetzt den aktuellen stand remote",
+  "remote_repository": "EdgarLiebold/vicione-servicebus",
+  "visibility": "PRIVATE",
+  "branch": "backup/servicebus-api-review-20261006",
+  "baseline_HEAD": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "archive_manifest_sha256": "a956938156856b1ad9e8e16e033cf25d3a6d0deaf221fe00a6da901a45e04d50",
+  "archive_member_count": 11601,
+  "archive_bytes": 100800092,
+  "archive_sha256": "1cb6ac2ad9af96e5c2b38e5bd758a1a5eadc40791a97bdb2da34707ec1cb998a",
+  "selected_index6330_receipt_sha256": "84cf661dee991058e5cd1b27ab1a408235720ac2b4d53bb943dc71a3d1b5d6a9",
+  "raw_evidence_attributes_sha256": "382bb8c13410fb7dda00e45d5c543988954c1576d42ae8ac77248f0942526f5e",
+  "independent_reviews": [
+    {
+      "path": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/independent-review/remote-backup-20261006-independent-final-archive-index-peer-r2/REPORT.json",
+      "sha256": "d522de4e24d63027d21bffdc56118547d3c98e0988c0a12b179ab45006e88644",
+      "manifest_sha256": "981d1b4d0154433eb56f8d4c35bd978b2611d960d8338a6b47c4cf5e806a1e93"
+    },
+    {
+      "path": "repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/independent-review/remote-backup-20261006-independent-raw-attributes-peer-r1/REPORT.json",
+      "sha256": "51ad830da322ab94665030c569d834c4a5927a1a8ab0e2e8bd38d58e7cb1382c",
+      "manifest_sha256": "ade95eb6e97eaae0a23f87ed6ac6ed4e870edb97377e73d6598b240cf35b6ab1"
+    }
+  ],
+  "git_diff_cached_check_exit": 0,
+  "selected_source_tests_and_API_unchanged_since_review": true,
+  "post_review_doc2_accepted": true,
+  "private_archive_restoration_and_file_hashes_independently_verified": true,
+  "SDK_calls_or_new_Native_tests": 0,
+  "main_merge_or_force_push": false,
+  "remote_durability_not_yet_claimed": true
+}

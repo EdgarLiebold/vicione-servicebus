@@ -1,0 +1,552 @@
+{
+  "status": "ROOT_PERSONALLY_FULL_PREAUTHOR_SOURCE_READ_COMPLETE",
+  "finding": "F-SB-API-033",
+  "subscope": "SignalR; Core independently accepted",
+  "source_inputs": [
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Runtime/DependencyInjectionBackplaneScopeProvider.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/DependencyInjectionBackplaneScopeProvider.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/DependencyInjectionBackplaneScopeProvider.cs",
+      "bytes": 2067,
+      "sha256": "55ee9e13f63b6092956668f470a274543692dcec02e196101fb9a58748cf7a43",
+      "frozen_sha256": "55ee9e13f63b6092956668f470a274543692dcec02e196101fb9a58748cf7a43",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Runtime/IBackplaneScope.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/IBackplaneScope.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/IBackplaneScope.cs",
+      "bytes": 638,
+      "sha256": "abb55ca05195eacf8dfe3e4e73242a508447700f33a026907d0be66e648126f9",
+      "frozen_sha256": "abb55ca05195eacf8dfe3e4e73242a508447700f33a026907d0be66e648126f9",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Runtime/IBackplaneScopeProvider.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/IBackplaneScopeProvider.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/IBackplaneScopeProvider.cs",
+      "bytes": 430,
+      "sha256": "5c5a4a4d21348fbb08ca053563f495dd85e83844f557aaa18ba4174ed0e755aa",
+      "frozen_sha256": "5c5a4a4d21348fbb08ca053563f495dd85e83844f557aaa18ba4174ed0e755aa",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ServiceBusHubLifetimeManager.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ServiceBusHubLifetimeManager.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ServiceBusHubLifetimeManager.cs",
+      "bytes": 26845,
+      "sha256": "d2ae3366c1fa906cdd1cc6978c037c0da3e49ad5b5485fde3c7585178276b625",
+      "frozen_sha256": "d2ae3366c1fa906cdd1cc6978c037c0da3e49ad5b5485fde3c7585178276b625",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Runtime/HubMessageSerializer.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/HubMessageSerializer.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/HubMessageSerializer.cs",
+      "bytes": 4259,
+      "sha256": "e794618f8ddef6f1d45628e7ecfccca1c99c47935221eaf074825768c8906cce",
+      "frozen_sha256": "e794618f8ddef6f1d45628e7ecfccca1c99c47935221eaf074825768c8906cce",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/SignalRBackplaneExtensions.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/SignalRBackplaneExtensions.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/SignalRBackplaneExtensions.cs",
+      "bytes": 4058,
+      "sha256": "fd4efd7e76f6fa880b6e0a8d0175a93e698927473860ee91e0c5c4cc31613ffc",
+      "frozen_sha256": "fd4efd7e76f6fa880b6e0a8d0175a93e698927473860ee91e0c5c4cc31613ffc",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupCommand.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupCommand.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupCommand.cs",
+      "bytes": 977,
+      "sha256": "e22e3bb6448d91c1b28729fd3683aa6b2f2bff27647e69ca20eebf1a55f64507",
+      "frozen_sha256": "e22e3bb6448d91c1b28729fd3683aa6b2f2bff27647e69ca20eebf1a55f64507",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupCommandAcknowledgement.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupCommandAcknowledgement.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupCommandAcknowledgement.cs",
+      "bytes": 627,
+      "sha256": "ef5e3dcf2bd9eb70519dd9c0353c071b5a0736d82d43c31fd0f2f5c2777ae2c6",
+      "frozen_sha256": "ef5e3dcf2bd9eb70519dd9c0353c071b5a0736d82d43c31fd0f2f5c2777ae2c6",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Contracts/BroadcastMessage.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Contracts/BroadcastMessage.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Contracts/BroadcastMessage.cs",
+      "bytes": 1061,
+      "sha256": "5beb99c4502d39d658f9f4f239ed51df06dab91415dbefb3539c84e61af2decd",
+      "frozen_sha256": "5beb99c4502d39d658f9f4f239ed51df06dab91415dbefb3539c84e61af2decd",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Consumers/GroupCommandConsumer.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Consumers/GroupCommandConsumer.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Consumers/GroupCommandConsumer.cs",
+      "bytes": 1892,
+      "sha256": "f09f90fbb10684119bee850b8dff20a208c224e5cb7bfe04f5f0c0e9a5a16d28",
+      "frozen_sha256": "f09f90fbb10684119bee850b8dff20a208c224e5cb7bfe04f5f0c0e9a5a16d28",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Configuration/SignalRBackplaneOptions.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Configuration/SignalRBackplaneOptions.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Configuration/SignalRBackplaneOptions.cs",
+      "bytes": 1611,
+      "sha256": "87aa1a799141d5cd0d27e1bae243f3267dba1c4bbb926f81755d51bd22ba828f",
+      "frozen_sha256": "87aa1a799141d5cd0d27e1bae243f3267dba1c4bbb926f81755d51bd22ba828f",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Configuration/SignalRBackplaneSettings.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Configuration/SignalRBackplaneSettings.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Configuration/SignalRBackplaneSettings.cs",
+      "bytes": 338,
+      "sha256": "b6147dab67316769e7053422e06e167a5e203757649412214dc6a2f6fbacf624",
+      "frozen_sha256": "b6147dab67316769e7053422e06e167a5e203757649412214dc6a2f6fbacf624",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
+      "bytes": 1217,
+      "sha256": "2b9a808c0d71c62529b5f75a1463df0c0a9b274c02fd5da6fc24d87b5ddc0e60",
+      "frozen_sha256": "2b9a808c0d71c62529b5f75a1463df0c0a9b274c02fd5da6fc24d87b5ddc0e60",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Clients/IRequestClient.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Clients/IRequestClient.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/Clients/IRequestClient.cs",
+      "bytes": 1616,
+      "sha256": "6db7403527e640c75aa66a35f9ca24d07b014af421d55c46cf04ce1657715c91",
+      "frozen_sha256": "6db7403527e640c75aa66a35f9ca24d07b014af421d55c46cf04ce1657715c91",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Clients/RequestHandle.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Clients/RequestHandle.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/Clients/RequestHandle.cs",
+      "bytes": 1360,
+      "sha256": "9884306ece5a3e6591432f098c8c69c078024a642118c30696cb44b038c617d8",
+      "frozen_sha256": "9884306ece5a3e6591432f098c8c69c078024a642118c30696cb44b038c617d8",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Clients/IRequestPipeConfigurator.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Clients/IRequestPipeConfigurator.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/Clients/IRequestPipeConfigurator.cs",
+      "bytes": 847,
+      "sha256": "fee6ae9a4d7135819719084df06fa4f4a8a816ed94bdde890a48d3f2d082b221",
+      "frozen_sha256": "fee6ae9a4d7135819719084df06fa4f4a8a816ed94bdde890a48d3f2d082b221",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Clients/Response.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Clients/Response.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/Clients/Response.cs",
+      "bytes": 14274,
+      "sha256": "ffff2c639a268c4fc732b489445343d6888a485e6702cdf93035849a1879b468",
+      "frozen_sha256": "ffff2c639a268c4fc732b489445343d6888a485e6702cdf93035849a1879b468",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Clients/IClientFactory.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Clients/IClientFactory.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/Clients/IClientFactory.cs",
+      "bytes": 9364,
+      "sha256": "5ddbd05305db7515c929c5aeb751028a53ea3972095a458293819b903f259065",
+      "frozen_sha256": "5ddbd05305db7515c929c5aeb751028a53ea3972095a458293819b903f259065",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Clients/ClientFactoryContext.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Clients/ClientFactoryContext.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/Clients/ClientFactoryContext.cs",
+      "bytes": 1935,
+      "sha256": "1b931481aace8346128a8ab6209d653e7daaa3fb99530ca04b8eb1f2be5ae7e9",
+      "frozen_sha256": "1b931481aace8346128a8ab6209d653e7daaa3fb99530ca04b8eb1f2be5ae7e9",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedRequestClient.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedRequestClient.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedRequestClient.cs",
+      "bytes": 13228,
+      "sha256": "5efa8081ce51f27b59580ad22e1f3fce077e8e6124441cec5d7930bc9efa1d51",
+      "frozen_sha256": "5efa8081ce51f27b59580ad22e1f3fce077e8e6124441cec5d7930bc9efa1d51",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedRequestClientExtensions.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedRequestClientExtensions.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedRequestClientExtensions.cs",
+      "bytes": 10559,
+      "sha256": "7441bf856128ccabe2c7743a172b590f806ed7edc7ed0c9860c4bbdfc715fa33",
+      "frozen_sha256": "7441bf856128ccabe2c7743a172b590f806ed7edc7ed0c9860c4bbdfc715fa33",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "bytes": 776,
+      "sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161",
+      "frozen_sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IRequestSendEndpoint.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/IRequestSendEndpoint.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/Advanced/IRequestSendEndpoint.cs",
+      "bytes": 1543,
+      "sha256": "d317b0e8c9b1049fc784ed3f0f10e59e22afa5eb81afb1e83de891fec7c1f22a",
+      "frozen_sha256": "d317b0e8c9b1049fc784ed3f0f10e59e22afa5eb81afb1e83de891fec7c1f22a",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+      "bytes": 1423,
+      "sha256": "3ed008f758a53f10d2dedc956c67629226340597ff1a8cad05073cec70e447b3",
+      "frozen_sha256": "3ed008f758a53f10d2dedc956c67629226340597ff1a8cad05073cec70e447b3",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Observers/IPublishObserver.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Observers/IPublishObserver.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus.Abstractions/Observers/IPublishObserver.cs",
+      "bytes": 1632,
+      "sha256": "3c9573747f5e26573459bbcf0bc2d4cbeb14b62ca816e52c18bc69d988cfded7",
+      "frozen_sha256": "3c9573747f5e26573459bbcf0bc2d4cbeb14b62ca816e52c18bc69d988cfded7",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Consumers/OwnedConsumerLifetime.cs",
+      "bytes": 1829,
+      "sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "frozen_sha256": "52472254c3233f484068a2dd542dbf4c4561c6617ced5429aa1d7eaa8f3afa82",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.cs",
+      "bytes": 11437,
+      "sha256": "5cdc630fb97a253b6d9fbc36a507f3eebfb51c4837b8817d81ee8c6539d3ede5",
+      "frozen_sha256": "5cdc630fb97a253b6d9fbc36a507f3eebfb51c4837b8817d81ee8c6539d3ede5",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.Completion.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.Completion.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.Completion.cs",
+      "bytes": 5650,
+      "sha256": "5f19593d9fd78b497da7f3fe34eb77243db3f030ee1d9fceb6c1b5a4077bd509",
+      "frozen_sha256": "5f19593d9fd78b497da7f3fe34eb77243db3f030ee1d9fceb6c1b5a4077bd509",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.Responses.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.Responses.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.Responses.cs",
+      "bytes": 4560,
+      "sha256": "abd809bc8583b91a4c96c8bbc13bbcfca03bc4ed19903197aac247c3afbd30e6",
+      "frozen_sha256": "abd809bc8583b91a4c96c8bbc13bbcfca03bc4ed19903197aac247c3afbd30e6",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Clients/Requests/RequestClient.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Clients/Requests/RequestClient.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Clients/Requests/RequestClient.cs",
+      "bytes": 14433,
+      "sha256": "8adb01e0cb90cd7fb9b01f231a9e35417c505284099b3596192d5717663a875c",
+      "frozen_sha256": "8adb01e0cb90cd7fb9b01f231a9e35417c505284099b3596192d5717663a875c",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Clients/ClientFactory.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Clients/ClientFactory.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Clients/ClientFactory.cs",
+      "bytes": 13817,
+      "sha256": "0897d46b94e9441748064fe7ca4dc3d7a98afe8cf0e5d8bbb84c6386c70ce2b9",
+      "frozen_sha256": "0897d46b94e9441748064fe7ca4dc3d7a98afe8cf0e5d8bbb84c6386c70ce2b9",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Clients/Contexts/BusClientFactoryContext.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Clients/Contexts/BusClientFactoryContext.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Clients/Contexts/BusClientFactoryContext.cs",
+      "bytes": 4407,
+      "sha256": "24288e4e37fd2e2472245c38bff1f1ec3210cf263c81b0643d3c9a28d7430091",
+      "frozen_sha256": "24288e4e37fd2e2472245c38bff1f1ec3210cf263c81b0643d3c9a28d7430091",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Clients/Endpoints/PublishRequestSendEndpoint.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Clients/Endpoints/PublishRequestSendEndpoint.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Clients/Endpoints/PublishRequestSendEndpoint.cs",
+      "bytes": 1394,
+      "sha256": "8a4e0581ce567f626abb718d389fa3e027127bd3fe8d70560a8acb941ec498df",
+      "frozen_sha256": "8a4e0581ce567f626abb718d389fa3e027127bd3fe8d70560a8acb941ec498df",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Clients/Endpoints/RequestSendEndpoint.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Clients/Endpoints/RequestSendEndpoint.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Clients/Endpoints/RequestSendEndpoint.cs",
+      "bytes": 4020,
+      "sha256": "ad9e247c6c7b0cc106ba5a45f5513e826d9b0c1905ba14531bb68c74f198557a",
+      "frozen_sha256": "ad9e247c6c7b0cc106ba5a45f5513e826d9b0c1905ba14531bb68c74f198557a",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/DependencyInjection/ScopedClientFactoryContext.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ScopedClientFactoryContext.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/DependencyInjection/ScopedClientFactoryContext.cs",
+      "bytes": 3999,
+      "sha256": "a8f23346055d3e43e75f2063527689a3403776316c0e7654fa3d9423fa41fbcc",
+      "frozen_sha256": "a8f23346055d3e43e75f2063527689a3403776316c0e7654fa3d9423fa41fbcc",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/DependencyInjection/GenericRequestClient.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/GenericRequestClient.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/DependencyInjection/GenericRequestClient.cs",
+      "bytes": 7607,
+      "sha256": "f43b66d4b2a237fd56c5814b19d2749f3b259449dc6e26134ade78bd404443fd",
+      "frozen_sha256": "f43b66d4b2a237fd56c5814b19d2749f3b259449dc6e26134ade78bd404443fd",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/IScopedClientFactory.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/IScopedClientFactory.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Advanced/IScopedClientFactory.cs",
+      "bytes": 4318,
+      "sha256": "0bc302f79786c128887fe9dfb5f877fe628dbed570a074f559ff3b67a88ab260",
+      "frozen_sha256": "0bc302f79786c128887fe9dfb5f877fe628dbed570a074f559ff3b67a88ab260",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/ClientFactoryExtensions.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/ClientFactoryExtensions.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Advanced/ClientFactoryExtensions.cs",
+      "bytes": 7046,
+      "sha256": "dba45a25d67aedafe42c5c99856e1780f15adc2db0f065e0196d7908d02a7d59",
+      "frozen_sha256": "dba45a25d67aedafe42c5c99856e1780f15adc2db0f065e0196d7908d02a7d59",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/Registration/IAdvancedBusRegistrationConfigurator.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Registration/IAdvancedBusRegistrationConfigurator.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Advanced/Registration/IAdvancedBusRegistrationConfigurator.cs",
+      "bytes": 2475,
+      "sha256": "a36c718bf934eed327b0e5284fbefb00afd553a477dd54c0be27ce2f3933e23a",
+      "frozen_sha256": "a36c718bf934eed327b0e5284fbefb00afd553a477dd54c0be27ce2f3933e23a",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/Registration/AdvancedBusRegistrationConfiguratorExtensions.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Registration/AdvancedBusRegistrationConfiguratorExtensions.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Advanced/Registration/AdvancedBusRegistrationConfiguratorExtensions.cs",
+      "bytes": 6038,
+      "sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1",
+      "frozen_sha256": "e0c962e12a62338708a77d6e6ff37173dd30cb5613104fb7a7a748268cbc7bd1",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+      "bytes": 22982,
+      "sha256": "200faf06c504e69bf3849aa2d4531fcbc15b749b355b4aeee08f17ccaaf2e058",
+      "frozen_sha256": "200faf06c504e69bf3849aa2d4531fcbc15b749b355b4aeee08f17ccaaf2e058",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "bytes": 16239,
+      "sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "frozen_sha256": "fa514fc2e0f5e9874374b00a1f75200fcf4e95f57d3721d7bf1e43a4c0b1be96",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.SignalR.Tests/HubLifetimeManagerTestEnvironment.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SignalR.Tests/HubLifetimeManagerTestEnvironment.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/tests/Transports/ViciOne.ServiceBus.SignalR.Tests/HubLifetimeManagerTestEnvironment.cs",
+      "bytes": 5251,
+      "sha256": "cc5c2e6be206ce7a0171915ecf147e1b217bb5697372b0a35fd8efa404ee9ef2",
+      "frozen_sha256": "cc5c2e6be206ce7a0171915ecf147e1b217bb5697372b0a35fd8efa404ee9ef2",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.SignalR.Tests/HubConnectionTestClient.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SignalR.Tests/HubConnectionTestClient.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/tests/Transports/ViciOne.ServiceBus.SignalR.Tests/HubConnectionTestClient.cs",
+      "bytes": 8101,
+      "sha256": "6845a29c4bbe4e62891b83923671d2e0a1679ba4cdf670d58fd23782522f321c",
+      "frozen_sha256": "6845a29c4bbe4e62891b83923671d2e0a1679ba4cdf670d58fd23782522f321c",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.SignalR.Tests/SignalRBackplaneConfigurationTests.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SignalR.Tests/SignalRBackplaneConfigurationTests.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/tests/Transports/ViciOne.ServiceBus.SignalR.Tests/SignalRBackplaneConfigurationTests.cs",
+      "bytes": 20590,
+      "sha256": "b2616cd6d74a7b3d5290bce380d2711f6b1cb84e1bc00ff2e034e2133a19e559",
+      "frozen_sha256": "b2616cd6d74a7b3d5290bce380d2711f6b1cb84e1bc00ff2e034e2133a19e559",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.SignalR.Tests/Requirements/SignalRRequirements.json",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.SignalR.Tests/Requirements/SignalRRequirements.json",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/tests/Transports/ViciOne.ServiceBus.SignalR.Tests/Requirements/SignalRRequirements.json",
+      "bytes": 25943,
+      "sha256": "1211adc431a27e3947cb55a58222a414e3d17cf3bbc6ad540e274d40c678379a",
+      "frozen_sha256": "1211adc431a27e3947cb55a58222a414e3d17cf3bbc6ad540e274d40c678379a",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Fresh complete bounded body tool reads; Manager1..225/226..450/451..668; RequestClient1..190/191..end; Registrar1..150/151..330/331..end; Requirements1..275/276..end repaired initial truncation. No foreign owner reads transferred."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Consumers/BroadcastConsumer.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Consumers/BroadcastConsumer.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Consumers/BroadcastConsumer.cs",
+      "bytes": 2034,
+      "sha256": "1f23f5d2569e149297b8bfbaa58e4f0959f65d2dbaf5eb07ab4bbff55c2f35ef",
+      "frozen_sha256": "1f23f5d2569e149297b8bfbaa58e4f0959f65d2dbaf5eb07ab4bbff55c2f35ef",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Additional complete bounded source read for actual Broadcast/Group delivery, group-state and real endpoint composition controls."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Consumers/GroupConsumer.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Consumers/GroupConsumer.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Consumers/GroupConsumer.cs",
+      "bytes": 2161,
+      "sha256": "3be978e87a27a462fb108f78f499ec0a2e6e0237dab937011277fe2b313a9d68",
+      "frozen_sha256": "3be978e87a27a462fb108f78f499ec0a2e6e0237dab937011277fe2b313a9d68",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Additional complete bounded source read for actual Broadcast/Group delivery, group-state and real endpoint composition controls."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ConnectionGroupFeature.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ConnectionGroupFeature.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ConnectionGroupFeature.cs",
+      "bytes": 1158,
+      "sha256": "312efaa528e70122de1a254de48bbd726e0ea69560b11a95f8bd7879e346fd18",
+      "frozen_sha256": "312efaa528e70122de1a254de48bbd726e0ea69560b11a95f8bd7879e346fd18",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Additional complete bounded source read for actual Broadcast/Group delivery, group-state and real endpoint composition controls."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ConnectionSubscriptionIndex.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ConnectionSubscriptionIndex.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ConnectionSubscriptionIndex.cs",
+      "bytes": 2220,
+      "sha256": "618a42ea5f8fd6b86ead8cb2f26f17d2b7571eb2a8deeb38171cb2048513ceec",
+      "frozen_sha256": "618a42ea5f8fd6b86ead8cb2f26f17d2b7571eb2a8deeb38171cb2048513ceec",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Additional complete bounded source read for actual Broadcast/Group delivery, group-state and real endpoint composition controls."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupMessage.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupMessage.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupMessage.cs",
+      "bytes": 1264,
+      "sha256": "8620f288604cb79158dff2ab8c4c2e39322f6ce7d2b026f8fa44469e1512927b",
+      "frozen_sha256": "8620f288604cb79158dff2ab8c4c2e39322f6ce7d2b026f8fa44469e1512927b",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Additional complete bounded source read for actual Broadcast/Group delivery, group-state and real endpoint composition controls."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupCommandAction.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupCommandAction.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Contracts/GroupCommandAction.cs",
+      "bytes": 346,
+      "sha256": "f07115222b7f03713d753b102cb85a3db762cebce8f4750e6aef951e47cce52f",
+      "frozen_sha256": "f07115222b7f03713d753b102cb85a3db762cebce8f4750e6aef951e47cce52f",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Additional complete bounded source read for actual Broadcast/Group delivery, group-state and real endpoint composition controls."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Configuration/BackplaneConsumerDefinition.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Configuration/BackplaneConsumerDefinition.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Configuration/BackplaneConsumerDefinition.cs",
+      "bytes": 975,
+      "sha256": "0d395983f9897f05c55e48ca3edb32f58d02ccb47d884835fcd5f5bcac85d49c",
+      "frozen_sha256": "0d395983f9897f05c55e48ca3edb32f58d02ccb47d884835fcd5f5bcac85d49c",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Additional complete bounded source read for actual Broadcast/Group delivery, group-state and real endpoint composition controls."
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SignalR/Configuration/SignalRBackplaneEndpointDefinition.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.SignalR/Configuration/SignalRBackplaneEndpointDefinition.cs",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/own-full-source-snapshots/src/Transports/ViciOne.ServiceBus.SignalR/Configuration/SignalRBackplaneEndpointDefinition.cs",
+      "bytes": 1800,
+      "sha256": "f313a05eac70da7f0a54864e5194572469534293c1e9e3bf8b46dbf0bfb39009",
+      "frozen_sha256": "f313a05eac70da7f0a54864e5194572469534293c1e9e3bf8b46dbf0bfb39009",
+      "read_status": "PERSONAL_FULL",
+      "read_basis": "Additional complete bounded source read for actual Broadcast/Group delivery, group-state and real endpoint composition controls."
+    }
+  ],
+  "source_read_basis": "Root fresh full toolbody reads54; Manager0..220/221..450/451..end; initial combined6..25 truncation repaired Response/IClientFactory/ClientFactoryContext/IAdvancedRequestClient full",
+  "product_plan": "existingProvider+Manager+assemblyowninternalBackplaneOperationLifetime; capture operation; syncRequest then awaitedasyncScope; singleEDI or directorderedAggregate; preserve fastpaths/token/WhenAll error selection",
+  "native_plan": "bounded new public NuGet owner; fullplan research41 is unimplemented and expectedcounts not native facts; Root derives concrete suite after own inputs; no canonical test owner edits",
+  "canonical_owner": "three adjacent source fixtures+requirements read for routes only; not complete SignalR test owner or ownergrade",
+  "prior_reader": "Root personal rereads; no teamownershiptransfer"
+}

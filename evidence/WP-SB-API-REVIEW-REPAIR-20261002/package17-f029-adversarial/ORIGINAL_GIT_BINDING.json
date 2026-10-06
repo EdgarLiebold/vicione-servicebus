@@ -1,0 +1,12 @@
+[
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus/Batching/Contexts/MessageBatch.cs",
+    "sha256": "9a46e174c4a7bd38c2294b31e615fd82d829fc10a60a0fe579e96e186a032650"
+  },
+  {
+    "head": "5afd0d077788f594b268a5ac441e788d54d57a70",
+    "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/IMessageBatch.cs",
+    "sha256": "53e53c4cbc614df6105a29a05f06c9c87c0ca868cc8667e1ccd1434f68e7a616"
+  }
+]

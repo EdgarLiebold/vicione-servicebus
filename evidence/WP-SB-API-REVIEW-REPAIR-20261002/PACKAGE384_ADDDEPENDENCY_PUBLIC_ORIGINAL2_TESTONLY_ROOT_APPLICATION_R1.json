@@ -1,0 +1,68 @@
+{
+  "utc": "2026-10-06T08:16:38.578199+00:00",
+  "status": "ROOT_ADDDEPENDENCY_FIRST_ADMISSION_ORIGINAL2_TESTONLY_APPLIED_PRODUCT_UNCHANGED_NATIVE_PENDING",
+  "Product_changes": 0,
+  "Test1": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/Configuration/EndpointDependencyAdmissionCleanupTests.cs",
+    "sha256": "16d9bf7ada547ad78134d3196cb8393f518269a63102cea611673137b46bd210",
+    "lines": 260
+  },
+  "Req_ADD1": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Abstractions.Tests/Requirements/AbstractionsRequirements.json",
+    "before_sha256": "f129b6e5a81bf80d7d528e47bd500b89e87f8d65bb8d64779b498b04b81204b4",
+    "after_sha256": "ad4efb3813d932237fd4529d2a9c7dce6c0c26b754cbda797cda741f9b794a35",
+    "before_rows": 673,
+    "after_rows": 674,
+    "object_prefix_equal": true,
+    "independent_literal_guard": {
+      "before": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package375-adddependency-first-admission-original2-testonly-proposed-r1/EXACT_REQUIREMENTS_BEFORE673.json",
+        "sha256": "f129b6e5a81bf80d7d528e47bd500b89e87f8d65bb8d64779b498b04b81204b4"
+      },
+      "after": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package375-adddependency-first-admission-original2-testonly-proposed-r1/proposed/tests/ViciOne.ServiceBus.Abstractions.Tests/Requirements/AbstractionsRequirements.json",
+        "sha256": "ad4efb3813d932237fd4529d2a9c7dce6c0c26b754cbda797cda741f9b794a35"
+      },
+      "literal_insertion": ",\n  {\n    \"requirementId\": \"REQ-VSB-ENDPOINT-DEPENDENCY\",\n    \"variantKey\": \"public-first-admission-cleanup-and-real-lifecycle\",\n    \"testAssembly\": \"ViciOne.ServiceBus.Abstractions.Tests\",\n    \"testType\": \"ViciOne.ServiceBus.Abstractions.Tests.Configuration.EndpointDependencyAdmissionCleanupTests\",\n    \"testMethod\": \"AddDependency_FirstAdmissionFailureRetiresTheAcquiredObserverAsync\"\n  }",
+      "exact_remove_once_recovers_before_bytes": true,
+      "before_rows": 673,
+      "after_rows": 674,
+      "unchanged_prefix_objects": true,
+      "new_test_absent_live_before": "tests/ViciOne.ServiceBus.Abstractions.Tests/Configuration/EndpointDependencyAdmissionCleanupTests.cs"
+    }
+  },
+  "author_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package375-adddependency-first-admission-original2-testonly-proposed-r1/MANIFEST.json",
+    "sha256": "98b44e83853cda778994619b28e8ba78e52948e47d18135f7f57097800bfe2d0"
+  },
+  "whole_independent_peer_REPORT": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package375-adddependency-test2-independent-runtime-source-peer-r1/REPORT.json",
+    "sha256": "87c02366600991d5b7d2e1acf0f42a996d2156356361ff91cdbe79e6c3737680"
+  },
+  "whole_independent_peer_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package375-adddependency-test2-independent-runtime-source-peer-r1/MANIFEST.json",
+    "sha256": "6c65b3db193984cad9a1c1ea2e5d83efcf7276b009f711f6eb886f80c4669f84"
+  },
+  "mandatory_first43_erratum": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package375-adddependency-test2-runtime-first-line-precision-r1/MANIFEST.json",
+    "sha256": "41fccbae813d1dc1a6febd03506092c835284d65b075e7d543b5d24782ab0865"
+  },
+  "mandatory_Req_literal_supplement": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package375-adddependency-req-literal-inverse-precision-supplement-r1/MANIFEST.json",
+    "sha256": "344014f2b0679c3d21f253a4dc5b1d65ff437b223bf21aad96a42d42efb3ceb0"
+  },
+  "previous382_frozen_ACK": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package382-observer3-original-independent-qualification-r1/SNAPSHOT_ACK.json",
+    "sha256": "384b6321fadff946482ae3c4803eb52951b547da2dfe3f24c871f263b38e8edd"
+  },
+  "Root_whole_Test260_read": [
+    "4fc366",
+    "9f8c28"
+  ],
+  "Root_whole_owner136_read": "357b41",
+  "Root_whole_peer_and_erratum_read": "49c0c0",
+  "Root_whole_author_Report_read": "e7fb4e",
+  "actual_phase": "package384-adddependency-first-admission-public-original2-native-r1",
+  "actual_original_prediction": null,
+  "held_later_halfgraph_policy": true
+}

@@ -1,0 +1,71 @@
+{
+  "utc": "2026-10-05T19:46:07.265238+00:00",
+  "status": "F147_BOUNDED_DOC9_EXTENSION_FRESH_PUBLISHED_ADVERSARIAL_ROOT_ACCEPTED",
+  "new_finding_IDs": 0,
+  "family": "F-SB-API-147",
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE230_F147_PIPELINE_PURPOSE_DOC9_PRODUCT9_ROOT_APPLICATION_R1.json",
+    "sha256": "4046681392988228eb1fc88a1195a7a96adfded5530d5c1b3ca0565d6b219922"
+  },
+  "root_fresh_proof": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package230-abstractions-pipeline-doc9-fresh-publication-root-proof-r1/REPORT.json",
+    "sha256": "4c65cdb0ec64f8c724b6bb38b151421a7d2fc83b2f79162cd7f3769ea268f345",
+    "MANIFEST_sha256": "08834e73e68089987763a1ea19037714b46401242d99389119e2086ee9a27412"
+  },
+  "independent_fresh_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package230-abstractions-pipeline-doc9-independent-runtime-publication-peer-r1/REPORT.json",
+    "sha256": "a64b97f875df8166f2683f85842d2a3fd7101f03b8c2dd3e6f05321a722884e8",
+    "MANIFEST_sha256": "44778ea3bb7cb3e670b2ae9a621692299a79efa9accbaf0785ef509aa4349557"
+  },
+  "Root_whole_source_and_review": "Ownwhole9Source503389d36 +9clauses275372 andwholeFreshPeerf8cede. Two-party current700-source checksum qualification is provenance only; no whole700human semantics. AllMANbytes verified before acceptance.",
+  "actual_publication": {
+    "package_sha256": "117eb85b4df8e030e068cb06d01876816e31bd2cb31f18e89916e63db9bb3bd6",
+    "DLL_sha256": "ff333abaea32f8f96b6ad11eccfc859c912af6ef06993b33d6ff2db334b48cd0",
+    "XML_sha256": "ad0691b5b4c76e79e2204b90bed2a6909761fb4eff86e5d16da129f1a64663aa",
+    "embedded_PDB_sha256": "bed6a7da38611080dd7eb3bc6cf28f6086a1b171f0a2e89fc19dd86149e48fbd",
+    "actual_PDB_documents": 700,
+    "zip_CRC_valid": true,
+    "actual9_member_summaries_exact": true,
+    "entire_XML9_raw_literal_inverse_equals_before": true,
+    "all_other_XML_bytes_unchanged": true
+  },
+  "canonical_original_ids": [
+    "M:ViciOne.ServiceBus.Middleware.AsyncDelegateFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.CopyContextPipe.SendAsync(ViciOne.ServiceBus.Advanced.SendContext)",
+    "M:ViciOne.ServiceBus.Middleware.DelegateFilter`1.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Middleware.FilterPipe`1.SendAsync(`0)",
+    "M:ViciOne.ServiceBus.Middleware.MergePipe`2.SendAsync(`1)",
+    "M:ViciOne.ServiceBus.Middleware.PublishPipe.SendAsync``1(ViciOne.ServiceBus.Advanced.PublishContext{``0},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.Middleware.SendPipe.SendAsync``1(ViciOne.ServiceBus.Advanced.SendContext{``0},System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.Middleware.SplitFilter`2.SendAsync(`0,ViciOne.ServiceBus.Advanced.Middleware.IPipe{`0})",
+    "M:ViciOne.ServiceBus.Transports.PublishSendPipeAdapter`1.SendAsync(ViciOne.ServiceBus.Advanced.SendContext{`0})"
+  ],
+  "accepted_original_canonical": 9,
+  "native_credit": 0,
+  "remaining_abstractions227_holds": [
+    {
+      "ordinal": 70,
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.Supervisor.Add(ViciOne.ServiceBus.Advanced.Middleware.IAgent)",
+      "reason": "Guards agent, then reads/non-null validates its Ready and Completed Task references before admission. Under agent lock rejects stopping supervisor, assigns increasing id, updates active/total/peak counts, and invokes SetReady. Completed continuation removes only successful child completion and observes faulted completion; canceled/faulted agents remain retained. Custom getter/SetReady failures and registration ownership remain operative obligations."
+    },
+    {
+      "ordinal": 73,
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.Supervisor.StopSupervisorAsync(ViciOne.ServiceBus.Advanced.Middleware.StopSupervisorContext)",
+      "reason": "Zero children sets completion success. One transfers child.Completed then awaits child.StopAsync(context). Multiple captures all Completed tasks, transfers WhenAll, then admits each StopAsync sequentially into Task array and awaits WhenAll; finally awaits supervisor.Completed. A later synchronous StopAsync/getter failure can bypass join of earlier admitted work, so ownership/error-drain invariant is explicitly held pending supported public control and known-finding reconciliation. No enforced None token/parallel error-order policy invented."
+    }
+  ],
+  "runtime_method_behavior_still_individually_bounded": true,
+  "whole_API_closed": false,
+  "grade": null,
+  "master_before": {
+    "rows": 14047,
+    "original": 13185,
+    "remaining": 5384
+  },
+  "master_after": {
+    "rows": 14056,
+    "original": 13194,
+    "remaining": 5375
+  },
+  "preserve_previous_rows_and_order": true
+}

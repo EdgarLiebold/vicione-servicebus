@@ -1,0 +1,49 @@
+ViciOne ServiceBus – Zwischenstand für den PO
+
+- Alle 220 bisher bestätigten Befunde sind im jeweils nachgewiesenen Umfang korrigiert und unabhängig nachgeprüft. Die Gesamtprüfung der API ist noch offen.
+- Zuletzt behoben: Die aktivierte Courier-Option vergibt bei Wiederzustellung jetzt eine neue Nachrichten-ID und erhält die ursprüngliche ID als Bezug.
+- Bei fehlgeschlagener Consumer-Registrierung werden alle bereits erhaltenen Registrierungen freigegeben, auch wenn eine Freigabe scheitert. Der ursprüngliche Fehler und die Freigabefehler bleiben erhalten.
+- Beide Korrekturen bestehen gemeinsam alle 10 gezielten Regressionstests und die vollständige Core-Modulprüfung mit 7.896 Tests. Die gezielten Fälle sind darin enthalten.
+- Der strenge Build besteht ohne Warnung und Fehler. Das frisch erzeugte NuGet-Paket und die tatsächlichen Testergebnisse sind unabhängig geprüft.
+- 18.405 von 18.569 ursprünglichen API-Prüfpunkten sind im dokumentierten Umfang geprüft; 164 bleiben offen.
+- Jede Produkt- und Testcodeänderung erhält einen Gegenreview durch einen anderen Reviewer.
+- Der bisherige Gesamtlauf bestand mit 13.230 Tests in 23 Modulen. Die frühere Paketprüfung bestand mit 31 Paketen, 18 kompilierten Beispielen und 4 tatsächlich ausgeführten isolierten Verbrauchern. Beide Gesamtnachweise müssen nach den neuesten Änderungen erneut laufen.
+- Auch die Registrierung vorhandener Consumer-Instanzen ist korrigiert: Alle sechs Regressionstests, das Core-Modul mit 7.902 Tests, der strenge Build und das frische Paket bestehen und sind unabhängig nachgeprüft. Die sechs Fälle sind im Modul enthalten.
+- Die Arbeit läuft autonom weiter. Der endgültige Abschlussbericht und die Gesamtfreigabe stehen noch aus.
+- Neue RabbitMQ-Prüfung: Alle sechs Fälle mit funktionierendem Logger bestehen; alle sechs Fälle mit gezielt fehlerhaftem Logger reproduzieren den Fehler. Die Korrektur entsteht und erhält einen unabhängigen Gegenreview.
+- Neuer Befund bei der Consumer-Konfiguration: Scheitert eine spätere Observer-Anmeldung, bleibt eine zuvor erhaltene Registrierung verbunden. Der Fehler ist unabhängig reproduziert; die Korrektur erhält gerade einen Gegenreview.
+- Auch eine abgelehnte erste Endpoint-Abhängigkeit hinterlässt eine Observer-Verbindung. Der Fehler ist unabhängig reproduziert; die schmale Korrektur hat ihren Code-Gegenreview bestanden.
+- Die drei neuesten Reparaturen bestehen alle 17 gezielten Tests. Core besteht mit 7.905, Abstractions mit 1.085 Tests; die gezielten Fälle sind in den Modulen enthalten. Beide strengen Builds bestehen ohne Warnungen und Fehler. Frische Pakete sind erzeugt und werden unabhängig nachgeprüft.
+- Zwei weitere RabbitMQ-Diagnosestellen sind unabhängig reproduziert: Ein fehlerhafter Logger unterbricht die Zustellungs- oder Shutdown-Behandlung. Sie erweitern den bestehenden Befund; seine bisherigen Korrekturen bleiben geprüft.
+- Beide Observer-Lecks sind behoben und unabhängig nachgeprüft: alle fünf gezielten Fälle, Core mit 7.905 und Abstractions mit 1.085 Tests, strenge Builds ohne Warnungen/Fehler und zwei frische Pakete. Die übrige Graph- und Callback-Behandlung wird weiterhin separat geprüft.
+
+- Zehn weitere API-Verträge für Analyzer-Initialisierung und Codefix-Registrierung sind einzeln geprüft und durch einen anderen Reviewer bestätigt; die spätere Ausführung der registrierten Analysen und Aktionen bleibt getrennt zu prüfen.
+
+- RabbitMQ: Acht zusätzliche störende Diagnose-Logger sind korrigiert; alle 16 gezielten Fälle, sämtliche 595 Modultests, der strenge Build und das frische NuGet-Paket bestehen und sind unabhängig geprüft. Sechs weitere ursprüngliche API-Verträge sind aufgenommen.
+
+- Sieben weitere API-Verträge zur adaptiven Anfragedrosselung sind einzeln anhand des aktuellen Codes und der kompilierten Dokumentation geprüft und unabhängig gegengeprüft. Das ersetzt keine umfassende Prüfung sämtlicher Callback- und Nebenläufigkeitsfälle.
+
+06.10.2026 — Paket406: Weitere15 API-Verträge für Persistenz und JobService individuell und unabhängig geprüft. 18.420 von18.569 ursprünglichen API-Prüfpunkten bearbeitet;149 verbleiben. Sieben konkrete Lebenszyklus-/Registrierungspfade bleiben ausdrücklich offen. Keine neue Laufzeit-/Gesamtfreigabe.
+
+06.10.2026 — Paket408:30 unabhängig geprüfte Regressionen gegen bisherigen Produktcode ausgeführt:15 bestehen,15 reproduzieren Fehler. Drei zusätzliche bestätigte Findings zu vollständiger Freigabe und Fehlerursachenerhalt; bestehende Diagnosefehlerfamilie um Courier und Harness erweitert. Korrektur und erneute Gegenprüfung laufen,219 von223 bestätigten Findings derzeit im jeweiligen Umfang abgenommen.
+
+06.10.2026 — Paket410: Weitere26 API-Verträge (22 Courier,3 RabbitMQ,1 Context-Nutzung) vollständig im festgelegten Source-Umfang und unabhängig geprüft. Noch123 von18.569 ursprünglichen API-Prüfpunkten offen. Die nachgewiesenen Diagnose-/Bereinigungsfehler bleiben separat offen bis Korrektur und erneutem Testnachweis.
+
+06.10.2026 — Paket411: Fünf independently adversarial geprüfte Produktkorrekturen angewendet: alle erworbenen Registrierungen freigeben, weitere Harness-Bereinigung trotz Callbackfehler durchführen, Aufnahmefehler samt Cleanup-Ursachen erhalten und optionale Diagnosefehler begrenzen. Unveränderte30 Regressionen und vollständige Modul-/Paketprüfungen folgen.
+
+- Paket415: 14 weitere Amazon-SQS-Verträge nach unabhängiger Gegenprüfung akzeptiert; elf konkrete Laufzeitfragen bleiben offen. 18.460 von 18.569 ursprünglichen API-Mitgliedern geprüft; noch109. Keine zusätzliche Laufzeitfreigabe aus Quellenprüfung.
+
+- Paket416: Vier Fehlerfamilien im aktuellen Umfang repariert und unabhängig nachgeprüft: Activity-Beobachter-Freigabe, Harness-Abbruch, Consumer-Rollback und optionales Logging. Alle 30 unveränderten Regressionstests sowie 7.935 Core-Tests bestehen; drei Builds ohne Warnungen und drei neue Pakete geprüft. Zwölf weitere API-Verträge aufgenommen; noch 97 ursprüngliche API-Prüfpunkte offen. Die bekannten 223 Findings haben eine akzeptierte begrenzte Bearbeitung; frischer Gesamtabschluss steht aus.
+
+- Paket418: elf neue Fehlerpfad- und Kontrolltests nach unabhängiger Codeprüfung integriert. Produktcode unverändert; tatsächliche Ausgangsläufe folgen.
+
+- Paket421: Elf neue Ausgangstests unabhängig bestätigt: fünf Kontrollen bestehen, sechs Fehlerfälle scheitern an den vorgesehenen Prüfstellen. Zwei neue Fehler: übersprungene Freigaben im Bus-Harness und liegengebliebene EF-Outbox-Registrierung. Die bekannte Logging-Fehlerfamilie umfasst jetzt zusätzlich Host-Start und Saga-Aufbau. Korrekturen sind in Gegenprüfung; bisherige Belege bleiben erhalten.
+
+- Paket423: Vier Produktdateien nach vollständiger unabhängiger Codeprüfung korrigiert. Dieselben elf Ausgangstests und beide Anforderungskataloge bleiben unverändert. Gezielte Nachtests, Modulprüfungen und Paketprüfung folgen; noch keine Abschlussfreigabe.
+
+Fortsetzung Paket422 (06.10.2026):
+- Neun weitere öffentliche API-Mitglieder einzeln anhand ihrer aktuellen Implementierung und unabhängiger Gegenprüfung bewertet.
+- Noch 88 von 18.569 ursprünglichen API-Mitgliedern offen; 225 bestätigte Findings, 222 bereits begrenzt abgenommen.
+- Die zusätzlichen Quellcodeprüfungen ersetzen keine Laufzeitnachweise. Drei Reparaturabnahmen und die abschließende Gesamtprüfung laufen weiter.
+
+- Paket427: Sechs neue unabhängig gegengeprüfte Tests für vollständigen Context-Stopp und Ende der SNS-Topic-Suche integriert. Produktcode bleibt auf dem geprüften Reparaturstand; tatsächliche Ausgangstests folgen.

@@ -18,100 +18,100 @@ public abstract class SqlHostConfigurator :
         _settings = settings;
     }
 
-    /// <summary>Gets or sets the connection string.</summary>
+    /// <summary>Sets the provider connection string.</summary>
     public abstract string? ConnectionString { set; }
 
-    /// <summary>Gets or sets the connection tag.</summary>
+    /// <summary>Sets the connection tag.</summary>
     public string? ConnectionTag
     {
         set => _settings.ConnectionTag = value;
     }
 
-    /// <summary>Gets or sets the host.</summary>
+    /// <summary>Sets the database server host.</summary>
     public string? Host
     {
         set => _settings.Host = value;
     }
 
-    /// <summary>Gets or sets the instance name.</summary>
+    /// <summary>Sets the SQL Server instance name.</summary>
     public string? InstanceName
     {
         set => _settings.InstanceName = value;
     }
 
-    /// <summary>Gets or sets the port.</summary>
+    /// <summary>Sets the database server port.</summary>
     public int? Port
     {
         set => _settings.Port = value;
     }
 
-    /// <summary>Gets or sets the database.</summary>
+    /// <summary>Sets the transport database name.</summary>
     public string? Database
     {
         set => _settings.Database = value;
     }
 
-    /// <summary>Gets or sets the schema.</summary>
+    /// <summary>Sets the transport schema.</summary>
     public string? Schema
     {
         set => _settings.Schema = value;
     }
 
-    /// <summary>Gets or sets the username.</summary>
+    /// <summary>Sets the database login name.</summary>
     public string? Username
     {
         set => _settings.Username = value;
     }
 
-    /// <summary>Gets or sets the password.</summary>
+    /// <summary>Sets the database login password.</summary>
     public string? Password
     {
         set => _settings.Password = value;
     }
 
-    /// <summary>Gets or sets the virtual host.</summary>
+    /// <summary>Sets the logical transport namespace.</summary>
     public string? VirtualHost
     {
         set => _settings.VirtualHost = value;
     }
 
-    /// <summary>Gets or sets the area.</summary>
+    /// <summary>Sets the logical queue area.</summary>
     public string? Area
     {
         set => _settings.Area = value;
     }
 
-    /// <summary>Gets or sets the isolation level.</summary>
+    /// <summary>Sets the transaction isolation level.</summary>
     public IsolationLevel IsolationLevel
     {
         set => _settings.IsolationLevel = value;
     }
 
-    /// <summary>Gets or sets the connection limit.</summary>
+    /// <summary>Sets the connection limit.</summary>
     public int ConnectionLimit
     {
         set => _settings.ConnectionLimit = value;
     }
 
-    /// <summary>Gets or sets the maintenance enabled.</summary>
+    /// <summary>Sets whether automatic maintenance is enabled.</summary>
     public bool MaintenanceEnabled
     {
         set => _settings.MaintenanceEnabled = value;
     }
 
-    /// <summary>Gets or sets the maintenance interval.</summary>
+    /// <summary>Sets the maintenance interval.</summary>
     public TimeSpan MaintenanceInterval
     {
         set => _settings.MaintenanceInterval = value;
     }
 
-    /// <summary>Gets or sets the queue cleanup interval.</summary>
+    /// <summary>Sets the queue cleanup interval.</summary>
     public TimeSpan QueueCleanupInterval
     {
         set => _settings.QueueCleanupInterval = value;
     }
 
-    /// <summary>Gets or sets the maintenance batch size.</summary>
+    /// <summary>Sets the maintenance batch size.</summary>
     public int MaintenanceBatchSize
     {
         set => _settings.MaintenanceBatchSize = value;

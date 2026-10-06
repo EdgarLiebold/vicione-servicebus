@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-04T16:11:38.495625+00:00",
+  "decision": "TEN_BOUNDED_REPAIRS_ACCEPTED",
+  "finding_ids": [
+    "F-SB-API-076",
+    "F-SB-API-077",
+    "F-SB-API-078",
+    "F-SB-API-079",
+    "F-SB-API-080",
+    "F-SB-API-081",
+    "F-SB-API-082",
+    "F-SB-API-083",
+    "F-SB-API-084",
+    "F-SB-API-085"
+  ],
+  "reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package80-azure-fixed-native52-independent-r1/REPORT.json",
+      "sha256": "da27543c42f4a95eec727ffa126411b0eb147f4f2b51581754caf197ea389e3e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package80-azure-fixed-native52-fresh-pack-independent-r1/REPORT.json",
+      "sha256": "448cffddc48f34e8e5b8f7df66ef23e6700e45ccae1c4663fbc0d14ec50e7bf6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package78-abstractions-fixed-native63-independent-r1/REPORT.json",
+      "sha256": "6886a689eccd076ced544e189194fb53ced0b97e86d0205b2b3c1281cfdbdacc"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package78-abstractions-fixed-native63-fresh-pack-independent-r1/REPORT.json",
+      "sha256": "300895c4f3bfb6e0253497873187951568e347db212ccb24880ef9536ad68de2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package78-host-messagepack6-json1-independent-r1/REPORT.json",
+      "sha256": "5e144bc33a305f8d25c979a8775bfce7f2179b076bee8d2ec5c1693795558d52"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package79-rabbit-fixed-native10-independent-r1/REPORT.json",
+      "sha256": "9c1cf14c25c6a952cddeb0481667a9f5fc2598011c1f22342bbe1e8f5d5e0617"
+    }
+  ],
+  "root_review": "Full source/delta/native/report review documented in prior root receipts; current Rabbit reports whole bb6c7d. Independent author/source-review separation preserved. Actual native52 Azure,63 AB plus3NY/3UTC/9scalar,MP6,JSON1,Rabbit10 all passed; strict builds0W/E, fresh ZIP DLL/XML equal executed frames.",
+  "limits": [
+    "Whole18598API review remains pending",
+    "Controlled local SDK/broker adapter tests are not live cloud/broker journeys",
+    "Historical8field metadata compared; no historical runtime wire-deserializer execution claimed",
+    "New source epochs require final integrated suite later"
+  ]
+}

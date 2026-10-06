@@ -76,11 +76,7 @@ internal sealed class ServiceBusHubLifetimeManager<THub> :
             Users.RemoveSubscription(connection.UserIdentifier, connection);
 
         ConnectionGroupFeature? feature = connection.Features.Get<ConnectionGroupFeature>();
-        if (feature is not null)
-        {
-            foreach (string groupName in feature.Snapshot())
-                RemoveGroup(connection, groupName);
-        }
+        feature?.Close(connection, Groups);
 
         RemovedPendingClientInvocation[] pending =
             _clientInvocations.RemoveForConnection(connection.ConnectionId);
@@ -173,12 +169,23 @@ internal sealed class ServiceBusHubLifetimeManager<THub> :
             return;
 
         IReadOnlyDictionary<string, byte[]> payloads = SerializeInvocation(methodName, args);
-        await using IBackplaneScope<THub> scope =
+        IBackplaneScope<THub> scope =
             await _scopeProvider.CreateScopeAsync<THub>().ConfigureAwait(false);
-        await Task.WhenAll(targets.Select(target =>
-                scope.PublishEndpoint.PublishAsync(
-                    new ConnectionMessage<THub>(target, payloads),
-                    cancellationToken)))
+        Exception? operationFailure = null;
+        try
+        {
+            await BackplaneOperationLifetime.JoinStartedOperationsAsync(targets.Select(target =>
+                    scope.PublishEndpoint.PublishAsync(
+                        new ConnectionMessage<THub>(target, payloads),
+                        cancellationToken)))
+                .ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await BackplaneOperationLifetime.ReleaseAfterOperationAsync(scope, null, operationFailure)
             .ConfigureAwait(false);
     }
 
@@ -232,12 +239,23 @@ internal sealed class ServiceBusHubLifetimeManager<THub> :
             return;
 
         IReadOnlyDictionary<string, byte[]> payloads = SerializeInvocation(methodName, args);
-        await using IBackplaneScope<THub> scope =
+        IBackplaneScope<THub> scope =
             await _scopeProvider.CreateScopeAsync<THub>().ConfigureAwait(false);
-        await Task.WhenAll(targets.Select(target =>
-                scope.PublishEndpoint.PublishAsync(
-                    new GroupMessage<THub>(target, payloads, []),
-                    cancellationToken)))
+        Exception? operationFailure = null;
+        try
+        {
+            await BackplaneOperationLifetime.JoinStartedOperationsAsync(targets.Select(target =>
+                    scope.PublishEndpoint.PublishAsync(
+                        new GroupMessage<THub>(target, payloads, []),
+                        cancellationToken)))
+                .ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await BackplaneOperationLifetime.ReleaseAfterOperationAsync(scope, null, operationFailure)
             .ConfigureAwait(false);
     }
 
@@ -273,12 +291,23 @@ internal sealed class ServiceBusHubLifetimeManager<THub> :
             return;
 
         IReadOnlyDictionary<string, byte[]> payloads = SerializeInvocation(methodName, args);
-        await using IBackplaneScope<THub> scope =
+        IBackplaneScope<THub> scope =
             await _scopeProvider.CreateScopeAsync<THub>().ConfigureAwait(false);
-        await Task.WhenAll(targets.Select(target =>
-                scope.PublishEndpoint.PublishAsync(
-                    new UserMessage<THub>(target, payloads),
-                    cancellationToken)))
+        Exception? operationFailure = null;
+        try
+        {
+            await BackplaneOperationLifetime.JoinStartedOperationsAsync(targets.Select(target =>
+                    scope.PublishEndpoint.PublishAsync(
+                        new UserMessage<THub>(target, payloads),
+                        cancellationToken)))
+                .ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await BackplaneOperationLifetime.ReleaseAfterOperationAsync(scope, null, operationFailure)
             .ConfigureAwait(false);
     }
 
@@ -407,8 +436,7 @@ internal sealed class ServiceBusHubLifetimeManager<THub> :
         ConnectionGroupFeature feature = connection.Features.Get<ConnectionGroupFeature>()
             ?? throw new InvalidOperationException("The SignalR connection was not registered with this lifetime manager.");
 
-        if (feature.Add(groupName))
-            Groups.AddSubscription(groupName, connection);
+        feature.Add(groupName, connection, Groups);
     }
 
     /// <summary>Removes local group state only once and drops empty subscription entries.</summary>
@@ -420,8 +448,7 @@ internal sealed class ServiceBusHubLifetimeManager<THub> :
         ConnectionGroupFeature feature = connection.Features.Get<ConnectionGroupFeature>()
             ?? throw new InvalidOperationException("The SignalR connection was not registered with this lifetime manager.");
 
-        if (feature.Remove(groupName))
-            Groups.RemoveSubscription(groupName, connection);
+        feature.Remove(groupName, connection, Groups);
     }
 
     /// <summary>Registers the result-forwarding state before an invocation is written to a remote-owned client.</summary>
@@ -544,18 +571,30 @@ internal sealed class ServiceBusHubLifetimeManager<THub> :
             return;
         }
 
-        await using IBackplaneScope<THub> scope =
+        IBackplaneScope<THub> scope =
             await _scopeProvider.CreateScopeAsync<THub>().ConfigureAwait(false);
-        using RequestHandle<GroupCommand<THub>> request = scope.GroupCommandClient.Create(
-            new GroupCommand<THub>(action, groupName, connectionId),
-            cancellationToken: cancellationToken);
-        Response<GroupCommandAcknowledgement<THub>> response =
-            await request.GetResponseAsync<GroupCommandAcknowledgement<THub>>(
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+        RequestHandle<GroupCommand<THub>>? request = null;
+        Exception? operationFailure = null;
+        try
+        {
+            request = scope.GroupCommandClient.Create(
+                new GroupCommand<THub>(action, groupName, connectionId),
+                cancellationToken: cancellationToken);
+            Response<GroupCommandAcknowledgement<THub>> response =
+                await request.GetResponseAsync<GroupCommandAcknowledgement<THub>>(
+                        cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
 
-        if (string.IsNullOrWhiteSpace(response.Message.NodeId))
-            throw new InvalidDataException("The SignalR group command acknowledgement did not identify its handling node.");
+            if (string.IsNullOrWhiteSpace(response.Message.NodeId))
+                throw new InvalidDataException("The SignalR group command acknowledgement did not identify its handling node.");
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await BackplaneOperationLifetime.ReleaseAfterOperationAsync(scope, request, operationFailure)
+            .ConfigureAwait(false);
     }
 
     IReadOnlyDictionary<string, byte[]> SerializeInvocation(
@@ -570,9 +609,20 @@ internal sealed class ServiceBusHubLifetimeManager<THub> :
         where TMessage : class
     {
         cancellationToken.ThrowIfCancellationRequested();
-        await using IBackplaneScope<THub> scope =
+        IBackplaneScope<THub> scope =
             await _scopeProvider.CreateScopeAsync<THub>().ConfigureAwait(false);
-        await scope.PublishEndpoint.PublishAsync(message, cancellationToken).ConfigureAwait(false);
+        Exception? operationFailure = null;
+        try
+        {
+            await scope.PublishEndpoint.PublishAsync(message, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            operationFailure = exception;
+        }
+
+        await BackplaneOperationLifetime.ReleaseAfterOperationAsync(scope, null, operationFailure)
+            .ConfigureAwait(false);
     }
 
     async Task PublishRemoteCompletionAsync(

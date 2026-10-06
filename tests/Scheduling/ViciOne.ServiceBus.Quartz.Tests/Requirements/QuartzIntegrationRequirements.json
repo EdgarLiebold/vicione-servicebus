@@ -1,179 +1,1255 @@
 [
-  { "requirementId": "REQ-VSB-QUARTZ-RECURRING", "variantKey": "provider-failure-preserves-triggers-before-command-recovery", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.RecurringReplacementIntegrityTests", "testMethod": "SchedulerProviderFailure_PreservesTriggersAndAllowsCommandRecoveryAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-RECURRING", "variantKey": "rejected-replacement-preserves-target-and-neighbor-before-recovery", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.RecurringReplacementIntegrityTests", "testMethod": "InvalidRecurringReplacement_PreservesTargetAndNeighborBeforeValidRecoveryAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY", "variantKey": "complete-user-identity-hash", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests", "testMethod": "RecurringKey_HashesTheCompleteUserIdentityInsideTheBusNamespace" },
-  { "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY", "variantKey": "bus-namespace-isolation", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests", "testMethod": "TriggerKeys_AreIsolatedByBusNamespace" },
-  { "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY", "variantKey": "invalid-schedule-id", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests", "testMethod": "RecurringKey_RejectsMissingScheduleIds" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "serialized-metadata-roundtrip", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "SerializedMetadata_IsRestoredWithExactQuartzHeaders" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "invalid-identifier", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "InvalidStandardIdentifier_FailsFast" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "noncanonical-identifier", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "NonCanonicalIdentifier_FailsFast" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "generated-identity-is-stable-per-firing", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "MissingMessageIdentifier_IsStableAcrossPersistentRetriesButUniqueAcrossOccurrences" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "missing-header-defaults", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "MissingHeader_ReturnsSuppliedReferenceAndValueFallbacks" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "present-header-overrides-defaults", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "PresentHeader_OverridesSuppliedReferenceAndValueFallbacks" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "immutable-snapshot", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests", "testMethod": "CreateSettings_SnapshotsEveryRuntimeValue" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "coherent-public-defaults", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests", "testMethod": "Defaults_StartWithTheBusAndUseTheSystemClock" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "invalid-scheduler-factory", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests", "testMethod": "CreateSettings_RejectsMissingSchedulerFactory" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "invalid-queue-name", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests", "testMethod": "CreateSettings_RejectsMissingQueueName" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "invalid-time-provider", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests", "testMethod": "CreateSettings_RejectsMissingTimeProvider" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "owner-scoped-time-zone-resolver-reaches-trigger", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "RecurringCommand_UsesTheOwnerScopedTimeZoneResolverAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS", "variantKey": "immutable-snapshot", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointDefinitionTests", "testMethod": "Constructor_UsesAnImmutableEndpointSettingsSnapshot" },
-  { "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS", "variantKey": "coherent-public-defaults", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointOptionsTests", "testMethod": "Defaults_AreBoundedAndProviderAware" },
-  { "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS", "variantKey": "invalid-queue-name", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointDefinitionTests", "testMethod": "Settings_RejectAMissingQueueName" },
-  { "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS", "variantKey": "invalid-prefetch-count", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointDefinitionTests", "testMethod": "Settings_RejectANonPositivePrefetchCount" },
-  { "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS", "variantKey": "invalid-concurrency-limit", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointDefinitionTests", "testMethod": "Settings_RejectANonPositiveConcurrencyLimit" },
-  { "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS", "variantKey": "partitioner-owned-and-disposed", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointDefinitionTests", "testMethod": "DisposeAsync_ReleasesTheOwnedPartitionerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "starts-and-stops-with-bus", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "EnabledScheduler_StartsAndStopsWithTheBusAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "initializes-without-starting", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "DisabledScheduler_IsInitializedButNotStartedAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "standalone-context-receives-snapshotted-clock", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "StandaloneContext_ReceivesTheConfiguredBusAndTimeProviderAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "direct-observer-null-guard", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "Constructor_RejectsMissingSettings" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "direct-observer-readiness-and-cleanup", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "EnabledObserver_WaitsForReadinessAndCleansSchedulerContextAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "direct-observer-disabled-start", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "DisabledObserver_InitializesWithoutWaitingOrStartingAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "direct-observer-idempotent-stop", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "RepeatedStop_DetachesWithoutShuttingDownTheCallerOwnedSchedulerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "direct-start-failure-detaches-context", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "StartFailure_DetachesWithoutShuttingDownTheCallerOwnedSchedulerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "direct-stop-failure-detaches-context", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "StandbyFailure_DetachesAndMakesStopFaultCallbackIdempotentAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-ONE-TIME", "variantKey": "command-creates-exact-recoverable-trigger", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "OneTimeCommand_CreatesAnExactRecoverableTriggerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-ONE-TIME", "variantKey": "same-token-replaces-trigger", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "ReusingTheToken_ReplacesRatherThanDuplicatesTheTriggerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-ONE-TIME", "variantKey": "deleted-durable-job-is-recreated", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "DeletedDurableJob_IsRecreatedBeforeTheNextMessageIsScheduledAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL", "variantKey": "schedule-pause-resume-cancel", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "RecurringControlCommands_OperateOnOneCanonicalTriggerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL", "variantKey": "same-key-replaces-trigger-with-send-misfire", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "RecurringCommand_ReplacesTheTriggerAndAppliesSendMisfirePolicyAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-DELIVERY", "variantKey": "serialized-payload-and-context-roundtrip", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "TriggeredJob_DeliversTheSerializedPayloadAndUserHeadersAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-EXPIRATION", "variantKey": "single-time-source", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.ScheduledMessageExpirationTests", "testMethod": "Expiration_UsesOnlyTheConfiguredTimeProvider" },
-  { "requirementId": "REQ-VSB-QUARTZ-EXPIRATION", "variantKey": "missing-expiration", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.ScheduledMessageExpirationTests", "testMethod": "MissingExpiration_LeavesTimeToLiveUnset" },
-  { "requirementId": "REQ-VSB-QUARTZ-EXPIRATION", "variantKey": "expired-message", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.ScheduledMessageExpirationTests", "testMethod": "PastExpiration_RemainsExpiredInsteadOfReceivingANewLifetime" },
-  { "requirementId": "REQ-VSB-QUARTZ-EXPIRATION", "variantKey": "invalid-time-provider", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.ScheduledMessageExpirationTests", "testMethod": "MissingTimeProvider_FailsFast" },
-  { "requirementId": "REQ-VSB-QUARTZ-REGISTRATION", "variantKey": "bus-specific-settings-snapshot", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests", "testMethod": "AddQuartzScheduling_RegistersOneClockAndABusSpecificSettingsSnapshotAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-REGISTRATION", "variantKey": "application-clock-is-preserved", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests", "testMethod": "AddQuartzScheduling_PreservesAnApplicationOwnedTimeProviderAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-REGISTRATION", "variantKey": "missing-arguments", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests", "testMethod": "AddQuartzScheduling_RejectsMissingArguments" },
-  { "requirementId": "REQ-VSB-QUARTZ-CONTAINER", "variantKey": "native-di-composition-and-serializer-roundtrip", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests", "testMethod": "RegisteredQuartzScheduler_DeliversThroughTheConfiguredBusAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-DUE-TIME", "variantKey": "past-now-and-future-delivery", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests", "testMethod": "DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-METADATA", "variantKey": "complete-envelope-roundtrip", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests", "testMethod": "ScheduledDelivery_RestoresTheCompleteMessageContextAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-METADATA", "variantKey": "transport-properties-persisted", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "OneTimeCommand_PersistsInboundTransportPropertiesAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-CANCEL", "variantKey": "future-trigger-is-removed-before-delivery", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests", "testMethod": "CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliverAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-RECURRING-DELIVERY", "variantKey": "public-api-and-time-domain-headers", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzRecurringDeliveryIntegrationTests", "testMethod": "RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-REDELIVERY-CANCELLATION", "variantKey": "nonrequested-dependency-cancellation-is-redelivered", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledRedeliveryIntegrationTests", "testMethod": "NonrequestedDependencyCancellation_IsClassifiedAndRedeliveredAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-REDELIVERY-SCOPE", "variantKey": "handler-consumer-message-endpoint-and-bus", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledRedeliveryScopeTests", "testMethod": "ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-EXPLICIT-REDELIVERY", "variantKey": "two-explicit-redeliveries", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzExplicitRedeliveryIntegrationTests", "testMethod": "Redeliver_SchedulesEachRequestedDeliveryThroughQuartzAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-EXPLICIT-REDELIVERY", "variantKey": "callback-mutates-redelivered-message", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzExplicitRedeliveryIntegrationTests", "testMethod": "Redeliver_CallbackRunsBeforeSchedulingAndMutatesTheRedeliveredMessageAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-COURIER", "variantKey": "permanent-fault-compensates", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzCourierRedeliveryIntegrationTests", "testMethod": "PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivityAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-COURIER", "variantKey": "transient-fault-recovers", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzCourierRedeliveryIntegrationTests", "testMethod": "TransientActivityFailure_RetriesAndCompletesTheSlipAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-MISSING-SAGA", "variantKey": "redelivery-finds-later-instance", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMissingSagaRedeliveryIntegrationTests", "testMethod": "MissingSaga_IsScheduledThroughQuartzAndDeliveredAfterTheInstanceExistsAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-OUTBOX", "variantKey": "rollback-versus-no-outbox", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzOutboxSchedulingIntegrationTests", "testMethod": "FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheScheduleAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-CHAINED-DELIVERY", "variantKey": "trace-and-interface-dispatch", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzChainedSchedulingIntegrationTests", "testMethod": "ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-EXPIRATION", "variantKey": "chained-delivery-preserves-time-to-live-within-scheduling-precision", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzChainedSchedulingIntegrationTests", "testMethod": "ChainedSchedule_PreservesTheConfiguredTimeToLiveWithinSchedulingPrecisionAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-RESCHEDULE", "variantKey": "replace-cancel-and-finalize", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests", "testMethod": "Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-SCHEDULE", "variantKey": "scheduled-message-correlates-and-finalizes", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests", "testMethod": "ScheduledMessage_CorrelatesToItsSagaAndFinalizesItAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-MULTIPLE-SCHEDULES", "variantKey": "independent-token-and-delivery", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests", "testMethod": "Saga_CanOwnAndReceiveTwoIndependentSchedulesAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-LOAD", "variantKey": "concurrent-schedules-finalize-and-remove-all-sagas", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests", "testMethod": "ConcurrentScheduledSagas_FinalizeAndLeaveNoStoredInstancesAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-NESTED-REQUEST", "variantKey": "response-completes-original-request", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzNestedRequestIntegrationTests", "testMethod": "NestedSagaRequest_ResponseCompletesTheOriginalRequestAndClearsBothSagasAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-NESTED-REQUEST", "variantKey": "fault-propagates-to-original-request", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzNestedRequestIntegrationTests", "testMethod": "NestedSagaRequest_FaultPropagatesToTheOriginalRequesterAndClearsBothSagasAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST", "variantKey": "response-cancels-timeout-and-clears-request-id", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaRequestTimeoutIntegrationTests", "testMethod": "SagaRequest_ResponseCancelsItsQuartzTimeoutAndClearsTheRequestIdentityAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST", "variantKey": "stale-generation-preserves-next-request-and-quartz-trigger", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaRequestGenerationIntegrationTests", "testMethod": "PreviousRequestMessages_CannotCompleteOrCancelTheNextRequestOfTheSameSagaAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST", "variantKey": "quartz-timeout-is-delivered-to-the-pending-saga", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaRequestTimeoutIntegrationTests", "testMethod": "SagaRequest_QuartzTimeoutIsDeliveredToThePendingSagaAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-REDELIVERY-INTERVALS", "variantKey": "configured-sequence-is-scheduled-in-order", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledRedeliveryIntegrationTests", "testMethod": "ScheduledRedelivery_UsesEveryConfiguredIntervalInOrderAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE", "variantKey": "default-request-client-completes", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests", "testMethod": "DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE", "variantKey": "addressed-request-client-completes", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests", "testMethod": "AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE", "variantKey": "cancellation-reaches-consumer-and-terminal-event", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests", "testMethod": "CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE", "variantKey": "concurrent-limit-is-enforced-and-all-jobs-complete", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests", "testMethod": "ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE", "variantKey": "running-attempt-answers-scheduled-status-check", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests", "testMethod": "RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT", "variantKey": "unhandled-failure-faults-the-job", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests", "testMethod": "UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT", "variantKey": "configured-retry-completes-through-quartz", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests", "testMethod": "ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT", "variantKey": "silent-attempt-faults-without-retry", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests", "testMethod": "SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT", "variantKey": "retry-ignores-stale-attempt-and-completes", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests", "testMethod": "SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-CANCELLATION", "variantKey": "requested-context-cancellation-propagates", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests", "testMethod": "RequestedContextCancellation_PropagatesWithoutImmediateRefireAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-CANCELLATION", "variantKey": "unrequested-dependency-cancellation-uses-trigger-policy", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests", "testMethod": "UnrequestedDependencyCancellation_UsesThePersistentTriggerRetryPolicyAsync" },
-  { "requirementId": "REQ-VSB-SCHEDULING-TECHNICAL-IDENTITY", "variantKey": "token-and-recurring-keys-do-not-overload-correlation", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "TechnicalSchedulingContracts_DoNotExposeSyntheticBusinessCorrelation" },
-  { "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API", "variantKey": "in-memory-quartz-is-explicit-single-owner-and-delivers", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests", "testMethod": "ReliableInMemoryScheduler_RegistersOneExplicitAdapterAndDeliversAsync" },
-  { "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API", "variantKey": "quartz-has-no-implicit-in-memory-fallback", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests", "testMethod": "ReliableQuartzScheduler_MissingFactoryFailsContainerValidation" },
-  { "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API", "variantKey": "mixed-adapters-are-rejected", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests", "testMethod": "ReliableScheduler_RejectsMixedExplicitAdapters" },
-  { "requirementId": "REQ-VSB-QUARTZ-PUBLIC-API", "variantKey": "minimal-greenfield-surface", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests", "testMethod": "PublicApi_ContainsOnlyOptionsAndQuartzSchedulingComposition" },
-  { "requirementId": "REQ-VSB-QUARTZ-PUBLIC-API", "variantKey": "required-owners-reject-null", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests", "testMethod": "PublicEntryPoints_RejectMissingRequiredOwners" },
-  { "requirementId": "REQ-VSB-QUARTZ-PUBLIC-API", "variantKey": "required-collaborators-reject-null", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests", "testMethod": "PublicEntryPoints_RejectMissingRequiredCollaborators" },
-  { "requirementId": "REQ-VSB-QUARTZ-PUBLIC-API", "variantKey": "missing-endpoint-address-fails-closed", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests", "testMethod": "ConfigureQuartzScheduler_RejectsATransportThatDoesNotConfigureTheEndpoint" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "no-eager-or-ambiguous-factory-option", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests", "testMethod": "SchedulerOptions_ContainOnlyRuntimeBehaviorSettings" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "serialized-user-headers-use-the-header-contract", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "SerializedUserHeaders_AreAvailableThroughEveryHeaderAccessPath" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "destination-key-roundtrip", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "PersistedDestination_IsExposedByTheMessageContext" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "constructor-null-guards", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "Constructor_RejectsMissingDependencies" },
-  { "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY", "variantKey": "invalid-schedule-group", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests", "testMethod": "RecurringKey_RejectsMissingScheduleGroups" },
-  { "requirementId": "REQ-VSB-QUARTZ-PARTITION", "variantKey": "composite-identities-cannot-collide", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests", "testMethod": "PartitionKey_PreservesCompositeIdentityBoundaries" },
-  { "requirementId": "REQ-VSB-QUARTZ-PARTITION", "variantKey": "invalid-composite-identity", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests", "testMethod": "PartitionKey_RejectsMissingComponents" },
-  { "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL", "variantKey": "invalid-misfire-policy-fails-closed", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "RecurringCommand_RejectsAnUnsupportedMisfirePolicyAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "standard-header-contract", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "StandardMessageProperties_AreAvailableThroughTheHeaderContract" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "header-enumeration", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "HeaderEnumeration_ExposesGenericAndNonGenericViews" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "invalid-timestamps-fail-fast", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "InvalidTimestamp_FailsFast" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-ACTIVATION", "variantKey": "injected-dependency-null-guards", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests", "testMethod": "Constructor_RejectsMissingInjectedDependencies" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-ACTIVATION", "variantKey": "execution-context-null-guard", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests", "testMethod": "ExecuteAsync_RejectsMissingExecutionContextAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-ACTIVATION", "variantKey": "standalone-context-dependencies", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests", "testMethod": "StandaloneJob_RejectsMissingSchedulerContextDependencyAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "required-delivery-values", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests", "testMethod": "RequiredJobData_FailsClosedAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "empty-serialized-body", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests", "testMethod": "EmptySerializedBody_ReachesTheTransportPipelineAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-RETRY", "variantKey": "persistent-trigger-policy", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests", "testMethod": "TransportFailure_DelegatesRetryTimingToThePersistentTriggerPolicyAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-DELIVERY", "variantKey": "transport-context-rehydration", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageSendPipeTests", "testMethod": "SendAsync_RestoresMessageAndTransportMetadataAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-DELIVERY", "variantKey": "send-pipe-null-guards", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageSendPipeTests", "testMethod": "ConstructorAndSendAsync_RejectMissingDependenciesAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL", "variantKey": "missing-targets-are-idempotent", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "ControlCommands_AreIdempotentWhenTheirTargetsDoNotExistAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "unknown-time-zone-fails-closed", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "RecurringCommand_RejectsAnUnknownTimeZoneAsync" },
-  { "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API", "variantKey": "provider-owned-configuration-scope", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests", "testMethod": "ReliableSchedulerAdapters_RequireProviderOwnedConfiguration" },
-  { "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API", "variantKey": "queue-name-required", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests", "testMethod": "ReliableScheduler_RejectsAnEmptyQueueName" },
-  { "requirementId": "REQ-VSB-QUARTZ-CONTAINER", "variantKey": "manual-endpoint-composition", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests", "testMethod": "ManuallyConfiguredEndpoint_ConsumesRegisteredSchedulingCommandsAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "complete-metadata-snapshot", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "MetadataHeadersAndTransportProperties_AreSnapshottedWhenTheContextIsCreated" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "absolute-message-addresses", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "RelativeStandardAddress_FailsFast" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "container-observer-null-guard", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "Constructor_RejectsAMissingBinding" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "readiness-stop-restart", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "Lifecycle_AwaitsReadinessDetachesOnStopAndSupportsRestartAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "container-start-failure-detaches-context", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "StartFailure_DetachesTheBusWithoutShuttingDownTheExternalSchedulerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "container-stop-failure-detaches-context", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "StandbyFailure_DetachesTheBusAndMakesTheFaultCallbackIdempotentAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-MULTIBUS", "variantKey": "independent-factories-contexts-triggers-and-lifecycles", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMultiBusIntegrationTests", "testMethod": "TwoBuses_KeepSchedulersDeliveryAndLifecycleStrictlyIsolatedAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-PERSISTENCE", "variantKey": "sqlite-store-survives-factory-and-bus-restart", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzPersistentStoreAcceptanceTests", "testMethod": "SqliteStore_RestoresTheExactTriggerAndDeliversAfterACompleteRestartAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-OWNERSHIP", "variantKey": "foreign-job-collision-fails-closed", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "ForeignJobAtTheAdapterIdentity_IsPreservedAndRejectsSchedulingAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "direct-shared-scheduler-is-rejected", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "SharedScheduler_CannotBeAttachedToTwoRunningBusesAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "factory-has-exactly-one-bus-owner", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "OneFactory_CannotBeClaimedByTwoBusOwners" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "scheduler-name-has-exactly-one-bus-owner", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "OneSchedulerIdentity_CannotBeClaimedByTwoBusOwnersAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "owned-binding-shuts-down-only-on-final-disposal", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "AdapterOwnedBinding_SupportsRestartAndShutsDownOnlyOnFinalDisposalAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "owned-lease-releases-every-resource-idempotently", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests", "testMethod": "AdapterOwnedLease_ReleasesEveryOwnedResourceExactlyOnceAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "caller-owned-lease-never-controls-factory", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests", "testMethod": "CallerOwnedLease_ReleasesOnlyTheBusOwnedPartitionerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "owned-lease-cleans-factory-after-partitioner-failure", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests", "testMethod": "PartitionerDisposalFailure_DoesNotPreventOwnedSchedulerCleanupAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "hosted-service-conflict-is-order-independent", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests", "testMethod": "QuartzHostedService_CannotShareTheBusOwnedSchedulerLifecycle" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "invalid-retry-policy", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests", "testMethod": "CreateSettings_RejectsMissingRetryPolicy" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-RETRY", "variantKey": "scheduler-executes-persistent-retry-policy", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests", "testMethod": "DeliveryFailure_IsRetriedByTheSchedulerPolicyAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "generated-identity-requires-persisted-seed", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests", "testMethod": "MissingMessageIdentifier_RejectsAMissingPersistentSeed" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "invalid-serialized-body-is-terminal", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageSendPipeTests", "testMethod": "SendAsync_ClassifiesInvalidPersistedContentAsTerminalDataFailureAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "terminal-data-failure-unschedules-trigger", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests", "testMethod": "InvalidPersistedMessageData_UnschedulesWithoutRetryAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "invalid-direct-prefetch-count", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests", "testMethod": "CreateSettings_RejectsANonPositivePrefetchCount" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "invalid-direct-concurrency-limit", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests", "testMethod": "CreateSettings_RejectsANonPositiveConcurrencyLimit" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "invalid-direct-start-delay", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests", "testMethod": "CreateSettings_RejectsANegativeStartDelay" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "direct-delayed-start", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "DelayedObserver_StartsWithTheConfiguredDelayAfterReadinessAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "direct-endpoint-qos-applied", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "DirectEndpoint_AppliesPrefetchConcurrencyAndPartitionCountAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "namespace-identity-excludes-assembly-version", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerNamespaceTests", "testMethod": "BusIdentity_IsAssemblyQualifiedWithoutVersionOrRuntimeMetadata" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "generic-bus-identity-is-recursively-stable", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerNamespaceTests", "testMethod": "GenericBusIdentity_QualifiesEveryTypeWithoutAssemblyVersion" },
-  { "requirementId": "REQ-VSB-QUARTZ-REGISTRATION", "variantKey": "factory-resolver-must-return-a-factory", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests", "testMethod": "AddQuartzScheduling_RejectsAResolverThatReturnsNull" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "owned-factory-is-released-after-configuration-failure", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests", "testMethod": "ConfigureInMemoryQuartzScheduler_PreservesConfigurationFailureAfterReleasingItsFactory" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "direct-shutdown-scheduler-fails-closed", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "ShutdownScheduler_IsRejectedBeforeItCanBeAttachedAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "variantKey": "immutable-runtime-settings-defend-their-invariants", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests", "testMethod": "RuntimeSettings_RejectInvalidConstruction" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "lease-reports-every-cleanup-failure", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests", "testMethod": "IndependentCleanupFailures_AreReportedTogetherAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "external-binding-stands-by-without-disposing-factory", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "ExternalBinding_DisposalStandsByDetachesAndRejectsFurtherUseAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "variantKey": "container-shutdown-scheduler-fails-closed", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "ShutdownScheduler_IsRejectedBeforeItCanBeClaimedOrAttachedAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "binding-reports-every-cleanup-failure", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "IndependentBindingCleanupFailures_AreReportedTogetherAndDetachTheBusAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-CONTAINER", "variantKey": "registered-definitions-cover-every-command", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests", "testMethod": "RegisteredEndpoint_ExecutesEverySchedulingCommandThroughItsBusBindingAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-MULTIBUS", "variantKey": "typed-registration-creates-only-its-bus-binding", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests", "testMethod": "TypedRegistration_CreatesOnlyTheRequestedBusBindingAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "owned-lease-supports-synchronous-factory-disposal", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests", "testMethod": "SynchronouslyDisposableFactory_IsReleasedByTheOwnedLeaseAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "direct-detach-preserves-a-replacement-owner", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests", "testMethod": "Stop_PreservesSchedulerContextThatWasReassignedToAnotherOwnerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "binding-rejects-a-foreign-context-owner", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "Binding_CannotAttachASchedulerOwnedByAnotherBusAsync" },
-  { "requirementId": "REQ-VSB-BODY-CROSS-OWNER", "variantKey": "quartz-messagepack-carrier-store-rehydrate-deliver", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMessagePackSchedulingTests", "testMethod": "ScheduledMessagePackBody_IsStoredAsCanonicalBase64AndDeliveredExactlyAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "binding-preserves-a-single-cleanup-failure", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests", "testMethod": "SingleSchedulerCleanupFailure_IsRethrownWithoutWrappingAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP", "variantKey": "lease-constructor-null-guards", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests", "testMethod": "Constructor_RejectsEveryMissingOwnedResourceAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "invalid-message-type-list-is-terminal", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests", "testMethod": "InvalidPersistedMessageTypeList_UnschedulesWithoutReachingTheTransportAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "message-types-use-unambiguous-json", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMessageTypeListTests", "testMethod": "SerializeAndDeserialize_RoundTripEveryIdentifierWithoutAliasingTheSource" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "scheduled-message-types-are-required", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMessageTypeListTests", "testMethod": "Serialize_RejectsMissingOrEmptyIdentifiers" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "persisted-message-types-fail-closed", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMessageTypeListTests", "testMethod": "Deserialize_RejectsMissingOrEmptyIdentifiers" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "persisted-message-types-require-json", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMessageTypeListTests", "testMethod": "Deserialize_RejectsMalformedJson" },
-  { "requirementId": "REQ-VSB-QUARTZ-ONE-TIME", "variantKey": "invalid-command-fails-before-scheduler-access", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulingCommandValidationTests", "testMethod": "InvalidOneTimeCommand_FailsBeforeAccessingTheSchedulerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL", "variantKey": "invalid-schedule-fails-before-scheduler-access", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulingCommandValidationTests", "testMethod": "InvalidRecurringCommand_FailsBeforeAccessingTheSchedulerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL", "variantKey": "invalid-control-key-fails-before-scheduler-access", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulingCommandValidationTests", "testMethod": "InvalidControlCommand_FailsBeforeAccessingTheSchedulerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY", "variantKey": "invalid-one-time-token", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests", "testMethod": "OneTimeKey_RejectsAnEmptySchedulingToken" },
-  { "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY", "variantKey": "invalid-scheduler-namespace", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests", "testMethod": "TriggerKeys_RejectMissingSchedulerNamespaces" },
-  { "requirementId": "REQ-VSB-QUARTZ-JOB-DATA", "variantKey": "persisted-content-type-comes-from-body-serializer", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleSerializationBoundaryTests", "testMethod": "Scheduling_PersistsTheContentTypeProducedByTheSelectedSerializerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST", "variantKey": "saga-id-three-responses-fault-and-real-timeout", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests", "testMethod": "SagaIdRequest_RoutesToTheHeaderOwnerAndCancelsOrDeliversItsRealTimeoutAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST", "variantKey": "correlation-callbacks-override-default-owner-without-canceling-its-timeout", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests", "testMethod": "CustomCorrelation_SelectsTheBodyOwnerAndPreservesTheOtherSagaTimeoutAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST", "variantKey": "missing-request-header-preserves-sagas-and-real-timeout", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests", "testMethod": "MissingRequestId_RejectsTheResponseWithoutChangingEitherSagaOrItsTimeoutAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST", "variantKey": "property-request-id-response-fault-and-real-timeout", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests", "testMethod": "PropertyRequestId_RoutesTheExactOwnerAndSettlesItsQuartzTriggerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST", "variantKey": "property-request-id-callback-override-preserves-request-owner-trigger", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests", "testMethod": "PropertyRequestId_CustomCorrelationSelectsBodyOwnerWithoutCancelingRequestOwnersTriggerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST", "variantKey": "missing-property-request-id-cannot-select-unowned-saga", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests", "testMethod": "PropertyRequestId_MissingHeaderCannotSelectUnownedSagaOrCancelItsTriggerAsync" },
-  { "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST", "variantKey": "two-live-property-request-owners-and-quartz-triggers", "testAssembly": "ViciOne.ServiceBus.Quartz.Tests", "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests", "testMethod": "PropertyRequestId_ReplySettlesOnlyItsOwnerWhileNeighborTimesOutAsync" }
+  {
+    "requirementId": "REQ-VSB-BODY-CROSS-OWNER",
+    "variantKey": "quartz-messagepack-carrier-store-rehydrate-deliver",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMessagePackSchedulingTests",
+    "testMethod": "ScheduledMessagePackBody_IsStoredAsCanonicalBase64AndDeliveredExactlyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-CANCEL",
+    "variantKey": "future-trigger-is-removed-before-delivery",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests",
+    "testMethod": "CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliverAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-CHAINED-DELIVERY",
+    "variantKey": "trace-and-interface-dispatch",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzChainedSchedulingIntegrationTests",
+    "testMethod": "ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-CONTAINER",
+    "variantKey": "manual-endpoint-composition",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests",
+    "testMethod": "ManuallyConfiguredEndpoint_ConsumesRegisteredSchedulingCommandsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-CONTAINER",
+    "variantKey": "native-di-composition-and-serializer-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests",
+    "testMethod": "RegisteredQuartzScheduler_DeliversThroughTheConfiguredBusAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-CONTAINER",
+    "variantKey": "registered-definitions-cover-every-command",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests",
+    "testMethod": "RegisteredEndpoint_ExecutesEverySchedulingCommandThroughItsBusBindingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-COURIER",
+    "variantKey": "permanent-fault-compensates",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzCourierRedeliveryIntegrationTests",
+    "testMethod": "PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivityAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-COURIER",
+    "variantKey": "transient-fault-recovers",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzCourierRedeliveryIntegrationTests",
+    "testMethod": "TransientActivityFailure_RetriesAndCompletesTheSlipAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-DELIVERY",
+    "variantKey": "send-pipe-null-guards",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageSendPipeTests",
+    "testMethod": "ConstructorAndSendAsync_RejectMissingDependenciesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-DELIVERY",
+    "variantKey": "serialized-payload-and-context-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "TriggeredJob_DeliversTheSerializedPayloadAndUserHeadersAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-DELIVERY",
+    "variantKey": "transient-clock-failure-is-not-permanent-persisted-data",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageSendPipeTests",
+    "testMethod": "ValidPayload_DoesNotClassifyTransientClockFailureAsPermanentDataAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-DELIVERY",
+    "variantKey": "transport-context-rehydration",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageSendPipeTests",
+    "testMethod": "SendAsync_RestoresMessageAndTransportMetadataAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-DUE-TIME",
+    "variantKey": "past-now-and-future-delivery",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests",
+    "testMethod": "DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS",
+    "variantKey": "coherent-public-defaults",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointOptionsTests",
+    "testMethod": "Defaults_AreBoundedAndProviderAware"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS",
+    "variantKey": "immutable-snapshot",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointDefinitionTests",
+    "testMethod": "Constructor_UsesAnImmutableEndpointSettingsSnapshot"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS",
+    "variantKey": "invalid-concurrency-limit",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointDefinitionTests",
+    "testMethod": "Settings_RejectANonPositiveConcurrencyLimit"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS",
+    "variantKey": "invalid-prefetch-count",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointDefinitionTests",
+    "testMethod": "Settings_RejectANonPositivePrefetchCount"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS",
+    "variantKey": "invalid-queue-name",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointDefinitionTests",
+    "testMethod": "Settings_RejectAMissingQueueName"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-ENDPOINT-SETTINGS",
+    "variantKey": "partitioner-owned-and-disposed",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzEndpointDefinitionTests",
+    "testMethod": "DisposeAsync_ReleasesTheOwnedPartitionerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-EXPIRATION",
+    "variantKey": "chained-delivery-preserves-time-to-live-within-scheduling-precision",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzChainedSchedulingIntegrationTests",
+    "testMethod": "ChainedSchedule_PreservesTheConfiguredTimeToLiveWithinSchedulingPrecisionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-EXPIRATION",
+    "variantKey": "expired-message",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.ScheduledMessageExpirationTests",
+    "testMethod": "PastExpiration_RemainsExpiredInsteadOfReceivingANewLifetime"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-EXPIRATION",
+    "variantKey": "invalid-time-provider",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.ScheduledMessageExpirationTests",
+    "testMethod": "MissingTimeProvider_FailsFast"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-EXPIRATION",
+    "variantKey": "missing-expiration",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.ScheduledMessageExpirationTests",
+    "testMethod": "MissingExpiration_LeavesTimeToLiveUnset"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-EXPIRATION",
+    "variantKey": "single-time-source",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.ScheduledMessageExpirationTests",
+    "testMethod": "Expiration_UsesOnlyTheConfiguredTimeProvider"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-EXPLICIT-REDELIVERY",
+    "variantKey": "callback-mutates-redelivered-message",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzExplicitRedeliveryIntegrationTests",
+    "testMethod": "Redeliver_CallbackRunsBeforeSchedulingAndMutatesTheRedeliveredMessageAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-EXPLICIT-REDELIVERY",
+    "variantKey": "two-explicit-redeliveries",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzExplicitRedeliveryIntegrationTests",
+    "testMethod": "Redeliver_SchedulesEachRequestedDeliveryThroughQuartzAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-ACTIVATION",
+    "variantKey": "execution-context-null-guard",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests",
+    "testMethod": "ExecuteAsync_RejectsMissingExecutionContextAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-ACTIVATION",
+    "variantKey": "injected-dependency-null-guards",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests",
+    "testMethod": "Constructor_RejectsMissingInjectedDependencies"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-ACTIVATION",
+    "variantKey": "standalone-context-dependencies",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests",
+    "testMethod": "StandaloneJob_RejectsMissingSchedulerContextDependencyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-CANCELLATION",
+    "variantKey": "requested-context-cancellation-propagates",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests",
+    "testMethod": "RequestedContextCancellation_PropagatesWithoutImmediateRefireAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-CANCELLATION",
+    "variantKey": "unrequested-dependency-cancellation-uses-trigger-policy",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests",
+    "testMethod": "UnrequestedDependencyCancellation_UsesThePersistentTriggerRetryPolicyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "absolute-message-addresses",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "RelativeStandardAddress_FailsFast"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "complete-metadata-snapshot",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "MetadataHeadersAndTransportProperties_AreSnapshottedWhenTheContextIsCreated"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "constructor-null-guards",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "Constructor_RejectsMissingDependencies"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "destination-key-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "PersistedDestination_IsExposedByTheMessageContext"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "empty-serialized-body",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests",
+    "testMethod": "EmptySerializedBody_ReachesTheTransportPipelineAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "generated-identity-is-stable-per-firing",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "MissingMessageIdentifier_IsStableAcrossPersistentRetriesButUniqueAcrossOccurrences"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "generated-identity-requires-persisted-seed",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "MissingMessageIdentifier_RejectsAMissingPersistentSeed"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "header-enumeration",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "HeaderEnumeration_ExposesGenericAndNonGenericViews"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "invalid-identifier",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "InvalidStandardIdentifier_FailsFast"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "invalid-message-type-list-is-terminal",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests",
+    "testMethod": "InvalidPersistedMessageTypeList_UnschedulesWithoutReachingTheTransportAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "invalid-serialized-body-is-terminal",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageSendPipeTests",
+    "testMethod": "SendAsync_ClassifiesInvalidPersistedContentAsTerminalDataFailureAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "invalid-timestamps-fail-fast",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "InvalidTimestamp_FailsFast"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "message-types-use-unambiguous-json",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMessageTypeListTests",
+    "testMethod": "SerializeAndDeserialize_RoundTripEveryIdentifierWithoutAliasingTheSource"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "missing-header-defaults",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "MissingHeader_ReturnsSuppliedReferenceAndValueFallbacks"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "noncanonical-identifier",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "NonCanonicalIdentifier_FailsFast"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "persisted-content-type-comes-from-body-serializer",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleSerializationBoundaryTests",
+    "testMethod": "Scheduling_PersistsTheContentTypeProducedByTheSelectedSerializerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "persisted-message-types-fail-closed",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMessageTypeListTests",
+    "testMethod": "Deserialize_RejectsMissingOrEmptyIdentifiers"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "persisted-message-types-require-json",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMessageTypeListTests",
+    "testMethod": "Deserialize_RejectsMalformedJson"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "present-header-overrides-defaults",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "PresentHeader_OverridesSuppliedReferenceAndValueFallbacks"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "required-delivery-values",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests",
+    "testMethod": "RequiredJobData_FailsClosedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "scheduled-message-types-are-required",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMessageTypeListTests",
+    "testMethod": "Serialize_RejectsMissingOrEmptyIdentifiers"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "serialized-metadata-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "SerializedMetadata_IsRestoredWithExactQuartzHeaders"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "serialized-user-headers-use-the-header-contract",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "SerializedUserHeaders_AreAvailableThroughEveryHeaderAccessPath"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "standard-header-contract",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageContextTests",
+    "testMethod": "StandardMessageProperties_AreAvailableThroughTheHeaderContract"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-DATA",
+    "variantKey": "terminal-data-failure-unschedules-trigger",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests",
+    "testMethod": "InvalidPersistedMessageData_UnschedulesWithoutRetryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-OWNERSHIP",
+    "variantKey": "foreign-job-collision-fails-closed",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "ForeignJobAtTheAdapterIdentity_IsPreservedAndRejectsSchedulingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-RETRY",
+    "variantKey": "persistent-trigger-policy",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledMessageJobTests",
+    "testMethod": "TransportFailure_DelegatesRetryTimingToThePersistentTriggerPolicyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-RETRY",
+    "variantKey": "scheduler-executes-persistent-retry-policy",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "DeliveryFailure_IsRetriedByTheSchedulerPolicyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT",
+    "variantKey": "configured-retry-completes-through-quartz",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests",
+    "testMethod": "ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-FAULT",
+    "variantKey": "unhandled-failure-faults-the-job",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceFaultIntegrationTests",
+    "testMethod": "UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE",
+    "variantKey": "addressed-request-client-completes",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests",
+    "testMethod": "AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE",
+    "variantKey": "cancellation-reaches-consumer-and-terminal-event",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests",
+    "testMethod": "CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE",
+    "variantKey": "concurrent-limit-is-enforced-and-all-jobs-complete",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests",
+    "testMethod": "ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE",
+    "variantKey": "default-request-client-completes",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests",
+    "testMethod": "DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-LIFECYCLE",
+    "variantKey": "running-attempt-answers-scheduled-status-check",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceLifecycleIntegrationTests",
+    "testMethod": "RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT",
+    "variantKey": "retry-ignores-stale-attempt-and-completes",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests",
+    "testMethod": "SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT",
+    "variantKey": "silent-attempt-faults-without-retry",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests",
+    "testMethod": "SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-METADATA",
+    "variantKey": "complete-envelope-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduleTimingIntegrationTests",
+    "testMethod": "ScheduledDelivery_RestoresTheCompleteMessageContextAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-METADATA",
+    "variantKey": "transport-properties-persisted",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "OneTimeCommand_PersistsInboundTransportPropertiesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-MISSING-SAGA",
+    "variantKey": "redelivery-finds-later-instance",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMissingSagaRedeliveryIntegrationTests",
+    "testMethod": "MissingSaga_IsScheduledThroughQuartzAndDeliveredAfterTheInstanceExistsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-MULTIBUS",
+    "variantKey": "independent-factories-contexts-triggers-and-lifecycles",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzMultiBusIntegrationTests",
+    "testMethod": "TwoBuses_KeepSchedulersDeliveryAndLifecycleStrictlyIsolatedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-MULTIBUS",
+    "variantKey": "typed-registration-creates-only-its-bus-binding",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests",
+    "testMethod": "TypedRegistration_CreatesOnlyTheRequestedBusBindingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-NESTED-REQUEST",
+    "variantKey": "fault-propagates-to-original-request",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzNestedRequestIntegrationTests",
+    "testMethod": "NestedSagaRequest_FaultPropagatesToTheOriginalRequesterAndClearsBothSagasAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-NESTED-REQUEST",
+    "variantKey": "response-completes-original-request",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzNestedRequestIntegrationTests",
+    "testMethod": "NestedSagaRequest_ResponseCompletesTheOriginalRequestAndClearsBothSagasAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-ONE-TIME",
+    "variantKey": "command-creates-exact-recoverable-trigger",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "OneTimeCommand_CreatesAnExactRecoverableTriggerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-ONE-TIME",
+    "variantKey": "deleted-durable-job-is-recreated",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "DeletedDurableJob_IsRecreatedBeforeTheNextMessageIsScheduledAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-ONE-TIME",
+    "variantKey": "invalid-command-fails-before-scheduler-access",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulingCommandValidationTests",
+    "testMethod": "InvalidOneTimeCommand_FailsBeforeAccessingTheSchedulerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-ONE-TIME",
+    "variantKey": "same-token-replaces-trigger",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "ReusingTheToken_ReplacesRatherThanDuplicatesTheTriggerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-OUTBOX",
+    "variantKey": "rollback-versus-no-outbox",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzOutboxSchedulingIntegrationTests",
+    "testMethod": "FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheScheduleAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-PARTITION",
+    "variantKey": "composite-identities-cannot-collide",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests",
+    "testMethod": "PartitionKey_PreservesCompositeIdentityBoundaries"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-PARTITION",
+    "variantKey": "invalid-composite-identity",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests",
+    "testMethod": "PartitionKey_RejectsMissingComponents"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-PERSISTENCE",
+    "variantKey": "sqlite-store-survives-factory-and-bus-restart",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzPersistentStoreAcceptanceTests",
+    "testMethod": "SqliteStore_RestoresTheExactTriggerAndDeliversAfterACompleteRestartAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-PUBLIC-API",
+    "variantKey": "minimal-greenfield-surface",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests",
+    "testMethod": "PublicApi_ContainsOnlyOptionsAndQuartzSchedulingComposition"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-PUBLIC-API",
+    "variantKey": "missing-endpoint-address-fails-closed",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests",
+    "testMethod": "ConfigureQuartzScheduler_RejectsATransportThatDoesNotConfigureTheEndpoint"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-PUBLIC-API",
+    "variantKey": "required-collaborators-reject-null",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests",
+    "testMethod": "PublicEntryPoints_RejectMissingRequiredCollaborators"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-PUBLIC-API",
+    "variantKey": "required-owners-reject-null",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests",
+    "testMethod": "PublicEntryPoints_RejectMissingRequiredOwners"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-RECURRING",
+    "variantKey": "provider-failure-preserves-triggers-before-command-recovery",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.RecurringReplacementIntegrityTests",
+    "testMethod": "SchedulerProviderFailure_PreservesTriggersAndAllowsCommandRecoveryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-RECURRING",
+    "variantKey": "rejected-replacement-preserves-target-and-neighbor-before-recovery",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.RecurringReplacementIntegrityTests",
+    "testMethod": "InvalidRecurringReplacement_PreservesTargetAndNeighborBeforeValidRecoveryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL",
+    "variantKey": "invalid-control-key-fails-before-scheduler-access",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulingCommandValidationTests",
+    "testMethod": "InvalidControlCommand_FailsBeforeAccessingTheSchedulerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL",
+    "variantKey": "invalid-misfire-policy-fails-closed",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "RecurringCommand_RejectsAnUnsupportedMisfirePolicyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL",
+    "variantKey": "invalid-schedule-fails-before-scheduler-access",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulingCommandValidationTests",
+    "testMethod": "InvalidRecurringCommand_FailsBeforeAccessingTheSchedulerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL",
+    "variantKey": "missing-targets-are-idempotent",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "ControlCommands_AreIdempotentWhenTheirTargetsDoNotExistAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL",
+    "variantKey": "same-key-replaces-trigger-with-send-misfire",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "RecurringCommand_ReplacesTheTriggerAndAppliesSendMisfirePolicyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-RECURRING-CONTROL",
+    "variantKey": "schedule-pause-resume-cancel",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "RecurringControlCommands_OperateOnOneCanonicalTriggerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-RECURRING-DELIVERY",
+    "variantKey": "public-api-and-time-domain-headers",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzRecurringDeliveryIntegrationTests",
+    "testMethod": "RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-REDELIVERY-CANCELLATION",
+    "variantKey": "nonrequested-dependency-cancellation-is-redelivered",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledRedeliveryIntegrationTests",
+    "testMethod": "NonrequestedDependencyCancellation_IsClassifiedAndRedeliveredAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-REDELIVERY-INTERVALS",
+    "variantKey": "configured-sequence-is-scheduled-in-order",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledRedeliveryIntegrationTests",
+    "testMethod": "ScheduledRedelivery_UsesEveryConfiguredIntervalInOrderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-REDELIVERY-SCOPE",
+    "variantKey": "handler-consumer-message-endpoint-and-bus",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzScheduledRedeliveryScopeTests",
+    "testMethod": "ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-REGISTRATION",
+    "variantKey": "application-clock-is-preserved",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests",
+    "testMethod": "AddQuartzScheduling_PreservesAnApplicationOwnedTimeProviderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-REGISTRATION",
+    "variantKey": "bus-specific-settings-snapshot",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests",
+    "testMethod": "AddQuartzScheduling_RegistersOneClockAndABusSpecificSettingsSnapshotAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-REGISTRATION",
+    "variantKey": "factory-resolver-must-return-a-factory",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests",
+    "testMethod": "AddQuartzScheduling_RejectsAResolverThatReturnsNull"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-REGISTRATION",
+    "variantKey": "missing-arguments",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests",
+    "testMethod": "AddQuartzScheduling_RejectsMissingArguments"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-LOAD",
+    "variantKey": "concurrent-schedules-finalize-and-remove-all-sagas",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests",
+    "testMethod": "ConcurrentScheduledSagas_FinalizeAndLeaveNoStoredInstancesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-MULTIPLE-SCHEDULES",
+    "variantKey": "independent-token-and-delivery",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests",
+    "testMethod": "Saga_CanOwnAndReceiveTwoIndependentSchedulesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST",
+    "variantKey": "correlation-callbacks-override-default-owner-without-canceling-its-timeout",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests",
+    "testMethod": "CustomCorrelation_SelectsTheBodyOwnerAndPreservesTheOtherSagaTimeoutAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST",
+    "variantKey": "missing-property-request-id-cannot-select-unowned-saga",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests",
+    "testMethod": "PropertyRequestId_MissingHeaderCannotSelectUnownedSagaOrCancelItsTriggerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST",
+    "variantKey": "missing-request-header-preserves-sagas-and-real-timeout",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests",
+    "testMethod": "MissingRequestId_RejectsTheResponseWithoutChangingEitherSagaOrItsTimeoutAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST",
+    "variantKey": "property-request-id-callback-override-preserves-request-owner-trigger",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests",
+    "testMethod": "PropertyRequestId_CustomCorrelationSelectsBodyOwnerWithoutCancelingRequestOwnersTriggerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST",
+    "variantKey": "property-request-id-response-fault-and-real-timeout",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests",
+    "testMethod": "PropertyRequestId_RoutesTheExactOwnerAndSettlesItsQuartzTriggerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST",
+    "variantKey": "quartz-timeout-is-delivered-to-the-pending-saga",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaRequestTimeoutIntegrationTests",
+    "testMethod": "SagaRequest_QuartzTimeoutIsDeliveredToThePendingSagaAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST",
+    "variantKey": "response-cancels-timeout-and-clears-request-id",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaRequestTimeoutIntegrationTests",
+    "testMethod": "SagaRequest_ResponseCancelsItsQuartzTimeoutAndClearsTheRequestIdentityAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST",
+    "variantKey": "saga-id-three-responses-fault-and-real-timeout",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests",
+    "testMethod": "SagaIdRequest_RoutesToTheHeaderOwnerAndCancelsOrDeliversItsRealTimeoutAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST",
+    "variantKey": "stale-generation-preserves-next-request-and-quartz-trigger",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaRequestGenerationIntegrationTests",
+    "testMethod": "PreviousRequestMessages_CannotCompleteOrCancelTheNextRequestOfTheSameSagaAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-REQUEST",
+    "variantKey": "two-live-property-request-owners-and-quartz-triggers",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaIdRequestIntegrationTests",
+    "testMethod": "PropertyRequestId_ReplySettlesOnlyItsOwnerWhileNeighborTimesOutAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-RESCHEDULE",
+    "variantKey": "replace-cancel-and-finalize",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests",
+    "testMethod": "Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SAGA-SCHEDULE",
+    "variantKey": "scheduled-message-correlates-and-finalizes",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSagaSchedulingIntegrationTests",
+    "testMethod": "ScheduledMessage_CorrelatesToItsSagaAndFinalizesItAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "container-observer-null-guard",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "Constructor_RejectsAMissingBinding"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "container-shutdown-scheduler-fails-closed",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "ShutdownScheduler_IsRejectedBeforeItCanBeClaimedOrAttachedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "container-start-failure-detaches-context",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "StartFailure_DetachesTheBusWithoutShuttingDownTheExternalSchedulerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "container-stop-failure-detaches-context",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "StandbyFailure_DetachesTheBusAndMakesTheFaultCallbackIdempotentAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "direct-delayed-start",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "DelayedObserver_StartsWithTheConfiguredDelayAfterReadinessAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "direct-observer-disabled-start",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "DisabledObserver_InitializesWithoutWaitingOrStartingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "direct-observer-idempotent-stop",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "RepeatedStop_DetachesWithoutShuttingDownTheCallerOwnedSchedulerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "direct-observer-null-guard",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "Constructor_RejectsMissingSettings"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "direct-observer-readiness-and-cleanup",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "EnabledObserver_WaitsForReadinessAndCleansSchedulerContextAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "direct-shutdown-scheduler-fails-closed",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "ShutdownScheduler_IsRejectedBeforeItCanBeAttachedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "direct-start-failure-detaches-context",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "StartFailure_DetachesWithoutShuttingDownTheCallerOwnedSchedulerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "direct-stop-failure-detaches-context",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "StandbyFailure_DetachesAndMakesStopFaultCallbackIdempotentAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "initializes-without-starting",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "DisabledScheduler_IsInitializedButNotStartedAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "readiness-stop-restart",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "Lifecycle_AwaitsReadinessDetachesOnStopAndSupportsRestartAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "standalone-context-receives-snapshotted-clock",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "StandaloneContext_ReceivesTheConfiguredBusAndTimeProviderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE",
+    "variantKey": "starts-and-stops-with-bus",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "EnabledScheduler_StartsAndStopsWithTheBusAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "binding-preserves-a-single-cleanup-failure",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "SingleSchedulerCleanupFailure_IsRethrownWithoutWrappingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "binding-rejects-a-foreign-context-owner",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "Binding_CannotAttachASchedulerOwnedByAnotherBusAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "binding-reports-every-cleanup-failure",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "IndependentBindingCleanupFailures_AreReportedTogetherAndDetachTheBusAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "caller-owned-lease-never-controls-factory",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests",
+    "testMethod": "CallerOwnedLease_ReleasesOnlyTheBusOwnedPartitionerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "direct-detach-preserves-a-replacement-owner",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "Stop_PreservesSchedulerContextThatWasReassignedToAnotherOwnerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "direct-shared-scheduler-is-rejected",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "SharedScheduler_CannotBeAttachedToTwoRunningBusesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "external-binding-stands-by-without-disposing-factory",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "ExternalBinding_DisposalStandsByDetachesAndRejectsFurtherUseAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "factory-has-exactly-one-bus-owner",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "OneFactory_CannotBeClaimedByTwoBusOwners"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "generic-bus-identity-is-recursively-stable",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerNamespaceTests",
+    "testMethod": "GenericBusIdentity_QualifiesEveryTypeWithoutAssemblyVersion"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "hosted-service-conflict-is-order-independent",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulingExtensionsTests",
+    "testMethod": "QuartzHostedService_CannotShareTheBusOwnedSchedulerLifecycle"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "lease-constructor-null-guards",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests",
+    "testMethod": "Constructor_RejectsEveryMissingOwnedResourceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "lease-reports-every-cleanup-failure",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests",
+    "testMethod": "IndependentCleanupFailures_AreReportedTogetherAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "namespace-identity-excludes-assembly-version",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerNamespaceTests",
+    "testMethod": "BusIdentity_IsAssemblyQualifiedWithoutVersionOrRuntimeMetadata"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "owned-binding-shuts-down-only-on-final-disposal",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "AdapterOwnedBinding_SupportsRestartAndShutsDownOnlyOnFinalDisposalAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "owned-factory-is-released-after-configuration-failure",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests",
+    "testMethod": "ConfigureInMemoryQuartzScheduler_PreservesConfigurationFailureAfterReleasingItsFactory"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "owned-lease-cleans-factory-after-partitioner-failure",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests",
+    "testMethod": "PartitionerDisposalFailure_DoesNotPreventOwnedSchedulerCleanupAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "owned-lease-releases-every-resource-idempotently",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests",
+    "testMethod": "AdapterOwnedLease_ReleasesEveryOwnedResourceExactlyOnceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "owned-lease-supports-synchronous-factory-disposal",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerLeaseTests",
+    "testMethod": "SynchronouslyDisposableFactory_IsReleasedByTheOwnedLeaseAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-OWNERSHIP",
+    "variantKey": "scheduler-name-has-exactly-one-bus-owner",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzSchedulerLifecycleObserverTests",
+    "testMethod": "OneSchedulerIdentity_CannotBeClaimedByTwoBusOwnersAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "coherent-public-defaults",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests",
+    "testMethod": "Defaults_StartWithTheBusAndUseTheSystemClock"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "direct-endpoint-qos-applied",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.DirectQuartzSchedulerLifecycleObserverTests",
+    "testMethod": "DirectEndpoint_AppliesPrefetchConcurrencyAndPartitionCountAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "immutable-runtime-settings-defend-their-invariants",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests",
+    "testMethod": "RuntimeSettings_RejectInvalidConstruction"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "immutable-snapshot",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests",
+    "testMethod": "CreateSettings_SnapshotsEveryRuntimeValue"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "invalid-direct-concurrency-limit",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests",
+    "testMethod": "CreateSettings_RejectsANonPositiveConcurrencyLimit"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "invalid-direct-prefetch-count",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests",
+    "testMethod": "CreateSettings_RejectsANonPositivePrefetchCount"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "invalid-direct-start-delay",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests",
+    "testMethod": "CreateSettings_RejectsANegativeStartDelay"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "invalid-queue-name",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests",
+    "testMethod": "CreateSettings_RejectsMissingQueueName"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "invalid-retry-policy",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests",
+    "testMethod": "CreateSettings_RejectsMissingRetryPolicy"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "invalid-scheduler-factory",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests",
+    "testMethod": "CreateSettings_RejectsMissingSchedulerFactory"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "invalid-time-provider",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzSchedulerOptionsTests",
+    "testMethod": "CreateSettings_RejectsMissingTimeProvider"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "no-eager-or-ambiguous-factory-option",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests",
+    "testMethod": "SchedulerOptions_ContainOnlyRuntimeBehaviorSettings"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "owner-scoped-time-zone-resolver-reaches-trigger",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "RecurringCommand_UsesTheOwnerScopedTimeZoneResolverAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-SCHEDULER-SETTINGS",
+    "variantKey": "unknown-time-zone-fails-closed",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "RecurringCommand_RejectsAnUnknownTimeZoneAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY",
+    "variantKey": "bus-namespace-isolation",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests",
+    "testMethod": "TriggerKeys_AreIsolatedByBusNamespace"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY",
+    "variantKey": "complete-user-identity-hash",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests",
+    "testMethod": "RecurringKey_HashesTheCompleteUserIdentityInsideTheBusNamespace"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY",
+    "variantKey": "invalid-one-time-token",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests",
+    "testMethod": "OneTimeKey_RejectsAnEmptySchedulingToken"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY",
+    "variantKey": "invalid-schedule-group",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests",
+    "testMethod": "RecurringKey_RejectsMissingScheduleGroups"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY",
+    "variantKey": "invalid-schedule-id",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests",
+    "testMethod": "RecurringKey_RejectsMissingScheduleIds"
+  },
+  {
+    "requirementId": "REQ-VSB-QUARTZ-TRIGGER-KEY",
+    "variantKey": "invalid-scheduler-namespace",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzTriggerKeyTests",
+    "testMethod": "TriggerKeys_RejectMissingSchedulerNamespaces"
+  },
+  {
+    "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API",
+    "variantKey": "in-memory-quartz-is-explicit-single-owner-and-delivers",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests",
+    "testMethod": "ReliableInMemoryScheduler_RegistersOneExplicitAdapterAndDeliversAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API",
+    "variantKey": "mixed-adapters-are-rejected",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests",
+    "testMethod": "ReliableScheduler_RejectsMixedExplicitAdapters"
+  },
+  {
+    "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API",
+    "variantKey": "provider-owned-configuration-scope",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Configuration.QuartzConfigurationContractTests",
+    "testMethod": "ReliableSchedulerAdapters_RequireProviderOwnedConfiguration"
+  },
+  {
+    "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API",
+    "variantKey": "quartz-has-no-implicit-in-memory-fallback",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests",
+    "testMethod": "ReliableQuartzScheduler_MissingFactoryFailsContainerValidation"
+  },
+  {
+    "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API",
+    "variantKey": "queue-name-required",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.QuartzContainerIntegrationTests",
+    "testMethod": "ReliableScheduler_RejectsAnEmptyQueueName"
+  },
+  {
+    "requirementId": "REQ-VSB-SCHEDULING-TECHNICAL-IDENTITY",
+    "variantKey": "token-and-recurring-keys-do-not-overload-correlation",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.SchedulerCommandIntegrationTests",
+    "testMethod": "TechnicalSchedulingContracts_DoNotExposeSyntheticBusinessCorrelation"
+  },
+  {
+    "requirementId": "REQ-VSB-RELIABLE-SCHEDULER-API",
+    "variantKey": "explicit-reliable-factory-delivers-command-and-remains-caller-owned",
+    "testAssembly": "ViciOne.ServiceBus.Quartz.Tests",
+    "testType": "ViciOne.ServiceBus.Quartz.Tests.Integration.ReliableQuartzBorrowedFactoryContractTests",
+    "testMethod": "ExplicitReliableFactory_CreatesTheTriggerAndSurvivesBusAndProviderDisposalAsync"
+  }
 ]

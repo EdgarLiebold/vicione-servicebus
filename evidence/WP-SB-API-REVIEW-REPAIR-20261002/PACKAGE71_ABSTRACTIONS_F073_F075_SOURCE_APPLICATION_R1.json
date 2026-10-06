@@ -1,0 +1,78 @@
+{
+  "utc": "2026-10-04T14:40:39.802237+00:00",
+  "status": "CONFIRMED_ORIGINAL6_RED_REVIEWED_PRODUCT5_SOURCE_APPLIED_FIXED_NATIVE_PENDING",
+  "original_native_log": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package71-abstractions-original-native6-r1.log",
+    "sha256": "635f175fed48c139ca96a4e9f50cc6df461d98fcddc786c9d3dafefb2697d904",
+    "result": "6finite causal assertion failures,0skipped; nofixture/crash/timeout failures"
+  },
+  "original_frame_freeze": "189cfa7023f1d1beb2f7b939e8302c175e3ba8d6210888d0e1f3fde5f65dd4b2",
+  "source_changes": [
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendReceipt.cs",
+      "before": "1b44fc7b08c5ada9b3ff193ed2ae3ee8eab273fc489f9d0b16d7b111fa5184fc",
+      "after": "321949e1292f209d0a8f78373281d958e5ab850baa8834a3701eaf2364a0d897"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendAdmissionResult.cs",
+      "before": "1d476b76f0b4427f4b8e4597f12ed65717725dba412b609c769464a9d4979ba0",
+      "after": "101a6c140fb669cbc4fa8984394343b2edb620ae00006c928bfe0a8c29eb73bd"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendOperationResult.cs",
+      "before": "e798a95083d45b9ccd5fc499beff6f1a1e4ea48ac3d4af928b6a65b90ca0a70d",
+      "after": "23c740b9618fae1d7a558b26d0863078bff3169876ca0967c36166bbc4ef6da1"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Util/LambdaEqualityComparer.cs",
+      "before": "4f6e5d9f5ed3464e57c56867a2d22e841982f8e50456fa3f8fa44d66f6bd2837",
+      "after": "b52826fc24ba0d37c976179e24e04998f3dbf06c759a455c946bd65684d22c43"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/MessageTypeCache.cs",
+      "before": "a3d3119667567bcc2a8a8d102e71f34336ae9b01f0cd83d22eebe64cfb0b6521",
+      "after": "3c05cfef41c499f69663c951eb7a7c9af2ef6357bfff5aee4b83d148420f73ec"
+    }
+  ],
+  "independent_source_review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/root-abstractions-product-guards-adversarial-r1/REPORT.json",
+    "sha256": "5dc6370edd120751e931dc8054deaf678592f8381ffebb791506c8602e3def72"
+  },
+  "root_review": "whole5owners prior960dfc/ba8ed4/7d7c4a; exact5diffa31c35 and fulladversariala6cb7f; Actual6Original log4e5d7a",
+  "findings": [
+    {
+      "id": "F-SB-API-073",
+      "severity": "Medium",
+      "title": "Default durable result structs falsely advertise accepted or applied work with an empty operation identity",
+      "source": [
+        "src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendReceipt.cs",
+        "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendAdmissionResult.cs",
+        "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendOperationResult.cs"
+      ],
+      "historical_candidate": "ABS-C01",
+      "native_cases": 3
+    },
+    {
+      "id": "F-SB-API-074",
+      "severity": "Medium",
+      "title": "Lambda equality comparer violates null reflexivity and prevents null deduplication in real collections",
+      "source": [
+        "src/ViciOne.ServiceBus.Abstractions/Util/LambdaEqualityComparer.cs"
+      ],
+      "historical_candidate": "ABS-C02",
+      "native_cases": 1
+    },
+    {
+      "id": "F-SB-API-075",
+      "severity": "Low",
+      "title": "Message validation reason depends on whether validity was queried first",
+      "source": [
+        "src/ViciOne.ServiceBus.Abstractions/Advanced/MessageTypeCache.cs"
+      ],
+      "historical_candidate": "ABS-C05",
+      "native_cases": 2
+    }
+  ],
+  "requirements_changed": false,
+  "limits": "Original null-reflexivity fails before HashSet checks; null deduplication control will execute only after fix. No provider-persistence acceptance claim."
+}

@@ -20,7 +20,14 @@ public static class ConsumerExtensions
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(consumerFactory);
 
-        LogContext.Debug?.Log("Subscribing Consumer: {ConsumerType} (using supplied consumer factory)", TypeCache<TConsumer>.ShortName);
+        try
+        {
+            LogContext.Debug?.Log("Subscribing Consumer: {ConsumerType} (using supplied consumer factory)", TypeCache<TConsumer>.ShortName);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics do not prevent consumer registration.
+        }
 
         var consumerConfigurator = new ConsumerConfigurator<TConsumer>(consumerFactory, configurator);
 
@@ -43,7 +50,14 @@ public static class ConsumerExtensions
         ArgumentNullException.ThrowIfNull(consumerFactory);
         ArgumentNullException.ThrowIfNull(pipeSpecifications);
 
-        LogContext.Debug?.Log("Connecting Consumer: {ConsumerType} (using supplied consumer factory)", TypeCache<TConsumer>.ShortName);
+        try
+        {
+            LogContext.Debug?.Log("Connecting Consumer: {ConsumerType} (using supplied consumer factory)", TypeCache<TConsumer>.ShortName);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics do not prevent consumer registration.
+        }
 
         IConsumerSpecification<TConsumer> specification = ConsumerConnectorCache<TConsumer>.Connector.CreateConsumerSpecification<TConsumer>();
         foreach (IPipeSpecification<ConsumerConsumeContext<TConsumer>> pipeSpecification in pipeSpecifications)
@@ -64,7 +78,14 @@ public static class ConsumerExtensions
     {
         ArgumentNullException.ThrowIfNull(configurator);
 
-        LogContext.Debug?.Log("Subscribing Consumer: {ConsumerType} (using default constructor)", TypeCache<TConsumer>.ShortName);
+        try
+        {
+            LogContext.Debug?.Log("Subscribing Consumer: {ConsumerType} (using default constructor)", TypeCache<TConsumer>.ShortName);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics do not prevent consumer registration.
+        }
 
         var consumerFactory = new DefaultConstructorConsumerFactory<TConsumer>();
 
@@ -87,7 +108,14 @@ public static class ConsumerExtensions
         ArgumentNullException.ThrowIfNull(connector);
         ArgumentNullException.ThrowIfNull(pipeSpecifications);
 
-        LogContext.Debug?.Log("Connecting Consumer: {ConsumerType} (using default constructor)", TypeCache<TConsumer>.ShortName);
+        try
+        {
+            LogContext.Debug?.Log("Connecting Consumer: {ConsumerType} (using default constructor)", TypeCache<TConsumer>.ShortName);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics do not prevent consumer registration.
+        }
 
         return ConnectConsumer(connector, new DefaultConstructorConsumerFactory<TConsumer>(), pipeSpecifications);
     }
@@ -104,7 +132,14 @@ public static class ConsumerExtensions
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(consumerFactoryMethod);
 
-        LogContext.Debug?.Log("Subscribing Consumer: {ConsumerType} (using delegate consumer factory)", TypeCache<TConsumer>.ShortName);
+        try
+        {
+            LogContext.Debug?.Log("Subscribing Consumer: {ConsumerType} (using delegate consumer factory)", TypeCache<TConsumer>.ShortName);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics do not prevent consumer registration.
+        }
 
         var delegateConsumerFactory = new DelegateConsumerFactory<TConsumer>(consumerFactoryMethod);
 
@@ -129,7 +164,14 @@ public static class ConsumerExtensions
         ArgumentNullException.ThrowIfNull(consumerFactoryMethod);
         ArgumentNullException.ThrowIfNull(pipeSpecifications);
 
-        LogContext.Debug?.Log("Connecting Consumer: {ConsumerType} (using delegate consumer factory)", TypeCache<TConsumer>.ShortName);
+        try
+        {
+            LogContext.Debug?.Log("Connecting Consumer: {ConsumerType} (using delegate consumer factory)", TypeCache<TConsumer>.ShortName);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics do not prevent consumer registration.
+        }
 
         var consumerFactory = new DelegateConsumerFactory<TConsumer>(consumerFactoryMethod);
 
@@ -147,8 +189,15 @@ public static class ConsumerExtensions
         ArgumentNullException.ThrowIfNull(consumerFactory);
         EnsureClosedReferenceType(consumerType);
 
-        LogContext.Debug?.Log("Subscribing Consumer: {ConsumerType} (by type, using object consumer factory)",
-            TypeCache.GetShortName(consumerType));
+        try
+        {
+            LogContext.Debug?.Log("Subscribing Consumer: {ConsumerType} (by type, using object consumer factory)",
+                TypeCache.GetShortName(consumerType));
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics do not prevent consumer registration.
+        }
 
         var configuratorType = typeof(UntypedConsumerConfigurator<>).MakeGenericType(consumerType);
         var consumerConfigurator = (IReceiveEndpointSpecification)(Activator.CreateInstance(configuratorType, consumerFactory, configurator)
@@ -169,7 +218,14 @@ public static class ConsumerExtensions
         ArgumentNullException.ThrowIfNull(objectFactory);
         EnsureClosedReferenceType(consumerType);
 
-        LogContext.Debug?.Log("Connecting Consumer: {ConsumerType} (by type, using object consumer factory)", TypeCache.GetShortName(consumerType));
+        try
+        {
+            LogContext.Debug?.Log("Connecting Consumer: {ConsumerType} (by type, using object consumer factory)", TypeCache.GetShortName(consumerType));
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics do not prevent consumer registration.
+        }
 
         return ConsumerConnectorCache.Connect(connector, consumerType, objectFactory);
     }

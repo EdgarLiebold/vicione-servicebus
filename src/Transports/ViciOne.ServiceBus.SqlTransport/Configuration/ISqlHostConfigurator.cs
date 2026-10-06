@@ -33,10 +33,10 @@ public interface ISqlHostConfigurator
     /// <summary>The password for the username.</summary>
     string? Password { set; }
 
-    /// <summary>Gets or sets the virtual host.</summary>
+    /// <summary>Sets the logical transport namespace.</summary>
     string? VirtualHost { set; }
 
-    /// <summary>Gets or sets the area.</summary>
+    /// <summary>Sets the logical queue area.</summary>
     string? Area { set; }
 
     /// <summary>Sets the isolation level used for database transactions (default: Repeatable Read).</summary>

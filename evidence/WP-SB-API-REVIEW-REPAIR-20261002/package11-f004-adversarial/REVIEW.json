@@ -1,0 +1,409 @@
+{
+  "status": "SCOPED_ACCEPT_F004_NO_ADDITIONAL_BLOCKER",
+  "scope": "PACKAGE11 F004 telemetry DI provider ownership; internal independent readonly review",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE11_F004_FREEZE.json",
+    "sha256": "b0096b5364b2a84f949bc51fce12bb4881502e2fa73911d6c347f881bc739d23"
+  },
+  "blockers": [],
+  "product_role_release": false,
+  "symbol_closed_count": 0,
+  "whole_Core766_owner_FULL": false,
+  "whole_API_grade": null,
+  "targeted_evidence": {
+    "personally_FULL_owned_inputs": 40,
+    "independently_reconstructed_sourceframes": 126,
+    "actual_receipts_full_read": 40,
+    "selected_package_cache_lock_runtime_chains": 6,
+    "product_PE_PDBs": 24,
+    "matched_product_source_documents": 23832,
+    "generated_product_documents_not_claimed": 600,
+    "consumer_PE_PDBs": 3,
+    "personal_FULL_consumer_source_documents": 15,
+    "compiled_causal_F004_mutants": 6,
+    "separate_graph_reversion": 1,
+    "same_binary_pair_controls": 7,
+    "restored_original_M_files": 6209
+  },
+  "actual_case_classification": {
+    "F004_valid_compiled_mutants": 6,
+    "separate_graph_reversion": 1,
+    "paired_controls": 7,
+    "baseline": {
+      "count": 16,
+      "causal_F004_scope_null": 11,
+      "positive_cases": [
+        "nondi-all",
+        "nondi-outgoing",
+        "nondi-consume",
+        "default-off"
+      ],
+      "excluded_graph_construction": "two-roots-same-service-collection"
+    },
+    "first_F004_corrected": {
+      "count": 16,
+      "passed": 15,
+      "excluded_graph_construction": 1
+    },
+    "combined_final_corrected": {
+      "count": 16,
+      "passed": 16
+    },
+    "mutation_corrected_and_rollback": {
+      "each_count": 16,
+      "each_passed": 16
+    },
+    "mutants": [
+      {
+        "variant": "process-meter-selected",
+        "scope": "F004",
+        "rejection": {
+          "phase": "package11-f004-mut-process-meter-selected-custom-factory-scope",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "custom-factory-scope",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T03:32:38.577323+00:00",
+          "completed_utc": "2026-10-03T03:32:39.330432+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-process-meter-selected-custom-factory-scope.log",
+          "log_sha256": "6d4682b93b836195e4d4e95143fe12222818db4ab489b1fac75fe83073158c88"
+        },
+        "positive": {
+          "phase": "package11-f004-mut-process-meter-selected-nondi-outgoing",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "nondi-outgoing",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T03:32:39.430249+00:00",
+          "completed_utc": "2026-10-03T03:32:40.207614+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-process-meter-selected-nondi-outgoing.log",
+          "log_sha256": "9886279d0c15488d8ba2ed8f57507dc30b5fea30a20320d1ee72488e7c6958a8"
+        },
+        "expected_exception": "SameException",
+        "expected_stack_location": "JournalEvidence.cs:line 63",
+        "exact_native_assertion_not_guard": true,
+        "both_loaded_dlls_match_same_compiled_variant": true
+      },
+      {
+        "variant": "factory-failure-global-fallback",
+        "scope": "F004",
+        "rejection": {
+          "phase": "package11-f004-mut-factory-failure-global-fallback-factory-failure-after-success",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "factory-failure-after-success",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T03:32:55.892294+00:00",
+          "completed_utc": "2026-10-03T03:32:56.790272+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-factory-failure-global-fallback-factory-failure-after-success.log",
+          "log_sha256": "41e58b910db83b409e779e42b6cfed575e2dd5099cca22c3c64c11d315c45397"
+        },
+        "positive": {
+          "phase": "package11-f004-mut-factory-failure-global-fallback-custom-factory-scope",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "custom-factory-scope",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T03:32:56.908562+00:00",
+          "completed_utc": "2026-10-03T03:32:57.717110+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-factory-failure-global-fallback-custom-factory-scope.log",
+          "log_sha256": "291079c46efdc729cbbd4702d306f7b394bb9562007eb26a5263227fd4803869"
+        },
+        "expected_exception": "EmptyException",
+        "expected_stack_location": "JournalCases.cs:line 81",
+        "exact_native_assertion_not_guard": true,
+        "both_loaded_dlls_match_same_compiled_variant": true
+      },
+      {
+        "variant": "borrowed-factory-meter-disposed",
+        "scope": "F004",
+        "rejection": {
+          "phase": "package11-f004-mut-borrowed-factory-meter-disposed-borrowed-factory-not-disposed",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "borrowed-factory-not-disposed",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T03:33:07.398531+00:00",
+          "completed_utc": "2026-10-03T03:33:08.149434+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-borrowed-factory-meter-disposed-borrowed-factory-not-disposed.log",
+          "log_sha256": "8023bb286c337794c3fcfbda926bb775a6b874ef696b15374ba4a56231caa79d"
+        },
+        "positive": {
+          "phase": "package11-f004-mut-borrowed-factory-meter-disposed-custom-factory-scope",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "custom-factory-scope",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T03:33:08.245849+00:00",
+          "completed_utc": "2026-10-03T03:33:09.002955+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-borrowed-factory-meter-disposed-custom-factory-scope.log",
+          "log_sha256": "05c6924c31eef528f7ce6b78e18901ff514752655cc04eef54310d3f76f7b7d8"
+        },
+        "expected_exception": "EqualException",
+        "expected_stack_location": "JournalCases.cs:line 143",
+        "exact_native_assertion_not_guard": true,
+        "both_loaded_dlls_match_same_compiled_variant": true
+      },
+      {
+        "variant": "owned-source-disposal-omitted",
+        "scope": "F004",
+        "rejection": {
+          "phase": "package11-f004-mut-owned-source-disposal-omitted-activity-source-disposal",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "activity-source-disposal",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T03:33:18.654696+00:00",
+          "completed_utc": "2026-10-03T03:33:19.494258+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-owned-source-disposal-omitted-activity-source-disposal.log",
+          "log_sha256": "5b6db196537d2717dccfe896a34363088ed307602670159a35cff28ccade34c1"
+        },
+        "positive": {
+          "phase": "package11-f004-mut-owned-source-disposal-omitted-custom-factory-scope",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "custom-factory-scope",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T03:33:19.596455+00:00",
+          "completed_utc": "2026-10-03T03:33:20.427893+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-owned-source-disposal-omitted-custom-factory-scope.log",
+          "log_sha256": "57e0ae673c9411215247cb4447f5cd2d2ac2261408bfd20edbcb27996b2c2b29"
+        },
+        "expected_exception": "NullException",
+        "expected_stack_location": "JournalCases.cs:line 131",
+        "exact_native_assertion_not_guard": true,
+        "both_loaded_dlls_match_same_compiled_variant": true
+      },
+      {
+        "variant": "registration-caches-first-telemetry",
+        "scope": "F004",
+        "rejection": {
+          "phase": "package11-f004-mut-registration-caches-first-telemetry-two-roots-same-service-collection",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "two-roots-same-service-collection",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T03:33:28.089482+00:00",
+          "completed_utc": "2026-10-03T03:33:28.950120+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-registration-caches-first-telemetry-two-roots-same-service-collection.log",
+          "log_sha256": "a8b249212947ac89448909ceb7076c3a2cc2932042dee1ada1a74adf7be9ffef"
+        },
+        "positive": {
+          "phase": "package11-f004-mut-registration-caches-first-telemetry-two-independent-providers",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "two-independent-providers",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T03:33:29.081841+00:00",
+          "completed_utc": "2026-10-03T03:33:29.852190+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-registration-caches-first-telemetry-two-independent-providers.log",
+          "log_sha256": "19d5dd7c89b27f95ca17f2dd31d839585913133ad47acdc0fee9d903dedbaff2"
+        },
+        "expected_exception": "SameException",
+        "expected_stack_location": "JournalEvidence.cs:line 63",
+        "exact_native_assertion_not_guard": true,
+        "both_loaded_dlls_match_same_compiled_variant": true
+      },
+      {
+        "variant": "di-writer-forgets-owner",
+        "scope": "F004",
+        "rejection": {
+          "phase": "package11-f004-mut-di-writer-forgets-owner-custom-factory-scope",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "custom-factory-scope",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T03:33:36.030962+00:00",
+          "completed_utc": "2026-10-03T03:33:37.073310+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-di-writer-forgets-owner-custom-factory-scope.log",
+          "log_sha256": "57dd3f2b55640e10f2267a3640d987a004343ff7ff8e11b25b92a8e958e89c51"
+        },
+        "positive": {
+          "phase": "package11-f004-mut-di-writer-forgets-owner-nondi-consume",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "nondi-consume",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T03:33:37.179791+00:00",
+          "completed_utc": "2026-10-03T03:33:37.926588+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-di-writer-forgets-owner-nondi-consume.log",
+          "log_sha256": "994fa699bc82fcc350011bed67730e8b0cf7b2038dcbd992ea5b13435ba0ed3f"
+        },
+        "expected_exception": "SameException",
+        "expected_stack_location": "JournalEvidence.cs:line 63",
+        "exact_native_assertion_not_guard": true,
+        "both_loaded_dlls_match_same_compiled_variant": true
+      },
+      {
+        "variant": "shared-transport-graph-restored",
+        "scope": "SEPARATE_GRAPH_EXCLUDED_FROM_F004",
+        "rejection": {
+          "phase": "package11-f004-mut-shared-transport-graph-restored-two-roots-same-service-collection",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "two-roots-same-service-collection",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T03:33:43.953160+00:00",
+          "completed_utc": "2026-10-03T03:33:44.511087+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-shared-transport-graph-restored-two-roots-same-service-collection.log",
+          "log_sha256": "c35fa16fd7d2c34367553b01a577208301d8281fa00ad5f4e90d4bbbe3727e27"
+        },
+        "positive": {
+          "phase": "package11-f004-mut-shared-transport-graph-restored-two-independent-providers",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/JournalOwnership.PublicConsumer.dll",
+            "two-independent-providers",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package11-f004/corrected-r2",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T03:33:44.632240+00:00",
+          "completed_utc": "2026-10-03T03:33:45.320512+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-mut-shared-transport-graph-restored-two-independent-providers.log",
+          "log_sha256": "1be9e0c2590660dd13b00e581ad6aa9e32674901038bf98e27fd5f2b92b75282"
+        },
+        "expected_exception": "ConfigurationException",
+        "expected_stack_location": "BaseHostConfiguration.cs:line 149",
+        "exact_native_assertion_not_guard": true,
+        "both_loaded_dlls_match_same_compiled_variant": true
+      }
+    ]
+  },
+  "source_contract_acceptance": [
+    "Actual provider IMeterFactory used by DI journal instruments; returned meter lifetime remains factory-owned",
+    "DI singleton factory owns IDisposable telemetry; immutable registration contains no provider-instance cache",
+    "DI activation failure remains inactive rather than using process or another provider instrumentation",
+    "Public three connector APIs retained; existing 3-argument writer construction retains process fallback",
+    "Own ActivitySource disposed on provider close; borrowed factory/meter preserved; owner close skips further metric emission",
+    "Name/version/units/schema/tags remain evidenced from actual measurements; observed callback failure does not change journal and publish success"
+  ],
+  "limits": "Ausschließlich bounded NuGet-PublicConsumer mit .NET10.0.10/X64 und InMemory. Die Mutationläufe substituieren SDK-kompilierte DLLs in identischem Consumer; kein frischer NuGet-Restore pro Mutant. Lockinhalte/Cacheidentitäten sind gebunden; kein tatsächlich verwendetes --locked-mode behauptet. Zwei Root-Provider/CustomFactory sind belegt, keine vollständige NamedBus-/ConcurrentDispose-/Transport-/ARM-/Cloud-Matrix. Der Factoryfailure-Test beweist Inaktivität und Geschäftserfolg; die Cleanupzeile einer nur teilweise initialisierten ActivitySource ist quellgeprüft, ihr Dispose nicht separat öffentlich nativ beobachtet. Policycancel setzt den Callertoken synchron; keine pendingGate-/Timer-Cancel-Behauptung. Timeoutguards sind ausschließlich FAIL und verbinden einen nichtkooperativen Task nicht automatisch. Auf dem belegten Lauf trat kein Guard ein. Ein expliziter lebender Caller-Logger isoliert den weiterhin getrennten F019-Vertrag; hier keine F019-Closure. Der separate Graphfix braucht seine eigenen Delay-, Bus-Lifetime- und Registration-URI-Kontrollen; dieser F004-Review nimmt ihn nicht pauschal ab.",
+  "operations": {
+    "native": 0,
+    "product_write": 0,
+    "test_write": 0,
+    "canonical_ledger_write": 0,
+    "dossier_write_only": true
+  },
+  "independent_artifacts": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/CONSUMER_PDB_BINDING.json",
+      "sha256": "0b62967dbe9554f0959aefab82c653ac3f74e94b265bbf3c13d91555c058936c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/COUNTERPROOF_BINDING.json",
+      "sha256": "6a44f32acc07de1efa5ba0a1408c0655d36b058cb92e46b9f1e277a08c8e1c48"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/FREEZE_HASH_CHECK.json",
+      "sha256": "b0096b5364b2a84f949bc51fce12bb4881502e2fa73911d6c347f881bc739d23"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/GUIDANCE_BINDING.json",
+      "sha256": "acedd1066599ad10f933a74c793ceb0e864f9a67cd8e4d0f8b307b9036cb9f21"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/PACKAGE_BINDING.json",
+      "sha256": "d3dac42d2c9c1789c4aee2363062f5a4e69a9908a5d6e035dcd7670ea2737424"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/PDB_DOCUMENTS.json",
+      "sha256": "f88bcdf6d8f4dc18abd27d8e7b282b7a3bbfe1e0bf15299fcad2dbfd7aa55a31"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/PDB_SOURCE_BINDING.json",
+      "sha256": "533197b25e2a70ef7e2fdef940eefce270830b0edfa1830b2fdd051534d2768b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/READ_CLOSURE.json",
+      "sha256": "3eb9f96d9d615f2d7dbf56adb2c9cdca4baf06d6e9055002b3ca1bf8e017d217"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/RECEIPT_BINDING.json",
+      "sha256": "d598c992e1899994c5f1c42df28a7d7f3a13227a41ca5e1f3b65609fde7118cb"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/RESTORE_CHECK.json",
+      "sha256": "a4711d30c3601dc8f9d8d0d62dc8bec237c4f70f0fb02edb8e70cc63d6122ce2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/SELECTED_SUPPORT_SOURCES.json",
+      "sha256": "ed00339ec062f20ac039f37a5146da42891dbe2f77f8d8d7f97f41257c9c89b2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/SOURCE_EFFECT_CHECK.json",
+      "sha256": "9bc4c088a9beaea83b226aedf7b28318a5e3f107965f9c077651966514ea8c58"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package11-f004-adversarial/XML_MEMBER_DIFF.json",
+      "sha256": "9abe34789bd8554902df3987d88d3ce9ac515cfe59e16c7c3e5e8cfe8c2a0401"
+    }
+  ]
+}

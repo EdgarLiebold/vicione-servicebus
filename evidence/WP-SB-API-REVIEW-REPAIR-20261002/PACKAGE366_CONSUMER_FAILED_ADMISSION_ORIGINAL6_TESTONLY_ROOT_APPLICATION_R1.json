@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-06T07:00:06.397201+00:00",
+  "status": "ROOT_APPLIED_REVIEWED_CONSUMER_ORIGINAL6_TESTONLY_NATIVE_PENDING",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package361-consumer-failed-admission-original6-testonly-proposed-r1/MANIFEST.json",
+    "sha256": "c5fee68d393dff8d9ab295bf230486620b2b61eadff720b1568f98e8062234e3"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package361-consumer-original6-independent-test-source-peer-r1/MANIFEST.json",
+    "sha256": "c21808f14200a40359296d900d5e25018ecd78672554dc3e300a32ed0ede8f4b"
+  },
+  "Root_whole_Test222_receipt": "2a986a",
+  "Root_whole_Reports_and_TestPatch_ReqADD1_receipt": "6413c8",
+  "Root_whole_public_ConsumerExtensions238_Connector80": "67b46c",
+  "retained_root_whole_handlers_metadata_connectors_helpers": [
+    "62f647",
+    "f8a82e",
+    "2281fc"
+  ],
+  "current_source_hash_guard_count": 23,
+  "test_sha256": "aba850dda884d7df652f5e4b09caee663ed90978a5d5d96dd58dd80d221d9ded",
+  "requirements_before_sha256": "1962891a2937f0dd14ce9256c9f6d4d051c42e3f4b483bd8b843648e295a6fc3",
+  "requirements_after_sha256": "796ec0273897fca12920ab17eeea4ad750724d60033373bf9598ed866159cce5",
+  "Req_ADD1": 1,
+  "actual_Req_rows": 4669,
+  "Product_source_mutations": 0,
+  "native_count": 0,
+  "grade": null,
+  "new_finding_registered": false,
+  "whole_API_closed": false,
+  "master_sha256_unchanged": "3ee50d01ce24a95d741188c9fccae42811fe5f574ce55f5164673b5766ecbfe4"
+}

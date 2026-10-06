@@ -42,7 +42,9 @@ public class RespondActivity<TSaga, TMessage, T> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        await _messageFactory.UseAsync(context, (ctx, s) => ctx.RespondAsync(s.Message, s.Pipe)).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(context);
+
+        await _messageFactory.UseAsync(context, (ctx, s) => ctx.RespondAsync(s.Message, s.Pipe), context.CancellationToken).ConfigureAwait(false);
 
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }

@@ -1,0 +1,110 @@
+{
+  "utc": "2026-10-03T03:04:37.562083+00:00",
+  "root_personally_FULL_before_author": [
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/IMessageJournalStore.cs",
+      "bytes": 1137,
+      "sha256": "7ab76173607e94a3baedc57eac3742df5638ca6b3b154a641f8985f7ecf116c8"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/IMessageJournalPolicy.cs",
+      "bytes": 831,
+      "sha256": "3c914063f808dede6291e54bb47d8780a63765e73e5cb80c17019d418053c07e"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalProjection.cs",
+      "bytes": 2989,
+      "sha256": "f19fb8e8d3e03b0a7a79a747bae6321f725e04f29097ced82f26d6282ec1f4d5"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalEntry.cs",
+      "bytes": 4232,
+      "sha256": "40cd1f307ba29a49b4f2cc722cd94fb8507521bbc8f9877cc37b213be78c7953"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalCapture.cs",
+      "bytes": 2594,
+      "sha256": "796227d7eb41bcc0d7a169b330b7fd83f5c2f4fa7b7bacce21b0abf88ae1def9"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalOptions.cs",
+      "bytes": 1943,
+      "sha256": "3d61886579bf4f1f9f870178d245e67dbe4ceaf73c69be3cd8fd58c98e579f5a"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalStoreLimits.cs",
+      "bytes": 1975,
+      "sha256": "16ad8b5c2a5a39ab428ab72202783a70c78263d293dead69df8c82c8293b1047"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalOutcome.cs",
+      "bytes": 348,
+      "sha256": "e8662df413357ec3c537dbd65840e6940531519584567609356da1898c0300bc"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalOperation.cs",
+      "bytes": 437,
+      "sha256": "3be217af5a48766f5d47aba9bbc55a89839154a4ccb556dada66997e9b6f2e80"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalDataClassification.cs",
+      "bytes": 611,
+      "sha256": "79232f64d8538c9057994937659ad94dd8c8aaeb73cc596435683f26cbdecce4"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalPublishObserver.cs",
+      "bytes": 1376,
+      "sha256": "0cef34e39107678c56ceabe2d0e9ee74671078d89de8e2a9f9e2586378c191a0"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/Observers/MessageJournalConsumeObserver.cs",
+      "bytes": 1284,
+      "sha256": "d947ec724146941e4b4f0361ef92ccb6e228d901a430b6cba45a01374a8c78c7"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "bytes": 5015,
+      "sha256": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Advanced/Bus.cs",
+      "bytes": 347,
+      "sha256": "764579cf15bacc44071a8bb7a75b091e7522edc45ec1aab025ce105215ad62d3"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "bytes": 7359,
+      "sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d"
+    }
+  ],
+  "owner": "New bounded public NuGet-only console consumer; no canonical Core tests edit/owner grade",
+  "cases": [
+    "two-independent-providers",
+    "two-roots-same-service-collection",
+    "custom-factory-scope",
+    "factory-failure-after-success",
+    "hostile-measurement-listener",
+    "provider-dispose-other-root",
+    "borrowed-factory-not-disposed",
+    "nondi-all",
+    "nondi-outgoing",
+    "nondi-consume",
+    "policy-filtered",
+    "policy-fault",
+    "policy-cancel",
+    "store-fault",
+    "default-off",
+    "activity-source-disposal"
+  ],
+  "provenance": "Previous selected fresh F022 package9b8c (original F004), corrected fresh package11-f004; identical source/locks except selected ViciOne package contents",
+  "logging_boundary": "Explicit live caller-owned LogContext during each test isolates separately confirmed pending F019; not a workaround claim or F019 closure",
+  "oracle": [
+    "Actual public Publish/Send and real InMemory consume where needed",
+    "Finite transactional public store SPI supplied by consumer application; actual journal observer and policy",
+    "Actual Meter.Scope/name/unit/description/counter/histogram/tags plus real activity-object completion",
+    "Public captured ActivitySource live before actual provider disposal and unable to start after; second live owner positive",
+    "No cancellation/timeout absence is a pass; completed operation/disposal supplies observation boundary"
+  ],
+  "research_plan": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/diagnostics-lifetime-package/CONSUMER_CASE_PLAN.json",
+  "native_status": "NOT_EXECUTED"
+}

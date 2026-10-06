@@ -1,0 +1,99 @@
+{
+  "utc": "2026-10-05T21:58:43.191945+00:00",
+  "status": "ROOT_APPLIED_INDEPENDENTLY_REVIEWED_XML_ONLY_DOC_THREE_MEMBERS_STRICT_PUBLICATION_PENDING",
+  "finding_family": "F-SB-API-147 purpose/completion precision extension",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-xml-only-proposed-r1/REPORT.json",
+    "sha256": "707302cefcc0327cb7aed242a6882cf40d7bd5bd61c938c4b1bd5ec5c91226d3",
+    "manifest_sha256": "4227863482f1859959487539845cb525dac4e50ed83efd77984aec74f8dd414d"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-independent-runtime-source-peer-r2/REPORT.json",
+    "sha256": "3e770149bd1c2daab64a67dc49fcdc685b7b29a93dcc817ddb97deecf2ea0959",
+    "manifest_sha256": "0cc7e8e59c35d740e25ba640785db9e20cb2d47510657b63dbdbb16874cfd30a"
+  },
+  "root_personal_authority": "Entire before445+516+39 and helper3/83; exact7XMLclauses forward/inverse and allnonXMLlines verified, peerReport wholee79e30 read, allManifestpayloads guarded.",
+  "files": [
+    {
+      "relative": "src/ViciOne.ServiceBus.JobService/JobService/JobServiceExtensions.cs",
+      "before_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-research-before-r1/before/src/ViciOne.ServiceBus.JobService/JobService/JobServiceExtensions.cs",
+      "before_sha256": "074565cf9896938cfae39a3a81bb72f0655fe403389971139f4bbd1dc49acc1f",
+      "after_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-xml-only-proposed-r1/proposed/src/ViciOne.ServiceBus.JobService/JobService/JobServiceExtensions.cs",
+      "after_sha256": "34a25f8e70f1ec1364081e619ade9c5d2a7c6e77c96a6cafd26c8a07af85d8d9",
+      "before_lines": 445,
+      "after_lines": 446,
+      "literal_replacements": [
+        {
+          "before_utf8": "    /// <summary>Removes a terminal job and its retained attempts from persistence.</summary>",
+          "after_utf8": "    /// <summary>Publishes a request to finalize the specified job.</summary>\n    /// <remarks>Completing this operation does not acknowledge removal from persistence.</remarks>"
+        },
+        {
+          "before_utf8": "    /// <returns>A task that completes when the command has been published.</returns>\n    public static Task FinalizeJobAsync(",
+          "after_utf8": "    /// <returns>The task returned by the publish endpoint.</returns>\n    public static Task FinalizeJobAsync("
+        }
+      ],
+      "literal_inverse_exact": true,
+      "all_non_XML_lines_exact": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.JobService/JobService/RecurringJobExtensions.cs",
+      "before_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-research-before-r1/before/src/ViciOne.ServiceBus.JobService/JobService/RecurringJobExtensions.cs",
+      "before_sha256": "e7aa4d52469223bbee155e558529dcc75d9699db95eaf0834fec28525faaa089",
+      "after_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-xml-only-proposed-r1/proposed/src/ViciOne.ServiceBus.JobService/JobService/RecurringJobExtensions.cs",
+      "after_sha256": "01fd7b150edda2ace329195e66bc7c4f2f02824b1bfea1475ecea719617c9aaa",
+      "before_lines": 516,
+      "after_lines": 517,
+      "literal_replacements": [
+        {
+          "before_utf8": "    /// <summary>Removes a terminal named recurring job and its retained attempts from persistence.</summary>",
+          "after_utf8": "    /// <summary>Publishes a request to finalize the specified named recurring job.</summary>\n    /// <remarks>Completing this operation does not acknowledge removal from persistence.</remarks>"
+        }
+      ],
+      "literal_inverse_exact": true,
+      "all_non_XML_lines_exact": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.JobService/JobService/JobDistributionContext.cs",
+      "before_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-research-before-r1/before/src/ViciOne.ServiceBus.JobService/JobService/JobDistributionContext.cs",
+      "before_sha256": "e355b3a2ad5265e92433a8e68bd624e79349d57f5376d93886bdb2d9c6e18d2d",
+      "after_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-jobservice-doc3-xml-only-proposed-r1/proposed/src/ViciOne.ServiceBus.JobService/JobService/JobDistributionContext.cs",
+      "after_sha256": "c0306aa87900dbeca37ad96797c896bfc948996c0bfc7ab823c553d885ef994e",
+      "before_lines": 39,
+      "after_lines": 40,
+      "literal_replacements": [
+        {
+          "before_utf8": "/// <summary>Provides an immutable view of the live capacity and metadata used to distribute one job type.</summary>",
+          "after_utf8": "/// <summary>Provides a snapshot of job-distribution capacity and metadata through read-only collections.</summary>\n/// <remarks>Metadata values are copied by reference and may remain mutable.</remarks>"
+        }
+      ],
+      "literal_inverse_exact": true,
+      "all_non_XML_lines_exact": true
+    }
+  ],
+  "before_actual_artifacts": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-job-doc3-root-before-r1/payload/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "932e7d5b397018753ee559d6ddfdd7d849bb76acfa19d775bfd081d6cd5f225c",
+      "bytes": 397824
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.xml",
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-job-doc3-root-before-r1/payload/ViciOne.ServiceBus.JobService.xml",
+      "sha256": "57b366590bd07e623433ab7587ee73d5a9ba29ca5a7fc5534313ca2d7a76190d",
+      "bytes": 284671
+    }
+  ],
+  "affected_members": [
+    "M:ViciOne.ServiceBus.JobService.JobServiceExtensions.FinalizeJobAsync(ViciOne.ServiceBus.IPublishEndpoint,System.Guid,System.Threading.CancellationToken)",
+    "M:ViciOne.ServiceBus.JobService.RecurringJobExtensions.FinalizeRecurringJobAsync``1(ViciOne.ServiceBus.IPublishEndpoint,System.String,System.Threading.CancellationToken)",
+    "T:ViciOne.ServiceBus.JobService.JobDistributionContext"
+  ],
+  "only_XML_comments_changed": true,
+  "executable_lines_and_public_declarations_unchanged": true,
+  "tests_and_requirements_changed": false,
+  "native_credit": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package249-job-doc3-root-before-r1"
+}

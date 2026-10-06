@@ -124,8 +124,15 @@ public class AmazonSqsClientContext :
                     var updated = await _snsClient.SetSubscriptionAttributesAsync(request, cancellationToken).ConfigureAwait(false);
                     updated.EnsureSuccessfulResponse();
 
-                    LogContext.Debug?.Log("Updated subscription attribute: {SubscriptionArn} {Name}={Value}", subscriptionArn, name,
-                        value);
+                    try
+                    {
+                        LogContext.Debug?.Log("Updated subscription attribute: {SubscriptionArn} {Name}={Value}", subscriptionArn, name,
+                            value);
+                    }
+                    catch (Exception)
+                    {
+                        // Optional diagnostics must not prevent the owned operation.
+                    }
                 }
             }
 
@@ -148,7 +155,14 @@ public class AmazonSqsClientContext :
     {
         var topicInfo = await ConnectionContext.GetTopicAsync(topic, cancellationToken).ConfigureAwait(false);
 
-        TransportLogMessages.DeleteTopic(topicInfo.Arn);
+        try
+        {
+            TransportLogMessages.DeleteTopic(topicInfo.Arn);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics must not prevent the owned operation.
+        }
 
         var response = await _snsClient.DeleteTopicAsync(topicInfo.Arn, cancellationToken).ConfigureAwait(false);
 
@@ -165,11 +179,25 @@ public class AmazonSqsClientContext :
     {
         var queueInfo = await ConnectionContext.GetQueueAsync(queue, cancellationToken).ConfigureAwait(false);
 
-        TransportLogMessages.DeleteQueue(queueInfo.Url);
+        try
+        {
+            TransportLogMessages.DeleteQueue(queueInfo.Url);
+        }
+        catch (Exception)
+        {
+            // Optional diagnostics must not prevent the owned operation.
+        }
 
         foreach (var subscriptionArn in queueInfo.SubscriptionArns)
         {
-            TransportLogMessages.DeleteSubscription(queueInfo.Url, subscriptionArn);
+            try
+            {
+                TransportLogMessages.DeleteSubscription(queueInfo.Url, subscriptionArn);
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics must not prevent the owned operation.
+            }
 
             await DeleteQueueSubscriptionAsync(subscriptionArn, cancellationToken).ConfigureAwait(false);
         }

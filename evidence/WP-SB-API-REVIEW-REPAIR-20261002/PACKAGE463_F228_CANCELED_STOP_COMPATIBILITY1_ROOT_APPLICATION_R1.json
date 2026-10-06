@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-06T13:55:48.807542+00:00",
+  "status": "ROOT_APPLIED_F228_CANCEL_COMPATIBILITY1_DIFFERENT_PEER_FRESH_NATIVE_PENDING",
+  "code_before": "f12ca69d0fe514e3e0d8f232d69f88bb6fd500edb50d101efb3e1594685855f9",
+  "code_after": "13f97dfa843394f3d9991a31ec259d0c3ea20f47ce184fb0f3c1f8fb9849805b",
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package459-host-canceled-stop-compatibility1-root-product-proposed-r2/REPORT.json",
+    "sha256": "cdc87024958806816b31570f40ac87952251af8e855e780b126dc5e0b9a255a2"
+  },
+  "different_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package459-host-cancel1-independent-scanner-product-source-peer-r2/REPORT.json",
+    "sha256": "2df4ffdda5d0a3de47f9c5cdecf9839f41cdb263e45903e19308513ad9788454"
+  },
+  "full_before_backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package463-host-cancel-compatibility1-root-application-before-r1",
+  "before_manifest": "43ab1ed08c7be0a68fba57ac2d99454240aa592b90ba12487e7b94a8fd975ce6",
+  "actual_failed_module": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package458-core-module456-original-current454-frozen-r1/REPORT.json",
+    "sha256": "1c0e5de2574edd57afecd709b3aa0885fbfd3128bf5af4580f452e7e4ffd6f6d",
+    "independent": "edaf14e2a747b1c4ba35c1de23e8aa86e04a30d742106e9590f992532b6b38a7"
+  },
+  "root_personal_peer_read": "36a913 wholefinal; ownSource before372 f75771/3937cb and exactR2deltae15217",
+  "limits": [
+    "Existing F228 repair compatibility regression, no newfinding or test weakening. Requested all-cancellation nonempty recursive trees keep cancellation marker, exact original tree inside; empty/mixed/unrequested remain faults.",
+    "Fresh actualLifecycle/Host/Reset and fullCore/module/publication required. No native/referenceidentity/universal callback promotion."
+  ]
+}

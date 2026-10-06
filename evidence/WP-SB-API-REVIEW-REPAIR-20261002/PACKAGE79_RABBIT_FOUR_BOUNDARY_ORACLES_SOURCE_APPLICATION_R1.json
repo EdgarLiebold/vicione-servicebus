@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-04T15:33:06.232781+00:00",
+  "decision": "ROOT_INDEPENDENT_ADVERSARIAL_TEST_NO_BLOCK_FOUR_NEW_ORACLES_APPLIED_ORIGINAL_NATIVE_REQUIRED",
+  "test": {
+    "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqPublicBoundaryContractTests.cs",
+    "sha256": "a456451d88a2ff5ed8870f9cbbde302dc496a43637c538069e5588a9d63f31d3"
+  },
+  "requirements": {
+    "before": "a6b1534ed92c37c636cf66f38f759e324a725e939fe88d8be3a77256f92f82bd",
+    "after": "752934988b7991f2953a18d8263611fc07b2d0042c20dd990c824720586eff52",
+    "rows_before": 278,
+    "rows_after": 282,
+    "added": [
+      {
+        "requirementId": "REQ-VSB-RABBITMQ-QUEUE-REDELIVERY",
+        "variantKey": "published-delay-membership-is-immutable",
+        "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+        "testType": "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.RabbitMqPublicBoundaryContractTests",
+        "testMethod": "RedeliveryIntervals_CannotDivergeFromTheDeclaredRoutingKeys"
+      },
+      {
+        "requirementId": "REQ-VSB-RABBITMQ-CLUSTER-NODE",
+        "variantKey": "resolver-node-snapshot-survives-caller-array-mutation",
+        "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+        "testType": "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.RabbitMqPublicBoundaryContractTests",
+        "testMethod": "Resolver_UsesItsConfiguredNodeSnapshotAcrossLazyEnumerationAndRotation"
+      },
+      {
+        "requirementId": "REQ-VSB-RABBITMQ-ENTITY-NAME",
+        "variantKey": "terminal-linefeed-is-not-a-supported-entity-character",
+        "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+        "testType": "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.RabbitMqPublicBoundaryContractTests",
+        "testMethod": "EntityValidation_RejectsTheEntireInvalidNameIncludingAnEncodedTerminalLinefeed"
+      },
+      {
+        "requirementId": "REQ-VSB-RABBITMQ-SEND-SETTINGS",
+        "variantKey": "single-active-consumer-survives-send-address-roundtrip",
+        "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+        "testType": "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.RabbitMqPublicBoundaryContractTests",
+        "testMethod": "SingleActiveConsumer_SurvivesProjectedFullAndShortAddressesIntoTheActualQueueTopology"
+      }
+    ]
+  },
+  "root_reads": [
+    "868df3 whole127L test actual4cases, priorbbbe74",
+    "c8e23b whole actual redeliveryPlan, SequentialEndpointResolver, EntityNameValidator",
+    "292e29 whole actual RabbitMqSendSettings171L and authorReport/4Reqdelta"
+  ],
+  "limits": "No new finding confirmed until native. Original purge6 already F077-repaired, new4 owners unchanged. No live broker calls."
+}

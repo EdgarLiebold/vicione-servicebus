@@ -1,0 +1,94 @@
+{
+  "utc": "2026-10-05T12:46:32.424123+00:00",
+  "actor": "/root",
+  "scope": "352original current-source individually bounded AWS configuration/entity/SPI/type contracts from363;11exactheld",
+  "before": {
+    "raw": 9201,
+    "original": 8339
+  },
+  "after": {
+    "raw": 9553,
+    "original": 8691,
+    "sidecars": 833,
+    "original_remaining": 9878
+  },
+  "author_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package213-amazonsqs-configuration-entity363-current-contracts-r1/REPORT.json",
+    "sha256": "c313cbc4a05529d8237fea83fa8f413bac5bb1204c86a6e1c0d54c41bb986db9"
+  },
+  "independent_peer_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package213-amazonsqs363-independent-runtime-peer-r1/REPORT.json",
+    "sha256": "0114e7222009d210cc9831b4585f98253e684d40b9d11132486f7c4a477057ec"
+  },
+  "root_personal_norm_read": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package184-root-aws363-personal-norm-read-r1/READ_RECEIPT.json",
+    "sha256": "bd22005e17df2693866f0eb010e0c5feffef1c1fa7a5bf32884ac9688e6eedba"
+  },
+  "root_independent_checks": "b92a69 allauthor8MAN/current63owner/all363qualified148physicalPDB/XML358+5generatedNA/FreshAWSCRC; peerwholeReport12c7b5+all4MAN rechecked. This action exactOriginalCSV/disjoint/currentSHA/preservedMasterprefix/exact352plus11holds checked. Authorsgenuine63/2905each independently; noRootwhole63SourceorTestclaim.",
+  "held_ids": [
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.AmazonSqsHostSettings.CreateConnection",
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "obligation": "CONCRETE_DEPENDENCY_ACQUISITION_OR_ASYNC_TRANSPORT_LIFETIME_WORKFLOW_SEPARATELY_HELD_NO_NATIVE_PROOF_FROM_THIS_DOSSIER"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Configuration.AmazonSqsHostConfiguration.Build",
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "obligation": "CONCRETE_DEPENDENCY_ACQUISITION_OR_ASYNC_TRANSPORT_LIFETIME_WORKFLOW_SEPARATELY_HELD_NO_NATIVE_PROOF_FROM_THIS_DOSSIER"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Configuration.AmazonSqsReceiveEndpointBuilder.CreateReceiveEndpointContext",
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "obligation": "CONCRETE_DEPENDENCY_ACQUISITION_OR_ASYNC_TRANSPORT_LIFETIME_WORKFLOW_SEPARATELY_HELD_NO_NATIVE_PROOF_FROM_THIS_DOSSIER"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Configuration.AmazonSqsReceiveEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "obligation": "CONCRETE_DEPENDENCY_ACQUISITION_OR_ASYNC_TRANSPORT_LIFETIME_WORKFLOW_SEPARATELY_HELD_NO_NATIVE_PROOF_FROM_THIS_DOSSIER"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Configuration.AmazonSqsReceiveEndpointConfiguration.ConfigureConnection(System.Action{ViciOne.ServiceBus.Configuration.IPipeConfigurator{ViciOne.ServiceBus.AmazonSqs.ConnectionContext}})",
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "obligation": "UNCONFIRMED_CONFIGURED_CONNECTION_PIPE_NOT_WIRED_TO_ACTUAL_ENDPOINT_WORKFLOW; requires genuine public Original before finding/repair."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Configuration.AmazonSqsReceiveEndpointConfiguration.CreateReceiveEndpointContext",
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "obligation": "CONCRETE_DEPENDENCY_ACQUISITION_OR_ASYNC_TRANSPORT_LIFETIME_WORKFLOW_SEPARATELY_HELD_NO_NATIVE_PROOF_FROM_THIS_DOSSIER"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Configuration.AmazonSqsRegistrationBusFactory.CreateBus(ViciOne.ServiceBus.Configuration.IBusRegistrationContext,System.Collections.Generic.IEnumerable{ViciOne.ServiceBus.Configuration.IBusInstanceSpecification},System.String)",
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "obligation": "CONCRETE_DEPENDENCY_ACQUISITION_OR_ASYNC_TRANSPORT_LIFETIME_WORKFLOW_SEPARATELY_HELD_NO_NATIVE_PROOF_FROM_THIS_DOSSIER"
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.IAmazonSqsReceiveEndpointConfigurator.ConfigureConnection(System.Action{ViciOne.ServiceBus.Configuration.IPipeConfigurator{ViciOne.ServiceBus.AmazonSqs.ConnectionContext}})",
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "obligation": "UNCONFIRMED_CONFIGURED_CONNECTION_PIPE_NOT_WIRED_TO_ACTUAL_ENDPOINT_WORKFLOW; requires genuine public Original before finding/repair."
+    },
+    {
+      "id": "M:ViciOne.ServiceBus.AmazonSqs.Topology.QueueSendSettings.GetBrokerTopology",
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "obligation": "UNCONFIRMED_OMITTED_CONFIGURED_QUEUE_ATTRIBUTE_TAG_INPUTS_IN_BROKER_BUILDER; exact public contract/caller and known-family reconciliation required before any Original/finding."
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.AmazonSqs.Configuration.AmazonSqsHostConfiguration.ConnectionContextSupervisor",
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "obligation": "CONCRETE_DEPENDENCY_ACQUISITION_OR_ASYNC_TRANSPORT_LIFETIME_WORKFLOW_SEPARATELY_HELD_NO_NATIVE_PROOF_FROM_THIS_DOSSIER"
+    },
+    {
+      "id": "P:ViciOne.ServiceBus.AmazonSqs.Configuration.AmazonSqsReceiveEndpointConfiguration.ConcurrentDeliveryLimit",
+      "assembly": "ViciOne.ServiceBus.AmazonSqs",
+      "obligation": "DOCUMENTARY_TOTAL_VERSUS_ORDERED_GROUP_LIMIT_PRECISION_PENDING_ACTUAL_RECEIVER_CALLER_RECONCILIATION"
+    }
+  ],
+  "native_cases_added": 0,
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "limits": [
+    "All363 reviewed norms are bounded current-source/declared-contract recommendations, not operational or inherited-runtime closure.",
+    "Historical typed metadata is source-reconciled, not regenerated current compiler metadata.",
+    "Source/ZIP/PDB equality is not a current composed AWS/Core runtime certification.",
+    "No ConfigureConnection/queue attribute finding without independently qualified causal public Original."
+  ]
+}

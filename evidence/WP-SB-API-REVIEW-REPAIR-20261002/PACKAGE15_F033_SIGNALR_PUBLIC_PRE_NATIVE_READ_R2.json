@@ -1,0 +1,96 @@
+{
+  "Root_personal_FULL": "Initial 10 bodies + changes Cases/Probe/Publish/PublicConnection/Program/csproj/namespace imports personally FULL; exact clone hash reuse for other owner; successful previous lock personally FULL",
+  "files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/Cases.cs",
+      "sha256": "fd2616e1e26ad71708f1acc853f52582c65994d78a3f9aae8d975daabd1bbee4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/ClientAdapter.cs",
+      "sha256": "b2a945642a06293ff88d61e850138d366fd233d83dbeece6f13a14e532539cba"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/NuGet.Config",
+      "sha256": "53d3094403bdaa598e99578187073906734801aa1a76fabbbcdd389b50c220b6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/OwnedLifetime.cs",
+      "sha256": "577e8003c589582e8e7142418c735a8cefbe2943713e3bb968052bf53f76299a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/Probe.cs",
+      "sha256": "5b778f039bc5d9efc718e431c763f4ce4f1e3c534005e7fd616ee48230327ea1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/Program.cs",
+      "sha256": "be00212fc89a5dd1d66cc136e10fb65e07fbb836678ee6c06a9c42c07b815f9d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/PublicConnection.cs",
+      "sha256": "4dd31efb8c97f8af28c51f360dafecbcde3f61ebe0e5cb941d54ae1ce6bdf450"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/PublishProbe.cs",
+      "sha256": "ddc062f4a0946afa433b68493ee5846ad6cdf70f1ea96a7ca573aac263a607f6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/SignalRLifetime.PublicConsumer.csproj",
+      "sha256": "60b6b6930df14c605728aff74d61ef5a54e54f9b1d211da4ddd7f8681c0212ae"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/TrackingContext.cs",
+      "sha256": "60457bfd726c25dcc6dd7921cd7c1bbd44e36eb6df42c932ba5bd64b66c8f803"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous/packages.lock.json",
+      "sha256": "a25cf26c11f0173366af6f8761eb8067defe3e13defa350c6c4adb7985940526"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/Cases.cs",
+      "sha256": "fd2616e1e26ad71708f1acc853f52582c65994d78a3f9aae8d975daabd1bbee4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/ClientAdapter.cs",
+      "sha256": "b2a945642a06293ff88d61e850138d366fd233d83dbeece6f13a14e532539cba"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/NuGet.Config",
+      "sha256": "69a890e28115ea2fd6355a1ad074bc101317daba1f8753a0c78d2c276a595268"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/OwnedLifetime.cs",
+      "sha256": "577e8003c589582e8e7142418c735a8cefbe2943713e3bb968052bf53f76299a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/Probe.cs",
+      "sha256": "5b778f039bc5d9efc718e431c763f4ce4f1e3c534005e7fd616ee48230327ea1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/Program.cs",
+      "sha256": "be00212fc89a5dd1d66cc136e10fb65e07fbb836678ee6c06a9c42c07b815f9d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/PublicConnection.cs",
+      "sha256": "4dd31efb8c97f8af28c51f360dafecbcde3f61ebe0e5cb941d54ae1ce6bdf450"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/PublishProbe.cs",
+      "sha256": "ddc062f4a0946afa433b68493ee5846ad6cdf70f1ea96a7ca573aac263a607f6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/SignalRLifetime.PublicConsumer.csproj",
+      "sha256": "60b6b6930df14c605728aff74d61ef5a54e54f9b1d211da4ddd7f8681c0212ae"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/TrackingContext.cs",
+      "sha256": "60457bfd726c25dcc6dd7921cd7c1bbd44e36eb6df42c932ba5bd64b66c8f803"
+    }
+  ],
+  "runtime_correction": "Preauthor 10.0.12 is historical goal; actual Microsoft framework assembly evidence recorded at run",
+  "setup_failures_excluded": [
+    "NU1510",
+    "NU1101",
+    "compiler namespace/nullability/Task-return diagnostics"
+  ],
+  "corrected_lock": "pending restore/personal full read"
+}

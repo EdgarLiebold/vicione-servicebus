@@ -103,9 +103,9 @@ public readonly struct NewId :
             var ticks = (long)(((ulong)_a << 32) | (uint)_b);
 
             if (ticks > DateTime.MaxValue.Ticks)
-                return DateTime.MaxValue;
+                return DateTimeOffset.MaxValue;
             if (ticks < DateTime.MinValue.Ticks)
-                return DateTime.MinValue;
+                return DateTimeOffset.MinValue;
 
             return new DateTime(ticks, DateTimeKind.Utc);
         }

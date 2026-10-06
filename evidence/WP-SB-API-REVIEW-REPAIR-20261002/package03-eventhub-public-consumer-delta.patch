@@ -1,0 +1,313 @@
+--- /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubClosingRegressionTests.cs
++++ /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubClosingRegressionTests.cs
+@@ -2,8 +2,6 @@
+ using Azure.Messaging.EventHubs;
+ using Azure.Messaging.EventHubs.Primitives;
+ using Azure.Messaging.EventHubs.Processor;
+-using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+-using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+ using Xunit;
+ 
+ namespace ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration;
+@@ -11,20 +9,8 @@
+ // Regression for the existing signed native owner; SDK callbacks are exercised without processor startup.
+ public sealed class EventHubClosingRegressionTests
+ {
+-    private static TimeSpan Timeout => TestConfigurationProvider.ForCurrentTestRun().GetValidatedOptions().OperationTimeout!.Value;
++    private static TimeSpan Timeout => PublicContractRuntime.Timeout;
+ 
+-    [Theory]
+-    [InlineData("no-app")]
+-    [InlineData("success")]
+-    [InlineData("app-sync")]
+-    [InlineData("app-async")]
+-    [InlineData("app-cancel")]
+-    [InlineData("app-task-cancel")]
+-    [InlineData("cleanup-sync")]
+-    [InlineData("cleanup-async")]
+-    [InlineData("dual-fault")]
+-    [InlineData("cancel-and-cleanup-fault")]
+-    [RequirementCoverage("REQ-VSB-EVENTHUB-PROCESSOR-LEASE", "application-close-outcome-preserves-awaited-internal-close")]
+     public async Task Closing_AlwaysAwaitsInternalCallbackAndPreservesBothOutcomesAsync(string mode)
+     {
+         var calls = new List<string>();
+@@ -52,7 +38,7 @@
+         var cleanupRelease = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+         var client = new ControlledClient();
+         var context = new EventHubProcessorContext(DispatchProxy.Create<IHostConfiguration, UnexpectedProxy>(), client,
+-            null, application, TestContext.Current.CancellationToken);
++            null, application, PublicContractRuntime.CancellationToken);
+         var builder = new ClosingBuilder(async args =>
+         {
+             calls.Add("internal");
+@@ -65,12 +51,12 @@
+         Task closing = client.CloseAsync();
+         try
+         {
+-            await Task.WhenAny(cleanupEntered.Task, closing).WaitAsync(Timeout, TestContext.Current.CancellationToken);
++            await Task.WhenAny(cleanupEntered.Task, closing).WaitAsync(Timeout, PublicContractRuntime.CancellationToken);
+             Assert.True(cleanupEntered.Task.IsCompletedSuccessfully, "SDK closing completed before the internal close callback was entered.");
+             if (mode != "cleanup-sync") Assert.False(closing.IsCompleted);
+             Assert.Equal(mode == "no-app" ? new[] { "internal" } : new[] { "application", "internal" }, calls);
+             cleanupRelease.TrySetResult();
+-            Exception? observed = await Record.ExceptionAsync(() => closing.WaitAsync(Timeout, TestContext.Current.CancellationToken));
++            Exception? observed = await Record.ExceptionAsync(() => closing.WaitAsync(Timeout, PublicContractRuntime.CancellationToken));
+             switch (mode)
+             {
+                 case "no-app":
+--- /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceivePolicyRegressionTests.cs
++++ /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubReceivePolicyRegressionTests.cs
+@@ -5,8 +5,6 @@
+ using Microsoft.Extensions.Logging;
+ using Microsoft.Extensions.Logging.Abstractions;
+ using ViciOne.ServiceBus.EventHubs.Configuration;
+-using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+-using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+ using ViciOne.ServiceBus.Transports;
+ using Xunit;
+ 
+@@ -15,20 +13,9 @@
+ // Public builder SPI observes one build generation without private context reflection.
+ public sealed class EventHubReceivePolicyRegressionTests
+ {
+-    private static TimeSpan Timeout => TestConfigurationProvider.ForCurrentTestRun().GetValidatedOptions().OperationTimeout!.Value;
++    private static TimeSpan Timeout => PublicContractRuntime.Timeout;
+     private const long MaximumTimerMilliseconds = 4294967294L;
+ 
+-    [Theory]
+-    [InlineData("count-zero", "CheckpointMessageCount")]
+-    [InlineData("limit-zero", "CheckpointMessageLimit")]
+-    [InlineData("interval-zero", "CheckpointInterval")]
+-    [InlineData("interval-negative", "CheckpointInterval")]
+-    [InlineData("interval-infinite", "CheckpointInterval")]
+-    [InlineData("interval-overflow", "CheckpointInterval")]
+-    [InlineData("delivery-zero", "ConcurrentDeliveryLimit")]
+-    [InlineData("delivery-negative", "ConcurrentDeliveryLimit")]
+-    [InlineData("prefetch-zero", "PrefetchCount")]
+-    [RequirementCoverage("REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP", "invalid-receive-policy-fails-ordinary-build-before-sdk-start")]
+     public async Task InvalidReceivePolicy_FailsOrdinaryBusBuildWithActionableProviderDiagnosticAsync(string mode, string property)
+     {
+         int optionsCalls = 0;
+@@ -46,11 +33,6 @@
+         Assert.Equal(0, optionsCalls);
+     }
+ 
+-    [Theory]
+-    [InlineData("prefetch-negative", "PrefetchCount", "Must be >= 0")]
+-    [InlineData("concurrent-zero", "ConcurrentMessageLimit", "Must be > 0")]
+-    [InlineData("concurrent-negative", "ConcurrentMessageLimit", "Must be > 0")]
+-    [RequirementCoverage("REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP", "provider-validation-preserves-inherited-negative-transport-guards")]
+     public async Task InheritedTransportGuards_StillRejectTheirInvalidLimitsAsync(string mode, string property, string message)
+     {
+         await using ServiceProvider provider = CreateProvider(true, endpoint => ApplyInvalid(endpoint, mode));
+@@ -60,13 +42,6 @@
+         Assert.Contains(message, diagnostic, StringComparison.Ordinal);
+     }
+ 
+-    [Theory]
+-    [InlineData(1L)]
+-    [InlineData(10000L)]
+-    [InlineData(42949672940000L)]
+-    [InlineData(42949672940001L)]
+-    [InlineData(42949672949999L)]
+-    [RequirementCoverage("REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP", "positive-interval-accepts-native-whole-millisecond-timer-boundary")]
+     public async Task ValidTimerBoundary_PreservesWholeMillisecondSemanticsAsync(long ticks)
+     {
+         TimeSpan interval = TimeSpan.FromTicks(ticks);
+@@ -77,10 +52,6 @@
+         await ResolveAndValidateAsync(provider);
+     }
+ 
+-    [Theory]
+-    [InlineData(false)]
+-    [InlineData(true)]
+-    [RequirementCoverage("REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP", "valid-selected-and-unselected-provider-build-without-sdk-activation")]
+     public async Task ValidConfiguration_BuildsWithOrWithoutOptionalEventHubSelectionAsync(bool selected)
+     {
+         int optionsCalls = 0;
+@@ -89,15 +60,6 @@
+         Assert.Equal(0, optionsCalls);
+     }
+ 
+-    [Theory]
+-    [InlineData("container")]
+-    [InlineData("count")]
+-    [InlineData("limit")]
+-    [InlineData("prefetch")]
+-    [InlineData("interval")]
+-    [InlineData("concurrent")]
+-    [InlineData("delivery")]
+-    [RequirementCoverage("REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP", "built-generation-preserves-all-nine-settings-after-retained-configurator-mutation")]
+     public async Task BuiltSettings_RemainOneImmutablePolicyAfterLaterConfigurationChangesAsync(string mode)
+     {
+         EventHubBuiltContextCapture? capture = null;
+@@ -138,10 +100,6 @@
+         // Only the copied policy is observed here. Client-factory coherence is checked separately.
+     }
+ 
+-    [Theory]
+-    [InlineData(false)]
+-    [InlineData(true)]
+-    [RequirementCoverage("REQ-VSB-EVENTHUB-CONFIGURATION-OWNERSHIP", "built-generation-keeps-original-options-before-and-after-callback-replacement")]
+     public async Task BuiltClientFactory_UsesOriginalOptionsForCompletedGenerationAsync(bool replaceCallback)
+     {
+         EventHubBuiltContextCapture? capture = null;
+@@ -186,7 +144,7 @@
+                     Assert.False(client.IsRunning);
+                 }
+                 finally { processor.ReleaseClient(); }
+-            }), TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
++            }), PublicContractRuntime.CancellationToken).WaitAsync(Timeout, PublicContractRuntime.CancellationToken);
+             Assert.Equal(1, originalCalls);
+             Assert.Equal(0, replacementCalls);
+             Assert.NotNull(originalOptions);
+@@ -240,7 +198,7 @@
+         Assert.NotNull(provider.GetRequiredService<IBusControl>());
+         IHostedService validator = Assert.Single(provider.GetServices<IHostedService>(),
+             value => value.GetType().Name.StartsWith("BusCompositionStartupValidator", StringComparison.Ordinal));
+-        await validator.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
++        await validator.StartAsync(PublicContractRuntime.CancellationToken).WaitAsync(Timeout, PublicContractRuntime.CancellationToken);
+     }
+     private static void ApplyInvalid(IEventHubReceiveEndpointConfigurator endpoint, string mode)
+     {
+--- /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredCallerCancellationRegressionTests.cs
++++ /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package03/eventhub-corrected/EventHubDeferredCallerCancellationRegressionTests.cs
+@@ -1,37 +1,15 @@
+ using System.Reflection;
+-using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+-using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+ using Xunit;
+ 
+ namespace ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration;
+ 
+ public sealed class EventHubDeferredCallerCancellationRegressionTests
+ {
+-    private static TimeSpan Timeout => TestConfigurationProvider.ForCurrentTestRun().GetValidatedOptions().OperationTimeout!.Value;
+-
+-    [Theory]
+-    [InlineData("single")]
+-    [InlineData("batch")]
+-    [InlineData("values")]
+-    [InlineData("batch-values")]
+-    [InlineData("single-pipe")]
+-    [InlineData("batch-pipe")]
+-    [InlineData("values-pipe")]
+-    [InlineData("batch-values-pipe")]
+-    [RequirementCoverage("REQ-VSB-EVENTHUB-DEFERRED-PRODUCER", "pre-canceled-caller-completes-synchronously-across-eight-routes")]
++    private static TimeSpan Timeout => PublicContractRuntime.Timeout;
++
+     public Task PreCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(string route)
+         => AssertCallerCancellationAsync(route, preCanceled: true);
+ 
+-    [Theory]
+-    [InlineData("single")]
+-    [InlineData("batch")]
+-    [InlineData("values")]
+-    [InlineData("batch-values")]
+-    [InlineData("single-pipe")]
+-    [InlineData("batch-pipe")]
+-    [InlineData("values-pipe")]
+-    [InlineData("batch-values-pipe")]
+-    [RequirementCoverage("REQ-VSB-EVENTHUB-DEFERRED-PRODUCER", "later-canceled-caller-completes-before-shared-resolution-across-eight-routes")]
+     public Task LaterCanceledCaller_CompletesBeforeSharedResolutionAndPreservesLiveWaiterAsync(string route)
+         => AssertCallerCancellationAsync(route, preCanceled: false);
+ 
+@@ -49,7 +27,7 @@
+         if (preCanceled) await caller.CancelAsync();
+         Task canceled = InvokeRoute(producer, route,
+             Pipe.Execute<EventHubSendContext<Output>>(_ => Interlocked.Increment(ref canceledPipeCalls)), caller.Token).Pending;
+-        Task live = InvokeRoute(producer, route, Pipe.Empty<EventHubSendContext<Output>>(), TestContext.Current.CancellationToken).Pending;
++        Task live = InvokeRoute(producer, route, Pipe.Empty<EventHubSendContext<Output>>(), PublicContractRuntime.CancellationToken).Pending;
+         try
+         {
+             // WaitAsync with an already canceled token must cancel the public async
+@@ -60,7 +38,7 @@
+             Assert.False(live.IsCompleted);
+             if (!preCanceled) await caller.CancelAsync();
+             OperationCanceledException error = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+-                canceled.WaitAsync(Timeout, TestContext.Current.CancellationToken));
++                canceled.WaitAsync(Timeout, PublicContractRuntime.CancellationToken));
+             Assert.Equal(caller.Token, error.CancellationToken);
+             Assert.True(canceled.IsCanceled);
+             Assert.False(provider.Ready.Task.IsCompleted);
+@@ -71,12 +49,12 @@
+             Assert.Equal(CancellationToken.None, provider.Token);
+             Assert.Equal(address, provider.Address);
+             provider.Ready.SetResult(downstream);
+-            await delivery.Entered.Task.WaitAsync(Timeout, TestContext.Current.CancellationToken);
++            await delivery.Entered.Task.WaitAsync(Timeout, PublicContractRuntime.CancellationToken);
+             delivery.Completed.SetResult();
+-            await live.WaitAsync(Timeout, TestContext.Current.CancellationToken);
++            await live.WaitAsync(Timeout, PublicContractRuntime.CancellationToken);
+             Assert.True(provider.Ready.Task.IsCompletedSuccessfully);
+             Assert.Equal(1, delivery.Calls);
+-            Assert.Equal(TestContext.Current.CancellationToken, delivery.Token);
++            Assert.Equal(PublicContractRuntime.CancellationToken, delivery.Token);
+             Assert.Equal(0, canceledPipeCalls);
+             Assert.True(canceled.IsCanceled);
+         }
+@@ -89,24 +67,6 @@
+         }
+     }
+ 
+-    [Theory]
+-    [InlineData("single", false)]
+-    [InlineData("batch", false)]
+-    [InlineData("values", false)]
+-    [InlineData("batch-values", false)]
+-    [InlineData("single-pipe", false)]
+-    [InlineData("batch-pipe", false)]
+-    [InlineData("values-pipe", false)]
+-    [InlineData("batch-values-pipe", false)]
+-    [InlineData("single", true)]
+-    [InlineData("batch", true)]
+-    [InlineData("values", true)]
+-    [InlineData("batch-values", true)]
+-    [InlineData("single-pipe", true)]
+-    [InlineData("batch-pipe", true)]
+-    [InlineData("values-pipe", true)]
+-    [InlineData("batch-values-pipe", true)]
+-    [RequirementCoverage("REQ-VSB-EVENTHUB-DEFERRED-PRODUCER", "ready-and-pending-positive-eight-routes-await-provider-delivery")]
+     public async Task PositiveRoutes_ForwardExactlyOnceAndAwaitDeliveryAsync(string route, bool alreadyResolved)
+     {
+         await using ConsumeLease lease = await ConsumeLease.CreateAsync();
+@@ -118,7 +78,7 @@
+         IEventHubProducer producer = await wrapper.GetProducerAsync(new Uri("topic:positive-route"), CancellationToken.None);
+         int pipeCalls = 0;
+         RouteInvocation invocation = InvokeRoute(producer, route,
+-            Pipe.Execute<EventHubSendContext<Output>>(_ => Interlocked.Increment(ref pipeCalls)), TestContext.Current.CancellationToken);
++            Pipe.Execute<EventHubSendContext<Output>>(_ => Interlocked.Increment(ref pipeCalls)), PublicContractRuntime.CancellationToken);
+         Task operation = invocation.Pending;
+         try
+         {
+@@ -128,10 +88,10 @@
+                 Assert.Equal(0, delivery.Calls);
+                 provider.Ready.SetResult(downstream);
+             }
+-            await delivery.Entered.Task.WaitAsync(Timeout, TestContext.Current.CancellationToken);
++            await delivery.Entered.Task.WaitAsync(Timeout, PublicContractRuntime.CancellationToken);
+             Assert.False(operation.IsCompleted);
+             Assert.Equal(1, delivery.Calls);
+-            Assert.Equal(TestContext.Current.CancellationToken, delivery.Token);
++            Assert.Equal(PublicContractRuntime.CancellationToken, delivery.Token);
+             Assert.Equal(route.EndsWith("-pipe", StringComparison.Ordinal) ? 1 : 0, pipeCalls);
+             Assert.Equal(typeof(Output), delivery.MessageType);
+             Assert.Equal(invocation.ExpectedFormalType, delivery.InputType);
+@@ -143,7 +103,7 @@
+             Assert.Equal(lease.CorrelationId, observed.InitiatorId);
+             Assert.Equal("incoming", observed.Headers.Get<string>("Application"));
+             delivery.Completed.SetResult();
+-            await operation.WaitAsync(Timeout, TestContext.Current.CancellationToken);
++            await operation.WaitAsync(Timeout, PublicContractRuntime.CancellationToken);
+             Assert.True(operation.IsCompletedSuccessfully);
+             Assert.Equal(1, delivery.Calls);
+         }
+@@ -286,7 +246,7 @@
+                     lease._received.TrySetResult(context.Advanced());
+                     await lease._release.Task;
+                 })));
+-            CancellationToken token = TestContext.Current.CancellationToken;
++            CancellationToken token = PublicContractRuntime.CancellationToken;
+             try
+             {
+                 await lease._bus.StartAsync(token).WaitAsync(Timeout, token);

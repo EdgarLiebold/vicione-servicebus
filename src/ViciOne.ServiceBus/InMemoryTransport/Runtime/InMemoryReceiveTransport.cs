@@ -168,8 +168,14 @@ internal sealed class InMemoryReceiveTransport :
                 }
                 catch (Exception observerException)
                 {
-                    LogContext.Warning?.Log(observerException, "In-memory receive startup fault observer failed: {InputAddress}",
-                        _context.InputAddress);
+                    try
+                    {
+                        LogContext.Warning?.Log(observerException, "In-memory receive startup fault observer failed: {InputAddress}",
+                            _context.InputAddress);
+                    }
+                    catch
+                    {
+                    }
                 }
             }
         }

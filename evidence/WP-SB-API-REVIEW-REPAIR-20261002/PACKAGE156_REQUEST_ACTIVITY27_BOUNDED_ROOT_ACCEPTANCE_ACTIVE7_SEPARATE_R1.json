@@ -1,0 +1,29 @@
+{
+  "utc": "2026-10-04T23:24:05.319015+00:00",
+  "decision": "ACCEPT27_REQUEST_ACTIVITY_SOURCE_AND_BOUNDED_SPI_CONTRACTS",
+  "api_before": 4233,
+  "api_after": 4260,
+  "semantic_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package152-request34-current-contracts-r1/REPORT.json",
+    "sha256": "8e4864e3a21f5dbbc880d08c2f45d949d1063c86a3c8ee8e7050ed24cb7114e8"
+  },
+  "per_member": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package152-request34-current-contracts-r1/PER_MEMBER_CONTRACT_MATRIX.json",
+    "sha256": "09dac452bcb508563fafce57f0f65d903ca6ae1a1a624ba0e54a12c1cda37228"
+  },
+  "root_norm_reviews": [
+    "ba2f15",
+    "380f32",
+    "3ed861",
+    "62d275"
+  ],
+  "source27_methods_types_current_literal_equal": true,
+  "actual_current27_XML_equal": true,
+  "limits": [
+    "Nine constructors,4Accept,3Probe,6directTaskforwarders,5types only. Active7dispatch/helper remain separate currentF128/runtime obligations.",
+    "Foreign150 nativecase references retained only named direct/causal joins; no current156 SDK native transfer.",
+    "Probe keyvalues/normalforwardTask identity Source-only when no named assertion; no customSPI universal guard, callback, transport/cancellation/disposal promise.",
+    "Physical changedRequest owner post153 differs only activeUseAsync token callsite;27 selected declarations/bodies/XML unchanged; currentSource hashes stored."
+  ],
+  "CLOSED": false
+}

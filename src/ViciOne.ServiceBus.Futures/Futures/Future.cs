@@ -26,6 +26,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 {
     readonly FutureFault<TFault> _fault = new();
     readonly FutureResult<TCommand, TResult> _result = new();
+    readonly Dictionary<IEvent, object> _pendingEvents = new();
 
     /// <summary>Initializes the durable lifecycle and default terminal fault mapping for the future.</summary>
     protected Future()
@@ -205,6 +206,8 @@ public abstract class Future<TCommand, TResult, TFault> :
             x.ConfigureConsumeTopology = false;
         });
 
+        RegisterPendingEvent(requestFaulted);
+
         var request = new FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TRequest>(this, requestFaulted);
 
         configure?.Invoke(request);
@@ -240,6 +243,9 @@ public abstract class Future<TCommand, TResult, TFault> :
             x.ConfigureConsumeTopology = false;
         });
 
+        RegisterPendingEvent(routingSlipCompleted);
+        RegisterPendingEvent(routingSlipFaulted);
+
         var routingSlip = new FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput>(this, routingSlipCompleted, routingSlipFaulted);
 
         configure(routingSlip);
@@ -274,6 +280,7 @@ public abstract class Future<TCommand, TResult, TFault> :
             x.ConfigureConsumeTopology = false;
         });
 
+        RegisterPendingEvent(requestCompleted);
         return requestCompleted;
     }
 
@@ -298,13 +305,33 @@ public abstract class Future<TCommand, TResult, TFault> :
         DuringAny(binder);
     }
 
+    PendingFutureEventActivity<T> RegisterPendingEvent<T>(IEvent<T> @event)
+        where T : class
+    {
+        if (_pendingEvents.TryGetValue(@event, out object? existing))
+            return (PendingFutureEventActivity<T>)existing;
+
+        var activity = new PendingFutureEventActivity<T>(async context =>
+        {
+            IState<FutureState>? state = await Accessor.GetAsync(context, context.CancellationToken).ConfigureAwait(false);
+            return state?.Name != Completed.Name && state?.Name != Faulted.Name;
+        });
+        _pendingEvents.Add(@event, activity);
+        // Install before response/fault callbacks and outcome activities. Rejection stops
+        // the complete event continuation, including callbacks configured later.
+        DuringAny(When(@event).Add(activity));
+        return activity;
+    }
+
     void CompletePending<T>(IEvent<T> completedEvent, PendingFutureIdProvider<T> pendingIdProvider)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(completedEvent);
         ArgumentNullException.ThrowIfNull(pendingIdProvider);
+        RegisterPendingEvent(completedEvent).AddPendingIdProvider(pendingIdProvider);
         DuringAny(
             When(completedEvent)
+                .If(context => context.Saga.Pending.Contains(pendingIdProvider(context.Message)), accepted => accepted
                 .SetResult(x => pendingIdProvider(x.Message), x => x.Message)
                 .IfElse(context => context.Saga.Completed.HasValue,
                     completed => completed
@@ -314,6 +341,7 @@ public abstract class Future<TCommand, TResult, TFault> :
                         faulted => faulted.IfAwaited(
                             context => _fault.TrySetFaultedAsync(context, context.CancellationToken),
                             terminal => terminal.TransitionTo(Faulted))))
+                )
         );
     }
 
@@ -326,26 +354,32 @@ public abstract class Future<TCommand, TResult, TFault> :
     {
         ArgumentNullException.ThrowIfNull(requestFaulted);
         ArgumentNullException.ThrowIfNull(pendingIdProvider);
+        RegisterPendingEvent(requestFaulted).AddPendingIdProvider(message => pendingIdProvider(message.Message));
         DuringAny(
             When(requestFaulted)
+                .If(context => context.Saga.Pending.Contains(pendingIdProvider(context.Message.Message)), accepted => accepted
                 .SetFault(x => pendingIdProvider(x.Message.Message), x => x.Message)
                 .If(context => context.Saga.Faulted.HasValue,
                     faulted => faulted.IfAwaited(
                         context => _fault.TrySetFaultedAsync(context, context.CancellationToken),
                         terminal => terminal.TransitionTo(Faulted)))
+                )
         );
     }
 
     void FaultPendingRoutingSlip(IEvent<IRoutingSlipFaulted> requestFaulted)
     {
         ArgumentNullException.ThrowIfNull(requestFaulted);
+        RegisterPendingEvent(requestFaulted).AddPendingIdProvider(message => message.TrackingNumber);
         DuringAny(
             When(requestFaulted)
+                .If(context => context.Saga.Pending.Contains(context.Message.TrackingNumber), accepted => accepted
                 .SetFault(x => x.Message)
                 .If(context => context.Saga.Faulted.HasValue,
                     faulted => faulted.IfAwaited(
                         context => _fault.TrySetFaultedAsync(context, context.CancellationToken),
                         terminal => terminal.TransitionTo(Faulted)))
+                )
         );
     }
 
@@ -456,6 +490,7 @@ public abstract class Future<TCommand, TResult, TFault> :
     protected void WhenAnyFaulted(Action<IFutureFaultConfigurator<TFault>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
+        _fault.WaitForPending = false;
         var configurator = new FutureFaultConfigurator<TFault>(_fault);
 
         configure(configurator);

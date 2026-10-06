@@ -1,0 +1,32 @@
+{
+  "status": "EXPLICIT_AUTONOMOUS_F030_CONTRACT_AND_DOC_CANDIDATE_R2_FINAL_PEER_PENDING",
+  "actor": "/root",
+  "utc": "2026-10-03T21:30:24.072669+00:00",
+  "user_authorization": "behebe alle Fehler A+ autonom",
+  "original_startup_requirement_implemented": false,
+  "original_findings_bytes_unchanged_sha256": "65e808177cbe5c9f63f1016ee577b591a4de6f56b0df1af65d878103a17a0630",
+  "disposition_is_contract_change_not_oracle_correction": true,
+  "new_runtime_code_changes_this_delta": false,
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/vicione-architecture/work/CURRENT_ORDER.yaml",
+      "sha256": "779f444e96088041787704ca976b5e5cd6529320f0e69438bc216ce83e65a7eb",
+      "bytes": 315645
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/api/batch-time-limits.md",
+      "sha256": "fef9610759ba3eac46ba28b5f968fb4603fd229ef20899bf660e100a0a4d457b",
+      "bytes": 3141
+    }
+  ],
+  "current_native8_pass": 8,
+  "current_native8_log_sha256": "3cc1a8753b9ad243953e065f059f43997335089f0f3ec96dc085df8a9dd7821d",
+  "source_preflight_sha256": "2bd4b8744654558ef9c5ad3057ad462ece889573f12e481753a913630cbce8fa",
+  "norm_recommendation_sha256": "643d524e90d8222e16bdcaf438fe3a4d492634d62d905094f7f75d7c722cb5aa",
+  "global_API_Aplus": false,
+  "supersedes": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE25_F030_EXPLICIT_NORM_DOC_CANDIDATE_R1.json",
+    "sha256": "9839f14a1fbdef41640809133200f333ae70e6607d57f9863176ff4c95d40012"
+  },
+  "source_peer_namespace_finding_corrected": true
+}

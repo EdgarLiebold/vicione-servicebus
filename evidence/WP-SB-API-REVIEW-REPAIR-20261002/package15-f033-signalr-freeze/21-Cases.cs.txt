@@ -1,0 +1,230 @@
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.SignalR;
+using Xunit;
+
+namespace ViciOneReview.SignalRLifetime;
+
+public static class Cases
+{
+    public static async Task RunAsync(string mode, TimeSpan timeout, CancellationToken caller)
+    {
+        var probe = new Probe(mode);
+        using var cancel = CancellationTokenSource.CreateLinkedTokenSource(caller);
+        CancellationToken token = cancel.Token;
+        using var logger = LoggerFactory.Create(_ => { });
+        var previousLog = LogContext.Current;
+        LogContext.ConfigureCurrentLogContext(logger);
+        ServiceProvider? provider = null;
+        IBusControl? control = null;
+        HubLifetimeManager<PublicHub>? manager = null;
+        PublicConnection? connection = null;
+        Task? operation = null, followup = null;
+        bool started = false, connected = false;
+        await OwnedLifetime.RunAsync(async () =>
+        {
+            var services = new ServiceCollection(); services.AddLogging(); services.AddSingleton(probe);
+            services.AddRouting(); services.AddSignalRCore().AddJsonProtocol();
+            services.AddViciOneServiceBus(bus =>
+            {
+                bus.Limits(MessageLimits.Conservative);
+                bus.AddSignalRBackplane<PublicHub>(options => options.RemoteGroupOperationTimeout = TimeSpan.FromSeconds(60));
+                bus.SetRequestClientFactory((actualBus, requestTimeout) =>
+                {
+                    var inner = actualBus.CreateClientFactory(requestTimeout); probe.OwnedFactory = inner;
+                    return new ClientFactory(new TrackingContext(inner.Context, probe));
+                });
+                bus.UsingInMemory((context, config) => config.ConfigureEndpoints(context));
+            });
+            services.AddScoped<AsyncScopeProbe>();
+            services.AddScoped<IPublishEndpoint>(scoped =>
+            {
+                _ = scoped.GetRequiredService<AsyncScopeProbe>();
+                if (mode.StartsWith("publishendpointresolution", StringComparison.Ordinal)) probe.FailPrimary();
+                return new PublishProbe(scoped.GetRequiredService<Bind<IBus, IPublishEndpoint>>().Value, probe);
+            });
+            foreach (var descriptor in services.Where(d => d.ServiceType.IsGenericType && d.ServiceType.GetGenericTypeDefinition() == typeof(IRequestClient<>)).ToArray())
+                services.Remove(descriptor);
+            services.AddScoped(typeof(IRequestClient<>), probe.Basic ? typeof(BasicClient<>) : typeof(ClientAdapter<>));
+            provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+            control = provider.GetRequiredService<IBusControl>();
+            started = true; await control.StartAsync(token).WaitAsync(timeout, token);
+            manager = provider.GetRequiredService<HubLifetimeManager<PublicHub>>();
+            connection = new PublicConnection("public-connection");
+
+            if (mode == "fastpaths-control")
+            {
+                await manager.OnConnectedAsync(connection); connected = true;
+                await manager.SendConnectionAsync(connection.ConnectionId, "Review", ["local"], token);
+                var local = await connection.ReadAsync(timeout, token);
+                Assert.Equal("Review", local.Target); Assert.Equal("local", Assert.Single(local.Arguments));
+                await manager.AddToGroupAsync(connection.ConnectionId, "group", token);
+                await manager.RemoveFromGroupAsync(connection.ConnectionId, "group", token);
+                await manager.SendConnectionsAsync([], "Review", ["empty"], token);
+                await manager.SendGroupsAsync([], "Review", ["empty"], token);
+                await manager.SendUsersAsync([], "Review", ["empty"], token);
+                using var preCanceled = new CancellationTokenSource(); preCanceled.Cancel();
+                var failure = await CaptureAsync(manager.SendAllAsync("Review", ["canceled"], preCanceled.Token), timeout);
+                Assert.IsAssignableFrom<OperationCanceledException>(failure); Assert.Equal(preCanceled.Token, ((OperationCanceledException)failure!).CancellationToken);
+                Assert.Equal(0, probe.ScopeCreated); Assert.Equal(0, probe.PublishCalls); Assert.Equal(0, probe.RequestCreated);
+                return;
+            }
+            if (mode == "realpublishdelivery-control") { await manager.OnConnectedAsync(connection); connected = true; }
+            operation = mode switch
+            {
+                _ when probe.Group => mode == "standardremoveacknowledged-control"
+                    ? manager.RemoveFromGroupAsync(connection.ConnectionId, "group", token)
+                    : manager.AddToGroupAsync(connection.ConnectionId, "group", token),
+                _ when mode.StartsWith("connections", StringComparison.Ordinal) => manager.SendConnectionsAsync(["first", "second", "first"], "Review", ["body"], token),
+                _ when mode.StartsWith("groups", StringComparison.Ordinal) => manager.SendGroupsAsync(["first", "second", "", "first"], "Review", ["body"], token),
+                _ when mode.StartsWith("users", StringComparison.Ordinal) => manager.SendUsersAsync(["first", "second", "", "first"], "Review", ["body"], token),
+                _ => manager.SendAllAsync("Review", ["body"], token)
+            };
+            if (probe.Group && !probe.Basic && !probe.CustomPrimary)
+            {
+                await probe.SendEntered.Task.WaitAsync(timeout, token);
+                if (probe.Cancel) cancel.Cancel();
+                else if (!probe.PrimaryFault)
+                {
+                    await manager.OnConnectedAsync(connection); connected = true;
+                    if (mode == "standardremoveacknowledged-control") await manager.AddToGroupAsync(connection.ConnectionId, "group", token);
+                }
+                probe.SendRelease.TrySetResult();
+            }
+            else if (probe.Cancel)
+            {
+                await probe.OperationEntered.Task.WaitAsync(timeout, token); cancel.Cancel();
+            }
+            await Task.WhenAny(operation, probe.ScopeEntered.Task).WaitAsync(timeout, caller);
+            Assert.True(probe.ScopeEntered.Task.IsCompleted); Assert.Equal(1, probe.ScopeEnteredCount);
+            Assert.Equal(0, probe.ScopeCompleted); Assert.False(operation.IsCompleted);
+            probe.ScopeRelease.TrySetResult();
+            Exception? actual = await CaptureAsync(operation, timeout);
+            Assert.Equal(1, probe.ScopeCreated); Assert.Equal(1, probe.ScopeEnteredCount); Assert.Equal(1, probe.ScopeCompleted);
+            Assert.Equal(0, probe.UnexpectedCalls); Assert.False(probe.RecoveryUsed);
+            var expected = new List<Exception>();
+            if (probe.Basic)
+            {
+                Exception primary = actual is AggregateException multiple ? multiple.InnerExceptions[0] : Assert.IsType<NotSupportedException>(actual);
+                Assert.IsType<NotSupportedException>(primary); Assert.Contains("does not expose advanced request operations", primary.Message, StringComparison.Ordinal);
+                Assert.Contains("RequireAdvanced", primary.StackTrace ?? "", StringComparison.Ordinal); expected.Add(primary);
+            }
+            else if (probe.InvalidAck)
+            {
+                Exception primary = actual is AggregateException multiple ? multiple.InnerExceptions[0] : Assert.IsType<InvalidDataException>(actual);
+                Assert.IsType<InvalidDataException>(primary); Assert.Contains("acknowledgement did not identify", primary.Message, StringComparison.Ordinal);
+                Assert.Contains("ChangeGroupMembershipAsync", primary.StackTrace ?? "", StringComparison.Ordinal); expected.Add(primary);
+            }
+            else if (mode.StartsWith("publishendpointresolution", StringComparison.Ordinal) || mode.StartsWith("groupclientresolution", StringComparison.Ordinal)) expected.Add(probe.Primary);
+            else if (probe.PrimaryFault || probe.Cancel)
+            {
+                if (probe.Cancel && !probe.Group)
+                {
+                    Exception selected = actual is AggregateException multiple ? multiple.InnerExceptions[0] : Assert.IsAssignableFrom<OperationCanceledException>(actual);
+                    Assert.Contains(probe.Publications, publication => ReferenceEquals(publication.CancellationFailure, selected));
+                    probe.ActualPrimary = selected;
+                }
+                Assert.NotNull(probe.ActualPrimary); expected.Add(probe.ActualPrimary);
+                if (probe.Cancel) { Assert.IsAssignableFrom<OperationCanceledException>(probe.ActualPrimary); Assert.Equal(token, ((OperationCanceledException)probe.ActualPrimary).CancellationToken); }
+                else if (probe.Group && !probe.CustomPrimary) { Assert.IsType<RequestException>(probe.ActualPrimary); Assert.Same(probe.Primary, probe.ActualPrimary.InnerException); }
+                else Assert.Same(probe.Primary, probe.ActualPrimary);
+            }
+            if (probe.RequestFault) expected.Add(probe.RequestFailure);
+            if (probe.ScopeFault) expected.Add(probe.ScopeFailure);
+            if (expected.Count == 0) Assert.Null(actual);
+            else if (expected.Count == 1) Assert.Same(expected[0], actual);
+            else
+            {
+                var aggregate = Assert.IsType<AggregateException>(actual); Assert.Equal(expected.Count, aggregate.InnerExceptions.Count);
+                for (int index = 0; index < expected.Count; index++) Assert.Same(expected[index], aggregate.InnerExceptions[index]);
+            }
+            if (probe.Group && !probe.Basic)
+            {
+                Assert.Equal(1, probe.RequestCreated); Assert.Equal(1, probe.RequestDisposed); Assert.Equal(0, probe.RequestAsyncDisposed);
+                Assert.Equal(token, probe.CreateToken); Assert.Equal(token, probe.ResponseToken);
+                Assert.Equal(new[] { "request", "scope" }, probe.Events);
+                if (!probe.CustomPrimary) { _ = Assert.Single(probe.ActualSends); Assert.NotEqual(token, probe.SendToken); }
+                if (probe.Cancel) Assert.True(probe.SendToken.IsCancellationRequested);
+            }
+            else
+            {
+                Assert.Equal(0, probe.RequestCreated); Assert.Equal(0, probe.RequestDisposed); Assert.Equal(new[] { "scope" }, probe.Events);
+                if (!mode.Contains("resolution", StringComparison.Ordinal) && !probe.Basic)
+                {
+                    Assert.Equal(token, probe.PublishToken);
+                    Assert.Equal(mode.StartsWith("connections") || mode.StartsWith("groups") || mode.StartsWith("users") ? 2 : 1, probe.PublishCalls);
+                }
+            }
+            if (probe.CleanupCallbacks) { Assert.True(probe.TimerFaults >= 1); Assert.True(probe.ConnectorFaults >= 2); }
+            if (mode == "realpublishdelivery-control")
+            {
+                var frame = await connection.ReadAsync(timeout, caller); Assert.Equal("Review", frame.Target); Assert.Equal("body", Assert.Single(frame.Arguments));
+            }
+            if (connected && probe.Group)
+            {
+                probe.HealthyShutdown = true; probe.ForwardPublish = true;
+                followup = manager.SendAllAsync("Followup", [mode], caller);
+                await followup.WaitAsync(timeout, caller);
+                var frame = await connection.ReadAsync(timeout, caller); Assert.Equal("Followup", frame.Target); Assert.Equal(mode, Assert.Single(frame.Arguments));
+                Assert.Equal(2, probe.ScopeCreated); Assert.Equal(2, probe.ScopeCompleted);
+            }
+        }, () =>
+        {
+            probe.SendRelease.TrySetResult(); probe.ScopeRelease.TrySetResult(); probe.HealthyShutdown = true;
+            return Task.CompletedTask;
+        }, async () =>
+        {
+            var cleanup = new List<Func<Task>>();
+            if (probe.RequestCreated > probe.RequestDisposed)
+            {
+                probe.RecoveryUsed = true;
+                foreach (var owned in probe.Handles) cleanup.Add(() => { owned.Handle.Dispose(); return Task.CompletedTask; });
+            }
+            if (probe.ScopeCreated > probe.ScopeCompleted)
+            {
+                probe.RecoveryUsed = true;
+                foreach (var scoped in probe.Scopes) if (scoped is IAsyncDisposable disposable) cleanup.Add(() => disposable.DisposeAsync().AsTask().WaitAsync(timeout));
+            }
+            if (operation is not null) cleanup.Add(() => ObserveAsync(operation, timeout));
+            if (followup is not null) cleanup.Add(() => ObserveAsync(followup, timeout));
+            foreach (var publication in probe.Publications) if (publication.Task is Task task) cleanup.Add(() => ObserveAsync(task, timeout));
+            foreach (Task send in probe.ActualSends) cleanup.Add(() => ObserveAsync(send, timeout));
+            foreach (var owned in probe.Handles) cleanup.Add(() => ObserveAsync(owned.Message, timeout));
+            await OwnedLifetime.RunAsync(() => Task.CompletedTask, cleanup.ToArray());
+        }, async () =>
+        {
+            if (connected && manager is not null && connection is not null) await manager.OnDisconnectedAsync(connection).WaitAsync(timeout);
+        }, async () =>
+        {
+            if (started && control is not null) await control.StopAsync(CancellationToken.None).WaitAsync(timeout);
+        }, async () =>
+        {
+            if (provider is not null) await provider.DisposeAsync().AsTask().WaitAsync(timeout);
+        }, async () =>
+        {
+            if (probe.OwnedFactory is not null) await probe.OwnedFactory.DisposeAsync().AsTask().WaitAsync(timeout);
+        }, async () =>
+        {
+            if (connection is not null) await connection.DisposeAsync().AsTask().WaitAsync(timeout);
+        }, () => { LogContext.Current = previousLog; return Task.CompletedTask; });
+    }
+    static async Task<Exception?> CaptureAsync(Task task, TimeSpan timeout)
+    {
+        try { await task.WaitAsync(timeout); return null; }
+        catch (TimeoutException) { throw; }
+        catch (Exception failure) { return failure; }
+    }
+    static async Task ObserveAsync(Task task, TimeSpan timeout)
+    {
+        try { await task.WaitAsync(timeout); }
+        catch (TimeoutException) { throw; }
+        catch when (task.IsCompleted) { /* Expected selected operation/send/handle outcome was checked above. */ }
+    }
+}

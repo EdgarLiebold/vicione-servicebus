@@ -1,0 +1,32 @@
+--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs
+@@ -14,7 +14,7 @@
+     private const string VersionSeparator = ";v=";
+ 
+     /// <summary>Initializes an identity from a stable contract name and major wire version.</summary>
+-    /// <param name="name">The stable, deployment-independent contract name.</param>
++    /// <param name="name">The stable, deployment-independent contract name containing well-formed UTF-16.</param>
+     /// <param name="majorVersion">The positive major version of the wire contract.</param>
+     public MessageContractIdentity(string name, int majorVersion)
+     {
+@@ -86,8 +86,19 @@
+         if (name.Length > 256)
+             throw new ArgumentOutOfRangeException(nameof(name), name.Length, "A message contract name cannot exceed 256 characters.");
+ 
+-        foreach (char character in name)
++        for (int index = 0; index < name.Length; index++)
+         {
++            char character = name[index];
++            if (char.IsHighSurrogate(character))
++            {
++                if (index + 1 >= name.Length || !char.IsLowSurrogate(name[index + 1]))
++                    throw new ArgumentException("A message contract name must contain well-formed UTF-16.", nameof(name));
++                index++;
++                continue;
++            }
++            if (char.IsLowSurrogate(character))
++                throw new ArgumentException("A message contract name must contain well-formed UTF-16.", nameof(name));
++
+             if (char.IsControl(character) || char.IsWhiteSpace(character) || character == ';')
+             {
+                 throw new ArgumentException(

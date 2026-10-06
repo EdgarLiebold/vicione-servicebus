@@ -112,6 +112,36 @@ public sealed class ReceiveLockContextTests
         Assert.True(duplicateContext.CancellationToken.IsCancellationRequested);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-LOCK", "callback-failure-does-not-suppress-other-retained-sources")]
+    public void PendingCancellation_StillCancelsTheSecondSourceWhenTheFirstCallbackThrows()
+    {
+        using ReceiveEndpointDispatcherReceiveContext firstContext = CreateReceiveContext();
+        using ReceiveEndpointDispatcherReceiveContext secondContext = CreateReceiveContext();
+        var callbackFailure = new ExpectedDeliveryException();
+        int secondCallbackCount = 0;
+        using CancellationTokenRegistration firstRegistration = firstContext.CancellationToken.Register(() => throw callbackFailure);
+        using CancellationTokenRegistration secondRegistration = secondContext.CancellationToken.Register(() => Interlocked.Increment(ref secondCallbackCount));
+        var pending = new PendingReceiveLockContext();
+        Assert.True(pending.Enqueue(firstContext, NoLockReceiveContext.Instance));
+        Assert.False(pending.Enqueue(secondContext, NoLockReceiveContext.Instance));
+        try
+        {
+            AggregateException observed = Assert.Throws<AggregateException>(pending.Cancel);
+            Assert.Single(observed.Flatten().InnerExceptions);
+            Assert.Same(callbackFailure, observed.Flatten().InnerExceptions[0]);
+            Assert.True(firstContext.CancellationToken.IsCancellationRequested);
+            // Finite ORIGINAL witness: Cancel aborted before the separate second source.
+            Assert.True(secondContext.CancellationToken.IsCancellationRequested);
+            Assert.Equal(1, Volatile.Read(ref secondCallbackCount));
+        }
+        finally
+        {
+            try { firstContext.Cancel(); }
+            finally { secondContext.Cancel(); }
+        }
+    }
+
     private static ReceiveEndpointDispatcherReceiveContext CreateReceiveContext()
     {
         var limits = new MessageLimits

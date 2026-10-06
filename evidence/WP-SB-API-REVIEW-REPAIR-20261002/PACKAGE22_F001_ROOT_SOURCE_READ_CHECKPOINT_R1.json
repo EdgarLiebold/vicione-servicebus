@@ -1,0 +1,139 @@
+{
+  "finding": "F-SB-API-001",
+  "status": "ROOT_PERSONAL_SOURCE_READ_PARTIAL_NOT_AUTHOR_PERMISSION_CLOSURE",
+  "read": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedPublishEndpointExtensions.cs",
+      "sha256": "4ae5ba4510743a6289d7d471deb9ab560c97f1de457be005c7876efc4415748f",
+      "bytes": 6072,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/AdvancedSendEndpointExtensions.cs",
+      "sha256": "fba4221d20e91ced300d5602edf8b3270167ced115ffc231e07901bc017f598f",
+      "bytes": 5842,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedPublishEndpoint.cs",
+      "sha256": "28c6023a0efbd8842ecafd6bcc263f18bc4fe9c75938b5d7098219d9e5a52c40",
+      "bytes": 6717,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/IAdvancedSendEndpoint.cs",
+      "sha256": "ad7d20b45ae5d37265a5d22930757be6887dfcbeeb57a052318ffd1d70b15cb7",
+      "bytes": 6465,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/IRequestSendEndpoint.cs",
+      "sha256": "d317b0e8c9b1049fc784ed3f0f10e59e22afa5eb81afb1e83de891fec7c1f22a",
+      "bytes": 1543,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Contracts/ReceiveTransportCompleted.cs",
+      "sha256": "8491630df723e05183cce8a4339a693a4b1ab8a22bbfcbc4e7bec24e827ea227",
+      "bytes": 469,
+      "Root_personally_FULL": true,
+      "planned_action": "RETAIN_NARROW_SPECIALIZED_CONTRACT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/IOutgoingMessages.cs",
+      "sha256": "e2da8e68033d840320a33414b5404b497b4cd1339abb2be62a3ddb66107fcaac",
+      "bytes": 3713,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+      "sha256": "3ed008f758a53f10d2dedc956c67629226340597ff1a8cad05073cec70e447b3",
+      "bytes": 1423,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/ISendEndpoint.cs",
+      "sha256": "10442899590f5b39e878b5d029b7ea61fc8faf4795c9bb8090169751ab1e7aa8",
+      "bytes": 1429,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Internals/Dispatching/ResponseEndpointDispatcher.cs",
+      "sha256": "0cf6a98e6cbe04b606fc2e1dc52990ad6b0962b009cb87b062ced0bf927f710b",
+      "bytes": 4313,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Transports/ISendTransport.cs",
+      "sha256": "aa4e415328882dae07adbbf7e9d0029ba12759919412dc522f7aa32d5734ac88",
+      "bytes": 1745,
+      "Root_personally_FULL": true,
+      "planned_action": "RETAIN_NARROW_SPECIALIZED_CONTRACT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSetHeaderAdapter.cs",
+      "sha256": "e078861b398fdcc0026d7041b48065872c2d549fa4d70b342e4f17a458c3e334",
+      "bytes": 1092,
+      "Root_personally_FULL": true,
+      "planned_action": "RETAIN_NARROW_SPECIALIZED_CONTRACT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Clients/Endpoints/RequestSendEndpoint.cs",
+      "sha256": "ad9e247c6c7b0cc106ba5a45f5513e826d9b0c1905ba14531bb68c74f198557a",
+      "bytes": 4020,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Events/Receiving/ReceiveTransportCompletedEvent.cs",
+      "sha256": "e04831f95d8b7c37c871509a1762110245ba8ba03cffc58490eac917baa4e52c",
+      "bytes": 1820,
+      "Root_personally_FULL": true,
+      "planned_action": "RETAIN_NARROW_SPECIALIZED_CONTRACT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Initializers/Advanced/Initializers/AdvancedMessageInitializerExtensions.cs",
+      "sha256": "434b348e2ba2a08dc457557e4cd113c943046ba4b842e1690dae1bfe352521ab",
+      "bytes": 7212,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Courier/Courier/RoutingSlipExecutor.cs",
+      "sha256": "06d7fe65d86a0afd8e95b6a56750d53024b48be8045a2b0be8be59628bd48db7",
+      "bytes": 5346,
+      "Root_personally_FULL": true,
+      "planned_action": "QUALIFY_ACTIVE_ENDPOINT_OPERATION"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/OutboxFailureCode.cs",
+      "sha256": "c1039601911a49d49f9117b009014559d10b559ba0782d7fbe02f4e399c64191",
+      "bytes": 757,
+      "Root_personally_FULL": true,
+      "planned_action": "RETAIN_NARROW_SPECIALIZED_CONTRACT"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/OutboxMessage.cs",
+      "sha256": "0f71e3447c448aa5ab29c9912c4c96894a79134be64f9440804772faaf993fa2",
+      "bytes": 5592,
+      "Root_personally_FULL": true,
+      "planned_action": "RETAIN_NARROW_SPECIALIZED_CONTRACT"
+    }
+  ],
+  "original_scope_target_count": 32,
+  "personally_FULL_here": 18,
+  "remaining_scope_bodies": 14,
+  "notes": "Configured endpoint operation differs from transport/durability/consumer completion; retained narrow transport/counter/header/persisted-row contracts. Request implementation explicitly SkipOutbox but still awaits configured endpoint rather than response. Every actual declaration/body reviewed before proposed XML-only comment edits.",
+  "source_edits": 0,
+  "native_pending": true,
+  "whole_API_CLOSED": false
+}

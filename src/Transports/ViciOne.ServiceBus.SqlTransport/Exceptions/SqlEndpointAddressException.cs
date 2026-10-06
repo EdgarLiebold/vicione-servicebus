@@ -13,7 +13,7 @@ public sealed class SqlEndpointAddressException :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="address">The address.</param>
-    /// <param name="message">The message to process.</param>
+    /// <param name="message">The description of the endpoint-address failure.</param>
     public SqlEndpointAddressException(Uri address, string message)
         : base(address, message)
     {
@@ -21,7 +21,7 @@ public sealed class SqlEndpointAddressException :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="address">The address.</param>
-    /// <param name="message">The message to process.</param>
+    /// <param name="message">The description of the endpoint-address failure.</param>
     /// <param name="innerException">The inner exception.</param>
     public SqlEndpointAddressException(Uri address, string message, Exception innerException)
         : base(address, message, innerException)

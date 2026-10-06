@@ -1,0 +1,58 @@
+{
+  "status": "ROOT_XML_ONLY_EXTENSION_BEFORE_ADVERSARIAL_NATIVE",
+  "utc": "2026-10-03T17:26:46.982551+00:00",
+  "inputs": [
+    {
+      "relative": "src/ViciOne.ServiceBus.JobService/Advanced/IJobContext.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/Advanced/IJobContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-job-docs-source-r2/src/ViciOne.ServiceBus.JobService/Advanced/IJobContext.cs",
+      "sha256": "44a474f3c41020668770035246d63562d551cd7f7b922a8b4c210d84d286eed3",
+      "original_sha256": "a23f4c7e6eb1689c04839edc294f048400c030a163cf48345d47d0ec3923a321",
+      "runtime_and_signatures_identical": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.JobService/JobService/ConsumeJobContext.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/JobService/ConsumeJobContext.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-job-docs-source-r2/src/ViciOne.ServiceBus.JobService/JobService/ConsumeJobContext.cs",
+      "sha256": "336e2df9830fecb6043cc173e5fff9fa0e9188ef539b3956e832098e0dd7978e",
+      "original_sha256": "4e126150de05e498137de3d84f09d7dc2b9619a565c66f2e9713a832f98a8df9",
+      "runtime_and_signatures_identical": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.JobService/JobService/JobStateMachine.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/JobService/JobStateMachine.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-job-docs-source-r2/src/ViciOne.ServiceBus.JobService/JobService/JobStateMachine.cs",
+      "sha256": "b2427ff0adff6fa9b2f5b7e6ad28826aec0dd19980e14f7ba932965b94bcd4c9",
+      "original_sha256": "4c5ac9cf917e5690d66b37916dec54842992cdca59ad36d51b4edfc581a94740",
+      "runtime_and_signatures_identical": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.JobService/JobService/JobSaga.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/JobService/JobSaga.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-job-docs-source-r2/src/ViciOne.ServiceBus.JobService/JobService/JobSaga.cs",
+      "sha256": "d08dc1261a25c5f8cbefccea43936bc19a2f65c39138b87edb01eabf2c4bd466",
+      "original_sha256": "2afd8bebbdfb1b22fd87816c49afd6302ca083e7bfa5db7193945cf2d0839c3c",
+      "runtime_and_signatures_identical": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus.JobService/Contracts/JobService/IJobState.cs",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.JobService/Contracts/JobService/IJobState.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package22-f001-job-docs-source-r2/src/ViciOne.ServiceBus.JobService/Contracts/JobService/IJobState.cs",
+      "sha256": "995e094d91c2551cf254d5212fa41f8a95c4c4256367b83b920ef1408ace261a",
+      "original_sha256": "06d5522c79f210e15f7bc7f1042f7a3f00601521a86d3d2e35763d8dc9935a83",
+      "runtime_and_signatures_identical": true
+    }
+  ],
+  "root_full_read_sources": [
+    "src/ViciOne.ServiceBus.JobService/Advanced/IJobContext.cs",
+    "src/ViciOne.ServiceBus.JobService/JobService/ConsumeJobContext.cs",
+    "src/ViciOne.ServiceBus.JobService/JobService/JobStateMachine.cs",
+    "src/ViciOne.ServiceBus.JobService/JobService/JobSaga.cs",
+    "src/ViciOne.ServiceBus.JobService/Contracts/JobService/IJobState.cs",
+    "src/ViciOne.ServiceBus.JobService/JobService/JobProgressBuffer.cs"
+  ],
+  "causal_finding": "F001 completion and recoverability promises",
+  "product_runtime_changed": false,
+  "job_native_cases": 0,
+  "adversarial_and_package_xml_gate_pending": true
+}

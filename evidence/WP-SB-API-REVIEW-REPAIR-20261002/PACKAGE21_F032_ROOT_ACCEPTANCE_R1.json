@@ -1,0 +1,60 @@
+{
+  "status": "ROOT_ACCEPTED_TARGETED_F032_SHARED_FINAL_PENDING",
+  "utc": "2026-10-03T17:51:14.643143+00:00",
+  "finding": "F-SB-API-032",
+  "source_files": 17,
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE21_F032_PRODUCT_SOURCE_FREEZE_R1.json",
+      "sha256": "e4925bf67fcc2b789ec9654a4845905fa8cf1ffe4c261951d55a2a23d0e1b1f2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE21_F032_MUTATIONS_R2.json",
+      "sha256": "85158b1630e6ae800ab06f923c8cfc2d78ac88b9e3a6c70ae80b4ea8734a984b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE21_F032_CURRENT_R9_R10_NATIVE_BINDING_R1.json",
+      "sha256": "1262b662593665823bcaec89da1864ad3a4379c390b3c96e2c8a01c641498ae5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package21-f032-mutations-final-native-qualification-r2/FINAL_MANIFEST.json",
+      "sha256": "22605664359c08ff54e6145f946a7d7211c3e575d7691e7f1e246a6d1b5516af"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package21-f032-saga-native-final-qualification/MANIFEST.json",
+      "sha256": "8252304e88bbe43279708aa4973ea894613ba52a13dff580569065d6271e3d25"
+    }
+  ],
+  "root_personally_full_read_sources_and_test_owners": true,
+  "root_personally_full_read_actual_21_counterclasses_and_final_peer_reviews": true,
+  "current_public_cases": {
+    "pass": 156,
+    "fail": 0
+  },
+  "current_public_saga_cases": {
+    "pass": 3,
+    "fail": 0
+  },
+  "previous_same_oracle_cases": {
+    "pass": 7,
+    "finite_failures": 152,
+    "guards_counted": 0
+  },
+  "compiled_single_effect_mutants": {
+    "killed": 21,
+    "positive_controls": 21,
+    "baseline": 159,
+    "rollback": 159,
+    "r1_async_survivor_not_counted": true,
+    "deterministic_r2_original_cancellation_oracle": true
+  },
+  "actual_package_cache_dll_xml_pdb_host_source_binding": "independent final native qualification; signed package metadata comparison does not establish publisher trust",
+  "restoration": {
+    "original_mutation_source_files": 6209,
+    "new_paths_absent": 2,
+    "selected_current_core_sha256": "78d166b2d084393c32665ab27f1f82871a9e80f8febdcc80e8c5d67936a49322"
+  },
+  "whole_api_A_plus": false,
+  "external_transport_proof": false,
+  "shared_final_pending": true
+}

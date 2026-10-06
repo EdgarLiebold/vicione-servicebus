@@ -1,0 +1,11 @@
+F039 / Package12 Graph: scoped code and public native evidence accepted.
+
+The internal registration descriptor keeps immutable normalized address/callback and creates a fresh topology/configuration/host for each CreateBus. The original host single-owner admission guard remains intact. Default and typed public registration select their own instance/delay bindings; the full construction pipeline, limits, callbacks and recovery remain on the same base factory path. No concrete blocker found in this scope.
+
+All28 frozen owned inputs personally FULL (22 own prior exact-SHA reuses,6 fresh complete readings), plus own bounded25-source public route closure. Actual25 receipt rows and complete logs checked. Original final8:4 causal second-construction ConfigurationException reds/4 positives,0 guards. Corrected8 green. Two strict-compiled graph-only mutants: default+typed each causally fail and each independent positive passes; baseline8/rollback8 green. Exact56 source effects and unchanged public oracle verified. Mutants are DLL substitutions, not separately packed NuGet variants.
+
+Four selected nupkg→SHA512 lock→own cache→actual DLL chains verified. Independent static PE/Portable-PDB checks bind90 frozen-frame/public-CSharp checksum conditions and50 bounded-route conditions (with overlap, not140 distinct sources). Current selected DLLs and oracle restored. Independent readonly checkpoint03:53:55–03:53:58 UTC confirms6209 original M hashes plus new identity file removal. Later Package13 changes are outside this frozen frame.
+
+The positive B logical delay completes after A stop/provider disposal and B then delivers its own exact marker receipt. Oversize rejection is followed by normal delivery; seven eager invalid URI classes and exact unwrapped callback failure/recovery are observed. Harness keeps the primary first, attempts every cleanup, cancels/joins its pending delay and releases acquired owners in reverse.
+
+Initial missing-import compiler failure and four early R1 oracle mistakes are excluded and archived. F039 acceptance is limited to two sequential providers and eight console modes. No parallel-create, Core766/whole API, canonical-owner grade, ARM/cloud/broker/restart/heap or F019 closure. No native operations or product/CSV writes by reviewer; overall API review remains PARTIAL,0 CLOSED.

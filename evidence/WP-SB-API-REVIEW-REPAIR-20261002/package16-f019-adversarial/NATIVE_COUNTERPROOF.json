@@ -1,0 +1,136 @@
+[
+  {
+    "stage": "corrected",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package16-f019-binaries/corrected/ViciOne.ServiceBus.dll",
+      "sha256": "40297490a364f498ec51a77d8207ce438578e3cc527e8144b94fdbaa27fcc0c1"
+    },
+    "proof_phases": [
+      "package16-f019-mut-corrected-thirtytwo"
+    ],
+    "failure_headers": []
+  },
+  {
+    "stage": "rollback",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package16-f019-binaries/rollback/ViciOne.ServiceBus.dll",
+      "sha256": "40297490a364f498ec51a77d8207ce438578e3cc527e8144b94fdbaa27fcc0c1"
+    },
+    "proof_phases": [
+      "package16-f019-mut-rollback-thirtytwo"
+    ],
+    "failure_headers": []
+  },
+  {
+    "stage": "RemoveAutomaticRefresh",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package16-f019-binaries/RemoveAutomaticRefresh/ViciOne.ServiceBus.dll",
+      "sha256": "6e3464b4c4959e9bf518d47a644a6fe475330f0b5ad0c386c6a1b8751febac90"
+    },
+    "proof_phases": [
+      "package16-f019-mut-RemoveAutomaticRefresh-ordinarydisposedpredecessor",
+      "package16-f019-mut-RemoveAutomaticRefresh-explicitlivefactorycontrol"
+    ],
+    "failure_headers": [
+      "ordinarydisposedpredecessor Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null"
+    ]
+  },
+  {
+    "stage": "LoseChildAutomaticOrigin",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package16-f019-binaries/LoseChildAutomaticOrigin/ViciOne.ServiceBus.dll",
+      "sha256": "a79b25b784f3aaffaadb7d91ada19fe90c48a3255a75e8871f419c162ad5607a"
+    },
+    "proof_phases": [
+      "package16-f019-mut-LoseChildAutomaticOrigin-automaticcategoryprovenance",
+      "package16-f019-mut-LoseChildAutomaticOrigin-ordinarydisposedpredecessor"
+    ],
+    "failure_headers": [
+      "automaticcategoryprovenance Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null"
+    ]
+  },
+  {
+    "stage": "LoseMessagesAutomaticOrigin",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package16-f019-binaries/LoseMessagesAutomaticOrigin/ViciOne.ServiceBus.dll",
+      "sha256": "1d5c8214e8b1b5db97bc5e0994bd0c867a8aea77108ef6ab2bc77f097b49822d"
+    },
+    "proof_phases": [
+      "package16-f019-mut-LoseMessagesAutomaticOrigin-automaticmessagesprovenance",
+      "package16-f019-mut-LoseMessagesAutomaticOrigin-ordinarydisposedpredecessor"
+    ],
+    "failure_headers": [
+      "automaticmessagesprovenance Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null"
+    ]
+  },
+  {
+    "stage": "MarkExplicitAsAutomatic",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package16-f019-binaries/MarkExplicitAsAutomatic/ViciOne.ServiceBus.dll",
+      "sha256": "11a6d98c737313382f4062dbb1f2c08ce1a92082f050d5cd281a87801613925e"
+    },
+    "proof_phases": [
+      "package16-f019-mut-MarkExplicitAsAutomatic-explicitlivefactorycontrol",
+      "package16-f019-mut-MarkExplicitAsAutomatic-ordinarydisposedpredecessor"
+    ],
+    "failure_headers": [
+      "explicitlivefactorycontrol Xunit.Sdk.SameException: Assert.Same() Failure: Values are not the same instance"
+    ]
+  },
+  {
+    "stage": "AlwaysTreatSameFactoryAsDifferent",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package16-f019-binaries/AlwaysTreatSameFactoryAsDifferent/ViciOne.ServiceBus.dll",
+      "sha256": "e1565eba2c32f1a4f5fbd5682de3a5bb4d2cbfc8bbeba335cf12864132b2ca0c"
+    },
+    "proof_phases": [
+      "package16-f019-mut-AlwaysTreatSameFactoryAsDifferent-sameproviderrootidentity",
+      "package16-f019-mut-AlwaysTreatSameFactoryAsDifferent-ordinarydisposedpredecessor"
+    ],
+    "failure_headers": [
+      "sameproviderrootidentity Xunit.Sdk.SameException: Assert.Same() Failure: Values are not the same instance"
+    ]
+  },
+  {
+    "stage": "FailRetireToNoFactory",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package16-f019-binaries/FailRetireToNoFactory/ViciOne.ServiceBus.dll",
+      "sha256": "77bbbed346acc361f320c5d7c42fa7569e298604f5969fb068fefc4d16edb5df"
+    },
+    "proof_phases": [
+      "package16-f019-mut-FailRetireToNoFactory-retireautomaticwhennofactory",
+      "package16-f019-mut-FailRetireToNoFactory-explicitnullwithoutfactoryidentity"
+    ],
+    "failure_headers": [
+      "retireautomaticwhennofactory Xunit.Sdk.NullException: Assert.Null() Failure: Value is not null"
+    ]
+  },
+  {
+    "stage": "DiscardExplicitNullIdentity",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package16-f019-binaries/DiscardExplicitNullIdentity/ViciOne.ServiceBus.dll",
+      "sha256": "449537f9b11e08db5e98b213e490b0e0a7acad60ca679d0be1463df8b828c451"
+    },
+    "proof_phases": [
+      "package16-f019-mut-DiscardExplicitNullIdentity-explicitnullwithoutfactoryidentity",
+      "package16-f019-mut-DiscardExplicitNullIdentity-ordinarydisposedpredecessor"
+    ],
+    "failure_headers": [
+      "explicitnullwithoutfactoryidentity Xunit.Sdk.SameException: Assert.Same() Failure: Values are not the same instance"
+    ]
+  },
+  {
+    "stage": "PrematureFactoryDispose",
+    "binary": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package16-f019-binaries/PrematureFactoryDispose/ViciOne.ServiceBus.dll",
+      "sha256": "cf80676a8864b12c618d7b83d281b2e360085505027859a98afc7556f7b54e6f"
+    },
+    "proof_phases": [
+      "package16-f019-mut-PrematureFactoryDispose-actualcallbackfactoryownership",
+      "package16-f019-mut-PrematureFactoryDispose-explicitlivefactorycontrol"
+    ],
+    "failure_headers": [
+      "actualcallbackfactoryownership Xunit.Sdk.EqualException: Assert.Equal() Failure: Values differ"
+    ]
+  }
+]

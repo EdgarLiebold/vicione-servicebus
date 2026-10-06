@@ -1,0 +1,296 @@
+{
+  "status": "EACH_ASSERTION_PERSONALLY_REVIEWED",
+  "scope": "ServiceBusSharedAdministrationLeaseTests only; 4 methods / 18 expanded cases",
+  "assertion_statement_lines": 47,
+  "assertions": [
+    {
+      "line": 40,
+      "expression_start": "Assert.False(pending.IsCompleted); // backed by an unreleased TCS, never elapsed time",
+      "semantic_review": "Inner entry proven then gated pending; elapsed time is not oracle.",
+      "blocking_problem": null
+    },
+    {
+      "line": 45,
+      "expression_start": "Assert.True(fixture.Gate.ForwardedToken.IsCancellationRequested,",
+      "semantic_review": "Real forwarded token cancellation asserted before manually canceling provider Task; primary F012 lifetime/link oracle.",
+      "blocking_problem": null
+    },
+    {
+      "line": 48,
+      "expression_start": "OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(",
+      "semantic_review": "Returned Task awaits provider cancellation.",
+      "blocking_problem": null
+    },
+    {
+      "line": 50,
+      "expression_start": "Assert.Equal(fixture.Gate.ForwardedToken, canceled.CancellationToken);",
+      "semantic_review": "Exact linked token preserved in OperationCanceledException.",
+      "blocking_problem": null
+    },
+    {
+      "line": 51,
+      "expression_start": "Assert.True(pending.IsCanceled);",
+      "semantic_review": "Returned Task is canceled, not success or fault.",
+      "blocking_problem": null
+    },
+    {
+      "line": 52,
+      "expression_start": "Assert.Equal(1, fixture.Calls);",
+      "semantic_review": "Exactly one provider call, with input checks delegated to AssertForwarding.",
+      "blocking_problem": null
+    },
+    {
+      "line": 78,
+      "expression_start": "Assert.False(pending.IsCompleted);",
+      "semantic_review": "Success route remains pending until explicit provider release.",
+      "blocking_problem": null
+    },
+    {
+      "line": 82,
+      "expression_start": "Assert.True(pending.IsCompletedSuccessfully);",
+      "semantic_review": "Actual public returned Task completes successfully.",
+      "blocking_problem": null
+    },
+    {
+      "line": 83,
+      "expression_start": "Assert.Equal(1, fixture.Calls);",
+      "semantic_review": "One provider call survives completion.",
+      "blocking_problem": null
+    },
+    {
+      "line": 84,
+      "expression_start": "Assert.False(fixture.Gate.ForwardedToken.IsCancellationRequested);",
+      "semantic_review": "Linked token is not spontaneously canceled before parent cancellation.",
+      "blocking_problem": null
+    },
+    {
+      "line": 89,
+      "expression_start": "Assert.False(fixture.Gate.ForwardedToken.IsCancellationRequested);",
+      "semantic_review": "Both parents canceled after success; disposed link token stays unrequested.",
+      "blocking_problem": null
+    },
+    {
+      "line": 117,
+      "expression_start": "Assert.False(pending.IsCompleted);",
+      "semantic_review": "Fault route stays pending before explicit provider fault.",
+      "blocking_problem": null
+    },
+    {
+      "line": 119,
+      "expression_start": "InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(",
+      "semantic_review": "Expected fault type propagates through returned Task.",
+      "blocking_problem": null
+    },
+    {
+      "line": 121,
+      "expression_start": "Assert.Same(original, actual);",
+      "semantic_review": "Original provider exception identity retained.",
+      "blocking_problem": null
+    },
+    {
+      "line": 122,
+      "expression_start": "Assert.True(pending.IsFaulted);",
+      "semantic_review": "Returned Task is faulted.",
+      "blocking_problem": null
+    },
+    {
+      "line": 123,
+      "expression_start": "Assert.Equal(1, fixture.Calls);",
+      "semantic_review": "One provider call on fault.",
+      "blocking_problem": null
+    },
+    {
+      "line": 124,
+      "expression_start": "Assert.False(fixture.Gate.ForwardedToken.IsCancellationRequested);",
+      "semantic_review": "No accidental cancellation before post-fault parent cancellation.",
+      "blocking_problem": null
+    },
+    {
+      "line": 127,
+      "expression_start": "Assert.False(fixture.Gate.ForwardedToken.IsCancellationRequested);",
+      "semantic_review": "Both parents canceled after fault; linked token remains unrequested, proving detached completed links.",
+      "blocking_problem": null
+    },
+    {
+      "line": 150,
+      "expression_start": "Assert.Equal(nameof(SendEndpointContext.SendAsync), method.Name);",
+      "semantic_review": "Positive send control invokes actual SendAsync boundary.",
+      "blocking_problem": null
+    },
+    {
+      "line": 151,
+      "expression_start": "Assert.Equal(2, args.Length);",
+      "semantic_review": "Send method argument arity preserves actual SPI shape.",
+      "blocking_problem": null
+    },
+    {
+      "line": 152,
+      "expression_start": "Assert.Same(message, args[0]);",
+      "semantic_review": "Original public message object forwarded unchanged.",
+      "blocking_problem": null
+    },
+    {
+      "line": 154,
+      "expression_start": "gate.RecordEntry(Assert.IsType<CancellationToken>(args[1]));",
+      "semantic_review": "Send fake captures actual CancellationToken, without auto-wiring parents.",
+      "blocking_problem": null
+    },
+    {
+      "line": 164,
+      "expression_start": "Assert.False(pending.IsCompleted);",
+      "semantic_review": "Positive send wrapper remains pending while provider gate is unreleased.",
+      "blocking_problem": null
+    },
+    {
+      "line": 166,
+      "expression_start": "Assert.True(gate.ForwardedToken.IsCancellationRequested);",
+      "semantic_review": "Send wrapper cancellation link stays active while pending.",
+      "blocking_problem": null
+    },
+    {
+      "line": 168,
+      "expression_start": "OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(",
+      "semantic_review": "Send returned Task propagates cancellation.",
+      "blocking_problem": null
+    },
+    {
+      "line": 170,
+      "expression_start": "Assert.Equal(gate.ForwardedToken, canceled.CancellationToken);",
+      "semantic_review": "Send exception keeps actual forwarded linked token.",
+      "blocking_problem": null
+    },
+    {
+      "line": 171,
+      "expression_start": "Assert.True(pending.IsCanceled);",
+      "semantic_review": "Send returned Task is canceled.",
+      "blocking_problem": null
+    },
+    {
+      "line": 172,
+      "expression_start": "Assert.Equal(1, calls);",
+      "semantic_review": "Send dispatch happened once.",
+      "blocking_problem": null
+    },
+    {
+      "line": 190,
+      "expression_start": "Assert.True(forwarded.CanBeCanceled);",
+      "semantic_review": "Forwarded token is cancelable.",
+      "blocking_problem": null
+    },
+    {
+      "line": 191,
+      "expression_start": "Assert.False(forwarded.IsCancellationRequested);",
+      "semantic_review": "Forwarded linked token initially unrequested.",
+      "blocking_problem": null
+    },
+    {
+      "line": 192,
+      "expression_start": "Assert.NotEqual(caller, forwarded);",
+      "semantic_review": "Caller token is not forwarded directly in place of link.",
+      "blocking_problem": null
+    },
+    {
+      "line": 193,
+      "expression_start": "Assert.NotEqual(lease, forwarded);",
+      "semantic_review": "Lease token is not forwarded directly in place of link.",
+      "blocking_problem": null
+    },
+    {
+      "line": 203,
+      "expression_start": "Assert.True(gate.Entered.IsCompleted, \"Operation completed before entering its inner boundary.\");",
+      "semantic_review": "Fast completion/fault before inner entry cannot falsely satisfy gate.",
+      "blocking_problem": null
+    },
+    {
+      "line": 288,
+      "expression_start": "Gate.RecordEntry(Assert.IsType<CancellationToken>(args[^1]));",
+      "semantic_review": "Administration fake records actual final CancellationToken argument.",
+      "blocking_problem": null
+    },
+    {
+      "line": 294,
+      "expression_start": "Assert.Equal(1, Calls);",
+      "semantic_review": "Strict fake recorded exactly one administration invocation.",
+      "blocking_problem": null
+    },
+    {
+      "line": 295,
+      "expression_start": "object?[] args = Assert.IsType<object?[]>(_recordedArguments);",
+      "semantic_review": "Recorded argument array actually exists.",
+      "blocking_problem": null
+    },
+    {
+      "line": 296,
+      "expression_start": "Assert.Equal(_operation == AdministrationOperation.CreateSubscription ? 4 : 2, args.Length);",
+      "semantic_review": "CreateSubscription has four arguments; other routes two.",
+      "blocking_problem": null
+    },
+    {
+      "line": 303,
+      "expression_start": "Assert.Same(expectedOptions, args[0]);",
+      "semantic_review": "Actual queue/topic/subscription options forwarded by identity.",
+      "blocking_problem": null
+    },
+    {
+      "line": 306,
+      "expression_start": "Assert.Same(_rule, args[1]);",
+      "semantic_review": "Exact optional rule forwarded.",
+      "blocking_problem": null
+    },
+    {
+      "line": 307,
+      "expression_start": "Assert.Same(_filter, args[2]);",
+      "semantic_review": "Exact optional filter forwarded.",
+      "blocking_problem": null
+    },
+    {
+      "line": 309,
+      "expression_start": "Assert.Equal(Gate.ForwardedToken, Assert.IsType<CancellationToken>(args[^1]));",
+      "semantic_review": "Recorded final argument equals exact gate token; type checked.",
+      "blocking_problem": null
+    },
+    {
+      "line": 317,
+      "expression_start": "AdministrationOperation.Queue => await Assert.IsAssignableFrom<Task<QueueProperties>>(_ownedOperation).WaitAsync(Timeout, TestToken),",
+      "semantic_review": "Public Queue Task preserves SDK QueueProperties return shape.",
+      "blocking_problem": null
+    },
+    {
+      "line": 318,
+      "expression_start": "AdministrationOperation.Topic => await Assert.IsAssignableFrom<Task<TopicProperties>>(_ownedOperation).WaitAsync(Timeout, TestToken),",
+      "semantic_review": "Public Topic Task preserves SDK TopicProperties return shape.",
+      "blocking_problem": null
+    },
+    {
+      "line": 319,
+      "expression_start": "AdministrationOperation.CreateSubscription => await Assert.IsAssignableFrom<Task<SubscriptionProperties>>(_ownedOperation).WaitAsync(Timeout, TestToken),",
+      "semantic_review": "Public CreateSubscription Task preserves SDK SubscriptionProperties return shape.",
+      "blocking_problem": null
+    },
+    {
+      "line": 320,
+      "expression_start": "AdministrationOperation.DeleteSubscription => await Assert.IsType<PendingGate<bool>>(Gate).ResultTask.WaitAsync(Timeout, TestToken),",
+      "semantic_review": "Delete provider bool gate is helper completion control, not a claimed public boolean result.",
+      "blocking_problem": null
+    },
+    {
+      "line": 324,
+      "expression_start": "Assert.True(Assert.IsType<bool>(actual));",
+      "semantic_review": "Delete helper provider succeeded; actual public void Task success independently established at 82.",
+      "blocking_problem": null
+    },
+    {
+      "line": 326,
+      "expression_start": "Assert.Same(Gate.ExpectedResult, actual);",
+      "semantic_review": "Three result-producing public Tasks preserve exact SDK result object; queue-result mutant fails here.",
+      "blocking_problem": null
+    }
+  ],
+  "fixture_controls": [
+    "Strict public DispatchProxy is a legitimate custom ConnectionContext SPI; production wrapper is real SharedConnectionContext.",
+    "TCS gates use RunContinuationsAsynchronously; token assertion occurs before fake manual cancellation; timeout bounds hung execution only.",
+    "WaitForEntry prevents already-completed outer Task from false pass; finally releases gates and observes inner/outer Tasks.",
+    "Observe helper suppresses only expected cancellation token or exact expected fault; no blanket swallowed assertion errors.",
+    "Delete bool gate is internal fake completion control, not a new public result contract."
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "status": "ACTUAL_EVALUATED762_TRACKED_CSHARP_SET_AND_HASHES_PASS_FINAL_CSC_GENERATED_SOURCE_CAPTURE_PENDING",
+  "utc": "2026-10-04T00:34:02.268334+00:00",
+  "log_sha256": "49cf7853caea62af8c8a7f2db7cc0dba9a31700a077a4ef809ec3941fe34da80",
+  "native_properties": {
+    "LangVersion": "14.0",
+    "DefineConstants": "TRACE;RELEASE",
+    "TargetFramework": "net10.0",
+    "MSBuildAllProjects": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/ViciOne.ServiceBus.Tests.csproj.nuget.g.props;;/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/Grpc.Tools.props;/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/_grpc/_Grpc.Tools.props;/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/_protobuf/Google.Protobuf.Tools.props;/usr/local/share/dotnet/sdk/10.0.302/Current/Microsoft.Common.targets/ImportAfter/Microsoft.TestPlatform.ImportAfter.targets;/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/Grpc.Tools.targets;/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/_grpc/_Grpc.Tools.targets;/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/_protobuf/Google.Protobuf.Tools.targets"
+  },
+  "tracked_owner_count": 766,
+  "evaluated_compile_count": 762,
+  "evaluated_protobuf_count": 1,
+  "evaluated_embedded_requirement_count": 1,
+  "additional_files": 0,
+  "compile_paths_and_current_hashes_exact_manifest": true,
+  "actual_listed_MSBuildAllProjects_bound": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/ViciOne.ServiceBus.Tests.csproj.nuget.g.props",
+      "bytes": 3813,
+      "sha256": "011dac6dc8a26b82e99acf3e9f74637a17eccbaf44686a6105de279ae3278957"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/Grpc.Tools.props",
+      "bytes": 661,
+      "sha256": "af4f45e20e5b86e4d91dc16fbfbc6185dbc81b55b19d8acc9af01e65ce0fa877"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/_grpc/_Grpc.Tools.props",
+      "bytes": 234,
+      "sha256": "6a482b9f4347b618793688e471007ea03fb3bb0181391f22b58ae272e938b20d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/_protobuf/Google.Protobuf.Tools.props",
+      "bytes": 1350,
+      "sha256": "7a3cbe8d01137b0576107cdb9a20ad20b2c04a4af001b2ec9d5c605827151622"
+    },
+    {
+      "path": "/usr/local/share/dotnet/sdk/10.0.302/Current/Microsoft.Common.targets/ImportAfter/Microsoft.TestPlatform.ImportAfter.targets",
+      "bytes": 1180,
+      "sha256": "756dc130cb63c753c0c3e165b6dab8f955cecb5b22e0d34d47c7ff5b726034fe"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/Grpc.Tools.targets",
+      "bytes": 667,
+      "sha256": "efcdce19a59a3109ce374dd164c6b73043cdb988064f4f21ef3c5eb07b830c5d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/_grpc/_Grpc.Tools.targets",
+      "bytes": 2881,
+      "sha256": "845ecb7edfe0ca22d1147e0722d86a319db95e3f00be3d16e3408ebfae0077d4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/grpc.tools/2.83.0/build/_protobuf/Google.Protobuf.Tools.targets",
+      "bytes": 23522,
+      "sha256": "d2a0aa80e793a06e9adeccaf647ef228681b457990436c74d33f85421879907c"
+    }
+  ],
+  "list_is_not_claimed_every_transitive_import": true,
+  "final_target_generated_and_Csc_inputs_pending": true,
+  "root_whole_semantic_owner_credit": false
+}

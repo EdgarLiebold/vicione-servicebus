@@ -64,9 +64,9 @@ public class AzureServiceBusTestHarness :
         AzureServiceBusReceiveEndpointConfiguring?.Invoke(configurator);
     }
 
-    /// <summary>Deletes every topic and queue from the configured Azure Service Bus namespace.</summary>
+    /// <summary>Deletes the topics and queues discovered by sequential enumeration of the configured Azure Service Bus namespace.</summary>
     /// <param name="cancellationToken">The token that cancels entity enumeration and deletion.</param>
-    /// <returns>A task that completes when the namespace contains no topics or queues.</returns>
+    /// <returns>A task that completes after the discovered topic and queue names have been deleted or are already absent.</returns>
     public override async Task CleanAsync(CancellationToken cancellationToken = default)
     {
         await AzureServiceBusNamespaceCleaner

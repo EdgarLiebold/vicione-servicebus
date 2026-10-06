@@ -1,0 +1,9 @@
+{
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE312_EF_JOB_SQL_TINY22_LOCAL_CONSTRUCTOR_SOURCE_ROOT_ACCEPTANCE_R1.json",
+    "sha256": "28b3b68b408684f9ce2ec62cd4e801e98682e16c0a52e60f82f8f204e712df8a"
+  },
+  "master_after_sha256": "ea278ac11fca12b55b80b5a33dbdeed1f683116f6f48a6605e7c9cef22ffbea6",
+  "accepted_count": 18971,
+  "Original_remaining": 460
+}

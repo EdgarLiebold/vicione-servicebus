@@ -1,0 +1,719 @@
+[
+  {
+    "generation": "previous",
+    "39_original_document_bindings": [
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ApiSurfaceGlobalUsings.cs",
+        "sha256": "92a91807b899850c048356982d623be2d372f1cf2b903612969d07f297b7c0c6",
+        "bytes": 762,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
+        "sha256": "90e8902627b6b2b78a16c65eba73031ba5ea93d59d0db163755f91fcdaa67132",
+        "bytes": 16222,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs",
+        "sha256": "a66a17c405cd379e1e24a4d2164b88e0dfbf4002bfe8434affce761c36c7afe7",
+        "bytes": 9879,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs",
+        "sha256": "749afe60c9686bab6d9cd9ca184babf63284e757f3ceed06acabdb1841e85cf6",
+        "bytes": 5940,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs",
+        "sha256": "3096dbd65f0e9bb9d1085ae3579b0910c69e104a00e905af6f8318c99ff3a7fa",
+        "bytes": 9083,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ApiSurfaceArchitectureTests.cs",
+        "sha256": "ab76acec294342bf17e526675204791e1cf819625d0fb0ff2cde2b416b4943db",
+        "bytes": 40729,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/AsyncApiConventionArchitectureTests.cs",
+        "sha256": "6539af9d0930d261bdb62cad1abe9fc98e414ce62deca35d0fdff5f6976aa751",
+        "bytes": 26752,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/BackgroundWorkOwnershipTests.cs",
+        "sha256": "5ca25d6761a2450163b337bc2e62800f6f94d79af216d9e43268f4d480193add",
+        "bytes": 9748,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CancellationTokenFlowArchitectureTests.cs",
+        "sha256": "8c15fefcb80429a61aab8e3dc6bbdcbd60132302d3b8891ecad4dca128484b17",
+        "bytes": 3000,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CapabilityPackageArchitectureTests.cs",
+        "sha256": "3087abee44f0a199d64af956dd30564545acb0881a88a90f12126258abbd2525",
+        "bytes": 11181,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ConfigurationExceptionArchitectureTests.cs",
+        "sha256": "1d1e05dc78d16d075c3255adc7c7990811366e9a8675788875912176fdae1383",
+        "bytes": 4777,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DeveloperJourneyArchitectureTests.cs",
+        "sha256": "71f0b5ff78bdfe0e48af11e79ab4240ece590dbd2c2695d5ff33aee19f200a42",
+        "bytes": 18085,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DurableSenderArchitectureTests.cs",
+        "sha256": "61118dfebdd02b99bf8a6dc468fb3a573f7dc2c7f6e04b5bd81b4a1537bcb3f2",
+        "bytes": 16395,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/GreenfieldApiArchitectureTests.cs",
+        "sha256": "ea41a73ed91c3e9bbd893d2db3f08dbc4646ee4e034c1301c56500c3b1e2b3d1",
+        "bytes": 19917,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/InboundMessageLimitsArchitectureTests.cs",
+        "sha256": "3a00c83369d22c461c428a4fe764b000ddf66227069c8356233bb48869ecf478",
+        "bytes": 6038,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/PayloadAdmissionArchitectureTests.cs",
+        "sha256": "a115ad1cfdb0b13220a77ae63e7869b1373855c067a342fc6e2ce1a006b5b001",
+        "bytes": 7259,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProductDocumentationArchitectureTests.cs",
+        "sha256": "b15c9050363b940a7f59f5d68bc1b7375bc307bfac26298cebb7ab43153f3916",
+        "bytes": 3892,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProviderCapabilityMatrixTests.cs",
+        "sha256": "dc241247b2d057c2a057af1216b977dc74042c97b21bde2028f5461ed12a58f7",
+        "bytes": 6284,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TechnicalRetryArchitectureTests.cs",
+        "sha256": "2b4b21227d2e618b063c22bab4dd512c4fd4e851325dd4931b88c277b12a8e28",
+        "bytes": 3746,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs",
+        "sha256": "04ebf3be68e717bd85d2cb2ec36b6319cabf58e516db2426c70dcf269e6c9dfb",
+        "bytes": 2462,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs",
+        "sha256": "4dbc0964a5fae7068b682717e5db7d7f0f362b5bebbf730be8206428d8790831",
+        "bytes": 4227,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs",
+        "sha256": "df6b180b30ef306efda2a0eae6c0f779b9812eb14747c15cca7e08ddfe0629b1",
+        "bytes": 3504,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/ProductProjectMetadataTests.cs",
+        "sha256": "bc564640aaac69b4f21f8e5440b9bc3de610d6445a5ff37f9baf210693b0bc24",
+        "bytes": 12165,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/PublicDocumentationArchitectureTests.cs",
+        "sha256": "3f2c96da47bfc24f67a3c582c71581243236c6cfa4f494e65baa75e1d186ebf0",
+        "bytes": 26552,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs",
+        "sha256": "15571481c01454521fc6f158a1a30d4b41c3e1b01cf34fb0f4358d12c51bfa3d",
+        "bytes": 25127,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs",
+        "sha256": "326e412c06597e85b1c47f7557a6dcfc88a3546d736725504b3b2f6cbd726603",
+        "bytes": 7031,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayoutTests.cs",
+        "sha256": "11d08bf1faa3fce21dae486ed8fd49d7483f749f44c35806d323e502989836c1",
+        "bytes": 4674,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceFileNamingArchitectureTests.cs",
+        "sha256": "c96ffe3797e4760a5bd7b849907486b5d23974c1358bfa4f40ccbc41cc3d38d3",
+        "bytes": 71574,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceHygieneArchitectureTests.cs",
+        "sha256": "9704879e1982e8e6dd3c2c2fa645e5bdf52bfa9a33fd28d4d25528310af9132e",
+        "bytes": 11322,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs",
+        "sha256": "660f883a15e95ab1d51587dc3328cdb9cfec3936116241b78981d19900a65a3b",
+        "bytes": 7316,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "sha256": "e8fda40be2674c55d0b101869247b809100568cf993f540048c9afc37c271e88",
+        "bytes": 2200,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs",
+        "sha256": "2cf88561bd7bbf56ce855d5240a01be7ef5c1443c49c25a5de624b2fa5079ea4",
+        "bytes": 7936,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+        "sha256": "7d584a00ccee0d028bcaa9e1ca48bf46d1501f71c35413266d0c7299015debd7",
+        "bytes": 19799,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/ProviderFixtureRunnerTests.cs",
+        "sha256": "46d2eb00a290a64c6d5b560bfa38740aa62692cf5856c809d367e1e58b43c0cb",
+        "bytes": 15880,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiBaselineTests.cs",
+        "sha256": "9b169f88ad57ceec31c5955d6d6e2cfb8f1ae8a9f71f9ea0b7f34abf66da496f",
+        "bytes": 5565,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiGenericContractTests.cs",
+        "sha256": "16d8a45c355c445f2b032abf7a390a06136bc21d6b696080fb392a876d1d9086",
+        "bytes": 8216,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberModifierTests.cs",
+        "sha256": "86ff1418277d2ffd1ef4ea5107b322eb7622682d8d71de7898747d1c8df35458",
+        "bytes": 18867,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberNullabilityTests.cs",
+        "sha256": "727e36c963dc6c8b57b888f18bec3091ee3e45a31d31253ecdaa475a6fcb2788",
+        "bytes": 21092,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiRuntimeContractTests.cs",
+        "sha256": "4307b28bcca465a9021b8e6d15a1a8c1ce111c04cc21c8b2397f5a19e6bf1f70",
+        "bytes": 2070,
+        "PDB_current_F_INPUT_GIT_equal": true
+      }
+    ]
+  },
+  {
+    "generation": "corrected",
+    "39_original_document_bindings": [
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ApiSurfaceGlobalUsings.cs",
+        "sha256": "92a91807b899850c048356982d623be2d372f1cf2b903612969d07f297b7c0c6",
+        "bytes": 762,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
+        "sha256": "90e8902627b6b2b78a16c65eba73031ba5ea93d59d0db163755f91fcdaa67132",
+        "bytes": 16222,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs",
+        "sha256": "a66a17c405cd379e1e24a4d2164b88e0dfbf4002bfe8434affce761c36c7afe7",
+        "bytes": 9879,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs",
+        "sha256": "749afe60c9686bab6d9cd9ca184babf63284e757f3ceed06acabdb1841e85cf6",
+        "bytes": 5940,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs",
+        "sha256": "3096dbd65f0e9bb9d1085ae3579b0910c69e104a00e905af6f8318c99ff3a7fa",
+        "bytes": 9083,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ApiSurfaceArchitectureTests.cs",
+        "sha256": "ab76acec294342bf17e526675204791e1cf819625d0fb0ff2cde2b416b4943db",
+        "bytes": 40729,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/AsyncApiConventionArchitectureTests.cs",
+        "sha256": "6539af9d0930d261bdb62cad1abe9fc98e414ce62deca35d0fdff5f6976aa751",
+        "bytes": 26752,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/BackgroundWorkOwnershipTests.cs",
+        "sha256": "5ca25d6761a2450163b337bc2e62800f6f94d79af216d9e43268f4d480193add",
+        "bytes": 9748,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CancellationTokenFlowArchitectureTests.cs",
+        "sha256": "8c15fefcb80429a61aab8e3dc6bbdcbd60132302d3b8891ecad4dca128484b17",
+        "bytes": 3000,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CapabilityPackageArchitectureTests.cs",
+        "sha256": "3087abee44f0a199d64af956dd30564545acb0881a88a90f12126258abbd2525",
+        "bytes": 11181,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ConfigurationExceptionArchitectureTests.cs",
+        "sha256": "1d1e05dc78d16d075c3255adc7c7990811366e9a8675788875912176fdae1383",
+        "bytes": 4777,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DeveloperJourneyArchitectureTests.cs",
+        "sha256": "71f0b5ff78bdfe0e48af11e79ab4240ece590dbd2c2695d5ff33aee19f200a42",
+        "bytes": 18085,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DurableSenderArchitectureTests.cs",
+        "sha256": "61118dfebdd02b99bf8a6dc468fb3a573f7dc2c7f6e04b5bd81b4a1537bcb3f2",
+        "bytes": 16395,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/GreenfieldApiArchitectureTests.cs",
+        "sha256": "ea41a73ed91c3e9bbd893d2db3f08dbc4646ee4e034c1301c56500c3b1e2b3d1",
+        "bytes": 19917,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/InboundMessageLimitsArchitectureTests.cs",
+        "sha256": "3a00c83369d22c461c428a4fe764b000ddf66227069c8356233bb48869ecf478",
+        "bytes": 6038,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/PayloadAdmissionArchitectureTests.cs",
+        "sha256": "a115ad1cfdb0b13220a77ae63e7869b1373855c067a342fc6e2ce1a006b5b001",
+        "bytes": 7259,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProductDocumentationArchitectureTests.cs",
+        "sha256": "b15c9050363b940a7f59f5d68bc1b7375bc307bfac26298cebb7ab43153f3916",
+        "bytes": 3892,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProviderCapabilityMatrixTests.cs",
+        "sha256": "dc241247b2d057c2a057af1216b977dc74042c97b21bde2028f5461ed12a58f7",
+        "bytes": 6284,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TechnicalRetryArchitectureTests.cs",
+        "sha256": "2b4b21227d2e618b063c22bab4dd512c4fd4e851325dd4931b88c277b12a8e28",
+        "bytes": 3746,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs",
+        "sha256": "04ebf3be68e717bd85d2cb2ec36b6319cabf58e516db2426c70dcf269e6c9dfb",
+        "bytes": 2462,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs",
+        "sha256": "4dbc0964a5fae7068b682717e5db7d7f0f362b5bebbf730be8206428d8790831",
+        "bytes": 4227,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs",
+        "sha256": "df6b180b30ef306efda2a0eae6c0f779b9812eb14747c15cca7e08ddfe0629b1",
+        "bytes": 3504,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/ProductProjectMetadataTests.cs",
+        "sha256": "bc564640aaac69b4f21f8e5440b9bc3de610d6445a5ff37f9baf210693b0bc24",
+        "bytes": 12165,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/PublicDocumentationArchitectureTests.cs",
+        "sha256": "3f2c96da47bfc24f67a3c582c71581243236c6cfa4f494e65baa75e1d186ebf0",
+        "bytes": 26552,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs",
+        "sha256": "15571481c01454521fc6f158a1a30d4b41c3e1b01cf34fb0f4358d12c51bfa3d",
+        "bytes": 25127,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs",
+        "sha256": "326e412c06597e85b1c47f7557a6dcfc88a3546d736725504b3b2f6cbd726603",
+        "bytes": 7031,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayoutTests.cs",
+        "sha256": "11d08bf1faa3fce21dae486ed8fd49d7483f749f44c35806d323e502989836c1",
+        "bytes": 4674,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceFileNamingArchitectureTests.cs",
+        "sha256": "c96ffe3797e4760a5bd7b849907486b5d23974c1358bfa4f40ccbc41cc3d38d3",
+        "bytes": 71574,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceHygieneArchitectureTests.cs",
+        "sha256": "9704879e1982e8e6dd3c2c2fa645e5bdf52bfa9a33fd28d4d25528310af9132e",
+        "bytes": 11322,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs",
+        "sha256": "660f883a15e95ab1d51587dc3328cdb9cfec3936116241b78981d19900a65a3b",
+        "bytes": 7316,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "sha256": "e8fda40be2674c55d0b101869247b809100568cf993f540048c9afc37c271e88",
+        "bytes": 2200,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs",
+        "sha256": "2cf88561bd7bbf56ce855d5240a01be7ef5c1443c49c25a5de624b2fa5079ea4",
+        "bytes": 7936,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+        "sha256": "7d584a00ccee0d028bcaa9e1ca48bf46d1501f71c35413266d0c7299015debd7",
+        "bytes": 19799,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/ProviderFixtureRunnerTests.cs",
+        "sha256": "46d2eb00a290a64c6d5b560bfa38740aa62692cf5856c809d367e1e58b43c0cb",
+        "bytes": 15880,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiBaselineTests.cs",
+        "sha256": "9b169f88ad57ceec31c5955d6d6e2cfb8f1ae8a9f71f9ea0b7f34abf66da496f",
+        "bytes": 5565,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiGenericContractTests.cs",
+        "sha256": "16d8a45c355c445f2b032abf7a390a06136bc21d6b696080fb392a876d1d9086",
+        "bytes": 8216,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberModifierTests.cs",
+        "sha256": "86ff1418277d2ffd1ef4ea5107b322eb7622682d8d71de7898747d1c8df35458",
+        "bytes": 18867,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberNullabilityTests.cs",
+        "sha256": "727e36c963dc6c8b57b888f18bec3091ee3e45a31d31253ecdaa475a6fcb2788",
+        "bytes": 21092,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiRuntimeContractTests.cs",
+        "sha256": "4307b28bcca465a9021b8e6d15a1a8c1ce111c04cc21c8b2397f5a19e6bf1f70",
+        "bytes": 2070,
+        "PDB_current_F_INPUT_GIT_equal": true
+      }
+    ]
+  },
+  {
+    "generation": "countercase",
+    "39_original_document_bindings": [
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ApiSurfaceGlobalUsings.cs",
+        "sha256": "92a91807b899850c048356982d623be2d372f1cf2b903612969d07f297b7c0c6",
+        "bytes": 762,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
+        "sha256": "90e8902627b6b2b78a16c65eba73031ba5ea93d59d0db163755f91fcdaa67132",
+        "bytes": 16222,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs",
+        "sha256": "a66a17c405cd379e1e24a4d2164b88e0dfbf4002bfe8434affce761c36c7afe7",
+        "bytes": 9879,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs",
+        "sha256": "749afe60c9686bab6d9cd9ca184babf63284e757f3ceed06acabdb1841e85cf6",
+        "bytes": 5940,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs",
+        "sha256": "3096dbd65f0e9bb9d1085ae3579b0910c69e104a00e905af6f8318c99ff3a7fa",
+        "bytes": 9083,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ApiSurfaceArchitectureTests.cs",
+        "sha256": "ab76acec294342bf17e526675204791e1cf819625d0fb0ff2cde2b416b4943db",
+        "bytes": 40729,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/AsyncApiConventionArchitectureTests.cs",
+        "sha256": "6539af9d0930d261bdb62cad1abe9fc98e414ce62deca35d0fdff5f6976aa751",
+        "bytes": 26752,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/BackgroundWorkOwnershipTests.cs",
+        "sha256": "5ca25d6761a2450163b337bc2e62800f6f94d79af216d9e43268f4d480193add",
+        "bytes": 9748,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CancellationTokenFlowArchitectureTests.cs",
+        "sha256": "8c15fefcb80429a61aab8e3dc6bbdcbd60132302d3b8891ecad4dca128484b17",
+        "bytes": 3000,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/CapabilityPackageArchitectureTests.cs",
+        "sha256": "3087abee44f0a199d64af956dd30564545acb0881a88a90f12126258abbd2525",
+        "bytes": 11181,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ConfigurationExceptionArchitectureTests.cs",
+        "sha256": "1d1e05dc78d16d075c3255adc7c7990811366e9a8675788875912176fdae1383",
+        "bytes": 4777,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DeveloperJourneyArchitectureTests.cs",
+        "sha256": "71f0b5ff78bdfe0e48af11e79ab4240ece590dbd2c2695d5ff33aee19f200a42",
+        "bytes": 18085,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/DurableSenderArchitectureTests.cs",
+        "sha256": "61118dfebdd02b99bf8a6dc468fb3a573f7dc2c7f6e04b5bd81b4a1537bcb3f2",
+        "bytes": 16395,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/GreenfieldApiArchitectureTests.cs",
+        "sha256": "ea41a73ed91c3e9bbd893d2db3f08dbc4646ee4e034c1301c56500c3b1e2b3d1",
+        "bytes": 19917,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/InboundMessageLimitsArchitectureTests.cs",
+        "sha256": "3a00c83369d22c461c428a4fe764b000ddf66227069c8356233bb48869ecf478",
+        "bytes": 6038,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/PayloadAdmissionArchitectureTests.cs",
+        "sha256": "a115ad1cfdb0b13220a77ae63e7869b1373855c067a342fc6e2ce1a006b5b001",
+        "bytes": 7259,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProductDocumentationArchitectureTests.cs",
+        "sha256": "b15c9050363b940a7f59f5d68bc1b7375bc307bfac26298cebb7ab43153f3916",
+        "bytes": 3892,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/ProviderCapabilityMatrixTests.cs",
+        "sha256": "dc241247b2d057c2a057af1216b977dc74042c97b21bde2028f5461ed12a58f7",
+        "bytes": 6284,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TechnicalRetryArchitectureTests.cs",
+        "sha256": "2b4b21227d2e618b063c22bab4dd512c4fd4e851325dd4931b88c277b12a8e28",
+        "bytes": 3746,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs",
+        "sha256": "04ebf3be68e717bd85d2cb2ec36b6319cabf58e516db2426c70dcf269e6c9dfb",
+        "bytes": 2462,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs",
+        "sha256": "4dbc0964a5fae7068b682717e5db7d7f0f362b5bebbf730be8206428d8790831",
+        "bytes": 4227,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs",
+        "sha256": "df6b180b30ef306efda2a0eae6c0f779b9812eb14747c15cca7e08ddfe0629b1",
+        "bytes": 3504,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/ProductProjectMetadataTests.cs",
+        "sha256": "bc564640aaac69b4f21f8e5440b9bc3de610d6445a5ff37f9baf210693b0bc24",
+        "bytes": 12165,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/PublicDocumentationArchitectureTests.cs",
+        "sha256": "3f2c96da47bfc24f67a3c582c71581243236c6cfa4f494e65baa75e1d186ebf0",
+        "bytes": 26552,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs",
+        "sha256": "15571481c01454521fc6f158a1a30d4b41c3e1b01cf34fb0f4358d12c51bfa3d",
+        "bytes": 25127,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs",
+        "sha256": "326e412c06597e85b1c47f7557a6dcfc88a3546d736725504b3b2f6cbd726603",
+        "bytes": 7031,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayoutTests.cs",
+        "sha256": "11d08bf1faa3fce21dae486ed8fd49d7483f749f44c35806d323e502989836c1",
+        "bytes": 4674,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceFileNamingArchitectureTests.cs",
+        "sha256": "c96ffe3797e4760a5bd7b849907486b5d23974c1358bfa4f40ccbc41cc3d38d3",
+        "bytes": 71574,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/SourceHygieneArchitectureTests.cs",
+        "sha256": "9704879e1982e8e6dd3c2c2fa645e5bdf52bfa9a33fd28d4d25528310af9132e",
+        "bytes": 11322,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs",
+        "sha256": "660f883a15e95ab1d51587dc3328cdb9cfec3936116241b78981d19900a65a3b",
+        "bytes": 7316,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "sha256": "e8fda40be2674c55d0b101869247b809100568cf993f540048c9afc37c271e88",
+        "bytes": 2200,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs",
+        "sha256": "2cf88561bd7bbf56ce855d5240a01be7ef5c1443c49c25a5de624b2fa5079ea4",
+        "bytes": 7936,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs",
+        "sha256": "7d584a00ccee0d028bcaa9e1ca48bf46d1501f71c35413266d0c7299015debd7",
+        "bytes": 19799,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/ProviderFixtureRunnerTests.cs",
+        "sha256": "46d2eb00a290a64c6d5b560bfa38740aa62692cf5856c809d367e1e58b43c0cb",
+        "bytes": 15880,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiBaselineTests.cs",
+        "sha256": "9b169f88ad57ceec31c5955d6d6e2cfb8f1ae8a9f71f9ea0b7f34abf66da496f",
+        "bytes": 5565,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiGenericContractTests.cs",
+        "sha256": "16d8a45c355c445f2b032abf7a390a06136bc21d6b696080fb392a876d1d9086",
+        "bytes": 8216,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberModifierTests.cs",
+        "sha256": "86ff1418277d2ffd1ef4ea5107b322eb7622682d8d71de7898747d1c8df35458",
+        "bytes": 18867,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiMemberNullabilityTests.cs",
+        "sha256": "727e36c963dc6c8b57b888f18bec3091ee3e45a31d31253ecdaa475a6fcb2788",
+        "bytes": 21092,
+        "PDB_current_F_INPUT_GIT_equal": true
+      },
+      {
+        "relative": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/PublicApiRuntimeContractTests.cs",
+        "sha256": "4307b28bcca465a9021b8e6d15a1a8c1ce111c04cc21c8b2397f5a19e6bf1f70",
+        "bytes": 2070,
+        "PDB_current_F_INPUT_GIT_equal": true
+      }
+    ]
+  }
+]

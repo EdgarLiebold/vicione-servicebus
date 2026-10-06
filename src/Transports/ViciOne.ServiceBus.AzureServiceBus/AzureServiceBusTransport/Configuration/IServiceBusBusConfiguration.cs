@@ -16,7 +16,7 @@ public interface IServiceBusBusConfiguration :
     /// <summary>Gets the transport-specific topology configuration.</summary>
     new IServiceBusTopologyConfiguration Topology { get; }
 
-    /// <summary>Creates a child endpoint configuration with an isolated copy of the current topology settings.</summary>
+    /// <summary>Creates a child endpoint configuration. The built-in implementation creates separate consume topology and shares message, send, and publish topology.</summary>
     /// <param name="isBusEndpoint">Whether the child represents the bus endpoint.</param>
     /// <returns>The child endpoint configuration.</returns>
     IServiceBusEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint = false);

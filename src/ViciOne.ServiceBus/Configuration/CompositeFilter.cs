@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration;
 
-/// <summary>Processes composite pipeline stages.</summary>
+/// <summary>Combines inclusion and exclusion predicates for values of the specified type.</summary>
 /// <typeparam name="T">The value type.</typeparam>
 public class CompositeFilter<T>
 {

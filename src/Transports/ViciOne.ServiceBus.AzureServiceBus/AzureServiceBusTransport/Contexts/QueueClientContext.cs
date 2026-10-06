@@ -108,7 +108,13 @@ public class QueueClientContext :
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, "Stop processing client faulted: {InputAddress}", InputAddress);
+            try
+            {
+                LogContext.Warning?.Log(exception, "Stop processing client faulted: {InputAddress}", InputAddress);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 
@@ -127,7 +133,13 @@ public class QueueClientContext :
         }
         catch (Exception exception)
         {
-            LogContext.Warning?.Log(exception, "Close client faulted: {InputAddress}", InputAddress);
+            try
+            {
+                LogContext.Warning?.Log(exception, "Close client faulted: {InputAddress}", InputAddress);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 

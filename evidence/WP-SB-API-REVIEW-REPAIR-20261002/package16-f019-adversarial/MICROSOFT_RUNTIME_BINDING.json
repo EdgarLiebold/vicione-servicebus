@@ -1,0 +1,308 @@
+[
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.logging.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+    "name": "Microsoft.Extensions.Logging.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+    "sha256": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.hosting.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+    "name": "Microsoft.Extensions.Hosting.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+    "sha256": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.dependencyinjection.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+    "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+    "sha256": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.dependencyinjection/10.0.12/lib/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+    "name": "Microsoft.Extensions.DependencyInjection",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+    "sha256": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.hosting/10.0.12/lib/net10.0/Microsoft.Extensions.Hosting.dll",
+    "name": "Microsoft.Extensions.Hosting",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Hosting.dll",
+    "sha256": "a78489eb8dbc8a906865a9fe54dbdc51a270ffd1d1f7c70569b20f3d6e51d029"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.configuration.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+    "name": "Microsoft.Extensions.Configuration.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+    "sha256": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.logging/10.0.12/lib/net10.0/Microsoft.Extensions.Logging.dll",
+    "name": "Microsoft.Extensions.Logging",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Logging.dll",
+    "sha256": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.diagnostics/10.0.12/lib/net10.0/Microsoft.Extensions.Diagnostics.dll",
+    "name": "Microsoft.Extensions.Diagnostics",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.dll",
+    "sha256": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.options/10.0.12/lib/net10.0/Microsoft.Extensions.Options.dll",
+    "name": "Microsoft.Extensions.Options",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Options.dll",
+    "sha256": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.diagnostics.healthchecks/10.0.12/lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+    "name": "Microsoft.Extensions.Diagnostics.HealthChecks",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+    "sha256": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.diagnostics.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+    "name": "Microsoft.Extensions.Diagnostics.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+    "sha256": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.diagnostics.healthchecks.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+    "name": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+    "sha256": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.configuration/10.0.12/lib/net10.0/Microsoft.Extensions.Configuration.dll",
+    "name": "Microsoft.Extensions.Configuration",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Configuration.dll",
+    "sha256": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.primitives/10.0.12/lib/net10.0/Microsoft.Extensions.Primitives.dll",
+    "name": "Microsoft.Extensions.Primitives",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Primitives.dll",
+    "sha256": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.fileproviders.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+    "name": "Microsoft.Extensions.FileProviders.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+    "sha256": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.fileproviders.physical/10.0.12/lib/net10.0/Microsoft.Extensions.FileProviders.Physical.dll",
+    "name": "Microsoft.Extensions.FileProviders.Physical",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Physical.dll",
+    "sha256": "d57f6e1bcf47468a053696ea34b08e7d04edcc2681a5df586145835bd3f0db66"
+  },
+  {
+    "consumer": "previous",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/restored-packages/microsoft.extensions.configuration.fileextensions/10.0.12/lib/net10.0/Microsoft.Extensions.Configuration.FileExtensions.dll",
+    "name": "Microsoft.Extensions.Configuration.FileExtensions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/previous/bin/Release/net10.0/Microsoft.Extensions.Configuration.FileExtensions.dll",
+    "sha256": "bcbdc341e7134c620e6427ab136cd80d8686f63152e17276aa80c63afa6357ce"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.logging.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+    "name": "Microsoft.Extensions.Logging.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+    "sha256": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.hosting.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+    "name": "Microsoft.Extensions.Hosting.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+    "sha256": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.dependencyinjection.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+    "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+    "sha256": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.dependencyinjection/10.0.12/lib/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+    "name": "Microsoft.Extensions.DependencyInjection",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.dll",
+    "sha256": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.hosting/10.0.12/lib/net10.0/Microsoft.Extensions.Hosting.dll",
+    "name": "Microsoft.Extensions.Hosting",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Hosting.dll",
+    "sha256": "a78489eb8dbc8a906865a9fe54dbdc51a270ffd1d1f7c70569b20f3d6e51d029"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.configuration.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+    "name": "Microsoft.Extensions.Configuration.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+    "sha256": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.logging/10.0.12/lib/net10.0/Microsoft.Extensions.Logging.dll",
+    "name": "Microsoft.Extensions.Logging",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Logging.dll",
+    "sha256": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.diagnostics/10.0.12/lib/net10.0/Microsoft.Extensions.Diagnostics.dll",
+    "name": "Microsoft.Extensions.Diagnostics",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.dll",
+    "sha256": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.options/10.0.12/lib/net10.0/Microsoft.Extensions.Options.dll",
+    "name": "Microsoft.Extensions.Options",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Options.dll",
+    "sha256": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.diagnostics.healthchecks/10.0.12/lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+    "name": "Microsoft.Extensions.Diagnostics.HealthChecks",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll",
+    "sha256": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.diagnostics.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+    "name": "Microsoft.Extensions.Diagnostics.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll",
+    "sha256": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.diagnostics.healthchecks.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+    "name": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll",
+    "sha256": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.configuration/10.0.12/lib/net10.0/Microsoft.Extensions.Configuration.dll",
+    "name": "Microsoft.Extensions.Configuration",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.dll",
+    "sha256": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.primitives/10.0.12/lib/net10.0/Microsoft.Extensions.Primitives.dll",
+    "name": "Microsoft.Extensions.Primitives",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Primitives.dll",
+    "sha256": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.fileproviders.abstractions/10.0.12/lib/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+    "name": "Microsoft.Extensions.FileProviders.Abstractions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+    "sha256": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.fileproviders.physical/10.0.12/lib/net10.0/Microsoft.Extensions.FileProviders.Physical.dll",
+    "name": "Microsoft.Extensions.FileProviders.Physical",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.FileProviders.Physical.dll",
+    "sha256": "d57f6e1bcf47468a053696ea34b08e7d04edcc2681a5df586145835bd3f0db66"
+  },
+  {
+    "consumer": "corrected",
+    "package_version": "10.0.12",
+    "cache": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/restored-packages/microsoft.extensions.configuration.fileextensions/10.0.12/lib/net10.0/Microsoft.Extensions.Configuration.FileExtensions.dll",
+    "name": "Microsoft.Extensions.Configuration.FileExtensions",
+    "version": "10.0.0.0",
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package16-f019/corrected/bin/Release/net10.0/Microsoft.Extensions.Configuration.FileExtensions.dll",
+    "sha256": "bcbdc341e7134c620e6427ab136cd80d8686f63152e17276aa80c63afa6357ce"
+  }
+]

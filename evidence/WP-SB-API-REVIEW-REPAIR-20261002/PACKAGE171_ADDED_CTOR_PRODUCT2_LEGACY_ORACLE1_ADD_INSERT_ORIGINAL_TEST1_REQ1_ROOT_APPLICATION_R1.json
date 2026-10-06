@@ -1,0 +1,70 @@
+{
+  "utc": "2026-10-05T06:55:00.012058+00:00",
+  "actor": "/root",
+  "status": "ROOT_APPLIED_INDEPENDENTLY_REVIEWED_SOURCE_NATIVE_PENDING",
+  "freeze170": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package170-default-created-fixed-added-ctor-original134-prior117-neighbors2263-fresh2-independent-r1/FREEZE.json",
+    "sha256": "04d1af01d3a724e7909b64259ce5b4591edc05c813d608f64bdc5c1f88ffb2da"
+  },
+  "author_peer": [
+    {
+      "author": "package177-saga-added-and-constructor-product-proposed-r1",
+      "report_sha256": "abeae67f47defc8543d2d6f89dd5b4485a340f93b4b15ac176b728964d2dcadb",
+      "peer": "package177-saga-added-constructor-independent-scanner-r1",
+      "peer_report_sha256": "bf548252c8be391892aa5ba9b5201153627da42bbbfa8deda0a3271e5518598b"
+    },
+    {
+      "author": "package176-inmemory-add-insert-token8-oracles-proposed-r1",
+      "report_sha256": "61fdd2f67db8fd69c99f0f0f03c673940f835045dd1fbe97f46598e4d7a63819",
+      "peer": "package176-inmemory-add-insert-token8-independent-scanner-r1",
+      "peer_report_sha256": "e866fc5ffac5108f333f8d69565ab3c0f9624e6763f4cd3012f819648bd6053c"
+    }
+  ],
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/MissingSagaPipe.cs",
+      "before_sha256": "abc00eafdc38420f2a6024f2fde76f07dca3642dc614253d77b5fb2a95235e62",
+      "after_sha256": "eb44dd32e1f1f4d408e94167615001a6eb6ab7a48a6f7d4afa892b1f8c4ea997",
+      "before_lines": 104,
+      "after_lines": 110
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Configuration/SagaSpecification.cs",
+      "before_sha256": "723cc2ba6290163b1bb4d87d70df43601cecadc59c598e313d3cd1e58e8bd217",
+      "after_sha256": "d07f7507cd3a8fd2946c3c37f1021a783fc7453b80e53c4c3aa3c9132b4d74eb",
+      "before_lines": 123,
+      "after_lines": 142
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/SagaRepositoryLifecycleDeepContractTests.cs",
+      "before_sha256": "01c7545e9c62841409ded32bf5005b5941e556207409856ff3fca4b947d12da2",
+      "after_sha256": "a6c4ac40027af9d500d24e51d32d0966bd827b72d25e524147b7a02f3d1ff3dd",
+      "before_lines": 1341,
+      "after_lines": 1345
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryContextTests.cs",
+      "before_sha256": "bc070ae3344fbb3c55532b5072ecb48f015fe694d90b556c5ba2eefc7191d70a",
+      "after_sha256": "7352922f23e33a05ba2ac18e662fe327839bc8b19d3561ffb7c15f926a049b7c",
+      "before_lines": 893,
+      "after_lines": 1093
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "8f9c19b6a4a72286f50f38d4df8f7728cc25a3b42d66c01e5bac2ead7c804f4f",
+      "after_sha256": "29d28bb62eb672b4ce6e591f20ee513efca38523262523acb596f055dce7fc5b",
+      "before_lines": 32552,
+      "after_lines": 32559
+    }
+  ],
+  "root_read_scope": "Whole actual Missing110/Saga142 products e1b9c9, all3literal177patches0d8be4, actualMultipleConnectHandle helper945730, wholeAddInsert200literal5e743e+peer5dd08e andwhole177peer3d0f31. Allauthor/peer MAN andbeforeguards checked; every entireproposed independently reconstructed from exactliteralpatchbeforeanywrites. LegacyAdded4-line net change only; originalnewAdded2/Ctor4 preserved.",
+  "requirement_before": 4650,
+  "requirement_after": 4651,
+  "requirement_prefix_preserved": true,
+  "limits": [
+    "FirstRootpreflight162551 failed before any writes on peer177author_manifest schema; corrected dict-or-top-level manifestSHA extraction, all same exact guards retained.",
+    "Original170 qualification pending; no Rootconstructorfinding registration or fixedNativeacceptance before independentqualification.",
+    "AddInsert8 original controls only; Add/Insert Product unchanged; no Load repair evidence transfer.",
+    "No wholeAPI/A+ claim."
+  ]
+}

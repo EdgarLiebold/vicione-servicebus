@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T14:38:25.138865+00:00",
+  "status": "ROOT_APPLIED_DIFFERENT_WHOLE_REVIEWED_TEST1_REQADD1_NATIVE_PENDING",
+  "author_report": "03360fa4aeb658bd0c219dbadcf3a6280a7512e9561d2d4fb913c738a064ab27",
+  "different_report": "7261c8b3dbc39f04fd7dc09fe606f699ce207157084fa78c74201ff1a7daa45d",
+  "different_manifest": "c43d760e7be5e844f856c6b085926de124bcc15c59b12d8ce3802979147ae2b6",
+  "before_manifest": "2c79e8b26a0f5aa3b5c245d826e8fe481968f5d530ebce7c9ac57662dc0f9130",
+  "changes": [
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsReceiveLockDiagnosticsTests.cs",
+      "before": "af739de802e62d0852556f6d199ed3d54e57354eff1fa4b8f40816854fd31294",
+      "after": "ebc304e8e2129ef68aecb4bcdc9656f6e82e4e21ce7b215d94a1055d7ec38ca8"
+    },
+    {
+      "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "before": "66a66bc361e7c40138d55ac411be276916eb6e808b7663065b9cae3b280e279a",
+      "after": "2d7729a6910c833363db81148c3203791993b8379946d8b2f6669c95837f517d"
+    }
+  ],
+  "Root_whole_test_receipts": [
+    "dd2869",
+    "bc29f1"
+  ],
+  "Product_changed": false,
+  "native_credit": 0,
+  "grade": null
+}

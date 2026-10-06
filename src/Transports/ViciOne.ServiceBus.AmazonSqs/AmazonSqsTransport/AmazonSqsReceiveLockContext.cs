@@ -142,8 +142,15 @@ public class AmazonSqsReceiveLockContext :
             }
             catch (Exception redeliveryException)
             {
-                LogContext.Error?.Log(redeliveryException, "ChangeMessageVisibility failed: {ReceiptHandle}, Original Exception: {Exception}",
-                    _message.ReceiptHandle, exception);
+                try
+                {
+                    LogContext.Error?.Log(redeliveryException, "ChangeMessageVisibility failed: {ReceiptHandle}, Original Exception: {Exception}",
+                        _message.ReceiptHandle, exception);
+                }
+                catch (Exception)
+                {
+                    // Optional diagnostics cannot interrupt renewal or settlement.
+                }
             }
         }
         finally
@@ -187,8 +194,15 @@ public class AmazonSqsReceiveLockContext :
                 var renewalSeconds = Math.Min(_maxVisibilityTimeoutRenewal, (int)Math.Floor(remaining.TotalSeconds));
                 if (renewalSeconds <= 0)
                 {
-                    LogContext.Warning?.Log("Maximum visibility timeout {MaxVisibilityTimeout} for message {ReceiptHandle} reached.",
-                        _maxVisibilityTimeout, _message.ReceiptHandle);
+                    try
+                    {
+                        LogContext.Warning?.Log("Maximum visibility timeout {MaxVisibilityTimeout} for message {ReceiptHandle} reached.",
+                            _maxVisibilityTimeout, _message.ReceiptHandle);
+                    }
+                    catch (Exception)
+                    {
+                        // Optional diagnostics cannot interrupt renewal or settlement.
+                    }
                     Interlocked.Exchange(ref _locked, 0);
                     return;
                 }
@@ -201,13 +215,27 @@ public class AmazonSqsReceiveLockContext :
             }
             catch (MessageNotInflightException exception)
             {
-                LogContext.Warning?.Log(exception, "Message no longer in flight: {ReceiptHandle}", _message.ReceiptHandle);
+                try
+                {
+                    LogContext.Warning?.Log(exception, "Message no longer in flight: {ReceiptHandle}", _message.ReceiptHandle);
+                }
+                catch (Exception)
+                {
+                    // Optional diagnostics cannot interrupt renewal or settlement.
+                }
                 Interlocked.Exchange(ref _locked, 0);
                 return;
             }
             catch (ReceiptHandleIsInvalidException exception)
             {
-                LogContext.Warning?.Log(exception, "Message receipt handle is invalid: {ReceiptHandle}", _message.ReceiptHandle);
+                try
+                {
+                    LogContext.Warning?.Log(exception, "Message receipt handle is invalid: {ReceiptHandle}", _message.ReceiptHandle);
+                }
+                catch (Exception)
+                {
+                    // Optional diagnostics cannot interrupt renewal or settlement.
+                }
                 Interlocked.Exchange(ref _locked, 0);
                 return;
             }
@@ -217,8 +245,15 @@ public class AmazonSqsReceiveLockContext :
             }
             catch (Exception exception)
             {
-                LogContext.Error?.Log(exception, "Failed to extend message {ReceiptHandle} visibility ({ElapsedTime})",
-                    _message.ReceiptHandle, _timeProvider.GetElapsedTime(_startedAt));
+                try
+                {
+                    LogContext.Error?.Log(exception, "Failed to extend message {ReceiptHandle} visibility ({ElapsedTime})",
+                        _message.ReceiptHandle, _timeProvider.GetElapsedTime(_startedAt));
+                }
+                catch (Exception)
+                {
+                    // Optional diagnostics cannot interrupt renewal or settlement.
+                }
                 Interlocked.Exchange(ref _locked, 0);
                 return;
             }
@@ -227,10 +262,28 @@ public class AmazonSqsReceiveLockContext :
 
     async Task StopRenewalAsync()
     {
-        if (!_activeTokenSource.IsCancellationRequested)
-            await _activeTokenSource.CancelAsync().ConfigureAwait(false);
+        Exception? cancellationFailure = null;
+        try
+        {
+            if (!_activeTokenSource.IsCancellationRequested)
+                await _activeTokenSource.CancelAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            cancellationFailure = exception;
+        }
 
-        await _visibilityTask.ConfigureAwait(false);
+        try
+        {
+            await _visibilityTask.ConfigureAwait(false);
+        }
+        catch (Exception workerFailure) when (cancellationFailure is not null)
+        {
+            throw new AggregateException("Cancellation and visibility renewal shutdown both failed.", cancellationFailure, workerFailure);
+        }
+
+        if (cancellationFailure is not null)
+            global::System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(cancellationFailure).Throw();
     }
 
     void DisposeRenewalTokens()

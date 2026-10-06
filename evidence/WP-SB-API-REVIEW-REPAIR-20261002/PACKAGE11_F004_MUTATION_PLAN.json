@@ -1,0 +1,49 @@
+{
+  "baseline": "corrected-r2 combined journal owner + separate per-construction InMemory graph",
+  "actual_cases": 16,
+  "consumer_behavior_unchanged_from_root_FULL_prior_owner": true,
+  "F004_original_causal_red": 11,
+  "F004_original_positive": 4,
+  "separate_graph_original_red": 1,
+  "mutants": [
+    {
+      "name": "process-meter-selected",
+      "negative": "custom-factory-scope",
+      "positive": "nondi-outgoing"
+    },
+    {
+      "name": "factory-failure-global-fallback",
+      "negative": "factory-failure-after-success",
+      "positive": "custom-factory-scope"
+    },
+    {
+      "name": "borrowed-factory-meter-disposed",
+      "negative": "borrowed-factory-not-disposed",
+      "positive": "custom-factory-scope"
+    },
+    {
+      "name": "owned-source-disposal-omitted",
+      "negative": "activity-source-disposal",
+      "positive": "custom-factory-scope"
+    },
+    {
+      "name": "registration-caches-first-telemetry",
+      "negative": "two-roots-same-service-collection",
+      "positive": "two-independent-providers"
+    },
+    {
+      "name": "di-writer-forgets-owner",
+      "negative": "custom-factory-scope",
+      "positive": "nondi-consume"
+    },
+    {
+      "name": "shared-transport-graph-restored",
+      "finding_scope": "separate graph construction issue, not F004",
+      "negative": "two-roots-same-service-collection",
+      "positive": "two-independent-providers"
+    }
+  ],
+  "require": "strict compile + actual causal assertion/configuration failure (no guard) + real positive route; frozen app unchanged; original6209 M restored finally",
+  "native_mutants_use_dll_substitution": "NOT fresh NuGet per mutant",
+  "adversarial_final": "pending"
+}

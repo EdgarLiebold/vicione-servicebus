@@ -1,0 +1,28 @@
+{
+  "status": "RUNNING",
+  "oracle_hashes": {
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/packages.lock.json": "61ce3d2ec6248e07f066fd6a6c29b56e3afd93c1b4b82609d912f02a0b755eab",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/NuGet.Config": "69a890e28115ea2fd6355a1ad074bc101317daba1f8753a0c78d2c276a595268",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/Cases.cs": "3fe48b7066bf0bbc2b348d867095804a157f08ded70fd025f019695b752e6fc9",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/TrackingContext.cs": "60457bfd726c25dcc6dd7921cd7c1bbd44e36eb6df42c932ba5bd64b66c8f803",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/ClientAdapter.cs": "b2a945642a06293ff88d61e850138d366fd233d83dbeece6f13a14e532539cba",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/PublishProbe.cs": "ddc062f4a0946afa433b68493ee5846ad6cdf70f1ea96a7ca573aac263a607f6",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/PublicConnection.cs": "4dd31efb8c97f8af28c51f360dafecbcde3f61ebe0e5cb941d54ae1ce6bdf450",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/SignalRLifetime.PublicConsumer.csproj": "60b6b6930df14c605728aff74d61ef5a54e54f9b1d211da4ddd7f8681c0212ae",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/OwnedLifetime.cs": "577e8003c589582e8e7142418c735a8cefbe2943713e3bb968052bf53f76299a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/Probe.cs": "5b778f039bc5d9efc718e431c763f4ce4f1e3c534005e7fd616ee48230327ea1",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/Program.cs": "be00212fc89a5dd1d66cc136e10fb65e07fbb836678ee6c06a9c42c07b815f9d",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected/bin/Release/net10.0/SignalRLifetime.PublicConsumer.dll": "05dec5fff54d06acab2d95d7a5e799925a88e479c3e9bc5aa94426b24ad54b76"
+  },
+  "constant_runtime_dependencies": {
+    "ViciOne.ServiceBus.dll": "1872fcba94846a8705c9367ab7217d06a74db951b80a36c47a79dac0c95d2bab",
+    "ViciOne.ServiceBus.Abstractions.dll": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+  },
+  "controls": [],
+  "mutants": [],
+  "oracle_hashes_preserved": true,
+  "runtime_restored": true,
+  "original_files_checked": 6209,
+  "original_mismatches": [],
+  "new_identity_and_helper_removed": true
+}

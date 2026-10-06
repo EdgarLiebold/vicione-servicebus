@@ -1,0 +1,56 @@
+[
+  {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package08-docs/ViciOne.ServiceBus.1.0.0.nupkg",
+    "sha256": "b9b235f010544b71c32420e7eddc86d3d06f078d5145eb99514a6ba217da7eb0",
+    "entries": [
+      {
+        "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+        "sha256": "04e76facee784b40ac545f597dca6449cef5d1182e85114dcf68aa14126c6253"
+      },
+      {
+        "entry": "lib/net10.0/ViciOne.ServiceBus.xml",
+        "sha256": "beda69a21e970ddfdecc08bd744fe237cf78bdf35a51e57c1c980a789556e1c8"
+      },
+      {
+        "entry": "[Content_Types].xml",
+        "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e"
+      }
+    ]
+  },
+  {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package08-docs/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+    "sha256": "3658293eaaae0104c4603a9c9c615528e0e60c47876b240c6351fa8af1961cac",
+    "entries": [
+      {
+        "entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+        "sha256": "f71b1848a16fad1606422bc2468346b8dd69dee0fb1e11a40ecb8ec635c26f15"
+      },
+      {
+        "entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.xml",
+        "sha256": "1182e961a8760ac22f822533ae1ff9247402fecd5490a1fbbf09631d6acbdd02"
+      },
+      {
+        "entry": "[Content_Types].xml",
+        "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e"
+      }
+    ]
+  },
+  {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package08-docs/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+    "sha256": "75d4356d13f62233f395676093505b9892239691fbe74f6448614b19880f5f8f",
+    "entries": [
+      {
+        "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+        "sha256": "85cd37daf696412edda23cef2deb456ef700f9439a8e59702b1feb8938d663ec"
+      },
+      {
+        "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.xml",
+        "sha256": "907e8d3052ba3ed26713592df1f003c0ac0760e374a10070a9d99e8c7fe59128"
+      },
+      {
+        "entry": "[Content_Types].xml",
+        "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e"
+      }
+    ]
+  }
+]

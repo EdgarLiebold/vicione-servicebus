@@ -64,8 +64,21 @@ internal sealed class JobProgressBuffer
 
     async Task WaitForUpdateAsync()
     {
-        while (await _channel.Reader.WaitToReadAsync().ConfigureAwait(false))
-            await ReadUpdateAsync().ConfigureAwait(false);
+        try
+        {
+            while (await _channel.Reader.WaitToReadAsync().ConfigureAwait(false))
+                await ReadUpdateAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            // Wake pending writers and reject new progress when the sole reader fails.
+            _channel.Writer.TryComplete(exception);
+            throw;
+        }
+        finally
+        {
+            _channel.Writer.TryComplete();
+        }
     }
 
     async Task ReadUpdateAsync()

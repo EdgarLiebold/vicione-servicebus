@@ -1,0 +1,51 @@
+{
+  "utc": "2026-10-05T07:47:11.998611+00:00",
+  "actor": "/root",
+  "status": "ROOT_TWO_EMITTED_XML_CAUSES_CONFIRMED",
+  "findings": [
+    {
+      "id": "F-SB-API-158",
+      "severity": "Low",
+      "title": "Receive observer XML wrongly promises transport lifecycle notifications",
+      "status": "CONFIRMED_XML_CONTRACT_DEFECT_PRE_REVIEWED_XML_ONLY_REPAIR_PENDING_APPLICATION",
+      "classification": "CONFIRMED_EMITTED_XML_CONTRACT_DEFECT",
+      "source": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpoint.cs",
+      "member_id": "M:ViciOne.ServiceBus.Transports.ReceiveEndpoint.ConnectReceiveObserver(ViciOne.ServiceBus.Advanced.Observers.IReceiveObserver)",
+      "actual171_emitted_before_XML": "<member name=\"M:ViciOne.ServiceBus.Transports.ReceiveEndpoint.ConnectReceiveObserver(ViciOne.ServiceBus.Advanced.Observers.IReceiveObserver)\">\n            <summary>Subscribes an observer to receive transport notifications.</summary>\n            <param name=\"observer\">The observer that receives transport notifications.</param>\n            <returns>A handle that disconnects the registration.</returns>\n        </member>\n        ",
+      "independent_peer": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package180-core-transport-observer-reset-xml3-independent-qualification-r1/REPORT.json",
+        "sha256": "fe6a6cc81ffa2cd36cd4a461a4dba6ebf2f2291611e19d0a52839ef79bd6c223"
+      },
+      "runtime_code_changes": 0,
+      "whole_API_closed": false,
+      "limits": [
+        "XML-only semantics repair; runtime failure/recovery policy remains separate.",
+        "No mirrored test added; actual new emitted XML and fresh package must be validated."
+      ]
+    },
+    {
+      "id": "F-SB-API-159",
+      "severity": "Low",
+      "title": "Reset XML promises cancellation of provider release although the token only cancels waiting for admission",
+      "status": "CONFIRMED_XML_CONTRACT_DEFECT_PRE_REVIEWED_XML_ONLY_REPAIR_PENDING_APPLICATION",
+      "classification": "CONFIRMED_EMITTED_XML_CONTRACT_DEFECT",
+      "source": "src/ViciOne.ServiceBus/Transports/Receiving/BaseReceiveEndpointContext.cs",
+      "member_id": "M:ViciOne.ServiceBus.Transports.BaseReceiveEndpointContext.ResetAsync(System.Threading.CancellationToken)",
+      "actual171_emitted_before_XML": "<member name=\"M:ViciOne.ServiceBus.Transports.BaseReceiveEndpointContext.ResetAsync(System.Threading.CancellationToken)\">\n            <summary>Releases endpoint-provider resources and initializes empty provider caches for the next generation.</summary>\n            <param name=\"cancellationToken\">The token that cancels resource release.</param>\n            <returns>A value task that completes after the current providers have been released.</returns>\n        </member>\n        ",
+      "independent_peer": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package180-core-transport-observer-reset-xml3-independent-qualification-r1/REPORT.json",
+        "sha256": "fe6a6cc81ffa2cd36cd4a461a4dba6ebf2f2291611e19d0a52839ef79bd6c223"
+      },
+      "runtime_code_changes": 0,
+      "whole_API_closed": false,
+      "limits": [
+        "XML-only semantics repair; runtime failure/recovery policy remains separate.",
+        "No mirrored test added; actual new emitted XML and fresh package must be validated."
+      ]
+    }
+  ],
+  "root_human_scope": "Exact3patch/report6a8b78 plus actual resetbodyc8c76e and independentpeerwholecd9b8a; actual171emitted before2membernodes independentlymatched. Separate notification-target and cancellation-semantics causes, not runtime defect.",
+  "known_before": 157,
+  "known_after": 159,
+  "accepted_unchanged": 155
+}

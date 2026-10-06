@@ -1,0 +1,45 @@
+{
+  "utc": "2026-10-05T10:36:03.596686+00:00",
+  "actor": "/root",
+  "status": "ROOT_CURRENT_BOUNDED_SOURCE432_ACCEPTED_RESET212_HELD",
+  "before": {
+    "raw": 8302,
+    "original_canonical": 7602,
+    "sidecars": 671
+  },
+  "after": {
+    "raw": 8734,
+    "original_canonical": 7872,
+    "sidecars": 833,
+    "original_remaining": 10697
+  },
+  "accepted_original_canonical": 270,
+  "accessor_sidecars": {
+    "PropertyGet": 154,
+    "EventAdd": 3,
+    "EventRemove": 3,
+    "PropertySet": 2
+  },
+  "new_native_cases": 0,
+  "genuine_semantic_review": "Root personally read all263 original canonical norms through232 unique norms and prior20 corrections in previous logical turn; current175 exact8 changed owner contexts/four repaired execution norms and completeParent8 getter norms personally read. Independentwhole34Source credit not inherited. Mandatoryrow60 auto-property override applied.",
+  "independent_preservation_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package184-core425-current175-rebase-independent-scanner-r1/REPORT.json",
+    "sha256": "e7a2d2dfe36dda6bd0fef678182c92e428faad6d88d19dbafdd0d449289a9c78",
+    "manifest_sha256": "321e6c1c7f182c1829ed5a8a9dbbaeb023aab1b1c001200942910f720a0cd18e"
+  },
+  "actual_verification": "All3MAN/34liveSource/current175 attributedPDB/425 exactXML (row230 absent)/Parent8getterfragments/CSVcanonical andaliasparents verified. Existing671 parentmapping respects indexedgetter/setter signatures. Masterprefix8302 preserved.",
+  "held": [
+    {
+      "row": 212,
+      "reason": "Sequential cache-release behavior lacks established all-child failure norm; no confirmed defect or native proof."
+    }
+  ],
+  "precision": "162sidecars=154get/2set/3eventadd/3eventremove. Prior20 retained plus row60storage corrected.",
+  "whole_API_closed": false,
+  "whole_API_A_plus": false,
+  "limits": [
+    "No new Rootwhole34Source/fresh compiler graph.",
+    "No blanketNative promotion from selected173/175 proofs.",
+    "Custom supervisors/budgets/concurrency/metrics failures/concreteSDK remain separate."
+  ]
+}

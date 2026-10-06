@@ -1,0 +1,30 @@
+{
+  "status": "ROOT_SCOPED_ACCEPTED_SHARED_FINAL_PENDING",
+  "finding": "F-SB-API-039",
+  "utc": "2026-10-03T04:07:23.117932+00:00",
+  "Root_personally_FULL_final_review_txt_and_json": true,
+  "mechanical_hash_check": "all manifest artifacts and current+frozen owned inputs exact",
+  "owned_inputs": 28,
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE12_GRAPH_FREEZE.json",
+    "sha256": "0dc7415ee56a76034a34cc78b73d3c2e26585ee442666cb03b9744ab7d554e17"
+  },
+  "adversarial_manifest": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/MANIFEST.json",
+    "sha256": "16b1fc4c5e08190369923fd616522fc5242449830911f94b8b2d010109cdcc3e"
+  },
+  "adversarial_review": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/REVIEW.json",
+    "sha256": "69f1b6150d03c23e58e98943777087440454dce8824e8dab4ef93d5af80ec9f5"
+  },
+  "whole_API_closed": false,
+  "limits": [
+    "Scoped F039 internal factory and eight public console modes only. No Core766/all-InMemory/canonical-test-owner grades, no CLOSED symbol or whole API acceptance.",
+    "Two sequential providers, not parallel CreateBus; no ARM/cloud/broker/restart/retained-heap claim. Explicit public logging override isolates open F019.",
+    "Imported F004 and earlier package frames are personally FULL or own exact SHA reused here, but their complete native review is not transferred or regraded.",
+    "Frozen selected Graph package/PDB/source frame only. Later Package13 current ScopeConsumerFactory/build outputs are outside this acceptance.",
+    "Compiled mutants substitute strict-built DLLs into unchanged NuGet consumer; no fresh pack per mutant claim.",
+    "Guards are exclusions and cannot PASS. WaitAsync is an observation deadline, not universal underlying task cancellation. All accepted runs completed without guard failure.",
+    "No builds/restores/tests/native/product/canonical-test/CSV writes by this internal independent reviewer."
+  ]
+}

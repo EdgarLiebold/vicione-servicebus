@@ -8,7 +8,7 @@ public class ReceiveEndpointBrokerTopologyBuilder :
     /// <summary>Gets or sets the consuming Amazon SQS queue handle.</summary>
     public QueueHandle? Queue { get; set; }
 
-    /// <summary>Creates an immutable snapshot of the accumulated receive topology.</summary>
+    /// <summary>Creates an array snapshot of the accumulated receive topology.</summary>
     /// <returns>The broker topology snapshot.</returns>
     public BrokerTopology BuildTopologyLayout()
     {

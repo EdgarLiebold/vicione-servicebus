@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-04T15:48:22.808121+00:00",
+  "decision": "ROOT_INDEPENDENT_ADVERSARIAL_PREFLIGHT_SQL13_SOURCE_NO_BLOCK_APPLIED_NATIVE_PENDING",
+  "sources": [
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlMetadataAndOptionsContractTests.cs",
+      "before": null,
+      "after": "cf40fb093866b59ed9665110dd819cf508e8fa40c3023a311cd46a4ad5b6391f"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlClientLeaseAndTimerContractTests.cs",
+      "before": null,
+      "after": "9a868c37bc1cb7ddc16b4f70b89b2c37fe208d0b8d7b52ab91309b822b77b67d"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Runtime/SqlMessageReceiverTests.cs",
+      "before": "ffe765d45ccde865c0bef13231853a7b263e42ef369eba71b6fbd00a3436d4ed",
+      "after": "c84b1ef44c917e2909eeffe2f3e076dc94b3353c1b9ea0afd10938e32f952bd3"
+    }
+  ],
+  "requirements": {
+    "before": "1791930671d13f85af1fdd8c6f0387c59437c9d46d6d18a8585ca9e6206202d3",
+    "after": "ad2d948de7dfb952c3f0a10f6e91f95af93b930e1bd080a9befc807018562940",
+    "rows_before": 156,
+    "rows_after": 161
+  },
+  "root_reads": [
+    "4bad69 full2newSQLtestowners4methods11cases",
+    "cf2506 fullSQLreceiver27Ldelta+actualTimerRenewalexact75L",
+    "cdaae8 actualexistingReceiverTestmainworkflows+SPIhelpers selected, notwhole640L",
+    "47774e actualclientwrapper/publicnativeheader targetedcausecontext; headerownerwholevisible"
+  ],
+  "semantics": "NoDBcalls: fourheldownedclientTaskshapes/healthyneighbor; earlysynchronouscausalcancellationcheck failsfinitelybeforeawait; actualTimercontextSystem/Fake100dayand1h controls; actualnativeheaderlookupvsenumeration; actualfriendbuilderPortprojection; actualpublicReceiverdispatchfirstversussecondattemptandsettlement. FinallyjoinalladmittedTasks/registrations. XML2proposals deliberatelyseparatependingProductapproval.",
+  "limits": "OriginalexpectedREDnotconfirmeduntilNative; noDBintegrationorblanketSQLgrade, nofactoryreconstruction. Ownauthorruntimeagent notindependent reviewer; Rootactualtestsandcausalbody review."
+}

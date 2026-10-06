@@ -1,0 +1,571 @@
+{
+  "full": [
+    {
+      "receipt": {
+        "phase": "package12-shared-graph-core-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:26:52.932512+00:00",
+        "completed_utc": "2026-10-03T03:27:05.988903+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-shared-graph-core-build.log",
+        "log_sha256": "c6da7f9ba3477b408d203b2f458c74b5e5cdc7a4230a3f5580b7b45c32dfa45c"
+      },
+      "log_bytes": 496,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-shared-graph-core-pack",
+        "command": [
+          "dotnet",
+          "pack",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "-o",
+          "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package12-shared-graph/corrected",
+          "/p:PackageVersion=1.0.0"
+        ],
+        "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:27:24.526827+00:00",
+        "completed_utc": "2026-10-03T03:27:26.500604+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-shared-graph-core-pack.log",
+        "log_sha256": "8b76ebda38066e624d466da344bbbae5462d108a13c9ffd2017718eeb895b6e2"
+      },
+      "log_bytes": 174,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-restore",
+        "command": [
+          "dotnet",
+          "restore",
+          "GraphOwnership.PublicConsumer.csproj",
+          "--configfile",
+          "NuGet.Config",
+          "--disable-parallel"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:37:08.334397+00:00",
+        "completed_utc": "2026-10-03T03:37:10.766016+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-restore.log",
+        "log_sha256": "a00af9d9561c4a9c6763a727834152414280db7ec251af207718c816af7b9e9b"
+      },
+      "log_bytes": 226,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-build",
+        "command": [
+          "dotnet",
+          "build",
+          "GraphOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:37:32.400287+00:00",
+        "completed_utc": "2026-10-03T03:37:37.019152+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-build.log",
+        "log_sha256": "e48bcf68af62b2af638c0d3aaeefe126791a39487ff3dd790e785ba5b221aa5b"
+      },
+      "log_bytes": 2136,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-build-r3",
+        "command": [
+          "dotnet",
+          "build",
+          "GraphOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:40:12.844930+00:00",
+        "completed_utc": "2026-10-03T03:40:16.209593+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-build-r3.log",
+        "log_sha256": "48a996090656bb6aec0d12b8db4ace33ec3c7a15a3bb8089b6f85aea1d86d6ef"
+      },
+      "log_bytes": 301,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-eight-r2",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:41:01.295327+00:00",
+        "completed_utc": "2026-10-03T03:41:02.182061+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-eight-r2.log",
+        "log_sha256": "d7cd511850a1d1b4b540768c7411272428d858cf44febd4fcab6f2360ac0124f"
+      },
+      "log_bytes": 23689,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-corrected-restore",
+        "command": [
+          "dotnet",
+          "restore",
+          "GraphOwnership.PublicConsumer.csproj",
+          "--configfile",
+          "NuGet.Config",
+          "--disable-parallel"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:41:35.105827+00:00",
+        "completed_utc": "2026-10-03T03:41:37.249766+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-corrected-restore.log",
+        "log_sha256": "e359d4e85f4a064169b3f664078eb93c00d5b98bf956ce33b62173b902a77e41"
+      },
+      "log_bytes": 227,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-corrected-build",
+        "command": [
+          "dotnet",
+          "build",
+          "GraphOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:42:02.719645+00:00",
+        "completed_utc": "2026-10-03T03:42:06.374278+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-corrected-build.log",
+        "log_sha256": "83f2ec5adb21ebe4cf9f845a909109acc7786767f48c5051b2220af9775a0cf1"
+      },
+      "log_bytes": 302,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-corrected-eight",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:42:56.764822+00:00",
+        "completed_utc": "2026-10-03T03:42:57.546121+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-corrected-eight.log",
+        "log_sha256": "1db24c3185a94ab53ca26cadb5a542bef09931e59415ad6b278fa38f0ed1f956"
+      },
+      "log_bytes": 1297,
+      "read_status": "READ_FULL",
+      "read_mode": "OWN_PERSONAL_PREFLIGHT_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-build-r2",
+        "command": [
+          "dotnet",
+          "build",
+          "GraphOwnership.PublicConsumer.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:38:12.294150+00:00",
+        "completed_utc": "2026-10-03T03:38:18.214087+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-build-r2.log",
+        "log_sha256": "bef8730ea9cce5e6a7838a4f2ee259cc1924055c7bf7d9c2e20bc755afa979cd"
+      },
+      "log_bytes": 301,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-public-previous-eight",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/previous",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:39:35.193323+00:00",
+        "completed_utc": "2026-10-03T03:39:35.813347+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-public-previous-eight.log",
+        "log_sha256": "ec9b06971dced6453f1137b705f0bb8a150f3fe99173e83bc1ca55ab8f529e38"
+      },
+      "log_bytes": 19248,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-corrected-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:20.568436+00:00",
+        "completed_utc": "2026-10-03T03:44:36.305499+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-corrected-build.log",
+        "log_sha256": "4a3eb5ca0028fad9c896e8187aa6f34a5032c69fcf19bac7ebcae93f3abd7f45"
+      },
+      "log_bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-corrected-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:36.465834+00:00",
+        "completed_utc": "2026-10-03T03:44:37.563349+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-corrected-all.log",
+        "log_sha256": "77c2e6d109e311c2e274e4e79da662a39952122b5cebd6d032664d9ed53711e0"
+      },
+      "log_bytes": 1297,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:37.682729+00:00",
+        "completed_utc": "2026-10-03T03:44:50.725840+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-build.log",
+        "log_sha256": "77765d005d501a20d62069fa1c3bcca4bc535d12ee6e43718171d88eaf1205b5"
+      },
+      "log_bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-shared-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "shared-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:44:50.980752+00:00",
+        "completed_utc": "2026-10-03T03:44:51.685489+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-shared-default.log",
+        "log_sha256": "c9cf46ec9b9733eb60075a70d45ae77fb9cd1df7c302038f314df07f889e9cb4"
+      },
+      "log_bytes": 6470,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-shared-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "shared-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:44:51.781051+00:00",
+        "completed_utc": "2026-10-03T03:44:52.502483+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-shared-typed.log",
+        "log_sha256": "b2b04c0d2fcca5159d1b398696e5ea685f7bc85c6a47b02d9a45b68a5ae73c22"
+      },
+      "log_bytes": 6483,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-independent-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:52.615418+00:00",
+        "completed_utc": "2026-10-03T03:44:53.499272+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-independent-default.log",
+        "log_sha256": "36cb3c554f0627c757001de18a7ec02b42b5e27489c9c5e859b0f9f49fc28539"
+      },
+      "log_bytes": 919,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-independent-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:53.602913+00:00",
+        "completed_utc": "2026-10-03T03:44:54.392691+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-independent-typed.log",
+        "log_sha256": "2732b59df133be06dabf58ba25f216e90eb9515c3468003bd1b5ead8f40f4fe5"
+      },
+      "log_bytes": 917,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:54.505475+00:00",
+        "completed_utc": "2026-10-03T03:45:04.209807+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-build.log",
+        "log_sha256": "d2ed17c7ab96e9eb763fa40ce9e45845aac742c4e468b56671623f24182a7eba"
+      },
+      "log_bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-invalid-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "invalid-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:45:04.429623+00:00",
+        "completed_utc": "2026-10-03T03:45:04.723056+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-invalid-default.log",
+        "log_sha256": "12f212aa7eaf13bb03e96f121a0235bcc94d643069e2d700a0578542ce050054"
+      },
+      "log_bytes": 2555,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-invalid-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "invalid-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:45:04.848947+00:00",
+        "completed_utc": "2026-10-03T03:45:05.184502+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-invalid-typed.log",
+        "log_sha256": "0825086ca33f1f130e237168f4cf4a28fc0ca3dc9a3a1fc08e5f3a07b13a3616"
+      },
+      "log_bytes": 2553,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-independent-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:45:05.293248+00:00",
+        "completed_utc": "2026-10-03T03:45:06.122769+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-independent-default.log",
+        "log_sha256": "d583d4c1605891bffdb5ad956941d4f2357b8ddf52613ce02bc4cadb4c9f6d18"
+      },
+      "log_bytes": 919,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-independent-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:45:06.222216+00:00",
+        "completed_utc": "2026-10-03T03:45:07.008520+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-independent-typed.log",
+        "log_sha256": "96d408001d86343edac6a979245a5f7dbca4053c43f6f838296ecf66299a8e66"
+      },
+      "log_bytes": 917,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-rollback-build",
+        "command": [
+          "dotnet",
+          "build",
+          "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "-warnaserror"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:45:07.117693+00:00",
+        "completed_utc": "2026-10-03T03:45:14.455975+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-rollback-build.log",
+        "log_sha256": "cc368032c64750cf99a46e95f1ad0b67794ce0c189a5f2551401a7158a1da7d7"
+      },
+      "log_bytes": 482,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    },
+    {
+      "receipt": {
+        "phase": "package12-graph-mut-rollback-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:45:14.598097+00:00",
+        "completed_utc": "2026-10-03T03:45:15.776919+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-rollback-all.log",
+        "log_sha256": "77c2e6d109e311c2e274e4e79da662a39952122b5cebd6d032664d9ed53711e0"
+      },
+      "log_bytes": 1297,
+      "read_status": "READ_FULL",
+      "read_by": "azure_test_scope",
+      "read_mode": "PERSONAL_FRESH_FULL_NATIVE_LOG_TEXT"
+    }
+  ],
+  "pending": []
+}

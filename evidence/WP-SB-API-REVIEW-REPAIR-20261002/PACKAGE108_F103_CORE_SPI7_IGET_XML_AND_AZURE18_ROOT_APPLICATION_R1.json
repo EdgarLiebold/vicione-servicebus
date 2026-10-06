@@ -1,0 +1,121 @@
+{
+  "utc": "2026-10-04T17:56:40.283981+00:00",
+  "status": "SOURCE_ADVERSARIAL_APPROVED_ACTUAL_NATIVE_AND_FRESH_PACK_PENDING",
+  "records": [
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionContainerRegistrar.cs",
+      "before_sha256": "23611849484a0acd3b2c422342a42487cdf2a229736078eed59eccd58fdd56de",
+      "after_sha256": "3a6caa6fe3a99d3a5f99786e38b8b01145b7df2c3cbd429a5e87f6c403593f7c"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/DependencyInjection/FutureServiceCollectionExtensions.cs",
+      "before_sha256": "48837f8ff524c3ef4beb388be159af7cbb233144693163f857e5eacc95b55b53",
+      "after_sha256": "869b18a682cada0053006b88a7ee3b768c2ad2a67304b94435489624bd6e4885"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/Futures/Contracts/IGet.cs",
+      "before_sha256": "2ac5e75c758487fdc62b83bb166c13b21fa73984b478608221b0191041ae09ae",
+      "after_sha256": "fccb9b66d82c65a0f6e08524c35dae611daa3eb71c5e2a6cf82f5ec90e279826"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureSameTypeBusOwnershipTests.cs",
+      "before_sha256": null,
+      "after_sha256": "27639ebecce760c49860e1f48d82eeec0f343ca3bb653436d4c3b501f9f28a6c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureCustomRegistrarSpiTests.cs",
+      "before_sha256": null,
+      "after_sha256": "b41fb445e80642f809410bfd9e3d79ee6d786f66e3e2a0080f2a6c2b5e2bea21"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusAdministrationOwnershipTests.cs",
+      "before_sha256": null,
+      "after_sha256": "fd8d09cc4ed6787651517940c9ab022116958333e67e719f099d940c7effc5cb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "cd386bfc99c47c5a8ae0ec360b93d64e383bafab3a590eb800678c3d629e16b9",
+      "after_sha256": "a846b05734137757cfc0b5a997a8d6056dadf1a1134d524afdbfc019c0cec631"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "before_sha256": "1dd0862254c340992570674f2a5c99876cef716ac5fa985d1e1b2b337a5d2f7c",
+      "after_sha256": "26aa2a9353209c0a49ad73ca7e8e480e17672164602a4b647afdaa884794a5e3"
+    }
+  ],
+  "requirements": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_rows": 4586,
+      "after_rows": 4588,
+      "add_only": [
+        {
+          "requirementId": "REQ-VSB-FUTURE-REGISTRATION",
+          "testType": "ViciOne.ServiceBus.Tests.Futures.FutureSameTypeBusOwnershipTests",
+          "testMethod": "SameFutureType_DispatchesToTheCompanionOwnedByEachTypedBusAsync",
+          "variantKey": "same-future-type-dispatches-to-each-selected-bus-companion",
+          "testAssembly": "ViciOne.ServiceBus.Tests"
+        },
+        {
+          "requirementId": "REQ-VSB-FUTURE-REGISTRATION",
+          "variantKey": "custom-registrar-public-definition-spi-preserved-for-companions",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Futures.FutureCustomRegistrarSpiTests",
+          "testMethod": "CompanionDefinitions_PreserveTheActualCustomRegistrarPublicSpi"
+        }
+      ]
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "before_rows": 211,
+      "after_rows": 213,
+      "add_only": [
+        {
+          "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+          "variantKey": "admin-get-or-create-joins-existing-create-and-race-reread-stages",
+          "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusAdministrationOwnershipTests",
+          "testMethod": "GetOrCreate_JoinsTheExactExistingCreateOrRaceRereadAlgorithmAsync"
+        },
+        {
+          "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+          "variantKey": "admin-get-create-reread-preserves-exact-fault-and-cancellation",
+          "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusAdministrationOwnershipTests",
+          "testMethod": "GetOrCreate_PreservesTheExactFaultOrCancellationOfEachSdkStageAsync"
+        }
+      ]
+    }
+  ],
+  "independent_reports": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package98-typed-companion-definition-product-independent-r1/REPORT.json",
+      "sha256": "67c5189c6d62eb91ba0b88148d9a95b56bb7d35c7f42cea9e32a091c55c3c56e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package105-same-future-selected-owner-independent-r1/REPORT.json",
+      "sha256": "77b2c99197423f1da4e58c67f06e8ac08ca18a26e4c2f700dfd007a816385908"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package106-future-custom-registrar-spi-independent-r1/REPORT.json",
+      "sha256": "618322d2a5c7c5b83600b82329ad6120f80db7727789fe3cdb5f2875df05f722"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package89-azure-admin18-oracles-independent-r1/REPORT.json",
+      "sha256": "05293e619122f0cb1df5a5fd59ab039604f4893aa4adf4ac6c5e59ba001633d0"
+    }
+  ],
+  "root_whole_source_reviews": [
+    "57a00f exact product2+XML1 deltas; retained6f177c full214Future/ddf9ef owner+930d88 default policy",
+    "e699ab whole bothnew Core source owners",
+    "retained d4027a whole Azure18 owner+75cce4 peer report",
+    "dec1b6 full independent Core7 reports"
+  ],
+  "IGet_XML_Source_proof": "Future<TCommand>.ResultRequested uses IGet<TCommand>; actual one typeparameter prose correction, no public signature or runtime change. Root independently checked Runtime author proposal.",
+  "future_machine_owner_hypothesis": "New same-Future1 must execute after F103 constructor fix before any machine ownership change; no native finding yet.",
+  "before_metadata_sha256": {
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json": "2625868aa387a58e827d23383b6101acac15746a98d451048e4f10534b7f84a0",
+    "SERVICEBUS_API_REVIEW_AND_REPAIR/ADDITIONAL_FINDINGS.json": "a69a1658037f4410a6a3f57c760f21e7956320b0bf22925c51e9980f4b88424a"
+  },
+  "whole_API_member_review_closed": false
+}

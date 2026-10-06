@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-04T21:35:10.331462+00:00",
+  "status": "ROOT_ACCEPTED_144_BOUNDED_MEMBER_SOURCE_AND_SPECIFIC_ASSERTION_CONTRACTS_WHOLE_IMPLEMENTATION_OPEN",
+  "count_before": 2221,
+  "count_after": 2365,
+  "source_context_manifest_sha256": "b1c01152c5bd9bece8220c4bd13f6252f0aa0bb24e0795772dc1c1959008d54f",
+  "semantic_matrix_sha256": "68dd0edee492dfbb462eb6ec1ae940418f09a161b5cee4437b43aee8c6e0f726",
+  "abstract22_overlay_sha256": "a1cd4ecd4b0c504a8d80807f73d662e681c36cdde073e0d0a9245b979f522c0d",
+  "fixture_method_erratum_sha256": "24c0d0c3c3f553f1d6cd9e3b284e7a536e51f58bec5c8de318b88808260daa3e",
+  "own_whole_actual_product_reads": [
+    "7b91b7",
+    "b03f98",
+    "524e2f",
+    "1918cc"
+  ],
+  "own_all70_contract_profiles": [
+    "8ffb48",
+    "438fa9",
+    "1818d3",
+    "4abe55"
+  ],
+  "own22_abstract_norm_review": [
+    "8a261a",
+    "66f8e3"
+  ],
+  "own_exact30_used_assertion_indexes": [
+    "f85dcc",
+    "e1323d",
+    "3ce9f4"
+  ],
+  "own_multiline_assertion_source_followup": [
+    "842fcd",
+    "f20525"
+  ],
+  "provenance_review": "1830ae",
+  "peer_whole_scope": "Qualifier personally read 4Source+7test+7helper exact pins; peer credit remains separate from Root Source-focused assertions.",
+  "runtime_bound_epoch": "143 actual252=19Base+4Proxy+5Deserializer+35Message+34Notification+155Endpoint, source/test body pins unchanged; current148 native not implied.",
+  "limits": [
+    "All144 are bounded member semantic assessment, no whole implementation runtime/A+ closure.",
+    "19 specific remaining obligations preserved per row, including initializer/option/fallback/held protected publish/malformed custom SPI.",
+    "Four notification fixture methods reclassified source-helper only; exactly30 actual used Fact/Theory methods carry epoch143 named-case evidence.",
+    "Seven Outgoing tests and other unused index entries with zero actual143 cases receive no native credit.",
+    "Abstract22 local generic contracts apply corrected overlay; borrowed completion tasks do not establish remote delivery."
+  ],
+  "CLOSED": false
+}

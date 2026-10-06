@@ -1,0 +1,313 @@
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/ReceiveEndpointConfiguration.cs", "bytes": 7519, "sha256": "85a2fa03af1f7ea69178a1d9904d3e834f3252dcc3f576f8660a1a4fb2f94ae9", "start_line": 1, "end_line": 120}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Observables;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>Stores and validates receive endpoint configuration.</summary>
+public abstract class ReceiveEndpointConfiguration :
+    EndpointConfiguration,
+    IReceiveEndpointConfiguration
+{
+    readonly Lazy<IConsumePipe> _consumePipe;
+    readonly HashSet<IReceiveEndpointDependency> _dependencies;
+    readonly HashSet<IReceiveEndpointDependent> _dependents;
+    readonly List<string> _lateConfigurationKeys;
+    readonly List<IReceiveEndpointSpecification> _specifications;
+    IReceiveEndpoint _receiveEndpoint = null!;
+
+    /// <summary>Initializes a new instance.</summary>
+    /// <param name="hostConfiguration">The host configuration.</param>
+    /// <param name="endpointConfiguration">The endpoint configuration.</param>
+    protected ReceiveEndpointConfiguration(IHostConfiguration hostConfiguration, IEndpointConfiguration endpointConfiguration)
+        : base(endpointConfiguration)
+    {
+        ConfigureConsumeTopology = true;
+        PublishFaults = true;
+
+        _consumePipe = new Lazy<IConsumePipe>(() => Consume.Specification.BuildConsumePipe());
+        _specifications = new List<IReceiveEndpointSpecification>();
+        _lateConfigurationKeys = new List<string>();
+        _dependencies = new HashSet<IReceiveEndpointDependency>();
+        _dependents = new HashSet<IReceiveEndpointDependent>();
+
+        EndpointObservers = new ReceiveEndpointObservable();
+        ReceiveObservers = new ReceiveObservable();
+        TransportObservers = new ReceiveTransportObservable();
+
+        ConnectConsumerConfigurationObserver(hostConfiguration.BusConfiguration);
+        ConnectSagaConfigurationObserver(hostConfiguration.BusConfiguration);
+        ConnectHandlerConfigurationObserver(hostConfiguration.BusConfiguration);
+        ConnectActivityConfigurationObserver(hostConfiguration.BusConfiguration);
+    }
+
+    /// <summary>Gets the endpoint observers.</summary>
+    public ReceiveEndpointObservable EndpointObservers { get; }
+    /// <summary>Gets the receive observers.</summary>
+    public ReceiveObservable ReceiveObservers { get; }
+    /// <summary>Gets the transport observers.</summary>
+    public ReceiveTransportObservable TransportObservers { get; }
+
+    /// <summary>Gets or sets the configure consume topology.</summary>
+    public bool ConfigureConsumeTopology { get; set; }
+    /// <summary>Gets or sets the publish faults.</summary>
+    public bool PublishFaults { get; set; }
+
+    /// <summary>Connects receive endpoint observer.</summary>
+    /// <param name="observer">The observer to connect.</param>
+    /// <returns>A handle that disconnects the registration.</returns>
+    public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
+    {
+        return EndpointObservers.Connect(observer);
+    }
+
+    /// <summary>Adds dependent to the configuration.</summary>
+    /// <param name="dependent">The dependent.</param>
+    public void AddDependent(IReceiveEndpointDependent dependent)
+    {
+        _dependents.Add(dependent);
+    }
+
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        foreach (var result in _specifications.SelectMany(x => x.Validate()))
+            yield return result;
+
+        foreach (var result in _lateConfigurationKeys.Select(x => this.Failure(x, "was modified after being used")))
+            yield return result;
+
+        foreach (var result in base.Validate())
+            yield return result;
+    }
+
+    /// <summary>Gets the consume pipe.</summary>
+    public IConsumePipe ConsumePipe => _consumePipe.Value;
+
+    /// <summary>Gets the host address.</summary>
+    public abstract Uri HostAddress { get; }
+    /// <summary>Gets the input address.</summary>
+    public abstract Uri InputAddress { get; }
+
+    /// <summary>Gets or sets the receive endpoint.</summary>
+    public virtual IReceiveEndpoint ReceiveEndpoint
+    {
+        get
+        {
+            if (_receiveEndpoint == null)
+                throw new InvalidOperationException("The receive endpoint has not been built.");
+
+            return _receiveEndpoint;
+        }
+
+        protected set => _receiveEndpoint = value;
+    }
+
+    /// <summary>Creates receive pipe.</summary>
+    /// <returns>The created receive pipe.</returns>
+    public virtual IReceivePipe CreateReceivePipe()
+    {
+        return Receive.CreatePipe(CreateConsumePipe(), Serialization.CreateSerializerCollection());
+    }
+
+    /// <summary>Creates receive endpoint context.</summary>
+    /// <returns>The created receive endpoint context.</returns>
+    public abstract ReceiveEndpointContext CreateReceiveEndpointContext();
+
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/ReceiveEndpointConfiguration.cs", "bytes": 7519, "sha256": "85a2fa03af1f7ea69178a1d9904d3e834f3252dcc3f576f8660a1a4fb2f94ae9", "start_line": 121, "end_line": 187}
+    /// <summary>Gets the dependencies ready.</summary>
+    public Task DependenciesReady => Task.WhenAll(_dependencies.Select(x => x.Ready));
+
+    /// <summary>Gets the dependents completed.</summary>
+    public Task DependentsCompleted => Task.WhenAll(_dependents.Select(x => x.Completed));
+
+    /// <summary>Configures message topology.</summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="enabled">The enabled.</param>
+    public void ConfigureMessageTopology<T>(bool enabled = true)
+        where T : class
+    {
+        Topology.Consume.GetMessageTopology<T>().ConfigureConsumeTopology = enabled;
+    }
+
+    /// <summary>Configures message topology.</summary>
+    /// <param name="messageType">The runtime type of the message contract.</param>
+    /// <param name="enabled">The enabled.</param>
+    public void ConfigureMessageTopology(Type messageType, bool enabled = true)
+    {
+        Topology.Consume.GetMessageTopology(messageType).ConfigureConsumeTopology = enabled;
+    }
+
+    /// <summary>Adds dependency to the configuration.</summary>
+    /// <param name="dependency">The dependency.</param>
+    public void AddDependency(IReceiveEndpointDependency dependency)
+    {
+        _dependencies.Add(dependency);
+    }
+
+    /// <summary>Applies specifications.</summary>
+    /// <param name="builder">The builder that receives the configuration.</param>
+    protected void ApplySpecifications(IReceiveEndpointBuilder builder)
+    {
+        for (var i = 0; i < _specifications.Count; i++)
+            _specifications[i].Configure(builder);
+    }
+
+    /// <summary>Adds endpoint specification to the configuration.</summary>
+    /// <param name="specification">The specification.</param>
+    public void AddEndpointSpecification(IReceiveEndpointSpecification specification)
+    {
+        _specifications.Add(specification);
+    }
+
+    /// <summary>Creates consume pipe.</summary>
+    /// <returns>The created consume pipe.</returns>
+    protected virtual IConsumePipe CreateConsumePipe()
+    {
+        return _consumePipe.Value;
+    }
+
+    /// <summary>Changes d.</summary>
+    /// <param name="key">The key used to identify the requested entry.</param>
+    protected void Changed(string key)
+    {
+        if (IsAlreadyConfigured())
+            _lateConfigurationKeys.Add(key);
+    }
+
+    /// <summary>Determines whether already configured.</summary>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    protected virtual bool IsAlreadyConfigured()
+    {
+        return false;
+    }
+}
+
+SOURCE {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs", "bytes": 14552, "sha256": "001a5f302aea41f3ff95804997c93644310ec45a41f571a508c15e529f5dc94f", "start_line": 1, "end_line": 120}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.Providers.Configuration;
+using ViciOne.ServiceBus.Runtime;
+using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>Coordinates dependency-injection services with a transport-specific bus factory.</summary>
+/// <typeparam name="TEndpointConfigurator">The receive-endpoint configurator exposed by the transport.</typeparam>
+public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
+    IRegistrationBusFactory
+    where TEndpointConfigurator : class, IReceiveEndpointConfigurator
+{
+    readonly IHostConfiguration _hostConfiguration;
+
+    /// <summary>Initializes the factory with the transport host configuration it owns.</summary>
+    /// <param name="hostConfiguration">The mutable transport host configuration used to build each bus instance.</param>
+    protected TransportRegistrationBusFactory(IHostConfiguration hostConfiguration)
+    {
+        _hostConfiguration = hostConfiguration ?? throw new ArgumentNullException(nameof(hostConfiguration));
+    }
+
+    /// <summary>Creates the transport bus represented by one dependency-injection registration.</summary>
+    /// <param name="context">The registration context that resolves observers, policies, and runtime services.</param>
+    /// <param name="specifications">The bus-instance specifications to validate and apply.</param>
+    /// <param name="busName">The configured name that identifies the bus registration.</param>
+    /// <returns>The bus instance owned by the registration.</returns>
+    public abstract IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName);
+
+    /// <summary>Builds a bus from a concrete transport configurator and the services bound to its registration.</summary>
+    /// <typeparam name="T">The concrete transport factory type.</typeparam>
+    /// <typeparam name="TConfigurator">The public configurator contract implemented by the transport factory.</typeparam>
+    /// <param name="configurator">The transport factory and configurator used to construct the bus endpoint.</param>
+    /// <param name="context">The registration context that resolves observers, policies, and runtime services.</param>
+    /// <param name="configure">An optional callback that applies the caller's transport configuration.</param>
+    /// <param name="specifications">The bus-instance specifications to validate and apply.</param>
+    /// <returns>The constructed bus instance.</returns>
+    protected IBusInstance CreateBus<T, TConfigurator>(T configurator, IBusRegistrationContext context,
+        Action<IBusRegistrationContext, TConfigurator>? configure, IEnumerable<IBusInstanceSpecification> specifications)
+        where T : TConfigurator, IBusFactory
+        where TConfigurator : IBusFactoryConfigurator
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(specifications);
+
+        IBusInstanceSpecification[] busInstanceSpecifications = specifications.ToArray();
+        if (busInstanceSpecifications.Any(specification => specification is null))
+        {
+            throw new ArgumentException(
+                "The bus specification collection cannot contain null elements.",
+                nameof(specifications));
+        }
+
+        LogContext.ConfigureCurrentLogContextIfNull(context);
+
+        _hostConfiguration.LogContext = LogContext.Current;
+
+        var hostOptions = context.GetService<IOptions<ViciOneServiceBusHostOptions>>()?.Value;
+        _hostConfiguration.ConsumerStopTimeout = hostOptions?.ConsumerStopTimeout;
+        _hostConfiguration.StopTimeout = hostOptions?.StopTimeout;
+
+        MessageLimits limits = ConfigureMessageLimits(context, _hostConfiguration);
+        ConfigurePayloadAdmission(context, _hostConfiguration);
+        ConnectBusObservers(context, configurator);
+        ConnectMessageJournal(context, configurator);
+
+        configure?.Invoke(context, configurator);
+
+        if (_hostConfiguration.BusConfiguration.Serialization is not SerializationConfiguration serialization)
+        {
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Message limits",
+                    "unknown",
+                    "MaxJsonDepth cannot be enforced because the built-in serialization configuration is unavailable",
+                    "Use the built-in serialization configuration before starting the host"));
+        }
+
+        serialization.SetMaximumJsonDepth(limits.MaxJsonDepth);
+
+        IEnumerable<ValidationResult> validationResult = configurator.Validate()
+            .Concat(busInstanceSpecifications.SelectMany(x => x.Validate()));
+
+        if (_hostConfiguration.BusConfiguration.MessageRoutes is not MessageRouteTable messageRoutes)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", "The bus must own a MessageRouteTable instance.", "Correct the named configuration before starting the host"));
+
+        messageRoutes.Freeze();
+
+        IReadOnlyList<ValidationResult> result = validationResult.ThrowIfContainsFailure("The bus configuration is invalid:");
+
+        try
+        {
+            return BuildConfiguredBus(configurator, context, busInstanceSpecifications);
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                _hostConfiguration.BusConfiguration.BusObservers.CreateFaulted(ex);
+            }
+            catch (Exception observerException)
+            {
+                LogContext.Warning?.Log(observerException,
+                    "Bus creation-fault observation failed without replacing the construction failure");
+            }
+
+            throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", "An exception occurred during bus creation", "Correct the named configuration before starting the host"), ex);
+        }
+    }
+
+    IBusInstance BuildConfiguredBus<T>(T configurator, IBusRegistrationContext context,
+        IReadOnlyList<IBusInstanceSpecification> busInstanceSpecifications)
+        where T : IBusFactory
+    {
+

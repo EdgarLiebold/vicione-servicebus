@@ -1,0 +1,38 @@
+{
+  "status": "ROOT_SCOPED_SOURCE_PREFLIGHT_ACCEPTED_NO_NATIVE_OR_FULL_PDB_CREDIT",
+  "utc": "2026-10-04T02:27:51.242241+00:00",
+  "runner": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package36_azure_retained_mutations.py",
+    "bytes": 20653,
+    "sha256": "57fe7169150146ccb5d0fbba182d72448b95f051c1cc01fe723cdb1a741a3fbf"
+  },
+  "prepared": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-azure-retained-mutants-r4/PREPARED.json",
+    "bytes": 2460325,
+    "sha256": "d5531c2ab367113883e912490892ad2b81c10c772d0b957e3d9256a302854b9d"
+  },
+  "review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-retained-source-preflight-r4/REVIEW.md",
+    "bytes": 3790,
+    "sha256": "d8d787535903f381acd8b4dcf40a59d63eef1cfb0f6eacd72d5609ff3ca5a4c5"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package36-retained-source-preflight-r4/MANIFEST.json",
+    "bytes": 7196,
+    "sha256": "0f7309363e988bafd294cf546cb18d9f1e26c1f84f1124a86481d436cf4ef4c1"
+  },
+  "all25_refs_freshly_verified": true,
+  "root_personally_full_artifacts": [
+    "REVIEW.md",
+    "MANIFEST.json",
+    "ACTUAL_PURE_EMBEDDED_PARSER_NEGATIVES.json",
+    "ACTUAL_PURE_R4_BINDING_CONTROLS.json",
+    "ACTUAL_R3_BASELINE_DEBUG_KIND_EXTRACTION.json"
+  ],
+  "runner_root_read": "R3 whole source personally full, complete Root-authored R3 to R4 delta retained; current exact bytes checked",
+  "limits": [
+    "Embedded extraction validates bounds, exact deflate stream, length and BSJB prefix only.",
+    "Independent complete Portable-PDB metadata, RSDS and source checksum binding mandatory after actual R4.",
+    "No native cases, mutation kills, F036/F037 completion or global A+ credit yet."
+  ]
+}

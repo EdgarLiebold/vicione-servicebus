@@ -1,0 +1,7 @@
+{
+  "utc": "2026-10-04T16:21:14.376106+00:00",
+  "test": "tests/ViciOne.ServiceBus.Tests/Futures/FutureRegistrationBoundaryTests.cs",
+  "after": "4e57bece1c259d3a669ea0203a2bad931b5fe861683460d1fa3582f556d0a785",
+  "root_independent_review": "ExactoneLineDelta c56ae0 addsrequired MessageLimits.Conservative to onlynewpubliccompositionFact; no assertions/requirements/productchanged. Original3 preserves2causalMembershipRED+1fixtureLimitsguard, notDIcandidateconfirmation.",
+  "original_frame": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package86-futures-original3-independent-r1/FREEZE.json"
+}

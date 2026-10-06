@@ -1,0 +1,21 @@
+{
+  "receipt": {
+    "phase": "package15-f033-signalr-public-previous-restore",
+    "command": [
+      "dotnet",
+      "restore",
+      "SignalRLifetime.PublicConsumer.csproj",
+      "--configfile",
+      "NuGet.Config",
+      "-p:NuGetAudit=false"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T05:02:39.768577+00:00",
+    "completed_utc": "2026-10-03T05:02:41.371179+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-previous-restore.log",
+    "log_sha256": "f922067a2118c6f9daefcb3417c8384a497424082ec78f63dd8b0c6f6e4f9e6b"
+  },
+  "reason": "NU1510 package pruning setup failure; no compiler or public case execution; no causal finding/mutant kill",
+  "decision": "Bounded public consumer retains explicit package references with supported RestoreEnablePackagePruning=false; actual runtime binding remains to verify"
+}

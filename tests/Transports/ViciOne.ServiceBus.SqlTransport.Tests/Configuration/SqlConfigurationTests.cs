@@ -135,4 +135,44 @@ public sealed class SqlConfigurationTests
         Assert.Equal(SqlReceiveMode.Partitioned, endpoint.Settings.ReceiveMode);
         Assert.Equal(1, endpoint.Settings.ConcurrentDeliveryLimit);
     }
+    [Theory]
+    [InlineData("queue_1", false)]
+    [InlineData("queue_1\n", true)]
+    [InlineData("queue_1\r\n", true)]
+    [InlineData("queue_1\0", true)]
+    [RequirementCoverage("REQ-VSB-SQL-RECEIVE-VALIDATION", "rejects-illegal-trailing-characters")]
+    public void ReceiveEndpointValidation_RejectsIllegalTrailingCharacters(string queueName, bool expectFailure)
+    {
+        var topology = new SqlTopologyConfiguration(SqlBusFactory.CreateMessageTopology());
+        var bus = new SqlBusConfiguration(topology);
+        var host = Assert.IsType<SqlHostConfiguration>(bus.HostConfiguration);
+        host.Settings = new SqlServerHostSettings(new SqlTransportOptions
+        {
+            Host = "localhost",
+            Database = "transport_tests",
+            Schema = "transport",
+            Username = "test_user",
+            Password = "test_password",
+        });
+        var endpoint = Assert.IsType<SqlReceiveEndpointConfiguration>(
+            host.CreateReceiveEndpointConfiguration(queueName, null));
+
+        ValidationResult[] results = endpoint.Validate().ToArray();
+
+        Assert.Equal(expectFailure, results.Any(result =>
+            result.Disposition == ValidationResultDisposition.Failure
+            && result.Key == queueName
+            && result.Message == "Must be a valid queue name"));
+        if (expectFailure)
+        {
+            ValidationResult failure = Assert.Single(results);
+            Assert.Equal(ValidationResultDisposition.Failure, failure.Disposition);
+            Assert.Equal(queueName, failure.Key);
+            Assert.Null(failure.Value);
+            Assert.Equal("Must be a valid queue name", failure.Message);
+        }
+        else
+            Assert.Empty(results);
+    }
+
 }

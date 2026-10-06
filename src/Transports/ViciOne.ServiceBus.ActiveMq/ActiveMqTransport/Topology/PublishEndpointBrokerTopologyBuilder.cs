@@ -27,7 +27,7 @@ public class PublishEndpointBrokerTopologyBuilder :
         return this;
     }
 
-    /// <summary>Creates an immutable snapshot of the accumulated publish topology.</summary>
+    /// <summary>Creates array snapshots of the accumulated publish topology with retained entity references.</summary>
     /// <returns>The configured ActiveMQ broker topology.</returns>
     public BrokerTopology BuildBrokerTopology()
     {

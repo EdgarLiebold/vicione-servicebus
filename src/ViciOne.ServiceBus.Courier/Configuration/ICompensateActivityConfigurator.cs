@@ -12,7 +12,7 @@ public interface ICompensateActivityConfigurator<TActivity, TLog> :
     where TActivity : class, ICompensateActivity<TLog>
     where TLog : class
 {
-    /// <summary>Gets or sets the concurrent message limit.</summary>
+    /// <summary>Sets the concurrent message limit.</summary>
     int? ConcurrentMessageLimit { set; }
 
     /// <summary>Configures middleware for the compensation log contract.</summary>

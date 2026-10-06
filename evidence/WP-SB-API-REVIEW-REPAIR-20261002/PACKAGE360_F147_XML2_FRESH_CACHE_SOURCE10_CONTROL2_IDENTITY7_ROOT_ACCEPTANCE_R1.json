@@ -1,0 +1,850 @@
+{
+  "utc": "2026-10-06T06:16:37.335164+00:00",
+  "status": "ROOT_ACCEPTED_F147_XML2_FRESH_PUBLICATION_CACHE10_LOCAL_SOURCE_AND_ACTUAL_CONTROL2",
+  "evidence_manifests": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-resource-cache9-bounded-source-contracts-proposed-r1/MANIFEST.json",
+      "sha256": "0fe9489d93e90d53ab185bc9cf33f7a2be4851c4992a8cec8f960e27dcb7b2f0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-cache9-independent-runtime-source-peer-r1/MANIFEST.json",
+      "sha256": "3adea6c3ead394e9df76107272a20c9daef4abfee3835f2086fb037ac5066ddc"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-cache-add1-version-retry-bounded-source-contract-proposed-r2/MANIFEST.json",
+      "sha256": "ae4263f37741b2872b5ce752f78aaed942d334b5532a4a6b73044b9d69b7adf0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-cache-add1-independent-runtime-source-peer-r1/MANIFEST.json",
+      "sha256": "3687394a04d70005a6df385e5aafea748677ec15500b47ca2f0cfb8464c7127f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package358-cache-regression2-independent-qualification-r1/MANIFEST.json",
+      "sha256": "850b5ee887f6ad7f2c58e2b1fefc84d39a2775f6d24f82cae16351c178451237"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package359-doc2-fresh-publication-independent-qualification-r1/MANIFEST.json",
+      "sha256": "4ef25475c87e61f4dc2d66f04e3f7e32d7e3d5a62680a352021621c8ca8d71e7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package359-publication-own-read-receipt-precision-erratum-r1/MANIFEST.json",
+      "sha256": "5fac232f814203ebc8d463eac887249da0aaa602b040c3f12d6fe2a7ed6e30dc"
+    }
+  ],
+  "Root_whole_Source16_1735_receipts": [
+    "db85ef Keyed82; initial Resource batch truncated replaced aa1f70",
+    "aa1f70 Resource368",
+    "d56db4 helpers8",
+    "33e8f1 Creation287 Lifecycle163",
+    "777350 Observers Resources Options Factory"
+  ],
+  "Root_individual_Source_norms10_and_peers_receipts": [
+    "cbd717 complete9norms and peer",
+    "3e2b13 completeAdd1 norm and actual358qualification",
+    "8e8b5f Add1 independentpeer"
+  ],
+  "Root_actual2_targeted_raw_JOIN_receipt": "9561ed",
+  "Root_whole_Doc2_221_patch_and7_existing_norms_receipts": [
+    "794b9b",
+    "d77386"
+  ],
+  "Root_whole_fresh_Doc2_report_mandatory_erratum": "8d7f44",
+  "Root_actual_strict_pack_whole_JOINs": [
+    "6daab1",
+    "b1df06"
+  ],
+  "current359_selected_cache16_source_checksums_XML10_rejoined": true,
+  "F147_existing_family_newIDs": 0,
+  "F147_doc2_compiled_pack_scope": "Exact2 summary-only sourceinverse, currentPDB2, actual6873XML nodes entireliteralinverse to original354, CRCclean net10 package matching freshcanonical. No Nativebehavior/code/ABI grade.",
+  "actual_Cache358_controls": {
+    "cases": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "Product_defect": false,
+    "newFindingIDs": 0,
+    "source_grade_promotion": false
+  },
+  "wrong_cache_duplicate_bypass_hypothesis_withdrawn": true,
+  "original_before": 18275,
+  "original_after": 18285,
+  "remaining_after": 284,
+  "master_before_sha256": "b4f3fbd15b329d1ff65a3e39ee397c8cf8acc9306cf270ff630b5ae87f63ef65",
+  "master_after_rows": 19147,
+  "known_unique_findings": 215,
+  "bounded_dispositions_before": 214,
+  "bounded_dispositions_after": 215,
+  "new_original_source10": [
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Caching.KeyedResourceCache`2.ClearAsync(System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Caching.KeyedResourceCache`2.DisposeAsync"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Caching.KeyedResourceCache`2.GetAsync(`0,System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Caching.KeyedResourceCache`2.GetOrAddAsync(`0,ViciOne.ServiceBus.Caching.ResourceFactory{`0,`1},System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Caching.KeyedResourceCache`2.RemoveAsync(`0,System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Caching.ResourceCache`1.AddIndex``1(System.String,System.Func{`0,``0},ViciOne.ServiceBus.Caching.ResourceFactory{``0,`0},System.Collections.Generic.IEqualityComparer{``0})"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Caching.ResourceCache`1.CleanupExpiredAsync(System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Caching.ResourceCache`1.ClearAsync(System.Threading.CancellationToken)"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Caching.ResourceCache`1.DisposeAsync"
+    ],
+    [
+      "ViciOne.ServiceBus",
+      "M:ViciOne.ServiceBus.Caching.ResourceCache`1.AddAsync(`0,System.Threading.CancellationToken)"
+    ]
+  ],
+  "identity_rebased_existing7_exact_before_after": [
+    {
+      "before": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "M:ViciOne.ServiceBus.Util.Recycle`1.#ctor(System.Func{`0})",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+        "source_sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+        "member_contract": "Ctor builds Lazy supervisor via local reset without invoking supplied factory, lacks null guard. Supervisor getter Volatile.Read.Value lazily invokes exact factory then accesses returned agent.Stopping.Register; factory/nullagent/callback failures visible. Stopping callback replaces Lazy and disposes prior registration. Getter executable lifetime remains bounded/research, no universal no-leak guarantee.",
+        "actual_current_PDB_source_binding": {
+          "rid": 1274,
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+          "sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+          "physical": true
+        },
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE206_CORE721_SOURCE704_SEVENTEEN_HELD_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9d0825d131a306fc5c2cf3bbe56b976b82312b9f72978a24f25d23b2ca8153c1"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Native0; executable members are not bodyless. Ordinary methods outside721 remain separate; this constructor/property review does not confer full class/runtime acceptance."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-current196-contract-context-r1/PER_ID721_CURRENT_CONTRACTS.json",
+            "sha256": "ebc7fcbeeec985ae9ded460ed1b256a380d41d510f1d941526a885915afbedf8"
+          },
+          "ordinal": 676,
+          "mandatory_overlay": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-four-row-precision-overlay-r1/EXACT4_ROW_FIELD_REPLACEMENTS.json",
+            "sha256": "3497a3fcf6c838765c330d126a9452f4721f6a8303874a8717f9c779f82daeba"
+          }
+        },
+        "actual_current_XML_raw": "<member name=\"M:ViciOne.ServiceBus.Util.Recycle`1.#ctor(System.Func{`0})\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"supervisorFactory\">The supervisor factory.</param>\n        </member>"
+      },
+      "after": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "M:ViciOne.ServiceBus.Util.Recycle`1.#ctor(System.Func{`0})",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+        "source_sha256": "be782b008385b462f183ae329c41fc6901b99b11e2d63e1053449e7f928bcaed",
+        "member_contract": "Ctor builds Lazy supervisor via local reset without invoking supplied factory, lacks null guard. Supervisor getter Volatile.Read.Value lazily invokes exact factory then accesses returned agent.Stopping.Register; factory/nullagent/callback failures visible. Stopping callback replaces Lazy and disposes prior registration. Getter executable lifetime remains bounded/research, no universal no-leak guarantee.",
+        "actual_current_PDB_source_binding": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "be782b008385b462f183ae329c41fc6901b99b11e2d63e1053449e7f928bcaed",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE206_CORE721_SOURCE704_SEVENTEEN_HELD_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9d0825d131a306fc5c2cf3bbe56b976b82312b9f72978a24f25d23b2ca8153c1"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Native0; executable members are not bodyless. Ordinary methods outside721 remain separate; this constructor/property review does not confer full class/runtime acceptance."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-current196-contract-context-r1/PER_ID721_CURRENT_CONTRACTS.json",
+            "sha256": "ebc7fcbeeec985ae9ded460ed1b256a380d41d510f1d941526a885915afbedf8"
+          },
+          "ordinal": 676,
+          "mandatory_overlay": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-four-row-precision-overlay-r1/EXACT4_ROW_FIELD_REPLACEMENTS.json",
+            "sha256": "3497a3fcf6c838765c330d126a9452f4721f6a8303874a8717f9c779f82daeba"
+          }
+        },
+        "actual_current_XML_raw": "<member name=\"M:ViciOne.ServiceBus.Util.Recycle`1.#ctor(System.Func{`0})\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"supervisorFactory\">The supervisor factory.</param>\n        </member>",
+        "actual_current_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Util.Recycle`1.#ctor(System.Func{`0})\">\n            <summary>Initializes a new instance.</summary>\n            <param name=\"supervisorFactory\">The supervisor factory.</param>\n        </member>\n        "
+      }
+    },
+    {
+      "before": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "T:ViciOne.ServiceBus.Util.Recycle`1",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+        "source_sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+        "member_contract": "Declares class global::ViciOne.ServiceBus.Util.Recycle<T> where T : class, global::ViciOne.ServiceBus.Advanced.Middleware.IAgent. Explicit base: object; declared implemented interfaces: none. This entry covers the personally inspected declaration and generic/inheritance contract, not all executable members of the class; those constructor/accessor/ordinary-method obligations remain separate.",
+        "actual_current_PDB_source_binding": {
+          "rid": 1274,
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+          "sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+          "physical": true
+        },
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE206_CORE721_SOURCE704_SEVENTEEN_HELD_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9d0825d131a306fc5c2cf3bbe56b976b82312b9f72978a24f25d23b2ca8153c1"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Native0; executable members are not bodyless. Ordinary methods outside721 remain separate; this constructor/property review does not confer full class/runtime acceptance."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-current196-contract-context-r1/PER_ID721_CURRENT_CONTRACTS.json",
+            "sha256": "ebc7fcbeeec985ae9ded460ed1b256a380d41d510f1d941526a885915afbedf8"
+          },
+          "ordinal": 678,
+          "mandatory_overlay": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-four-row-precision-overlay-r1/EXACT4_ROW_FIELD_REPLACEMENTS.json",
+            "sha256": "3497a3fcf6c838765c330d126a9452f4721f6a8303874a8717f9c779f82daeba"
+          }
+        },
+        "actual_current_XML_raw": "<member name=\"T:ViciOne.ServiceBus.Util.Recycle`1\">\n            <summary>Recycles a supervisor once it is stopped, replacing it with a new one.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n        </member>"
+      },
+      "after": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "T:ViciOne.ServiceBus.Util.Recycle`1",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+        "source_sha256": "be782b008385b462f183ae329c41fc6901b99b11e2d63e1053449e7f928bcaed",
+        "member_contract": "Declares class global::ViciOne.ServiceBus.Util.Recycle<T> where T : class, global::ViciOne.ServiceBus.Advanced.Middleware.IAgent. Explicit base: object; declared implemented interfaces: none. This entry covers the personally inspected declaration and generic/inheritance contract, not all executable members of the class; those constructor/accessor/ordinary-method obligations remain separate.",
+        "actual_current_PDB_source_binding": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "be782b008385b462f183ae329c41fc6901b99b11e2d63e1053449e7f928bcaed",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE206_CORE721_SOURCE704_SEVENTEEN_HELD_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9d0825d131a306fc5c2cf3bbe56b976b82312b9f72978a24f25d23b2ca8153c1"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Native0; executable members are not bodyless. Ordinary methods outside721 remain separate; this constructor/property review does not confer full class/runtime acceptance."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-current196-contract-context-r1/PER_ID721_CURRENT_CONTRACTS.json",
+            "sha256": "ebc7fcbeeec985ae9ded460ed1b256a380d41d510f1d941526a885915afbedf8"
+          },
+          "ordinal": 678,
+          "mandatory_overlay": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-four-row-precision-overlay-r1/EXACT4_ROW_FIELD_REPLACEMENTS.json",
+            "sha256": "3497a3fcf6c838765c330d126a9452f4721f6a8303874a8717f9c779f82daeba"
+          }
+        },
+        "actual_current_XML_raw": "<member name=\"T:ViciOne.ServiceBus.Util.Recycle`1\">\n            <summary>Recycles a supervisor once it is stopped, replacing it with a new one.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n        </member>",
+        "actual_current_XML_node_serialized": "<member name=\"T:ViciOne.ServiceBus.Util.Recycle`1\">\n            <summary>Makes a new supervisor available lazily when the current supervisor begins stopping.</summary>\n            <typeparam name=\"T\">The value type.</typeparam>\n        </member>\n        "
+      }
+    },
+    {
+      "before": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+        "source_sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+        "member_contract": "The getter Volatile.Read obtains the current Lazy<T> cell, then returns that captured cell's Value. Construction publishes a Lazy without calling the borrowed supervisorFactory; factory execution is deferred to Value and governed by the actual System.Lazy<T> implementation. The initializer calls supervisorFactory, reads the returned supervisor.Stopping token, registers the recycle callback and only then returns that supervisor. There is no local factory or returned-instance null guard, catch, readiness/Completed/Stopped wait, stop initiation, agent disposal or ownership-transfer protocol. Factory, returned-token getter and registration errors remain governed by the actual Lazy/token APIs rather than locally swallowed or translated. The callback first disposes the shared prior CancellationTokenRegistration, then publishes a new unevaluated Lazy using Volatile.Write; next generation creation is deferred to a later getter. Subscription is to Stopping, whose IAgent contract describes admission of a stop attempt, not successful Stopped or terminal Completed. A getter already holding the previous Lazy may return that older generation while another callback has published a replacement; it does not promise a live/current/readied agent at return. An already-canceled Stopping token can invoke registration callback during lazy initialization before the new registration assignment. Neither generation recovery after registration/Dispose/factory error, callback reentrancy/concurrent replacement, nor draining arbitrary agent tasks is established by this bounded local getter contract. The concrete constructor/callback stages and System.Lazy/CancellationTokenRegistration scheduling/lifetime behavior remain separate operative obligations.",
+        "actual_selected_compilation_PDB_source_binding": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_historical_XML_node_serialized": "<member name=\"P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor\">\n            <summary>Gets the supervisor.</summary>\n        </member>\n        ",
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "grade": null,
+        "whole_API_member_review_closed": false,
+        "selected_original_inventory": {
+          "index": 9659,
+          "full_original_row": {
+            "symbol_id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+            "assembly": "ViciOne.ServiceBus",
+            "source_path": "./vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+            "source_line": "37",
+            "snapshot_diagnostics": "False",
+            "contract": "",
+            "implementation": "",
+            "tests": "",
+            "package_consumer": "",
+            "status": "PENDING",
+            "finding": ""
+          }
+        },
+        "author_context_evidence": {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+          "original_csv_zero_based_index": 9659,
+          "Core123_selected_ordinal_zero_based": 122,
+          "individual_contract_norm": "The getter Volatile.Read obtains the current Lazy<T> cell, then returns that captured cell's Value. Construction publishes a Lazy without calling the borrowed supervisorFactory; factory execution is deferred to Value and governed by the actual System.Lazy<T> implementation. The initializer calls supervisorFactory, reads the returned supervisor.Stopping token, registers the recycle callback and only then returns that supervisor. There is no local factory or returned-instance null guard, catch, readiness/Completed/Stopped wait, stop initiation, agent disposal or ownership-transfer protocol. Factory, returned-token getter and registration errors remain governed by the actual Lazy/token APIs rather than locally swallowed or translated. The callback first disposes the shared prior CancellationTokenRegistration, then publishes a new unevaluated Lazy using Volatile.Write; next generation creation is deferred to a later getter. Subscription is to Stopping, whose IAgent contract describes admission of a stop attempt, not successful Stopped or terminal Completed. A getter already holding the previous Lazy may return that older generation while another callback has published a replacement; it does not promise a live/current/readied agent at return. An already-canceled Stopping token can invoke registration callback during lazy initialization before the new registration assignment. Neither generation recovery after registration/Dispose/factory error, callback reentrancy/concurrent replacement, nor draining arbitrary agent tasks is established by this bounded local getter contract. The concrete constructor/callback stages and System.Lazy/CancellationTokenRegistration scheduling/lifetime behavior remain separate operative obligations.",
+          "recommendation": "BOUNDED_LOCAL_SOURCE_GETTER_CONTRACT_WITH_EXPLICIT_GENERATION_LIFETIME_OBLIGATIONS_PENDING_ROOT",
+          "historical_held_record": {
+            "selected_ordinal_zero_based": 122,
+            "original_csv_zero_based_index": 9659,
+            "assembly": "ViciOne.ServiceBus",
+            "id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+            "prior_draft_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/CORE630_CURRENT260_COMPOSED_MATRIX.json",
+            "prior_draft_sha256": "a770a8370e4b60951c5276b248caaf0ac9eda8e6846e5fbca13b1567339d4291",
+            "prior_matrix_ordinal": 412,
+            "prior_draft_whole_source_authority": "Other-author prior630 norms retained as draft references ONLY; not transferred as our human source proof. Own historical Source721/600 may be reused only exact ownedSHA receipts per future selected group.",
+            "historical_individual_contract_norm": "Volatile reads current Lazy<T> then Value; first access invokes borrowed factory and registers supervisor.Stopping callback that replaces Lazy immediately on stopping signal, not only stopped completion. No factory/result guards or parent disposal ownership, generation/cancellation registration lifetime held.",
+            "historical_hold": {
+              "category": "PRIOR_HOLD_RETAINED",
+              "reason": "LAZY_FACTORY_LIFETIME_BOUND: supervisor factory/Stoppng registration execute within selected getter; do not infer custom lifetime/registration-failure closure.",
+              "prior_record": {
+                "current630_ordinal": 412,
+                "id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+                "historical_dossier": "package222-core721-current196-contract-context-r1/EXACT17_HELD_OBLIGATIONS.json",
+                "original_held_record": {
+                  "ordinal": 677,
+                  "assembly": "ViciOne.ServiceBus",
+                  "id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+                  "reason": "LAZY_FACTORY_LIFETIME_BOUND: supervisor factory/Stoppng registration execute within selected getter; do not infer custom lifetime/registration-failure closure.",
+                  "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+                  "current_source_sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+                  "native_count": 0,
+                  "finding_registered": false
+                },
+                "disposition": "RETAIN_INDIVIDUAL_HOLD; fresh current local norm does not close historical operative obligation."
+              }
+            },
+            "historical_recommendation": "HELD_PRIOR_HOLD_RETAINED",
+            "historical_runtime_obligation": "LAZY_FACTORY_LIFETIME_BOUND: supervisor factory/Stoppng registration execute within selected getter; do not infer custom lifetime/registration-failure closure.",
+            "current_recommendation": "HELD_PENDING_OWN_BOUNDED_CURRENT_REVIEW",
+            "native_count": 0,
+            "grade": null,
+            "closed": false,
+            "source_relative": "src/ViciOne.ServiceBus/Util/Recycle.cs",
+            "historical_source_sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+            "actual_research_source_sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+            "same_source_bytes": true
+          },
+          "runtime_obligation": "Generation ownership, registration disposal/recursive or concurrently canceled token callback ordering, arbitrary IAgent factory/getter faults, live-work/readiness/completion/drain semantics remain open; no empirical closure or global worker outcome. Local getter does not itself acquire/await/release an agent-owned task.",
+          "source_binding": {
+            "relative": "src/ViciOne.ServiceBus/Util/Recycle.cs",
+            "sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+            "lines": 38,
+            "actual342_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package342-consumer-fixed16-native-source-capture-r1/payload/ViciOne.ServiceBus/ViciOne.ServiceBus.dll",
+            "actual342_dll_sha256": "e829adde925cdcea50ba398738c7f4cb78af2a0516aa3ec862b133ad755d46b6",
+            "actual342_PDB_RID": 1275,
+            "document": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+              "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+              "checksum": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+              "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+            },
+            "physical_current_equal_at_check": true
+          },
+          "IAgent_declaration_binding": {
+            "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/IAgent.cs",
+            "sha256": "fca17b77d5a2624f1f846753ecf02df42a43d723a8587d74840d39d3abe6c96e",
+            "lines": 46,
+            "actual342_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package342-consumer-fixed16-native-source-capture-r1/payload/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.dll",
+            "actual342_dll_sha256": "e80a976da6dba9b3caf6bf875dc627def6b74b158a56d5995ae073d84257f1da",
+            "actual342_PDB_RID": 93,
+            "document": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/IAgent.cs",
+              "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+              "checksum": "fca17b77d5a2624f1f846753ecf02df42a43d723a8587d74840d39d3abe6c96e",
+              "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+            },
+            "physical_current_equal_at_check": true
+          },
+          "actual342_XML_raw": "<member name=\"P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor\">\n            <summary>Gets the supervisor.</summary>\n        </member>\n        ",
+          "native_count": 0,
+          "grade": null,
+          "closed": false,
+          "root_accepted": false
+        },
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE357_CLIENT3_RECYCLE1_DEPLOY1_RABBIT_RECORD14_DELEGATE5_SOURCE24_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "363830234f4bec7325fb48ec5a312776e8eb8ea02e485f63a9ec9b282700ab63"
+        }
+      },
+      "after": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+        "source_sha256": "be782b008385b462f183ae329c41fc6901b99b11e2d63e1053449e7f928bcaed",
+        "member_contract": "The getter Volatile.Read obtains the current Lazy<T> cell, then returns that captured cell's Value. Construction publishes a Lazy without calling the borrowed supervisorFactory; factory execution is deferred to Value and governed by the actual System.Lazy<T> implementation. The initializer calls supervisorFactory, reads the returned supervisor.Stopping token, registers the recycle callback and only then returns that supervisor. There is no local factory or returned-instance null guard, catch, readiness/Completed/Stopped wait, stop initiation, agent disposal or ownership-transfer protocol. Factory, returned-token getter and registration errors remain governed by the actual Lazy/token APIs rather than locally swallowed or translated. The callback first disposes the shared prior CancellationTokenRegistration, then publishes a new unevaluated Lazy using Volatile.Write; next generation creation is deferred to a later getter. Subscription is to Stopping, whose IAgent contract describes admission of a stop attempt, not successful Stopped or terminal Completed. A getter already holding the previous Lazy may return that older generation while another callback has published a replacement; it does not promise a live/current/readied agent at return. An already-canceled Stopping token can invoke registration callback during lazy initialization before the new registration assignment. Neither generation recovery after registration/Dispose/factory error, callback reentrancy/concurrent replacement, nor draining arbitrary agent tasks is established by this bounded local getter contract. The concrete constructor/callback stages and System.Lazy/CancellationTokenRegistration scheduling/lifetime behavior remain separate operative obligations.",
+        "actual_selected_compilation_PDB_source_binding": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_historical_XML_node_serialized": "<member name=\"P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor\">\n            <summary>Gets the supervisor.</summary>\n        </member>\n        ",
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "grade": null,
+        "whole_API_member_review_closed": false,
+        "selected_original_inventory": {
+          "index": 9659,
+          "full_original_row": {
+            "symbol_id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+            "assembly": "ViciOne.ServiceBus",
+            "source_path": "./vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+            "source_line": "37",
+            "snapshot_diagnostics": "False",
+            "contract": "",
+            "implementation": "",
+            "tests": "",
+            "package_consumer": "",
+            "status": "PENDING",
+            "finding": ""
+          }
+        },
+        "author_context_evidence": {
+          "assembly": "ViciOne.ServiceBus",
+          "id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+          "original_csv_zero_based_index": 9659,
+          "Core123_selected_ordinal_zero_based": 122,
+          "individual_contract_norm": "The getter Volatile.Read obtains the current Lazy<T> cell, then returns that captured cell's Value. Construction publishes a Lazy without calling the borrowed supervisorFactory; factory execution is deferred to Value and governed by the actual System.Lazy<T> implementation. The initializer calls supervisorFactory, reads the returned supervisor.Stopping token, registers the recycle callback and only then returns that supervisor. There is no local factory or returned-instance null guard, catch, readiness/Completed/Stopped wait, stop initiation, agent disposal or ownership-transfer protocol. Factory, returned-token getter and registration errors remain governed by the actual Lazy/token APIs rather than locally swallowed or translated. The callback first disposes the shared prior CancellationTokenRegistration, then publishes a new unevaluated Lazy using Volatile.Write; next generation creation is deferred to a later getter. Subscription is to Stopping, whose IAgent contract describes admission of a stop attempt, not successful Stopped or terminal Completed. A getter already holding the previous Lazy may return that older generation while another callback has published a replacement; it does not promise a live/current/readied agent at return. An already-canceled Stopping token can invoke registration callback during lazy initialization before the new registration assignment. Neither generation recovery after registration/Dispose/factory error, callback reentrancy/concurrent replacement, nor draining arbitrary agent tasks is established by this bounded local getter contract. The concrete constructor/callback stages and System.Lazy/CancellationTokenRegistration scheduling/lifetime behavior remain separate operative obligations.",
+          "recommendation": "BOUNDED_LOCAL_SOURCE_GETTER_CONTRACT_WITH_EXPLICIT_GENERATION_LIFETIME_OBLIGATIONS_PENDING_ROOT",
+          "historical_held_record": {
+            "selected_ordinal_zero_based": 122,
+            "original_csv_zero_based_index": 9659,
+            "assembly": "ViciOne.ServiceBus",
+            "id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+            "prior_draft_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/CORE630_CURRENT260_COMPOSED_MATRIX.json",
+            "prior_draft_sha256": "a770a8370e4b60951c5276b248caaf0ac9eda8e6846e5fbca13b1567339d4291",
+            "prior_matrix_ordinal": 412,
+            "prior_draft_whole_source_authority": "Other-author prior630 norms retained as draft references ONLY; not transferred as our human source proof. Own historical Source721/600 may be reused only exact ownedSHA receipts per future selected group.",
+            "historical_individual_contract_norm": "Volatile reads current Lazy<T> then Value; first access invokes borrowed factory and registers supervisor.Stopping callback that replaces Lazy immediately on stopping signal, not only stopped completion. No factory/result guards or parent disposal ownership, generation/cancellation registration lifetime held.",
+            "historical_hold": {
+              "category": "PRIOR_HOLD_RETAINED",
+              "reason": "LAZY_FACTORY_LIFETIME_BOUND: supervisor factory/Stoppng registration execute within selected getter; do not infer custom lifetime/registration-failure closure.",
+              "prior_record": {
+                "current630_ordinal": 412,
+                "id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+                "historical_dossier": "package222-core721-current196-contract-context-r1/EXACT17_HELD_OBLIGATIONS.json",
+                "original_held_record": {
+                  "ordinal": 677,
+                  "assembly": "ViciOne.ServiceBus",
+                  "id": "P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor",
+                  "reason": "LAZY_FACTORY_LIFETIME_BOUND: supervisor factory/Stoppng registration execute within selected getter; do not infer custom lifetime/registration-failure closure.",
+                  "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+                  "current_source_sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+                  "native_count": 0,
+                  "finding_registered": false
+                },
+                "disposition": "RETAIN_INDIVIDUAL_HOLD; fresh current local norm does not close historical operative obligation."
+              }
+            },
+            "historical_recommendation": "HELD_PRIOR_HOLD_RETAINED",
+            "historical_runtime_obligation": "LAZY_FACTORY_LIFETIME_BOUND: supervisor factory/Stoppng registration execute within selected getter; do not infer custom lifetime/registration-failure closure.",
+            "current_recommendation": "HELD_PENDING_OWN_BOUNDED_CURRENT_REVIEW",
+            "native_count": 0,
+            "grade": null,
+            "closed": false,
+            "source_relative": "src/ViciOne.ServiceBus/Util/Recycle.cs",
+            "historical_source_sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+            "actual_research_source_sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+            "same_source_bytes": true
+          },
+          "runtime_obligation": "Generation ownership, registration disposal/recursive or concurrently canceled token callback ordering, arbitrary IAgent factory/getter faults, live-work/readiness/completion/drain semantics remain open; no empirical closure or global worker outcome. Local getter does not itself acquire/await/release an agent-owned task.",
+          "source_binding": {
+            "relative": "src/ViciOne.ServiceBus/Util/Recycle.cs",
+            "sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+            "lines": 38,
+            "actual342_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package342-consumer-fixed16-native-source-capture-r1/payload/ViciOne.ServiceBus/ViciOne.ServiceBus.dll",
+            "actual342_dll_sha256": "e829adde925cdcea50ba398738c7f4cb78af2a0516aa3ec862b133ad755d46b6",
+            "actual342_PDB_RID": 1275,
+            "document": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+              "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+              "checksum": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+              "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+            },
+            "physical_current_equal_at_check": true
+          },
+          "IAgent_declaration_binding": {
+            "relative": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/IAgent.cs",
+            "sha256": "fca17b77d5a2624f1f846753ecf02df42a43d723a8587d74840d39d3abe6c96e",
+            "lines": 46,
+            "actual342_dll": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package342-consumer-fixed16-native-source-capture-r1/payload/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.dll",
+            "actual342_dll_sha256": "e80a976da6dba9b3caf6bf875dc627def6b74b158a56d5995ae073d84257f1da",
+            "actual342_PDB_RID": 93,
+            "document": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/IAgent.cs",
+              "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+              "checksum": "fca17b77d5a2624f1f846753ecf02df42a43d723a8587d74840d39d3abe6c96e",
+              "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+            },
+            "physical_current_equal_at_check": true
+          },
+          "actual342_XML_raw": "<member name=\"P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor\">\n            <summary>Gets the supervisor.</summary>\n        </member>\n        ",
+          "native_count": 0,
+          "grade": null,
+          "closed": false,
+          "root_accepted": false
+        },
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE357_CLIENT3_RECYCLE1_DEPLOY1_RABBIT_RECORD14_DELEGATE5_SOURCE24_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "363830234f4bec7325fb48ec5a312776e8eb8ea02e485f63a9ec9b282700ab63"
+        },
+        "actual_current_PDB_source_binding": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "be782b008385b462f183ae329c41fc6901b99b11e2d63e1053449e7f928bcaed",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML_node_serialized": "<member name=\"P:ViciOne.ServiceBus.Util.Recycle`1.Supervisor\">\n            <summary>Gets the supervisor.</summary>\n        </member>\n        "
+      }
+    },
+    {
+      "before": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.#ctor(ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory{`0})",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+        "source_sha256": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9",
+        "member_contract": "Supervisor ctor rejectsnullfactory thenretains and allocates separateactive Supervisor; doesnotinvoke factoryor register childagent. ProtectedHasContext lockqueriescachednull/IsDisposed dynamically, customgettererrors visible; no creation occurs inproperty.",
+        "actual_current_PDB_source_binding": {
+          "rid": 47,
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+          "sha256": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9",
+          "physical": true
+        },
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE206_CORE721_SOURCE704_SEVENTEEN_HELD_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9d0825d131a306fc5c2cf3bbe56b976b82312b9f72978a24f25d23b2ca8153c1"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Native0; executable members are not bodyless. Ordinary methods outside721 remain separate; this constructor/property review does not confer full class/runtime acceptance."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-current196-contract-context-r1/PER_ID721_CURRENT_CONTRACTS.json",
+            "sha256": "ebc7fcbeeec985ae9ded460ed1b256a380d41d510f1d941526a885915afbedf8"
+          },
+          "ordinal": 50,
+          "mandatory_overlay": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-four-row-precision-overlay-r1/EXACT4_ROW_FIELD_REPLACEMENTS.json",
+            "sha256": "3497a3fcf6c838765c330d126a9452f4721f6a8303874a8717f9c779f82daeba"
+          }
+        },
+        "actual_current_XML_raw": "<member name=\"M:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.#ctor(ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory{`0})\">\n            <summary>Initializes a supervisor with the factory that owns context creation and borrowing.</summary>\n            <param name=\"contextFactory\">Factory used to create the underlying and active contexts.</param>\n        </member>"
+      },
+      "after": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.#ctor(ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory{`0})",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+        "source_sha256": "03d4e0b667f35b672a602bae5a295fa4250076d4c381c98dad4a792bd5588ec1",
+        "member_contract": "Supervisor ctor rejectsnullfactory thenretains and allocates separateactive Supervisor; doesnotinvoke factoryor register childagent. ProtectedHasContext lockqueriescachednull/IsDisposed dynamically, customgettererrors visible; no creation occurs inproperty.",
+        "actual_current_PDB_source_binding": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "03d4e0b667f35b672a602bae5a295fa4250076d4c381c98dad4a792bd5588ec1",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE206_CORE721_SOURCE704_SEVENTEEN_HELD_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9d0825d131a306fc5c2cf3bbe56b976b82312b9f72978a24f25d23b2ca8153c1"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Native0; executable members are not bodyless. Ordinary methods outside721 remain separate; this constructor/property review does not confer full class/runtime acceptance."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-current196-contract-context-r1/PER_ID721_CURRENT_CONTRACTS.json",
+            "sha256": "ebc7fcbeeec985ae9ded460ed1b256a380d41d510f1d941526a885915afbedf8"
+          },
+          "ordinal": 50,
+          "mandatory_overlay": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-four-row-precision-overlay-r1/EXACT4_ROW_FIELD_REPLACEMENTS.json",
+            "sha256": "3497a3fcf6c838765c330d126a9452f4721f6a8303874a8717f9c779f82daeba"
+          }
+        },
+        "actual_current_XML_raw": "<member name=\"M:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.#ctor(ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory{`0})\">\n            <summary>Initializes a supervisor with the factory that owns context creation and borrowing.</summary>\n            <param name=\"contextFactory\">Factory used to create the underlying and active contexts.</param>\n        </member>",
+        "actual_current_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.#ctor(ViciOne.ServiceBus.Advanced.Middleware.IPipeContextFactory{`0})\">\n            <summary>Initializes a supervisor with the factory that owns context creation and borrowing.</summary>\n            <param name=\"contextFactory\">Factory used to create the underlying and active contexts.</param>\n        </member>\n        "
+      }
+    },
+    {
+      "before": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "P:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.HasContext",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+        "source_sha256": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9",
+        "member_contract": "Locks the supervisor state and returns whether the cached context exists and is not disposed; custom IsDisposed getter errors propagate, and access does not create a context.",
+        "actual_current_PDB_source_binding": {
+          "rid": 47,
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+          "sha256": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9",
+          "physical": true
+        },
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE206_CORE721_SOURCE704_SEVENTEEN_HELD_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9d0825d131a306fc5c2cf3bbe56b976b82312b9f72978a24f25d23b2ca8153c1"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Native0; executable members are not bodyless. Ordinary methods outside721 remain separate; this constructor/property review does not confer full class/runtime acceptance."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-current196-contract-context-r1/PER_ID721_CURRENT_CONTRACTS.json",
+            "sha256": "ebc7fcbeeec985ae9ded460ed1b256a380d41d510f1d941526a885915afbedf8"
+          },
+          "ordinal": 51,
+          "mandatory_overlay": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-four-row-precision-overlay-r1/EXACT4_ROW_FIELD_REPLACEMENTS.json",
+            "sha256": "3497a3fcf6c838765c330d126a9452f4721f6a8303874a8717f9c779f82daeba"
+          }
+        },
+        "actual_current_XML_raw": "<member name=\"P:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.HasContext\">\n            <summary>Gets whether a reusable owned context is currently available.</summary>\n        </member>"
+      },
+      "after": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "P:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.HasContext",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+        "source_sha256": "03d4e0b667f35b672a602bae5a295fa4250076d4c381c98dad4a792bd5588ec1",
+        "member_contract": "Locks the supervisor state and returns whether the cached context exists and is not disposed; custom IsDisposed getter errors propagate, and access does not create a context.",
+        "actual_current_PDB_source_binding": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "03d4e0b667f35b672a602bae5a295fa4250076d4c381c98dad4a792bd5588ec1",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE206_CORE721_SOURCE704_SEVENTEEN_HELD_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9d0825d131a306fc5c2cf3bbe56b976b82312b9f72978a24f25d23b2ca8153c1"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Native0; executable members are not bodyless. Ordinary methods outside721 remain separate; this constructor/property review does not confer full class/runtime acceptance."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-current196-contract-context-r1/PER_ID721_CURRENT_CONTRACTS.json",
+            "sha256": "ebc7fcbeeec985ae9ded460ed1b256a380d41d510f1d941526a885915afbedf8"
+          },
+          "ordinal": 51,
+          "mandatory_overlay": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-four-row-precision-overlay-r1/EXACT4_ROW_FIELD_REPLACEMENTS.json",
+            "sha256": "3497a3fcf6c838765c330d126a9452f4721f6a8303874a8717f9c779f82daeba"
+          }
+        },
+        "actual_current_XML_raw": "<member name=\"P:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.HasContext\">\n            <summary>Gets whether a reusable owned context is currently available.</summary>\n        </member>",
+        "actual_current_XML_node_serialized": "<member name=\"P:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.HasContext\">\n            <summary>Gets whether a reusable owned context is currently available.</summary>\n        </member>\n        "
+      }
+    },
+    {
+      "before": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "T:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+        "source_sha256": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9",
+        "member_contract": "Declares class global::ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor<TContext> where TContext : class, global::ViciOne.ServiceBus.Advanced.PipeContext. Explicit base: global::ViciOne.ServiceBus.Advanced.Middleware.Supervisor; declared implemented interfaces: global::ViciOne.ServiceBus.Advanced.Middleware.ISupervisor<TContext> where TContext : class, global::ViciOne.ServiceBus.Advanced.PipeContext. This entry covers the personally inspected declaration and generic/inheritance contract, not all executable members of the class; those constructor/accessor/ordinary-method obligations remain separate.",
+        "actual_current_PDB_source_binding": {
+          "rid": 47,
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+          "sha256": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9",
+          "physical": true
+        },
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE206_CORE721_SOURCE704_SEVENTEEN_HELD_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9d0825d131a306fc5c2cf3bbe56b976b82312b9f72978a24f25d23b2ca8153c1"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Native0; executable members are not bodyless. Ordinary methods outside721 remain separate; this constructor/property review does not confer full class/runtime acceptance."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-current196-contract-context-r1/PER_ID721_CURRENT_CONTRACTS.json",
+            "sha256": "ebc7fcbeeec985ae9ded460ed1b256a380d41d510f1d941526a885915afbedf8"
+          },
+          "ordinal": 52,
+          "mandatory_overlay": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-four-row-precision-overlay-r1/EXACT4_ROW_FIELD_REPLACEMENTS.json",
+            "sha256": "3497a3fcf6c838765c330d126a9452f4721f6a8303874a8717f9c779f82daeba"
+          }
+        },
+        "actual_current_XML_raw": "<member name=\"T:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1\">\n            <summary>Creates a pipe context on demand, caches it while valid, and replaces it after invalidation.</summary>\n            <typeparam name=\"TContext\">The pipe context type.</typeparam>\n        </member>"
+      },
+      "after": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "T:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+        "source_sha256": "03d4e0b667f35b672a602bae5a295fa4250076d4c381c98dad4a792bd5588ec1",
+        "member_contract": "Declares class global::ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor<TContext> where TContext : class, global::ViciOne.ServiceBus.Advanced.PipeContext. Explicit base: global::ViciOne.ServiceBus.Advanced.Middleware.Supervisor; declared implemented interfaces: global::ViciOne.ServiceBus.Advanced.Middleware.ISupervisor<TContext> where TContext : class, global::ViciOne.ServiceBus.Advanced.PipeContext. This entry covers the personally inspected declaration and generic/inheritance contract, not all executable members of the class; those constructor/accessor/ordinary-method obligations remain separate.",
+        "actual_current_PDB_source_binding": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "03d4e0b667f35b672a602bae5a295fa4250076d4c381c98dad4a792bd5588ec1",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE206_CORE721_SOURCE704_SEVENTEEN_HELD_BOUNDED_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9d0825d131a306fc5c2cf3bbe56b976b82312b9f72978a24f25d23b2ca8153c1"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Native0; executable members are not bodyless. Ordinary methods outside721 remain separate; this constructor/property review does not confer full class/runtime acceptance."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-current196-contract-context-r1/PER_ID721_CURRENT_CONTRACTS.json",
+            "sha256": "ebc7fcbeeec985ae9ded460ed1b256a380d41d510f1d941526a885915afbedf8"
+          },
+          "ordinal": 52,
+          "mandatory_overlay": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package222-core721-four-row-precision-overlay-r1/EXACT4_ROW_FIELD_REPLACEMENTS.json",
+            "sha256": "3497a3fcf6c838765c330d126a9452f4721f6a8303874a8717f9c779f82daeba"
+          }
+        },
+        "actual_current_XML_raw": "<member name=\"T:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1\">\n            <summary>Creates a pipe context on demand, caches it while valid, and replaces it after invalidation.</summary>\n            <typeparam name=\"TContext\">The pipe context type.</typeparam>\n        </member>",
+        "actual_current_XML_node_serialized": "<member name=\"T:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1\">\n            <summary>Creates a pipe context on demand, caches it while valid, and replaces it after invalidation.</summary>\n            <typeparam name=\"TContext\">The pipe context type.</typeparam>\n        </member>\n        "
+      }
+    },
+    {
+      "before": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+        "source_sha256": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9",
+        "member_contract": "Guards probe, creates source scope and emits type short name plus locked HasContext (_context exists and !IsDisposed), not creation/Ready task status. No context creation or disposal, custom diagnostic/provider errors propagate.",
+        "actual_current_PDB_source_binding": {
+          "rid": 47,
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+          "sha256": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9",
+          "physical": true
+        },
+        "actual_current_XML_raw": "<member name=\"M:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.Probe(ViciOne.ServiceBus.Operations.ProbeContext)\">\n            <summary>Adds the supervisor's context-cache state to a probe.</summary>\n            <param name=\"context\">The probe to populate.</param>\n        </member>\n        ",
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE265_CORE504_SQS433_SOURCE937_EXACT166_HELD_COLLECTIVE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9bb94236d44420c20e2438fd9cc89c0a377d9aba31ccd9d381b3cd671dd4b528"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Executable behaviors remain source-bounded. No native, ABI, package-consumer or full-workflow completion is credited by this declaration/local-body recommendation."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/CORE630_CURRENT260_COMPOSED_MATRIX.json",
+            "sha256": "a770a8370e4b60951c5276b248caaf0ac9eda8e6846e5fbca13b1567339d4291"
+          },
+          "ordinal": 77
+        }
+      },
+      "after": {
+        "assembly": "ViciOne.ServiceBus",
+        "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.Probe(ViciOne.ServiceBus.Operations.ProbeContext)",
+        "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+        "source_sha256": "03d4e0b667f35b672a602bae5a295fa4250076d4c381c98dad4a792bd5588ec1",
+        "member_contract": "Guards probe, creates source scope and emits type short name plus locked HasContext (_context exists and !IsDisposed), not creation/Ready task status. No context creation or disposal, custom diagnostic/provider errors propagate.",
+        "actual_current_PDB_source_binding": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+          "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+          "checksum": "03d4e0b667f35b672a602bae5a295fa4250076d4c381c98dad4a792bd5588ec1",
+          "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+        },
+        "actual_current_XML_raw": "<member name=\"M:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.Probe(ViciOne.ServiceBus.Operations.ProbeContext)\">\n            <summary>Adds the supervisor's context-cache state to a probe.</summary>\n            <param name=\"context\">The probe to populate.</param>\n        </member>\n        ",
+        "canonical_original_member": true,
+        "compiler_accessor_sidecar": false,
+        "status": "ROOT_ACCEPTED_BOUNDED_CURRENT_SOURCE_CONTRACT",
+        "native_cases_added": 0,
+        "whole_API_member_review_closed": false,
+        "grade": null,
+        "root_acceptance": {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE265_CORE504_SQS433_SOURCE937_EXACT166_HELD_COLLECTIVE_ROOT_ACCEPTANCE_R1.json",
+          "sha256": "9bb94236d44420c20e2438fd9cc89c0a377d9aba31ccd9d381b3cd671dd4b528"
+        },
+        "runtime_obligations_not_native_proven": [
+          "Executable behaviors remain source-bounded. No native, ABI, package-consumer or full-workflow completion is credited by this declaration/local-body recommendation."
+        ],
+        "author_context_evidence": {
+          "matrix": {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package265-core630-sqs473-current-root-composed-source937-r1/CORE630_CURRENT260_COMPOSED_MATRIX.json",
+            "sha256": "a770a8370e4b60951c5276b248caaf0ac9eda8e6846e5fbca13b1567339d4291"
+          },
+          "ordinal": 77
+        },
+        "actual_current_XML_node_serialized": "<member name=\"M:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.Probe(ViciOne.ServiceBus.Operations.ProbeContext)\">\n            <summary>Adds the supervisor's context-cache state to a probe.</summary>\n            <param name=\"context\">The probe to populate.</param>\n        </member>\n        "
+      }
+    }
+  ],
+  "new_source_native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": "Ten local cache contracts and separate finite2 public expiry/standardduplicate controls only. Arbitrary comparer/selector/clock/factory/observer/concurrent lifetime and operative lifecycle holds remain distinct. Documentation does not repair all sync-child/getter/drain errors. Historical author prose awaiting Root execution is retained as pre358 epoch; current real2PASS is qualified independently here."
+}

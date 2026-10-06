@@ -35,7 +35,7 @@ public class MergePipe<TInput, TSplit> :
         _next.Probe(scope);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Invokes the context projection with the retained input and split context, then forwards its result to the continuation.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task SendAsync(TSplit context)

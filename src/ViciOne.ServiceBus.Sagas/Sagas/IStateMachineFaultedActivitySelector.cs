@@ -32,7 +32,7 @@ public interface IStateMachineFaultedActivitySelector<TInstance, TException>
     where TInstance : class, ISagaStateMachineInstance
     where TException : Exception
 {
-    /// <summary>An activity which accepts the instance and data from the event.</summary>
+    /// <summary>An activity that accepts the saga instance without requiring an event data contract.</summary>
     /// <typeparam name="TActivity">The activity type.</typeparam>
     /// <returns>The exception activity binder produced by the operation.</returns>
     IExceptionActivityBinder<TInstance, TException> OfType<TActivity>()

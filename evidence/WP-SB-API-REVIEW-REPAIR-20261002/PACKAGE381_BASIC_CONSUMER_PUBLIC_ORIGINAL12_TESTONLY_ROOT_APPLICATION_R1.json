@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-06T08:03:29.517702+00:00",
+  "status": "ROOT_TESTONLY_APPLIED_PUBLIC_ORIGINAL12_PRODUCT_UNCHANGED_NATIVE_PENDING",
+  "Product_changes": 0,
+  "Test1": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqBasicConsumerDiagnosticsTests.cs",
+    "sha256": "1f7de125fe8b6dd273ce0bb545835985c816c9cdf6dc58f91b91b78b2ac992c6",
+    "lines": 374
+  },
+  "Req_ADD1": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+    "before_sha256": "1c6cc5e3b65c1480eed691b5abe856c159241abed270b52f06daececeb77c8fd",
+    "after_sha256": "eef4bc67e21d42a62b3b80e9464a1d7b172ba16dca01d569428f86f996aeacd0",
+    "before_rows": 291,
+    "after_rows": 292,
+    "object_prefix_unchanged": true
+  },
+  "author": {
+    "REPORT": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package357-rabbit-basic-consumer-diagnostic-original12-testonly-proposed-r1/REPORT.json",
+      "sha256": "c0227ae76cf2d01a8816b54033abf1137d6b5bdf4e1e9e8670854416d1340321"
+    },
+    "MAN": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package357-rabbit-basic-consumer-diagnostic-original12-testonly-proposed-r1/MANIFEST.json",
+      "sha256": "53797d7e357b1e66985b4c71b11b988ec3dc8c5b04dff77a54bc20eeab2c6232"
+    }
+  },
+  "independent_whole_peer": {
+    "REPORT": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package357-basic12-independent-test-source-peer-r1/REPORT.json",
+      "sha256": "eddae70cee470b77b634d8832a5974a10d8291266550f715a3548dde87e48c35"
+    },
+    "MAN": {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package357-basic12-independent-test-source-peer-r1/MANIFEST.json",
+      "sha256": "0afe3df5042fa97c4180a724d7ba4b572d37ef33fdc287ebb6ba8f5b51668163"
+    }
+  },
+  "Root_research_MAN": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package381-basic12-root-testonly-research-before-r1/MANIFEST.json",
+    "sha256": "0dba96ebc53177e0c857cae685e3b80303a6283841cf6fc82418c93615c3dfdc"
+  },
+  "Root_whole_Test_read": [
+    "89e359",
+    "17026a"
+  ],
+  "Root_whole_peer_Report_read": "d13bd6",
+  "actual_phase": "package381-basic-consumer-public-original12-native-r1",
+  "native_results": null
+}

@@ -1,0 +1,11 @@
+--- frozen-corrected-Registrar
++++ CollapseEndpointAliases
+@@ -420,7 +420,7 @@
+         Collection.AddSingleton<Bind<TBus, TDefinition>>(provider =>
+             Bind<TBus>.Create(provider.GetRequiredKeyedService<TDefinition>(definitionKey)));
+ 
+-        Collection.AddSingleton<Bind<TBus, IEndpointDefinition<T>>>(provider =>
++        Collection.TryAddSingleton<Bind<TBus, IEndpointDefinition<T>>>(provider =>
+             Bind<TBus>.Create<IEndpointDefinition<T>>(
+                 provider.GetRequiredService<Bind<TBus, TDefinition>>().Value));
+     }

@@ -1,0 +1,968 @@
+{
+  "status": "TWO_ISOLATED_COMPILED_GRAPH_MUTANTS_CAUSALLY_ACCEPTED",
+  "utc": "2026-10-03T04:00:17.292597+00:00",
+  "mutations_sha256": "223fb6d987369d190c87a311b193cffeadac99c68738d84ea7a3a92367725d95",
+  "source_effects": [
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "bytes": 2662,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "bytes": 2641,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "bytes": 1550,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "bytes": 4762,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "bytes": 5099,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "bytes": 281,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/journal_telemetry.cs.txt",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/journal_registration.cs.txt",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "corrected",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/inmemory_factory.cs.txt",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "bytes": 3639,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "bytes": 2662,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "bytes": 2641,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "bytes": 1550,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "bytes": 4762,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "bytes": 5099,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "bytes": 281,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/journal_telemetry.cs.txt",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/journal_registration.cs.txt",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/inmemory_factory.cs.txt",
+      "sha256": "f236623fdb28e5745365501bee6c15c2bfd42855e640877747ab159b13c13bf6",
+      "bytes": 3036,
+      "exact_expected_effect": true,
+      "read_mode": "PERSONAL_FULL_MUTANT_FACTORY_TEXT"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "bytes": 2662,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "bytes": 2641,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "bytes": 1550,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "bytes": 4762,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "bytes": 5099,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "bytes": 281,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/journal_telemetry.cs.txt",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/journal_registration.cs.txt",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/inmemory_factory.cs.txt",
+      "sha256": "1205d38c2366e1d15f76e2c163c678dd2ef63a0d85c12cade138a89d723bcd58",
+      "bytes": 3578,
+      "exact_expected_effect": true,
+      "read_mode": "PERSONAL_FULL_MUTANT_FACTORY_TEXT"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/results.cs.txt",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "bytes": 2662,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/host.cs.txt",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "bytes": 2641,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/host_xml.cs.txt",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "bytes": 1550,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/batch.cs.txt",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/batch_options.cs.txt",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "bytes": 7243,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/ConsumerRegistration.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/registration.cs.txt",
+      "sha256": "d9aad4c2c005b97848f49346062d56cfbb6944ade8145c6d00f6a2c719def5f1",
+      "bytes": 4762,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/BatchConsumerMessageConnector.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/connector.cs.txt",
+      "sha256": "3e63913beb548d301b87480abb92633833d03f56756450722798cf78a71b650d",
+      "bytes": 5099,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/identity.cs.txt",
+      "sha256": "8d9d583e3e4a13a4815c20663f7ebebd316d4051070abedba9cb629a185cd9c6",
+      "bytes": 281,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/trace.cs.txt",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/journal_telemetry.cs.txt",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/journal_writer.cs.txt",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/journal_registration.cs.txt",
+      "sha256": "9420d693af741c3f3b4c852fa172be1f60ce1acd2507adb0b9233e45adf0a08c",
+      "bytes": 11009,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/transport_registration.cs.txt",
+      "sha256": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "bytes": 14561,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    },
+    {
+      "variant": "rollback",
+      "source": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/inmemory_factory.cs.txt",
+      "sha256": "6deddd8b4af9d4a001126eb62c4e439309f61c79fcfe32e47546c26a4b923d1e",
+      "bytes": 3639,
+      "exact_expected_effect": true,
+      "read_mode": "OWN_PERSONAL_FROZEN_FRAME_FULL_EXACT_SHA_REUSE"
+    }
+  ],
+  "verified_source_effect_count": 56,
+  "compiled_binaries": [
+    {
+      "variant": "corrected",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/ViciOne.ServiceBus.dll",
+      "sha256": "4e2974787bad39cc60e921628223b9179709d6904431086fb2fbc3520b5b66f4"
+    },
+    {
+      "variant": "corrected",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/corrected/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/ViciOne.ServiceBus.dll",
+      "sha256": "a401e78a2b69b9b8de0ba331a26921474196ef23a5a606b2c0ff1fb5dd3cc3ac"
+    },
+    {
+      "variant": "shared-transport-graph-restored",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/shared-transport-graph-restored/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/ViciOne.ServiceBus.dll",
+      "sha256": "f499cfb9f1da553d35ed98e8705a1ac5750090e8f37518ce3f0929246df2ab65"
+    },
+    {
+      "variant": "address-validation-deferred",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/address-validation-deferred/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+    },
+    {
+      "variant": "rollback",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/ViciOne.ServiceBus.dll",
+      "sha256": "4e2974787bad39cc60e921628223b9179709d6904431086fb2fbc3520b5b66f4"
+    },
+    {
+      "variant": "rollback",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package12-graph-binaries/rollback/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "938f413ea68fb25b7dc1f9f65d1e2372e0be13e3310e3da69b9b80d4bc5e5319"
+    }
+  ],
+  "actual_countercases": [
+    {
+      "mutant": "shared-transport-graph-restored",
+      "role": "negative",
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-shared-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "shared-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:44:50.980752+00:00",
+        "completed_utc": "2026-10-03T03:44:51.685489+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-shared-default.log",
+        "log_sha256": "c9cf46ec9b9733eb60075a70d45ae77fb9cd1df7c302038f314df07f889e9cb4"
+      },
+      "actual_case": {
+        "case": "shared-default",
+        "assertions_passed": false,
+        "exception_type": "ViciOne.ServiceBus.ConfigurationException",
+        "Message": "Base Host for bus 'unknown': Payload admission is already configured for this bus owner. Correct the named configuration before starting the host.",
+        "StackTrace": "   at ViciOne.ServiceBus.Configuration.BaseHostConfiguration`2.ViciOne.ServiceBus.Advanced.Serialization.IPayloadAdmissionHostConfiguration.SetPayloadAdmissionRuntime(IPayloadAdmissionRuntime runtime) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs:line 149\n   at ViciOne.ServiceBus.Configuration.TransportRegistrationBusFactory`1.ConfigurePayloadAdmission(IBusRegistrationContext context, IHostConfiguration hostConfiguration) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs:line 241\n   at ViciOne.ServiceBus.Configuration.TransportRegistrationBusFactory`1.CreateBus[T,TConfigurator](T configurator, IBusRegistrationContext context, Action`2 configure, IEnumerable`1 specifications) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs:line 69\n   at ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryRegistrationBusFactory.CreateBus(IBusRegistrationContext context, IEnumerable`1 specifications, String busName) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs:line 44\n   at ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.CreateBus[T](T busFactory, IServiceProvider provider) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs:line 148\n   at ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator.<>c__DisplayClass6_0`1.<SetBusFactory>b__0(IServiceProvider provider) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs:line 91\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitFactory(FactoryCallSite factoryCallSite, RuntimeResolverContext context)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)\n   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)\n   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)\n   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)\n   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)\n   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)\n   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)\n   at ViciOneReview.GraphOwnership.GraphCases.Owner.Resolve(Boolean typed) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 180\n   at ViciOneReview.GraphOwnership.GraphCases.Owner.StartAsync(Boolean typed, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 185\n   at ViciOneReview.GraphOwnership.GraphCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 65\n--- End of stack trace from previous location ---\n   at ViciOneReview.GraphOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.GraphOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.GraphOwnership.GraphCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 35\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "exact_expected_causal_predicate": true,
+      "binary_loaded_equal": true
+    },
+    {
+      "mutant": "shared-transport-graph-restored",
+      "role": "negative",
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-shared-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "shared-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:44:51.781051+00:00",
+        "completed_utc": "2026-10-03T03:44:52.502483+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-shared-typed.log",
+        "log_sha256": "b2b04c0d2fcca5159d1b398696e5ea685f7bc85c6a47b02d9a45b68a5ae73c22"
+      },
+      "actual_case": {
+        "case": "shared-typed",
+        "assertions_passed": false,
+        "exception_type": "ViciOne.ServiceBus.ConfigurationException",
+        "Message": "Base Host for bus 'unknown': Payload admission is already configured for this bus owner. Correct the named configuration before starting the host.",
+        "StackTrace": "   at ViciOne.ServiceBus.Configuration.BaseHostConfiguration`2.ViciOne.ServiceBus.Advanced.Serialization.IPayloadAdmissionHostConfiguration.SetPayloadAdmissionRuntime(IPayloadAdmissionRuntime runtime) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs:line 149\n   at ViciOne.ServiceBus.Configuration.TransportRegistrationBusFactory`1.ConfigurePayloadAdmission(IBusRegistrationContext context, IHostConfiguration hostConfiguration) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs:line 241\n   at ViciOne.ServiceBus.Configuration.TransportRegistrationBusFactory`1.CreateBus[T,TConfigurator](T configurator, IBusRegistrationContext context, Action`2 configure, IEnumerable`1 specifications) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs:line 69\n   at ViciOne.ServiceBus.InMemoryTransport.Configuration.InMemoryRegistrationBusFactory.CreateBus(IBusRegistrationContext context, IEnumerable`1 specifications, String busName) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryRegistrationBusFactory.cs:line 44\n   at ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2.CreateBus[T](T busFactory, IServiceProvider provider) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs:line 294\n   at ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2.<>c__DisplayClass3_0`1.<SetBusFactory>b__0(IServiceProvider provider) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs:line 239\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitFactory(FactoryCallSite factoryCallSite, RuntimeResolverContext context)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)\n   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)\n   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)\n   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)\n   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)\n   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)\n   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)\n   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)\n   at ViciOneReview.GraphOwnership.GraphCases.Owner.Resolve(Boolean typed) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 180\n   at ViciOneReview.GraphOwnership.GraphCases.Owner.StartAsync(Boolean typed, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 185\n   at ViciOneReview.GraphOwnership.GraphCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 65\n--- End of stack trace from previous location ---\n   at ViciOneReview.GraphOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.GraphOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.GraphOwnership.GraphCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 35\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "exact_expected_causal_predicate": true,
+      "binary_loaded_equal": true
+    },
+    {
+      "mutant": "shared-transport-graph-restored",
+      "role": "positive",
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-independent-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:52.615418+00:00",
+        "completed_utc": "2026-10-03T03:44:53.499272+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-independent-default.log",
+        "log_sha256": "36cb3c554f0627c757001de18a7ec02b42b5e27489c9c5e859b0f9f49fc28539"
+      },
+      "actual_case": {
+        "case": "independent-default",
+        "assertions_passed": true
+      },
+      "exact_expected_causal_predicate": true,
+      "binary_loaded_equal": true
+    },
+    {
+      "mutant": "shared-transport-graph-restored",
+      "role": "positive",
+      "receipt": {
+        "phase": "package12-graph-mut-shared-transport-graph-restored-independent-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:44:53.602913+00:00",
+        "completed_utc": "2026-10-03T03:44:54.392691+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-shared-transport-graph-restored-independent-typed.log",
+        "log_sha256": "2732b59df133be06dabf58ba25f216e90eb9515c3468003bd1b5ead8f40f4fe5"
+      },
+      "actual_case": {
+        "case": "independent-typed",
+        "assertions_passed": true
+      },
+      "exact_expected_causal_predicate": true,
+      "binary_loaded_equal": true
+    },
+    {
+      "mutant": "address-validation-deferred",
+      "role": "negative",
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-invalid-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "invalid-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:45:04.429623+00:00",
+        "completed_utc": "2026-10-03T03:45:04.723056+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-invalid-default.log",
+        "log_sha256": "12f212aa7eaf13bb03e96f121a0235bcc94d643069e2d700a0578542ce050054"
+      },
+      "actual_case": {
+        "case": "invalid-default",
+        "assertions_passed": false,
+        "exception_type": "Xunit.Sdk.ThrowsException",
+        "Message": "Assert.Throws() Failure: No exception was thrown\nExpected: typeof(System.ArgumentException)",
+        "StackTrace": "   at Xunit.Assert.ThrowsImpl(Type exceptionType, Exception exception, Func`2 inspector) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 506\n   at Xunit.Assert.Throws[T](Action testCode) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 120\n   at ViciOneReview.GraphOwnership.GraphCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 43\n--- End of stack trace from previous location ---\n   at ViciOneReview.GraphOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.GraphOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.GraphOwnership.GraphCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 35\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "exact_expected_causal_predicate": true,
+      "binary_loaded_equal": true
+    },
+    {
+      "mutant": "address-validation-deferred",
+      "role": "negative",
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-invalid-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "invalid-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 1,
+        "started_utc": "2026-10-03T03:45:04.848947+00:00",
+        "completed_utc": "2026-10-03T03:45:05.184502+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-invalid-typed.log",
+        "log_sha256": "0825086ca33f1f130e237168f4cf4a28fc0ca3dc9a3a1fc08e5f3a07b13a3616"
+      },
+      "actual_case": {
+        "case": "invalid-typed",
+        "assertions_passed": false,
+        "exception_type": "Xunit.Sdk.ThrowsException",
+        "Message": "Assert.Throws() Failure: No exception was thrown\nExpected: typeof(System.ArgumentException)",
+        "StackTrace": "   at Xunit.Assert.ThrowsImpl(Type exceptionType, Exception exception, Func`2 inspector) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 506\n   at Xunit.Assert.Throws[T](Action testCode) in /_/src/xunit.v3.assert/Asserts/ExceptionAsserts.cs:line 120\n   at ViciOneReview.GraphOwnership.GraphCases.<>c__DisplayClass0_0.<<RunAsync>b__1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 43\n--- End of stack trace from previous location ---\n   at ViciOneReview.GraphOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/OwnedLifetime.cs:line 11\n   at ViciOneReview.GraphOwnership.OwnedLifetime.RunAsync(Func`1 body, Func`1[] cleanup) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/OwnedLifetime.cs:line 18\n   at ViciOneReview.GraphOwnership.GraphCases.RunAsync(String mode, TimeSpan timeout, CancellationToken caller) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/GraphCases.cs:line 35\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected/Program.cs:line 23",
+        "bounded_guard_failure": false
+      },
+      "exact_expected_causal_predicate": true,
+      "binary_loaded_equal": true
+    },
+    {
+      "mutant": "address-validation-deferred",
+      "role": "positive",
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-independent-default",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-default",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:45:05.293248+00:00",
+        "completed_utc": "2026-10-03T03:45:06.122769+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-independent-default.log",
+        "log_sha256": "d583d4c1605891bffdb5ad956941d4f2357b8ddf52613ce02bc4cadb4c9f6d18"
+      },
+      "actual_case": {
+        "case": "independent-default",
+        "assertions_passed": true
+      },
+      "exact_expected_causal_predicate": true,
+      "binary_loaded_equal": true
+    },
+    {
+      "mutant": "address-validation-deferred",
+      "role": "positive",
+      "receipt": {
+        "phase": "package12-graph-mut-address-validation-deferred-independent-typed",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/GraphOwnership.PublicConsumer.dll",
+          "independent-typed",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package12-shared-graph/corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T03:45:06.222216+00:00",
+        "completed_utc": "2026-10-03T03:45:07.008520+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-mut-address-validation-deferred-independent-typed.log",
+        "log_sha256": "96d408001d86343edac6a979245a5f7dbca4053c43f6f838296ecf66299a8e66"
+      },
+      "actual_case": {
+        "case": "independent-typed",
+        "assertions_passed": true
+      },
+      "exact_expected_causal_predicate": true,
+      "binary_loaded_equal": true
+    }
+  ],
+  "negative_routes": 4,
+  "positive_routes": 4,
+  "baseline": 8,
+  "rollback": 8,
+  "exact_actual_receipt_checks": [
+    {
+      "phase": "package12-shared-graph-core-build",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-shared-graph-core-pack",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-public-previous-restore",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-public-previous-build",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-public-previous-build-r2",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-public-previous-eight",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-public-previous-build-r3",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-public-previous-eight-r2",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-public-corrected-restore",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-public-corrected-build",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-public-corrected-eight",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-corrected-build",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-corrected-all",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-shared-transport-graph-restored-build",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-shared-transport-graph-restored-shared-default",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-shared-transport-graph-restored-shared-typed",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-shared-transport-graph-restored-independent-default",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-shared-transport-graph-restored-independent-typed",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-address-validation-deferred-build",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-address-validation-deferred-invalid-default",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-address-validation-deferred-invalid-typed",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-address-validation-deferred-independent-default",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-address-validation-deferred-independent-typed",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-rollback-build",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    },
+    {
+      "phase": "package12-graph-mut-rollback-all",
+      "exact_actual_ledger_row_equal": true,
+      "actual_log_hash_equal": true
+    }
+  ],
+  "selected_package_chains": [
+    {
+      "consumer": "previous",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package11-f004/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "8c9bf2184b7294f39748fc6e87a12da2486ef755d7b2c0faa9d4b25898b6f391",
+      "contentHash": "s8BBGcw4xKxbVJ4u2BmHRSfjObCcI1aHD+nAwjUfjLcYI/6DfjH7PFv7G3mm+A5ab0PjSdGh7VTueuqZfAlcCA==",
+      "actual_runtime_dll_sha256": "20ed4de901d85272330b027ca8f2c0d980e0413e6b40b383f78727f77efd7e5a",
+      "raw_sha512": "s8BBGcw4xKxbVJ4u2BmHRSfjObCcI1aHD+nAwjUfjLcYI/6DfjH7PFv7G3mm+A5ab0PjSdGh7VTueuqZfAlcCA==",
+      "selected_zip_cache_lock_loaded_equal": true,
+      "lock_node_count": 20
+    },
+    {
+      "consumer": "previous",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package11-f004/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "3e362398bf1e256571e48b58c61b1b2ff64b2a8e9d0946d93a398a17b4407114",
+      "contentHash": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "actual_runtime_dll_sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a",
+      "raw_sha512": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "selected_zip_cache_lock_loaded_equal": true,
+      "lock_node_count": 20
+    },
+    {
+      "consumer": "corrected",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package12-shared-graph/corrected/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "7edf7b3dfbb20406a476bba3151a0d1dd655f6b4ea3372503f86be6f43c9bbc7",
+      "contentHash": "1br+rHJ8rVf8dfmT4HvlKrNTLaVwOI4JaulqX3jncTIXVXnrmCldt+hraUQp2IxgC4n9bwoEx4s6ic5dtEdxvg==",
+      "actual_runtime_dll_sha256": "a827f1324d81df913bd1d8e24b1e6be663dad7268487b71c59f8da2585a7441b",
+      "raw_sha512": "1br+rHJ8rVf8dfmT4HvlKrNTLaVwOI4JaulqX3jncTIXVXnrmCldt+hraUQp2IxgC4n9bwoEx4s6ic5dtEdxvg==",
+      "selected_zip_cache_lock_loaded_equal": true,
+      "lock_node_count": 20
+    },
+    {
+      "consumer": "corrected",
+      "package": "/private/tmp/vicione-servicebus-api-review-20261001/repair-packages/package12-shared-graph/corrected/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "3e362398bf1e256571e48b58c61b1b2ff64b2a8e9d0946d93a398a17b4407114",
+      "contentHash": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "actual_runtime_dll_sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a",
+      "raw_sha512": "UabgJKU9FFnQwZFkqaodxAIVcwNarmSwZLhvabpwAjsKz4J5PYnZsFEbmQ3NnqQOTSVFqyrakIKl4Z8H1QgPxA==",
+      "selected_zip_cache_lock_loaded_equal": true,
+      "lock_node_count": 20
+    }
+  ],
+  "oracle_preserved": true,
+  "selected_runtime_restored": true,
+  "own_6209_checkpoint": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package12-graph-adversarial/INDEPENDENT_6209_ROLLBACK_CHECK.json",
+    "sha256": "09e08dc6cd15133e6e84220608190227534368fc0e3ee2b8912e5ec82a5e9135"
+  },
+  "limits": [
+    "Scoped F039 internal factory and eight public console modes only. No Core766/all-InMemory/canonical-test-owner grades, no CLOSED symbol or whole API acceptance.",
+    "Two sequential providers, not parallel CreateBus; no ARM/cloud/broker/restart/retained-heap claim. Explicit public logging override isolates open F019.",
+    "Imported F004 and earlier package frames are personally FULL or own exact SHA reused here, but their complete native review is not transferred or regraded.",
+    "Frozen selected Graph package/PDB/source frame only. Later Package13 current ScopeConsumerFactory/build outputs are outside this acceptance.",
+    "Compiled mutants substitute strict-built DLLs into unchanged NuGet consumer; no fresh pack per mutant claim.",
+    "Guards are exclusions and cannot PASS. WaitAsync is an observation deadline, not universal underlying task cancellation. All accepted runs completed without guard failure.",
+    "No builds/restores/tests/native/product/canonical-test/CSV writes by this internal independent reviewer."
+  ]
+}

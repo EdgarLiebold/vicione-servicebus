@@ -46,49 +46,49 @@ public class SqlBusFactoryConfigurator :
             yield return this.Failure("Bus", "The bus queue name must not be null or empty");
     }
 
-    /// <summary>Gets or sets the auto delete on idle.</summary>
+    /// <summary>Sets the bus queue idle removal interval.</summary>
     public TimeSpan? AutoDeleteOnIdle
     {
         set => _settings.AutoDeleteOnIdle = value;
     }
 
-    /// <summary>Gets or sets the polling interval.</summary>
+    /// <summary>Sets the bus queue polling interval.</summary>
     public TimeSpan PollingInterval
     {
         set => _settings.PollingInterval = value;
     }
 
-    /// <summary>Gets or sets the lock duration.</summary>
+    /// <summary>Sets the bus message lock duration.</summary>
     public TimeSpan LockDuration
     {
         set => _settings.LockDuration = value;
     }
 
-    /// <summary>Gets or sets the max lock duration.</summary>
+    /// <summary>Sets the maximum bus message lock duration.</summary>
     public TimeSpan MaxLockDuration
     {
         set => _settings.MaxLockDuration = value;
     }
 
-    /// <summary>Gets or sets the max delivery count.</summary>
+    /// <summary>Sets the bus queue maximum number of delivery attempts.</summary>
     public int? MaxDeliveryCount
     {
         set => _settings.MaxDeliveryCount = value;
     }
 
-    /// <summary>Gets or sets the purge on startup.</summary>
+    /// <summary>Sets whether existing bus queue messages are purged at startup.</summary>
     public bool PurgeOnStartup
     {
         set => _settings.PurgeOnStartup = value;
     }
 
-    /// <summary>Gets or sets the maintenance batch size.</summary>
+    /// <summary>Sets the bus queue maintenance batch size.</summary>
     public int MaintenanceBatchSize
     {
         set => _settings.MaintenanceBatchSize = value;
     }
 
-    /// <summary>Gets or sets the dead letter expired messages.</summary>
+    /// <summary>Sets whether expired bus queue messages are moved to the dead-letter queue.</summary>
     public bool DeadLetterExpiredMessages
     {
         set => _settings.DeadLetterExpiredMessages = value;
@@ -101,7 +101,7 @@ public class SqlBusFactoryConfigurator :
         _busConfiguration.HostConfiguration.Settings = settings;
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Configures SQL send topology for the message contract.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="configureTopology">The configure topology.</param>
     public void Send<T>(Action<ISqlMessageSendTopologyConfigurator<T>>? configureTopology)
@@ -112,7 +112,7 @@ public class SqlBusFactoryConfigurator :
         configureTopology?.Invoke(configurator);
     }
 
-    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <summary>Configures SQL publish topology for the message contract.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="configureTopology">The configure topology.</param>
     public void Publish<T>(Action<ISqlMessagePublishTopologyConfigurator<T>>? configureTopology)
@@ -123,7 +123,7 @@ public class SqlBusFactoryConfigurator :
         configureTopology?.Invoke(configurator);
     }
 
-    /// <summary>Publishes a message to its configured consumers.</summary>
+    /// <summary>Configures SQL publish topology for the supplied message contract type.</summary>
     /// <param name="messageType">The runtime type of the message contract.</param>
     /// <param name="configure">The callback used to configure the component.</param>
     public void Publish(Type messageType, Action<ISqlMessagePublishTopologyConfigurator>? configure = null)

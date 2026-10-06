@@ -1,0 +1,12 @@
+Der eingefrorene Patch ist intern adversarial geprüft; es gibt keine bestätigte Produktregression. Alle 17 gezielten Gegenmutanten scheitern kausal an ihren unveränderten Regressionstests. Paketverbraucher und aktuelle gemeinsame Testprofile bleiben als nachgelagerte Gates offen.
+
+- Alle geänderten Zeilen der 14 Dateien wurden gegen die gebundene Baseline geprüft; die drei neuen Testdateien vollständig. Die laufenden Dateien und Snapshots stimmen weiterhin mit Freeze `fb4b58e623dfae621beaabec01b2919c99dd2ecf61714cdb6ece0d41c636cb7b` überein.
+- Beide erzeugten Azure-Clients erhalten den gültigen Retrybasiswert einschließlich 1 ms und 5 Minuten. Externe SDK-Clients behalten ihre Einstellungen und Ownership. Der öffentliche Context-Konstruktor behält seine bisherige Disposal-Pflicht, wartet die Bereinigung ab und erhält die ursprüngliche Fehleridentität.
+- Der Sessionkontext liest die aktuelle Sessionzeit in UTC; zwei Erneuerungen, die getrennte Nachrichtenzeit und der ursprüngliche Abbruchtoken werden kontrolliert.
+- Die Blob-Probe entfernt Geheimnisse aus URI und Name vor der tatsächlichen JSON-Serialisierung. Der zusätzliche native Befund zum Fragment im SDK-Namen ist berücksichtigt; der echte SDK-Endpunkt bleibt unverändert.
+- 9 neue Testmethoden mit 21 Fällen besitzen konkrete Assertions. 61 direkte und 10 Helper-Referenzen sind keine Laufzeit- oder Coveragezahl. SDK-private Reflection ist ein laut scheiternder, versionsgebundener Testdurchsetzer.
+- Alle 28 gültigen Restore-/Testloghashes wurden geprüft; 17 Mutanten-Deltas unabhängig aus dem Freeze rekonstruiert und gegen die Laufzeithashes verglichen. Baseline scheitert 11/15, 1/2 und 3/4; korrigierte Fassung und korrigierte Rückkehr bestehen 15 + 2 + 4. Keine Skips. Filter-/Metadaten-Fehlversuche zählen nicht als getötete Mutanten.
+- 6.209 getrackte Dateien der isolierten Mutationskopie wurden unabhängig erneut gegen die ursprüngliche Baseline verglichen: keine Differenz.
+- Keine realen Azure-Broker-/Cloud-/Ressourcenmessungen werden behauptet. Zusätzliche Blob-Emulator-Probe sowie Factory-Konstruktions-/Race-Faults bleiben begrenzte, unbestätigte Beweisgrenzen, keine erwiesenen Produktfehler und keine von diesem Reviewer geforderte Freeze-Erweiterung.
+
+Interner read-only Patchreview. Keine externe Produktteam-, Gesamt-API-, allgemeine A+- oder Releasefreigabe. Der technische Bericht, die Assertions und die exakten Einzeldatei-/Mutantendeltas stehen in REVIEW.json, MUTATION_REVIEW.json und *.patch.

@@ -591,6 +591,337 @@ public sealed class InMemorySagaRepositoryContextTests
         await AssertDictionaryLeaseIsAvailableAsync(dictionary);
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [RequirementCoverage("REQ-VSB-SAGA-REPOSITORY-CONTEXT", "message-load-selected-token-cancels-held-saga-acquisition")]
+    public async Task MessageLoad_SelectedTokenCancelsTheActualHeldSagaLeaseAsync(int mode)
+    {
+        using var consumeCancellation = new CancellationTokenSource();
+        using var operationCancellation = new CancellationTokenSource();
+        var dictionary = new IndexedSagaDictionary<RepositoryState>();
+        var state = new RepositoryState { Value = 37 };
+        var instance = new SagaInstance<RepositoryState>(state);
+        dictionary.Add(instance);
+        ConsumeContext<RepositoryMessage> consumed = CreateConsumeContext(consumeCancellation.Token);
+        var factory = new RecordingLoadFactory();
+        InMemorySagaRepositoryContext<RepositoryState, RepositoryMessage>? context = null;
+        Task<SagaConsumeContext<RepositoryState, RepositoryMessage>?>? operation = null;
+        bool ownsHeldSagaLease = false;
+        bool ownsDictionaryLease = false;
+        try
+        {
+            await instance.MarkInUseAsync(TestContext.Current.CancellationToken);
+            ownsHeldSagaLease = true;
+            await dictionary.MarkInUseAsync(TestContext.Current.CancellationToken);
+            ownsDictionaryLease = true;
+            context = new InMemorySagaRepositoryContext<RepositoryState, RepositoryMessage>(dictionary, factory, consumed);
+            ownsDictionaryLease = false;
+            CancellationToken selected = mode == 2 ? consumeCancellation.Token : operationCancellation.Token;
+            Assert.NotEqual(consumeCancellation.Token, operationCancellation.Token);
+            Assert.False(selected.IsCancellationRequested);
+
+            operation = context.LoadAsync(state.CorrelationId, mode == 2 ? default : operationCancellation.Token);
+
+            Assert.False(operation.IsCompleted);
+            Assert.Same(instance, dictionary[state.CorrelationId]);
+            Assert.Same(state, instance.Instance);
+            Assert.Equal(1, dictionary.Count);
+            Assert.False(instance.IsRemoved);
+            await AssertDictionaryLeaseIsAvailableAsync(dictionary);
+            Assert.False(operation.IsCompleted);
+            Assert.Equal(1, factory.Calls);
+            Assert.Same(dictionary, factory.Storage);
+            Assert.Same(state, factory.State);
+            Assert.Same(consumed.Message, factory.Message);
+            Assert.Equal(SagaConsumeContextMode.Load, factory.Mode);
+            Assert.NotNull(factory.ReturnedTask);
+            Assert.False(factory.ReturnedTask.IsCompleted);
+
+            if (mode == 1)
+                operationCancellation.Cancel();
+            else if (mode == 2)
+                consumeCancellation.Cancel();
+            if (mode != 2)
+                Assert.False(consumeCancellation.IsCancellationRequested);
+            if (mode != 0)
+                Assert.True(factory.ObservedToken.IsCancellationRequested);
+
+            if (mode == 0)
+            {
+                instance.Release();
+                ownsHeldSagaLease = false;
+            }
+            SagaConsumeContext<RepositoryState, RepositoryMessage>? loaded = null;
+            Exception? failure = await Record.ExceptionAsync(async () =>
+                loaded = await operation.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None));
+
+            Assert.IsNotType<TimeoutException>(failure);
+            Assert.True(operation.IsCompleted);
+            Assert.True(factory.ReturnedTask.IsCompleted);
+            if (mode != 0)
+            {
+                Assert.True(operation.IsCanceled);
+                instance.Release();
+                ownsHeldSagaLease = false;
+            }
+            Assert.Same(instance, dictionary[state.CorrelationId]);
+            Assert.Same(state, instance.Instance);
+            Assert.Equal(37, state.Value);
+            Assert.Equal(1, dictionary.Count);
+            Assert.False(instance.IsRemoved);
+            if (mode == 0)
+            {
+                Assert.Null(failure);
+                Assert.True(operation.IsCompletedSuccessfully);
+                SagaConsumeContext<RepositoryState, RepositoryMessage> result =
+                    Assert.IsAssignableFrom<SagaConsumeContext<RepositoryState, RepositoryMessage>>(loaded);
+                Assert.Same(state, result.Saga);
+                Assert.Same(consumed.Message, result.Message);
+            }
+            else
+            {
+                Assert.IsAssignableFrom<OperationCanceledException>(failure);
+                Assert.True(operation.IsCanceled);
+                Assert.Null(loaded);
+                Assert.True(selected.IsCancellationRequested);
+            }
+        }
+        finally
+        {
+            if (ownsHeldSagaLease)
+                instance.Release();
+            if (ownsDictionaryLease)
+                dictionary.Release();
+            try
+            {
+                if (operation != null)
+                {
+                    try
+                    {
+                        SagaConsumeContext<RepositoryState, RepositoryMessage>? loaded =
+                            await operation.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+                        (loaded as IDisposable)?.Dispose();
+                    }
+                    catch (Exception failure) when (failure is not TimeoutException && (operation.IsFaulted || operation.IsCanceled))
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                context?.Dispose();
+            }
+        }
+
+        using var verificationCancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        verificationCancellation.CancelAfter(TimeSpan.FromSeconds(5));
+        await instance.MarkInUseAsync(verificationCancellation.Token);
+        instance.Release();
+        await AssertDictionaryLeaseIsAvailableAsync(dictionary);
+    }
+
+    [Theory]
+    [InlineData(SagaConsumeContextMode.Add, true, false)]
+    [InlineData(SagaConsumeContextMode.Add, true, true)]
+    [InlineData(SagaConsumeContextMode.Add, false, false)]
+    [InlineData(SagaConsumeContextMode.Add, false, true)]
+    [InlineData(SagaConsumeContextMode.Insert, true, false)]
+    [InlineData(SagaConsumeContextMode.Insert, true, true)]
+    [InlineData(SagaConsumeContextMode.Insert, false, false)]
+    [InlineData(SagaConsumeContextMode.Insert, false, true)]
+    [RequirementCoverage("REQ-VSB-SAGA-REPOSITORY-CONTEXT", "add-insert-selected-budget-reaches-initial-and-reacquired-factory")]
+    public async Task MessageCreation_SelectedBudgetReachesTheActualCooperativeFactoryAsync(
+        SagaConsumeContextMode mode, bool initialLease, bool cancelCaller)
+    {
+        using var consumeCancellation = new CancellationTokenSource();
+        using var operationCancellation = new CancellationTokenSource();
+        var dictionary = new IndexedSagaDictionary<RepositoryState>();
+        var state = new RepositoryState { Value = 43 };
+        ConsumeContext<RepositoryMessage> consumed = CreateConsumeContext(consumeCancellation.Token);
+        var factory = new CooperativeCreationFactory();
+        InMemorySagaRepositoryContext<RepositoryState, RepositoryMessage>? context = null;
+        SagaConsumeContext<RepositoryState, RepositoryMessage>? seedLease = null;
+        Task<SagaConsumeContext<RepositoryState, RepositoryMessage>?>? operation = null;
+        bool ownsDictionaryLease = false;
+        try
+        {
+            await dictionary.MarkInUseAsync(TestContext.Current.CancellationToken);
+            ownsDictionaryLease = true;
+            context = new InMemorySagaRepositoryContext<RepositoryState, RepositoryMessage>(dictionary, factory, consumed);
+            ownsDictionaryLease = false;
+            if (!initialLease)
+            {
+                var seed = new SagaInstance<RepositoryState>(new RepositoryState());
+                dictionary.Add(seed);
+                seedLease = await context.LoadAsync(seed.Instance.CorrelationId, TestContext.Current.CancellationToken);
+                Assert.NotNull(seedLease);
+                ((IDisposable)seedLease).Dispose();
+                seedLease = null;
+                dictionary.Remove(seed);
+                await AssertDictionaryLeaseIsAvailableAsync(dictionary);
+            }
+            Assert.NotEqual(consumeCancellation.Token, operationCancellation.Token);
+            Assert.Equal(0, factory.Calls);
+            operation = mode == SagaConsumeContextMode.Add
+                ? CreateAddedContextAsync(context, state, operationCancellation.Token)
+                : context.InsertAsync(state, operationCancellation.Token);
+
+            Assert.Equal(1, factory.Calls);
+            Assert.Same(dictionary, factory.Storage);
+            Assert.Same(state, factory.State);
+            Assert.Equal(mode, factory.Mode);
+            Assert.NotNull(factory.MessageContext);
+            Assert.Same(consumed.Message, factory.Message);
+            Assert.Same(consumed.Advanced().ReceiveContext, factory.MessageContext.ReceiveContext);
+            Assert.NotNull(factory.ReturnedTask);
+            Assert.False(factory.ReturnedTask.IsCompleted);
+            Assert.False(operation.IsCompleted);
+            Assert.False(factory.Continue.Task.IsCompleted);
+            Assert.Equal(0, dictionary.Count);
+            Assert.Null(dictionary[state.CorrelationId]);
+            Assert.False(factory.ObservedToken.IsCancellationRequested);
+            if (cancelCaller)
+            {
+                operationCancellation.Cancel();
+                Assert.False(consumeCancellation.IsCancellationRequested);
+                Assert.True(factory.ObservedToken.IsCancellationRequested);
+            }
+            else
+                factory.Continue.TrySetResult();
+
+            SagaConsumeContext<RepositoryState, RepositoryMessage>? created = null;
+            Exception? failure = await Record.ExceptionAsync(async () =>
+                created = await operation.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None));
+            Assert.IsNotType<TimeoutException>(failure);
+            Assert.True(operation.IsCompleted);
+            Assert.True(factory.ReturnedTask.IsCompleted);
+            Assert.Equal(43, state.Value);
+            Assert.False(consumeCancellation.IsCancellationRequested);
+            Assert.Equal(consumeCancellation.Token, consumed.CancellationToken);
+            if (cancelCaller)
+            {
+                Assert.IsAssignableFrom<OperationCanceledException>(failure);
+                Assert.True(operation.IsCanceled);
+                Assert.False(factory.Continue.Task.IsCompleted);
+                Assert.Null(created);
+                Assert.Null(factory.CreatedContext);
+                Assert.Equal(0, dictionary.Count);
+            }
+            else
+            {
+                Assert.Null(failure);
+                Assert.True(operation.IsCompletedSuccessfully);
+                Assert.NotNull(created);
+                Assert.Same(factory.CreatedContext, created);
+                Assert.Same(state, created.Saga);
+                Assert.Same(consumed.Message, created.Message);
+                Assert.Same(consumed.Advanced().ReceiveContext, created.ReceiveContext);
+                Assert.Same(state, dictionary[state.CorrelationId]!.Instance);
+                Assert.False(dictionary[state.CorrelationId]!.IsRemoved);
+                Assert.Equal(1, dictionary.Count);
+            }
+        }
+        finally
+        {
+            factory.Continue.TrySetResult();
+            try
+            {
+                if (factory.ReturnedTask is Task actualFactoryTask)
+                {
+                    try
+                    {
+                        await actualFactoryTask.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+                    }
+                    catch (Exception failure) when (failure is not TimeoutException && (actualFactoryTask.IsFaulted || actualFactoryTask.IsCanceled))
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                try
+                {
+                    if (operation is not null)
+                    {
+                        try
+                        {
+                            await operation.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+                        }
+                        catch (Exception failure) when (failure is not TimeoutException && (operation.IsFaulted || operation.IsCanceled))
+                        {
+                        }
+                    }
+                }
+                finally
+                {
+                    try
+                    {
+                        (seedLease as IDisposable)?.Dispose();
+                        (factory.CreatedContext as IDisposable)?.Dispose();
+                    }
+                    finally
+                    {
+                        context?.Dispose();
+                        if (ownsDictionaryLease)
+                            dictionary.Release();
+                    }
+                }
+            }
+        }
+        await AssertDictionaryLeaseIsAvailableAsync(dictionary);
+        if (dictionary[state.CorrelationId] is SagaInstance<RepositoryState> retained)
+        {
+            using var verificationCancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+            verificationCancellation.CancelAfter(TimeSpan.FromSeconds(5));
+            await retained.MarkInUseAsync(verificationCancellation.Token);
+            retained.Release();
+        }
+    }
+
+    private sealed class CooperativeCreationFactory : ISagaConsumeContextFactory<IndexedSagaDictionary<RepositoryState>, RepositoryState>
+    {
+        readonly InMemorySagaConsumeContextFactory<RepositoryState> _inner = new();
+        public TaskCompletionSource Continue { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public int Calls { get; private set; }
+        public IndexedSagaDictionary<RepositoryState>? Storage { get; private set; }
+        public RepositoryState? State { get; private set; }
+        public SagaConsumeContextMode Mode { get; private set; }
+        public ConsumeContext? MessageContext { get; private set; }
+        public object? Message { get; private set; }
+        public CancellationToken ObservedToken { get; private set; }
+        public Task? ReturnedTask { get; private set; }
+        public object? CreatedContext { get; private set; }
+
+        public Task<SagaConsumeContext<RepositoryState, T>> CreateSagaConsumeContextAsync<T>(IndexedSagaDictionary<RepositoryState> context,
+            ConsumeContext<T> consumeContext, RepositoryState instance, SagaConsumeContextMode mode)
+            where T : class
+        {
+            if (mode == SagaConsumeContextMode.Load)
+                return _inner.CreateSagaConsumeContextAsync(context, consumeContext, instance, mode);
+            Calls++;
+            Storage = context;
+            State = instance;
+            Mode = mode;
+            MessageContext = consumeContext.Advanced();
+            Message = consumeContext.Message;
+            ObservedToken = consumeContext.CancellationToken;
+            Task<SagaConsumeContext<RepositoryState, T>> task = CreateAsync();
+            ReturnedTask = task;
+            return task;
+
+            async Task<SagaConsumeContext<RepositoryState, T>> CreateAsync()
+            {
+                await Continue.Task.WaitAsync(consumeContext.CancellationToken);
+                SagaConsumeContext<RepositoryState, T> created =
+                    await _inner.CreateSagaConsumeContextAsync(context, consumeContext, instance, mode);
+                CreatedContext = created;
+                return created;
+            }
+        }
+    }
+
     private static async Task DrainCreatedContextAsync(Task<SagaConsumeContext<RepositoryState, RepositoryMessage>> operation, CancellationToken cancellationToken)
     {
         try
@@ -661,6 +992,33 @@ public sealed class InMemorySagaRepositoryContextTests
             dictionary.Remove(seed);
         }
         return context;
+    }
+
+    private sealed class RecordingLoadFactory : ISagaConsumeContextFactory<IndexedSagaDictionary<RepositoryState>, RepositoryState>
+    {
+        private readonly InMemorySagaConsumeContextFactory<RepositoryState> _inner = new();
+        public int Calls { get; private set; }
+        public IndexedSagaDictionary<RepositoryState>? Storage { get; private set; }
+        public RepositoryState? State { get; private set; }
+        public object? Message { get; private set; }
+        public SagaConsumeContextMode Mode { get; private set; }
+        public CancellationToken ObservedToken { get; private set; }
+        public Task? ReturnedTask { get; private set; }
+
+        public Task<SagaConsumeContext<RepositoryState, T>> CreateSagaConsumeContextAsync<T>(IndexedSagaDictionary<RepositoryState> context,
+            ConsumeContext<T> consumeContext, RepositoryState instance, SagaConsumeContextMode mode)
+            where T : class
+        {
+            Calls++;
+            Storage = context;
+            State = instance;
+            Message = consumeContext.Message;
+            Mode = mode;
+            ObservedToken = consumeContext.CancellationToken;
+            Task<SagaConsumeContext<RepositoryState, T>> task = _inner.CreateSagaConsumeContextAsync(context, consumeContext, instance, mode);
+            ReturnedTask = task;
+            return task;
+        }
     }
 
     private sealed class BlockingCreationFactory : ISagaConsumeContextFactory<IndexedSagaDictionary<RepositoryState>, RepositoryState>

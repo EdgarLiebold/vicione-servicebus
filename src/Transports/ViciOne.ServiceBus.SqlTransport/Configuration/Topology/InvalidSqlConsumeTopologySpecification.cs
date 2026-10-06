@@ -12,7 +12,7 @@ public class InvalidSqlConsumeTopologySpecification :
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="key">The key used to identify the requested entry.</param>
-    /// <param name="message">The message to process.</param>
+    /// <param name="message">The validation failure message.</param>
     public InvalidSqlConsumeTopologySpecification(string key, string message)
     {
         _key = key;
@@ -26,8 +26,8 @@ public class InvalidSqlConsumeTopologySpecification :
         yield return this.Failure(_key, _message);
     }
 
-    /// <summary>Applies this specification to the target builder.</summary>
-    /// <param name="builder">The builder that receives the configuration.</param>
+    /// <summary>Performs no topology changes; validation reports the stored failure separately.</summary>
+    /// <param name="builder">The topology builder; this specification leaves it unchanged.</param>
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
     {
     }

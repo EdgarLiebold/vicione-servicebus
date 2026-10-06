@@ -1,0 +1,58 @@
+{
+  "utc": "2026-10-04T17:06:23.601578+00:00",
+  "status": "SOURCE_APPROVED_ACTUAL_NATIVE_PENDING_TYPED_CANDIDATE_SEPARATE",
+  "records": [
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SignalR.Tests/SignalRSelectedGroupClientTests.cs",
+      "sha256": "8fdde268236aa2ac04b035256a6fb8f7e076f89d105a54edebfd20f278f77ba1",
+      "lines": 127
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureSelectedDefinitionAndSharedEventTests.cs",
+      "sha256": "ce7c5267732bbac811bd0eea1fd187a5eea94812820328943794f4d46dbbe632",
+      "lines": 167
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before": "ffba17dcad66685118f3d072e3f982ea4643f2bdf3790815ec0368b7ec530a56",
+      "after": "cd386bfc99c47c5a8ae0ec360b93d64e383bafab3a590eb800678c3d629e16b9",
+      "before_rows": 4584,
+      "after_rows": 4586,
+      "add_only": [
+        {
+          "requirementId": "REQ-VSB-FUTURE-REGISTRATION",
+          "variantKey": "typed-companion-activation-resolves-owner-specific-consumer-definition",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Futures.FutureSelectedDefinitionAndSharedEventTests",
+          "testMethod": "TypedCompanions_ActivateTheirDefinitionsThroughNormalPublicCompositionAsync"
+        },
+        {
+          "requirementId": "REQ-VSB-FUTURE-RESULTS",
+          "variantKey": "shared-response-contract-completes-only-matching-pending-selectors",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Futures.FutureSelectedDefinitionAndSharedEventTests",
+          "testMethod": "SharedResponseContract_CompletesOnlyTheMatchingPendingOperationAsync"
+        }
+      ]
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.SignalR.Tests/Requirements/SignalRRequirements.json",
+      "before": "8da9837d2adaea8fd7c59ee5a52fe317e0dbb6455bb7573c3e7252c18863a97d",
+      "after": "b253bbfb305051d9511211194acd4c4677dec28a0896bde28da6fd1004654b8b",
+      "before_rows": 78,
+      "after_rows": 79,
+      "add_only": [
+        {
+          "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+          "variantKey": "selected-group-client-receives-acknowledgement-from-owning-bus",
+          "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+          "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRSelectedGroupClientTests",
+          "testMethod": "GroupClients_ApplyAndAcknowledgeCommandsThroughEachSelectedBusAsync"
+        }
+      ]
+    }
+  ],
+  "root_adversarial_review": "9dfae7 whole167Core,54fea7 whole127SignalR,8855ef fullindependentSource+3Req;no manufactured typedCausecredit",
+  "independent_report": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package84-selected-owner-and-shared-event-controls-independent-r1/REPORT.json",
+  "independent_report_sha256": "072008dc5b20bc5d22510100b1bce77c0812ee09513090f4668d83eb5046835c"
+}

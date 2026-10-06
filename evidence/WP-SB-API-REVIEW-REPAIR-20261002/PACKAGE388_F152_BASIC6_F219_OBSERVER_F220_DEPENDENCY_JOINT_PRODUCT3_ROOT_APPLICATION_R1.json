@@ -1,0 +1,88 @@
+{
+  "utc": "2026-10-06T08:29:48.397616+00:00",
+  "status": "ROOT_APPLIED_JOINT_PRODUCT3_AFTER_ALL_INDEPENDENT_ORIGINAL_AND_DIFFERENT_AUTHOR_SOURCE_PEERS_FIXED_NATIVE_PENDING",
+  "changes": [
+    {
+      "finding": "F-SB-API-152",
+      "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqBasicConsumer.cs",
+      "before_sha256": "b5cc606143e8c8d7e68e102a905a74af7c3d76527a825ce3b0a04925c9aae54d",
+      "after_sha256": "8f09c94e0eed7441260730d039a407bbb277846a8f2c4a85a0052f30d99eb4ba",
+      "before_lines": 209,
+      "after_lines": 251,
+      "literal_inverse_count": 6,
+      "all_existing_XML_source_comments_exact": true,
+      "author_MAN": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package382-basic-consumer-owning-diagnostics6-product1-proposed-r1/MANIFEST.json",
+        "sha256": "f2be5f98b4e95f3f87ce3022f9c44febcb8c7834bcac4a9d2363d5cff06187e5"
+      },
+      "different_author_peer_MAN": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package382-basic-consumer-product6-independent-scanner-source-peer-r1/MANIFEST.json",
+        "sha256": "e034494ac192b95a62e7ef515c6ef37e6636a355008fcbc9de3316a72b052c52"
+      },
+      "Root_whole_Source_and_peer_Report_reads": {
+        "source": [
+          "c97762",
+          "c850b3"
+        ],
+        "report": "54f596"
+      },
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package382-basic-consumer-owning-diagnostics6-product1-proposed-r1/proposed/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqBasicConsumer.cs"
+    },
+    {
+      "finding": "F-SB-API-219",
+      "relative": "src/ViciOne.ServiceBus/Configuration/ConsumerSpecification.cs",
+      "before_sha256": "0588767c92b0bfb4df24d097dd4bce826abbe84b5e2bdba9d5258e901a9b9b89",
+      "after_sha256": "aaa533c284b41a817a4795aa7b311ef79e83e1b38d0e4e30138fe2e9d3509a96",
+      "before_lines": 195,
+      "after_lines": 213,
+      "literal_inverse_count": 1,
+      "all_existing_XML_source_comments_exact": true,
+      "author_MAN": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package383-consumer-specification-observer-admission-product1-proposed-r1/MANIFEST.json",
+        "sha256": "5894be30a2f24f3d36d1ac9baf619cf8f58715d338e0779228d98217040fe578"
+      },
+      "different_author_peer_MAN": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package383-consumer-observer-product1-independent-runtime-source-peer-r1/MANIFEST.json",
+        "sha256": "8fc2273f23473490b306e6038e6c0b0b17610e4c91e0fc1da6a0b19609debde8"
+      },
+      "Root_whole_Source_and_peer_Report_reads": {
+        "source": "770668",
+        "report": "44b3c9"
+      },
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package383-consumer-specification-observer-admission-product1-proposed-r1/proposed/src/ViciOne.ServiceBus/Configuration/ConsumerSpecification.cs"
+    },
+    {
+      "finding": "F-SB-API-220",
+      "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/ReceiveEndpointConfiguratorDependencyExtensions.cs",
+      "before_sha256": "3fe0a57926853981c2ee062a41ed93989d1914198fb0cd1c982c85d6cd09e66e",
+      "after_sha256": "2529de7250ff8ffd7253070600295937b8908dfa1ece9b489faeff4d4fb04b54",
+      "before_lines": 136,
+      "after_lines": 157,
+      "literal_inverse_count": 2,
+      "all_existing_XML_source_comments_exact": true,
+      "author_MAN": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package385-adddependency-first-admission-product1-proposed-r1/MANIFEST.json",
+        "sha256": "2e12aa0c0d4f186fd9a842d536dbf33edce4b2ad81ae573e52a5a3f22250df86"
+      },
+      "different_author_peer_MAN": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package385-adddependency-product1-independent-runtime-source-peer-r1/MANIFEST.json",
+        "sha256": "9c4969172baef7e9f26cecb64f5c6fe154c879b8b9b8a8607d904dd0ae81b0d2"
+      },
+      "Root_whole_Source_and_peer_Report_reads": {
+        "source": "6b4c47",
+        "report": "e88fa5"
+      },
+      "proposed": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package385-adddependency-first-admission-product1-proposed-r1/proposed/src/ViciOne.ServiceBus.Abstractions/Configuration/Middleware/ReceiveEndpointConfiguratorDependencyExtensions.cs"
+    }
+  ],
+  "Product_files_changed": 3,
+  "Test_Req_changes": 0,
+  "previous384_frozen_ACK": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package384-adddependency2-original-independent-qualification-r1/SNAPSHOT_ACK.json",
+    "sha256": "121d0db89734b4f13093fce619971b51e357c359745401ce34ad0d5eaac738c4"
+  },
+  "scope": "F152 exact six new owning Log calls; F219 constructor acquiredobserver retirement; F220 first prestorage admission observerretirement only. No pass prediction/public signature or existing XML comment changes.",
+  "Native_gate_plan": "Serial focused12/3/2 then appropriate modules/strict/fresh independent actual qualification; untested extraBasic2 follow separate publicOriginal4 plan.",
+  "whole_API_closed": false,
+  "native_cases_added": 0
+}

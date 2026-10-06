@@ -1,0 +1,18 @@
+{
+  "changes_since_frozen6330": [
+    {
+      "relative": "CHANGELOG.md",
+      "review_snapshot_sha256": "2c20193151874c23b53eac5dec72e784724acd9ed385bbdace20d795058e7a37",
+      "current_sha256": "4d2377126b992bb25b59b895b96238bd189fdf209e9387cb4bad570efd68440f"
+    },
+    {
+      "relative": "docs/changelog/product-fixes.md",
+      "review_snapshot_sha256": "77373cd27e36c2dc36a834fc646565d1cdab769ef567ba09be63beb9ae64773a",
+      "current_sha256": "63d7a6b78faf10309159e6b070beca158e989f155ccb63fe6ccb76b2bbfe3c9e"
+    }
+  ],
+  "unchanged_other_inputs": 6328,
+  "API_member_STATE_finding_authorities_unchanged": true,
+  "frozen_review_snapshots_not_rewritten": true,
+  "documentation_does_not_add_native_execution_credit": true
+}

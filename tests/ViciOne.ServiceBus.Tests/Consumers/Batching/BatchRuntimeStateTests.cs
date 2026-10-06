@@ -867,7 +867,7 @@ public sealed class BatchRuntimeStateTests
             typeof(BatchCollector<StateItem, string>),
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
             binder: null,
-            args: [options, pipe, provider],
+            args: [options, pipe, provider, "unknown"],
             culture: null));
     }
 

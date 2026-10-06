@@ -1,0 +1,7 @@
+{
+  "status": "SETUP_COMPILER_EXCLUDED_NOT_FINDING_OR_KILL",
+  "phase": "package19-transport-public-previous-build",
+  "errors": 3,
+  "cause": "Formal ConsumeContext exposes actual receive context through Advanced().ReceiveContext; owner incorrectly used direct property.",
+  "paired_fix": "Use existing public Advanced boundary; no business oracle weakening."
+}

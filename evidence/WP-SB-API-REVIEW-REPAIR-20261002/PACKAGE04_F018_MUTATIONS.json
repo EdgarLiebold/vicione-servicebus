@@ -1,0 +1,834 @@
+{
+  "status": "ALL_SIX_MUTANTS_KILLED_AND_SIXTEEN_ROLLBACK_CASES_GREEN",
+  "oracle_hashes": {
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/packages.lock.json": "d1ae1b628391b20621dcdc896d41f1ac13f99927d07fae8cbf2687d32494f1e8",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/NuGet.Config": "7d8c2eecb4d465c44c1c1c2bf7042019b54676f55d7aa05e54b927e97ae7f9cf",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/F018.PublicConsumer.csproj": "769b70d0fabeb7f431a8880a5db33da8a35d0b41a3e80c4e8a4d3d2e68afc01a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/OwnershipAssertions.cs": "2c86c35df3eea44d49908e82c8325ba8c9921947397f45b61c3ee04d86e4c988",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/Program.cs": "7fa84ce937741215dc387fbbf6037e3b5568072c0eb2bccc02d39cc856492e08",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/bin/Release/net10.0/F018.PublicConsumer.dll": "1745b9e88666a31253528cca098c8db065c0c27b506d34071dac60f80600ae4d",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/packages.lock.json": "d1ae1b628391b20621dcdc896d41f1ac13f99927d07fae8cbf2687d32494f1e8",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/NuGet.Config": "7d8c2eecb4d465c44c1c1c2bf7042019b54676f55d7aa05e54b927e97ae7f9cf",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/F018.IdentityGateConsumer.csproj": "769b70d0fabeb7f431a8880a5db33da8a35d0b41a3e80c4e8a4d3d2e68afc01a",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs": "fff81707b8646971e90ddcea5ad768ead70a214044d6f37dc2a71250da98e57e",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/Program.cs": "b98bbf5094705aa844ea77f4622c48b0d61ef752be31b0c804f533f056823ced",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/bin/Release/net10.0/F018.IdentityGateConsumer.dll": "0ccd1e4a4b3413066e1e568a17ed86c4e4a96fb8b516322170ca980fcb3c9253"
+  },
+  "mutants": [
+    {
+      "name": "send-marker-only",
+      "binary": {
+        "receipt": {
+          "phase": "package04-f018-mut-send-marker-only-build",
+          "command": [
+            "dotnet",
+            "build",
+            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:54:41.617369+00:00",
+          "completed_utc": "2026-10-03T00:54:44.308424+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-marker-only-build.log",
+          "log_sha256": "886085474263c62177e9d94635a8d52e7081d8ae62451a8fe9f98fc83ab070db"
+        },
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package04-f018-binaries/send-marker-only/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "sha256": "e14f3a517c3b72996633cd5c7721d976c4123661f24fabe4aa971d3408cc48ed",
+        "source_sha256": "00081c048b0febdac28caa7373706bc1b0d740f51f1bf4d2ff5fed4c27d2b859"
+      },
+      "rejection": {
+        "receipt": {
+          "phase": "package04-f018-mut-send-marker-only-ownership-send-separate-success",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.PublicConsumer.dll",
+            "send-separate-success",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T00:54:44.440720+00:00",
+          "completed_utc": "2026-10-03T00:54:47.273527+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-marker-only-ownership-send-separate-success.log",
+          "log_sha256": "cfe35bceb9a11f23bfa95c6e2a8655f43524254ebef8bfa222af6f48b7a4fd4c"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "send-separate-success",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.NotNullException",
+              "Message": "Assert.NotNull() Failure: Value is null",
+              "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/OwnershipAssertions.cs:line 176\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/OwnershipAssertions.cs:line 192\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/Program.cs:line 35",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1
+        }
+      },
+      "positive_control": {
+        "receipt": {
+          "phase": "package04-f018-mut-send-marker-only-ownership-query-separate-success",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.PublicConsumer.dll",
+            "query-separate-success",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:54:47.373474+00:00",
+          "completed_utc": "2026-10-03T00:54:49.754673+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-marker-only-ownership-query-separate-success.log",
+          "log_sha256": "092ac953b4354507088ca9bb4d4b1834cd15deb5191f84d1509c331d3b1ba63e"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "query-separate-success",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0
+        }
+      },
+      "status": "KILLED_BY_CAUSAL_ASSERTION"
+    },
+    {
+      "name": "query-marker-only",
+      "binary": {
+        "receipt": {
+          "phase": "package04-f018-mut-query-marker-only-build",
+          "command": [
+            "dotnet",
+            "build",
+            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:54:49.867221+00:00",
+          "completed_utc": "2026-10-03T00:54:52.091930+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-marker-only-build.log",
+          "log_sha256": "5b10c9671ea50d2c81b58a0de766efcfca65ce0bb2c15a5d68ff4ed14363e6bd"
+        },
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package04-f018-binaries/query-marker-only/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "sha256": "52ebdbc7aaabcaf861b4cb7b012c4e4bb91e6b145b6fab41c597ffc61a395b3f",
+        "source_sha256": "65aecddd92991e00ff4a2b53ccc3ad59dff24933c6610e1c3e4d66ac7c7d07dd"
+      },
+      "rejection": {
+        "receipt": {
+          "phase": "package04-f018-mut-query-marker-only-ownership-query-separate-success",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.PublicConsumer.dll",
+            "query-separate-success",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T00:54:52.257249+00:00",
+          "completed_utc": "2026-10-03T00:54:54.915041+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-marker-only-ownership-query-separate-success.log",
+          "log_sha256": "745087bcc43a6838ab63aaeb956d16eaba9e9e499495c2371759fbf705f4ec53"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "query-separate-success",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.NotNullException",
+              "Message": "Assert.NotNull() Failure: Value is null",
+              "StackTrace": "   at Xunit.Assert.NotNull(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 34\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/OwnershipAssertions.cs:line 176\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/OwnershipAssertions.cs:line 190\n   at ViciOneReview.F018.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean separate, Boolean failInboxSave, Boolean useTransaction) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/OwnershipAssertions.cs:line 192\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected/Program.cs:line 33",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1
+        }
+      },
+      "positive_control": {
+        "receipt": {
+          "phase": "package04-f018-mut-query-marker-only-ownership-send-separate-success",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.PublicConsumer.dll",
+            "send-separate-success",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:54:55.021017+00:00",
+          "completed_utc": "2026-10-03T00:54:57.257332+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-marker-only-ownership-send-separate-success.log",
+          "log_sha256": "5059a515ab0a9ec3aa1826523b188c6950b369824f23ca5562d4c98afeec4d11"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "send-separate-success",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0
+        }
+      },
+      "status": "KILLED_BY_CAUSAL_ASSERTION"
+    },
+    {
+      "name": "send-id-comparison-lost",
+      "binary": {
+        "receipt": {
+          "phase": "package04-f018-mut-send-id-comparison-lost-build",
+          "command": [
+            "dotnet",
+            "build",
+            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:54:57.359346+00:00",
+          "completed_utc": "2026-10-03T00:54:59.466241+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-id-comparison-lost-build.log",
+          "log_sha256": "d806c55734df0dfdfc10d0c2479d1524e08f163d1c856d2ae9a3c42e00839380"
+        },
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package04-f018-binaries/send-id-comparison-lost/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "sha256": "3cca58dcb2f1f005917c950707e962db0d863dc243f38085fe3edd54b1326f4d",
+        "source_sha256": "2b90cd4499148b021f3437fe12e9eb74f6a9efe506967dfa42adaf3dabee220f"
+      },
+      "rejection": {
+        "receipt": {
+          "phase": "package04-f018-mut-send-id-comparison-lost-identity-send-foreign",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+            "send-foreign",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T00:54:59.590169+00:00",
+          "completed_utc": "2026-10-03T00:55:01.867707+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-id-comparison-lost-identity-send-foreign.log",
+          "log_sha256": "6421bd5ebbd25747cb75b8787c0a4d0c6f716d4fcfada4166ce0ec9665ca958f"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "send-foreign",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.IsTypeException",
+              "Message": "Assert.IsType() Failure: Value is null\nExpected: typeof(System.InvalidOperationException)\nActual:   null",
+              "StackTrace": "   at Xunit.Assert.IsType(Type expectedType, Object object, Boolean exactMatch) in /_/src/xunit.v3.assert/Asserts/TypeAsserts.cs:line 262\n   at Xunit.Assert.IsType[T](Object object) in /_/src/xunit.v3.assert/Asserts/TypeAsserts.cs:line 195\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs:line 117\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs:line 155\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/Program.cs:line 26",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1
+        }
+      },
+      "positive_control": {
+        "receipt": {
+          "phase": "package04-f018-mut-send-id-comparison-lost-identity-send-matching",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+            "send-matching",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:55:01.961466+00:00",
+          "completed_utc": "2026-10-03T00:55:04.196609+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-id-comparison-lost-identity-send-matching.log",
+          "log_sha256": "21531b5e24b3e00a2549036b382e236f9d2fb6bdea45a5522ae7f7159fe319ce"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "send-matching",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0
+        }
+      },
+      "status": "KILLED_BY_CAUSAL_ASSERTION"
+    },
+    {
+      "name": "query-id-comparison-lost",
+      "binary": {
+        "receipt": {
+          "phase": "package04-f018-mut-query-id-comparison-lost-build",
+          "command": [
+            "dotnet",
+            "build",
+            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:55:04.298763+00:00",
+          "completed_utc": "2026-10-03T00:55:06.224808+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-id-comparison-lost-build.log",
+          "log_sha256": "b5bc8b4aafdfc7ffdb7ee653b4f3e25d1fa75119770b4c456c47ebe47f7d6d4f"
+        },
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package04-f018-binaries/query-id-comparison-lost/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "sha256": "f80708ea2a645407451287a30f56404a8e1cdc7020952395d1bc041c1009d890",
+        "source_sha256": "e01aec0cacd3e7a6932ebf658e0bda1007d4a70850dc1992dd7116cd174b05a9"
+      },
+      "rejection": {
+        "receipt": {
+          "phase": "package04-f018-mut-query-id-comparison-lost-identity-query-foreign",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+            "query-foreign",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T00:55:06.339670+00:00",
+          "completed_utc": "2026-10-03T00:55:08.537910+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-id-comparison-lost-identity-query-foreign.log",
+          "log_sha256": "c2522758a6791acc4c8db6bc273644cb07eff477abe1be8065a5b7631d367fa6"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "query-foreign",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.IsTypeException",
+              "Message": "Assert.IsType() Failure: Value is null\nExpected: typeof(System.InvalidOperationException)\nActual:   null",
+              "StackTrace": "   at Xunit.Assert.IsType(Type expectedType, Object object, Boolean exactMatch) in /_/src/xunit.v3.assert/Asserts/TypeAsserts.cs:line 262\n   at Xunit.Assert.IsType[T](Object object) in /_/src/xunit.v3.assert/Asserts/TypeAsserts.cs:line 195\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs:line 117\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs:line 155\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/Program.cs:line 26",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1
+        }
+      },
+      "positive_control": {
+        "receipt": {
+          "phase": "package04-f018-mut-query-id-comparison-lost-identity-query-matching",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+            "query-matching",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:55:08.637889+00:00",
+          "completed_utc": "2026-10-03T00:55:10.836380+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-id-comparison-lost-identity-query-matching.log",
+          "log_sha256": "0f3d3de2836ae5058004e25c5a8673beb00608f0e4cfe1f16d34c34dd8ed8fee"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "query-matching",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0
+        }
+      },
+      "status": "KILLED_BY_CAUSAL_ASSERTION"
+    },
+    {
+      "name": "send-valid-owner-rejected",
+      "binary": {
+        "receipt": {
+          "phase": "package04-f018-mut-send-valid-owner-rejected-build",
+          "command": [
+            "dotnet",
+            "build",
+            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:55:10.927183+00:00",
+          "completed_utc": "2026-10-03T00:55:12.676804+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-valid-owner-rejected-build.log",
+          "log_sha256": "0ee009c7a1827f3bc1a23d07ceb530ce6074d2285cfbfa6c84ffe2e8229b242d"
+        },
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package04-f018-binaries/send-valid-owner-rejected/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "sha256": "4ec322fb0727bd4c470383e90ed4305e95e410661d6d7643d35ecf48e1498636",
+        "source_sha256": "101534469702cc596a462fd2f167fc997b1bb03407810fb91e338f7e945ef048"
+      },
+      "rejection": {
+        "receipt": {
+          "phase": "package04-f018-mut-send-valid-owner-rejected-identity-send-matching",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+            "send-matching",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T00:55:12.809095+00:00",
+          "completed_utc": "2026-10-03T00:55:14.968328+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-valid-owner-rejected-identity-send-matching.log",
+          "log_sha256": "9fa8381647ea742bfceeca846eb339a4f71e38cffabd0dbb8925ce6af74f106e"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "send-matching",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.NullException",
+              "Message": "Assert.Null() Failure: Value is not null\nExpected: null\nActual:   System.InvalidOperationException: The connection is already in a transaction and cannot participate in another transaction.\n   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.EnsureNoTransactions()\n   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.BeginTransactionAsync(IsolationLevel isolationLevel, CancellationToken cancellationToken)\n   at ViciOne.ServiceBus.EntityFrameworkCore.Saga.EntityFrameworkSagaRepositoryContextFactory`1.WithinTransactionAsync[T](DbContext context, CancellationToken cancellationToken, Func`1 callback) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs:line 265\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAttemptAsync[TMessage](ConsumeContext`1 consumeContext, Func`1 operation, OutboxRollbackRetryGuard retryGuard) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 94\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAttemptAsync[TMessage](ConsumeContext`1 consumeContext, Func`1 operation, OutboxRollbackRetryGuard retryGuard) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 115\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.<>c__DisplayClass0_0.<<ExecuteAsync>b__0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 25\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAttemptAsync[TResult](DbContext dbContext, Func`1 operation) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 124\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAsync(DbContext dbContext, IExecutionStrategy strategy, Func`1 operation, CancellationToken cancellationToken) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 23\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAsync[TMessage](DbContext dbContext, IExecutionStrategy strategy, ConsumeContext`1 consumeContext, Func`1 operation) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 58\n   at ViciOne.ServiceBus.EntityFrameworkCore.Saga.EntityFrameworkSagaRepositoryContextFactory`1.SendAsync[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs:line 111\n   at ViciOne.ServiceBus.EntityFrameworkCore.Saga.EntityFrameworkSagaRepositoryContextFactory`1.SendAsync[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs:line 121\n   at ViciOne.ServiceBus.DependencyInjection.DependencyInjectionSagaRepositoryContextFactory`1.SendAsync[T](ConsumeContext`1 context, Func`3 send) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/DependencyInjectionSagaRepositoryContextFactory.cs:line 96\n   at ViciOne.ServiceBus.DependencyInjection.DependencyInjectionSagaScope.ThrowIfAny(String aggregateMessage, Exception operationFailure, IReadOnlyList`1 cleanupFailures) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/DependencyInjectionSagaRepositoryContextFactory.cs:line 222\n   at ViciOne.ServiceBus.DependencyInjection.DependencyInjectionSagaRepositoryContextFactory`1.SendAsync[T](ConsumeContext`1 context, Func`3 send) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/DependencyInjectionSagaRepositoryContextFactory.cs:line 113\n   at ViciOne.ServiceBus.Middleware.CorrelatedSagaFilter`2.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Middleware/CorrelatedSagaFilter.cs:line 58\n   at ViciOne.ServiceBus.Middleware.CorrelatedSagaFilter`2.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Middleware/CorrelatedSagaFilter.cs:line 80\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.GateFilter`1.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs:line 207\n   at ViciOne.ServiceBus.Middleware.OutboxMessagePipe`1.SendAsync(OutboxConsumeContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs:line 46\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.<>c__DisplayClass7_0`1.<<SendAsync>g__ExecuteAsync|0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 130\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.<>c__DisplayClass7_0`1.<<SendAsync>g__ExecuteAsync|0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 178\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.<>c__DisplayClass7_0`1.<<SendAsync>g__ExecuteAsync|0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 178\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAttemptAsync[TResult](DbContext dbContext, Func`1 operation) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 124\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.SendAsync[T](ConsumeContext`1 context, OutboxConsumeOptions options, IPipe`1 next, CancellationToken cancellationToken) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 190\n   at ViciOne.ServiceBus.Middleware.OutboxConsumeFilter`2.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxConsumeFilter.cs:line 49\n   at ViciOne.ServiceBus.Middleware.OutboxConsumeFilter`2.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxConsumeFilter.cs:line 49\n   at ViciOne.ServiceBus.Middleware.TeeFilter`1.<>c__DisplayClass5_0.<<SendAsync>g__SendAsync|1>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/TeeFilter.cs:line 45\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendToOutputAsync(IPipe`1 next, ConsumeContext`1 pipeContext) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs:line 95\n   at ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendToOutputAsync(IPipe`1 next, ConsumeContext`1 pipeContext) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs:line 114\n   at ViciOne.ServiceBus.Middleware.DeserializeFilter.SendAsync(ReceiveContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/DeserializeFilter.cs:line 72\n   at ViciOne.ServiceBus.Middleware.RescueFilter`2.ViciOne.ServiceBus.Advanced.Middleware.IFilter<TContext>.SendAsync(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/RescueFilter.cs:line 47",
+              "StackTrace": "   at Xunit.Assert.Null(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 88\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs:line 127\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs:line 155\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/Program.cs:line 26",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1
+        }
+      },
+      "positive_control": {
+        "receipt": {
+          "phase": "package04-f018-mut-send-valid-owner-rejected-identity-query-matching",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+            "query-matching",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:55:15.059630+00:00",
+          "completed_utc": "2026-10-03T00:55:17.178805+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-send-valid-owner-rejected-identity-query-matching.log",
+          "log_sha256": "0f3d3de2836ae5058004e25c5a8673beb00608f0e4cfe1f16d34c34dd8ed8fee"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "query-matching",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0
+        }
+      },
+      "status": "KILLED_BY_CAUSAL_ASSERTION"
+    },
+    {
+      "name": "query-valid-owner-rejected",
+      "binary": {
+        "receipt": {
+          "phase": "package04-f018-mut-query-valid-owner-rejected-build",
+          "command": [
+            "dotnet",
+            "build",
+            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-warnaserror"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:55:17.274569+00:00",
+          "completed_utc": "2026-10-03T00:55:18.911573+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-valid-owner-rejected-build.log",
+          "log_sha256": "2692a7fb8cdc76e0a6dceac709eeb88651e6fc12a43b68c3e7bc28e8df071d4e"
+        },
+        "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package04-f018-binaries/query-valid-owner-rejected/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "sha256": "34e002d9a33ba06938639910fdae670f7b486403c93fe47f600a83ca42659f99",
+        "source_sha256": "be675b5d5c6554b950dc41bbab358db6bbbdf5deb712539a86b4b691837f2f41"
+      },
+      "rejection": {
+        "receipt": {
+          "phase": "package04-f018-mut-query-valid-owner-rejected-identity-query-matching",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+            "query-matching",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+          "exit_code": 1,
+          "started_utc": "2026-10-03T00:55:19.015478+00:00",
+          "completed_utc": "2026-10-03T00:55:21.259777+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-valid-owner-rejected-identity-query-matching.log",
+          "log_sha256": "983edb9824bb4d6468cb50d37f574a72e339af88c5c46b4b0a974058a1fbfa58"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "query-matching",
+              "assertions_passed": false,
+              "exception_type": "Xunit.Sdk.NullException",
+              "Message": "Assert.Null() Failure: Value is not null\nExpected: null\nActual:   System.InvalidOperationException: The connection is already in a transaction and cannot participate in another transaction.\n   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.EnsureNoTransactions()\n   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.BeginTransactionAsync(IsolationLevel isolationLevel, CancellationToken cancellationToken)\n   at ViciOne.ServiceBus.EntityFrameworkCore.Saga.EntityFrameworkSagaRepositoryContextFactory`1.WithinTransactionAsync[T](DbContext context, CancellationToken cancellationToken, Func`1 callback) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs:line 265\n   at ViciOne.ServiceBus.EntityFrameworkCore.Saga.EntityFrameworkSagaRepositoryContextFactory`1.<>c__DisplayClass8_1`1.<<SendQueryAsync>g__SendQueryAsync|1>d.MoveNext() in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs:line 166\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAttemptAsync[TMessage](ConsumeContext`1 consumeContext, Func`1 operation, OutboxRollbackRetryGuard retryGuard) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 94\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAttemptAsync[TMessage](ConsumeContext`1 consumeContext, Func`1 operation, OutboxRollbackRetryGuard retryGuard) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 115\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.<>c__DisplayClass0_0.<<ExecuteAsync>b__0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 25\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAttemptAsync[TResult](DbContext dbContext, Func`1 operation) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 124\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAsync(DbContext dbContext, IExecutionStrategy strategy, Func`1 operation, CancellationToken cancellationToken) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 23\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAsync[TMessage](DbContext dbContext, IExecutionStrategy strategy, ConsumeContext`1 consumeContext, Func`1 operation) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 58\n   at ViciOne.ServiceBus.EntityFrameworkCore.Saga.EntityFrameworkSagaRepositoryContextFactory`1.SendQueryAsync[T](ConsumeContext`1 context, ISagaQuery`1 query, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs:line 176\n   at ViciOne.ServiceBus.EntityFrameworkCore.Saga.EntityFrameworkSagaRepositoryContextFactory`1.SendQueryAsync[T](ConsumeContext`1 context, ISagaQuery`1 query, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/EntityFrameworkCoreIntegration/Saga/EntityFrameworkSagaRepositoryContextFactory.cs:line 181\n   at ViciOne.ServiceBus.DependencyInjection.DependencyInjectionSagaRepositoryContextFactory`1.SendAsync[T](ConsumeContext`1 context, Func`3 send) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/DependencyInjectionSagaRepositoryContextFactory.cs:line 96\n   at ViciOne.ServiceBus.DependencyInjection.DependencyInjectionSagaScope.ThrowIfAny(String aggregateMessage, Exception operationFailure, IReadOnlyList`1 cleanupFailures) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/DependencyInjectionSagaRepositoryContextFactory.cs:line 222\n   at ViciOne.ServiceBus.DependencyInjection.DependencyInjectionSagaRepositoryContextFactory`1.SendAsync[T](ConsumeContext`1 context, Func`3 send) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/DependencyInjection/DependencyInjectionSagaRepositoryContextFactory.cs:line 113\n   at ViciOne.ServiceBus.Middleware.QuerySagaFilter`2.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Middleware/QuerySagaFilter.cs:line 83\n   at ViciOne.ServiceBus.Middleware.QuerySagaFilter`2.NotifyFaultedAndRethrowAsync(ConsumeContext`1 context, TimeProvider timeProvider, Int64 startedAt, Exception exception) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Middleware/QuerySagaFilter.cs:line 115\n   at ViciOne.ServiceBus.Middleware.QuerySagaFilter`2.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Middleware/QuerySagaFilter.cs:line 89\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.GateFilter`1.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs:line 207\n   at ViciOne.ServiceBus.Middleware.OutboxMessagePipe`1.SendAsync(OutboxConsumeContext`1 context) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs:line 46\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.<>c__DisplayClass7_0`1.<<SendAsync>g__ExecuteAsync|0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 130\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.<>c__DisplayClass7_0`1.<<SendAsync>g__ExecuteAsync|0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 178\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.<>c__DisplayClass7_0`1.<<SendAsync>g__ExecuteAsync|0>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 178\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkExecutionStrategy.ExecuteAttemptAsync[TResult](DbContext dbContext, Func`1 operation) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Infrastructure/EntityFrameworkExecutionStrategy.cs:line 124\n   at ViciOne.ServiceBus.EntityFrameworkCore.EntityFrameworkOutboxContextFactory`2.SendAsync[T](ConsumeContext`1 context, OutboxConsumeOptions options, IPipe`1 next, CancellationToken cancellationToken) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs:line 190\n   at ViciOne.ServiceBus.Middleware.OutboxConsumeFilter`2.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxConsumeFilter.cs:line 49\n   at ViciOne.ServiceBus.Middleware.OutboxConsumeFilter`2.SendAsync(ConsumeContext`1 context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxConsumeFilter.cs:line 49\n   at ViciOne.ServiceBus.Middleware.TeeFilter`1.<>c__DisplayClass5_0.<<SendAsync>g__SendAsync|1>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/TeeFilter.cs:line 45\n--- End of stack trace from previous location ---\n   at ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendToOutputAsync(IPipe`1 next, ConsumeContext`1 pipeContext) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs:line 95\n   at ViciOne.ServiceBus.Middleware.ConsumeContextOutputMessageTypeFilter`1.SendToOutputAsync(IPipe`1 next, ConsumeContext`1 pipeContext) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs:line 114\n   at ViciOne.ServiceBus.Middleware.DeserializeFilter.SendAsync(ReceiveContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/DeserializeFilter.cs:line 72\n   at ViciOne.ServiceBus.Middleware.RescueFilter`2.ViciOne.ServiceBus.Advanced.Middleware.IFilter<TContext>.SendAsync(TContext context, IPipe`1 next) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/RescueFilter.cs:line 47",
+              "StackTrace": "   at Xunit.Assert.Null(Object object) in /_/src/xunit.v3.assert/Asserts/NullAsserts.cs:line 88\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs:line 127\n   at ViciOneReview.F018.Gate.EntityFrameworkSagaTransactionOwnershipRegressionTests.RunAsync(Boolean query, Boolean foreignMarker) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/IdentityGateAssertions.cs:line 155\n   at Program.<Main>$(String[] args) in /private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected/Program.cs:line 26",
+              "bounded_guard_failure": false
+            }
+          ],
+          "count": 1,
+          "failures": 1
+        }
+      },
+      "positive_control": {
+        "receipt": {
+          "phase": "package04-f018-mut-query-valid-owner-rejected-identity-send-matching",
+          "command": [
+            "dotnet",
+            "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+            "send-matching",
+            "00:00:20",
+            "00:01:00"
+          ],
+          "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+          "exit_code": 0,
+          "started_utc": "2026-10-03T00:55:21.350687+00:00",
+          "completed_utc": "2026-10-03T00:55:23.508514+00:00",
+          "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-query-valid-owner-rejected-identity-send-matching.log",
+          "log_sha256": "21531b5e24b3e00a2549036b382e236f9d2fb6bdea45a5522ae7f7159fe319ce"
+        },
+        "actual": {
+          "cases": [
+            {
+              "case": "send-matching",
+              "assertions_passed": true
+            }
+          ],
+          "count": 1,
+          "failures": 0
+        }
+      },
+      "status": "KILLED_BY_CAUSAL_ASSERTION"
+    }
+  ],
+  "controls": [
+    {
+      "receipt": {
+        "phase": "package04-f018-mut-corrected-ownership-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/F018.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T00:54:34.492185+00:00",
+        "completed_utc": "2026-10-03T00:54:38.612772+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-corrected-ownership-all.log",
+        "log_sha256": "fd10344da7c6affaec8899cadd7b5cea4834fa7c06f92cff4b6cd9499db852ce"
+      },
+      "actual": {
+        "cases": [
+          {
+            "case": "send-same-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-same-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-separate-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-separate-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-same-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-same-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-separate-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-separate-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-disabled-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-disabled-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-disabled-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-disabled-failure",
+            "assertions_passed": true
+          }
+        ],
+        "count": 12,
+        "failures": 0
+      }
+    },
+    {
+      "receipt": {
+        "phase": "package04-f018-mut-corrected-identity-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T00:54:38.735055+00:00",
+        "completed_utc": "2026-10-03T00:54:41.519799+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-corrected-identity-all.log",
+        "log_sha256": "2521c2da24290ba2d2093e4f9733cb97f7486c05a896d485a9372ef66b70d711"
+      },
+      "actual": {
+        "cases": [
+          {
+            "case": "send-matching",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-foreign",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-matching",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-foreign",
+            "assertions_passed": true
+          }
+        ],
+        "count": 4,
+        "failures": 0
+      }
+    }
+  ],
+  "rollback": [
+    {
+      "receipt": {
+        "phase": "package04-f018-mut-rollback-ownership-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/F018.PublicConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/ownership-corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T00:55:25.466232+00:00",
+        "completed_utc": "2026-10-03T00:55:28.635934+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-rollback-ownership-all.log",
+        "log_sha256": "fd10344da7c6affaec8899cadd7b5cea4834fa7c06f92cff4b6cd9499db852ce"
+      },
+      "actual": {
+        "cases": [
+          {
+            "case": "send-same-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-same-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-separate-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-separate-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-same-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-same-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-separate-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-separate-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-disabled-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-disabled-failure",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-disabled-success",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-disabled-failure",
+            "assertions_passed": true
+          }
+        ],
+        "count": 12,
+        "failures": 0
+      }
+    },
+    {
+      "receipt": {
+        "phase": "package04-f018-mut-rollback-identity-all",
+        "command": [
+          "dotnet",
+          "bin/Release/net10.0/F018.IdentityGateConsumer.dll",
+          "all",
+          "00:00:20",
+          "00:01:00"
+        ],
+        "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package04/identity-corrected",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T00:55:28.730762+00:00",
+        "completed_utc": "2026-10-03T00:55:31.310424+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-rollback-identity-all.log",
+        "log_sha256": "2521c2da24290ba2d2093e4f9733cb97f7486c05a896d485a9372ef66b70d711"
+      },
+      "actual": {
+        "cases": [
+          {
+            "case": "send-matching",
+            "assertions_passed": true
+          },
+          {
+            "case": "send-foreign",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-matching",
+            "assertions_passed": true
+          },
+          {
+            "case": "query-foreign",
+            "assertions_passed": true
+          }
+        ],
+        "count": 4,
+        "failures": 0
+      }
+    }
+  ],
+  "locked_restore": {
+    "phase": "package04-f018-mut-locked-restore",
+    "command": [
+      "dotnet",
+      "restore",
+      "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+      "--locked-mode"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+    "exit_code": 0,
+    "started_utc": "2026-10-03T00:54:24.475088+00:00",
+    "completed_utc": "2026-10-03T00:54:27.370323+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-locked-restore.log",
+    "log_sha256": "d7558ed960c2b2ad78b436a3d1c3781262f5976ca9646ebb7b91265bead3fb6c"
+  },
+  "corrected_binary": {
+    "receipt": {
+      "phase": "package04-f018-mut-corrected-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:54:27.469022+00:00",
+      "completed_utc": "2026-10-03T00:54:34.382051+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-corrected-build.log",
+      "log_sha256": "ad788b3baccd6784c06cd196ce96f1a6cb0281da2f746cd4ec5a906657744463"
+    },
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package04-f018-binaries/corrected/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+    "sha256": "bd66d44fd2696369315763ac33993dd5a68842fbf07ad41e4eec39645e96975a",
+    "source_sha256": "53473b843b6a9d28ed03fcc5c9de7848bd15c2772efb9018e39b1d7054ce43cd"
+  },
+  "rollback_binary": {
+    "receipt": {
+      "phase": "package04-f018-mut-rollback-build",
+      "command": [
+        "dotnet",
+        "build",
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-warnaserror"
+      ],
+      "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/mutations/source-main",
+      "exit_code": 0,
+      "started_utc": "2026-10-03T00:55:23.602720+00:00",
+      "completed_utc": "2026-10-03T00:55:25.348515+00:00",
+      "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-mut-rollback-build.log",
+      "log_sha256": "cfe56d56fd6c824b62f5e4ec06a1e0a119e381f098199d7e74317151ea7c46c7"
+    },
+    "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-evidence/package04-f018-binaries/rollback/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+    "sha256": "bd66d44fd2696369315763ac33993dd5a68842fbf07ad41e4eec39645e96975a",
+    "source_sha256": "53473b843b6a9d28ed03fcc5c9de7848bd15c2772efb9018e39b1d7054ce43cd"
+  },
+  "original_files": 6209,
+  "original_mismatches": [],
+  "oracle_hashes_preserved": true,
+  "runtime_restored": true
+}

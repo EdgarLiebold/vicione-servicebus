@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace ViciOne.ServiceBus.Util;
 
-/// <summary>Converts runtime objects by using cached type-specific conversion delegates.</summary>
+/// <summary>Projects public readable properties into dictionaries, lowercasing the first key character when uppercase.</summary>
 public static class ConvertObject
 {
     /// <summary>Converts this value to dictionary.</summary>

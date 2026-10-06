@@ -1,0 +1,59 @@
+{
+  "status": "PUBLISHED_ORIGINAL_DOC3_SOURCE_BOUND_CONFIRMED_F147_TWO_NODE_EXTENSION_PLUS_F198_FACTORY_TYPE_PURPOSE",
+  "utc": "2026-10-05T18:04:28.351221+00:00",
+  "new_finding": {
+    "id": "F-SB-API-198",
+    "severity": "Low",
+    "title": "Supplied saga factory delegate type XML incorrectly promises the default factory method"
+  },
+  "existing_F147_extension": "Two actual saga factory Send summaries promise configured-destination sending despite only obtaining saga context and forwarding next; same previous43-node Send-purpose template family, no new ID for the two siblings.",
+  "original_research": {
+    "status": "RESEARCH_BEFORE_PROPOSAL_NO_ROOT_REGISTRATION",
+    "utc": "2026-10-05T17:54:56.767798+00:00",
+    "discovery": "Root genuine12source698L whole286060, two saga factory owners121L",
+    "published_before": {
+      "capture": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package198-rabbit-configured-validation-fixed2-source-bound-capture-r1",
+      "DLL_sha256": "ee7e4f74f8f78ce592692d16d5c9a4cb45172fb4d6ae6ff532a1e82493293bc3",
+      "PDB_sha256": "d2785867ce4ecfc995e5ece925eaa7cdca62ba2c06d8aed61b1e5c9efae294a7",
+      "XML_sha256": "f22525e67ab8140d6631849e7746127e68d02c4a3f80bf786fa8b3f11ebb29bb"
+    },
+    "family_reconciliation": "F147 is exact configured-destination middleware summary copy template, these two own exact saga factory IDs absent its previous43 nodes; extends F147 without newID. FactoryMethodSagaFactory type claimsdefaultfactory despitealways using supplied delegate: distinct purpose clause pending Root known-cause reconciliation before any newID.",
+    "native": 0,
+    "root_accepted": false,
+    "prior_R1_research_sha256": "aa0c44f560a538ea89192db3eb2ff30dc441051549bee3503ecdac80d178cef4"
+  },
+  "per_node3_originals": [
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Configuration/DefaultSagaFactory.cs",
+      "id": "M:ViciOne.ServiceBus.Configuration.DefaultSagaFactory`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SagaConsumeContext{`0,`1}})",
+      "element": "summary",
+      "before": "Sends a message to the configured destination.",
+      "after": "Obtains a saga instance for the correlated message and forwards its saga consume context to the next pipeline stage.",
+      "family": "EXISTING_F147_SAME_SEND_PURPOSE_TEMPLATE",
+      "actual198_XML": "<member name=\"M:ViciOne.ServiceBus.Configuration.DefaultSagaFactory`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SagaConsumeContext{`0,`1}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        "
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Saga/FactoryMethodSagaFactory.cs",
+      "id": "M:ViciOne.ServiceBus.Saga.FactoryMethodSagaFactory`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SagaConsumeContext{`0,`1}})",
+      "element": "summary",
+      "before": "Sends a message to the configured destination.",
+      "after": "Obtains a saga instance for the correlated message and forwards its saga consume context to the next pipeline stage.",
+      "family": "EXISTING_F147_SAME_SEND_PURPOSE_TEMPLATE",
+      "actual198_XML": "<member name=\"M:ViciOne.ServiceBus.Saga.FactoryMethodSagaFactory`2.SendAsync(ViciOne.ServiceBus.ConsumeContext{`1},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.Advanced.SagaConsumeContext{`0,`1}})\">\n            <summary>Sends a message to the configured destination.</summary>\n            <param name=\"context\">The context associated with the operation.</param>\n            <param name=\"next\">The next pipeline stage to invoke.</param>\n            <returns>A task that represents the asynchronous operation.</returns>\n        </member>\n        "
+    },
+    {
+      "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Sagas/Saga/FactoryMethodSagaFactory.cs",
+      "id": "T:ViciOne.ServiceBus.Saga.FactoryMethodSagaFactory`2",
+      "element": "summary",
+      "before": "Creates a saga instance using the default factory method.",
+      "after": "Obtains saga instances from the supplied factory delegate.",
+      "family": "DISTINCT_SUPPLIED_FACTORY_DELEGATE_TYPE_PURPOSE",
+      "actual198_XML": "<member name=\"T:ViciOne.ServiceBus.Saga.FactoryMethodSagaFactory`2\">\n            <summary>Creates a saga instance using the default factory method.</summary>\n            <typeparam name=\"TSaga\">The saga state managed by the member.</typeparam>\n            <typeparam name=\"TMessage\">The message contract processed by the member.</typeparam>\n        </member>\n        "
+    }
+  ],
+  "known_reconciliation": "Root5b1a0a complete197 finding records exact two owner-name references only F152 runtime Created/Used/Removed diagnostics; distinct from these Docpurpose clauses. F147 sameSend template extends; factory type summary default-vs-supplied clause newowningcause. ExistingFactoryType Master accepts declaration shape only, not arbitrary implementation behavior, and remains historical no extra original denominator.",
+  "root_personal_reads": "Two entire actual55+66=121 Source in286060; exact3Q literalsf5684c; arithmetic119 mistake correctedR2report2506d2 without code/artifact/read expansion; Source peerswhole081f68/f944d5.",
+  "native_count": 0,
+  "root_repair_accepted": false,
+  "global_grade": null
+}

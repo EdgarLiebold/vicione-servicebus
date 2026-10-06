@@ -1,0 +1,8 @@
+{
+  "status": "COMPILER_SETUP_EXCLUDED_NOT_FINDING_OR_MUTANT_KILL",
+  "phase": "package19-f034-public-previous-build",
+  "log_sha256": "76cb73e12ec8bd1d1e78198f1843ca124266a85490582e992ffc38048cf0cf12",
+  "errors": 9,
+  "cause": "Public fixture missing ViciOne.ServiceBus.Courier using; actual IExecuteActivity/IActivity/ICompensateActivity are public Courier namespace. Correct matching import to both unchanged paired owners; behavior not yet run.",
+  "fixed_models_sha256": "992c66a76575b6b54a9add2a4881343c5c6565e26fe3e820120ad10f3f197ca6"
+}

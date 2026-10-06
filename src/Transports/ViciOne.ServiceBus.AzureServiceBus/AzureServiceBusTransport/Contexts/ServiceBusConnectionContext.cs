@@ -19,24 +19,28 @@ public class ServiceBusConnectionContext :
 {
     readonly ServiceBusAdministrationClient _administrationClient;
     readonly ServiceBusClient _client;
+    readonly bool _ownsClient;
 
     /// <summary>Initializes the namespace context from messaging and administration clients.</summary>
     /// <param name="client">The client used for senders and processors.</param>
     /// <param name="administrationClient">The client used to create, inspect, update, and delete entities.</param>
     /// <param name="cancellationToken">The token that ends the context lifetime.</param>
+    /// <remarks>This constructor transfers ownership of the messaging client to the context. Host configuration with caller-owned clients retains their external ownership.</remarks>
     public ServiceBusConnectionContext(ServiceBusClient client, ServiceBusAdministrationClient administrationClient, CancellationToken cancellationToken)
         : base(cancellationToken)
     {
         _client = client;
         _administrationClient = administrationClient;
+        _ownsClient = true;
         Endpoint = new Uri($"sb://{_client.FullyQualifiedNamespace}");
     }
 
     internal ServiceBusConnectionContext(ServiceBusClient client, ServiceBusAdministrationClient administrationClient,
-        CancellationToken cancellationToken, Uri endpoint)
+        CancellationToken cancellationToken, Uri endpoint, bool ownsClient)
         : this(client, administrationClient, cancellationToken)
     {
         Endpoint = endpoint;
+        _ownsClient = ownsClient;
     }
 
     /// <summary>Gets the namespace URI used to form entity addresses.</summary>
@@ -332,17 +336,33 @@ public class ServiceBusConnectionContext :
         }
     }
 
-    /// <summary>Disposes the namespace messaging client.</summary>
-    /// <returns>A task that completes when the client has released its resources.</returns>
+    /// <summary>Releases the namespace context and disposes its messaging client when the context owns it.</summary>
+    /// <returns>A task that completes after any owned messaging-client cleanup.</returns>
+    /// <remarks>Caller-owned clients supplied through host configuration remain open and must be disposed by their owner.</remarks>
     public async ValueTask DisposeAsync()
     {
         var address = _client.FullyQualifiedNamespace;
 
-        TransportLogMessages.DisconnectHost(address);
+        try
+        {
+            TransportLogMessages.DisconnectHost(address);
+        }
+        catch (Exception)
+        {
+            // Diagnostic failures must not prevent owned cleanup.
+        }
 
-        await _client.DisposeAsync().ConfigureAwait(false);
+        if (_ownsClient)
+            await _client.DisposeAsync().ConfigureAwait(false);
 
-        TransportLogMessages.DisconnectedHost(address);
+        try
+        {
+            TransportLogMessages.DisconnectedHost(address);
+        }
+        catch (Exception)
+        {
+            // Diagnostic failures must not turn successful cleanup into a failure.
+        }
     }
 
     static ServiceBusSessionProcessorOptions GetSessionProcessorOptions(ClientSettings settings)

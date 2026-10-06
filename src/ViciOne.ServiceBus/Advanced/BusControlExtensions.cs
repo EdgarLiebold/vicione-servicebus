@@ -4,15 +4,16 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
-/// <summary>Provides bounded lifecycle operations for bus-control instances.</summary>
+/// <summary>Provides lifecycle operations with cooperative cancellation for bus-control instances.</summary>
 public static class BusControlExtensions
 {
-    /// <summary>Starts a bus and cancels the operation when the specified timeout elapses.</summary>
+    /// <summary>Starts a bus and requests cancellation when the specified timeout elapses.</summary>
     /// <param name="bus">The bus to start.</param>
-    /// <param name="startTimeout">The positive maximum startup duration.</param>
+    /// <param name="startTimeout">The positive delay before requesting startup cancellation.</param>
     /// <param name="timeProvider">The clock used to measure the timeout, or the system clock when omitted.</param>
-    /// <param name="cancellationToken">Cancels startup independently of the timeout.</param>
+    /// <param name="cancellationToken">Requests startup cancellation independently of the timeout.</param>
     /// <returns>A task that completes when the bus has started.</returns>
+    /// <remarks>Waits for the bus startup task to finish. Cancellation requires cooperation from the bus and does not impose a hard completion deadline.</remarks>
     public static async Task StartAsync(this IBusControl bus, TimeSpan startTimeout, TimeProvider? timeProvider = null,
         CancellationToken cancellationToken = default)
     {
@@ -36,12 +37,13 @@ public static class BusControlExtensions
         }
     }
 
-    /// <summary>Stops a bus and cancels the operation when the specified timeout elapses.</summary>
+    /// <summary>Stops a bus and requests cancellation when the specified timeout elapses.</summary>
     /// <param name="bus">The bus to stop.</param>
-    /// <param name="stopTimeout">The positive maximum shutdown duration.</param>
+    /// <param name="stopTimeout">The positive delay before requesting shutdown cancellation.</param>
     /// <param name="timeProvider">The clock used to measure the timeout, or the system clock when omitted.</param>
-    /// <param name="cancellationToken">Cancels shutdown independently of the timeout.</param>
+    /// <param name="cancellationToken">Requests shutdown cancellation independently of the timeout.</param>
     /// <returns>A task that completes when the bus has stopped.</returns>
+    /// <remarks>Waits for the bus shutdown task to finish. Cancellation requires cooperation from the bus and does not impose a hard completion deadline.</remarks>
     public static async Task StopAsync(this IBusControl bus, TimeSpan stopTimeout, TimeProvider? timeProvider = null,
         CancellationToken cancellationToken = default)
     {
@@ -65,10 +67,11 @@ public static class BusControlExtensions
         }
     }
 
-    /// <summary>Starts and stops a bus to deploy its topology without running a message-consumption lifetime.</summary>
+    /// <summary>Starts a bus to deploy its topology, then stops it after startup completes.</summary>
     /// <param name="bus">The bus whose topology is deployed.</param>
     /// <param name="cancellationToken">Cancels startup.</param>
     /// <returns>A task that completes after topology deployment and shutdown.</returns>
+    /// <remarks>Configure topology-only deployment on the bus before calling this method when consumption must be disabled. This method itself does not disable consumption.</remarks>
     /// <exception cref="ArgumentNullException">Thrown when a required argument is <see langword="null" />.</exception>
     public static async Task DeployAsync(this IBusControl bus, CancellationToken cancellationToken = default)
     {

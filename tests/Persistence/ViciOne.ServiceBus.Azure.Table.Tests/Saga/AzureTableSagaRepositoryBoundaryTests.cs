@@ -1,6 +1,10 @@
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Logging;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using global::Azure;
+using global::Azure.Core;
 using global::Azure.Data.Tables;
 using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Advanced.Middleware;
@@ -16,6 +20,145 @@ namespace ViciOne.ServiceBus.Azure.Table.Tests.Saga;
 
 public sealed class AzureTableSagaRepositoryBoundaryTests
 {
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(0, true)]
+    [InlineData(1, false)]
+    [InlineData(1, true)]
+    [InlineData(2, false)]
+    [InlineData(2, true)]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-INSERT", "insert-diagnostics-preserve-context-conflict-and-primary-failure")]
+    public async Task Insert_DebugDiagnosticsPreserveStorageOutcomeAsync(int outcome, bool loggerThrows)
+    {
+        string template = outcome == 0
+            ? "SAGA:{SagaType}:{CorrelationId} Used {MessageType}"
+            : "SAGA:{SagaType}:{CorrelationId} Dupe {MessageType}";
+        var diagnosticFailure = new IOException("Azure Table insert diagnostic failure");
+        var storageFailure = new RequestFailedException(outcome == 1 ? 409 : 500, "test-owned insert storage failure");
+        var logger = new InsertDiagnosticLogger(template, loggerThrows ? diagnosticFailure : null);
+        using var messageLifetime = new CancellationTokenSource();
+        Guid correlationId = Guid.Parse("018cc251-f400-7000-8000-000000000312");
+        var successfulTable = new SuccessfulPreinsertTableClient();
+        var failingTable = new FailingWriteTableClient(insertFailure: storageFailure);
+        TableClient table = outcome == 0 ? successfulTable : failingTable;
+        ILogContext? previous = LogContext.Current;
+        Task<SagaConsumeContext<BoundarySaga, BoundaryMessage>?>? operation = null;
+        SagaConsumeContext<BoundarySaga, BoundaryMessage>? inserted = null;
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            ISagaRepositoryContext<BoundarySaga, BoundaryMessage> repository =
+                CreateRepositoryContext(table, messageLifetime.Token, correlationId);
+            operation = repository.InsertAsync(new BoundarySaga { CorrelationId = correlationId },
+                TestContext.Current.CancellationToken);
+            Exception? failure = await Record.ExceptionAsync(async () =>
+            {
+                inserted = await operation.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+            });
+
+            Assert.IsNotType<TimeoutException>(failure);
+            Assert.True(operation.IsCompleted);
+            Assert.False(messageLifetime.IsCancellationRequested);
+            if (outcome == 0)
+            {
+                Assert.Equal(new[] { "insert" }, successfulTable.Calls);
+                Assert.Equal(messageLifetime.Token, Assert.Single(successfulTable.Tokens));
+                Assert.Equal(default(ETag), successfulTable.InputEtagBeforeResponse);
+                TableEntity entity = Assert.IsType<TableEntity>(successfulTable.InsertedEntity);
+                Assert.Equal(nameof(BoundarySaga), entity.PartitionKey);
+                Assert.Equal(correlationId.ToString("D"), entity.RowKey);
+                Assert.Equal(new ETag(SuccessfulPreinsertTableClient.ProviderEtag), entity.ETag);
+            }
+            else
+            {
+                Assert.Equal(1, failingTable.WriteCallCount);
+                Assert.Equal(messageLifetime.Token, failingTable.ObservedCancellationToken);
+            }
+            InsertDiagnosticLogger.Entry selected = Assert.Single(logger.Entries, entry => entry.Template == template);
+            Assert.Equal(LogLevel.Debug, selected.Level);
+            Assert.Equal(correlationId, selected.CorrelationId);
+            if (outcome == 0)
+                Assert.Null(selected.Error);
+            else
+                Assert.Same(storageFailure, selected.Error);
+            Assert.Equal(loggerThrows ? 1 : 0, logger.ThrowCount);
+            if (loggerThrows)
+            {
+                Assert.Same(diagnosticFailure, logger.ThrownFailure);
+                if (failure is not null && !ReferenceEquals(failure, storageFailure))
+                    Assert.Same(diagnosticFailure, failure);
+            }
+            else
+                Assert.Null(logger.ThrownFailure);
+
+            if (outcome == 2)
+            {
+                Assert.Same(storageFailure, failure);
+                Assert.Equal(500, Assert.IsType<RequestFailedException>(failure).Status);
+                Assert.Null(inserted);
+                Assert.True(operation.IsFaulted);
+            }
+            else
+            {
+                Assert.Null(failure);
+                Assert.True(operation.IsCompletedSuccessfully);
+                if (outcome == 0)
+                {
+                    SagaConsumeContext<BoundarySaga, BoundaryMessage> actual =
+                        Assert.IsAssignableFrom<SagaConsumeContext<BoundarySaga, BoundaryMessage>>(inserted);
+                    Assert.Equal(correlationId, actual.CorrelationId);
+                    Assert.Equal(correlationId, actual.Saga.CorrelationId);
+                    Assert.Equal(SuccessfulPreinsertTableClient.ProviderEtag, actual.GetPayload<AzureTableSagaETag>().ETag);
+                    Assert.Equal(messageLifetime.Token, actual.CancellationToken);
+                }
+                else
+                    Assert.Null(inserted);
+            }
+        }
+        finally
+        {
+            try
+            {
+                if (operation is not null)
+                    await ObserveInsertDiagnosticTaskAsync(operation);
+            }
+            finally
+            {
+                LogContext.Current = previous;
+            }
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-INSERT", "successful-preinsert-retains-provider-etag-for-conditional-writes")]
+    public async Task SuccessfulInsert_RetainsResponseEtagForSubsequentConditionalWritesAsync()
+    {
+        using var lifetime = new CancellationTokenSource();
+        Guid correlationId = Guid.Parse("018cc251-f400-7000-8000-000000000311");
+        var table = new SuccessfulPreinsertTableClient();
+        var repository = CreateRepositoryContext(table, lifetime.Token, correlationId);
+
+        SagaConsumeContext<BoundarySaga, BoundaryMessage> inserted =
+            Assert.IsAssignableFrom<SagaConsumeContext<BoundarySaga, BoundaryMessage>>(
+                await repository.InsertAsync(new BoundarySaga { CorrelationId = correlationId }, TestContext.Current.CancellationToken));
+
+        Assert.Equal(correlationId, inserted.Saga.CorrelationId);
+        Assert.Equal(SuccessfulPreinsertTableClient.ProviderEtag, inserted.GetPayload<AzureTableSagaETag>().ETag);
+        Assert.Equal(default(ETag), table.InputEtagBeforeResponse);
+        Assert.Equal(nameof(BoundarySaga), table.InsertedEntity!.PartitionKey);
+        Assert.Equal(correlationId.ToString("D"), table.InsertedEntity.RowKey);
+        await repository.UpdateAsync(inserted, TestContext.Current.CancellationToken);
+        await repository.DeleteAsync(inserted, TestContext.Current.CancellationToken);
+
+        Assert.Equal(new[] { "insert", "update", "delete" }, table.Calls);
+        Assert.All(table.Tokens, token => Assert.Equal(lifetime.Token, token));
+        Assert.Equal(new ETag(SuccessfulPreinsertTableClient.ProviderEtag), table.UpdateEtag);
+        Assert.Equal(table.UpdateEtag, table.DeleteEtag);
+        Assert.Equal(TableUpdateMode.Replace, table.UpdateMode);
+        Assert.Equal(table.InsertedEntity.PartitionKey, table.DeletedPartition);
+        Assert.Equal(table.InsertedEntity.RowKey, table.DeletedRow);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CANCELLATION", "load-propagates-caller-cancellation-token-and-instance")]
     public async Task Load_PropagatesCallerCancellationWithTheExactTokenAndExceptionAsync()
@@ -399,6 +542,46 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
         Assert.Equal("Azure Table saga persistence does not support query correlation.", failure.Message);
     }
 
+    private static async Task ObserveInsertDiagnosticTaskAsync(Task task)
+    {
+        try
+        {
+            await task.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+        }
+        catch (Exception exception) when (exception is not TimeoutException && (task.IsFaulted || task.IsCanceled))
+        {
+        }
+    }
+
+    private sealed class InsertDiagnosticLogger(string selectedTemplate, Exception? failure) : ILogger
+    {
+        public sealed record Entry(LogLevel Level, string? Template, Guid? CorrelationId, Exception? Error);
+        public List<Entry> Entries { get; } = [];
+        public int ThrowCount { get; private set; }
+        public Exception? ThrownFailure { get; private set; }
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Debug;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state,
+            Exception? exception, Func<TState, Exception?, string> formatter)
+        {
+            IEnumerable<KeyValuePair<string, object?>> values = state as IEnumerable<KeyValuePair<string, object?>>
+                ?? Array.Empty<KeyValuePair<string, object?>>();
+            string? template = values.FirstOrDefault(value => value.Key == "{OriginalFormat}").Value as string;
+            object? correlation = values.FirstOrDefault(value => value.Key == "CorrelationId").Value;
+            Entries.Add(new Entry(logLevel, template, correlation is Guid id ? id : null, exception));
+            if (template == selectedTemplate && failure is not null)
+            {
+                ThrowCount++;
+                ThrownFailure = failure;
+                throw failure;
+            }
+        }
+    }
+
     private static AzureTableSagaRepositoryContext<BoundarySaga, BoundaryMessage> CreateRepositoryContext(
         TableClient table,
         CancellationToken cancellationToken,
@@ -555,6 +738,74 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             ObservedETag = ifMatch;
             return Task.FromException<global::Azure.Response>(deleteFailure
                 ?? throw new InvalidOperationException("No delete failure was configured."));
+        }
+    }
+
+    private sealed class SuccessfulPreinsertTableClient : TableClient
+    {
+        public const string ProviderEtag = "W/\"provider-success-etag\"";
+        public List<string> Calls { get; } = [];
+        public List<CancellationToken> Tokens { get; } = [];
+        public TableEntity? InsertedEntity { get; private set; }
+        public ETag InputEtagBeforeResponse { get; private set; }
+        public ETag UpdateEtag { get; private set; }
+        public ETag DeleteEtag { get; private set; }
+        public TableUpdateMode UpdateMode { get; private set; }
+        public string? DeletedPartition { get; private set; }
+        public string? DeletedRow { get; private set; }
+
+        public override Task<global::Azure.Response> AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default)
+        {
+            Calls.Add("insert");
+            Tokens.Add(cancellationToken);
+            InsertedEntity = Assert.IsType<TableEntity>(entity);
+            InputEtagBeforeResponse = InsertedEntity.ETag;
+            // SDK-compatible response-only token: never mutate the input entity.
+            return Task.FromResult<global::Azure.Response>(new PreinsertResponse());
+        }
+
+        public override Task<global::Azure.Response> UpdateEntityAsync<T>(T entity, ETag ifMatch,
+            TableUpdateMode mode = TableUpdateMode.Merge, CancellationToken cancellationToken = default)
+        {
+            Calls.Add("update");
+            Tokens.Add(cancellationToken);
+            Assert.Equal(new ETag(ProviderEtag), Assert.IsType<TableEntity>(entity).ETag);
+            UpdateEtag = ifMatch;
+            UpdateMode = mode;
+            return Task.FromResult<global::Azure.Response>(new PreinsertResponse());
+        }
+
+        public override Task<global::Azure.Response> DeleteEntityAsync(string partitionKey, string rowKey,
+            ETag ifMatch = default, CancellationToken cancellationToken = default)
+        {
+            Calls.Add("delete");
+            Tokens.Add(cancellationToken);
+            DeletedPartition = partitionKey;
+            DeletedRow = rowKey;
+            DeleteEtag = ifMatch;
+            return Task.FromResult<global::Azure.Response>(new PreinsertResponse());
+        }
+    }
+
+    private sealed class PreinsertResponse : global::Azure.Response
+    {
+        public override int Status => 201;
+        public override string ReasonPhrase => "Created";
+        public override Stream? ContentStream { get; set; }
+        public override string ClientRequestId { get; set; } = "owned-preinsert-control";
+        public override void Dispose() { }
+        protected override bool ContainsHeader(string name) => string.Equals(name, "ETag", StringComparison.OrdinalIgnoreCase);
+        protected override IEnumerable<HttpHeader> EnumerateHeaders() =>
+            [new HttpHeader("ETag", SuccessfulPreinsertTableClient.ProviderEtag)];
+        protected override bool TryGetHeader(string name, out string value)
+        {
+            value = ContainsHeader(name) ? SuccessfulPreinsertTableClient.ProviderEtag : null!;
+            return ContainsHeader(name);
+        }
+        protected override bool TryGetHeaderValues(string name, out IEnumerable<string> values)
+        {
+            values = ContainsHeader(name) ? [SuccessfulPreinsertTableClient.ProviderEtag] : null!;
+            return ContainsHeader(name);
         }
     }
 

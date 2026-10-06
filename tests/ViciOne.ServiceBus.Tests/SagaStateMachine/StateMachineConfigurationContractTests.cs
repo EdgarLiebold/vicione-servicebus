@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Serialization;
 using System.Linq.Expressions;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Saga;
@@ -142,6 +145,115 @@ public sealed class StateMachineConfigurationContractTests
         Assert.Equal(1, instance.CompositeCount);
         Assert.Equal(["first", "both", "second"], instance.Markers);
         Assert.Same(machine.Initial, instance.CurrentState);
+    }
+
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(0, true)]
+    [InlineData(1, false)]
+    [InlineData(1, true)]
+    [InlineData(2, true)]
+    [InlineData(3, true)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "mismatched-delivery-debug-failure-keeps-rejection-observational")]
+    public async Task ScheduledDelivery_DebugFailureCannotChangeTokenRejectionAsync(int deliveryKind, bool loggerThrows)
+    {
+        var currentToken = Guid.Parse("380f2ab5-8fe3-461f-bf17-5b427c4e3622");
+        var foreignToken = Guid.Parse("92cf51a4-c89d-48e4-b8fb-d1762e7e8d70");
+        Guid? initialToken = deliveryKind == 1 ? null : currentToken;
+        Guid? incomingToken = deliveryKind == 3 ? null : deliveryKind == 2 ? currentToken : foreignToken;
+        var machine = new DiagnosticScheduleMachine();
+        var instance = new DiagnosticScheduleState
+        {
+            CorrelationId = Guid.Parse("2ab4ee26-6e91-4cb6-a06a-ff7ff9818e2e"),
+            CurrentState = machine.Waiting,
+            NoticeTokenId = initialToken
+        };
+        var headers = new DictionarySendHeaders();
+        if (incomingToken.HasValue)
+            headers.Set(MessageHeaders.SchedulingTokenId, incomingToken.Value);
+        ConsumeContext<DiagnosticScheduleNotice> source = InMemoryOutboxTestContextFactory.Create(
+            new DiagnosticScheduleNotice(instance.CorrelationId), TestContext.Current.CancellationToken);
+        var headerContext = new DiagnosticScheduleHeaderContext(source, headers);
+        var sagaInstance = new SagaInstance<DiagnosticScheduleState>(instance);
+        await sagaInstance.MarkInUseAsync(TestContext.Current.CancellationToken);
+        using var sagaContext = new InMemorySagaConsumeContext<DiagnosticScheduleState, DiagnosticScheduleNotice>(headerContext, sagaInstance);
+        var behaviorContext = new ViciOneServiceBusStateMachine<DiagnosticScheduleState>.BehaviorContextProxy<DiagnosticScheduleNotice>(
+            machine, sagaContext, sagaContext, machine.Notice.AnyReceived);
+        var loggerFailure = new IOException("unique-scheduled-delivery-debug-failure");
+        var logger = new DiagnosticScheduleLogger(loggerThrows ? loggerFailure : null);
+        var previousLogContext = LogContext.Current;
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            Task operation = ((IStateMachine<DiagnosticScheduleState>)machine).RaiseEventAsync(
+                behaviorContext, TestContext.Current.CancellationToken);
+            Exception? observed = await Record.ExceptionAsync(() => operation);
+
+            Assert.Equal(incomingToken, headerContext.Headers.Get(MessageHeaders.SchedulingTokenId, default(Guid?)));
+            Assert.Same(machine.Waiting, instance.CurrentState);
+            bool rejected = deliveryKind is 0 or 1;
+            Assert.Equal(rejected ? 0 : 1, instance.ReceivedCount);
+            Assert.Equal(rejected ? initialToken : null, instance.NoticeTokenId);
+            if (rejected)
+            {
+                string diagnostic = Assert.Single(logger.Messages);
+                Assert.Contains("Scheduled message not current", diagnostic, StringComparison.Ordinal);
+                Assert.Contains(foreignToken.ToString(), diagnostic, StringComparison.Ordinal);
+            }
+            else
+                Assert.Empty(logger.Messages);
+            Assert.Null(observed);
+            Assert.True(operation.IsCompletedSuccessfully);
+        }
+        finally
+        {
+            LogContext.Current = previousLogContext;
+        }
+    }
+
+    public sealed record DiagnosticScheduleNotice(Guid CorrelationId) : ICorrelatedBy<Guid>;
+
+    public sealed class DiagnosticScheduleState : ISagaStateMachineInstance
+    {
+        public Guid CorrelationId { get; set; }
+        public IState? CurrentState { get; set; }
+        public Guid? NoticeTokenId { get; set; }
+        public int ReceivedCount { get; set; }
+    }
+
+    public sealed class DiagnosticScheduleMachine : ViciOneServiceBusStateMachine<DiagnosticScheduleState>
+    {
+        public DiagnosticScheduleMachine()
+        {
+            InstanceState(instance => instance.CurrentState!);
+            Schedule(() => Notice, instance => instance.NoticeTokenId);
+            During(Waiting, When(Notice.Received).Then(context => context.Saga.ReceivedCount++));
+        }
+
+        public IState Waiting { get; } = null!;
+        public ISchedule<DiagnosticScheduleState, DiagnosticScheduleNotice> Notice { get; } = null!;
+    }
+
+    private sealed class DiagnosticScheduleHeaderContext(
+        ConsumeContext<DiagnosticScheduleNotice> context, Headers headers) : ConsumeContextProxy<DiagnosticScheduleNotice>(context)
+    {
+        public override Headers Headers => headers;
+    }
+
+    private sealed class DiagnosticScheduleLogger(Exception? failure) : ILogger
+    {
+        public List<string> Messages { get; } = [];
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Debug;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+        {
+            string message = formatter(state, exception);
+            if (logLevel != LogLevel.Debug || !message.Contains("Scheduled message not current", StringComparison.Ordinal))
+                return;
+            Messages.Add(message);
+            if (failure is not null)
+                throw failure;
+        }
     }
 
     public sealed record CorrelationMessage(Guid BusinessId);

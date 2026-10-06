@@ -1,0 +1,113 @@
+{
+  "status": "ROOT_REGISTERED_ORIGINAL_CAUSES_AND_APPLIED_PRODUCT7_AFTER_DIFFERENT_SOURCE_PEERS_NATIVE_FIXED_PENDING",
+  "utc": "2026-10-06T13:33:16.368016+00:00",
+  "files": [
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Hosting/BaseHost.cs",
+      "before": "b16a8873c80786616168406f25604b285ad128b57169e6dab8c60959054549ab",
+      "after": "f12ca69d0fe514e3e0d8f232d69f88bb6fd500edb50d101efb3e1594685855f9",
+      "before_lines": 318,
+      "after_lines": 372
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Receiving/ReceiveEndpointCollection.cs",
+      "before": "51eaa162283a52a913294b79f35fcfa3846ee627b9b03bae21505b10721fffd4",
+      "after": "9aa8fa511535b8b0e3d987730b3027dd8b67363d9571c9b93669320f719863ec",
+      "before_lines": 289,
+      "after_lines": 310
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Transports/Receiving/BaseReceiveEndpointContext.cs",
+      "before": "eb9c132706f6f4a0b47ace530704717a08e6ecbbaa2b5027df37887c3eadea79",
+      "after": "886f29a682eca89552caff40fb14013d28d6abd8634328a8d9e0025505777452",
+      "before_lines": 322,
+      "after_lines": 345
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+      "before": "39406858463d4d3775eacc41d80ebff3315e9c89305d07076a79311832093da8",
+      "after": "ac2e6d1a1c1a493358476f130a383c8791137aca3cc6cdda7ada1b8637e73ba0",
+      "before_lines": 81,
+      "after_lines": 93
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/ConfigureAmazonSqsTopologyFilter.cs",
+      "before": "5eea9d0977146874725cc825a14f0425ff9bb33d79a3ae58e3e4939d2706450e",
+      "after": "2912a3e0a312dc1330302b4aa2585ff592267ff30a16d544c955c057e1adae82",
+      "before_lines": 156,
+      "after_lines": 186
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/SqlHost.cs",
+      "before": "dbdaf124b289bdc43004b1fb04aafa02b2539e8305af8c890677fa8248be6514",
+      "after": "bd404c9a98155ade149430b4772d2fd7c4773d936c241846a8e0f055d33a43b6",
+      "before_lines": 110,
+      "after_lines": 116
+    },
+    {
+      "relative": "src/Transports/ViciOne.ServiceBus.SqlTransport/ConnectionContextSupervisor.cs",
+      "before": "57a462dffc86aacb0e97eb73b959caf8c8c82b49bcf868e59ab1473860dd877c",
+      "after": "f619262bc90b80136538e9007b6aac44e342fe9710c5e54ff8456a153851a334",
+      "before_lines": 109,
+      "after_lines": 115
+    }
+  ],
+  "pins": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package444-original24-independent-native-qualification-r1/INDEPENDENT_REPORT.json",
+      "sha256": "7e5094fc4e4003aa945d69461dd343c834d6d026b80911a87f7524100bece5d1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package447-host-original6-independent-native-qualification-r1/INDEPENDENT_REPORT.json",
+      "sha256": "5848b767370dd4234ff3138096326d31901bd7011f077659f75bfdd3aa3feea4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package451-sql-original8-independent-native-qualification-r1/INDEPENDENT_REPORT.json",
+      "sha256": "79010483e6b1f89d1f69d3a094927ea96a59581b4b6493c30f4da1f836821a83"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package448-host-reset-sqs-product5-root-proposed-r1/REPORT.json",
+      "sha256": "299894df7e4009ce022220af95d9471fb4fc24c408dcadb94c67d0ab9387c462"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package448-product5-independent-source-peer-r1/INDEPENDENT_REPORT.json",
+      "sha256": "338b6ec1a23658719a711f7e31c5164eea1d3f4ec1937c163f9a707963473ec4"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package452-sql-own-diagnostics2-root-product-proposed-r1/REPORT.json",
+      "sha256": "ee24ade1e3d71d38cdf4e56d5f37ddae3de7f8ef41d22e25e8804b7f406a835f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package452-sql-product2-independent-source-peer-r1/INDEPENDENT_REPORT.json",
+      "sha256": "83faedb0e04b8af2bde1a3958b75cd1ef61d59665c0500edeeedbd00cc0949b0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package448-host-start8373-dependent-norm-root-proposed-r1/PROPOSED.json",
+      "sha256": "b101884213f2bbba04832e578b3f7acad875172aa1e8d333489fb23d8b055ef6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package448-start8373-root-norm-independent-peer-r1/INDEPENDENT_REPORT.json",
+      "sha256": "14e12b4fd91c2734c16967f3de9cfcf00d0308515a5b80ef6063e11db2928f8a"
+    }
+  ],
+  "known_before": 227,
+  "known_after": 229,
+  "bounded_before": 227,
+  "bounded_after": 226,
+  "whole_original_unique_cases": 32,
+  "original_control_passed": 16,
+  "original_causal_failed": 16,
+  "case_accounting": "Host6 corrected447 (old444Host6 historical repeat excluded), Reset2 and SQS16 actual444, SQL8 actual451; no stack/fallback doublecount.",
+  "findings": {
+    "F228": "Three valid public shutdown routes skip later owned phase/agent after actual early provider failure; two Source owners BaseHost/Collection.",
+    "F229": "Reset first actual provider release failure leaves real distinct second provider observer registration connected.",
+    "F152": "Extended same existing optional owning-diagnostic family: SQS7statements8routes plusSQL2statements4routes; all historic fixes preserved."
+  },
+  "source_bounds": "Sequential actual host phase/agent tasks awaited; prior fault cannot skip later acquired stages. Single ordinary exception identity preserved; sole cancellation has Task/token semantics, not exception-object identity. Unchanged rider-internal phase fault policy. Endpoint all phase fault sets retained and failed native transport remains for retry. Reset all distinct already-acquired providers attempted; lazy generation only after successful release. Optional logs only are guarded.",
+  "start8373_dependent_norm": "Root concrete b1018842 + different14e12b4f staged for fresh actual compiled source acceptance; entire old accepted member remains historical until later bounded acceptance, no premature current PDB relabel.",
+  "master_rows": 19374,
+  "original_remaining": 57,
+  "backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package454-product7-findings2-f152-extension-root-application-before-r1",
+  "grade": null,
+  "limits": "Product application is not repair acceptance. All fixed32 actual reruns/modules/strict/fresh publication/different native qualification pending. No Test/Req/public API/XML changes here; no global A+, cloud or installed workflow credit."
+}

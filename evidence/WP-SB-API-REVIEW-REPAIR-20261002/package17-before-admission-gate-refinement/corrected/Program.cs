@@ -1,0 +1,40 @@
+using System.Diagnostics;
+using System.Reflection;
+using System.Security.Cryptography;
+using BatchClock;
+
+if (args.Length != 2 || !TimeSpan.TryParse(args[1], out var timeout) || timeout <= TimeSpan.Zero || timeout > TimeSpan.FromMinutes(1))
+    throw new ArgumentException("exact-case|all positiveOperationTimeout<=1minute");
+if (args[0] == "all")
+{
+    int failed = 0;
+    foreach (string name in Cases.Names)
+    {
+        using var child = new Process { StartInfo = new ProcessStartInfo("dotnet") { UseShellExecute = false } };
+        child.StartInfo.ArgumentList.Add(Assembly.GetExecutingAssembly().Location);
+        child.StartInfo.ArgumentList.Add(name); child.StartInfo.ArgumentList.Add(args[1]);
+        if (!child.Start()) throw new InvalidOperationException("Child did not start");
+        try { await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(60)); }
+        catch
+        {
+            if (!child.HasExited) child.Kill(entireProcessTree: true);
+            await child.WaitForExitAsync(); throw;
+        }
+        if (child.ExitCode != 0) failed++;
+    }
+    Console.WriteLine($"TOTAL {Cases.Names.Length - failed} PASS {failed} FAIL");
+    return failed == 0 ? 0 : 1;
+}
+try
+{
+    await Cases.Run(args[0], timeout);
+    foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic && (a.GetName().Name!.StartsWith("ViciOne.ServiceBus", StringComparison.Ordinal) || a.GetName().Name!.StartsWith("Microsoft.Extensions.", StringComparison.Ordinal))))
+        Console.WriteLine($"LOADED {assembly.GetName().Name} {assembly.GetName().Version} {assembly.Location} {Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(assembly.Location))).ToLowerInvariant()}");
+    Console.WriteLine("PASS " + args[0]); return 0;
+}
+catch (Exception e)
+{
+    foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic && (a.GetName().Name!.StartsWith("ViciOne.ServiceBus", StringComparison.Ordinal) || a.GetName().Name!.StartsWith("Microsoft.Extensions.", StringComparison.Ordinal))))
+        Console.WriteLine($"LOADED {assembly.GetName().Name} {assembly.GetName().Version} {assembly.Location} {Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(assembly.Location))).ToLowerInvariant()}");
+    Console.WriteLine("FAIL " + args[0] + " " + e); return 1;
+}

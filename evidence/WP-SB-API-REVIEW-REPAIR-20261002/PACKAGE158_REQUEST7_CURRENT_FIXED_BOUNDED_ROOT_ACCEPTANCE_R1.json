@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-04T23:59:43.809139+00:00",
+  "decision": "ACCEPT7_REQUEST_CURRENT_SOURCE_AND_EXACT_ROUTE_ASSERTIONS",
+  "api_before": 5016,
+  "api_after": 5023,
+  "semantic_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package158-request7-fixed-assertion-overlay-r1/REPORT.json",
+    "sha256": "c1f3b6d39b07b62af46833e66a4735045c0deca3db9589233ac50200e2153065"
+  },
+  "per_member": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package158-request7-fixed-assertion-overlay-r1/PER_MEMBER_FIXED7_CONTRACT_OVERLAY.json",
+    "sha256": "017ec82f84e7c9f16d30c00635111eb7d1bc7f61b11face2b5de698163e66aed"
+  },
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package158-request7-fixed-assertion-overlay-r1/MANIFEST.json",
+    "sha256": "6067d327a2ba48848423f39e3fd00dcf8cefc9901285b8a3ed2bc99f6887e588"
+  },
+  "qualified_actual_case_authority": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package153-request-fixed233-doc22-fresh2-independent-r1/REPORT.json",
+    "sha256": "da78437a711a734db35d7286110943b062263dc2d9a460167dbb78494bc7b780"
+  },
+  "root_norm_reviews": [
+    "90f78d",
+    "d932c2"
+  ],
+  "root_current_whole_source_and_literal7_bodies_XML": "457998",
+  "limits": [
+    "Six declared public routes each5 unchanged named153 green cases; shared protectedhelper only24 cases actually executinghelper. Six addressadmission failures rejectbeforehelper, explicitlyexcluded fromhelpercredit.",
+    "Current literal declarations/bodies/sourceSHA/XML match exactfixedoverlay; historical original7 heldprose remains unchanged externally.",
+    "Publicationruntime-null fallback, nestedRequestSendPipe execution, genericbridge missingScheduler and six-routeclock proofs retainindividuallimits. No universal SPI cancellation/CTSdisposal/rollback claim.",
+    "Current API contract is bounded, not wholeimplementation or inheritedclosure."
+  ],
+  "CLOSED": false
+}

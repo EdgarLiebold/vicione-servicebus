@@ -1,0 +1,12 @@
+--- src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs
++++ di-writer-forgets-owner/src/ViciOne.ServiceBus/Configuration/MessageJournalConfigurationExtensions.cs
+@@ -197,8 +197,7 @@
+     {
+         ArgumentNullException.ThrowIfNull(configurator);
+         ArgumentNullException.ThrowIfNull(provider);
+-        var writer = new MessageJournalWriter(store, policy, options,
+-            provider.GetRequiredService<MessageJournalTelemetry>());
++        var writer = new MessageJournalWriter(store, policy, options);
+         _ = MessageJournalConfigurationExtensions.ConnectMessageJournal(configurator, writer);
+     }
+ }

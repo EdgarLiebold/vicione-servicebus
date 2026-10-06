@@ -1,0 +1,21 @@
+{
+  "receipt": {
+    "phase": "package15-f033-signalr-public-previous-restore-r3",
+    "command": [
+      "dotnet",
+      "restore",
+      "SignalRLifetime.PublicConsumer.csproj",
+      "--configfile",
+      "NuGet.Config",
+      "-p:NuGetAudit=false"
+    ],
+    "cwd": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous",
+    "exit_code": 1,
+    "started_utc": "2026-10-03T05:12:33.860399+00:00",
+    "completed_utc": "2026-10-03T05:12:35.561883+00:00",
+    "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package15-f033-signalr-public-previous-restore-r3.log",
+    "log_sha256": "720199b19901848744e477b0b1d0dec1eda88139f54e581625f44bdc176e9e72"
+  },
+  "reason": "Flat offline source also NU1101; no native product case; not classified causal red",
+  "final_setup_decision": "Remove redundant explicit DI/Logging Nuget references and retain Microsoft.AspNetCore.App framework plus SDK-default pruning; report actual loaded Microsoft assemblies; no presumed 10.0.12 runtime"
+}

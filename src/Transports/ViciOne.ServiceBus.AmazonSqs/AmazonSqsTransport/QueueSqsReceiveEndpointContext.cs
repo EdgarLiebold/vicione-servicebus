@@ -27,7 +27,10 @@ public class QueueSqsReceiveEndpointContext :
         _configuration = configuration;
         BrokerTopology = brokerTopology;
 
-        _clientContext = new Recycle<IClientContextSupervisor>(() => new ClientContextSupervisor(_hostConfiguration.ConnectionContextSupervisor));
+        Func<IPipe<ConnectionContext>, IPipe<ConnectionContext>>? connectionPipeBuilder =
+            (configuration as AmazonSqsReceiveEndpointConfiguration)?.BuildConnectionPipe();
+        _clientContext = new Recycle<IClientContextSupervisor>(() =>
+            new ClientContextSupervisor(_hostConfiguration.ConnectionContextSupervisor, connectionPipeBuilder));
     }
 
     /// <summary>Gets the endpoint's Amazon topology.</summary>

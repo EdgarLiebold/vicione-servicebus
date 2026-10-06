@@ -1,0 +1,80 @@
+{
+  "status": "SCOPED_ACCEPT_F035_WITH_EXPLICIT_ENDPOINT_EXTENSION",
+  "role": "internal independent readonly adversarial reviewer",
+  "root_acceptance_not_claimed": true,
+  "freeze_sha256": "024d8c1da8184ebb7236e08270ec7fc3267589c13aa59247972077734aa74fda",
+  "current_scoped_blockers": [],
+  "owned_full_inputs": 48,
+  "public_route_source_rechecks": 17,
+  "source_effects": 378,
+  "actual_receipts_FULL": 51,
+  "excluded_setup_receipts": 1,
+  "original": {
+    "causal_assertion_reds": 27,
+    "definition_and_capture": 15,
+    "endpoint_same_finding_extension": 12,
+    "positive": 19,
+    "guards": 0
+  },
+  "corrected": {
+    "positive": 46,
+    "fail": 0,
+    "guards": 0
+  },
+  "mutation_controls": {
+    "baseline_pass": 46,
+    "rollback_pass": 46,
+    "strict_compiled_mutants": 12,
+    "causal_direct_assertion_reds": 12,
+    "unaffected_positive_pairs": 12,
+    "strict_builds": 14
+  },
+  "selected_ViciOne_package_chains": 4,
+  "actual_Microsoft_package_chains": 20,
+  "actual_case_operation_runtime_bindings": 28,
+  "PE_PDB_images": 20,
+  "matching_source_document_checksums": 22030,
+  "generated_other_documents_without_semantic_FULL_claim": 764,
+  "bounded_original_Git_paths": 26,
+  "M_original_files_restored": 6209,
+  "new_frame_paths_removed": [
+    "src/ViciOne.ServiceBus/Configuration/ConsumerBusIdentityOptions.cs"
+  ],
+  "native_operations_by_reviewer": 0,
+  "product_public_test_globalCSV_writes": 0,
+  "no_external_product_release": true,
+  "no_new_F040": true,
+  "limits": [
+    "standard Microsoft DI keyed support only",
+    "default raw alias2/logical1 preserved compatibility",
+    "controlled disposed-capture sequence only",
+    "no universal guard cleanup or concurrent provider guarantee",
+    "signature presence/hashdomains only, no cryptographic signature validation",
+    "PE source-byte evidence is not semantic FULL of nonframe families",
+    "no canonical Core766 FULL/test transfer",
+    "no wholeAPI/A+/heap/ARM/cloud grade"
+  ],
+  "CaptureOwnerBeforeDependencies": {
+    "kill": "actual SDK domain resource dependency-order Assertion; expected dependency.Disposed0 actual1",
+    "reobserved_cleanup_stack": "same faulted actual SDK task re-awaited; captured primary EDI later rethrown",
+    "not_credited": "ordinary harness failure or constructor-failure mutant mode"
+  },
+  "evidence_artifacts": [
+    "FREEZE_HASH_CHECK.json",
+    "SOURCE_EFFECT_CHECK.json",
+    "NATIVE_COUNTERPROOF.json",
+    "ACTUAL_RECEIPTS.json",
+    "LOG_DICTIONARY.json",
+    "LOSSLESS_LOG_READ_MAP.json",
+    "PACKAGE_BINDING.json",
+    "MICROSOFT_RUNTIME_BINDING.json",
+    "ACTUAL_RUNTIME_LOG_BINDING.json",
+    "PDB_DOCUMENTS.json",
+    "PDB_SOURCE_BINDING.json",
+    "PDB_SINGLE_SOURCE_EFFECTS.json",
+    "ORIGINAL_GIT_BINDING.json",
+    "RESTORE_CHECK.json",
+    "PUBLIC_ROUTE_SOURCE_RECHECK.json",
+    "READ_CLOSURE.json"
+  ]
+}

@@ -77,13 +77,13 @@ public class EndpointConfiguration :
         set => Transport.Configurator.PrefetchCount = value;
     }
 
-    /// <summary>Gets or sets the default content type.</summary>
+    /// <summary>Sets the default content type.</summary>
     public ContentType DefaultContentType
     {
         set => Serialization.DefaultContentType = value;
     }
 
-    /// <summary>Gets or sets the serializer content type.</summary>
+    /// <summary>Sets the serializer content type.</summary>
     public ContentType SerializerContentType
     {
         set => Serialization.SerializerContentType = value;
@@ -92,7 +92,7 @@ public class EndpointConfiguration :
     /// <summary>Gets a value indicating whether bus endpoint.</summary>
     public bool IsBusEndpoint { get; }
 
-    /// <summary>Gets or sets the auto start.</summary>
+    /// <summary>Sets whether the endpoint starts automatically.</summary>
     public bool AutoStart
     {
         set => Consume.Configurator.AutoStart = value;

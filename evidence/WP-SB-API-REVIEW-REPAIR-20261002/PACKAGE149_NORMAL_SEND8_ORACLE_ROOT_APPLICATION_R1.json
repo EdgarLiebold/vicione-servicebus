@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-04T21:41:55.550956+00:00",
+  "status": "ORIGINAL_NORMAL_SEND_TEST_APPLIED_COMPILER_NATIVE_PENDING",
+  "148_freeze_ack_sha256": "705bf2547bc7ad90a56ef75404c47020e308fe57bc6b5d6ea59fb5439c65193f",
+  "author_peer_checks": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package149-normal-send-cancellation6-oracles-proposed-r1",
+      "manifest_sha256": "d0b89893f7b26e5d356fd9853e88a962e4d7e1ac28f5bdc8f6a6109569f0e2ab",
+      "report_sha256": "3d6f7332a02b6ddea0db333efc969277c947b95d5cc2cb14633f5af08c30485f",
+      "verified_rows": 18
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package149-normal-send8-independent-scanner-r1",
+      "manifest_sha256": "002fe037744f231ac2c8df3b71c1df4d361e76220fa89fba18c632d45876d5b4",
+      "report_sha256": "1030ee1e1a674f27ba03e490b4eef9f6a5b4a76172647a3173ec1cce3b53cd4d",
+      "verified_rows": 4
+    }
+  ],
+  "root_complete_report_reads": "c46455",
+  "root_whole_original_Send_ContextFactory_TaskFactory_ISendProvider": "464eff",
+  "root_complete_test_delta_read": "b1b924",
+  "changes": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachinePublishSendRespondActivitiesDeepContractTests.cs",
+      "before_sha256": "0b21e7c6062c761ed08ddcc0db92233ad0586a114015a6bfae9506960f7625ec",
+      "after_sha256": "546c202d3a485f499105ba8c73a806f66de9cf70717c136e250719de9f155644"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "fb968655d391d37c46dafb94dc56e3f66fdc6bf6722c9faaf11c97d22eda461a",
+      "after_sha256": "927e16684f037e06f14178424ca31345d44a9435aeea0ecf98f300bb86633512"
+    }
+  ],
+  "requirement_rows_before": 4599,
+  "requirement_rows_after": 4602,
+  "proof_limit": "Original normal SendActivity5211... unchanged; 3Theories8genuine cases new. No compiler/native/Finding/repair grade. Existing7method bodies and hookdefaultnull unchanged."
+}

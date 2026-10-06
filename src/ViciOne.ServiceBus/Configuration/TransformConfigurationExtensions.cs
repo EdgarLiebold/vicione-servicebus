@@ -20,7 +20,7 @@ public static class TransformConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>Encapsulate the pipe behavior in a transaction.</summary>
+    /// <summary>Creates and adds the consume transform specification returned by the supplied factory.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="getSpecification">The get specification.</param>
@@ -49,7 +49,7 @@ public static class TransformConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    /// <summary>Encapsulate the pipe behavior in a transaction.</summary>
+    /// <summary>Creates and adds the consume transform specification returned by the supplied factory.</summary>
     /// <typeparam name="T">The value type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="getSpecification">The get specification.</param>

@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-06T06:56:28.372775+00:00",
+  "status": "ROOT_ACCEPTED_RECORD_CLASS23_INDIVIDUAL_BOUNDED_SOURCE_LANGUAGE_CONTRACTS",
+  "master_before_sha256": "8b4797a8be81b51483fe7f845214213e0046b294d89cd52996c75a61053d24fc",
+  "root_author_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package363-testing-record23-individual-source-language-root-proposed-r1/MANIFEST.json",
+    "sha256": "781889c65ae88bb31aed1816b012a981cba5d50b72e153e0d11473fcfcdc1702"
+  },
+  "independent_different_agent_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package363-testing-record23-independent-source-peer-r1/MANIFEST.json",
+    "sha256": "7508fbc77c16cd2e4ad68b6d662690f2e73eef9e8751cfcdb7cb9908f11fa0b6"
+  },
+  "research_before": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package363-testing-record23-root-source-language-research-before-r1/MANIFEST.json",
+    "sha256": "65407ac526e4fb707307c4e58dec2424948f0f8e08973c1546ebf43ef5e37d77"
+  },
+  "Root_source3_actual60_whole_receipt": "266aa1",
+  "Root_actualTYPE3_whole_receipt": "dce9c3",
+  "Root_guarded_own_P36_frozen320_parse": "6b0783",
+  "Root_handwritten23_norm_author_receipt": "d15a3d",
+  "Root_complete23semantic_norms_recovery_receipt": "3b63e7 recovers truncated9b2e58 semanticfields without redundant provenance fields",
+  "Root_whole_independentREPORT": "cfdba2",
+  "exact_per_source_PDB_bindings": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package363-testing-record23-individual-source-language-root-proposed-r1/SOURCE3_SELECTED_CURRENT_PDB_BINDINGS.json",
+    "sha256": "36843bbd6ad4e9d82dafef146cafbc775e768d3aa78999d301590ec5a3e8638d"
+  },
+  "source_epoch": "Frozen actual320 Testing producer, selected3 exact-current-source docs; no newly executed native/runtimebody grade",
+  "historical_timing_label_precision": "Research label61 corrected to actual60 in mandatory authorREPORT, measured36+14+10 complete.",
+  "original_before": 18329,
+  "original_after": 18352,
+  "remaining_after": 217,
+  "master_before": 19191,
+  "master_after": 19214,
+  "native_count_added": 0,
+  "grade": null,
+  "known_unique_findings": 215,
+  "bounded_dispositions": 215,
+  "whole_API_closed": false,
+  "limits": "Individual stored-field/default-comparer/equality/hash/display/clone/deconstruction contracts only. No observation/historytruth, runtime formatter containment, sequence content equality, deep immutability, durablehash or generatedIL/ABI/body acceptance."
+}

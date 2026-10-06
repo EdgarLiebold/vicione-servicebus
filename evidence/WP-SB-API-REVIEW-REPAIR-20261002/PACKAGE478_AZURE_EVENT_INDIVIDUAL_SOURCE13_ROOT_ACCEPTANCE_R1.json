@@ -1,0 +1,1153 @@
+{
+  "utc": "2026-10-06T14:31:29.555685+00:00",
+  "status": "ROOT_ACCEPTED_BOUNDED_AZURE_EVENT_SOURCE13_HELD14_OPERATIVE",
+  "selected13": [
+    {
+      "ordinal": 0,
+      "original_csv_zero_based_index": 2194,
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+        "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+        "source_line": "67",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+      "current_source_sha256": "9196e978721bc9f6b26615d1745d7c438562be8159767c1b02e9e36f579e3bd4",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "9196e978721bc9f6b26615d1745d7c438562be8159767c1b02e9e36f579e3bd4",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)\">\n            <summary>Configures dead-letter transports and topology, then registers the receive endpoint with the host.</summary>\n            <param name=\"host\">The host that owns the receive endpoint.</param>\n        </member>\n        ",
+      "individual_contract_norm": "Configures native dead-letter handling, then appends GenerateFault and dead-letter exception filters; builds a subscription endpoint builder and applies the configured specifications before creating its broker topology/context. Appends ConfigureServiceBusTopologyFilter<SubscriptionSettings> with retained settings, actual context topology and RemoveSubscriptions. Inherited creation appends deploy-only readiness or dependency+session/non-session receiver filters, builds the client pipe and real ReceiveTransport/ReceiveEndpoint, optionally adds bus publish topology, and registers it using settings.Path (or generated name), finally storing ReceiveEndpoint. This Build does not itself validate or start the endpoint and adds no host null guard, atomic repeated-build or arbitrary specification/host-admission rollback guarantee. Lazy client supervisor acquisition and later topology cleanup are separate runtime obligations.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package215-azure518-two-norm-precision-overlay-r1/PER_ID518_WITH_TWO_PRECISE_NORMS.json",
+          "historical_matrix_sha256": "787f22e2f1910ca076561c46cc079dcf1769576fa60a98f509d2ad11ffa67cdf",
+          "entire_historical_member_object": {
+            "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+            "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+            "original_API_COVERAGE_index": 2194,
+            "original_API_COVERAGE_csv_line": 2196,
+            "original_API_COVERAGE_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+              "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+              "source_line": "67",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "owner_source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+            "reservation_source_sha256": "9196e978721bc9f6b26615d1745d7c438562be8159767c1b02e9e36f579e3bd4",
+            "canonical_original": true,
+            "accessor_sidecar": false,
+            "reservation_status": "HISTORICAL_RESEARCH_RESERVATION_PRESERVED",
+            "native_count": 0,
+            "grade": null,
+            "closed": false,
+            "ordinal": 17,
+            "historical_typed_tuple": {
+              "Owner": "T:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration",
+              "Relation": "Declared",
+              "Id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+              "Kind": "Method",
+              "Implicit": false,
+              "Accessibility": "Public",
+              "Signature": "public void global::ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(global::ViciOne.ServiceBus.Transports.IHost host)",
+              "Attributes": [],
+              "Detail": {
+                "kind": "Ordinary",
+                "IsExtensionMethod": false,
+                "IsAsync": false,
+                "IsReadOnly": false,
+                "returnType": "void",
+                "returnNullable": "NotAnnotated",
+                "returnsByRef": false,
+                "returnsByRefReadonly": false,
+                "returnAttributes": [],
+                "parameters": [
+                  {
+                    "Name": "host",
+                    "type": "global::ViciOne.ServiceBus.Transports.IHost",
+                    "nullable": "NotAnnotated",
+                    "IsOptional": false,
+                    "HasExplicitDefaultValue": false,
+                    "defaultValue": null,
+                    "refKind": "None",
+                    "IsParams": false,
+                    "attributes": []
+                  }
+                ]
+              },
+              "Implementation": null,
+              "Path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+              "Line": 67,
+              "Xml": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)\">\n    <summary>Configures dead-letter transports and topology, then registers the receive endpoint with the host.</summary>\n    <param name=\"host\">The host that owns the receive endpoint.</param>\n</member>\n"
+            },
+            "historical_typed_inventory_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-current-api-inventory-r1/inventory-r2/extended/ViciOne.ServiceBus.AzureServiceBus.json",
+            "historical_typed_inventory_sha256": "09e5331953749655ac48894c194cdecf290c7d685fba305292f295b2ce9f3b47",
+            "actual_current_source_sha256": "9196e978721bc9f6b26615d1745d7c438562be8159767c1b02e9e36f579e3bd4",
+            "qualified_source_epoch": "148 exact selected owner bytes only; other assembly owners may have later repairs; no184 current whole-runtime claim",
+            "current_source_binding": {
+              "owner_ordinal": 10,
+              "owner_source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+              "current_sha256": "9196e978721bc9f6b26615d1745d7c438562be8159767c1b02e9e36f579e3bd4",
+              "reservation_snapshot": "before/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+              "qualified148_source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package148-diagnostics-validator-host-independent-r1/source/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+              "qualified148_physical_binding_pointer": 2426,
+              "PDB_document": {
+                "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+                "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+                "checksum": "9196e978721bc9f6b26615d1745d7c438562be8159767c1b02e9e36f579e3bd4",
+                "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+              },
+              "personal_whole_receipt": {
+                "owner_source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+                "reservation_source_sha256": "9196e978721bc9f6b26615d1745d7c438562be8159767c1b02e9e36f579e3bd4",
+                "snapshot": "before/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+                "physical_lines": 105,
+                "personal_source_read_status": "PERSONALLY_WHOLE_CURRENT_BODY_READ",
+                "IDs": [
+                  "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.#ctor(ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusHostConfiguration,ViciOne.ServiceBus.AzureServiceBus.Topology.SubscriptionEndpointSettings,ViciOne.ServiceBus.AzureServiceBus.Configuration.IServiceBusEndpointConfiguration)",
+                  "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+                  "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.CreateReceiveEndpointContext",
+                  "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Validate",
+                  "P:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Filter",
+                  "P:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.HostAddress",
+                  "P:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.InputAddress",
+                  "P:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Rule",
+                  "P:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Settings",
+                  "T:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration"
+                ],
+                "owner_ordinal": 10,
+                "tool_receipt": "1df5bf",
+                "read_limit": "Entire named source body output untruncated after research; hash only verifies unchanged bytes, not read credit."
+              }
+            },
+            "qualified148_XML": {
+              "node": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)\">\n            <summary>Configures dead-letter transports and topology, then registers the receive endpoint with the host.</summary>\n            <param name=\"host\">The host that owns the receive endpoint.</param>\n        </member>\n        ",
+              "frame_path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package148-diagnostics-validator-host-independent-r1/frames/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.xml",
+              "frame_sha256": "880f946d2757f517a603f44e64ff66912be166133daa2b4e3b62ebe04d2b458d"
+            },
+            "classification": "CONCRETE_METHOD",
+            "individual_contract_norm": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost): Configures native dead-letter and error pipeline stages first, creates actual subscription context, appends ConfigureServiceBusTopologyFilter with current settings/broker topology/remove flag/context, then calls inherited CreateReceiveEndpoint(host,context). No starting/Ready await or all-stage rollback.",
+            "runtime_obligations_not_native_proven": [
+              "Local source route only; exact argument/callback/iterator/provider exceptions remain visible as described, no cloud/native closure."
+            ],
+            "specific_NA": "No extra native/mirror test required solely for exact local source/storage/forwarding review; callable constructor/operation obligations are retained.",
+            "hold_reason": "Actual Build registers transports/topology filter before inherited Build; concrete factory readiness/agent lifetime/failed-build ownership remains separate workflow obligation, not proven by the model/declaration packet.",
+            "recommendation": "HOLD_EXACT_CONTRACT",
+            "root_accepted": false,
+            "actual_current_containing_type_declaration": "class ServiceBusSubscriptionEndpointConfiguration :\n    ServiceBusEntityReceiveEndpointConfiguration,\n    IServiceBusSubscriptionEndpointConfiguration,\n    IServiceBusSubscriptionEndpointConfigurator",
+            "author_status": "PERSONAL_WHOLE_OWNER_AND_INDIVIDUAL_CURRENT_CONTRACT_REVIEW_COMPLETE_Q_ONLY",
+            "current_member_metadata_limit": "Original compiler tuple is historical. Current containing syntax and selected current source body were personally read; qualified148 PDB/source and exact emitted XML IDs are rejoined. No new Roslyn/SDK/current184 reflection metadata claim."
+          }
+        },
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure-servicebus120-current-contract-context-r1/PER_ID120_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "38d9d279841000af25d51d9b2be5b6412063725c5c0ee231d772264f80f7ee63",
+          "entire_historical_member_object": {
+            "ordinal": 1,
+            "original_ordinal": 2195,
+            "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+            "id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)",
+              "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+              "source_line": "67",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+            "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure-servicebus120-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+            "source_sha256": "9196e978721bc9f6b26615d1745d7c438562be8159767c1b02e9e36f579e3bd4",
+            "actual_PDB_document": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Configuration/ServiceBusSubscriptionEndpointConfiguration.cs",
+              "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+              "checksum": "9196e978721bc9f6b26615d1745d7c438562be8159767c1b02e9e36f579e3bd4",
+              "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+            },
+            "PDB_RID": 26,
+            "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Configuration.ServiceBusSubscriptionEndpointConfiguration.Build(ViciOne.ServiceBus.Transports.IHost)\">\n            <summary>Configures dead-letter transports and topology, then registers the receive endpoint with the host.</summary>\n            <param name=\"host\">The host that owns the receive endpoint.</param>\n        </member>\n        ",
+            "member_contract": "Build configures dead-letter and error transports first, creates endpoint context, appends topology filter carrying settings/remove-subscriptions/context, then registers receive endpoint. Partial configuration and registration effects are retained on failure; no local rollback.",
+            "recommendation": "HOLD_EXACT_ID_GENERATED_OR_OPERATIVE",
+            "hold_reason": "Multi-stage transport/context/topology filter construction and receive registration partial-failure ownership remains operative; Source hypothesis only.",
+            "runtime_obligation": "Exact local Source fact only. Custom SDK/provider/base/cache/observer/callback/null/error/cancellation/owned lifetime and composed cloud workflow require independent runtime evidence; declaration is not implementation proof. No inherited family/member/API/native closure.",
+            "typed_shape_authority": "OriginalCSV exact canonical historical UID/signature plus personally read current Source declaration/nullability/defaults/variance/accessors; actual PDB identity does not claim fresh Roslyn signature extraction.",
+            "native_count": 0,
+            "grade": null,
+            "closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 1,
+      "original_csv_zero_based_index": 2345,
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.ConfigureAsync(ViciOne.ServiceBus.AzureServiceBus.NamespaceContext,System.Threading.CancellationToken)",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.ConfigureAsync(ViciOne.ServiceBus.AzureServiceBus.NamespaceContext,System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+        "source_line": "69",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+      "current_source_sha256": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.ConfigureAsync(ViciOne.ServiceBus.AzureServiceBus.NamespaceContext,System.Threading.CancellationToken)\">\n            <summary>Runs entity deployment once for the namespace context and returns its eviction handle.</summary>\n            <param name=\"context\">The namespace context used for administration operations.</param>\n            <param name=\"cancellationToken\">The token that cancels topology deployment.</param>\n            <returns>A task that produces the one-time setup context.</returns>\n        </member>\n        ",
+      "individual_contract_norm": "For class TSettings, awaits namespace OneTimeSetupAsync keyed by ConfigureTopologyContext<TSettings> and the supplied caller token. Its setup callback GetOrAddPayload retains an existing same-type settings payload, otherwise supplies this filter's settings; when a receive owner exists and RemoveSubscriptions is true, creates a ready RemoveServiceBusTopologyAgent and calls that owner's AddSendAgent before deployment. Deploys topics, queues, subscriptions, queue subscriptions then topic subscriptions, awaiting each group before admitting the next. Each group individually captures a synchronous provider throw/null Task as one faulted Task, stops further group admissions, and WhenAll joins tasks already admitted. Starts/stops the optional activity around deployment; callback/provider/activity/adoption failures propagate as actual one-time setup failure. Caller cancellation may end the setup wait independently of admitted provider tasks. No atomic broker rollback, group-error ordering or later cleanup-agent diagnostic tolerance is promised by this local method.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure-servicebus120-current-contract-context-r1/PER_ID120_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "38d9d279841000af25d51d9b2be5b6412063725c5c0ee231d772264f80f7ee63",
+          "entire_historical_member_object": {
+            "ordinal": 19,
+            "original_ordinal": 2346,
+            "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+            "id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.ConfigureAsync(ViciOne.ServiceBus.AzureServiceBus.NamespaceContext,System.Threading.CancellationToken)",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.ConfigureAsync(ViciOne.ServiceBus.AzureServiceBus.NamespaceContext,System.Threading.CancellationToken)",
+              "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+              "source_line": "69",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+            "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure-servicebus120-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+            "source_sha256": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+            "actual_PDB_document": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+              "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+              "checksum": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+              "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+            },
+            "PDB_RID": 76,
+            "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.ConfigureAsync(ViciOne.ServiceBus.AzureServiceBus.NamespaceContext,System.Threading.CancellationToken)\">\n            <summary>Runs entity deployment once for the namespace context and returns its eviction handle.</summary>\n            <param name=\"context\">The namespace context used for administration operations.</param>\n            <param name=\"cancellationToken\">The token that cancels topology deployment.</param>\n            <returns>A task that produces the one-time setup context.</returns>\n        </member>\n        ",
+            "member_contract": "Awaits namespace OneTimeSetupAsync keyed by ConfigureTopologyContext<TSettings>. Setup callback adds settings payload, optionally registers removal agent when context/nonfalse flag, then deploys groups Topics/Queues/Subscriptions/QueueSubscriptions/TopicSubscriptions in order. Each group uses bounded admission catch/null-task check and actual WhenAll; supplied token flows to setup and provider calls. No cross-group rollback.",
+            "recommendation": "HOLD_EXACT_ID_GENERATED_OR_OPERATIVE",
+            "hold_reason": "Optional removal-agent registration and composed OneTime/SDK topology deployment resource cleanup remain operative; private remover admission/join semantics need genuine public original before any new finding. Existing F072 creation-stage join repair is retained, not reopened.",
+            "runtime_obligation": "Exact local Source fact only. Custom SDK/provider/base/cache/observer/callback/null/error/cancellation/owned lifetime and composed cloud workflow require independent runtime evidence; declaration is not implementation proof. No inherited family/member/API/native closure.",
+            "typed_shape_authority": "OriginalCSV exact canonical historical UID/signature plus personally read current Source declaration/nullability/defaults/variance/accessors; actual PDB identity does not claim fresh Roslyn signature extraction.",
+            "native_count": 0,
+            "grade": null,
+            "closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 2,
+      "original_csv_zero_based_index": 2347,
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AzureServiceBus.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AzureServiceBus.ClientContext})",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AzureServiceBus.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AzureServiceBus.ClientContext})",
+        "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+        "source_line": "49",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+      "current_source_sha256": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AzureServiceBus.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AzureServiceBus.ClientContext})\">\n            <summary>Ensures topology is configured, then executes the remaining client-context pipeline.</summary>\n            <param name=\"context\">The client context whose namespace receives the topology.</param>\n            <param name=\"next\">The remaining pipeline.</param>\n            <returns>The continuation task returned by <paramref name=\"next\" /> after all configured entities exist.</returns>\n        </member>\n        ",
+      "individual_contract_norm": "Awaits ConfigureAsync on the same client using context.CancellationToken before the downstream try. Then awaits next.SendAsync(context). A downstream exception triggers the acquired one-time handle's Evict followed by bare rethrow; an Evict failure can replace that exception. Configuration failures occur outside this catch; no own null guards, independent cancellation token, resource disposal or universal next/provider failure compensation. One-time setup and remove-subscription agent ownership retain their separate exact local contracts, not end-to-end lifetime closure.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure-servicebus120-current-contract-context-r1/PER_ID120_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "38d9d279841000af25d51d9b2be5b6412063725c5c0ee231d772264f80f7ee63",
+          "entire_historical_member_object": {
+            "ordinal": 20,
+            "original_ordinal": 2348,
+            "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+            "id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AzureServiceBus.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AzureServiceBus.ClientContext})",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AzureServiceBus.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AzureServiceBus.ClientContext})",
+              "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+              "source_line": "49",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+            "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure-servicebus120-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+            "source_sha256": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+            "actual_PDB_document": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+              "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+              "checksum": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+              "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+            },
+            "PDB_RID": 76,
+            "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.Middleware.ConfigureServiceBusTopologyFilter`1.SendAsync(ViciOne.ServiceBus.AzureServiceBus.ClientContext,ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.AzureServiceBus.ClientContext})\">\n            <summary>Ensures topology is configured, then executes the remaining client-context pipeline.</summary>\n            <param name=\"context\">The client context whose namespace receives the topology.</param>\n            <param name=\"next\">The remaining pipeline.</param>\n            <returns>The continuation task returned by <paramref name=\"next\" /> after all configured entities exist.</returns>\n        </member>\n        ",
+            "member_contract": "Awaits ConfigureAsync using context.CancellationToken before next.SendAsync. Downstream failure invokes one-time Evict then bare rethrow; eviction failure can replace downstream failure. No continuation when setup fails.",
+            "recommendation": "HOLD_EXACT_ID_GENERATED_OR_OPERATIVE",
+            "hold_reason": "Custom bodyless OneTimeContext.Evict can fail before rethrow of downstream failure; causal error preservation requires bounded public Original and exact eviction contract before any finding.",
+            "runtime_obligation": "Exact local Source fact only. Custom SDK/provider/base/cache/observer/callback/null/error/cancellation/owned lifetime and composed cloud workflow require independent runtime evidence; declaration is not implementation proof. No inherited family/member/API/native closure.",
+            "typed_shape_authority": "OriginalCSV exact canonical historical UID/signature plus personally read current Source declaration/nullability/defaults/variance/accessors; actual PDB identity does not claim fresh Roslyn signature extraction.",
+            "native_count": 0,
+            "grade": null,
+            "closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 6,
+      "original_csv_zero_based_index": 2414,
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusConnectionContext.DisposeAsync",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusConnectionContext.DisposeAsync",
+        "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+        "source_line": "337",
+        "snapshot_diagnostics": "False",
+        "contract": "Beide öffentlichen Einstiegspunkte und deren gepacktes XML bezeichnen vorgegebene Azure-Clients ausdrücklich als caller-owned. Microsofts exakt paketgebundene SDK-Quelle definiert ServiceBusClient.DisposeAsync als Schließen des Clients samt gemeinsam verwendeter AMQP-Verbindung.",
+        "implementation": "Complete causal path in FINDINGS.json",
+        "tests": "Own positive controls/expected-red terminal/renewal/options oracle",
+        "package_consumer": "reproductions/azure-public/EXECUTION_RECEIPT.json; exact fresh bytes",
+        "status": "PARTIAL_CONFIRMED_RUNTIME_DEFECT",
+        "finding": "F-SB-API-008"
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+      "current_source_sha256": "a6464295ca7b855e8f1bd109a22520f1d606c473924ed9419108217c8a94d2d4",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "a6464295ca7b855e8f1bd109a22520f1d606c473924ed9419108217c8a94d2d4",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusConnectionContext.DisposeAsync\">\n            <summary>Releases the namespace context and disposes its messaging client when the context owns it.</summary>\n            <returns>A task that completes after any owned messaging-client cleanup.</returns>\n            <remarks>Caller-owned clients supplied through host configuration remain open and must be disposed by their owner.</remarks>\n        </member>\n        ",
+      "individual_contract_norm": "Reads the retained messaging client's FullyQualifiedNamespace before either guard. Contains optional DisconnectHost(address) failures, then awaits messaging-client DisposeAsync only when the context owns that client; afterward contains optional DisconnectedHost(address) failures. Public constructor transfers ownership; internal host construction can preserve caller-owned clients. A namespace getter failure or actual client disposal failure propagates and skips later stages; the administration client is not disposed here. No repeat/concurrent disposal coalescing or tolerance of arbitrary custom client getters is promised. The two owning diagnostic expressions alone cannot replace successful owned cleanup.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure-servicebus120-current-contract-context-r1/PER_ID120_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "38d9d279841000af25d51d9b2be5b6412063725c5c0ee231d772264f80f7ee63",
+          "entire_historical_member_object": {
+            "ordinal": 40,
+            "original_ordinal": 2415,
+            "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+            "id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusConnectionContext.DisposeAsync",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusConnectionContext.DisposeAsync",
+              "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+              "source_line": "337",
+              "snapshot_diagnostics": "False",
+              "contract": "Beide öffentlichen Einstiegspunkte und deren gepacktes XML bezeichnen vorgegebene Azure-Clients ausdrücklich als caller-owned. Microsofts exakt paketgebundene SDK-Quelle definiert ServiceBusClient.DisposeAsync als Schließen des Clients samt gemeinsam verwendeter AMQP-Verbindung.",
+              "implementation": "Complete causal path in FINDINGS.json",
+              "tests": "Own positive controls/expected-red terminal/renewal/options oracle",
+              "package_consumer": "reproductions/azure-public/EXECUTION_RECEIPT.json; exact fresh bytes",
+              "status": "PARTIAL_CONFIRMED_RUNTIME_DEFECT",
+              "finding": "F-SB-API-008"
+            },
+            "source_relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+            "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure-servicebus120-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+            "source_sha256": "a6464295ca7b855e8f1bd109a22520f1d606c473924ed9419108217c8a94d2d4",
+            "actual_PDB_document": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusConnectionContext.cs",
+              "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+              "checksum": "a6464295ca7b855e8f1bd109a22520f1d606c473924ed9419108217c8a94d2d4",
+              "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+            },
+            "PDB_RID": 45,
+            "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusConnectionContext.DisposeAsync\">\n            <summary>Releases the namespace context and disposes its messaging client when the context owns it.</summary>\n            <returns>A task that completes after any owned messaging-client cleanup.</returns>\n            <remarks>Caller-owned clients supplied through host configuration remain open and must be disposed by their owner.</remarks>\n        </member>\n        ",
+            "member_contract": "Reads messaging client FullyQualifiedNamespace first, contains DisconnectHost diagnostic errors, awaits client.DisposeAsync only when owned, then contains DisconnectedHost diagnostic errors. Administration client is not disposed. Provider getter/disposal failures remain visible; public ctor owns messaging client, internal host path can retain external ownership.",
+            "recommendation": "HOLD_EXACT_ID_GENERATED_OR_OPERATIVE",
+            "hold_reason": "Existing F076 diagnostic guards are repaired and closed. Current client FullyQualifiedNamespace getter precedes guarded diagnostics and owned disposal; arbitrary SDK getter failure versus owned cleanup remains unqualified separate source hypothesis, not duplicate F076/new finding.",
+            "runtime_obligation": "Exact local Source fact only. Custom SDK/provider/base/cache/observer/callback/null/error/cancellation/owned lifetime and composed cloud workflow require independent runtime evidence; declaration is not implementation proof. No inherited family/member/API/native closure.",
+            "typed_shape_authority": "OriginalCSV exact canonical historical UID/signature plus personally read current Source declaration/nullability/defaults/variance/accessors; actual PDB identity does not claim fresh Roslyn signature extraction.",
+            "native_count": 0,
+            "grade": null,
+            "closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 10,
+      "original_csv_zero_based_index": 2477,
+      "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+      "id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueMoveTransport.#ctor(ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.AzureServiceBus.SendSettings)",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueMoveTransport.#ctor(ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.AzureServiceBus.SendSettings)",
+        "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusQueueMoveTransport.cs",
+        "source_line": "20",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusQueueMoveTransport.cs",
+      "current_source_sha256": "782e91690d80c68fba4d3eb993f13d18b21667133021da9f5a5d7b354e4de528",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusQueueMoveTransport.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "782e91690d80c68fba4d3eb993f13d18b21667133021da9f5a5d7b354e4de528",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueMoveTransport.#ctor(ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.AzureServiceBus.SendSettings)\">\n            <summary>Creates a move transport for a destination entity.</summary>\n            <param name=\"supervisor\">The namespace connection supervisor.</param>\n            <param name=\"settings\">The destination entity declaration and sender settings.</param>\n        </member>\n        ",
+      "individual_contract_norm": "Protected constructor only creates and retains Recycle<ISendEndpointContextSupervisor> around a closure capturing supervisor and settings. Recycle installs a Lazy factory; this constructor does not call CreateSendEndpointContextSupervisor or AddSendAgent and adds no immediate supervisor/settings null guards. On later first supervisor evaluation, the closure creates an endpoint supervisor from settings, adds that returned agent to the captured connection supervisor, then returns it; Recycle replaces its Lazy when that agent begins stopping. Actual later Move message-copy/serializer/SDK dispatch and arbitrary lazy factory/admission failure cleanup are outside the constructor's local initialization contract.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure-servicebus120-current-contract-context-r1/PER_ID120_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "38d9d279841000af25d51d9b2be5b6412063725c5c0ee231d772264f80f7ee63",
+          "entire_historical_member_object": {
+            "ordinal": 69,
+            "original_ordinal": 2478,
+            "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+            "id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueMoveTransport.#ctor(ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.AzureServiceBus.SendSettings)",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueMoveTransport.#ctor(ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.AzureServiceBus.SendSettings)",
+              "assembly": "ViciOne.ServiceBus.AzureServiceBus",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusQueueMoveTransport.cs",
+              "source_line": "20",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusQueueMoveTransport.cs",
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusQueueMoveTransport.cs",
+            "source_snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package250-azure-servicebus120-remaining-research-before-r1/before/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusQueueMoveTransport.cs",
+            "source_sha256": "782e91690d80c68fba4d3eb993f13d18b21667133021da9f5a5d7b354e4de528",
+            "actual_PDB_document": {
+              "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusQueueMoveTransport.cs",
+              "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+              "checksum": "782e91690d80c68fba4d3eb993f13d18b21667133021da9f5a5d7b354e4de528",
+              "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+            },
+            "PDB_RID": 102,
+            "actual_current_XML": "<member name=\"M:ViciOne.ServiceBus.AzureServiceBus.ServiceBusQueueMoveTransport.#ctor(ViciOne.ServiceBus.AzureServiceBus.IConnectionContextSupervisor,ViciOne.ServiceBus.AzureServiceBus.SendSettings)\">\n            <summary>Creates a move transport for a destination entity.</summary>\n            <param name=\"supervisor\">The namespace connection supervisor.</param>\n            <param name=\"settings\">The destination entity declaration and sender settings.</param>\n        </member>\n        ",
+            "member_contract": "Protected move constructor creates Recycle closure: on generation demand creates endpoint supervisor, calls parent AddSendAgent, then returns it. Supplied references are not guarded; registration failure may occur after child creation, no local disposal rollback.",
+            "recommendation": "HOLD_EXACT_ID_GENERATED_OR_OPERATIVE",
+            "hold_reason": "Lazy factory creates child supervisor then parent AddSendAgent; registration failure rollback/owned child lifetime is unqualified, no public Original yet.",
+            "runtime_obligation": "Exact local Source fact only. Custom SDK/provider/base/cache/observer/callback/null/error/cancellation/owned lifetime and composed cloud workflow require independent runtime evidence; declaration is not implementation proof. No inherited family/member/API/native closure.",
+            "typed_shape_authority": "OriginalCSV exact canonical historical UID/signature plus personally read current Source declaration/nullability/defaults/variance/accessors; actual PDB identity does not claim fresh Roslyn signature extraction.",
+            "native_count": 0,
+            "grade": null,
+            "closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 13,
+      "original_csv_zero_based_index": 3433,
+      "assembly": "ViciOne.ServiceBus.EventHubs",
+      "id": "M:ViciOne.ServiceBus.EventHubs.Checkpoints.PendingConfirmationCollection.Add(Azure.Messaging.EventHubs.Processor.ProcessEventArgs)",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.EventHubs.Checkpoints.PendingConfirmationCollection.Add(Azure.Messaging.EventHubs.Processor.ProcessEventArgs)",
+        "assembly": "ViciOne.ServiceBus.EventHubs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/PendingConfirmationCollection.cs",
+        "source_line": "36",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/PendingConfirmationCollection.cs",
+      "current_source_sha256": "c9777d4eb9a46a35b7a41d36e90a095de80e3dd3aec0fca9b4f66a231e10a660",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/PendingConfirmationCollection.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "c9777d4eb9a46a35b7a41d36e90a095de80e3dd3aec0fca9b4f66a231e10a660",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.EventHubs.Checkpoints.PendingConfirmationCollection.Add(Azure.Messaging.EventHubs.Processor.ProcessEventArgs)\">\n            <summary>Adds a pending confirmation for an event, faulting any duplicate entry it replaces.</summary>\n            <param name=\"eventArgs\">The Azure SDK event-processing arguments.</param>\n            <returns>The newly registered pending confirmation.</returns>\n        </member>\n        ",
+      "individual_contract_norm": "Checks the collection's captured cancellation token, constructs one PendingConfirmation around the supplied ProcessEventArgs, and converts the event's partition id/offset to the dictionary key. AddOrUpdate inserts that candidate or its update delegate faults the currently observed duplicate with an ArgumentException message then replaces it with the candidate. Returns the candidate selected by AddOrUpdate. There is no separate args/data guard, disposal check, single update-delegate invocation under contention, or atomic admission versus cancellation snapshot guarantee. Actual confirmation completion/checkpoint tasks and invalid SDK arguments remain delegated; no Event Hubs delivery/checkpoint native closure.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs264-two-address-norm-precision-overlay-r1/CORRECTED264_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "fc05fc3e134c9c4e46571786080d493a862ca587cb2364c7c140d8a622270f73",
+          "entire_historical_member_object": {
+            "ordinal": 49,
+            "original_index": 3433,
+            "assembly": "ViciOne.ServiceBus.EventHubs",
+            "id": "M:ViciOne.ServiceBus.EventHubs.Checkpoints.PendingConfirmationCollection.Add(Azure.Messaging.EventHubs.Processor.ProcessEventArgs)",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.EventHubs.Checkpoints.PendingConfirmationCollection.Add(Azure.Messaging.EventHubs.Processor.ProcessEventArgs)",
+              "assembly": "ViciOne.ServiceBus.EventHubs",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/PendingConfirmationCollection.cs",
+              "source_line": "36",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/PendingConfirmationCollection.cs",
+            "source_sha256": "c9777d4eb9a46a35b7a41d36e90a095de80e3dd3aec0fca9b4f66a231e10a660",
+            "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs-original264-research-before-r1/before/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/PendingConfirmationCollection.cs",
+            "member_contract": "Checks governing token, creates PendingConfirmation, then ConcurrentDictionary.AddOrUpdate using converted partition-offset key. Existing duplicate receives ArgumentException before replacement; factory may run more than once under contention. Cancellation callback may run between precheck and insertion, so race-free cancellation of every admitted entry is not established.",
+            "recommendation": "HOLD",
+            "hold_reason": "Public Add versus governing cancellation admission race needs genuine public-path Original with deterministic gate; Source hypothesis only, no confirmed Finding.",
+            "local_source": true,
+            "runtime_obligation": "Own individually described callback/error/ownership/cancellation limits; no native cloud/checkpoint durability proof. Held race needs finite state oracle and independent cleanup; do not infer from key membership or task scheduling.",
+            "native_credit": 0,
+            "grade": null,
+            "whole_API_closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 15,
+      "original_csv_zero_based_index": 3463,
+      "assembly": "ViciOne.ServiceBus.EventHubs",
+      "id": "M:ViciOne.ServiceBus.EventHubs.Configuration.EventHubProducerSpecification.CreateSendTransportContext(System.String,ViciOne.ServiceBus.Transports.IBusInstance)",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.EventHubs.Configuration.EventHubProducerSpecification.CreateSendTransportContext(System.String,ViciOne.ServiceBus.Transports.IBusInstance)",
+        "assembly": "ViciOne.ServiceBus.EventHubs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubProducerSpecification.cs",
+        "source_line": "77",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubProducerSpecification.cs",
+      "current_source_sha256": "03ef9a4e0b2cd35e227a2512243fe1c9775d87c5e14242663a8b1afcc32e0ece",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubProducerSpecification.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "03ef9a4e0b2cd35e227a2512243fe1c9775d87c5e14242663a8b1afcc32e0ece",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.EventHubs.Configuration.EventHubProducerSpecification.CreateSendTransportContext(System.String,ViciOne.ServiceBus.Transports.IBusInstance)\">\n            <summary>Builds the send pipeline and transport context for a named Event Hub.</summary>\n            <param name=\"eventHubName\">The Event Hub entity name.</param>\n            <param name=\"busInstance\">The bus instance supplying host and topology services.</param>\n            <returns>The configured Event Hubs send transport context.</returns>\n        </member>\n        ",
+      "individual_contract_norm": "Reads the bus host SendTopology and creates SendPipeConfiguration; invokes retained ConfigureSend callbacks by list index, creates its pipe, then constructs ProducerContextSupervisor. That constructor immediately adds itself as a send agent to the host connection supervisor before creating EventHubProducerSendTransportContext with bus host, entity name and newly created serializer collection. Connects its send-observable to the returned context then returns that context. No explicit eventHubName/busInstance guard, local Validate or native client acquisition in this method; later serializer/callback/context/observer errors have no universal partial-admission rollback guarantee. The supervisor's public acquisition/disposal and all physical batching remain open runtime obligations.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs264-two-address-norm-precision-overlay-r1/CORRECTED264_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "fc05fc3e134c9c4e46571786080d493a862ca587cb2364c7c140d8a622270f73",
+          "entire_historical_member_object": {
+            "ordinal": 79,
+            "original_index": 3463,
+            "assembly": "ViciOne.ServiceBus.EventHubs",
+            "id": "M:ViciOne.ServiceBus.EventHubs.Configuration.EventHubProducerSpecification.CreateSendTransportContext(System.String,ViciOne.ServiceBus.Transports.IBusInstance)",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.EventHubs.Configuration.EventHubProducerSpecification.CreateSendTransportContext(System.String,ViciOne.ServiceBus.Transports.IBusInstance)",
+              "assembly": "ViciOne.ServiceBus.EventHubs",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubProducerSpecification.cs",
+              "source_line": "77",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubProducerSpecification.cs",
+            "source_sha256": "03ef9a4e0b2cd35e227a2512243fe1c9775d87c5e14242663a8b1afcc32e0ece",
+            "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs-original264-research-before-r1/before/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubProducerSpecification.cs",
+            "member_contract": "Reads bus host SendTopology, invokes registered send configuration callbacks in current order, creates send pipe, creates ProducerContextSupervisor from actual host ConnectionContextSupervisor and hub name, creates transport context with current serializer collection, connects shared send observers and returns it. Does not call SDK send; callbacks may fail before/after partial construction and no local rollback.",
+            "recommendation": "HOLD",
+            "hold_reason": "Public multi-stage build ownership/rollback upon later factory/callback failure needs genuinely observed Original and cleanup contract; Source concern only, not confirmed Finding.",
+            "local_source": true,
+            "runtime_obligation": "Individual local guards/deferred mutable callback and borrowed ownership limits as written; actual SDK lifetime/transport validation needs independent public-path proof, no native credit from Type or Source.",
+            "native_credit": 0,
+            "grade": null,
+            "whole_API_closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 16,
+      "original_csv_zero_based_index": 3468,
+      "assembly": "ViciOne.ServiceBus.EventHubs",
+      "id": "M:ViciOne.ServiceBus.EventHubs.Configuration.EventHubReceiveEndpointConfigurator.Build",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.EventHubs.Configuration.EventHubReceiveEndpointConfigurator.Build",
+        "assembly": "ViciOne.ServiceBus.EventHubs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointConfigurator.cs",
+        "source_line": "138",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointConfigurator.cs",
+      "current_source_sha256": "89b5f06d34c451480434561d2e8c37ab7ab5a289216b1c6d2f16ada586438bd1",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointConfigurator.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "89b5f06d34c451480434561d2e8c37ab7ab5a289216b1c6d2f16ada586438bd1",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.EventHubs.Configuration.EventHubReceiveEndpointConfigurator.Build\">\n            <summary>Builds the processor middleware, receive transport, and receive endpoint.</summary>\n            <returns>The configured Event Hubs receive endpoint.</returns>\n        </member>\n        ",
+      "individual_contract_norm": "Creates a context through EventHubReceiveEndpointBuilder after applying specifications; builder snapshots actual receive settings and adds host topology/that snapshot payloads. Appends blob-container-factory filter using the Lazy Blob client value, receive dependency filter and EventHubConsumerFilter; builds the processor pipe, creates ReceiveTransport with a deferred context-supervisor getter, and returns a real ReceiveEndpoint. Build itself does not validate, register/start this endpoint or eagerly call the deferred EventProcessorClient factory. That later factory applies captured options and chooses connection-string or namespace+credential construction. Partial configuration/build/Blob-client/registration failures are not atomically undone; storage access and endpoint runtime lifetime are separate.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs264-two-address-norm-precision-overlay-r1/CORRECTED264_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "fc05fc3e134c9c4e46571786080d493a862ca587cb2364c7c140d8a622270f73",
+          "entire_historical_member_object": {
+            "ordinal": 84,
+            "original_index": 3468,
+            "assembly": "ViciOne.ServiceBus.EventHubs",
+            "id": "M:ViciOne.ServiceBus.EventHubs.Configuration.EventHubReceiveEndpointConfigurator.Build",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.EventHubs.Configuration.EventHubReceiveEndpointConfigurator.Build",
+              "assembly": "ViciOne.ServiceBus.EventHubs",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointConfigurator.cs",
+              "source_line": "138",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointConfigurator.cs",
+            "source_sha256": "89b5f06d34c451480434561d2e8c37ab7ab5a289216b1c6d2f16ada586438bd1",
+            "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs-original264-research-before-r1/before/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Configuration/EventHubReceiveEndpointConfigurator.cs",
+            "member_contract": "Creates endpoint context by snapshot builder plus ApplySpecifications, then evaluates lazy Blob client and appends BlobFactory/Dependency/Consumer filters to mutable processor builder, builds pipe and wraps transport/context in ReceiveEndpoint. Does not start SDK processor; subsequent calls append another filter set and no rollback on intermediate construction/callback failures.",
+            "recommendation": "HOLD",
+            "hold_reason": "Multi-stage Build construction rollback and retained mutable processor-builder repeated-build behavior require bounded public-path Original before lifecycle acceptance; no confirmed Finding from this Source concern.",
+            "local_source": true,
+            "runtime_obligation": "Individual deferred callback, validation ordering and snapshot/borrowed ownership scope as written; no cloud/SKD startup/delivery or arbitrary rollback acceptance.",
+            "native_credit": 0,
+            "grade": null,
+            "whole_API_closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 17,
+      "original_csv_zero_based_index": 3499,
+      "assembly": "ViciOne.ServiceBus.EventHubs",
+      "id": "M:ViciOne.ServiceBus.EventHubs.EventHubDataReceiver.#ctor(ViciOne.ServiceBus.EventHubs.ReceiveSettings,ViciOne.ServiceBus.Transports.ReceiveEndpointContext,ViciOne.ServiceBus.EventHubs.ProcessorContext)",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.EventHubs.EventHubDataReceiver.#ctor(ViciOne.ServiceBus.EventHubs.ReceiveSettings,ViciOne.ServiceBus.Transports.ReceiveEndpointContext,ViciOne.ServiceBus.EventHubs.ProcessorContext)",
+        "assembly": "ViciOne.ServiceBus.EventHubs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubDataReceiver.cs",
+        "source_line": "30",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubDataReceiver.cs",
+      "current_source_sha256": "61038a593599e9a91c39e40b64ec8e66d650ee9f603df5232192a1b323775d38",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubDataReceiver.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "61038a593599e9a91c39e40b64ec8e66d650ee9f603df5232192a1b323775d38",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.EventHubs.EventHubDataReceiver.#ctor(ViciOne.ServiceBus.EventHubs.ReceiveSettings,ViciOne.ServiceBus.Transports.ReceiveEndpointContext,ViciOne.ServiceBus.EventHubs.ProcessorContext)\">\n            <summary>Starts the processor client and initializes receive admission, partition dispatch, and checkpoint coordination.</summary>\n            <param name=\"receiveSettings\">The endpoint concurrency, prefetch, and checkpoint settings.</param>\n            <param name=\"context\">The owning receive-endpoint context.</param>\n            <param name=\"processorContext\">The active processor context that owns the Azure SDK client.</param>\n        </member>\n        ",
+      "individual_contract_norm": "Public constructor first runs ConsumerAgent base initialization (nonnull endpoint, nonnull receive dispatcher, ZeroActivity subscription), stores endpoint, and owns a CTS linked to Stopped. Creates ProcessorLockContext, which registers pending cancellation then leases the processor client through GetClient; constructs partition executor from concurrent message/delivery settings and Murmur3 key hashing, stores client/lock, and creates prefetch admission. Registers SDK error/message callbacks, installs the manual consume Task, then bridges public Ready to SDK StartProcessingAsync(Stopping). No own settings/processor guard or constructor catch/atomic acquisition rollback. It initiates startup rather than synchronously guaranteeing Ready. Failed startup/invalid settings/custom lease callbacks and deferred shutdown resources remain explicit runtime obligations.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs264-two-address-norm-precision-overlay-r1/CORRECTED264_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "fc05fc3e134c9c4e46571786080d493a862ca587cb2364c7c140d8a622270f73",
+          "entire_historical_member_object": {
+            "ordinal": 107,
+            "original_index": 3499,
+            "assembly": "ViciOne.ServiceBus.EventHubs",
+            "id": "M:ViciOne.ServiceBus.EventHubs.EventHubDataReceiver.#ctor(ViciOne.ServiceBus.EventHubs.ReceiveSettings,ViciOne.ServiceBus.Transports.ReceiveEndpointContext,ViciOne.ServiceBus.EventHubs.ProcessorContext)",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.EventHubs.EventHubDataReceiver.#ctor(ViciOne.ServiceBus.EventHubs.ReceiveSettings,ViciOne.ServiceBus.Transports.ReceiveEndpointContext,ViciOne.ServiceBus.EventHubs.ProcessorContext)",
+              "assembly": "ViciOne.ServiceBus.EventHubs",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubDataReceiver.cs",
+              "source_line": "30",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubDataReceiver.cs",
+            "source_sha256": "61038a593599e9a91c39e40b64ec8e66d650ee9f603df5232192a1b323775d38",
+            "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs-original264-research-before-r1/before/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubDataReceiver.cs",
+            "member_contract": "Calls ConsumerAgent base first, creates linked checkpoint CTS from Stopped, constructs ProcessorLockContext then partition executor using ConcurrentMessageLimit/ConcurrentDeliveryLimit, obtains client and constructs admission with PrefetchCount, subscribes ProcessError/Event, sets manual consume task and Ready to StartProcessingAsync(Stopping). Acquisition and event-subscription failures can occur before full initialization; no constructor-local rollback. Runtime resource admission/cleanup remains held.",
+            "recommendation": "HELD_OPERATIVE_OR_DOC",
+            "hold_reason": "Constructor starts/acquires checkpoint registration/client lease/executor/admission sequentially; actual invalid-capacity or later acquisition failure rollback requires genuine public Original.",
+            "local_source": true,
+            "runtime_obligation": "Exact per-ID local body/declaration context only. Delegated Azure SDK, cache engine, MessageFactory1379, retry/base/context/supervisor lifecycle, arbitrary caller callback failures, cancellation cooperation and resource ownership remain independently operative; no native evidence or global rollback guarantee inferred.",
+            "native_credit": 0,
+            "grade": null,
+            "whole_API_closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 20,
+      "original_csv_zero_based_index": 3526,
+      "assembly": "ViciOne.ServiceBus.EventHubs",
+      "id": "M:ViciOne.ServiceBus.EventHubs.EventHubProducer.ProduceAsync``1(System.Collections.Generic.IEnumerable{System.Object},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.EventHubs.EventHubSendContext{``0}},System.Threading.CancellationToken)",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.EventHubs.EventHubProducer.ProduceAsync``1(System.Collections.Generic.IEnumerable{System.Object},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.EventHubs.EventHubSendContext{``0}},System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.EventHubs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+        "source_line": "132",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+      "current_source_sha256": "6594d34ab9eb784b530a984ae09f93215e2b59572e9ebf98e17cedf809e1add4",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "6594d34ab9eb784b530a984ae09f93215e2b59572e9ebf98e17cedf809e1add4",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.EventHubs.EventHubProducer.ProduceAsync``1(System.Collections.Generic.IEnumerable{System.Object},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.EventHubs.EventHubSendContext{``0}},System.Threading.CancellationToken)\">\n            <summary>Initializes, configures, observes, and produces messages in provider-sized batches.</summary>\n            <typeparam name=\"T\">The message type to initialize.</typeparam>\n            <param name=\"values\">The values used to initialize the messages.</param>\n            <param name=\"pipe\">The pipe applied to each Event Hubs send context.</param>\n            <param name=\"cancellationToken\">The token used to cancel the operation.</param>\n            <returns>A task that completes after initialization, observers, and all provider batches finish.</returns>\n        </member>\n        ",
+      "individual_contract_norm": "For class T, constructs initializer Tasks through values.Select and awaits Task.WhenAll, preserving result-array order. On success constructs one BatchSendPipe<T> from initialized messages and initializer pipes plus the caller pipe/token and awaits context.SendAsync. Batch pipe tracks per-message provider confirmation across retry, configures only unresolved messages, applies admission before and after PreSend, sends via actual provider batching, and marks confirmations before post observers. Fault/post observer and sent/fault-log errors are locally contained as shown; activity.Stop remains a finally operation. No explicit values/pipe guard or precheck before initializer admission; throwing enumeration/initializer admission has no universal already-started-task drain guarantee. No physical batch/cancellation/custom diagnostics native closure is inferred from this source behavior.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs264-two-address-norm-precision-overlay-r1/CORRECTED264_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "fc05fc3e134c9c4e46571786080d493a862ca587cb2364c7c140d8a622270f73",
+          "entire_historical_member_object": {
+            "ordinal": 125,
+            "original_index": 3526,
+            "assembly": "ViciOne.ServiceBus.EventHubs",
+            "id": "M:ViciOne.ServiceBus.EventHubs.EventHubProducer.ProduceAsync``1(System.Collections.Generic.IEnumerable{System.Object},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.EventHubs.EventHubSendContext{``0}},System.Threading.CancellationToken)",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.EventHubs.EventHubProducer.ProduceAsync``1(System.Collections.Generic.IEnumerable{System.Object},ViciOne.ServiceBus.Advanced.Middleware.IPipe{ViciOne.ServiceBus.EventHubs.EventHubSendContext{``0}},System.Threading.CancellationToken)",
+              "assembly": "ViciOne.ServiceBus.EventHubs",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+              "source_line": "132",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+            "source_sha256": "6594d34ab9eb784b530a984ae09f93215e2b59572e9ebf98e17cedf809e1add4",
+            "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs-original264-research-before-r1/before/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+            "member_contract": "Enumerates values.Select into Task.WhenAll of actual InitializeMessageAsync(value,token), awaits all admitted tasks if enumeration completes, then sends BatchSendPipe with initialized message/pipe sequences through context and caller token. Synchronous enumeration/initializer admission fault can prevent WhenAll joining previously started tasks; this specific ownership question held for public Original, not inferred fixed by other fanout families.",
+            "recommendation": "HELD_OPERATIVE_OR_DOC",
+            "hold_reason": "User enumerable/initializer admission may throw after actual earlier initializer tasks started and before WhenAll constructed; public finite all-joined/cause control required, no cross-family assumption.",
+            "local_source": true,
+            "runtime_obligation": "Exact per-ID local body/declaration context only. Delegated Azure SDK, cache engine, MessageFactory1379, retry/base/context/supervisor lifecycle, arbitrary caller callback failures, cancellation cooperation and resource ownership remain independently operative; no native evidence or global rollback guarantee inferred.",
+            "native_credit": 0,
+            "grade": null,
+            "whole_API_closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 21,
+      "original_csv_zero_based_index": 3545,
+      "assembly": "ViciOne.ServiceBus.EventHubs",
+      "id": "M:ViciOne.ServiceBus.EventHubs.EventHubProducerProvider.GetProducerAsync(System.Uri,System.Threading.CancellationToken)",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.EventHubs.EventHubProducerProvider.GetProducerAsync(System.Uri,System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.EventHubs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerProvider.cs",
+        "source_line": "41",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerProvider.cs",
+      "current_source_sha256": "0b700d07098e6ec5a29eac2c56714f7dbf1833d856fcddebd461a9b8bd9dc8a8",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerProvider.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "0b700d07098e6ec5a29eac2c56714f7dbf1833d856fcddebd461a9b8bd9dc8a8",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.EventHubs.EventHubProducerProvider.GetProducerAsync(System.Uri,System.Threading.CancellationToken)\">\n            <summary>Gets or creates the cached producer for an Event Hubs endpoint address.</summary>\n            <param name=\"address\">The endpoint address to normalize against the bus host.</param>\n            <param name=\"cancellationToken\">Cancels cache lookup or producer creation.</param>\n            <returns>A task whose result is the endpoint producer.</returns>\n        </member>\n        ",
+      "individual_contract_norm": "Returns cache.GetProducerAsync keyed by the exact supplied Uri with CreateProducerAsync and caller token, without independent address/null/cancellation guards. Cache caller wait is separate from shared creation; on a miss the callback normalizes against bus host address, asks the host for a transport context, connects the shared send-observable and constructs EventHubProducer that adopts context agents, then returns Task.FromResult. Raw key normalization is not performed before cache lookup, so equivalent destination spellings need not share a cache key. Caller cancellation, disposed-cache/absent entry/partial construction and future producer/native ownership remain delegated local contracts, not universal rollback or post-disposal tolerance.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs264-two-address-norm-precision-overlay-r1/CORRECTED264_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "fc05fc3e134c9c4e46571786080d493a862ca587cb2364c7c140d8a622270f73",
+          "entire_historical_member_object": {
+            "ordinal": 144,
+            "original_index": 3545,
+            "assembly": "ViciOne.ServiceBus.EventHubs",
+            "id": "M:ViciOne.ServiceBus.EventHubs.EventHubProducerProvider.GetProducerAsync(System.Uri,System.Threading.CancellationToken)",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.EventHubs.EventHubProducerProvider.GetProducerAsync(System.Uri,System.Threading.CancellationToken)",
+              "assembly": "ViciOne.ServiceBus.EventHubs",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerProvider.cs",
+              "source_line": "41",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerProvider.cs",
+            "source_sha256": "0b700d07098e6ec5a29eac2c56714f7dbf1833d856fcddebd461a9b8bd9dc8a8",
+            "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs-original264-research-before-r1/before/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerProvider.cs",
+            "member_contract": "Returns exact cache.GetProducerAsync(address,CreateProducerAsync,callerToken) Task; callback normalizes address against current bus host, constructs send transport, connects observable then constructs EventHubProducer. Callback has no cancellation-token parameter; caller cancellation of shared wait does not promise cancellation of shared producer creation. Existing parameter XML creation wording held for narrow completion-purpose review.",
+            "recommendation": "HELD_OPERATIVE_OR_DOC",
+            "hold_reason": "Actual wrapper cancels caller cache waits but does not pass token to shared creation factory; current cancellationToken XML says producer creation. Narrow document-purpose review held, not a runtime finding.",
+            "local_source": true,
+            "runtime_obligation": "Exact per-ID local body/declaration context only. Delegated Azure SDK, cache engine, MessageFactory1379, retry/base/context/supervisor lifecycle, arbitrary caller callback failures, cancellation cooperation and resource ownership remain independently operative; no native evidence or global rollback guarantee inferred.",
+            "native_credit": 0,
+            "grade": null,
+            "whole_API_closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 24,
+      "original_csv_zero_based_index": 3633,
+      "assembly": "ViciOne.ServiceBus.EventHubs",
+      "id": "M:ViciOne.ServiceBus.EventHubs.ProcessorLockContext.#ctor(ViciOne.ServiceBus.EventHubs.ProcessorContext,ViciOne.ServiceBus.EventHubs.ReceiveSettings,System.Threading.CancellationToken)",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.EventHubs.ProcessorLockContext.#ctor(ViciOne.ServiceBus.EventHubs.ProcessorContext,ViciOne.ServiceBus.EventHubs.ReceiveSettings,System.Threading.CancellationToken)",
+        "assembly": "ViciOne.ServiceBus.EventHubs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+        "source_line": "25",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+      "current_source_sha256": "635dde7e5fdeb5a4c14e66c4af18596f52c18ce4f2eb24894603bebd4673099e",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "635dde7e5fdeb5a4c14e66c4af18596f52c18ce4f2eb24894603bebd4673099e",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.EventHubs.ProcessorLockContext.#ctor(ViciOne.ServiceBus.EventHubs.ProcessorContext,ViciOne.ServiceBus.EventHubs.ReceiveSettings,System.Threading.CancellationToken)\">\n            <summary>Leases the processor client and creates shared pending-confirmation state.</summary>\n            <param name=\"context\">The processor context that owns the client.</param>\n            <param name=\"receiveSettings\">The endpoint concurrency and checkpoint settings.</param>\n            <param name=\"cancellationToken\">Cancels every outstanding confirmation.</param>\n        </member>\n        ",
+      "individual_contract_norm": "Stores supplied processor context/settings, creates PendingConfirmationCollection with the supplied token (registering Cancel only when token can cancel), creates ordinal SingleThreadedDictionary partition state, then synchronously calls context.GetClient(this) and stores the returned SDK client. Default EventHubProcessorContext leases by attaching composed partition initializing/closing delegates, rejecting an already active lease; application-close fault does not skip its internal partition close and two failures are aggregated in that helper. No own context/settings null guard, returned-client null guard or catch compensating arbitrary failed lease acquisition. Local initialization/lease behavior only; concurrent SDK events, invalid/custom SPI, pending state and later shutdown retain runtime obligations.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs264-two-address-norm-precision-overlay-r1/CORRECTED264_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "fc05fc3e134c9c4e46571786080d493a862ca587cb2364c7c140d8a622270f73",
+          "entire_historical_member_object": {
+            "ordinal": 188,
+            "original_index": 3633,
+            "assembly": "ViciOne.ServiceBus.EventHubs",
+            "id": "M:ViciOne.ServiceBus.EventHubs.ProcessorLockContext.#ctor(ViciOne.ServiceBus.EventHubs.ProcessorContext,ViciOne.ServiceBus.EventHubs.ReceiveSettings,System.Threading.CancellationToken)",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.EventHubs.ProcessorLockContext.#ctor(ViciOne.ServiceBus.EventHubs.ProcessorContext,ViciOne.ServiceBus.EventHubs.ReceiveSettings,System.Threading.CancellationToken)",
+              "assembly": "ViciOne.ServiceBus.EventHubs",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+              "source_line": "25",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+            "source_sha256": "635dde7e5fdeb5a4c14e66c4af18596f52c18ce4f2eb24894603bebd4673099e",
+            "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs-original264-research-before-r1/before/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+            "member_contract": "Stores processor/receive settings, creates PendingConfirmationCollection(token) then SingleThreadedDictionary ordinal partition comparer, obtains leased Client=context.GetClient(this). No local guards or rollback of cancellation registration on GetClient failure; lease construction/disposal failure context held.",
+            "recommendation": "HELD_OPERATIVE_OR_DOC",
+            "hold_reason": "Pending cancellation registration constructed before custom processor.GetClient lease; failed lease acquisition rollback lacks local cleanup. Public valid custom-SPI original required.",
+            "local_source": true,
+            "runtime_obligation": "Exact per-ID local body/declaration context only. Delegated Azure SDK, cache engine, MessageFactory1379, retry/base/context/supervisor lifecycle, arbitrary caller callback failures, cancellation cooperation and resource ownership remain independently operative; no native evidence or global rollback guarantee inferred.",
+            "native_credit": 0,
+            "grade": null,
+            "whole_API_closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    },
+    {
+      "ordinal": 25,
+      "original_csv_zero_based_index": 3636,
+      "assembly": "ViciOne.ServiceBus.EventHubs",
+      "id": "M:ViciOne.ServiceBus.EventHubs.ProcessorLockContext.DisposeAsync",
+      "exact_original_row": {
+        "symbol_id": "M:ViciOne.ServiceBus.EventHubs.ProcessorLockContext.DisposeAsync",
+        "assembly": "ViciOne.ServiceBus.EventHubs",
+        "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+        "source_line": "40",
+        "snapshot_diagnostics": "False",
+        "contract": "",
+        "implementation": "",
+        "tests": "",
+        "package_consumer": "",
+        "status": "PENDING",
+        "finding": ""
+      },
+      "source_relative": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+      "current_source_sha256": "635dde7e5fdeb5a4c14e66c4af18596f52c18ce4f2eb24894603bebd4673099e",
+      "current_selected_source_PDB_document": {
+        "path": "/_/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "635dde7e5fdeb5a4c14e66c4af18596f52c18ce4f2eb24894603bebd4673099e",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "compiled_producer_epoch": 320,
+      "actual_XML_structural": "<member name=\"M:ViciOne.ServiceBus.EventHubs.ProcessorLockContext.DisposeAsync\">\n            <summary>Releases the client lease and disposes pending-confirmation cancellation state.</summary>\n            <returns>A completed value task.</returns>\n        </member>\n        ",
+      "individual_contract_norm": "Synchronous ValueTask method calls retained context.ReleaseClient first, then pending collection.Dispose (which disposes its optional cancellation registration), then returns default completed ValueTask. Default processor ReleaseClient removes its two lease callbacks and clears its release delegate; it does not dispose the SDK processor client. A synchronous ReleaseClient failure skips pending-registration disposal; either failure is thrown at invocation rather than packaged into an async Task by this body. No partition-worker iteration/disposal, cancellation of confirmations, concurrent lease retirement or arbitrary SPI all-attempt guarantee is promised by this local method. Those separate ownership obligations remain open without inventing a universal rollback policy.",
+      "recommendation": "SOURCE_ONLY_BOUNDED_LOCAL_CANDIDATE",
+      "hold_reason": null,
+      "historical_entire_objects": [
+        {
+          "historical_dossier": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs264-two-address-norm-precision-overlay-r1/CORRECTED264_CONTRACT_MATRIX.json",
+          "historical_matrix_sha256": "fc05fc3e134c9c4e46571786080d493a862ca587cb2364c7c140d8a622270f73",
+          "entire_historical_member_object": {
+            "ordinal": 191,
+            "original_index": 3636,
+            "assembly": "ViciOne.ServiceBus.EventHubs",
+            "id": "M:ViciOne.ServiceBus.EventHubs.ProcessorLockContext.DisposeAsync",
+            "original_row": {
+              "symbol_id": "M:ViciOne.ServiceBus.EventHubs.ProcessorLockContext.DisposeAsync",
+              "assembly": "ViciOne.ServiceBus.EventHubs",
+              "source_path": "./vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+              "source_line": "40",
+              "snapshot_diagnostics": "False",
+              "contract": "",
+              "implementation": "",
+              "tests": "",
+              "package_consumer": "",
+              "status": "PENDING",
+              "finding": ""
+            },
+            "source_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+            "source_sha256": "635dde7e5fdeb5a4c14e66c4af18596f52c18ce4f2eb24894603bebd4673099e",
+            "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package239-eventhubs-original264-research-before-r1/before/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+            "member_contract": "Calls _context.ReleaseClient before disposing pending cancellation registration, then returns default completed ValueTask; no partition-map traversal/worker Close and no finally if release fails. Actual caller must close/drain partition workers separately; unconditional resource cleanup not inferred.",
+            "recommendation": "HELD_OPERATIVE_OR_DOC",
+            "hold_reason": "ReleaseClient failure bypasses pending cancellation-registration disposal; no traversal/close of active partition worker map. Explicit processor ownership/cleanup original needed.",
+            "local_source": true,
+            "runtime_obligation": "Exact per-ID local body/declaration context only. Delegated Azure SDK, cache engine, MessageFactory1379, retry/base/context/supervisor lifecycle, arbitrary caller callback failures, cancellation cooperation and resource ownership remain independently operative; no native evidence or global rollback guarantee inferred.",
+            "native_credit": 0,
+            "grade": null,
+            "whole_API_closed": false
+          }
+        }
+      ],
+      "remaining_runtime_obligations": "Current precise local source contract only; all separate task/SDK/SPI/concurrency/late fault/ownership obligations and historical records preserved, no universal rollback/native/workflow/A+ closure.",
+      "native_credit": 0,
+      "grade": null,
+      "closed": false
+    }
+  ],
+  "different_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package477-azure27-independent-root-source-norm-peer-r1/REPORT.json",
+    "sha256": "419eed8543cb6f4d17ac2eb1e4bc0982b0aede887a481551a521da5e7b4d47dc"
+  },
+  "own_actual_binding": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package475-azure27-independent-root-actual-binding-r1/PROOF.json",
+    "sha256": "518b5c58ea8510e0875f1ac6a1fbb89447843200e3aea9bde2cc624a4fc29b88"
+  },
+  "before_full_backup": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package478-azure-event-local-source13-root-acceptance-before-r1",
+  "before_master_sha256": "6a7f5b1faec56a32bb870e26d7cb22578fd4778a0b0e301f7779d28e9d02e815",
+  "before_state_sha256": "c46dfa584060d5a51953fee74816be6fef90b8e602c759e20bd787f5b09f5dd6",
+  "master_before": 19384,
+  "master_after": 19397,
+  "original_before": 18522,
+  "original_after": 18535,
+  "original_remaining": 34,
+  "native_added": 0,
+  "grade": null,
+  "held14": [
+    2365,
+    2368,
+    2370,
+    2432,
+    2436,
+    2437,
+    2505,
+    3355,
+    3444,
+    3500,
+    3524,
+    3622,
+    3624,
+    3639
+  ],
+  "limits": [
+    "Source-only individual13 with exactcurrentSource/actualfrozen320PDB/XML, no historicaldependencygraph/currentNative/globalAPIgrade.",
+    "Mandatory3444withdrawal observerregistrationhold retained; entireall27historicalrows andcompletebeforeMaster/State retained. All14holds operative.",
+    "Source13 cannotaccept SOURCEhypotheses/undrained private tasks from futuretestplans. CurrentCore module is repaired7953P, historicalfailed456 remains unchanged."
+  ]
+}

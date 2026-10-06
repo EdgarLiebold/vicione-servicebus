@@ -1,0 +1,30 @@
+{
+  "status": "ROOT_BOUNDED_PUBLIC_OWNER_PLAN_PREAUTHOR",
+  "finding": "F-SB-API-033",
+  "subscope": "SignalR five manager owners and actualDI resolution catch",
+  "owners": [
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/previous",
+    "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package15-f033-signalr/corrected"
+  ],
+  "files": [
+    "SignalRLifetime.PublicConsumer.csproj",
+    "NuGet.Config",
+    "Program.cs",
+    "Cases.cs",
+    "Probe.cs",
+    "PublishProbe.cs",
+    "ClientAdapter.cs",
+    "TrackingContext.cs",
+    "PublicConnection.cs",
+    "OwnedLifetime.cs",
+    "packages.lock.json"
+  ],
+  "whole_original_testowner": "not authored or accepted; new bounded console with strictNuGet-only packageReferences/noIVT/privateMemberReflection",
+  "research": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/f033-signalr-plan/NATIVE_TEST_PLAN.json",
+  "planned_cases": 41,
+  "expected_original_failure_counts": "predictions only; report actual causal failures separately",
+  "oracle": "exactprimary+request+scope refs order; genuine incomplete scope dispose gate+await; actualstandard request and real SignalR consumer/publicconnection positive controls; real derived request-send token joined; explicit owned recovery never productPASS",
+  "cleanup": "allgates finally released; actualSend/response/operation tasks saved joined; healthyPASS recoveryfalse; DIStop/dispose allattempts +save/restoreLogContext; request before scope; no absence-timeoutPASS",
+  "runtime": ".NET10.0.10X64/MicrosoftExtensions10.0.12; isolatedNuGetfeed/cache/lock; CoreAbsselected14samebytesbothmodes; freshSignalRonly",
+  "skills": "current Microsoft code-testing-agent Research\u2192Plan\u2192Implement entry used; publicConsole assertions/gap/anti-patterns guidance; no canonicalframework/discoveryclaims"
+}

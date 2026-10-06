@@ -1,0 +1,60 @@
+{
+  "utc": "2026-10-05T15:38:39.163065+00:00",
+  "status": "ADVERSARIALLY_REVIEWED_XML7_SIX_SOURCES_APPLIED_FRESH_PACKAGE_PENDING",
+  "findings": [
+    "F-SB-API-183",
+    "F-SB-API-184",
+    "F-SB-API-185"
+  ],
+  "changes": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/CachedMessageProducer.cs",
+      "before_sha256": "c333251f7831dbb7872bc2ddaf68bcf75d5d4eb593094c8acd5476fe385e6947",
+      "after_sha256": "ea1822b1eb3065a253b92f453b9b1356d0db4b1e94c874341b58452bfa00f47c"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Configuration/ActiveMqBusFactoryConfigurator.cs",
+      "before_sha256": "726d9a4139a2c9637b1d4bd7bd87225ffbc1f8ce83a9c13f2c2b15975c365ec3",
+      "after_sha256": "c65797e6c4e38cf4f909dfda72c95f5f0e069e9889659b53c9b547c8b3f660e4"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ActiveMqBrokerTopology.cs",
+      "before_sha256": "3f891991bd7269f38a9737c989c3560f643618445c82a63b8b2cfe8c4a6d6571",
+      "after_sha256": "86d3bb01b3de74cbff4a613e0069f9c2c2f3e96e167364825c812eb9289213fc"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/PublishEndpointBrokerTopologyBuilder.cs",
+      "before_sha256": "3525b1a5ff33357abd7fa81a76840ac52dbf325fabfab384446f6a9829f309ca",
+      "after_sha256": "69475d561ce0b75036138aa6a9b998f243fed8e0df01d2d2878e420c5f60979f"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Topology/ReceiveEndpointBrokerTopologyBuilder.cs",
+      "before_sha256": "9dbf1363adf041cd4cbb96e8fa6204bdb8da2a822b91a7714e86e5229fb63deb",
+      "after_sha256": "5bfcc7203a5abfd973c8452ed58fc01a79a67ff66b47e8b427e72783df092529"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/IActiveMqBusFactoryConfigurator.cs",
+      "before_sha256": "0afa5e3e59c06911d895c5a97c32c0d5027f4396784921610c62e17061606dcf",
+      "after_sha256": "1b8de19ba586fff6cbd3a94d3ea6f50d2ffe19fea3bf628d83ad827f8f7abd69"
+    }
+  ],
+  "original_registration": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE192_ACTIVEMQ_F183_F184_F185_XML7_ORIGINAL_ROOT_REGISTRATION_R1.json",
+    "sha256": "7838ddc6ed04faedd033f9c6dff64480ef51e0ef7fc3e88dd1f4c1c7879fb16a"
+  },
+  "proposal_manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package218-activemq-seven-documentation-product-proposed-r2/MANIFEST.json",
+    "sha256": "4afd7dcbeee4f0ce8184dbfd430ac679ed8202f3bfac72d6642794e3b4165fa4"
+  },
+  "independent_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package218-activemq-doc7-independent-scanner-peer-r1/REPORT.json",
+    "sha256": "92fc74af4ffb247f018eea06c1056d703b14d3b1189388e85ff80d1925df45aa"
+  },
+  "mandatory_patch_label_erratum": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package218-doc7-delta-path-label-erratum-r1/ERRATUM.json",
+    "sha256": "f023af68cc33c3821b307863f1b95951f727a789124e8ce8dda2b27398ca8b31"
+  },
+  "tests_requirements_public_declarations_and_executable_bytes_unchanged": true,
+  "fresh_compiled_XML_and_package_pending": true,
+  "global_Aplus": false
+}

@@ -1,0 +1,10 @@
+{
+  "utc": "2026-10-04T14:07:27.144808+00:00",
+  "status": "ROOT_INDEPENDENT_ADVERSARIAL_SOURCE_NO_BLOCK_ORIGINAL_NATIVE_PENDING",
+  "test": "repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusTopologyOwnershipTests.cs",
+  "before": "11b0f7360ca88d00ce3db83260e87bc7023486f165a385f2341a3418d7ceb68b",
+  "after": "6e66e6379eb0e72a68afcbb3fc0dbbb25cd26a1432bdb0a6f945560ae7a980e2",
+  "root_whole_review": "fbffda whole423 proposedTest; actualgenericSDKreturnedTask objects preserved and independentlyjoined twice acrosslateradmission; exactmethod.ReturnType guard; original2controls+5causaltests notweakened",
+  "superseded_fixture_epoch": "package68-azure-topology-original-native5-r1 INVALID_FIXTURE_ONLY_NO_PRODUCT_RED",
+  "requirements": "unchanged203"
+}

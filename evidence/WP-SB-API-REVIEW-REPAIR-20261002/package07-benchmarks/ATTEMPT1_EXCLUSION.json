@@ -1,0 +1,10 @@
+{
+  "status": "COMPILER_FAILURE_EXCLUDED_NO_FALSE_KILL",
+  "preserved_runner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package07-benchmarks/attempt1-runner.py.txt",
+  "preserved_runner_sha256": "a43f79ba8d0fdb27b60d38767f449f2397f935372a01ab2089d4ed8a0a0e8d93",
+  "preserved_proof": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE07_BENCHMARK_MUTATIONS_ATTEMPT1.json",
+  "accepted_prior_native_mutants": 7,
+  "excluded": "Interlocked.Read loses compiler-visible assignment and causes CS0649 under strict build. No runtime kill claimed. Corrected equivalent counter-loss mutant uses Interlocked.Add(ref _consumed,0).",
+  "final_run": "Complete fresh nine-mutant round with package07-r2-* phases; immutable original receipts preserved.",
+  "rollback": "Original6209 source hashes and owned consumer runtime restored by finally."
+}

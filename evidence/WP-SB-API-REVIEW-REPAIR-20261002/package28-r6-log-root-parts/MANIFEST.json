@@ -1,0 +1,21 @@
+{
+  "source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package28-composition-native-observe-r6.log",
+  "source_sha256": "e544a0cdf1b842ff483a2aaaa20f478a493d6f62185a4c013b3fe55d061a69e5",
+  "parts": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package28-r6-log-root-parts/part-00.txt",
+      "bytes": 14000,
+      "sha256": "38592a57c54fa472e02b08aaf7247c517b64e600da335f21c31292b9859c4e94"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package28-r6-log-root-parts/part-01.txt",
+      "bytes": 14000,
+      "sha256": "407c0dbd1918b81d58dc967abce18dd5c820a45c89a73a9e5cf00135151e6661"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package28-r6-log-root-parts/part-02.txt",
+      "bytes": 2862,
+      "sha256": "26255146d61cf6473200cf30e19606bb267cffb76c1b11d8d8599a2584a51c11"
+    }
+  ]
+}

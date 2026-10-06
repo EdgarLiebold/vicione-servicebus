@@ -1,0 +1,1346 @@
+[
+  {
+    "requirementId": "REQ-VSB-ASB-FUNCTIONS-TESTING",
+    "variantKey": "same-path-selects-requested-consumer",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.MessageReceiverIsolationTests",
+    "testMethod": "SamePath_DispatchesOnlyToTheRequestedConsumerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SCHEDULER-CANCELLATION",
+    "variantKey": "native-broker-assigns-token-after-send",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusScheduleCancellationCapabilityTests",
+    "testMethod": "NativeBrokerScheduler_AssignsTokenAfterAcceptingTheSend"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-FUNCTIONS-TESTING",
+    "variantKey": "typed-and-all-pipelines-are-independent",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.MessageReceiverIsolationTests",
+    "testMethod": "TypedAndAllDispatch_KeepTheirConsumerSetsIndependentAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-FUNCTIONS-TESTING",
+    "variantKey": "each-path-configures-all-consumers",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.MessageReceiverIsolationTests",
+    "testMethod": "DifferentPaths_ConfigureAllConsumersForEachReceiverAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-FUNCTIONS-TESTING",
+    "variantKey": "invalid-subscription-cannot-alias-queue",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.MessageReceiverIsolationTests",
+    "testMethod": "InvalidSubscription_CannotReuseAnExistingQueuePipelineAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-FUNCTIONS-TESTING",
+    "variantKey": "saga-selection-preserves-independent-state",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.MessageReceiverIsolationTests",
+    "testMethod": "SagaDispatch_PreservesSelectedTypesAndIndependentStateAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-FUNCTIONS-TESTING",
+    "variantKey": "activity-types-and-consumer-role-are-distinct",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.MessageReceiverIsolationTests",
+    "testMethod": "ActivityDispatch_SeparatesActivityTypesAndConsumerRoleAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-FUNCTIONS-TESTING",
+    "variantKey": "typed-bus-preserves-owner-and-consume-scope",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.MessageReceiverIsolationTests",
+    "testMethod": "TypedBusDispatch_PreservesRegistrationOwnerAndAmbientContextAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-ENDPOINT-ADDRESS",
+    "variantKey": "topic-short-address-canonical-roundtrip",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusEndpointAddressTests",
+    "testMethod": "TopicShortAddress_RoundTripsWithItsProviderType"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-ENDPOINT-ADDRESS",
+    "variantKey": "canonical-address-is-idempotent",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusEndpointAddressTests",
+    "testMethod": "CanonicalAddress_NormalizesIdempotently"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-ENDPOINT-ADDRESS",
+    "variantKey": "queue-name-scope-and-path",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusEndpointAddressTests",
+    "testMethod": "QueueName_ProjectsTheExactScopePathAndUri"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-ENDPOINT-ADDRESS",
+    "variantKey": "custom-namespace-port-survives-host-and-entity-address-projection",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusEndpointAddressTests",
+    "testMethod": "CustomPort_RemainsOnScopedHostAndEveryEntityAddressForm"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-ENDPOINT-ADDRESS",
+    "variantKey": "unsupported-scheme-fails-fast",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusEndpointAddressTests",
+    "testMethod": "UnsupportedScheme_IsRejectedAtTheDomainBoundary"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-MESSAGE-BODY",
+    "variantKey": "all-access-orders-byte-length-and-readonly-stream",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusMessageBodyTests",
+    "testMethod": "EveryAccessorOrder_PreservesExactBytesAndByteLength"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "connection-string-endpoint-order-and-scope",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "ConnectionString_ProjectsTheExactServiceUri"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "authentication-modes-remain-exclusive-without-changing-the-selected-credential",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "AuthenticationModes_RejectEveryOtherModeAndPreserveTheSelectedCredential"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "same-authentication-mode-can-replace-its-credential",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "AuthenticationModes_AllowReplacingTheSelectedModeWithoutActivatingAnother"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "endpoint-only-connection-string-accepts-explicit-token-credential",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "EndpointOnlyConnectionString_AllowsAnExplicitTokenCredential"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "endpoint-only-setter-accepts-each-explicit-credential",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "EndpointOnlyConnectionStringSetter_AllowsEachExplicitCredential"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "endpoint-only-setter-preserves-existing-explicit-credential",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "EndpointOnlyConnectionStringSetter_PreservesAnExistingExplicitCredential"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "incomplete-or-mixed-shared-access-credentials-fail-before-authentication",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "ConnectionString_RejectsIncompleteOrMixedSharedAccessCredentials"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "connection-string-setter-must-match-host-and-port-without-losing-scope",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "ConnectionStringSetter_RejectsAnotherNamespaceOrPortWithoutChangingTheScopedHost"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "invalid-connection-string-setter-is-atomic-for-every-authentication-mode",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "ConnectionStringSetter_InvalidInputPreservesEveryExistingAuthenticationMode"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "duplicate-endpoints-cannot-split-host-and-sdk-namespace",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "DuplicateEndpoints_RejectBeforeTheHostOrSdkCanSelectDifferentNamespaces"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "credential-bearing-string-requires-a-namespace-endpoint",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "CredentialBearingConnectionString_RequiresAnEndpointAtConstruction"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "entity-bound-connection-string-is-rejected-for-a-bus-host",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "EntityBoundConnectionString_RejectsHostConstructionAndSetterWithoutChangingAuthentication"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "valid-sas-connection-string-remains-usable",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "SharedAccessSignatureConnectionString_RemainsTheSelectedAuthenticationMode"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "emulator-connection-string-retains-matching-custom-port",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "EmulatorConnectionString_AcceptsTheSameCustomPortAndPreservesScope"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "null-explicit-credential-cannot-enable-ambient-authentication",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "ExplicitCredentialSetters_RejectNullWithoutClearingTheSelectedMode"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "sdk-supported-schemaless-emulator-endpoints-are-normalized",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "EmulatorConnectionString_AcceptsSdkSupportedSchemalessEndpoint"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "credentialless-emulator-or-custom-port-cannot-silently-lose-transport-settings",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "CredentiallessEmulatorOrCustomPort_RejectsBeforeTransportSettingsCanBeLost"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "endpoint-only-setter-clears-shared-access-string-before-selecting-a-credential",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "EndpointOnlyConnectionStringSetter_ClearsPreviousSharedAccessAuthentication"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "custom-port-requires-credential-bearing-string-or-complete-clients",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusConnectionContextTests",
+    "testMethod": "CustomPortWithoutConnectionString_RejectsIncompleteClientOrCredentialRoutesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "custom-port-accepts-complete-caller-supplied-clients",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusConnectionContextTests",
+    "testMethod": "CustomPortWithBothPreconfiguredClients_CreatesTheSuppliedNamespaceContextAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "custom-port-accepts-credential-bearing-emulator-string",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusConnectionContextTests",
+    "testMethod": "CustomPortWithEmulatorConnectionString_CreatesSdkClientsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "preconfigured-client-physical-host-can-differ-from-logical-host",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusConnectionContextTests",
+    "testMethod": "PreconfiguredMessagingClientFromAnotherHost_PreservesTheConfiguredLogicalAddressAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "custom-port-shared-access-string-requires-effective-emulator-mode",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "CustomPortSharedAccessString_RejectsMissingOrDisabledEmulatorMode"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "duplicate-emulator-flag-follows-sdk-last-valid-value",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "DuplicateEmulatorFlag_UsesTheLastValidBoolean"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "missing-endpoint-returns-null",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "ParseEndpoint_EmptyConnectionStringHasNoEndpoint"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "null-connection-string-is-rejected",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "ParseEndpoint_RejectsANullConnectionString"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "empty-connection-string-key-is-rejected",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "ParseEndpoint_RejectsAnEmptyConnectionStringKey"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "public-parser-rejects-duplicate-endpoints",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "ParseEndpoint_RejectsASecondEndpointInsteadOfSelectingEitherNamespace"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "public-parser-validates-all-segments",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "ParseEndpoint_RejectsMalformedSegmentBeforeOrAfterAValidEndpoint"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "public-parser-preserves-delimiters-and-schemaless-scope",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "ParseEndpoint_LeadingRepeatedAndTrailingDelimitersPreserveSchemalessScopedEndpoint"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-ENTITY-NAMES",
+    "variantKey": "entity-and-subscription-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests",
+    "testMethod": "EntityAndSubscriptionNames_EnforceProviderLimitsAndCharacters"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "consume-subscription-is-exact-and-not-expanded-to-base-interface",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "ConsumeSubscription_BindsOnlyTheExplicitInterfaceToTheQueue"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "anonymous-publish-type-is-rejected-at-provider-topology-boundary",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "AnonymousPublishType_IsRejectedWithTheExactDomainReason"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "publish-hierarchy-has-complete-exact-chain",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "PublishHierarchy_ContainsEveryTopicAndOnlyTheDirectInheritanceEdges"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "single-interface-has-no-spurious-edge",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SingleInterface_CreatesOneTopicAndNoSubscription"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "partitioned-forwarding-queue-reuses-the-propagated-declaration",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "PartitionedTopicForwarding_ReusesThePropagatedQueueDeclaration"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "partitioned-forwarding-topic-reuses-the-propagated-declaration",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "PartitionedTopicForwarding_ReusesThePropagatedTopicDeclaration"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "queue-message-size-conflict-is-not-silently-reused",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "QueueMessageSizeConflict_RejectsTheSecondDeclaration"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "topic-entity-size-conflict-is-not-silently-reused",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "TopicEntitySizeConflict_RejectsTheSecondDeclaration"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "topic-message-size-conflict-is-not-silently-reused",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "TopicMessageSizeConflict_RejectsTheSecondDeclaration"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "queue-settings-conflicts-are-not-silently-reused",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "QueueDeclaration_RejectsEveryOtherConfiguredSettingConflict"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "topic-settings-conflicts-are-not-silently-reused",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "TopicDeclaration_RejectsEveryOtherConfiguredSettingConflict"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "queue-status-and-authorization-conflicts-rejected",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "QueueDeclaration_RejectsDifferentStatusOrAuthorization"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "topic-status-and-authorization-conflicts-rejected",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "TopicDeclaration_RejectsDifferentStatusOrAuthorization"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "equivalent-authorization-reuses-declaration-and-different-rights-conflict",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "AuthorizationRules_ReuseEquivalentDeclarationsAndRejectDifferentRights"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "queue-declaration-snapshots-caller-options",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "QueueDeclaration_RetainsItsOriginalIdentityAfterCallerMutatesOptions"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "topic-declaration-snapshots-caller-options",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "TopicDeclaration_RetainsItsOriginalIdentityAfterCallerMutatesOptions"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "authorization-rules-are-snapshotted-on-input-and-output",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "AuthorizationRules_AreNotChangedByMutatingCallerOrExposedRules"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "subscription-status-and-initial-rule-conflicts-rejected",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SubscriptionDeclaration_RejectsDifferentStatusOrInitialRule"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "subscription-declaration-is-stable-after-caller-and-getter-mutation",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SubscriptionDeclaration_RetainsIdentityAndRuleAfterOptionsAreMutated"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "subscription-settings-conflicts-are-not-silently-reused",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SubscriptionDeclaration_RejectsEveryOtherConfiguredSettingConflict"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "subscription-filter-selection-conflicts-rejected",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SubscriptionDeclaration_RejectsDifferentFilterSelection"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "subscription-sql-rule-and-action-parameters-are-snapshotted",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SubscriptionRule_RetainsSqlParametersAfterCallerAndGetterMutation"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "subscription-rule-parameter-conflicts-rejected",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SubscriptionDeclaration_RejectsDifferentSqlFilterOrActionParameter"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "subscription-correlation-filter-properties-are-snapshotted",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SubscriptionFilter_RetainsCorrelationPropertiesAfterCallerAndGetterMutation"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "subscription-topic-handle-must-match-sdk-options",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SubscriptionDeclaration_RejectsOptionsForAnotherTopic"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "forwarding-subscription-name-cannot-target-two-destinations",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "ForwardingSubscription_RejectsSameBrokerNameForDifferentDestinations"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "subscription-broker-name-is-unique-across-relationship-kinds",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SubscriptionDeclaration_RejectsBrokerNameAlreadyUsedByAnotherRelationshipKind"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "forwarding-target-must-match-destination-handle",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "ForwardingSubscription_RejectsAnotherForwardingTargetWithoutPromotingDestination"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "forwarding-target-defaults-to-destination-without-caller-mutation",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "ForwardingSubscription_FillsOmittedTargetFromDestinationWithoutMutatingCaller"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "partitioning-propagates-through-existing-forwarding-relationships",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "ForwardingSubscription_PropagatesLatePartitioningThroughExistingRelationships"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "session-enabled-subscriptions-cannot-be-forwarding-sources",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "ForwardingSubscription_RejectsSessionEnabledSourceBeforeChangingTopology"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "broker-entity-names-ignore-case-for-deduplication-and-conflicts",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "BrokerEntities_ReuseCaseVariantNamesAndRejectCaseVariantSettingConflicts"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "subscription-identity-ignores-case-across-relationship-kinds",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SubscriptionDeclaration_RejectsCaseVariantBrokerNameAcrossRelationshipKinds"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "forwarding-target-identity-ignores-case",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "ForwardingSubscription_AcceptsCaseVariantOfDestinationName"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "direct-session-enabled-entities-cannot-auto-forward",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "DirectEntityDeclaration_RejectsSessionEnabledAutoForwarding"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "custom-reflective-formatter-is-evaluated-once-without-recursion",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "CustomReflectiveFormatter_IsEvaluatedOnceAndKeepsTheCompleteTypeGraph"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-ENDPOINT-CONFIGURATION",
+    "variantKey": "bus-and-endpoint-prefetch-precedence",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusEndpointConfigurationTests",
+    "testMethod": "BusAndEndpointPrefetch_UseTheExactConfiguredPrecedence"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-ENDPOINT-CONFIGURATION",
+    "variantKey": "consumer-definition-and-endpoint-definition-precedence",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusEndpointConfigurationTests",
+    "testMethod": "ConsumerDefinitions_ProjectExactPrefetchAndConcurrencyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-ENDPOINT-CONFIGURATION",
+    "variantKey": "processor-options-project-the-complete-client-settings",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusConnectionContextTests",
+    "testMethod": "ProcessorFactories_ProjectTheCompleteClientSettingsIntoTheSdkBoundary"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROBE",
+    "variantKey": "configured-bus-renders-provider-endpoint-details",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSessionSagaProbeTests",
+    "testMethod": "ConfiguredBus_ProbeRendersProviderEndpointDetails"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SESSION-SAGA",
+    "variantKey": "probe-names-service-bus-session-persistence",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSessionSagaProbeTests",
+    "testMethod": "MessageSessionSagaProbe_NamesItsActualPersistenceOwner"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SESSION-SAGA",
+    "variantKey": "query-correlation-evaluates-the-current-session-state",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.MessageSessionSagaRepositoryTests",
+    "testMethod": "QueryCorrelation_EvaluatesOnlyTheSagaStoredByTheCurrentSessionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SESSION-SAGA",
+    "variantKey": "query-correlation-forwards-context-cancellation",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.MessageSessionSagaRepositoryTests",
+    "testMethod": "QueryCorrelation_ForwardsContextCancellationToSessionStateAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SESSION-SAGA",
+    "variantKey": "state-writes-forward-operation-cancellation",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.MessageSessionSagaRepositoryTests",
+    "testMethod": "StateWrites_ForwardTheOperationCancellationTokenAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SETTLEMENT-CANCELLATION",
+    "variantKey": "session-settlement-pre-canceled",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSettlementCancellationTests",
+    "testMethod": "SessionSettlement_PreCanceledCallerToken_DoesNotInvokeTheSdkAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-REQUIREMENT-PROJECTION",
+    "variantKey": "compiled-metadata-matches-projection",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.Requirements.RequirementCoverageProjectionTests",
+    "testMethod": "AzureServiceBusRequirements_MatchCompiledRequirementMetadata"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TIME-SOURCE",
+    "variantKey": "relative-send-metadata-uses-context-clock",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTimeProviderTests",
+    "testMethod": "RelativeSendMetadata_UsesTheContextClockForSetAndGet"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TIME-SOURCE",
+    "variantKey": "lock-and-ttl-exact-clock-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTimeProviderTests",
+    "testMethod": "ReceiveLockValidation_UsesTheInjectedClockAtExactBoundariesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TIME-SOURCE",
+    "variantKey": "receive-lock-rejects-null-clock",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTimeProviderTests",
+    "testMethod": "ReceiveLockConstruction_RejectsANullClock"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "reason-status-chain-and-permanent-precedence",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSendFailureClassifierTests",
+    "testMethod": "TypedFailures_UseReasonsStatusesAndTheCompleteChainWithPermanentPrecedence"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "missing-http-response-is-transient",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSendFailureClassifierTests",
+    "testMethod": "RequestWithoutHttpResponse_IsTransientEvenWhenWrapped"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "aggregate-permanent-sibling-has-precedence",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSendFailureClassifierTests",
+    "testMethod": "AggregateFailures_PermanentSiblingOverridesRecoverableFirstChild"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "aggregate-later-transient-sibling-is-visible",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSendFailureClassifierTests",
+    "testMethod": "AggregateFailures_LaterRecoverableSiblingRemainsTransient"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "broker-reason-direct-and-wrapped-send-taxonomy",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSendFailureClassifierTests",
+    "testMethod": "BrokerFailures_KeepTheirSendEligibilityInsideConnectionWrappers"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "foreign-connection-failure-is-unclassified",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSendFailureClassifierTests",
+    "testMethod": "ForeignConnectionFailure_IsNotClaimedByAzureClassifier"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "foreign-connection-nested-typed-cause-delegates",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSendFailureClassifierTests",
+    "testMethod": "ForeignConnectionWithTypedCause_DelegatesToItsTransport"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "azure-permanent-aggregate-cause-retains-ownership",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSendFailureClassifierTests",
+    "testMethod": "AggregateWithForeignConnection_PreservesPermanentAzureBrokerCause"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "azure-connection-wrapper-retains-ownership",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSendFailureClassifierTests",
+    "testMethod": "AzureConnectionWrapper_RetainsItsExplicitTransientClassification"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "stopping-host-preserves-azure-cause",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "StoppingHost_PreservesAzureSendFailureForDurableClassificationAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "azure-first-activemq-permanent-failure-quarantines",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.CrossTransportDurableSendTests",
+    "testMethod": "AzureRegisteredFirst_ActiveMqConfigurationFailureQuarantinesWithoutRetryAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SEND-FAILURE",
+    "variantKey": "registration-is-singleton-and-idempotent",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSendFailureClassifierTests",
+    "testMethod": "BusRegistration_AddsExactlyOneClassifierDescriptor"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "queue-start-forwards-caller-cancellation-token",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusConnectionContextTests",
+    "testMethod": "QueueClientStart_ForwardsTheCallerCancellationTokenAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-RULE",
+    "variantKey": "concurrent-creation-reconciles-winner-settings-and-rule",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSubscriptionReconciliationRaceTests",
+    "testMethod": "ConcurrentCreation_ReconcilesTheWinnerSubscriptionAndNamedRuleAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PUBLISH-VALIDATION",
+    "variantKey": "invalid-topic-name-and-idle-duration-reach-publish-validation",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusPublishValidationTests",
+    "testMethod": "InvalidTopicNameAndIdleDuration_AreReportedBeforeBrokerTopologyIsBuilt"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PUBLISH-VALIDATION",
+    "variantKey": "five-minute-idle-boundary-is-accepted",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusPublishValidationTests",
+    "testMethod": "FiveMinuteIdleDurationAndValidTopicName_PassPublishValidation"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PUBLISH-VALIDATION",
+    "variantKey": "invalid-composed-topic-path-is-rejected",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusPublishValidationTests",
+    "testMethod": "BasePath_RejectsInvalidCharactersAndCombinedLength"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PUBLISH-VALIDATION",
+    "variantKey": "excluded-topic-does-not-block-publish-validation",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusPublishValidationTests",
+    "testMethod": "ExcludedTopic_DoesNotFailValidationOrCreateABrokerDeclaration"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PUBLISH-VALIDATION",
+    "variantKey": "subscribe-freezes-topic-options-before-later-changes",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusPublishValidationTests",
+    "testMethod": "SubscriptionSnapshot_RejectsLaterPublishChangesAndKeepsSenderAligned"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PUBLISH-VALIDATION",
+    "variantKey": "exposed-topic-options-cannot-mutate-broker-declaration",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusPublishValidationTests",
+    "testMethod": "ExposedTopicOptions_CannotChangeTheValidatedBrokerDeclaration"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PUBLISH-VALIDATION",
+    "variantKey": "configured-topic-properties-reach-broker-and-sender",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusPublishValidationTests",
+    "testMethod": "ConfiguredTopicProperties_ReachTheBrokerAndSenderWithoutLoss"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "queue-error-recycle-reasons-and-fault-identity",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverErrorCallbackTests",
+    "testMethod": "QueueProcessorErrorCallback_RecyclesOnlyTheRequiredServiceBusFailuresAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "unknown-nontransient-error-recycles",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverErrorCallbackTests",
+    "testMethod": "QueueProcessorErrorCallback_UnknownNonTransientFailureRequestsRecycleAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "expired-message-and-lock-do-not-recycle",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverErrorCallbackTests",
+    "testMethod": "QueueProcessorErrorCallback_ExpiredMessageAndLockDoNotRecycleAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "session-error-uses-inherited-recycle-handler",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverErrorCallbackTests",
+    "testMethod": "SessionProcessorErrorCallback_UsesTheInheritedRecycleHandlerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "error-callback-awaits-fault-notification",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverErrorCallbackTests",
+    "testMethod": "QueueProcessorErrorCallback_WaitsForFaultNotificationBeforeCompletingAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "recycle-faults-receiver-lifecycle",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverErrorCallbackTests",
+    "testMethod": "QueueProcessorErrorCallback_RecycleStopsReceiverButIgnoredFailureLeavesItRunningAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "processor-errors-preserve-severity-structured-identity-and-quiet-cases",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverErrorCallbackTests",
+    "testMethod": "QueueProcessorErrorCallback_LogsTheClassifiedFailureWithExactStructuredIdentityAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "fault-notification-defers-and-coalesces-supervisor-stop",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusClientFaultShutdownTests",
+    "testMethod": "FaultNotification_ReturnsBeforeSupervisorStopsAndCoalescesConcurrentFaultsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "simultaneous-first-faults-install-one-stop",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusClientFaultShutdownTests",
+    "testMethod": "SimultaneousFirstFaults_InstallOneSupervisorStopAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "canceled-fault-notification-does-not-stop-supervisor",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusClientFaultShutdownTests",
+    "testMethod": "CanceledFaultNotification_LeavesSupervisorRunningUntilANewFaultAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "failed-supervisor-stop-is-logged-and-a-later-fault-retries",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusClientFaultShutdownTests",
+    "testMethod": "FailedSupervisorStop_IsLoggedAndLaterFaultStartsANewStopAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-NAME",
+    "variantKey": "deterministic-65-bit-suffix-and-provider-limit",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "LongSubscriptionNames_UseTheCompleteBudgetAndACollisionResistantSuffix"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-NAME",
+    "variantKey": "large-same-prefix-set-has-no-collisions",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "LongSubscriptionNames_AreUniqueAcrossALargeSamePrefixSet"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-NAME",
+    "variantKey": "null-empty-and-whitespace-rejected",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "SubscriptionNameFormatting_RejectsMissingNames"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-NAME",
+    "variantKey": "entity-and-optional-scope-compose-before-shortening",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyTests",
+    "testMethod": "GeneratedSubscriptionNames_ComposeTheOptionalScopeBeforeApplyingTheLimit"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-FUNCTIONS-TESTING",
+    "variantKey": "public-entry-points-validate-required-inputs",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureFunctionsTestExtensionsBoundaryTests",
+    "testMethod": "PublicEntryPoints_RejectEveryMissingRequiredInputAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-FUNCTIONS-TESTING",
+    "variantKey": "public-sdk-message-and-exact-forwarding",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureFunctionsTestExtensionsBoundaryTests",
+    "testMethod": "HandleConsumerAsync_CreatesACompleteSdkMessageAndForwardsTheExactDispatchContextAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-FUNCTIONS-TESTING",
+    "variantKey": "pre-cancellation-skips-service-resolution",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureFunctionsTestExtensionsBoundaryTests",
+    "testMethod": "HandleConsumerAsync_WithPreCanceledToken_DoesNotResolveAnyServiceAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-MESSAGE-BODY",
+    "variantKey": "required-binary-data-boundary",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusMessageBodyTests",
+    "testMethod": "Constructor_RejectsMissingBinaryDataImmediately"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HEADERS",
+    "variantKey": "received-message-is-required",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHeaderProviderTests",
+    "testMethod": "Constructor_RejectsAMissingReceivedMessage"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HEADERS",
+    "variantKey": "azure-diagnostic-id-projects-to-canonical-activity-id",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHeaderProviderTests",
+    "testMethod": "AzureDiagnosticId_ProjectsToTheCanonicalActivityHeader"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HEADERS",
+    "variantKey": "system-and-application-enumeration-preserves-values-but-excludes-spoofed-time",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHeaderProviderTests",
+    "testMethod": "GetAll_ProjectsPresentSystemAndApplicationHeadersWithoutSpoofedTime"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HEADERS",
+    "variantKey": "blank-system-values-are-not-enumerated",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHeaderProviderTests",
+    "testMethod": "GetAll_OmitsBlankSystemValues"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HEADERS",
+    "variantKey": "application-lookup-is-exact-and-system-lookup-is-case-insensitive",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHeaderProviderTests",
+    "testMethod": "TryGetHeader_RequiresExactApplicationNameAndIgnoresSystemCase"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HEADERS",
+    "variantKey": "raw-identity-headers-retain-canonical-guid-format",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHeaderProviderTests",
+    "testMethod": "RawIdentityHeaders_TakePrecedenceOverBrokerFormatting"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HEADERS",
+    "variantKey": "transport-sent-time-is-exact-utc-broker-time",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHeaderProviderTests",
+    "testMethod": "TransportSentTime_UsesTheBrokerEnqueueInstantInUtc"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TRANSPORT-METADATA",
+    "variantKey": "persisted-routing-metadata-roundtrips-without-losing-unrelated-properties",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.AzureServiceBusTransportMetadataTests",
+    "testMethod": "PersistedRoutingMetadata_RoundTripsExactlyAndPreservesOtherProperties"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TRANSPORT-METADATA",
+    "variantKey": "utf8-routing-values-and-session-precedence",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.AzureServiceBusTransportMetadataTests",
+    "testMethod": "ReadPropertiesFrom_DecodesUtf8AndMakesSessionWinOverConflictingPartition"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TRANSPORT-METADATA",
+    "variantKey": "blank-metadata-is-not-persisted",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.AzureServiceBusTransportMetadataTests",
+    "testMethod": "WritePropertiesTo_OmitsBlankProviderMetadata"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TRANSPORT-METADATA",
+    "variantKey": "session-and-partition-identity-stays-consistent",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.AzureServiceBusTransportMetadataTests",
+    "testMethod": "SessionAndPartitionKey_KeepOneRoutingIdentity"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TRANSPORT-METADATA",
+    "variantKey": "broker-schedule-token-after-serialization-remains-readable",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.AzureServiceBusTransportMetadataTests",
+    "testMethod": "BrokerScheduleToken_AfterBodySerializationPreservesTheSerializedBody"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TRANSPORT-METADATA",
+    "variantKey": "received-routing-metadata-survives-persisted-replay",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiveTransportPropertiesTests",
+    "testMethod": "ReceivedRoutingMetadata_SurvivesPersistedReplay"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TRANSPORT-METADATA",
+    "variantKey": "reply-destination-alone-is-persisted",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiveTransportPropertiesTests",
+    "testMethod": "ReplyDestinationAlone_ProducesTransportProperties"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TRANSPORT-METADATA",
+    "variantKey": "blank-received-routing-metadata-is-omitted",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiveTransportPropertiesTests",
+    "testMethod": "BlankRoutingMetadata_DoesNotCreateTransportProperties"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+    "variantKey": "broker-reason-and-transience-matrix",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "BrokerReasons_HaveDistinctReceiveAndSendRetryEligibility"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+    "variantKey": "http-status-transient-boundary",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "RequestFailedStatuses_RetryOnlyRecoverableHttpFailures"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+    "variantKey": "connection-exception-transience-boundary",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "ConnectionFailures_RespectTheirExplicitTransientFlag"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+    "variantKey": "policy-context-schedules-timeout-but-stops-authorization",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "RetryContext_SchedulesARecoverableTimeoutButStopsAuthorization"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+    "variantKey": "wrapped-http-failure-boundary",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "ConnectionWrapper_PreservesHttpFailureEligibility"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+    "variantKey": "wrapped-broker-reason-boundary",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "ConnectionWrapper_PreservesBrokerReasonEligibility"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+    "variantKey": "nested-permanent-provider-cause-vetoes-transient-inner",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "ConnectionWrapper_RejectsPermanentBrokerCauseEvenWithNestedTimeout"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+    "variantKey": "aggregate-permanent-sibling-vetoes-transient",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "AggregateFailures_RejectPermanentSiblingAfterRecoverableFailure"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+    "variantKey": "aggregate-later-transient-sibling-is-visible",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "AggregateFailures_RetryWhenLaterSiblingIsRecoverable"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+    "variantKey": "intermediate-recoverable-provider-cause-is-visible",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "NestedWrapper_RetriesRecoverableBrokerCauseBetweenUnknownExceptions"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-RETRY",
+    "variantKey": "missing-http-response-inside-timeout-remains-retryable",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostRetryPolicyTests",
+    "testMethod": "TimeoutWrapper_DoesNotTurnMissingHttpResponseIntoAPermanentFailure"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "queue-entity-path-follows-initialized-processor-kind",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusConnectionContextTests",
+    "testMethod": "QueueClientEntityPath_UsesTheInitializedMessageOrSessionProcessorAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "diagnostics-report-every-topic-and-consumer-subscription-with-structured-identities",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusTopologyLoggingTests",
+    "testMethod": "LogResult_ReportsEachDeclaredTopicAndSubscriptionWithItsBrokerIdentity"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-OPTIONS",
+    "variantKey": "configured-settings-reach-sdk-subscription-creation",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSubscriptionOptionsTests",
+    "testMethod": "ConfiguredSettings_ReachTheSdkSubscriptionCreationBoundary"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-OPTIONS",
+    "variantKey": "validation-reports-all-independent-errors-in-order",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSubscriptionOptionsTests",
+    "testMethod": "Validate_ReportsEveryIndependentSubscriptionErrorInOrder"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-OPTIONS",
+    "variantKey": "validation-enforces-idle-bounds-and-either-rule-form",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSubscriptionOptionsTests",
+    "testMethod": "Validate_EnforcesIdleBoundsWithEitherRuleForm"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-OPTIONS",
+    "variantKey": "validation-uses-distinct-topic-and-subscription-name-rules",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSubscriptionOptionsTests",
+    "testMethod": "Validate_UsesDistinctTopicAndSubscriptionNameRules"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-OPTIONS",
+    "variantKey": "omitted-and-blank-settings-preserve-sdk-defaults",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSubscriptionOptionsTests",
+    "testMethod": "OmittedAndBlankSettings_PreserveSdkDefaults"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-OPTIONS",
+    "variantKey": "explicit-zero-idle-uses-sdk-default-for-all-entity-kinds",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSubscriptionOptionsTests",
+    "testMethod": "ExplicitZeroIdle_UsesSdkDefaultForSubscriptionsQueuesAndTopics"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-OPTIONS",
+    "variantKey": "zero-idle-addresses-and-send-settings-disable-deletion",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusSubscriptionOptionsTests",
+    "testMethod": "ZeroIdleAddressesAndSendSettings_DisableBrokerDeletion"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-QUEUE-OPTIONS",
+    "variantKey": "configured-queue-settings-reach-sdk-options",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusQueueOptionsTests",
+    "testMethod": "ConfiguredQueueSettings_ReachTheSdkOptionsWithoutLosingDistinctValues"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-QUEUE-OPTIONS",
+    "variantKey": "unconfigured-optional-settings-and-blank-routes-preserve-defaults",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusQueueOptionsTests",
+    "testMethod": "UnconfiguredOptionalSettingsAndBlankRoutes_PreserveProductAndSdkDefaults"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SESSION-BATCH",
+    "variantKey": "session-limits-project-to-queue-and-subscription-with-prefetch-boundaries",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.ServiceBusSessionBatchConfigurationTests",
+    "testMethod": "SessionBatching_ProjectsLimitsToBatchAndEndpointWithoutDiscardingPrefetch"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SESSION-BATCH",
+    "variantKey": "group-key-uses-broker-session-instead-of-reply-session",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.ServiceBusSessionBatchConfigurationTests",
+    "testMethod": "SessionBatching_GroupsByTheBrokerSessionIdentifier"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SESSION-BATCH",
+    "variantKey": "invalid-options-and-non-service-bus-endpoint-fail-before-mutation",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.ServiceBusSessionBatchConfigurationTests",
+    "testMethod": "SessionBatching_RejectsInvalidOptionsAndOtherEndpointKindsBeforeMutation"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-PROCESSOR",
+    "variantKey": "sdk-callbacks-preserve-identity-and-await-terminal-result",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.SubscriptionProcessorBehaviorTests",
+    "testMethod": "Dispatch_PreservesCallbackIdentityAndWaitsForItsResultAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-PROCESSOR",
+    "variantKey": "reconfiguration-rejects-all-kind-combinations-and-retains-original-callback",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.SubscriptionProcessorBehaviorTests",
+    "testMethod": "Reconfiguration_RejectsEveryKindCombinationAndPreservesOriginalCallbackAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-PROCESSOR",
+    "variantKey": "lifecycle-awaits-sdk-and-preserves-propagation-or-warning-contract",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.SubscriptionProcessorBehaviorTests",
+    "testMethod": "Lifecycle_AwaitsSdkAndPreservesFailureContractAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-PROCESSOR",
+    "variantKey": "closed-processors-skip-stop-close-and-dispose-uses-default-token",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.SubscriptionProcessorBehaviorTests",
+    "testMethod": "ClosedState_ControlsStopCloseAndDisposeUsesDefaultTokenAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-RECEIVE-SETTLEMENT",
+    "variantKey": "failure-reason-selects-abandon-with-original-identity",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.AzureServiceBusTransport.ServiceBusReceiveLockContextTests",
+    "testMethod": "FaultSettlement_AbandonsOnlyRecoverableFailuresWithOriginalIdentityAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-RECEIVE-SETTLEMENT",
+    "variantKey": "abandon-awaited-with-provider-failure-containment",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.AzureServiceBusTransport.ServiceBusReceiveLockContextTests",
+    "testMethod": "FaultSettlement_AwaitsAbandonAndContainsProviderFailureAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "retry-minimum-reaches-both-created-sdk-clients",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusClientOwnershipAndRetryTests",
+    "testMethod": "MinimumBackoff_ReachesBothCreatedSdkClientsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "retry-minimum-rejects-sdk-invalid-bounds-atomically",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusClientOwnershipAndRetryTests",
+    "testMethod": "MinimumBackoff_RejectsSdkInvalidBoundsWithoutChangingSettings"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "supplied-messaging-client-survives-terminal-stop-and-reuse",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusClientOwnershipAndRetryTests",
+    "testMethod": "SuppliedMessagingClient_SurvivesTwoTerminalContextsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "created-messaging-client-is-owned-with-either-administration-route",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusClientOwnershipAndRetryTests",
+    "testMethod": "CreatedMessagingClient_ClosesAfterTerminalStopAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "direct-context-constructor-retains-awaited-client-ownership",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusClientOwnershipAndRetryTests",
+    "testMethod": "DirectConstructor_AwaitsOwnedClientDisposalAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "direct-owned-client-disposal-preserves-sdk-failure",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusClientOwnershipAndRetryTests",
+    "testMethod": "DirectConstructor_PreservesOwnedClientDisposalFailureAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TRANSPORT-METADATA",
+    "variantKey": "session-expiry-follows-sdk-renewals-in-utc-without-message-mutation",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusMessageSessionContextTests",
+    "testMethod": "LockedUntilUtc_FollowsSuccessfulSessionRenewalsAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SETTLEMENT-CANCELLATION",
+    "variantKey": "session-noop-renewal-preserves-pre-canceled-caller-token",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusMessageSessionContextTests",
+    "testMethod": "RenewLock_PreCanceledCallerRetainsItsTokenAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-TOPOLOGY",
+    "variantKey": "default-session-formatter-reaches-send-filter-with-explicit-override",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusFamilyRegressionTests",
+    "testMethod": "DefaultSessionFormatter_ReachesTheSendFilterAndPreservesExplicitOverridesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-OPTIONS",
+    "variantKey": "consume-subscriptions-retain-rule-filter-validation",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusFamilyRegressionTests",
+    "testMethod": "ConsumeSubscriptions_RetainRuleFilterValidation"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-OPTIONS",
+    "variantKey": "bus-construction-rejects-conflicting-consume-rule-filter",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusFamilyRegressionTests",
+    "testMethod": "BusConstruction_RejectsConflictingConsumeRuleAndFilter"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-SUBSCRIPTION-NAME",
+    "variantKey": "nested-queue-destinations-have-distinct-automatic-subscriptions",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusFamilyRegressionTests",
+    "testMethod": "NestedQueueDestinations_HaveDistinctAutomaticSubscriptionsAsync"
+  }
+]

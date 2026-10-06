@@ -51,6 +51,8 @@ public class RabbitMqSendSettings :
         return new RabbitMqEndpointAddress(hostAddress, ExchangeName, ExchangeType, Durable, AutoDelete, _bindToQueue, _queueName,
             ExchangeArguments.TryGetValue("x-delayed-type", out var argument) && argument is string delayedType ? delayedType : default,
             _exchangeBindings.Count > 0 ? _exchangeBindings.Select(x => x.ExchangeName).ToArray() : default,
+            singleActiveConsumer: QueueArguments.TryGetValue(RabbitMQ.Client.Headers.XSingleActiveConsumer, out var queueArgument)
+                && queueArgument is true,
             alternateExchange: ExchangeArguments.TryGetValue(RabbitMQ.Client.Headers.AlternateExchange, out argument)
                 && argument is string alternateExchange ? alternateExchange : default);
     }

@@ -1,0 +1,22 @@
+{
+  "created_utc": "2026-10-04T12:49:10.598447+00:00",
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "before": "970affb1ece8396d1ace98a194e88c8f13205abe692db61867ca106a8917e2fb",
+      "after": "58405e18c4d3fc11fa89a59c8e429a780acb076ccbe8626df0ba0bba9e714436"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/PendingReceiveLockContext.cs",
+      "before": "f2ee7c866fb0f3f671fdc67fd5f1b38ff3298b71cfc2fe4f5b6071a0bd7b3ea4",
+      "after": "587cdc3f2262713e2722b3ad3ac8b2a76f01cd025f86ddf1d2d35d89c3f3a199"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "before": "1a08c417117fc3e65ca5f45e38da48d74805e29218f0ae7d31bb5ae152cd1ad8",
+      "after": "8659b5f22016823aea26893f10dd0be31fc1f2efa9590f46e0acc6cb5b34972e"
+    }
+  ],
+  "approved_source_report": "f5d1f48513d712dca46b28da08b1eb67f9d8251cea69f62b22469a8f8850c50a",
+  "original_native_report": "69047dafae4516eb0074119448475b8906ece6bb2610f11df5c2c7c883b6ca84"
+}

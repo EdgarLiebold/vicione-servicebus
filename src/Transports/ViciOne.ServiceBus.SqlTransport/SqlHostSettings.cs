@@ -36,7 +36,7 @@ public interface SqlHostSettings :
     int MaintenanceBatchSize { get; }
 
     /// <summary>Creates connection context factory.</summary>
-    /// <param name="configuration">The callback used to configure the component.</param>
+    /// <param name="configuration">The SQL host configuration used to create the connection context factory.</param>
     /// <returns>The created connection context factory.</returns>
     ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration configuration);
 

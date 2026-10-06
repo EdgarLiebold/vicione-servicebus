@@ -49,7 +49,13 @@ public class MissingSagaPipe<TSaga, TMessage> :
         Exception? operationFailure = null;
         try
         {
-            sagaConsumeContext.LogAdded();
+            try
+            {
+                sagaConsumeContext.LogAdded();
+            }
+            catch (Exception)
+            {
+            }
 
             Task next = _next.SendAsync(sagaConsumeContext)
                 ?? throw new InvalidOperationException("The added saga pipeline returned a null task.");

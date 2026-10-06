@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-06T00:27:40.414818+00:00",
+  "status": "F147_CORE_DOC2_REPAIR_SOURCE3_ROOT_ACCEPTED_WHOLE_API_OPEN",
+  "before_master": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/API_MEMBER_ACCEPTANCE_CURRENT.json",
+    "sha256": "4ad0c02d310c995a03cc91e72b3039ae7d648787dd2b3aa5aaf6a53f487c8cd8"
+  },
+  "before_rows": 18391,
+  "expected_after_rows": 18394,
+  "evidence": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package274-core-projection-row-doc2-fresh-root-publication-proof-r1/REPORT.json",
+      "sha256": "1f42803736f809eaec953be6b4d1317af44c9ad9df4825c2668fda879cb20406"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package274-core-doc2-independent-runtime-publication-peer-r1/REPORT.json",
+      "sha256": "0a4f02baa6fbb1713115ddb127a3584903de91f6deb1340b639e660ac415960f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package277-core-source3-independent-runtime-norm-peer-r1/REPORT.json",
+      "sha256": "05c731c4a9c146844f01cba5be98d5430e209737d0207953f04b8b241e785909"
+    }
+  ],
+  "source3": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package277-core-doc2-current274-individual-source3-contracts-proposed-r1/CURRENT_SOURCE3_CONTRACTS.json",
+    "sha256": "6dd0724abb4251756d567ae5d54e5fd42de2ee06c4cc3679adce56001dccc84a"
+  },
+  "own_authority": "Root whole2/293 8808b7 and own3 newly hand-authored norms; independent Runtime own293, actualpub1340/315 and precise3norm peer. Reports personally wholly read a5f46f; no borrowed human315 claim.",
+  "doc_changes": 2,
+  "new_source_original_ids": 3,
+  "existing_source2_rows_rebound": 15,
+  "strict_build": "0 warnings/0 errors",
+  "actual_NuGet_verified": true,
+  "native_cases_added": 0,
+  "grade": null,
+  "whole_API_closed": false,
+  "rebase_limit": "Existing rows preserve exact member_contract/status/native; only current SourceSHA/PDB identity and explicit publication-context ref rebound. Literal wholeXML2 inverse and actual ZIP independently confirmed."
+}

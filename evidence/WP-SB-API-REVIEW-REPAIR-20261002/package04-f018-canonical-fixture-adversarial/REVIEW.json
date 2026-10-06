@@ -1,0 +1,115 @@
+{
+  "status": "SCOPED_CANONICAL_F018_FIXTURE_ACCEPTED_OWNER410_NATIVE_PASS_RECORDED",
+  "finding": "F018",
+  "reviewer": "azure_test_scope",
+  "independence": "No fixture/product/runner authorship, native operations or product writes.",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE04_F018_CANONICAL_FIXTURE_FREEZE.json",
+    "sha256": "5b0150f1788987dc6dfc2b0d87bd32e9372e73413148559fc10084e0b5d2d9c8"
+  },
+  "blockers": [],
+  "confirmed_findings": [],
+  "code_assessment": "Actual SQLite Serializable outer transaction owned by caller; ContainerSagaDbContextFactory lends same actualContext; marker uses actualTransaction.TransactionId. Repository ReadCommitted setting, method/requirement IDs and delivery1/execution1 remain. Additional zero-start and same-reference assertions expose nested/released ownership.",
+  "physical_route": "Ordinary SQLite in-memory connection, EnsureCreated+SaveChanges two real rows, actual provider execution invoked by counter strategy; optimistic IQueryable.ToListAsync feeds loaded index count2. Proxy supplies only context/marker/token, not database/results.",
+  "borrowed_lifetime": "Factory finally releases borrowed Container without disposing DbContext. Query context disposes semaphore only. Caller await-using reverse order disposes actual transaction, actualContext, then shared database connection on success and failure. Post-call Same actual Database.CurrentTransaction exposes premature release.",
+  "runtime": {
+    "profile": "UnitArchitecture",
+    "total": 410,
+    "passed": 410,
+    "failed": 0,
+    "skipped": 0,
+    "minimum_expected_tests": 410,
+    "receipts": [
+      {
+        "phase": "package04-f018-canonical-fixture-build",
+        "command": [
+          "dotnet",
+          "build",
+          "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-restore",
+          "/p:TreatWarningsAsErrors=true"
+        ],
+        "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T01:51:50.881027+00:00",
+        "completed_utc": "2026-10-03T01:52:06.640003+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-build.log",
+        "log_sha256": "57cb0bb9fe2e09f3049ad573e1835727b7903d1ccb9c177e90795d6f6f31bd7c"
+      },
+      {
+        "phase": "package04-f018-canonical-owner410",
+        "command": [
+          "env",
+          "VICIONE_TESTS__Profile=UnitArchitecture",
+          "dotnet",
+          "test",
+          "--project",
+          "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj",
+          "-c",
+          "Release",
+          "--no-build",
+          "--no-restore",
+          "--minimum-expected-tests",
+          "410"
+        ],
+        "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+        "exit_code": 0,
+        "started_utc": "2026-10-03T01:52:21.896397+00:00",
+        "completed_utc": "2026-10-03T01:53:01.662002+00:00",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-owner410.log",
+        "log_sha256": "f3d31a3a47d11b6599099247711f9e2f6b07472166849d2d50d9e70d52e1726d"
+      }
+    ],
+    "binary_hashes": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll",
+        "sha256": "052900d7ca4b9ac0feb657af073559928af87dda89ce01e61efb11883c2b0115"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+        "sha256": "3d9cfe2389b8ae86292c476479ae1cd6ee752c707969cd10a272e00ecfe471af"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.dll",
+        "sha256": "70c111cec48d128c020f93dbb11b9bf917a1e2d7ff2ac4e4dd7e891061cbdd57"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.Abstractions.dll",
+        "sha256": "52f7a320d17f50918e00a0485a0355bf0e4d0e0ab1101a1ea0e481b3a9e6916a"
+      }
+    ]
+  },
+  "historical_boundary": "Prior valid410/409/1 old-marker native red remains immutable; current valid unfiltered410/410 clears that owner failure in this actual dependency frame.",
+  "public_relation": "Canonical direct public repository SPI fixture complements independent original/corrected16 ordinary bus/outbox NuGet cases and six actual product mutants; does not replace them.",
+  "limits": [
+    "Current native owner uses Package05 Core70c111/Abstractions52f7a dependency frame; no old runtime-frame reuse claim",
+    "Root36+57 source closure stays Root-owned, all93 metadata source SHAs checked with only exact fixture delta",
+    "Only changed fixture assessed, no whole410 assertion grade/A+ or wholeAPI CLOSED",
+    "SQLite nonretry custom strategy; no exhaustive transient/commit/disposal/cancellation fault matrix",
+    "No external provider/cloud/ARM512MiB conclusion"
+  ],
+  "proof_artifacts": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-adversarial/READ_CLOSURE.json",
+      "sha256": "889a2dd88e8b189c56275fdf224074f68ceefec34dd1f95d84fc5b72ae60e440"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-adversarial/DELTA_PROOF.json",
+      "sha256": "32d3e0be52662e889f00575e76461dbefdc95cb0cce16c235b2327c12131f68d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-adversarial/FIXTURE_DELTA.patch",
+      "sha256": "c7804b327fee9d54846844962c7c6cefc0a331fc8abfe9587c0fd21cbabb1792"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-adversarial/SOURCE_BINARY_BINDING.json",
+      "sha256": "9dbc3bbbb42fcf8ec3b48b7d9b0a070fafd64ee66ff2235d9b522f30a964efc9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package04-f018-canonical-fixture-adversarial/verify_pdb.py",
+      "sha256": "26527e1c6caadb47808dd705098a4da6690d37bbe46770b5ab4950c5e2d1bc78"
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+import ast
+import csv
+import hashlib
+import json
+import shutil
+import subprocess
+from pathlib import Path
+
+W = Path('/Users/edgar.liebold/Downloads/ViciOne Suite 2.0')
+O = W / 'repositories/vicione-servicebus'
+R = Path('/private/tmp/vicione-servicebus-api-review-20261001')
+M = R / 'mutations/source-main'
+F = R / 'frozen-repository'
+E = O / 'evidence/WP-SB-API-REVIEW-REPAIR-20261002'
+RUN = W / 'SERVICEBUS_API_REVIEW_AND_REPAIR/run_operation.py'
+C = R / 'repair-consumers/package19-f034-r6/corrected'
+OUT = C / 'bin/Release/net10.0'
+APP = 'ActivityOwnership.PublicConsumer.dll'
+DLLS = ['ViciOne.ServiceBus.dll', 'ViciOne.ServiceBus.Courier.dll']
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+PATHS = json.loads((E / 'PACKAGE19_F040_MUTATIONS.json').read_text())['frame']
+PATHS.update(execute_registration='src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ExecuteActivityRegistration.cs',
+    activity_registration='src/ViciOne.ServiceBus.Courier/DependencyInjection/Registration/ActivityRegistration.cs',
+    execute_definition='src/ViciOne.ServiceBus.Courier/Configuration/ExecuteActivityEndpointDefinition.cs',
+    compensate_definition='src/ViciOne.ServiceBus.Courier/Configuration/CompensateActivityEndpointDefinition.cs',
+    context_definition='src/ViciOne.ServiceBus/Configuration/DependencyInjection/RegistrationContextEndpointDefinition.cs')
+assert len(PATHS) == len(set(PATHS.values())) == 33
+original = {key: (F / rel).read_bytes() if (F / rel).exists() else None for key, rel in PATHS.items()}
+assert all(((M / rel).read_bytes() if (M / rel).exists() else None) == original[key] for key, rel in PATHS.items()), 'Mutation frame must start frozen original'
+corrected = {key: (O / rel).read_text() for key, rel in PATHS.items()}
+runtime = {name: (OUT / name).read_bytes() for name in DLLS}
+runtime_hashes = {name: hashlib.sha256(value).hexdigest() for name, value in runtime.items()}
+oracle = {str(p): sha(p) for p in C.iterdir() if p.is_file()}
+oracle[str(OUT / APP)] = sha(OUT / APP)
+constants = {str(p): sha(p) for p in OUT.glob('*.dll') if p.name not in DLLS}
+result = dict(status='RUNNING', oracle_hashes=oracle, constant_dependencies=constants, frame=PATHS,
+    selected_runtime_hashes=runtime_hashes, controls=[], mutants=[])
+materialization_line = next(i for i, line in enumerate((C / 'RuntimeOwner.cs').read_text().splitlines(), 1) if 'Assert.Null(failure);' in line)
+multiset_line = next(i for i, line in enumerate((C / 'RuntimeOwner.cs').read_text().splitlines(), 1) if 'Assert.Equal(expectedNames, actualNames);' in line)
+
+def replace_once(text, before, after):
+    assert text.count(before) == 1, (before, text.count(before))
+    return text.replace(before, after, 1)
+
+def mutation(name):
+    texts = dict(corrected)
+    if name in ['DropPlannedCompanionName', 'IgnoreCapturedCompanionName']:
+        if name == 'DropPlannedCompanionName':
+            target = 'endpoint_context'
+            before = '(IBusRegistrationContext)RegistrationContext, endpointName);'
+            after = '(IBusRegistrationContext)RegistrationContext);'
+        else:
+            target = 'context_definition'
+            before = 'return _plannedEndpointName ?? _endpointDefinition.GetEndpointName(formatter);'
+            after = 'return _endpointDefinition.GetEndpointName(formatter);'
+        texts[target] = replace_once(texts[target], before, after)
+    else:
+        full = 'Full' in name or name == 'BypassTypedSelector'
+        compensate = 'Compensate' in name
+        target = 'activity_registration' if full else 'execute_registration'
+        kind, argument, variable = ('Compensate', 'TLog', 'compensate') if compensate else ('Execute', 'TArguments', 'execute')
+        concrete = kind + 'ActivityEndpointDefinition<TActivity, ' + argument + '>'
+        generic = 'I' + kind + 'Activity<' + argument + '>'
+        call = '_selector.GetDefinition<' + concrete + '>(provider)'
+        if name.startswith('Restore'):
+            texts[target] = replace_once(texts[target], call, '_selector.GetEndpointDefinition<' + generic + '>(provider)')
+        elif name == 'BypassTypedSelector':
+            texts[target] = replace_once(texts[target], call, 'provider.GetService(typeof(' + concrete + ')) as ' + concrete)
+        elif name.startswith('AcceptForeign'):
+            rejection = variable + 'EndpointDefinition = null;'
+            texts[target] = replace_once(texts[target], rejection, '_ = ' + variable + 'EndpointDefinition;')
+        elif name.startswith('RejectOwn'):
+            condition = '\n                        && endpointType != typeof(' + concrete + ')'
+            texts[target] = replace_once(texts[target], condition, '')
+        elif name.startswith('DropGenuine'):
+            marker = 'Type endpointType = ' + variable + 'EndpointDefinition.GetType();'
+            additional = '\n                    if (!endpointType.IsConstructedGenericType\n                        || endpointType.GetGenericTypeDefinition() != typeof(' + kind + 'ActivityEndpointDefinition<,>))\n                        ' + variable + 'EndpointDefinition = null;'
+            texts[target] = replace_once(texts[target], marker, marker + additional)
+        else:
+            raise ValueError(name)
+    assert sum(texts[k] != corrected[k] for k in texts) == 1
+    return texts
+
+def install(texts):
+    for key, rel in PATHS.items():
+        path = M / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        payload = texts[key].encode()
+        if not path.exists() or path.read_bytes() != payload:
+            path.write_bytes(payload)
+
+def operation(suffix, cwd, args, expected=0):
+    phase = 'package19-f034-f041-mut-' + suffix
+    completed = subprocess.run(['python3', str(RUN), phase, str(cwd), '--', *args], check=False)
+    assert completed.returncode == expected, (phase, completed.returncode, expected)
+    receipt = next(json.loads(line) for line in reversed((E / 'VERIFICATION_LOG.jsonl').read_text().splitlines()) if json.loads(line)['phase'] == phase)
+    assert receipt['exit_code'] == expected and sha(receipt['log']) == receipt['log_sha256']
+    text = Path(receipt['log']).read_text()
+    if 'build' in args:
+        assert '0 Warnung(en)' in text and '0 Fehler' in text
+    return receipt
+
+def build(name, texts):
+    install(texts)
+    receipt = operation(name + '-build', M, ['dotnet', 'build', 'src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj', '-c', 'Release', '--no-restore', '-warnaserror'])
+    directory = R / 'repair-evidence/package19-f034-f041-binaries' / name
+    directory.mkdir(parents=True, exist_ok=False)
+    snapshots = []
+    for index, (key, rel) in enumerate(PATHS.items()):
+        snapshot = directory / ('source-' + str(index) + '.txt')
+        snapshot.write_bytes((M / rel).read_bytes())
+        snapshots.append(dict(key=key, relative=rel, path=str(snapshot), sha256=sha(snapshot), current_source_sha256=hashlib.sha256(texts[key].encode()).hexdigest()))
+    binaries = []
+    for dll in DLLS:
+        project = dll[:-4]
+        binary = M / 'artifacts/sdk/bin' / project / 'release' / dll
+        shutil.copy2(binary, directory / dll)
+        shutil.copy2(binary, OUT / dll)
+        binaries.append(dict(path=str(directory / dll), sha256=sha(directory / dll)))
+    return dict(name=name, build=receipt, binaries=binaries, source_snapshots=snapshots)
+
+def case(suffix, mode, expected=0, finding=None, mutant=None):
+    receipt = operation(suffix, C, ['dotnet', 'bin/Release/net10.0/' + APP, mode, '00:00:12'], expected)
+    text = Path(receipt['log']).read_text()
+    if mode == 'all':
+        assert text.count('\nPASS ') == 41 and 'TOTAL 41 PASS 0 FAIL' in text and '\nFAIL ' not in text
+    elif expected == 0:
+        assert '\nPASS ' + mode in text and '\nFAIL ' not in text
+    else:
+        assert '\nFAIL ' + mode + ' Xunit.Sdk.' in text and 'TimeoutException' not in text and 'Case and cleanup failed' not in text
+        duplicate_keys = {
+            'RestoreFullCompensateAlias': 'owner-b-compensate',
+            'AcceptForeignFullCompensate': 'owner-a-compensate',
+            'DropPlannedCompanionName': 'ignored-fluent-compensate',
+            'IgnoreCapturedCompanionName': 'ignored-fluent-compensate'
+        }
+        duplicate_key = duplicate_keys.get(mutant)
+        line = materialization_line if duplicate_key is not None else multiset_line
+        assert 'RuntimeOwner.cs:line ' + str(line) in text, 'Require finite materialization assertion'
+        if duplicate_key is not None:
+            assert '\nFAIL ' + mode + ' Xunit.Sdk.NullException:' in text
+            assert 'same key was already added: ' + duplicate_key + '. Correct the named configuration' in text
+        else:
+            assert '\nFAIL ' + mode + ' Xunit.Sdk.EqualException:' in text and 'ENDPOINT_PLAN ' in text
+        receipt['finite_materialization_assertion_line'] = line
+        receipt['finding'] = finding
+        receipt['mutant'] = mutant
+        receipt['exact_duplicate_key'] = duplicate_key
+    for path, digest in {**oracle, **constants}.items():
+        assert sha(path) == digest, path
+    return receipt
+
+variants = [
+    ('RestoreExecuteAlias', 'execute-shared', 'execute-single', 'F034'),
+    ('RestoreFullExecuteAlias', 'full-args', 'full-distinct', 'F034'),
+    ('RestoreFullCompensateAlias', 'full-log', 'full-distinct', 'F034'),
+    ('AcceptForeignExecute', 'default-mixed-execute-first', 'caller-fallback-execute', 'F034'),
+    ('AcceptForeignFullExecute', 'default-mixed-full-first', 'custom-selector-full', 'F034'),
+    ('AcceptForeignFullCompensate', 'default-mixed-full-first', 'custom-selector-full', 'F034'),
+    ('DropGenuineExecute', 'custom-selector-execute', 'custom-own-execute', 'F034'),
+    ('DropGenuineFullExecute', 'custom-selector-full', 'custom-own-full', 'F034'),
+    ('DropGenuineFullCompensate', 'custom-selector-full', 'custom-own-full', 'F034'),
+    ('RejectOwnExecute', 'custom-own-execute', 'custom-selector-execute', 'F034'),
+    ('RejectOwnFullExecute', 'custom-own-full', 'custom-selector-full', 'F034'),
+    ('RejectOwnFullCompensate', 'custom-own-full', 'custom-selector-full', 'F034'),
+    ('BypassTypedSelector', 'two-buses-full', 'full-distinct', 'F034'),
+    ('DropPlannedCompanionName', 'definition-full', 'definition-aligned-full', 'F041'),
+    ('IgnoreCapturedCompanionName', 'typed-definition-compensation-full', 'typed-definition-aligned-full', 'F041')
+]
+
+try:
+    stage = build('corrected', corrected)
+    stage['all_cases'] = case('corrected-fortyone', 'all')
+    result['controls'].append(stage)
+    for name, negative, positive, finding in variants:
+        stage = build(name, mutation(name))
+        stage['negative'] = case(name + '-' + negative, negative, 1, finding, name)
+        stage['positive'] = case(name + '-' + positive, positive)
+        result['mutants'].append(stage)
+    stage = build('rollback', corrected)
+    stage['all_cases'] = case('rollback-fortyone', 'all')
+    result['controls'].append(stage)
+    result['status'] = 'FIFTEEN_STRICT_COMPILED_SINGLE_EFFECT_MUTANTS_KILLED_WITH_GREEN_CONTROLS'
+finally:
+    for key, rel in PATHS.items():
+        path = M / rel
+        if original[key] is None:
+            path.unlink(missing_ok=True)
+        else:
+            path.write_bytes(original[key])
+    for dll, data in runtime.items():
+        (OUT / dll).write_bytes(data)
+        assert sha(OUT / dll) == runtime_hashes[dll]
+    assert all(sha(path) == digest for path, digest in {**oracle, **constants}.items())
+    rows = list(csv.DictReader((R / 'FILE_COVERAGE.csv').open()))
+    mismatches = [row['path'] for row in rows if sha(M / row['path']) != row['sha256']]
+    assert not mismatches, mismatches
+    result['mutation_tree_original_files_verified'] = len(rows)
+    result['oracle_and_runtime_restored'] = True
+    (E / 'PACKAGE19_F034_F041_MUTATIONS.json').write_text(json.dumps(result, indent=2) + '\n')

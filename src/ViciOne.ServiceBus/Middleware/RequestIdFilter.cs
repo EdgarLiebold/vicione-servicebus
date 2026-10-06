@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
@@ -33,7 +34,7 @@ public class RequestIdFilter<TMessage> :
             pipe.Probe(scope);
     }
 
-    /// <summary>Sends a message to the configured destination.</summary>
+    /// <summary>Awaits an available matching request pipeline before invoking the continuation.</summary>
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -73,6 +74,7 @@ public class RequestIdFilter<TMessage> :
     {
         readonly Guid _key;
         readonly Action<Guid> _removeKey;
+        int _disconnected;
 
         public Handle(Guid key, Action<Guid> removeKey)
         {
@@ -82,7 +84,8 @@ public class RequestIdFilter<TMessage> :
 
         public void Disconnect()
         {
-            _removeKey(_key);
+            if (Interlocked.Exchange(ref _disconnected, 1) == 0)
+                _removeKey(_key);
         }
 
         public void Dispose()

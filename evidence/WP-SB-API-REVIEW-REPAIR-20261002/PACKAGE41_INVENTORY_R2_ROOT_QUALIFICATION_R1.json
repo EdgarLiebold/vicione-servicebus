@@ -1,0 +1,35 @@
+{
+  "scope": "Root accepts error-free33project compiler/source/packed graph and29newID delta as qualified inventory, not semantic closure. Snapshot native08:58..qualification09:07:52 beforeRoot subsequentF047/F048/F049 andS3testoverlays. Original18569 baseline retained.",
+  "root_native_exit": 0,
+  "projects": 33,
+  "declared_symbols": 18598,
+  "workspace_errors": 0,
+  "compiler_errors": 0,
+  "metadata_errors": 0,
+  "new_declared_ids": 29,
+  "removed_declared_ids": 0,
+  "individual_semantic_closure": false,
+  "global_API_Aplus": false,
+  "inputs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-current-api-inventory-independent-r2/REPORT.json",
+      "bytes": 7656,
+      "sha256": "9c32a58322e513e008f6247fc30b808949aef4548d763bff315ccf9ff4735592"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-current-symbol-delta-worklist-r1/REPORT.json",
+      "bytes": 5058,
+      "sha256": "662093f0d3fbb362a87ef2551476b512faf73e198f1a6d87695f3c1f87115796"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package41-inventory-r2-time-clarification-r1/REPORT.json",
+      "bytes": 4297,
+      "sha256": "ac92fbdce64bb59b5f80360f0c62b298a782c04f1206e27f2018535ae64c8862"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package41-current-api-inventory-native-r2.log",
+      "bytes": 4419,
+      "sha256": "1fba823eab6c90cba4a1faab31ce0dffbbeca572f7adabfd2f686ec07cc13489"
+    }
+  ]
+}

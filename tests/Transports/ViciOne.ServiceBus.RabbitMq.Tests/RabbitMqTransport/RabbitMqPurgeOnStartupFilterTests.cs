@@ -127,29 +127,37 @@ public sealed class RabbitMqPurgeOnStartupFilterTests
         Assert.Equal(3, broker.PassiveDeclareCalls);
     }
 
-    [Fact]
-    [RequirementCoverage("REQ-VSB-RABBITMQ-STARTUP-PURGE", "only-nonempty-consumer-free-queue-is-purged")]
-    public async Task EmptyOrConsumedQueue_IsNotPurgedAndCanBePurgedAtNextEligibleStartAsync()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-STARTUP-PURGE", "first-successful-startup-inspection-prevents-reconnect-purge")]
+    public async Task FirstSuccessfulStartupInspection_PreventsPurgeOnLaterChannelsAsync(bool hasActiveConsumer)
     {
         var broker = new RecordingBroker();
-        broker.Snapshots.Enqueue(new QueueDeclareOk("orders", 4, 1));
-        broker.Snapshots.Enqueue(new QueueDeclareOk("orders", 0, 0));
+        broker.Snapshots.Enqueue(hasActiveConsumer
+            ? new QueueDeclareOk("orders", 4, 1)
+            : new QueueDeclareOk("orders", 0, 0));
         broker.Snapshots.Enqueue(new QueueDeclareOk("orders", 4, 0));
         var filter = new PurgeOnStartupFilter("orders");
         var next = new RecordingPipe();
-        ChannelContext channel = broker.Channel(TestContext.Current.CancellationToken);
+        CancellationToken token = TestContext.Current.CancellationToken;
+        ChannelContext startupChannel = broker.Channel(token);
+        ChannelContext laterChannel = broker.Channel(token);
 
-        await filter.SendAsync(channel, next);
-        await filter.SendAsync(channel, next);
+        await filter.SendAsync(startupChannel, next);
+        Assert.Equal(0, broker.PurgeCalls);
+        Assert.Equal(1, next.Calls);
+
+        // A new channel for this same endpoint must not purge messages arriving after successful startup.
+        await filter.SendAsync(laterChannel, next);
+
         Assert.Equal(0, broker.PurgeCalls);
         Assert.Equal(2, next.Calls);
-
-        await filter.SendAsync(channel, next);
-
-        Assert.Equal(1, broker.PurgeCalls);
-        Assert.Equal(3, next.Calls);
+        Assert.Equal(2, broker.PassiveDeclareCalls);
         Assert.Equal("orders", broker.DeclaredQueue);
-        Assert.Equal(TestContext.Current.CancellationToken, broker.DeclareToken);
+        Assert.Equal(token, broker.DeclareToken);
+        Assert.Single(next.Contexts, context => ReferenceEquals(context, startupChannel));
+        Assert.Single(next.Contexts, context => ReferenceEquals(context, laterChannel));
     }
 
     private sealed class RecordingBroker

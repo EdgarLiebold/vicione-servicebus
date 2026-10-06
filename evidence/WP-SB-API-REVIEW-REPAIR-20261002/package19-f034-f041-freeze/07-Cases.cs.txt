@@ -1,0 +1,59 @@
+using System.Runtime.ExceptionServices;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Courier;
+using ViciOne.ServiceBus.Transports;
+using Xunit;
+
+namespace ActivityOwnership;
+public static class Cases
+{
+    public static readonly string[] Names = ["execute-shared", "execute-distinct", "execute-single", "full-shared", "full-args", "full-log", "full-distinct",
+        "default-mixed-execute-first", "default-mixed-execute-last", "default-mixed-full-first", "default-mixed-full-last",
+        "typed-mixed-execute-first", "typed-mixed-execute-last", "typed-mixed-full-first", "typed-mixed-full-last",
+        "conventional-execute", "conventional-full", "definition-execute", "definition-full", "repeated-execute", "repeated-full",
+        "caller-fallback-execute", "caller-fallback-full", "custom-selector-execute", "custom-selector-full", "two-buses-execute", "two-buses-full",
+        "compensation-default", "compensation-typed", "pre-cancel-default", "pre-cancel-typed", "caller-fallback-compensate", "custom-own-execute", "custom-own-full", "definition-compensation-full", "typed-definition-compensation-full",
+        "definition-literal-full", "typed-definition-literal-full", "definition-aligned-full", "typed-definition-aligned-full", "typed-definition-full"];
+    public static async Task Run(string name, TimeSpan timeout)
+    {
+        Assert.Contains(name, Names);
+        var life = new OwnedLifetime(timeout); var probe = new Probe(); Exception? primary = null;
+        try
+        {
+            bool full = name.Contains("full", StringComparison.Ordinal) || name.StartsWith("compensation-", StringComparison.Ordinal) || name == "caller-fallback-compensate";
+            bool typed = name.StartsWith("typed-", StringComparison.Ordinal) || name.EndsWith("-typed", StringComparison.Ordinal) || name.StartsWith("two-buses-", StringComparison.Ordinal);
+            bool single = name == "execute-single" || name.StartsWith("pre-cancel-", StringComparison.Ordinal) || name.Contains("definition-", StringComparison.Ordinal) || name.StartsWith("repeated-", StringComparison.Ordinal)
+                || name.StartsWith("caller-fallback-", StringComparison.Ordinal) || name.StartsWith("custom-selector-", StringComparison.Ordinal) || name.StartsWith("custom-own-", StringComparison.Ordinal);
+            bool compensate = name.StartsWith("compensation-", StringComparison.Ordinal) || name.Contains("-compensation-", StringComparison.Ordinal) || name == "caller-fallback-compensate";
+            var runtime = new RuntimeOwner(life, probe, name, full, typed, single, compensate);
+            await runtime.MaterializeAndStart();
+            if (name.StartsWith("pre-cancel-", StringComparison.Ordinal))
+            {
+                using var cancelled = new CancellationTokenSource(); cancelled.Cancel();
+                var builder = runtime.Builder(Guid.NewGuid(), 0);
+                Exception? error = await Capture(() => life.Await(runtime.Buses[0].ExecuteAsync(builder.Build(), cancelled.Token)));
+                var oce = Assert.IsAssignableFrom<OperationCanceledException>(error); Assert.Equal(cancelled.Token, oce.CancellationToken);
+                Assert.Empty(probe.Calls); Assert.Empty(probe.TerminalBusiness); Assert.Empty(probe.Receipts);
+            }
+            for (int owner = 0; owner < runtime.Buses.Count; owner++)
+                for (int iteration = 0; iteration < 2; iteration++) await runtime.ExecuteAndCheck(owner, compensate);
+            await runtime.Stop();
+            Assert.Equal(runtime.Buses.Count * 2, probe.TerminalBusiness.Count); Assert.Equal(runtime.Buses.Count * 2, probe.Receipts.Count);
+            if (name.StartsWith("custom-selector-", StringComparison.Ordinal) || name.StartsWith("custom-own-", StringComparison.Ordinal))
+            {
+                Assert.NotEmpty(probe.SelectorRequests);
+            }
+        }
+        catch (Exception e) { primary = e; }
+        Exception? cleanup = null; try { await life.DisposeAsync(); } catch (Exception e) { cleanup = e; }
+        if (primary != null && cleanup != null) throw new AggregateException("Case and cleanup failed", primary, cleanup);
+        if (primary != null) ExceptionDispatchInfo.Capture(primary).Throw();
+        if (cleanup != null) ExceptionDispatchInfo.Capture(cleanup).Throw();
+    }
+    public static async Task<Exception?> Capture(Func<Task> action)
+    { try { await action(); return null; } catch (Exception e) { return e; } }
+}

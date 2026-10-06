@@ -1,0 +1,469 @@
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs", "start_line": 241, "end_line": 309, "kind": "original_product"}
+        BatchOptions options,
+        IPipe<ConsumeContext<IMessageBatch<TMessage>>> consumerPipe,
+        IGroupKeyProvider<TMessage, TKey> keyProvider)
+        : base(RequireKeyProvider(options, keyProvider), consumerPipe)
+    {
+        _keyProvider = keyProvider;
+    }
+
+    protected override async Task<BatchConsumer<TMessage>> AddAsync(
+        ConsumeContext<TMessage> context,
+        Activity? currentActivity)
+    {
+        if (_keyProvider.TryGetKey(context, out TKey key))
+        {
+            _batchesByKey.TryGetValue(key, out BatchConsumer<TMessage>? batch);
+            batch = await CollectIntoBatchAsync(context, batch, currentActivity).ConfigureAwait(false);
+            _batchesByKey[key] = batch;
+            return batch;
+        }
+
+        _ungroupedBatch = await CollectIntoBatchAsync(context, _ungroupedBatch, currentActivity).ConfigureAwait(false);
+        return _ungroupedBatch;
+    }
+
+    protected override Task RemoveAsync(BatchConsumer<TMessage> consumer)
+    {
+        if (_ungroupedBatch == consumer)
+        {
+            _ungroupedBatch = null;
+            return Task.CompletedTask;
+        }
+
+        TKey? matchingKey = default;
+        var found = false;
+        foreach (KeyValuePair<TKey, BatchConsumer<TMessage>> entry in _batchesByKey)
+        {
+            if (entry.Value != consumer)
+                continue;
+
+            matchingKey = entry.Key;
+            found = true;
+            break;
+        }
+
+        if (found)
+            _batchesByKey.Remove(matchingKey!);
+
+        return Task.CompletedTask;
+    }
+
+    protected override Task FlushActiveBatchesAsync()
+    {
+        BatchConsumer<TMessage>[] batches = _batchesByKey.Values
+            .Append(_ungroupedBatch)
+            .OfType<BatchConsumer<TMessage>>()
+            .Distinct()
+            .ToArray();
+        _batchesByKey.Clear();
+        _ungroupedBatch = null;
+
+        return Task.WhenAll(batches.Select(static batch => batch.ForceCompleteAsync()));
+    }
+
+    static BatchOptions RequireKeyProvider(BatchOptions options, IGroupKeyProvider<TMessage, TKey> keyProvider)
+    {
+        ArgumentNullException.ThrowIfNull(keyProvider);
+        return options;
+    }
+}
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs", "start_line": 1, "end_line": 120, "kind": "original_product"}
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Defines batch size, timing, grouping, delivery concurrency, and endpoint capacity settings.
+/// </summary>
+public sealed class BatchOptions :
+    IOptions,
+    IConfigureReceiveEndpoint,
+    ISpecification
+{
+    /// <summary>Represents a callback that configures receive-endpoint capacity for effective batch limits.</summary>
+    /// <param name="name">The endpoint definition name, when one is available.</param>
+    /// <param name="configurator">The receive endpoint to configure.</param>
+    public delegate void ConfigurationCallback(string? name, IReceiveEndpointConfigurator configurator);
+    ConfigurationCallback _configurationCallback;
+
+    /// <summary>Creates options with one concurrent batch, ten messages, and a one-second first-message timeout.</summary>
+    public BatchOptions()
+    {
+        ConcurrencyLimit = 1;
+        MessageLimit = 10;
+        TimeLimit = TimeSpan.FromSeconds(1);
+        TimeLimitStart = BatchTimeLimitStart.FromFirst;
+
+        _configurationCallback = DefaultConfigurationCallback;
+    }
+
+    /// <summary>Gets or sets the maximum number of messages in a single batch.</summary>
+    public int MessageLimit { get; set; }
+
+    /// <summary>Gets or sets the maximum number of completed batches delivered concurrently.</summary>
+    public int ConcurrencyLimit { get; set; }
+
+    /// <summary>Gets or sets the maximum time to wait before delivering a partial batch.</summary>
+    public TimeSpan TimeLimit { get; set; }
+
+    /// <summary>Gets or sets the message arrival from which <see cref="TimeLimit" /> is measured.</summary>
+    public BatchTimeLimitStart TimeLimitStart { get; set; }
+
+    internal object? GroupKeyProvider { get; private set; }
+
+    /// <summary>Applies endpoint capacity settings derived from these batch limits.</summary>
+    /// <param name="name">The endpoint definition name, when one is available.</param>
+    /// <param name="configurator">The receive endpoint to configure.</param>
+    public void Configure(string? name, IReceiveEndpointConfigurator configurator)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+
+        _configurationCallback(name, configurator);
+    }
+
+    /// <summary>Validates the current configuration.</summary>
+    /// <returns>The validation failures.</returns>
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (TimeLimit <= TimeSpan.Zero)
+            yield return this.Failure("Batch", "TimeLimit", "Must be > TimeSpan.Zero");
+        if (MessageLimit <= 0)
+            yield return this.Failure("Batch", "MessageLimit", "Must be > 0");
+        if (ConcurrencyLimit <= 0)
+            yield return this.Failure("Batch", "ConcurrencyLimit", "Must be > 0");
+        if (ConcurrencyLimit > 0 && MessageLimit > 0 && (long)ConcurrencyLimit * MessageLimit > int.MaxValue)
+            yield return this.Failure("Batch", "ConcurrencyLimit", "ConcurrencyLimit multiplied by MessageLimit must fit in Int32");
+        if (!Enum.IsDefined(TimeLimitStart))
+            yield return this.Failure("Batch", "TimeLimitStart", "Must be a defined BatchTimeLimitStart value");
+    }
+
+    /// <summary>Replaces the endpoint-capacity configuration callback.</summary>
+    /// <param name="callback">The callback invoked when the receive endpoint is configured.</param>
+    /// <returns>This options instance.</returns>
+    public BatchOptions SetConfigurationCallback(ConfigurationCallback callback)
+    {
+        ArgumentNullException.ThrowIfNull(callback);
+
+        _configurationCallback = callback;
+        return this;
+    }
+
+    void DefaultConfigurationCallback(string? name, IReceiveEndpointConfigurator configurator)
+    {
+        var messageCapacity = checked(ConcurrencyLimit * MessageLimit);
+
+        configurator.PrefetchCount = Math.Max(messageCapacity, configurator.PrefetchCount);
+
+        if (configurator.ConcurrentMessageLimit is not int concurrencyLimit || concurrencyLimit < messageCapacity)
+            configurator.ConcurrentMessageLimit = messageCapacity;
+    }
+
+    /// <summary>Sets the maximum number of messages in a single batch.</summary>
+    /// <param name="limit">The maximum message count.</param>
+    /// <returns>This options instance.</returns>
+    public BatchOptions SetMessageLimit(int limit)
+    {
+        MessageLimit = limit;
+        return this;
+    }
+
+    /// <summary>Sets the maximum number of completed batches delivered concurrently.</summary>
+    /// <param name="limit">The maximum concurrent batch count.</param>
+    /// <returns>This options instance.</returns>
+    public BatchOptions SetConcurrencyLimit(int limit)
+    {
+        ConcurrencyLimit = limit;
+        return this;
+    }
+
+    /// <summary>Sets the maximum time to wait before delivering a partial batch.</summary>
+    /// <param name="limit">The maximum collection interval.</param>
+    /// <returns>This options instance.</returns>
+    public BatchOptions SetTimeLimit(TimeSpan limit)
+    {
+        TimeLimit = limit;
+        return this;
+    }
+
+    /// <summary>Sets the starting point for the <see cref="TimeLimit" />.</summary>
+    /// <param name="timeLimitStart">The message arrival that starts or restarts the interval.</param>
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs", "start_line": 121, "end_line": 159, "kind": "original_product"}
+    /// <returns>This options instance.</returns>
+    public BatchOptions SetTimeLimitStart(BatchTimeLimitStart timeLimitStart)
+    {
+        TimeLimitStart = timeLimitStart;
+        return this;
+    }
+
+    /// <summary>Groups messages by an optional value-type key.</summary>
+    /// <typeparam name="TMessage">The message contract type.</typeparam>
+    /// <typeparam name="TKey">The value-type grouping key.</typeparam>
+    /// <param name="provider">The selector that returns a grouping key or <see langword="null" /> for the ungrouped stream.</param>
+    /// <returns>This options instance.</returns>
+    public BatchOptions GroupBy<TMessage, TKey>(Func<ConsumeContext<TMessage>, TKey?> provider)
+        where TMessage : class
+        where TKey : struct
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+
+        GroupKeyProvider = new ValueTypeGroupKeyProvider<TMessage, TKey>(provider);
+
+        return this;
+    }
+
+    /// <summary>Groups messages by an optional reference-type key.</summary>
+    /// <typeparam name="TMessage">The message contract type.</typeparam>
+    /// <typeparam name="TKey">The reference-type grouping key.</typeparam>
+    /// <param name="provider">The selector that returns a grouping key or <see langword="null" /> for the ungrouped stream.</param>
+    /// <returns>This options instance.</returns>
+    public BatchOptions GroupBy<TMessage, TKey>(Func<ConsumeContext<TMessage>, TKey?> provider)
+        where TMessage : class
+        where TKey : class
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+
+        GroupKeyProvider = new GroupKeyProvider<TMessage, TKey>(provider);
+
+        return this;
+    }
+}
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs", "start_line": 1, "end_line": 120, "kind": "relevant_frozen_source"}
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Hosting;
+
+internal sealed class ServiceBusHostedService :
+    IHostedService,
+    IAsyncDisposable
+{
+    readonly SemaphoreSlim _lifecycleGate = new(1, 1);
+    readonly ILogger _logger;
+    readonly object _stateLock = new();
+    readonly IOptions<ViciOneServiceBusHostOptions> _options;
+    readonly IServiceProvider _provider;
+    readonly TimeProvider _timeProvider;
+    IBusDepot? _depot;
+    Task? _backgroundStartObservation;
+    Task? _startTask;
+    bool _stopping;
+    bool _stopped;
+
+    public ServiceBusHostedService(
+        IServiceProvider provider,
+        IOptions<ViciOneServiceBusHostOptions> options,
+        ILoggerFactory? loggerFactory = null,
+        TimeProvider? timeProvider = null)
+    {
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+        _logger = (loggerFactory ?? NullLoggerFactory.Instance).CreateLogger(typeof(ServiceBusHostedService).FullName!);
+        _timeProvider = timeProvider ?? TimeProvider.System;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await StopCoreAsync(CancellationToken.None).ConfigureAwait(false);
+    }
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        lock (_stateLock)
+        {
+            if (_stopped || _stopping)
+                throw new InvalidOperationException("The hosted service cannot be started after stopping has begun.");
+
+            if (_startTask is null)
+            {
+                _depot = _provider.GetRequiredService<IBusDepot>();
+                _startTask = ExecuteWithTimeoutAsync(
+                    StartDepotAsync,
+                    _options.Value.StartTimeout,
+                    cancellationToken);
+            }
+
+            if (_startTask.IsCompleted || _options.Value.WaitUntilStarted)
+                return _startTask;
+
+            _backgroundStartObservation ??= ObserveBackgroundStartAsync(_startTask);
+            return Task.CompletedTask;
+        }
+    }
+
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        await StopCoreAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    async Task StartDepotAsync(CancellationToken cancellationToken)
+    {
+        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            IBusDepot depot;
+            lock (_stateLock)
+                depot = _depot ?? throw new InvalidOperationException("The bus depot was not initialized before startup.");
+
+            await depot.StartAsync(cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            _lifecycleGate.Release();
+        }
+    }
+
+    async Task StopCoreAsync(CancellationToken cancellationToken)
+    {
+        lock (_stateLock)
+        {
+            if (_stopped)
+                return;
+        }
+
+        await ExecuteWithTimeoutAsync(StopDepotAsync, _options.Value.StopTimeout, cancellationToken).ConfigureAwait(false);
+
+        Task? backgroundStartObservation;
+        lock (_stateLock)
+            backgroundStartObservation = _backgroundStartObservation;
+        if (backgroundStartObservation is not null)
+            await backgroundStartObservation.ConfigureAwait(false);
+    }
+
+    async Task StopDepotAsync(CancellationToken cancellationToken)
+    {
+        await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            IBusDepot? depot;
+            lock (_stateLock)
+            {
+                if (_stopped)
+                    return;
+
+                _stopping = true;
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs", "start_line": 121, "end_line": 188, "kind": "relevant_frozen_source"}
+                depot = _depot;
+            }
+
+            if (depot is not null)
+                await depot.StopAsync(cancellationToken).ConfigureAwait(false);
+
+            lock (_stateLock)
+                _stopped = true;
+        }
+        finally
+        {
+            lock (_stateLock)
+                _stopping = false;
+
+            _lifecycleGate.Release();
+        }
+    }
+
+    async Task ExecuteWithTimeoutAsync(
+        Func<CancellationToken, Task> operation,
+        TimeSpan? timeout,
+        CancellationToken cancellationToken)
+    {
+        if (timeout is null)
+        {
+            await operation(cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        using var timeoutTokenSource = new CancellationTokenSource(timeout.Value, _timeProvider);
+        if (!cancellationToken.CanBeCanceled)
+        {
+            await operation(timeoutTokenSource.Token).ConfigureAwait(false);
+            return;
+        }
+
+        using var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutTokenSource.Token);
+        await operation(linkedTokenSource.Token).ConfigureAwait(false);
+    }
+
+    async Task ObserveBackgroundStartAsync(Task startTask)
+    {
+        try
+        {
+            await startTask.ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception)
+        {
+            TryLogBackgroundStartFailure(LogLevel.Warning, exception);
+        }
+        catch (Exception exception)
+        {
+            TryLogBackgroundStartFailure(LogLevel.Error, exception);
+        }
+    }
+
+    void TryLogBackgroundStartFailure(LogLevel level, Exception exception)
+    {
+        try
+        {
+            _logger.Log(level, exception, "Background bus startup did not complete successfully");
+        }
+        catch
+        {
+            // Logging cannot replace or leave the background startup failure unobserved.
+        }
+    }
+}
+
+READ {"path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs", "start_line": 1, "end_line": 41, "kind": "relevant_frozen_source"}
+using System;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.Batching.Runtime;
+
+/// <summary>Captures the validated batch limits used by one connected runtime pipeline.</summary>
+internal sealed class BatchRuntimeSettings
+{
+    /// <summary>Copies the effective values from a validated batch configuration.</summary>
+    /// <param name="options">The configuration snapshot source.</param>
+    public BatchRuntimeSettings(BatchOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        ValidationResult[] failures = options.Validate()
+            .Where(static result => result.Disposition == ValidationResultDisposition.Failure)
+            .ToArray();
+        if (failures.Length > 0)
+        {
+            throw new ArgumentException(
+                $"Batch options must be valid before runtime use: {string.Join("; ", failures.Select(static failure => failure.ToString()))}",
+                nameof(options));
+        }
+
+        MessageLimit = options.MessageLimit;
+        ConcurrencyLimit = options.ConcurrencyLimit;
+        TimeLimit = options.TimeLimit;
+        TimeLimitStart = options.TimeLimitStart;
+    }
+
+    /// <summary>Gets the maximum number of messages in one batch.</summary>
+    public int MessageLimit { get; }
+
+    /// <summary>Gets the maximum number of completed batches delivered concurrently.</summary>
+    public int ConcurrencyLimit { get; }
+
+    /// <summary>Gets the maximum collection interval for a partial batch.</summary>
+    public TimeSpan TimeLimit { get; }
+
+    /// <summary>Gets the message arrival from which the collection interval is measured.</summary>
+    public BatchTimeLimitStart TimeLimitStart { get; }
+}
+

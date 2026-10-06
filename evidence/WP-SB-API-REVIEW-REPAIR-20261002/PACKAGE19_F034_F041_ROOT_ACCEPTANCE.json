@@ -1,0 +1,53 @@
+{
+  "utc": "2026-10-03T11:22:35.591369+00:00",
+  "status": "ROOT_SCOPED_F034_F041_ACCEPTED_SHARED_FINAL_PENDING",
+  "findings": [
+    "F-SB-API-034",
+    "F-SB-API-041"
+  ],
+  "freeze_sha256": "02d928874dd545026c3cf306c1a8858815595ffe0c0519d04748bd59ee51ca45",
+  "owned_current_snapshot_verified": 25,
+  "captured_frame_current_verified": 33,
+  "independent_adversarial_reviews": [
+    {
+      "review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f034-f041-final-adversarial/REVIEW.json",
+      "review_sha256": "3ebd4855f9ad5be7d24ca4294c4fe7b4fc136253f71b1871b7de4d2e5a914667",
+      "manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f034-f041-final-adversarial/MANIFEST.json",
+      "manifest_sha256": "3d29af139abe201c7a84c6df288618efed5d7abdfb754f2dd35096fc59ee81b7",
+      "artifacts_hash_verified": 10,
+      "Root_report_TXT_JSON_personally_FULL": true
+    },
+    {
+      "review": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f034-f041-binder-final-review/001/REVIEW.json",
+      "review_sha256": "b86ce1965da6b450fd635c5f1cab1530705ec5521f2bccc659537efbe7b552c6",
+      "manifest": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package19-f034-f041-binder-final-review/001/MANIFEST.json",
+      "manifest_sha256": "d86ba85a3b731cda6408fcab94d6d15a9e7a3e199d5eddad9de2f2559a9429c7",
+      "artifacts_hash_verified": 29,
+      "Root_report_TXT_JSON_personally_FULL": true
+    }
+  ],
+  "public_previous": {
+    "positive": 24,
+    "F034_finite_failures": 17,
+    "guards": 0,
+    "same_fixed_Core": true
+  },
+  "public_corrected": 41,
+  "strict_single_effect_mutants": {
+    "F034": 13,
+    "F041": 2,
+    "all_finite_negatives": 15,
+    "all_positive_controls": 15
+  },
+  "baseline": 41,
+  "rollback": 41,
+  "root_personally_FULL_primary_fail_blocks": 32,
+  "source_generation_precision": "F031 inherited original4f7\u2192b2c1; F041 incrementalb2c1\u2192d9f. F034 old/currentCourier paired with SAMEfixedCore; originalF041 separately historicalR4+2compiledcounterreversions.",
+  "whole_API_CLOSED": false,
+  "limits": [
+    "No canonical Core766 or Courier whole-owner grade",
+    "No wholeAPI/A+, ARM/cloud/heap proof",
+    "Final integrated all-repairs profiles/package/API/XML gate and rereview remain required",
+    "Framework/CoreLib ambient metadata remains unbound by this scoped packet"
+  ]
+}

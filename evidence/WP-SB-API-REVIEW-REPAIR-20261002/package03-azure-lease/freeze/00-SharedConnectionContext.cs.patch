@@ -1,0 +1,56 @@
+--- /private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/SharedConnectionContext.cs
++++ /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/SharedConnectionContext.cs
+@@ -75,22 +75,22 @@
+     /// <param name="createQueueOptions">The desired queue properties.</param>
+     /// <param name="cancellationToken">The caller's cancellation token.</param>
+     /// <returns>A task that produces the queue properties.</returns>
+-    public Task<QueueProperties> CreateQueueAsync(CreateQueueOptions createQueueOptions, CancellationToken cancellationToken)
++    public async Task<QueueProperties> CreateQueueAsync(CreateQueueOptions createQueueOptions, CancellationToken cancellationToken)
+     {
+         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+ 
+-        return _context.CreateQueueAsync(createQueueOptions, tokenSource.Token);
++        return await _context.CreateQueueAsync(createQueueOptions, tokenSource.Token).ConfigureAwait(false);
+     }
+ 
+     /// <summary>Creates or retrieves a topic using cancellation linked to this connection lease.</summary>
+     /// <param name="createTopicOptions">The desired topic properties.</param>
+     /// <param name="cancellationToken">The caller's cancellation token.</param>
+     /// <returns>A task that produces the topic properties.</returns>
+-    public Task<TopicProperties> CreateTopicAsync(CreateTopicOptions createTopicOptions, CancellationToken cancellationToken)
++    public async Task<TopicProperties> CreateTopicAsync(CreateTopicOptions createTopicOptions, CancellationToken cancellationToken)
+     {
+         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+ 
+-        return _context.CreateTopicAsync(createTopicOptions, tokenSource.Token);
++        return await _context.CreateTopicAsync(createTopicOptions, tokenSource.Token).ConfigureAwait(false);
+     }
+ 
+     /// <summary>Creates or reconciles a subscription using cancellation linked to this connection lease.</summary>
+@@ -99,22 +99,22 @@
+     /// <param name="filter">An optional filter for the generated initial rule.</param>
+     /// <param name="cancellationToken">The caller's cancellation token.</param>
+     /// <returns>A task that produces the subscription properties.</returns>
+-    public Task<SubscriptionProperties> CreateTopicSubscriptionAsync(CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule,
++    public async Task<SubscriptionProperties> CreateTopicSubscriptionAsync(CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule,
+         RuleFilter? filter, CancellationToken cancellationToken)
+     {
+         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+ 
+-        return _context.CreateTopicSubscriptionAsync(createSubscriptionOptions, rule, filter, tokenSource.Token);
++        return await _context.CreateTopicSubscriptionAsync(createSubscriptionOptions, rule, filter, tokenSource.Token).ConfigureAwait(false);
+     }
+ 
+     /// <summary>Deletes a subscription using cancellation linked to this connection lease.</summary>
+     /// <param name="subscriptionOptions">Options identifying the topic and subscription.</param>
+     /// <param name="cancellationToken">The caller's cancellation token.</param>
+     /// <returns>A task that completes after the deletion attempt.</returns>
+-    public Task DeleteTopicSubscriptionAsync(CreateSubscriptionOptions subscriptionOptions, CancellationToken cancellationToken)
++    public async Task DeleteTopicSubscriptionAsync(CreateSubscriptionOptions subscriptionOptions, CancellationToken cancellationToken)
+     {
+         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+ 
+-        return _context.DeleteTopicSubscriptionAsync(subscriptionOptions, tokenSource.Token);
++        await _context.DeleteTopicSubscriptionAsync(subscriptionOptions, tokenSource.Token).ConfigureAwait(false);
+     }
+ }

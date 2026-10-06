@@ -34,14 +34,14 @@ public sealed class BodyConsumeContext :
     public override Guid? InitiatorId => SerializerContext.InitiatorId;
     /// <summary>Gets the absolute message expiration time.</summary>
     public override DateTimeOffset? ExpirationTime => SerializerContext.ExpirationTime;
-    /// <summary>Gets the logical source endpoint address.</summary>
-    public override Uri SourceAddress => SerializerContext.SourceAddress!;
-    /// <summary>Gets the destination endpoint address.</summary>
-    public override Uri DestinationAddress => SerializerContext.DestinationAddress!;
-    /// <summary>Gets the response endpoint address.</summary>
-    public override Uri ResponseAddress => SerializerContext.ResponseAddress!;
-    /// <summary>Gets the fault endpoint address.</summary>
-    public override Uri FaultAddress => SerializerContext.FaultAddress!;
+    /// <summary>Gets the logical source endpoint address, or null when none was supplied.</summary>
+    public override Uri? SourceAddress => SerializerContext.SourceAddress;
+    /// <summary>Gets the destination endpoint address, or null when none was supplied.</summary>
+    public override Uri? DestinationAddress => SerializerContext.DestinationAddress;
+    /// <summary>Gets the response endpoint address, or null when none was supplied.</summary>
+    public override Uri? ResponseAddress => SerializerContext.ResponseAddress;
+    /// <summary>Gets the fault endpoint address, or null when none was supplied.</summary>
+    public override Uri? FaultAddress => SerializerContext.FaultAddress;
     /// <summary>Gets the envelope creation time.</summary>
     public override DateTimeOffset? SentTime => SerializerContext.SentTime;
     /// <summary>Gets the deserialized application headers.</summary>

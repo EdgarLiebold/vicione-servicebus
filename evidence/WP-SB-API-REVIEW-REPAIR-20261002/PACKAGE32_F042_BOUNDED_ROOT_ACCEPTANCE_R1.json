@@ -1,0 +1,21 @@
+{
+  "status": "ROOT_ACCEPTED_BOUNDED_NATIVE_SOURCE_AND_INDEPENDENT_PHYSICAL_QUALIFICATION_FULL_F042_MUTATIONS_SHARED_FINAL_PENDING",
+  "actor": "/root",
+  "utc": "2026-10-03T23:31:49.146217+00:00",
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package32-neighbor-native-qualification-r4/FINAL_MANIFEST.json",
+    "sha256": "b4bea0525ddab0d5ac7e3cc3b7fe49826bf62d79d06c36b00a832574ea90c2d5",
+    "personally_full": true,
+    "all_artifact_hashes_rechecked": true
+  },
+  "review": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package32-neighbor-native-qualification-r4/REVIEW.md",
+    "sha256": "0eb0e64eb43b589578efd232366ad5799f3792c760d6cb659fd164b1b5032401",
+    "personally_full": true
+  },
+  "cases": 4,
+  "receives": 6,
+  "root_native_read": "whole actual raw log",
+  "whole_F042": false,
+  "whole_API": false
+}

@@ -1,0 +1,63 @@
+{
+  "utc": "2026-10-06T06:04:38.183995+00:00",
+  "status": "ROOT_APPLIED_F147_EXISTING_FAMILY_XML2_SUMMARY_PRECISION_FRESH_PENDING",
+  "known_finding": "F-SB-API-147",
+  "new_finding_IDs": 0,
+  "author": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-recycle-pipe-stop-summary-doc2-product-proposed-r1/MANIFEST.json",
+    "sha256": "dd0438e9b0e58426099846fc2c7d76faff94d37c005ac3e7150dc828dddcfa78"
+  },
+  "independent_product_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-recycle-pipe-stop-doc2-independent-source-peer-r1/MANIFEST.json",
+    "sha256": "811599d6c1499b846e46781d3d9484423c39197e3fe09b2d77982740095624ad"
+  },
+  "Root_whole_proposed221_and_exact_patch_receipt": "794b9b",
+  "Root_whole_actual_Recycle38_IAgent46_receipt": "3921f2",
+  "Root_full_clause2_published_before_and_peer_receipt": "d77386",
+  "before_publication_ZIP_CRC_DLL_XML_verified": true,
+  "two_exact_summary_originals": [
+    {
+      "relative": "src/ViciOne.ServiceBus/Util/Recycle.cs",
+      "sha256": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+      "lines": 38,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-recycle-pipe-stop-summary-doc2-research-before-r1/before/src/ViciOne.ServiceBus/Util/Recycle.cs",
+      "actual342_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/Recycle.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "fe8ec8d34f4f9f994f250c40dbcc6c3488088996a38acbdd207d216124c99820",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "id": "T:ViciOne.ServiceBus.Util.Recycle`1",
+      "element": "summary",
+      "before": "Recycles a supervisor once it is stopped, replacing it with a new one.",
+      "after": "Makes a new supervisor available lazily when the current supervisor begins stopping.",
+      "proposed_sha256": "be782b008385b462f183ae329c41fc6901b99b11e2d63e1053449e7f928bcaed",
+      "full_literal_inverse_equal": true,
+      "nonXML_executable_bytes_unchanged": true
+    },
+    {
+      "relative": "src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+      "sha256": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9",
+      "lines": 183,
+      "snapshot": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package307-recycle-pipe-stop-summary-doc2-research-before-r1/before/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+      "actual342_document": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/Middleware/PipeContextSupervisor.cs",
+        "algorithm_guid": "8829d00f-11b8-4213-878b-770e8597ac16",
+        "checksum": "e86b886ef551b66d4bb9ba5f4b726fdca81bf50852195681e9bd6058e945acc9",
+        "language_guid": "3f5162f8-07c6-11d3-9053-00c04fa302a1"
+      },
+      "id": "M:ViciOne.ServiceBus.Advanced.Middleware.PipeContextSupervisor`1.StopSupervisorAsync(ViciOne.ServiceBus.Advanced.Middleware.StopSupervisorContext)",
+      "element": "summary",
+      "before": "Stops borrowed uses before stopping the owned contexts captured by the supervisor.",
+      "after": "Initiates borrowed and captured owned context stops, then awaits both stop operations and lifecycle completion.",
+      "proposed_sha256": "03d4e0b667f35b672a602bae5a295fa4250076d4c381c98dad4a792bd5588ec1",
+      "full_literal_inverse_equal": true,
+      "nonXML_executable_bytes_unchanged": true
+    }
+  ],
+  "new_executable_API_Test_Req_changes": 0,
+  "withdrawn_Cache_hypothesis_control358": "Rootjoined9561ed2PASS; independent frozenACK received before this mutation",
+  "grade": null,
+  "whole_API_closed": false,
+  "limits": "Documentation removes false completed-stop/order premises. Arbitrary sync Stop/Completed getter exceptions, every-agent admission/drain and generation races remain operative obligations, not fixed by comments."
+}

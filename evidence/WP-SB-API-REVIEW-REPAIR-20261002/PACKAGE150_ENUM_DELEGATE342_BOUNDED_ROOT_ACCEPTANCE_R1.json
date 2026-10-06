@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-04T21:58:11.104352+00:00",
+  "decision": "ACCEPT342_INDIVIDUAL_ENUM_AND_DELEGATE_DECLARATION_CONTRACTS_WITH_CONCRETE_CALLERS_EXCLUDED",
+  "api_before": 2547,
+  "api_after": 2889,
+  "semantic_report": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package149-core-saga-enum-delegate342-contract-context-r1/REPORT.json",
+    "sha256": "b98c915d1a1b9144c558bcd64793f2fc71bd71ade93c02bd0939d32f6cffffda"
+  },
+  "semantic_matrix": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package149-core-saga-enum-delegate342-contract-context-r1/PER_SYMBOL342_CONTEXT_AND_RECOMMENDATIONS.json",
+    "sha256": "f2e7138d2e8614470bdf412905bce093c0ccd1b06c23ebeb2bf049ee46daa49e"
+  },
+  "families": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package149-core-saga-enum-delegate342-contract-context-r1/PERSONALLY_REVIEWED_66_DECLARATION_FAMILIES.json",
+    "sha256": "3a8f525732147bd3135ba02cec31110d97854fc46d9cfce390fad72444cbeaaf"
+  },
+  "target_retention_clarification": {
+    "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package149-core-saga-enum-delegate342-contract-context-r1/CLR_DELEGATE_TARGET_RETENTION_CLARIFICATION_R1.json",
+    "sha256": "a24b6cc911cdbd96900c838abbce1fae31288872400eeba252dd4f7362ef460d"
+  },
+  "verified_manifest_rows": 53,
+  "exact_roles_previously_validated_before_mutation": "5a2d8c all342 historical signatures, current44 Source/PDB,45enum constants exactfamilyvalues,55Invoke exactdetail,55ctor object/nint,55BeginInvoke invocationprefix+callback+state,55EndInvoke sameInvokeReturn;11enum defaultshapes no authoredbody. That read-only validation ended at heterogeneous old Master identifier lookup, no mutations. Corrected current master uses id or symbol_id consistently.",
+  "root_personal_norms": [
+    "66 exact family contracts, parameters/defaults/nullability/results/constraints/variance:0..21 93b6ed;22..43 corrected complete07358e (34bc12 partial excluded);44..54 67ba29;55..65 b9970c",
+    "Distinct per-role/per-enum NA39/cancellation/errors/ownership/defaults/XML42aa34; detailed CLR ctor/Begin/End/zeroargumentInvoke8bdcc5/fcff82; target retentionfcff82.",
+    "Whole report8bdcc5. Genuine peer whole44 owners1417L+4caller scope explicitly attributed; Root claims own contracts/norms review, not own whole44 sources."
+  ],
+  "limits": [
+    "342 immutable declarations or implicit CLR signatures only; historical typed packed signatures distinguished from current147PDB/XML and unchanged current Source.",
+    "No concrete callback/caller error/cancel/ordering/ownership acceptance; no modern APM availability or actual emitted enum ctor MethodDef/inherited member claim.",
+    "Constructed CLR delegate may retain closed target/captured state; no authored repository allocation/dispose body does not promise no managed retention.",
+    "No full API/native grade."
+  ],
+  "whole_api_status": "PARTIAL"
+}

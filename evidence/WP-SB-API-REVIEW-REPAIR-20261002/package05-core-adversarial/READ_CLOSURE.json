@@ -1,0 +1,1426 @@
+{
+  "reviewer": "/root/adversarial_package_01",
+  "role": "independent readonly, research author is a different agent",
+  "personal_owned_full": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/00-ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/01-ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/02-ViciOneServiceBusHostOptions.cs",
+      "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/03-BatchCollector.cs",
+      "sha256": "df09223331e2acd9be04e5e241510bd39cc2572618b3d3b0d16f0548e4f9c0d0",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/04-BatchOptions.cs",
+      "sha256": "414f9ed20fc03ddee4b6039e795ede3ac58083126db8c6639af2aa8afb549817",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/packages.lock.json",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/05-packages.lock.json",
+      "sha256": "67b4ca31e0cd16ce001ed3a42122dfbfc76131e717a0ffc6cd4518216eb648d4",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/NuGet.Config",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/06-NuGet.Config",
+      "sha256": "eee60fab9218839e3754d13bae2fc98e755e6dd45a7711015f64de9fca80d3ac",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/BatchTimerAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/07-BatchTimerAssertions.cs",
+      "sha256": "dc72e10b31f3ee1ecd5ae8b6a746d3185a3453fe876988588ca39899dfc98baa",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/HostTimeoutAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/08-HostTimeoutAssertions.cs",
+      "sha256": "10ab3e81f227587b50486e9052021c85638502e3b9fb03b17ebb7046483c6358",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/CorePackage05.PublicConsumer.csproj",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/09-CorePackage05.PublicConsumer.csproj",
+      "sha256": "984be80a8d2aebbe2ff049039fc27aed9e629d395c76a958432cb0651c9785d4",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/OwnedLifetime.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/10-OwnedLifetime.cs",
+      "sha256": "cd94fc8c143a9ce057002fda15e29ac76c684f2845dc264ad0dfe3a031a0ae6b",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/ResultsAssertions.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/11-ResultsAssertions.cs",
+      "sha256": "9a75db2b72535847674eaa3314c59041ff8b71c0900bbea7a9a021cb8fa2e1f1",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-consumers/package05/corrected/Program.cs",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/12-Program.cs",
+      "sha256": "dddba44e9f9e1376c612093ffe7f14ecc1b68875173b0fa49c30dd1e5a729df8",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/package05_core_mutations.py",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/freeze/13-package05_core_mutations.py",
+      "sha256": "9731c0bc67bcb4b857a5008c8a92891b4eec41c39a9a49184d990d0f1749bec8",
+      "read_status": "PERSONAL_FULL_UNTRUNCATED"
+    }
+  ],
+  "personal_additional_full": [
+    {
+      "kind": "original_product",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "0ea2c6c187131d7d822c647d0a107377b87d8dc2d5483babfa4c299d4b9083a2",
+      "bytes": 2531
+    },
+    {
+      "kind": "original_product",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "sha256": "6c42108b365710a384e9376cb872b30eb85ae98801a2038f066d0fe249e24dcd",
+      "bytes": 2263
+    },
+    {
+      "kind": "original_product",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "sha256": "d44c52e1c11fc61bc423fdbc35edcb84ddd57c2f25c81db8304c498060c19181",
+      "bytes": 1163
+    },
+    {
+      "kind": "original_product",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "a689b557031f8c9d08df3c09dfeff774f9dfa25e7b01c76c81e4daa5a7eea16c",
+      "bytes": 12579
+    },
+    {
+      "kind": "original_product",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "sha256": "c41fe496133493750337eec78ed3718157f9762072dff2c4a290316558ca9062",
+      "bytes": 6940
+    },
+    {
+      "kind": "relevant_frozen_source",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+      "sha256": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214",
+      "bytes": 5882
+    },
+    {
+      "kind": "relevant_frozen_source",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+      "sha256": "55f86c6399c0f9ee6f971853a7f05ef58a04f3cd714817ea64c9eef223ed0e29",
+      "bytes": 1680
+    },
+    {
+      "kind": "relevant_frozen_source",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+      "sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+      "bytes": 15567
+    },
+    {
+      "kind": "relevant_frozen_source",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "sha256": "970affb1ece8396d1ace98a194e88c8f13205abe692db61867ca106a8917e2fb",
+      "bytes": 11412
+    },
+    {
+      "kind": "relevant_frozen_source",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResult.cs",
+      "sha256": "71e6b4437fd8adb48ab9efd30b166bb8880331b83669d0cc5acb5579b7998261",
+      "bytes": 695
+    },
+    {
+      "kind": "relevant_frozen_source",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResultExtensions.cs",
+      "sha256": "54edcef773f15092f88e140bbdf9e27357943d9c74458302a095fa42fbecc357",
+      "bytes": 7767
+    },
+    {
+      "kind": "relevant_frozen_source",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumerFactory.cs",
+      "sha256": "99f2ea1869fcc2511c1067613f71000be1da8732b1f55c045c29ca1aca1d8f85",
+      "bytes": 3509
+    },
+    {
+      "kind": "relevant_frozen_source",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "bytes": 10520
+    },
+    {
+      "kind": "relevant_frozen_source",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollectorLifetime.cs",
+      "sha256": "72b10a945b35c07bef46b770e74745564e209b4464c669aa90d2bdcc011d4df9",
+      "bytes": 4172
+    },
+    {
+      "kind": "relevant_frozen_source",
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+      "sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+      "bytes": 1893
+    },
+    {
+      "kind": "proof",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+      "sha256": "244737bde95c98ebc2ec5e82d1ecc2636b4c72a09368ecd6ffa61c3e33b6dcb1",
+      "bytes": 188064
+    },
+    {
+      "kind": "proof",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_ROOT_INDEPENDENT_MUTATION_BINDING.json",
+      "sha256": "4944c079031ea76b906b199aa802e18b2adf8a2057cd35c638ecf61ffcde4346",
+      "bytes": 5700
+    },
+    {
+      "kind": "proof",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_PUBLIC_BINDING.json",
+      "sha256": "22ab8e9da4384e71fba359a9909dc82c5634e7fbbc1b89f701209482d187eebf",
+      "bytes": 7154
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Transports/Receiving/BaseReceiveEndpointContext.cs",
+      "bytes": 17526,
+      "sha256": "5b6ed52649ef4d734d055d50848f190b945e569ae72bf0900415683927b160ff"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Transports/Receiving/BaseReceiveContext.cs",
+      "bytes": 13603,
+      "sha256": "0b3256e68a15d4dc9a338ba8810d9d32547484f4d7a1d0c01953466af9d40514"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/ReceiveEndpointConfiguration.cs",
+      "bytes": 7519,
+      "sha256": "85a2fa03af1f7ea69178a1d9904d3e834f3252dcc3f576f8660a1a4fb2f94ae9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "bytes": 14552,
+      "sha256": "001a5f302aea41f3ff95804997c93644310ec45a41f571a508c15e529f5dc94f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Runtime/ServiceBusRuntime.cs",
+      "bytes": 9495,
+      "sha256": "fdb8a75d182886d32468204ea0413a430fb1f66038e8c25af8cd606515889c56"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/BaseHostConfiguration.cs",
+      "bytes": 11978,
+      "sha256": "958fc108f1aad53041fc4fc2c3773bc72ee88f23d1c11f11b1023f21c44de3ad"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/EndpointConfiguration.cs",
+      "bytes": 14872,
+      "sha256": "9823652a8666e8f8cddb0fb43ad11cf69d5c62a2ab0e8b3c00a67f5c6a4ba5e6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/IEndpointConfiguration.cs",
+      "bytes": 1053,
+      "sha256": "c1221801468865669490224ba6a1c43319ab2bad6bbb59ea5b30ef83d8954cae"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/IReceiveEndpointConfiguration.cs",
+      "bytes": 2773,
+      "sha256": "5591c175c6e0b8bb692b352b2f48bff6741e7408b07db7ece42cd9be20d85918"
+    }
+  ],
+  "full_bounded_read_artifacts": [
+    {
+      "artifact": "READ_ADDITIONAL_001.txt",
+      "sha256": "b3bb6906ec70f0ae849af1dda72a04b1687796e97a033d2ef55840640f1b49b3",
+      "fragments": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+          "start_line": 1,
+          "end_line": 59,
+          "kind": "original_product"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+          "start_line": 1,
+          "end_line": 49,
+          "kind": "original_product"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+          "start_line": 1,
+          "end_line": 26,
+          "kind": "original_product"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "start_line": 1,
+          "end_line": 120,
+          "kind": "original_product"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "start_line": 121,
+          "end_line": 240,
+          "kind": "original_product"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_002.txt",
+      "sha256": "254b490a0f5ba5ceb93a7e699f9b2b399c4c7e2951bafc2b22a5fd0545d7cdc0",
+      "fragments": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "start_line": 241,
+          "end_line": 309,
+          "kind": "original_product"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "start_line": 1,
+          "end_line": 120,
+          "kind": "original_product"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+          "start_line": 121,
+          "end_line": 159,
+          "kind": "original_product"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+          "start_line": 1,
+          "end_line": 120,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+          "start_line": 121,
+          "end_line": 188,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+          "start_line": 1,
+          "end_line": 41,
+          "kind": "relevant_frozen_source"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_003.txt",
+      "sha256": "9947c2477d25cef61692527b2dd1747c7c2853f71ef6a9e4a98295f93b11cb96",
+      "fragments": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+          "start_line": 1,
+          "end_line": 120,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+          "start_line": 121,
+          "end_line": 240,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+          "start_line": 241,
+          "end_line": 360,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+          "start_line": 361,
+          "end_line": 429,
+          "kind": "relevant_frozen_source"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_004.txt",
+      "sha256": "52185ebff7f7e190bc402a6c4a138a9224117d1ccc9ff9ac363d5bb8dab34bce",
+      "fragments": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+          "start_line": 1,
+          "end_line": 120,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+          "start_line": 121,
+          "end_line": 240,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+          "start_line": 241,
+          "end_line": 304,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResult.cs",
+          "start_line": 1,
+          "end_line": 17,
+          "kind": "relevant_frozen_source"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_005.txt",
+      "sha256": "f158abf1989d32bfc0bd941280be8e46a299c8bd3ccd0430afd906f169bea1e3",
+      "fragments": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResultExtensions.cs",
+          "start_line": 1,
+          "end_line": 120,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Configuration/ValidationResultExtensions.cs",
+          "start_line": 121,
+          "end_line": 165,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumerFactory.cs",
+          "start_line": 1,
+          "end_line": 77,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+          "start_line": 1,
+          "end_line": 120,
+          "kind": "relevant_frozen_source"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_006.txt",
+      "sha256": "5c6a4b708bc5084555bbff4f951be3d6674b8e27a6d26ebc0e970348d5e2209b",
+      "fragments": [
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+          "start_line": 121,
+          "end_line": 202,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollectorLifetime.cs",
+          "start_line": 1,
+          "end_line": 112,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/private/tmp/vicione-servicebus-api-review-20261001/frozen-repository/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+          "start_line": 1,
+          "end_line": 48,
+          "kind": "relevant_frozen_source"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 1,
+          "end_line": 120,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_007.txt",
+      "sha256": "f2daf4530662d17e49a6a3d50d5cd841841da51805ffc21c06183d305b83a2c2",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 121,
+          "end_line": 240,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 241,
+          "end_line": 360,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 361,
+          "end_line": 480,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 481,
+          "end_line": 600,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_008.txt",
+      "sha256": "c8139fe0d046c16d746fdb35109edb327343499622d6072bed9bca179b21489a",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 601,
+          "end_line": 720,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 721,
+          "end_line": 840,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_009.txt",
+      "sha256": "dbf90c6877a51b6621fd4e3b5c0552a4aec57c82ba9f4e52247327b5d8844092",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 841,
+          "end_line": 960,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 961,
+          "end_line": 1080,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_010.txt",
+      "sha256": "dac98c461dbb9e4b716592655a82bd4a96abf5aaaad1a6b660c562e77a04b85c",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 1081,
+          "end_line": 1200,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 1201,
+          "end_line": 1320,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_011.txt",
+      "sha256": "e526a027db0a563dbd4d5c7c921e32cca2f64c06ae091d4ec78df9d18d88cbc3",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 1321,
+          "end_line": 1440,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 1441,
+          "end_line": 1560,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_012.txt",
+      "sha256": "6f01d25bd526a677325cf0ee3e62e745bc52d6f0f00390e411e29693baec3356",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 1561,
+          "end_line": 1680,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 1681,
+          "end_line": 1800,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_013.txt",
+      "sha256": "e4538032e5f602a8688043f286604eff8c3a8f17450f82a9569f3d59880820b8",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 1801,
+          "end_line": 1920,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 1921,
+          "end_line": 2040,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_014.txt",
+      "sha256": "9c9df4b826649ced7e051e0f467e87b6b6536f4dbd8d6deea0832d5e9c299615",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 2041,
+          "end_line": 2160,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_015.txt",
+      "sha256": "53489124e55ef8beaec5861e286a6e768aca12d2ed3ae4104442aa1066c28d6f",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 2161,
+          "end_line": 2280,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_016.txt",
+      "sha256": "ad445968028541ae1eb04d7bd257ba1d0dc94a5370cff4448587f2c4b6fbcf3c",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 2281,
+          "end_line": 2400,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_017.txt",
+      "sha256": "7ddb847d3b0758637a71c0019591ec39cc5a77a95ca346e73dc2265fb64348a3",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 2401,
+          "end_line": 2520,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_018.txt",
+      "sha256": "01b2d37692ab397ab4b58a4904fcc051febad56a1917fd11cc85dba383e31948",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 2521,
+          "end_line": 2640,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_019.txt",
+      "sha256": "230c7b91f72337a513b0749f222d5ebd6a10b57423f98c2eb658c9f5c23462fc",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 2641,
+          "end_line": 2760,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 2761,
+          "end_line": 2880,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_020.txt",
+      "sha256": "53cef5aa5a7a79b6ebf99f9af4e89335a1d80772869ad55d4bc9da9a4b0d0a21",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 2881,
+          "end_line": 3000,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 3001,
+          "end_line": 3120,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 3121,
+          "end_line": 3240,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_MUTATIONS.json",
+          "start_line": 3241,
+          "end_line": 3241,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_ADDITIONAL_021.txt",
+      "sha256": "29d93cd83948a95203c14e67040e6fe2d8dbf1b381e55c0214656ce5295bcd79",
+      "fragments": [
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_ROOT_INDEPENDENT_MUTATION_BINDING.json",
+          "start_line": 1,
+          "end_line": 120,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_ROOT_INDEPENDENT_MUTATION_BINDING.json",
+          "start_line": 121,
+          "end_line": 145,
+          "kind": "proof"
+        },
+        {
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_PUBLIC_BINDING.json",
+          "start_line": 1,
+          "end_line": 114,
+          "kind": "proof"
+        }
+      ],
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_STARTUP_001.txt",
+      "sha256": "55c656d2b9c56d74756c61584c140c64198142e8593361da03986a1dcc29b9e1",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_STARTUP_002.txt",
+      "sha256": "3a27d042f293ffd4490317cbacc201d658ee90a57a596cce33f6b26f569c00b4",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_STARTUP_003.txt",
+      "sha256": "3313ebedd4d18cda8fa32a29f9b56502adbd5c4e03c8dcc84ed93ec6a9ea8b84",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_STARTUP_004.txt",
+      "sha256": "d96e5c8ce1901c1ff4c744d07790ff633cc0d107fbabfa7d8326f0a84e3822bd",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_PROVIDER_001.txt",
+      "sha256": "c21cec6de2e364e506f528fb8667b8129822866324604c59490d057594637bfa",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_PROVIDER_002.txt",
+      "sha256": "54de0b641a6bfd1f5d576f509bdfcc98b8c57bff3675f77acbfad37b198c6c6a",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_PROVIDER_003.txt",
+      "sha256": "643bb17da4c563bfb80f79868172cb219da460dfa9885ce6df706d0d1e69a512",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_LOGS_001.txt",
+      "sha256": "3a53fcb6b089bc73b7f3ce9938022281cab0701a81be19ec9753abcb131db54e",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_LOGS_002.txt",
+      "sha256": "5ad2e6821a24306707827b4a2d315935fd71a96dfc3a6d9c9149f85b3627fa52",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_LOGS_003.txt",
+      "sha256": "a8fc034eaf8646a50ad2b1481a4d06a29021c2aaa4efc41d2c53e02183438f85",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_LOGS_004.txt",
+      "sha256": "c9c9a739e8e77440817fd158e7cfa1c500ebfd09a88a81eeb0670b5be5fad6b0",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_LOGS_005.txt",
+      "sha256": "6793da841e25df3bac7309eb6d28fd5da4bfcdfc4188e04e2e5318f26b12bb44",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_LOGS_006.txt",
+      "sha256": "36a7e14d85f713b2cc895887b463f0a0be53888973c0dc45e4f5a8944810835c",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_LOGS_007.txt",
+      "sha256": "d359257f5359d71b554a2056b4cd68462b038dab1333c06ff4dfb141e7d45c1a",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_LOGS_008.txt",
+      "sha256": "fbe3bdb2fba48db3426e6d68cdb099190a5ad7338630d16cf2f63c21ff54e4d1",
+      "read_status": "FULL"
+    },
+    {
+      "artifact": "READ_LOGS_009.txt",
+      "sha256": "b16fa0bdf6bf2219d8ce72a263b43a2d643019ca74751ec284f9f0cb5ac1a773",
+      "read_status": "FULL"
+    }
+  ],
+  "actual_log_contents": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-build.log",
+      "bytes": 287,
+      "sha256": "ca5b11efd7f7cab80812267d25119a83fe4da6c8d3dbd5e2ede35d330cfb2ed0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-final-metadata-build.log",
+      "bytes": 287,
+      "sha256": "b9808a35f51ae1a4dff192bf267aa85b009ab0128b542a8e2b0efaaa3e42063f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-final-metadata-run42.log",
+      "bytes": 3385,
+      "sha256": "64ef0ee0c3381532c65e64e4faef86d0da8e47dd2a6ad7c6715014a671221d1a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-pack-abstractions.log",
+      "bytes": 174,
+      "sha256": "12c3145f544e400cdbcb871468a3cdf4d998044923867bb67bac209fa7c838f1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-pack-core.log",
+      "bytes": 161,
+      "sha256": "060b812fbe22935829d70469a73b75f5946803c59c4a81bcfe9055cd9a9dc06d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-product-core-build.log",
+      "bytes": 496,
+      "sha256": "be0032630725a179a9bc3c867d602d834507e5dc1941733ec1695dc1d01bca6c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-restore.log",
+      "bytes": 213,
+      "sha256": "0dde507e22e1f73b37a6d4a66b58f4de72ebef455eaf99fc6f1d2271efdc57ea"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-corrected-run42.log",
+      "bytes": 2583,
+      "sha256": "b43e93fe5c18564bc18676f3e211a25debdb73806402037168104118f27d954e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-corrected-all.log",
+      "bytes": 3385,
+      "sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-corrected-build.log",
+      "bytes": 482,
+      "sha256": "411d04a70df8d1714ec59166c660d8ca11a718248ab9832f7e17ef04cf908f56"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-inclusive-upper-build.log",
+      "bytes": 482,
+      "sha256": "44faae635342f74df6526a2b208e80645346ca4afd16104d1027475739f79677"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-inclusive-upper-host-StartTimeout-maximum.log",
+      "bytes": 2952,
+      "sha256": "139441f390da6b7471f01602de8d897e5167402c5fc6cf9478acb7f42dc9f3c4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-ConsumerStopTimeout-build.log",
+      "bytes": 482,
+      "sha256": "becd4cd71c27eaf8491bad6cd3d1e25e2cd3e484c2b657e9496f80bbfd6a0d72"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-ConsumerStopTimeout-host-ConsumerStopTimeout-too-large.log",
+      "bytes": 2017,
+      "sha256": "e20f26a9a66ce9b75d04318851c365aa06d0cd373d0572c8779103c38904e37b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-ConsumerStopTimeout-host-relation-equal.log",
+      "bytes": 893,
+      "sha256": "d523ff5cdc4b6e98232d734acf6b30c0b47795a01d14f45a8ac61b17e80a0629"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StartTimeout-build.log",
+      "bytes": 482,
+      "sha256": "9be7e931b54a406e557686b561c4f490c76b3a07d8c29565fc93c399248f0384"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StartTimeout-host-StartTimeout-too-large.log",
+      "bytes": 2010,
+      "sha256": "141db072ed6fcb616f8d209a661969923bd95299e9bcbc3a2322101410075065"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StartTimeout-host-relation-equal.log",
+      "bytes": 893,
+      "sha256": "9cad27b56d7b08955b63570444e6505f425ac050da392ddc50c3fbf5843a450b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StopTimeout-build.log",
+      "bytes": 482,
+      "sha256": "7cf13c79dd72868f8ceb2893f712fd4de048c04e6dbabcdbbf1caabc492003c5"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StopTimeout-host-StopTimeout-too-large.log",
+      "bytes": 2009,
+      "sha256": "637f4e1b96fc5db4148a35062fa9f0963f876de19400dbcc5af9fb4f29b99742"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StopTimeout-host-relation-equal.log",
+      "bytes": 893,
+      "sha256": "4e07b4c01eb427749559db509a7f3259c12e093e7aeba9f2412421a6e6d0f4a3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-corrected-all.log",
+      "bytes": 3385,
+      "sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-corrected-all.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-corrected-build.log",
+      "bytes": 482,
+      "sha256": "52d3839178111c85ae08d859e4e23dafa7728909ce4006074a2b8fa1ed012b6b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-fractional-compare-build.log",
+      "bytes": 482,
+      "sha256": "a51369690bc6890358f5208d2d6223c2654e29f21bdf32d613e348b3ccf82b77"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-fractional-compare-host-StartTimeout-null.log",
+      "bytes": 896,
+      "sha256": "3b8fae5a094c71de1902f4631f99a7a1049b298750e91dbfd9cbf49a1d8965f9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-fractional-compare-host-StopTimeout-fraction.log",
+      "bytes": 2950,
+      "sha256": "b0b524b7bebb9021854fec77dee5268b90a8a0d80c13496b2b8346d7f80a39f6"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-inclusive-upper-build.log",
+      "bytes": 482,
+      "sha256": "e4d49ba15513ca116df623fe6941b6e8b0267ecc3b920fe4c32f1da6dfb55af3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-inclusive-upper-host-StartTimeout-maximum.log",
+      "bytes": 2952,
+      "sha256": "139441f390da6b7471f01602de8d897e5167402c5fc6cf9478acb7f42dc9f3c4",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-inclusive-upper-host-StartTimeout-maximum.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-inclusive-upper-host-StopTimeout-null.log",
+      "bytes": 895,
+      "sha256": "154747145ddccb385f3599f51b5bb6fd8c3a0aa5940d68537f2b03fb9965917d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-ConsumerStopTimeout-build.log",
+      "bytes": 482,
+      "sha256": "ed5c3ef6403080cc41116c30e3109307172d3930a67b8c47eab444ad279a7ea0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-ConsumerStopTimeout-host-ConsumerStopTimeout-too-large.log",
+      "bytes": 2017,
+      "sha256": "e20f26a9a66ce9b75d04318851c365aa06d0cd373d0572c8779103c38904e37b",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-ConsumerStopTimeout-host-ConsumerStopTimeout-too-large.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-ConsumerStopTimeout-host-relation-equal.log",
+      "bytes": 893,
+      "sha256": "d523ff5cdc4b6e98232d734acf6b30c0b47795a01d14f45a8ac61b17e80a0629",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-ConsumerStopTimeout-host-relation-equal.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StartTimeout-build.log",
+      "bytes": 482,
+      "sha256": "5f155d9289ba1a90432eae1a21b832034863cca4dea612221673815fba615bf1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StartTimeout-host-StartTimeout-too-large.log",
+      "bytes": 2010,
+      "sha256": "141db072ed6fcb616f8d209a661969923bd95299e9bcbc3a2322101410075065",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StartTimeout-host-StartTimeout-too-large.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StartTimeout-host-relation-equal.log",
+      "bytes": 893,
+      "sha256": "9cad27b56d7b08955b63570444e6505f425ac050da392ddc50c3fbf5843a450b",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StartTimeout-host-relation-equal.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StopTimeout-build.log",
+      "bytes": 482,
+      "sha256": "617b4419821245304238f4df0832bbc6797186eca30b3ba21c89789b4330a1a9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StopTimeout-host-StopTimeout-too-large.log",
+      "bytes": 2009,
+      "sha256": "637f4e1b96fc5db4148a35062fa9f0963f876de19400dbcc5af9fb4f29b99742",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StopTimeout-host-StopTimeout-too-large.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-omit-StopTimeout-host-relation-equal.log",
+      "bytes": 893,
+      "sha256": "4e07b4c01eb427749559db509a7f3259c12e093e7aeba9f2412421a6e6d0f4a3",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-host-omit-StopTimeout-host-relation-equal.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-relation-lost-build.log",
+      "bytes": 482,
+      "sha256": "7a2ab0d4b026ce5425605b1362b54e15fc1cfe21915490afd577801a683dc268"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-relation-lost-host-relation-greater.log",
+      "bytes": 1923,
+      "sha256": "ca9e57062b7fc295398740891d4c9fb1f5a49ed2679fec103ddf2a5b6cb02ada"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-live-input-build.log",
+      "bytes": 482,
+      "sha256": "4950f4577d4dfb5f09d6dffdd2d3e20452f03a024b9d46c0a6ee4b9d08a374a1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-live-input-results-empty.log",
+      "bytes": 640,
+      "sha256": "2e8ea56fa0605d6bc7fac114f4746b6e2f3668c1cfb63a54d04330f5def92cca"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-live-input-results-membership-inner.log",
+      "bytes": 1699,
+      "sha256": "d0aa040d8e873c9d4e91cd32ef1ce1a62e0a0064a8b34c341abab5a912a2bdfc"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-null-guard-lost-build.log",
+      "bytes": 482,
+      "sha256": "823c3f01b2e0fab68afb05c29608ea80023beeaca4ed694e22f5a314e0d14f8b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-null-guard-lost-results-membership-inner.log",
+      "bytes": 651,
+      "sha256": "7b2d4dac1d4d496d2432c10e7296bff27beccbff218698de56d44c8ce3e33646"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-null-guard-lost-results-null-plain.log",
+      "bytes": 2122,
+      "sha256": "99c0442f662afef03f6434befbe47d38516d85f6724bcd31081a897c2a6f87f5"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-return-array-build.log",
+      "bytes": 482,
+      "sha256": "9c597f8942db136f92747525e34bc9b555fcf683dd51aa143636d4d16876802c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-return-array-results-membership-plain.log",
+      "bytes": 1637,
+      "sha256": "d031b93cb0672b40f96b6e106ec9b2e708cdf4fc6982653efda6b65a5c1488b7"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-return-array-results-null-inner.log",
+      "bytes": 645,
+      "sha256": "193823e531f8c298b3ef9ee295dabb306f20eb3f6825b5c680734add876c72ea"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-all-providers-cap-batch-custom-long-size.log",
+      "bytes": 6648,
+      "sha256": "ac841acc7f9efec65b2ca3452ca57e22e7dc7ceee2843c24d4f41ad756b162a1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-all-providers-cap-batch-system-ordinary.log",
+      "bytes": 895,
+      "sha256": "0f670b75a6eaaaa44586487d11e62fa6b1833320824b14ca16f89e086782ddb2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-all-providers-cap-build.log",
+      "bytes": 482,
+      "sha256": "098206d0f0fc5eedb2fb78ebc9540d5fbb85ad136c81391ee6777890cdf2e2f7"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-fractional-compare-batch-system-fraction.log",
+      "bytes": 6649,
+      "sha256": "3c826cfa1a040b1629b84cfb01a887823c052c8f49eb88c083ba9ad74ef448aa"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-fractional-compare-batch-system-maximum.log",
+      "bytes": 894,
+      "sha256": "48637d17092494c057bf57c94a2d7aa738d31638ce6f4e57e156ee886293f26d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-fractional-compare-build.log",
+      "bytes": 482,
+      "sha256": "6f8808ce500bb2e78d76b0b6ab5540d2e9ce7e7dde069e248155edadcd21adef"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-global-options-cap-batch-custom-long-expire.log",
+      "bytes": 7545,
+      "sha256": "a09319e71ffcd9c0d883001a7babd34224a589b32e601beece4cb03e6f2ccef4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-global-options-cap-batch-system-ordinary.log",
+      "bytes": 895,
+      "sha256": "27368328d3fe5cd0f1ae6c820b98d027b44005900daccaa5e159da504d4262b1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-global-options-cap-build.log",
+      "bytes": 482,
+      "sha256": "7faf54d4d66c89f5cacff0a237b49708d62d09fcb76cda497e2effacee3f05c4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-inclusive-upper-batch-system-maximum.log",
+      "bytes": 6648,
+      "sha256": "0404525c2ef956378d929362cbbf30cac76c7886e61adea89c1126d9580ea38f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-inclusive-upper-batch-system-ordinary.log",
+      "bytes": 895,
+      "sha256": "4b0f9621e49280dc2d7cb2d560b3d8898a99cb07849cf5e90a33fc0b33aa9d50"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-inclusive-upper-build.log",
+      "bytes": 482,
+      "sha256": "08363e05907a6ee23fa732e986593d55094197db3d7d584afc5609d82703544d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-late-guard-batch-custom-long-size.log",
+      "bytes": 896,
+      "sha256": "686f05f14320208fa474e3739a565f5fd6a31419d785959afe6651880db29835"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-late-guard-batch-default-too-large.log",
+      "bytes": 2513,
+      "sha256": "b2455d1513e4f9afac7a83808c0c1c3079f224c06bdce1f07d6bfb0c1a740ef2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-late-guard-build.log",
+      "bytes": 482,
+      "sha256": "3b285a79f846a1f61e19e74d9be0634a65e1fd236879542e7a69ee5bbdd25577"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-provider-guard-lost-batch-custom-long-size.log",
+      "bytes": 896,
+      "sha256": "3f1463bc1a3e4500cab82c14d39db792de347c2832c42792572c41b8fa001ae9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-provider-guard-lost-batch-default-too-large.log",
+      "bytes": 2513,
+      "sha256": "6b98555c0663d6bb3c9e742794984630383fdae078be5c32243c838cfb31dd50"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-provider-guard-lost-build.log",
+      "bytes": 482,
+      "sha256": "417d24832c675f712e1e5f5f5515f6c13607b86ff0680885432121338efa33b7"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-batch-wrong-diagnostic-key-build.log",
+      "bytes": 1017,
+      "sha256": "62485ae6e21bd25c4d1b59bc7727c7c929870138d0745cdc6572a8fa9624f679"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-corrected-all.log",
+      "bytes": 3385,
+      "sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-corrected-all.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-corrected-build.log",
+      "bytes": 482,
+      "sha256": "fc9126ebdd0c9844f7d321fae7bc6e709d29221ccafd8c824bb99fb42c53a9a0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-positive-lost-build.log",
+      "bytes": 482,
+      "sha256": "ced69ccd1cdc92923afd8957e256b76654d411f160d753be23ffa9bfa49240bf"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-positive-lost-host-StartTimeout-maximum.log",
+      "bytes": 899,
+      "sha256": "8f1321e804b3e2ffc438aed286ad6d7103e6ee886142106320209cd2f0cbc520"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-positive-lost-host-StartTimeout-zero.log",
+      "bytes": 2005,
+      "sha256": "7457d0c2ad220fe0037cb5469b81f35c14c28b469344fcfbb3bee9246b47e4e3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-relation-lost-build.log",
+      "bytes": 482,
+      "sha256": "f2c64c37ef440e5120f5fbc04fbcadd02446c33d1ee606fe88985b2112c169bf"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-relation-lost-host-relation-equal.log",
+      "bytes": 893,
+      "sha256": "1d37535be7f6401826601083691d2d3798b648378697c9f0b803a54897e6126a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r3-host-relation-lost-host-relation-greater.log",
+      "bytes": 1923,
+      "sha256": "ca9e57062b7fc295398740891d4c9fb1f5a49ed2679fec103ddf2a5b6cb02ada",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-host-relation-lost-host-relation-greater.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-batch-wrong-diagnostic-key-batch-custom-long-size.log",
+      "bytes": 896,
+      "sha256": "f034e79cc70950ea42c9b13c35f4e7800f29812635a77d714cd355597c603592"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-batch-wrong-diagnostic-key-batch-default-too-large.log",
+      "bytes": 2513,
+      "sha256": "3ceb152b2ede7d9aea7a8380214b9677a66df39c7ff9bd6fc259e55eb2374df8"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-batch-wrong-diagnostic-key-build.log",
+      "bytes": 482,
+      "sha256": "1daeea2dedd6ab8b98931db5cd77c53ccab2065aef97dab6527e7801cfbac2cf"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-corrected-all.log",
+      "bytes": 3385,
+      "sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-corrected-all.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-corrected-build.log",
+      "bytes": 482,
+      "sha256": "b2722399972a6559cd043832e66bf8e27811436e4dc2f5f05797be63126eece8"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-rollback-all.log",
+      "bytes": 3385,
+      "sha256": "c85e0f19f5d41ee5be7c90085dacaad4de19229f1d996ede6502c8623131caa1",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-corrected-all.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r4-rollback-build.log",
+      "bytes": 482,
+      "sha256": "96b27d192ae023bce0596daab250387e5b1743a2a95f41f55507371ccae0e88e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-live-input-build.log",
+      "bytes": 482,
+      "sha256": "4885bcca6ac1c4a111460c459d90cdae64ee77bf0a61d3e3714d4b822b1b23f5"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-live-input-results-empty.log",
+      "bytes": 640,
+      "sha256": "2e8ea56fa0605d6bc7fac114f4746b6e2f3668c1cfb63a54d04330f5def92cca",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-live-input-results-empty.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-live-input-results-membership-inner.log",
+      "bytes": 1699,
+      "sha256": "d0aa040d8e873c9d4e91cd32ef1ce1a62e0a0064a8b34c341abab5a912a2bdfc",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-live-input-results-membership-inner.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-null-guard-lost-build.log",
+      "bytes": 482,
+      "sha256": "7ad1fa41f82ca8057d0f01e14df4996357900f30c78bbe39a91a7263459baed9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-null-guard-lost-results-membership-inner.log",
+      "bytes": 651,
+      "sha256": "7b2d4dac1d4d496d2432c10e7296bff27beccbff218698de56d44c8ce3e33646",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-null-guard-lost-results-membership-inner.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-null-guard-lost-results-null-plain.log",
+      "bytes": 2122,
+      "sha256": "99c0442f662afef03f6434befbe47d38516d85f6724bcd31081a897c2a6f87f5",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-null-guard-lost-results-null-plain.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-return-array-build.log",
+      "bytes": 482,
+      "sha256": "2249d796857d4d8c1f7eb034e083c5e435a073fbc8ea267d4c55ca8ace88c56d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-return-array-results-membership-plain.log",
+      "bytes": 1637,
+      "sha256": "d031b93cb0672b40f96b6e106ec9b2e708cdf4fc6982653efda6b65a5c1488b7",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-return-array-results-membership-plain.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-results-return-array-results-null-inner.log",
+      "bytes": 645,
+      "sha256": "193823e531f8c298b3ef9ee295dabb306f20eb3f6825b5c680734add876c72ea",
+      "personal_read_reuse": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-mut-r2-results-return-array-results-null-inner.log"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-build-r2.log",
+      "bytes": 286,
+      "sha256": "61d6826c3b00aee15c901fce860873291f8c340a0d8944c430bb2e2b93f92bac"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-build.log",
+      "bytes": 9136,
+      "sha256": "e09a998c65130c151fc404bf7445dbc24fd4ff833b77198a5145e6e03041ab9c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-final-metadata-build.log",
+      "bytes": 286,
+      "sha256": "3af2e0922b84ca6feef52bf203784aa65a1a2a6d9814b88187db5d3007a1aaf4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-final-metadata-run42.log",
+      "bytes": 15208,
+      "sha256": "c9a79a50bd65f18dd4dceef3c7939e651d1eeee5dba11dc66d146e58c86e5ddc"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-restore-r2.log",
+      "bytes": 212,
+      "sha256": "ec9910f86e4ab6bdc07d2cf30b3f3dd08dfe2cef704f4d0298720e5b66c04064"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-restore.log",
+      "bytes": 212,
+      "sha256": "0fe051d36c68a516bf37c3601180d09167b5e1ffe73aee6df07e19878a2fd4c1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-original-run42.log",
+      "bytes": 14408,
+      "sha256": "b7ba2df1e492dac2016cd91d56a41b70cc167cb23b27f849440cc18a84471061"
+    }
+  ],
+  "small_proofs_full": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_CORE_FREEZE.json",
+      "sha256": "2911be2c1fec39766f3c964d3aab3f8c157042a6e813088e8cdbba7b7ec78af2",
+      "bytes": 8952
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_PLAN.json",
+      "sha256": "7d45851f8d957465fcf364367361eae9a913d653233a25ef162177cc4d6e8908",
+      "bytes": 728
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_ROOT_PUBLIC_READ_CLOSURE.json",
+      "sha256": "d700d5d8df85c7557ab0cfce971a2a34815404b68558da1860a4873accabf37e",
+      "bytes": 10121
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_SETUP_EXCLUSION.json",
+      "sha256": "26b0452dad795b78e8abbd0850283af1860e160068eec00b5f93f811b9fcba41",
+      "bytes": 415
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE05_METADATA_PLAN_DELTA.json",
+      "sha256": "8955f18727b986d515196c977a193f92ec8295fcf36d15ddf76867d7e5b849ec",
+      "bytes": 303
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/ATTEMPT1_EXCLUSION.json",
+      "sha256": "90c79d4abe093588c8e4504b21047a016c98a059807ca4c5838ddef3289057d7",
+      "bytes": 439
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/ATTEMPT2_CATEGORY_NOTE.json",
+      "sha256": "2b4ec7992c4c9eba42e85f1d8ca4e8d29c380c6b21ac90c6458c6ca21cf66fb9",
+      "bytes": 421
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core/ATTEMPT3_COMPILER_EXCLUSION.json",
+      "sha256": "4e4f26f4e6d66f91363c96821d892d0e910d85675cb98f6bcb051ad9e288ece7",
+      "bytes": 437
+    }
+  ],
+  "public_receipt_subset_personal_full": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/READ_PUBLIC_RECEIPTS.json",
+    "sha256": "aeaaeaa03a3e2de8b015e4246a62427f8e902b84dee77d69752e9ec75fe9f835"
+  },
+  "skills_own_prior_full_reuse": {
+    "skills": [
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/assertion-quality/SKILL.md",
+        "sha256": "efc92d1cbea09cf01e5e3b723bffa72ff4f6f8be352a2cd89fb502d6d27194e8",
+        "read_mode": "OWN_PRIOR_PERSONAL_FULL_REUSED_HASH_VERIFIED",
+        "own_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-adversarial/READ_CLOSURE.json"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/SKILL.md",
+        "sha256": "ec6f69ed00a627c0319a2bbdcfd71fcfab84eaae28900b2f814af3b27e44bd70",
+        "read_mode": "OWN_PRIOR_PERSONAL_FULL_REUSED_HASH_VERIFIED",
+        "own_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-adversarial/READ_CLOSURE.json"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-analysis-extensions/extensions/dotnet.md",
+        "sha256": "ef257a931a25501697fde8a36e027ba9195ff624ff701dd5fd276d746c0d25be",
+        "read_mode": "OWN_PRIOR_PERSONAL_FULL_REUSED_HASH_VERIFIED",
+        "own_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-adversarial/READ_CLOSURE.json"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-gap-analysis/SKILL.md",
+        "sha256": "cfec7d0e13deaee15fb97151d0cd5339fa5f14c109a10c49de81e9a5512231b7",
+        "read_mode": "OWN_PRIOR_PERSONAL_FULL_REUSED_HASH_VERIFIED",
+        "own_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-adversarial/READ_CLOSURE.json"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/skills-source/skills-2124a6e3518b2120cda1c076d62ed79491b00693/plugins/dotnet-test/skills/test-anti-patterns/SKILL.md",
+        "sha256": "0f589352ba88c5873e85a2bde65d44f72c75ec76a0547105ff6698271d813bf0",
+        "read_mode": "OWN_PRIOR_PERSONAL_FULL_REUSED_HASH_VERIFIED",
+        "own_evidence": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package08-docs-adversarial/READ_CLOSURE.json"
+      }
+    ],
+    "application": "Assertions target observable membership/identity, startup options validation, actual pipeline result, retained controls and discriminating mutants. Async boundedness/cleanup checked; no sleep-absence PASS or compiler kill accepted. No new tests generated or run."
+  },
+  "no_foreign_owner_transfer": true,
+  "canonical_Core_766_full_read": false,
+  "writes_scope": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial",
+  "reviewer_native_invocations": 0,
+  "notes": "Machine hash verification of all6209 files is not a semantic FULL read claim for those files. Proof closure read of another reviewer is not transfer of that reviewer source reads. XML selected ZIP/cache member inspection is not whole assembly XML semantic coverage.",
+  "selected_original_finding_objects_full": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/package05-core-adversarial/ORIGINAL_FINDING_OBJECTS.json",
+    "sha256": "9bf57c084de3fed21ccb544565d90a1fe3506f7612aa03ff3bf1b6deb8537097",
+    "ids": [
+      "F-SB-API-027",
+      "F-SB-API-028",
+      "F-SB-API-030"
+    ]
+  }
+}

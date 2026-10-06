@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal.Observers;
 using ViciOne.ServiceBus.Providers.Configuration;
@@ -14,7 +15,7 @@ public static class MessageJournalConfigurationExtensions
     /// <summary>Enables one bounded journal owned by the default bus registration.</summary>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The configured message journal.</returns>
+    /// <returns>The bus registration configurator for further configuration.</returns>
     public static IBusRegistrationConfigurator UseMessageJournal(
         this IBusRegistrationConfigurator configurator,
         Action<IMessageJournalConfigurator> configure)
@@ -28,7 +29,7 @@ public static class MessageJournalConfigurationExtensions
     /// <typeparam name="TBus">The bus type.</typeparam>
     /// <param name="configurator">The configurator to update.</param>
     /// <param name="configure">The callback used to configure the component.</param>
-    /// <returns>The configured message journal.</returns>
+    /// <returns>The bus registration configurator for further configuration.</returns>
     public static IBusRegistrationConfigurator<TBus> UseMessageJournal<TBus>(
         this IBusRegistrationConfigurator<TBus> configurator,
         Action<IMessageJournalConfigurator> configure)
@@ -60,6 +61,14 @@ public static class MessageJournalConfigurationExtensions
 
         var writer = new MessageJournalWriter(store, policy, options);
 
+        return ConnectMessageJournal(connector, writer);
+    }
+
+    internal static ConnectHandle ConnectMessageJournal<TConnector>(
+        TConnector connector,
+        MessageJournalWriter writer)
+        where TConnector : ISendObserverConnector, IPublishObserverConnector, IConsumeObserverConnector
+    {
         return ConnectAtomically(
             () => connector.ConnectSendObserver(new MessageJournalSendObserver(writer)),
             () => connector.ConnectPublishObserver(new MessageJournalPublishObserver(writer)),
@@ -160,6 +169,7 @@ public static class MessageJournalConfigurationExtensions
         configure(builder);
         IMessageJournalRegistration registration = builder.Build<TBus>();
         services.AddSingleton(registration);
+        services.TryAddSingleton(static provider => MessageJournalTelemetry.Create(provider));
         BusCompositionRegistrations.AddFeature<TBus>(services, "Message journal");
     }
 }
@@ -170,7 +180,7 @@ internal interface IMessageJournalRegistration
 
     string BusKey { get; }
 
-    void Connect(IBusFactoryConfigurator configurator);
+    void Connect(IBusFactoryConfigurator configurator, IServiceProvider provider);
 }
 
 internal sealed class MessageJournalRegistration<TBus>(
@@ -183,10 +193,13 @@ internal sealed class MessageJournalRegistration<TBus>(
 
     public string BusKey { get; } = BusRegistrationIdentity.GetKey(typeof(TBus));
 
-    public void Connect(IBusFactoryConfigurator configurator)
+    public void Connect(IBusFactoryConfigurator configurator, IServiceProvider provider)
     {
         ArgumentNullException.ThrowIfNull(configurator);
-        _ = configurator.ConnectMessageJournal(store, policy, options);
+        ArgumentNullException.ThrowIfNull(provider);
+        var writer = new MessageJournalWriter(store, policy, options,
+            provider.GetRequiredService<MessageJournalTelemetry>());
+        _ = MessageJournalConfigurationExtensions.ConnectMessageJournal(configurator, writer);
     }
 }
 
